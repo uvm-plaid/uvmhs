@@ -1,0 +1,69 @@
+verbatim:
+  cabal-version: 2.2
+
+name: uvmhs
+version: 0.0.0.1
+
+default-extensions:
+  - ConstraintKinds
+  - DataKinds
+  - ExplicitNamespaces
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - KindSignatures
+  - LambdaCase
+  - MonadComprehensions
+  - MultiParamTypeClasses
+  - NoImplicitPrelude
+  - OverloadedStrings
+  - PatternSynonyms
+  - PolyKinds
+  - QuantifiedConstraints
+  - RankNTypes
+  - RebindableSyntax
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - Strict
+  - StrictData
+  - TemplateHaskell
+  - TypeApplications
+  - TypeOperators
+  - UndecidableInstances
+  - UndecidableSuperClasses
+  - UnicodeSyntax
+  - ViewPatterns
+
+ghc-options:
+  - -Wall
+  - -Wno-orphans
+
+library:
+  source-dirs: 
+    - src/
+  dependencies: 
+    - base
+    - text
+    - containers
+    - process
+    - template-haskell
+    - array
+
+executables:
+  examples:
+    source-dirs:
+      - contrib/examples
+    main: Main.hs
+    dependencies:
+      - base
+      - uvmhs
+  hook:
+    source-dirs:
+      - contrib/hook
+    main: Main.hs
+    dependencies:
+      - base
+      - uvmhs
