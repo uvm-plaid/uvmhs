@@ -1,0 +1,1 @@
+HTML documentation [here](doc/).
