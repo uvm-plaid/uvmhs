@@ -32,6 +32,6 @@ instance Append ParserError where
   ParserError tok₁ suf₁ fail₁ ⧺ ParserError tok₂ suf₂ fail₂ =
     case (compare `on` (map locRangeEnd ∘ parserContextLocRange)) tok₁ tok₂ of
       LT → ParserError tok₂ suf₂ fail₂
-      EQ → ParserError tok₁ suf₁ $ unionWith (\ (ic₁ :꘍ pest₁) (_ic₂ :꘍ pest₂) → (ic₁ :꘍ pest₁ ⊔ pest₂)) fail₁ fail₂
+      EQ → ParserError tok₁ suf₁ $ unionWith (\ (ic₁ :* pest₁) (_ic₂ :* pest₂) → (ic₁ :* pest₁ ⊔ pest₂)) fail₁ fail₂
       GT → ParserError tok₁ suf₁ fail₁
 

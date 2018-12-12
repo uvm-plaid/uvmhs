@@ -52,9 +52,9 @@ thSingleMatch ∷ TH.Pat → TH.Exp → TH.Match
 thSingleMatch p b = TH.Match p (TH.NormalB b) []
 
 thViewSimpleCon ∷ TH.Con → 𝑂 (TH.Name ∧ 𝐿 TH.Type)
-thViewSimpleCon (TH.NormalC name (frhs → strictTypes)) = Some (name :꘍ map snd strictTypes)
-thViewSimpleCon (TH.RecC name (frhs → varStrictTypes)) = Some (name :꘍ map snd varStrictTypes)
-thViewSimpleCon (TH.InfixC (_,typeL) name (_,typeR)) = Some (name :꘍ list [typeL,typeR])
+thViewSimpleCon (TH.NormalC name (frhs → strictTypes)) = Some (name :* map snd strictTypes)
+thViewSimpleCon (TH.RecC name (frhs → varStrictTypes)) = Some (name :* map snd varStrictTypes)
+thViewSimpleCon (TH.InfixC (_,typeL) name (_,typeR)) = Some (name :* list [typeL,typeR])
 thViewSimpleCon (TH.ForallC _ _ _) = None
 thViewSimpleCon (TH.GadtC _ _ _) = None
 thViewSimpleCon (TH.RecGadtC _ _ _) = None
@@ -70,17 +70,17 @@ thTyConIL = Prism
 thDataDL ∷ TH.Dec ⌲ TH.Cxt ∧ TH.Name ∧ 𝐿 TH.TyVarBndr ∧ 𝑂 TH.Kind ∧ 𝐿 TH.Con ∧ 𝐿 TH.DerivClause
 thDataDL = Prism
   { view = \case
-      TH.DataD cx t (frhs → args) (frhs → kM) (frhs → cs) (frhs → ders) → Some (cx :꘍ t :꘍ args :꘍ kM :꘍ cs :꘍ ders)
+      TH.DataD cx t (frhs → args) (frhs → kM) (frhs → cs) (frhs → ders) → Some (cx :* t :* args :* kM :* cs :* ders)
       _ → None
-  , construct = \ (cx :꘍ t :꘍ args :꘍ kM :꘍ cs :꘍ ders) → TH.DataD cx t (tohs args) (tohs kM) (tohs cs) (tohs ders)
+  , construct = \ (cx :* t :* args :* kM :* cs :* ders) → TH.DataD cx t (tohs args) (tohs kM) (tohs cs) (tohs ders)
   }
 
 thNewtypeDL ∷ TH.Dec ⌲ TH.Cxt ∧ TH.Name ∧ 𝐿 TH.TyVarBndr ∧ 𝑂 TH.Kind ∧ TH.Con ∧ 𝐿 TH.DerivClause
 thNewtypeDL = Prism
   { view = \case
-      TH.NewtypeD cx t (frhs → args) (frhs → kM) (frhs → c) (frhs → ders) → Some (cx :꘍ t :꘍ args :꘍ kM :꘍ c :꘍ ders)
+      TH.NewtypeD cx t (frhs → args) (frhs → kM) (frhs → c) (frhs → ders) → Some (cx :* t :* args :* kM :* c :* ders)
       _ → None
-  , construct = \ (cx :꘍ t :꘍ args :꘍ kM :꘍ c :꘍ ders) → TH.NewtypeD cx t (tohs args) (tohs kM) (tohs c) (tohs ders)
+  , construct = \ (cx :* t :* args :* kM :* c :* ders) → TH.NewtypeD cx t (tohs args) (tohs kM) (tohs c) (tohs ders)
   }
 
 thViewADT ∷ TH.Dec → 𝑂 (TH.Cxt ∧ TH.Name ∧ 𝐿 TH.TyVarBndr ∧ 𝑂 TH.Kind ∧ 𝐿 TH.Con ∧ 𝐿 TH.DerivClause)
@@ -89,19 +89,19 @@ thViewADT d =
   ⎅
   (ff ^∘ view thNewtypeDL) d
   where
-    ff (cx :꘍ t :꘍ args :꘍ kM :꘍ c :꘍ ders) = (cx :꘍ t :꘍ args :꘍ kM :꘍ single c :꘍ ders)
+    ff (cx :* t :* args :* kM :* c :* ders) = (cx :* t :* args :* kM :* single c :* ders)
 
 thViewSingleConADT ∷ TH.Dec → 𝑂 (TH.Cxt ∧ TH.Name ∧ 𝐿 TH.TyVarBndr ∧ 𝑂 TH.Kind ∧ TH.Con ∧ 𝐿 TH.DerivClause)
 thViewSingleConADT dec = do
-  (cx :꘍ t :꘍ args :꘍ kM :꘍ cs :꘍ ders) ← thViewADT dec
+  (cx :* t :* args :* kM :* cs :* ders) ← thViewADT dec
   c ← view singleL cs
-  return (cx :꘍ t :꘍ args :꘍ kM :꘍ c :꘍ ders)
+  return (cx :* t :* args :* kM :* c :* ders)
 
 thRecCL ∷ TH.Con ⌲ TH.Name ∧ 𝐿 TH.VarStrictType
 thRecCL = Prism
   { view = \case
-      TH.RecC n (frhs → fs) → Some (n :꘍ fs)
+      TH.RecC n (frhs → fs) → Some (n :* fs)
       _ → None
-  , construct = \ (n :꘍ fs) → TH.RecC n (tohs fs)
+  , construct = \ (n :* fs) → TH.RecC n (tohs fs)
   }
 

@@ -66,9 +66,9 @@ interpChunk (Text s) = do
   col ← getL σColL
   spitConsole s
   fM ← askL ρUnderFormatL
-  when𝑂 fM $ \ (f :꘍ c) → do
+  when𝑂 fM $ \ (f :* c) → do
     col' ← getL σColL
-    modifyL σUndersL $ (:&) $ (col :꘍ col' :꘍ f :꘍ c)
+    modifyL σUndersL $ (:&) $ (col :* col' :* f :* c)
 interpChunk Newline = do
   doUnders
   spitNLConsole
@@ -78,7 +78,7 @@ doUnders = do
   us ← getL σUndersL
   when (not $ isEmpty us) $ do
     spitNLConsole
-    eachWith (reverse us) $ \ (colₗ :꘍ colᵤ :꘍ f :꘍ c) → do
+    eachWith (reverse us) $ \ (colₗ :* colᵤ :* f :* c) → do
       col ← getL σColL
       spitConsole $ string $ repeat (colₗ - col) ' '
       mapOut (FormatCO f) $ 
@@ -93,7 +93,7 @@ finalize aM = do
 
 interpAnnotation ∷ Annotation → ConsoleM () → ConsoleM ()
 interpAnnotation (FormatA f) = mapOut $ FormatCO $ concat $ map formats f
-interpAnnotation (UndertagA f c) = mapEnv (update ρUnderFormatL $ Some ((concat $ map formats f) :꘍ c))
+interpAnnotation (UndertagA f c) = mapEnv (update ρUnderFormatL $ Some ((concat $ map formats f) :* c))
 
 interpOutputElem ∷ OutputElem → ConsoleM ()
 interpOutputElem (RawChunk c) = interpChunk c

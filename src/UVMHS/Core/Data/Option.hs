@@ -18,7 +18,7 @@ instance (Append a) ⇒ Append (𝑂 a) where
   Some x ⧺ Some y = Some $ x ⧺ y
 instance (Monoid a) ⇒ Monoid (𝑂 a)
 
-instance ToStream a (𝑂 a) where stream xM = 𝑆 xM $ map (:꘍None)
+instance ToStream a (𝑂 a) where stream xM = 𝑆 xM $ map (:*None)
 instance ToIter a (𝑂 a) where iter = iter𝑆 ∘ stream
 
 instance 𝑂 a ⇄ (() ∨ a) where

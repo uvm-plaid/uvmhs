@@ -16,12 +16,13 @@ data ParserEnv t = ParserEnv
   { parserEnvContextPadding ∷ ℕ
   , parserEnvRenderFormat ∷ 𝐿 Format
   , parserEnvErrorStack ∷ 𝐿 𝕊 ∧ 𝕊
+  , parserEnvSkip ∷ t → 𝔹
   }
 makeLenses ''ParserEnv
 makePrettyRecord ''ParserEnv
 
 parserEnv₀ ∷ ParserEnv t
-parserEnv₀ = ParserEnv 1 null (null :꘍ "<top level>")
+parserEnv₀ = ParserEnv 1 null (null :* "<top level>") (const False)
 
 ---------------
 -- ParserOut --
@@ -72,37 +73,37 @@ runParser e s = unFailT ∘ runStateT s ∘ runReaderT e ∘ unParser
 
 pFail ∷ ParserContext → Parser t a
 pFail tc = do
-  (es :꘍ e) ← askL parserEnvErrorStackL
+  (es :* e) ← askL parserEnvErrorStackL
   ec ← getL parserStateExpressionContextL
   ic ← getL parserStateInputContextL
   is ← getL parserStateInputL
   cp ← askL parserEnvContextPaddingL
   let sc = renderParserInput $ prefixBeforeN𝑆 (succ cp) (parserContextNewlines ∘ parserTokenContext) $ parserInputStream is
-  tellL parserOutErrorL $ AddNull $ ParserError tc (parserContextDocCachedDoc sc) $ dict [ec ↦ (ic :꘍ makeStackTraces e (list $ reverse es))]
+  tellL parserOutErrorL $ AddNull $ ParserError tc sc $ dict [ec ↦ (ic :* makeStackTraces e (list $ reverse es))]
   abort
 
 pErr ∷ 𝕊 → Parser t a → Parser t a
-pErr msg = mapEnv $ alter parserEnvErrorStackL $ \ (stack :꘍ msg') → (msg':&stack :꘍ msg)
+pErr msg = mapEnv $ alter parserEnvErrorStackL $ \ (stack :* msg') → (msg':&stack :* msg)
 
 pNewWithContext ∷ 𝕊 → Parser t a → Parser t (InputContext ∧ ExpressionContext ∧ a)
 pNewWithContext msg aM = do
   ic ← getL parserStateInputContextL
   ec ← getL parserStateExpressionContextL
   cp ← askL parserEnvContextPaddingL
-  putL parserStateInputContextL $ InputContext $ truncateParserContext cp $ concat [runInputContext ic,runExpressionContext ec]
+  putL parserStateInputContextL $ InputContext $ truncateParserContext cp $ concat [unInputContext ic,unExpressionContext ec]
   putL parserStateExpressionContextL null
-  a ← mapEnv (update parserEnvErrorStackL (null :꘍ msg)) aM
+  a ← mapEnv (update parserEnvErrorStackL (null :* msg)) aM
   ic' ← getL parserStateInputContextL
   ec' ← getL parserStateExpressionContextL
   putL parserStateInputContextL $ ic
   putL parserStateExpressionContextL $ ec ⧺ ec'
-  return $ ic' :꘍ ec' :꘍ a
+  return $ ic' :* ec' :* a
 
 pNew ∷ 𝕊 → Parser t a → Parser t a
 pNew msg = map snd ∘ pNewWithContext msg
 
-pRender ∷ 𝐿 Format → Parser t a → Parser t a
-pRender fmt = mapEnv $ alter parserEnvRenderFormatL $ (⧺) fmt
+pRender ∷ Format → Parser t a → Parser t a
+pRender fmt = mapEnv $ alter parserEnvRenderFormatL $ (⧺) $ single fmt
 
 pAdvance ∷ Parser t (AddBot Loc ∨ ParserToken t)
 pAdvance = do
@@ -111,24 +112,27 @@ pAdvance = do
     None → return $ Inl $ parserInputEndPos pi
     Some (t,pi') → do
       putL parserStateInputL pi'
-      return $ Inr t
+      sk ← askL parserEnvSkipL
+      case sk $ parserTokenValue t of
+        True → do
+          modifyL parserStateExpressionContextL $ \ ec → ec ⧺ ExpressionContext (parserTokenContext t)
+          pAdvance
+        False → do
+          fmt ← askL parserEnvRenderFormatL
+          return $ Inr $ ParserToken (parserTokenValue t) $ onParserContext (mapOut $ ppFormat fmt) $ parserTokenContext t
 
 pPluck ∷ Parser t (ParserToken t)
 pPluck = do
   tM ← pAdvance
   case tM of
     Inl l → pErr "more input" $ pFail $ renderEOFContext l
-    Inr t → do
-      fmt ← askL parserEnvRenderFormatL
-      let o = ExpressionContext $ onParserContext (mapOut $ ppFormat fmt) $ parserTokenContext t
-      modifyL parserStateExpressionContextL $ \ c → c ⧺ o
-      return t
+    Inr t → return t
 
 pEnd ∷ Parser t ()
 pEnd = do
   tM ← pAdvance
   case tM of
-    Inl _ → skip
+    Inl _ → return ()
     Inr t → pErr "end of input" $ pFail $ parserTokenContext t
 
 ----------------
@@ -142,22 +146,29 @@ pFinal aM = do
   return a
 
 pAny ∷ Parser t t
-pAny = map parserTokenValue pPluck
+pAny = do
+  t ← pPluck
+  modifyL parserStateExpressionContextL $ \ c → c ⧺ ExpressionContext (parserTokenContext t)
+  return $ parserTokenValue t
 
 pShaped ∷ 𝕊 → (t → 𝑂 a) → Parser t a
 pShaped msg sh = do
-  ec ← getL parserStateExpressionContextL
   t ← pPluck
   case sh $ parserTokenValue t of
-    None → do
-      putL parserStateExpressionContextL ec
-      pErr msg $ pFail $ parserTokenContext t
-    Some x → return x
+    None → pErr msg $ pFail $ parserTokenContext t
+    Some x → do
+      modifyL parserStateExpressionContextL $ \ c → c ⧺ ExpressionContext (parserTokenContext t)
+      return x
 
 pSatisfies ∷ 𝕊 → (t → 𝔹) → Parser t t
 pSatisfies msg p = pShaped msg $ \ x → case p x of
   True → Some x 
   False → None
+
+pDie ∷ 𝕊 → Parser t a
+pDie msg = do
+  void $ pSatisfies msg $ const False
+  abort
 
 pLit ∷ (Eq t,Pretty t) ⇒ t → Parser t t
 pLit l = pSatisfies (ppshow l) $ (≡) l
@@ -170,10 +181,7 @@ pOptional p = tries [map Some p,return None]
 
 pMany ∷ Parser t a → Parser t (𝐿 a)
 pMany xM = tries
-  [ do
-      x ← xM
-      xs ← pMany xM
-      return $ x:&xs
+  [ pOneOrMore xM
   , return Nil
   ]
 
@@ -185,12 +193,18 @@ pOneOrMore xM = do
 
 pManySepBy ∷ Parser t () → Parser t a → Parser t (𝐿 a)
 pManySepBy sepM xM = tries
-  [ do
-      x ← xM
-      xs ← map snd ^$ pMany $ sepM <×> xM
-      return $ x:&xs
+  [ pOneOrMoreSepBy sepM xM
   , return Nil
   ]
+
+pOneOrMoreSepBy ∷ Parser t () → Parser t a → Parser t (𝐿 a)
+pOneOrMoreSepBy sepM xM = do
+  x ← xM
+  xs ← map snd ^$ pMany $ sepM <×> xM
+  return $ x :& xs
+
+pSkip ∷ (t → 𝔹) → Parser t a → Parser t a
+pSkip = localL parserEnvSkipL
 
 ------------------------
 -- High-level Helpers --
@@ -239,8 +253,20 @@ pNumber = do
 pLetter ∷ Parser ℂ ℂ
 pLetter = pSatisfies "letter [a-zA-Z]" isLetter
 
+pName ∷ Parser ℂ 𝕊
+pName = pNew "name" $ do
+  s₁ ← single ^$ pSatisfies "first character" $ \ c → joins
+    [ isLetter c
+    ]
+  s₂ ← string ^$ pMany $ pSatisfies "character" $ \ c → joins
+    [ isLetter c 
+    , isNumber c 
+    , c ∈ pow "_-'′"
+    ]
+  return $ s₁ ⧺ s₂
+
 pWhitespace ∷ Parser ℂ 𝕊
-pWhitespace = string ^$ pOneOrMore $ pSatisfies "whitespace [ \\t\\n]" isSpace
+pWhitespace = string ^$ pOneOrMore $ pSatisfies "whitespace" isSpace
 
 pOptionalWhitespace ∷ Parser ℂ ()
 pOptionalWhitespace = void $ pOptional $ pWhitespace
@@ -267,7 +293,7 @@ displayErrorTraces (ParserErrorStackTraces final chain) = ppVertical $ list $ co
         [ single $ ppFG red $ ppText "Expected"
         , inbetween (ppFG red $ ppText "OR") $ map ppText $ iter final
         ]
-  , mapOn (iter chain) $ \ (msg :꘍ tr) → ppVertical $ list
+  , mapOn (iter chain) $ \ (msg :* tr) → ppVertical $ list
       [ ppHorizontal $ list
           [ ppFG darkGreen $ ppText "Parsing"
           , ppText msg
@@ -294,17 +320,17 @@ displaySourceError peM = ppVertical $ list $ concat
                 ]
             ]
         , return $ ppHeader "One of:"
-        , inbetween (ppHeader "OR") $ mapOn (iter fs) $ \ (ec :꘍ (ic :꘍ ets)) →
+        , inbetween (ppHeader "OR") $ mapOn (iter fs) $ \ (ec :* (ic :* ets)) →
             let lineBegin = meets
-                  [ elimAddBot Top (AddTop ∘ locRangeBegin) $ parserContextLocRange $ runInputContext ic
-                  , elimAddBot Top (AddTop ∘ locRangeBegin) $ parserContextLocRange $ runExpressionContext ec
+                  [ elimAddBot Top (AddTop ∘ locRangeBegin) $ parserContextLocRange $ unInputContext ic
+                  , elimAddBot Top (AddTop ∘ locRangeBegin) $ parserContextLocRange $ unExpressionContext ec
                   , elimAddBot Top (AddTop ∘ locRangeBegin) $ parserContextLocRange tc
                   ]
             in ppVertical $ list
               [ ppLineNumbers $ ppSetLineNumber (elimAddTop bot locRow lineBegin + 1) $ concat
-                  [ execParserContextDoc $ parserContextDocCachedDoc $ execParserContext $ runInputContext ic
-                  , ppUT '^' green $ execParserContextDoc $ parserContextDocCachedDoc $ execParserContext $ runExpressionContext ec
-                  , ppUT '^' red $ execParserContextDoc $ parserContextError $ parserContextDocCachedDoc $ execParserContext tc
+                  [ execParserContextDoc $ execParserContext $ unInputContext ic
+                  , ppUT '^' green $ execParserContextDoc $ execParserContext $ unExpressionContext ec
+                  , ppUT '^' red $ execParserContextDoc $ parserContextError $ execParserContext tc
                   , execParserContextDoc sc
                   ]
               , displayErrorTraces ets
@@ -317,12 +343,8 @@ runParser₀ p ts = runParser parserEnv₀ (parserState₀ $ parserInput₀ ts) 
 
 parse ∷ (Pretty a) ⇒ Parser t a → 𝑆 (ParserToken t) → Doc ∨ a
 parse p ts = case runParser₀ (pFinal p) ts of
-  (ParserOut pe :꘍ None) → Inl $ displaySourceError pe
-  (_ :꘍ Some (_ :꘍ x)) → Inr x
-  -- (_,x:xs) → Inl $ ppVertical $ concat
-  --   [ return $ ppHeader "Ambiguous Parse"
-  --   , intersperse (ppHeader "OR") $ map (pretty ∘ snd) (x:xs)
-  --   ]
+  (ParserOut pe :* None) → Inl $ displaySourceError pe
+  (_ :* Some (_ :* x)) → Inr x
 
 parseIO ∷ (Pretty a) ⇒ Parser t a → 𝑆 (ParserToken t) → IO a
 parseIO p ss = case parse p ss of
@@ -342,22 +364,22 @@ parseIOMain p ss = do
 ------------------------
 
 tokenize ∷ 𝐿 (Parser t a) → 𝑆 (ParserToken t) → Doc ∨ 𝐿 (ParserToken a)
-tokenize ps ss = loop null $ parserState₀ $ parserInput₀ ss
+tokenize ps ss = loop $ parserState₀ $ parserInput₀ ss
   where
-    loop pe s
+    loop s
       | isEmpty $ parserInputStream $ parserStateInput s = return null
       | otherwise =
-          let results = mapOn ps $ \ p → runParser parserEnv₀ s $ tell pe ≫ pNewWithContext "token" p
+          let results = mapOn ps $ \ p → runParser parserEnv₀ s $ pNewWithContext "token" p
               pe' = concat $ map fst results
               xs = do
-                s' :꘍ (_ic :꘍ ec :꘍ t) ← mzero𝑂 *$ map snd results
-                return $ map locPos (parserInputEndPos $ parserStateInput s') :꘍ (s' :꘍ ec :꘍ t)
+                s' :* (_ic :* ec :* t) ← mzero𝑂 *$ map snd results
+                return $ map locPos (parserInputEndPos $ parserStateInput s') :* (s' :* ec :* t)
               xM = snd ^$ firstMaxByLT ((<) `on` fst) xs
           in case xM of
             None → Inl $ displaySourceError $ parserOutError pe'
-            Some (s' :꘍ ec :꘍ t) → do
-              ts ← loop pe' s'
-              return $ ParserToken t (runExpressionContext ec):&ts
+            Some (s' :* ec :* t) → do
+              ts ← loop s'
+              return $ ParserToken t (unExpressionContext ec):&ts
 
 tokenizeIO ∷ 𝐿 (Parser t a) → 𝑆 (ParserToken t) → IO (𝐿 (ParserToken a))
 tokenizeIO ps ss = case tokenize ps ss of
@@ -372,3 +394,10 @@ tokenizeIOMain ps ss = do
     , pretty $ map parserTokenValue x
     ]
 
+pWithContext ∷ 𝕊 → Parser t a → Parser t (Annotated FullContext a)
+pWithContext s p = do
+  cp ← askL parserEnvContextPaddingL
+  (ic :* ec :* x) ← pNewWithContext s p
+  pi ← getL parserStateInputL
+  let sc = renderParserInput $ prefixBeforeN𝑆 (succ cp) (parserContextNewlines ∘ parserTokenContext) $ parserInputStream pi
+  return $ Annotated (FullContext ic ec sc) x

@@ -19,6 +19,9 @@ isAlphaNum = HS.isAlphaNum
 isLetter ∷ ℂ → 𝔹
 isLetter = HS.isLetter
 
+isNumber ∷ ℂ → 𝔹
+isNumber = HS.isNumber
+
 isDigit ∷ ℂ → 𝔹
 isDigit = HS.isDigit
 

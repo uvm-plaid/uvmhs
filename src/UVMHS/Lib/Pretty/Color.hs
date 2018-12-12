@@ -36,6 +36,7 @@ data Format =
   | BG Color
   | UL
   | BD
+  | IT
   deriving (Eq, Ord,Show)
 
 data Formats = Formats
@@ -43,19 +44,22 @@ data Formats = Formats
   , bgFormats ∷ 𝑂 Color
   , ulFormats ∷ 𝑂 𝔹
   , bdFormats ∷ 𝑂 𝔹
+  , itFormats ∷ 𝑂 𝔹
   } deriving (Eq,Ord,Show)
-instance Null Formats where null = Formats None None None None
+instance Null Formats where null = Formats None None None None None
 instance Append Formats where
-  Formats fg₁ bg₁ ul₁ bd₁ ⧺ Formats fg₂ bg₂ ul₂ bd₂ = Formats (first fg₁ fg₂) (first bg₁ bg₂) (first ul₁ ul₂) (first bd₁ bd₂)
+  Formats fg₁ bg₁ ul₁ bd₁ it₁ ⧺ Formats fg₂ bg₂ ul₂ bd₂ it₂ = 
+    Formats (first fg₁ fg₂) (first bg₁ bg₂) (first ul₁ ul₂) (first bd₁ bd₂) (first it₁ it₂)
 instance Monoid Formats
 
 formats ∷ Format → Formats
-formats (FG c) = Formats (Some c) None None None
-formats (BG c) = Formats None (Some c) None None
-formats UL = Formats None None (Some True) None
-formats BD = Formats None None None (Some True)
+formats (FG c) = Formats (Some c) None None None None
+formats (BG c) = Formats None (Some c) None None None
+formats UL = Formats None None (Some True) None None
+formats BD = Formats None None None (Some True) None
+formats IT = Formats None None None None (Some True)
 
-type FormatsIso = 𝑂 ℕ64 ∧ 𝑂 ℕ64 ∧ 𝑂 𝔹 ∧ 𝑂 𝔹
+type FormatsIso = 𝑂 ℕ64 ∧ 𝑂 ℕ64 ∧ 𝑂 𝔹 ∧ 𝑂 𝔹 ∧ 𝑂 𝔹
 instance Formats ⇄ FormatsIso where
-  isoto (Formats fg bg ul bd) = map (natΩ64 ∘ colorCode) fg :꘍ map (natΩ64 ∘ colorCode) bg :꘍ ul :꘍ bd
-  isofr (fg :꘍ bg :꘍ ul :꘍ bd) = Formats (map (Color ∘ nat) fg) (map (Color ∘ nat) bg) ul bd
+  isoto (Formats fg bg ul bd it) = map (natΩ64 ∘ colorCode) fg :* map (natΩ64 ∘ colorCode) bg :* ul :* bd :* it
+  isofr (fg :* bg :* ul :* bd :* it) = Formats (map (Color ∘ nat) fg) (map (Color ∘ nat) bg) ul bd it

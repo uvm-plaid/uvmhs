@@ -488,3 +488,9 @@ instance JoinLattice 𝔻
 instance Top 𝔻 where top = 1.0/0.0
 instance Meet 𝔻 where (⊓) = (⩎)
 instance MeetLattice 𝔻
+
+sqrt ∷ 𝔻 → 𝔻
+sqrt = HS.sqrt
+
+log ∷ 𝔻 → 𝔻
+log = HS.log

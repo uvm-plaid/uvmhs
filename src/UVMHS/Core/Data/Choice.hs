@@ -27,16 +27,16 @@ instance (Append a,Append b) ⇒ Append (a ∨ b) where
   Inr x ⧺ Inr y = Inr (x ⧺ y)
 instance (Append a,Monoid b) ⇒ Monoid (a ∨ b) 
 
-elimAlt ∷ (a → c) → (b → c) → a ∨ b → c
-elimAlt f₁ f₂ = \case
+elimChoice ∷ (a → c) → (b → c) → a ∨ b → c
+elimChoice f₁ f₂ = \case
   Inl x → f₁ x
   Inr y → f₂ y
 
-mapAlt ∷ (a₁ → a₂) → (b₁ → b₂) → a₁ ∨ b₁ → a₂ ∨ b₂
-mapAlt f g = elimAlt (Inl ∘ f) (Inr ∘ g)
+mapChoice ∷ (a₁ → a₂) → (b₁ → b₂) → a₁ ∨ b₁ → a₂ ∨ b₂
+mapChoice f g = elimChoice (Inl ∘ f) (Inr ∘ g)
 
 mapInl ∷ (a₁ → a₂) → a₁ ∨ b → a₂ ∨ b
-mapInl f = mapAlt f id
+mapInl f = mapChoice f id
 
 mapInr ∷ (b₁ → b₂) → a ∨ b₁ → a ∨ b₂
-mapInr f = mapAlt id f
+mapInr f = mapChoice id f

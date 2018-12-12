@@ -26,16 +26,16 @@ updateM l xM = alterM l $ const xM
 instance Category (⟢) where
   refl = isoLens id id
   Lens g ⊚ Lens f = Lens $ \ a →
-    let (b :꘍ ba) = f a
-        (c :꘍ cb) = g b
-    in (c :꘍ (ba ∘ cb))
+    let (b :* ba) = f a
+        (c :* cb) = g b
+    in (c :* (ba ∘ cb))
 instance Alter (⟢) where
-  alter l f a = let (b :꘍ ba) = runLens l a in ba $ f b
+  alter l f a = let (b :* ba) = runLens l a in ba $ f b
 instance AlterM (⟢) where
-  alterM l f a = let (b :꘍ ba) = runLens l a in map ba $ f b
+  alterM l f a = let (b :* ba) = runLens l a in map ba $ f b
 
 lens ∷ (a → b) → (a → b → a) → a ⟢ b
-lens getter setter = Lens $ \ s → (getter s :꘍ setter s)
+lens getter setter = Lens $ \ s → (getter s :* setter s)
 
 isoLens ∷ (a → b) → (b → a) → a ⟢ b
 isoLens to from = lens to $ const from
@@ -67,16 +67,16 @@ shape ∷ a ⌲ b → a → 𝔹
 shape p = elim𝑂 False (const True) ∘ view p
 
 leftL ∷ a ∨ b ⌲ a
-leftL = Prism Inl $ elimAlt Some $ const None
+leftL = Prism Inl $ elimChoice Some $ const None
 
 rightL ∷ a ∨ b ⌲ b
-rightL = Prism Inr $ elimAlt (const None) Some
+rightL = Prism Inr $ elimChoice (const None) Some
 
 fstL ∷ a ∧ b ⟢ a
-fstL = lens fst $ \ (_ :꘍ b) → ( :꘍ b)
+fstL = lens fst $ \ (_ :* b) → ( :* b)
 
 sndL ∷ a ∧ b ⟢ b
-sndL = lens snd $ \ (a :꘍ _) → (a :꘍ )
+sndL = lens snd $ \ (a :* _) → (a :* )
 
 nothingL ∷ 𝑂 a ⌲ ()
 nothingL = prism (const None) $ elim𝑂 (Some ()) $ const None

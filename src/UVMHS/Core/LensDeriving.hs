@@ -31,9 +31,9 @@ makeLensLogic cx ty tyargs field fieldty = do
 
 makeLenses ∷ TH.Name → TH.Q [TH.Dec]
 makeLenses name = do
-  (cx :꘍ ty :꘍ tyargs :꘍ _ :꘍ c :꘍ _) ← return𝑂 (io abortIO) ∘ (thViewSingleConADT *∘ view thTyConIL) *$ TH.reify name
-  (_ :꘍ fields) ← return𝑂 (io abortIO) $ view thRecCL c
-  map (tohs ∘ concat) $ mapMOn fields $ \ (frhs → (field :꘍ _ :꘍ fieldty)) → makeLensLogic cx ty tyargs field fieldty
+  (cx :* ty :* tyargs :* _ :* c :* _) ← return𝑂 (io abortIO) ∘ (thViewSingleConADT *∘ view thTyConIL) *$ TH.reify name
+  (_ :* fields) ← return𝑂 (io abortIO) $ view thRecCL c
+  map (tohs ∘ concat) $ mapMOn fields $ \ (frhs → (field :* _ :* fieldty)) → makeLensLogic cx ty tyargs field fieldty
 
 -- makePrismLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] con (fieldty₁,…,fieldtyₙ) ≔ 
 --   [| fieldL ∷ ∀ a₁ … aₙ. (C₁,…,Cₙ) ⇒ ty a₁ … aₙ ⌲ (fieldty₁,…,fieldtyₙ)
@@ -71,8 +71,8 @@ makePrismLogic cx ty tyargs con fieldtys numcons = do
 
 makePrisms ∷ TH.Name → TH.Q [TH.Dec]
 makePrisms name = do
-  (cx :꘍ ty :꘍ tyargs :꘍ _ :꘍ cs :꘍ _) ← return𝑂 (io abortIO) ∘ (thViewADT *∘ view thTyConIL) *$ TH.reify name
+  (cx :* ty :* tyargs :* _ :* cs :* _) ← return𝑂 (io abortIO) ∘ (thViewADT *∘ view thTyConIL) *$ TH.reify name
   scs ← mapM (return𝑂 (io abortIO) ∘ thViewSimpleCon) cs
   let numcons = count scs
-  map (tohs ∘ concat) $ mapMOn scs $ \ (con :꘍ fieldtys) → makePrismLogic cx ty tyargs con fieldtys numcons
+  map (tohs ∘ concat) $ mapMOn scs $ \ (con :* fieldtys) → makePrismLogic cx ty tyargs con fieldtys numcons
 

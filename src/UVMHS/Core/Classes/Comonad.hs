@@ -32,3 +32,7 @@ siphon xW y = xW =≫ \ _ → y
 
 submerge ∷ (Functor m,Comonad w) ⇒ w (m a) → m (w a)
 submerge aMW = map (siphon aMW) (extract aMW)
+
+wmap ∷ (Comonad w) ⇒ (a → b) → w a → w b
+wmap = wextend ∘ kextract
+

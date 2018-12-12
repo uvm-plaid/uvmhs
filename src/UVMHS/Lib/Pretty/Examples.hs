@@ -56,7 +56,7 @@ testPrettyLineNumbers = ppVertical $ list
 testPrettyBlinders ∷ Doc
 testPrettyBlinders = 
   let lines ∷ 𝐿 Doc
-      lines = list $ map (\ (i :꘍ p) → ppHorizontal $ list [p,ppNoFormat $ pretty i]) $ withIndex $ repeat 30 (ppText "line number")
+      lines = list $ map (\ (i :* p) → ppHorizontal $ list [p,ppNoFormat $ pretty i]) $ withIndex $ repeat 30 (ppText "line number")
   in ppLineNumbers $ ppBlinders 10 20 $ ppVertical $ lines
 
 testGrouping ∷ Doc

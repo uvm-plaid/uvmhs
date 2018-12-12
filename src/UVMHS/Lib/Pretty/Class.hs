@@ -26,13 +26,38 @@ instance Pretty ℤ64 where pretty = ppLit ∘ show𝕊
 instance Pretty ℤ32 where pretty = ppLit ∘ show𝕊
 instance Pretty ℤ16 where pretty = ppLit ∘ show𝕊
 instance Pretty ℤ8 where pretty = ppLit ∘ show𝕊
-instance Pretty ℂ where pretty = ppLit ∘ show𝕊
-instance Pretty 𝕊 where pretty = ppLit ∘ show𝕊
 instance Pretty 𝔻  where pretty = ppLit ∘ show𝕊
 instance Pretty () where pretty = ppCon ∘ show𝕊
 
--- instance (Pretty a, Pretty b) ⇒ Pretty (a ∧ b) where
---   pretty (a :* b) = ppCollection "(" ")" "," $ list [pretty a, pretty b]
+escape ∷ ℂ → 𝐼 ℂ
+escape = \case
+  '"' → iter "\\\""
+  '\\' → iter "\\\\"
+  '\n' → iter "\\n"
+  '\t' → iter "\\t"
+  '\r' → iter "\\r"
+  '\b' → iter "\\b"
+  '\f' → iter "\\f"
+  c' → single c'
+
+instance Pretty ℂ where 
+  pretty c = ppLit $ string $ concat
+    [ iter "'"
+    , escape c
+    , iter "'"
+    ]
+
+instance Pretty 𝕊 where 
+  pretty s = ppLit $ string $ concat
+    [ iter "\""
+    , escape *$ iter s
+    , iter "\""
+    ]
+
+instance (Pretty a,Pretty b) ⇒ Pretty (a,b) where
+  pretty (a,b) = ppCollection "(" ")" "," $ list [pretty a, pretty b]
+instance (Pretty a,Pretty b) ⇒ Pretty (a ∧ b) where
+  pretty (a :* b) = ppCollection "⟨" "⟩" "," $ list [pretty a, pretty b]
 
 instance (Pretty a) ⇒ Pretty (𝑆 a) where pretty xs = ppApp (ppText "𝑆") $ list [pretty $ list xs]
 instance (Pretty a) ⇒ Pretty (𝐼 a) where pretty xs = ppApp (ppText "𝐼") $ list [pretty $ list xs]

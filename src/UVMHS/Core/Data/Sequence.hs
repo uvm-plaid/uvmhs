@@ -36,7 +36,7 @@ cons𝑄 x xs = 𝑄 $ x Sequence.:<| un𝑄 xs
 uncons𝑄 ∷ 𝑄 a → 𝑂 (a ∧ 𝑄 a)
 uncons𝑄 xs = case Sequence.viewl $ un𝑄 xs of
   Sequence.EmptyL → None
-  x Sequence.:< xs' → Some $ x :꘍ 𝑄 xs'
+  x Sequence.:< xs' → Some $ x :* 𝑄 xs'
 
 snoc𝑄 ∷ 𝑄 a → a → 𝑄 a
 snoc𝑄 xs x = 𝑄 $ un𝑄 xs Sequence.:|> x
@@ -44,7 +44,7 @@ snoc𝑄 xs x = 𝑄 $ un𝑄 xs Sequence.:|> x
 unsnoc𝑄 ∷ 𝑄 a → 𝑂 (𝑄 a ∧ a)
 unsnoc𝑄 xs = case Sequence.viewr $ un𝑄 xs of
   Sequence.EmptyR → None
-  xs' Sequence.:> x → Some $ 𝑄 xs' :꘍ x
+  xs' Sequence.:> x → Some $ 𝑄 xs' :* x
 
 single𝑄 ∷ a → 𝑄 a
 single𝑄 = 𝑄 ∘ Sequence.singleton

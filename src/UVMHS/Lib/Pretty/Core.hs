@@ -161,7 +161,7 @@ shouldOutput = do
   bl ← askL blindersL
   return $ case bl of
     None → True
-    Some (low :꘍ high) → (low ≤ ln) ⩓ (ln ≤ high)
+    Some (low :* high) → (low ≤ ln) ⩓ (ln ≤ high)
 
 shouldOutputNewline ∷ PrettyM 𝔹
 shouldOutputNewline = do
@@ -169,7 +169,7 @@ shouldOutputNewline = do
   bl ← askL blindersL
   return $ case bl of
     None → True
-    Some (low :꘍ high) → (low ≤ ln) ⩓ (ln < high)
+    Some (low :* high) → (low ≤ ln) ⩓ (ln < high)
 
 spit ∷ 𝕊 → PrettyM ()
 spit s = do
@@ -254,7 +254,7 @@ ppText = Doc ∘ exec ∘ inbetween newline ∘ map word ∘ splitOn𝕊 "\n"
 
 ppAnnotate ∷ Annotation → Doc → Doc
 ppAnnotate a aM = Doc $ do
-  (o :꘍ ()) ← listenL outputL $ runDoc aM
+  (o :* ()) ← listenL outputL $ runDoc aM
   tellL outputL *$ annotateOutput a o
 
 ppFormat ∷ 𝐿 Format → Doc → Doc
@@ -303,7 +303,7 @@ ppFormatParam l s = Doc $ do
   runDoc $ ppFormat fmt $ ppText s
 
 ppBlinders ∷ ℕ → ℕ → Doc → Doc
-ppBlinders low high = onDoc $ mapEnv $ update blindersL $ Some (low :꘍ high)
+ppBlinders low high = onDoc $ mapEnv $ update blindersL $ Some (low :* high)
 
 ppLineNumbers ∷ Doc → Doc
 ppLineNumbers = onDoc $ mapEnv $ update doLineNumbersL True
@@ -442,7 +442,7 @@ ppCollection open close sep xs = ppGroup $ ppBotLevel $ ppIfFlat flatCollection 
 ppRecord ∷ 𝕊 → 𝐿 (Doc ∧ Doc) → Doc
 ppRecord rel kvs = ppCollection "{" "}" "," $ map mapping kvs
   where
-    mapping (k :꘍ v) = concat
+    mapping (k :* v) = concat
       [ ppAlign k
       , ppIfFlat null $ ppSpace 1
       , ppPun rel

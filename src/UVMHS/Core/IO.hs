@@ -68,11 +68,11 @@ optionIO (Some x) = return x
 shell ∷ 𝕊 → IO (𝔹 ∧ 𝕊 ∧ 𝕊)
 shell c = do
   (e,o,r) ← Process.readCreateProcessWithExitCode (Process.shell $ chars c) []
-  return (e ≡ Exit.ExitSuccess :꘍ string o :꘍ string r)
+  return (e ≡ Exit.ExitSuccess :* string o :* string r)
 
 shellOK ∷ 𝕊 → IO 𝕊
 shellOK c = do
-  (e :꘍ o :꘍ r) ← shell c
+  (e :* o :* r) ← shell c
   case e of
     True → return o
     False → do

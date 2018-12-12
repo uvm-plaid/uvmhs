@@ -116,16 +116,16 @@ product ∷ (ToIter a t,Multiplicative a) ⇒ t → a
 product = fold one (×)
 
 concat ∷ (Monoid a,ToIter a t) ⇒ t → a
-concat = fold null (flip (⧺))
+concat = fold null $ flip (⧺)
 
 compose ∷ (ToIter (a → a) t) ⇒ t → a → a
-compose = fold id (flip (∘))
+compose = fold id $ flip (∘)
 
 mcompose ∷ (Monad m) ⇒ (ToIter (a → m a) t) ⇒ t → a → m a
-mcompose = fold return (flip (*∘))
+mcompose = fold return $ flip (*∘)
 
 wcompose ∷ (Comonad w) ⇒ (ToIter (w a → a) t) ⇒ t → w a → a
-wcompose = fold extract (flip (%∘))
+wcompose = fold extract $ flip (%∘)
 
 joins ∷ (JoinLattice a,ToIter a t) ⇒ t → a
 joins = fold bot (⊔)
@@ -172,26 +172,26 @@ upTo n = build n 0 succ
 
 withIndex ∷ (ToIter a t) ⇒ t → 𝐼 (ℕ ∧ a)
 withIndex xs = 𝐼 $ \ (f ∷ (ℕ ∧ a) → b → b) (i₀ ∷ b) →
-  snd $ foldWith xs (1 :꘍ i₀) $ \ (x ∷ a) (n :꘍ i ∷ ℕ ∧ b) → succ n :꘍ f (n :꘍ x) i
+  snd $ foldWith xs (1 :* i₀) $ \ (x ∷ a) (n :* i ∷ ℕ ∧ b) → succ n :* f (n :* x) i
 
 withFirst ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
 withFirst xs = 𝐼 $ \ (f ∷ (𝔹 ∧ a) → b → b) (i₀ ∷ b) →
-  snd $ foldWith xs (True :꘍ i₀) $ \ (x ∷ a) (b :꘍ i ∷ 𝔹 ∧ b) → False :꘍ f (b :꘍ x) i
+  snd $ foldWith xs (True :* i₀) $ \ (x ∷ a) (b :* i ∷ 𝔹 ∧ b) → False :* f (b :* x) i
 
 mapFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapFirst f = map (\ (b :꘍ x) → case b of {True → f x;False → x}) ∘ withFirst
+mapFirst f = map (\ (b :* x) → case b of {True → f x;False → x}) ∘ withFirst
 
 mapAfterFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapAfterFirst f = map (\ (b :꘍ x) → case b of {True → x;False → f x}) ∘ withFirst
+mapAfterFirst f = map (\ (b :* x) → case b of {True → x;False → f x}) ∘ withFirst
 
 withLast ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
 withLast = reverse ∘ withFirst ∘ reverse
 
 mapLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapLast f = map (\ (b :꘍ x) → case b of {True → f x;False → x}) ∘ withLast
+mapLast f = map (\ (b :* x) → case b of {True → f x;False → x}) ∘ withLast
 
 mapBeforeLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapBeforeLast f = map (\ (b :꘍ x) → case b of {True → x;False → f x}) ∘ withLast
+mapBeforeLast f = map (\ (b :* x) → case b of {True → x;False → f x}) ∘ withLast
 
 filterMap ∷ (ToIter a t) ⇒ (a → 𝑂 b) → t → 𝐼 b
 filterMap g xs = 𝐼 $ \ (f ∷ b → c → c) (i₀ ∷ c) →
@@ -205,7 +205,7 @@ filter f = filterMap $ \ x → case f x of {True → Some x;False → None}
 
 inbetween ∷ (ToIter a t) ⇒ a → t → 𝐼 a
 inbetween xⁱ xs = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
-  foldWith (withFirst xs) i₀ $ \ (b :꘍ x ∷ 𝔹 ∧ a) →
+  foldWith (withFirst xs) i₀ $ \ (b :* x ∷ 𝔹 ∧ a) →
     case b of
       True → f x
       False → f x ∘ f xⁱ
@@ -251,6 +251,6 @@ firstMaxByLT ∷ (ToIter a t) ⇒ (a → a → 𝔹) → t → 𝑂 a
 firstMaxByLT f = fold None $ \ x xM →
   case xM of
     None → Some x
-    Some x' → case f x x' of
-      True → Some x'
-      False → Some x
+    Some x' → case f x' x of
+      True → Some x
+      False → Some x'

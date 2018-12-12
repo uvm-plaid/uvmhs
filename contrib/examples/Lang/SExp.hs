@@ -25,13 +25,13 @@ makePrettySum ''SToken
 makePrisms ''SToken
 
 lparenTok ∷ Parser ℂ ()
-lparenTok = pRender (list [FG darkGray]) $ void $ pLit '(' 
+lparenTok = pRender (FG darkGray) $ void $ pLit '(' 
 
 rparenTok ∷ Parser ℂ ()
-rparenTok = pRender (list [FG darkGray]) $ void $ pLit ')' 
+rparenTok = pRender (FG darkGray) $ void $ pLit ')' 
 
 litTok ∷ Parser ℂ SLit
-litTok = pRender (list [FG darkRed]) $ tries
+litTok = pRender (FG darkRed) $ tries
   [ SLNumber ^$ pErr "number" numberTok
   , SLString ^$ pErr "string" stringTok
   ]
@@ -79,34 +79,15 @@ testSExpTokenizerFailure1 = tokenizeIOMain tok $ tokens "((foo-1and0.01+bar"
 testSExpTokenizerFailure2 ∷ IO ()
 testSExpTokenizerFailure2 = tokenizeIOMain tok $ tokens "()foo-1\"astring\\badescape\""
 
-data FullContext t = FullContext
-  { fullContextInputContext ∷ InputContext
-  , fullContextExpressionsConrtext ∷ ExpressionContext
-  , fullContextInputStream ∷ ParserInput t
-  }
-instance Pretty (FullContext t) where
-  pretty (FullContext (InputContext ic) (ExpressionContext ec) _pi) = concat
-    [ ppPun "⟬"
-    , ppAlign $ 
-        (execParserContextDoc $ parserContextDocCachedDoc $ execParserContext ic) 
-        ⧺ (ppUT '^' green $ execParserContextDoc $ parserContextDocCachedDoc $ execParserContext ec)
-    , ppPun "⟭"
-    ]
-
 data SAtom =
     SALit SLit
   | SASymbol 𝕊
 makePrettySum ''SAtom
-data TaggedFix t (f ∷ ★ → ★) = TaggedFix
-  { taggedFixContext ∷ FullContext t
-  , taggedFixValue ∷ f (TaggedFix t f)
-  }
-makePrettySum ''TaggedFix
-data PreSExp e =
+type SExp = Annotated FullContext SExpPre
+data SExpPre =
     SEAtom SAtom
-  | SEExp (𝐿 e)
-makePrettySum ''PreSExp
-type SExp = TaggedFix SToken PreSExp
+  | SEExp (𝐿 SExp)
+makePrettySum ''SExpPre
 
 atomPar ∷ Parser SToken SAtom
 atomPar = pNew "atom" $ tries
@@ -120,7 +101,7 @@ litPar = pShaped "lit" $ view sTLitL
 symbolPar ∷ Parser SToken 𝕊
 symbolPar = pShaped "symbol" $ view sTSymbolL
 
-preSExpPar ∷ Parser SToken (PreSExp SExp)
+preSExpPar ∷ Parser SToken SExpPre
 preSExpPar = tries
   [ SEAtom ^$ atomPar
   , SEExp ^$ inParensPar
@@ -141,10 +122,7 @@ sexpsPar = do
   return xs
 
 sexpPar ∷ Parser SToken SExp
-sexpPar = do
-  (ic :꘍ ec :꘍ s) ← pNewWithContext "sexp" preSExpPar
-  pi ← getL parserStateInputL
-  return $ TaggedFix (FullContext ic ec pi) s
+sexpPar = pWithContext "sexp" preSExpPar
 
 testSExpParserSuccess ∷ IO ()
 testSExpParserSuccess = do

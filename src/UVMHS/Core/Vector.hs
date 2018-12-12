@@ -114,8 +114,8 @@ instance (Chunky a,Chunky b) ⇒ Chunky (a ∧ b) where
   fromChunk g = do
     x ← fromChunk g
     y ← fromChunk g
-    return $ x :꘍ y
-  toChunk (x :꘍ y) = toChunk x ⧺ toChunk y
+    return $ x :* y
+  toChunk (x :* y) = toChunk x ⧺ toChunk y
 
 instance (Chunky a,Chunky b) ⇒ Chunky (a ∨ b) where
   chunkSize P = natΩ64 1 + (chunkSize @ a P ⩏ chunkSize @ b P)
@@ -175,7 +175,7 @@ stream𝕍 xs =
   let ιᵀ = idxᐪ𝕍 xs
       g ∷ ℕ64 → 𝑂 (a ∧ ℕ64)
       g ι | ι > ιᵀ = None
-          | otherwise = Some (idx𝕍 xs ι :꘍ succ ι)
+          | otherwise = Some (idx𝕍 xs ι :* succ ι)
   in 𝑆 (natΩ64 1) g
 
 -- iter𝕍 ∷ ∀ a. (Chunky a) ⇒ 𝕍 a → 𝐼 a
@@ -196,17 +196,17 @@ streamBytes𝕍 (𝕍 a) =
   in 𝑆 i₁ $ \ i →
     case i > iₙ of
       True → abort
-      False → return $ (a Arr.! i) :꘍ succ i
+      False → return $ (a Arr.! i) :* succ i
 
 corelib_vector_e1 ∷ 𝕍 (ℕ64 ∨ (ℕ64 ∧ ℕ64))
 corelib_vector_e1 = vec $ vec $ mapOn (upTo 10) $ \ x → 
   case even x of
     True → Inl $ natΩ64 x 
-    False → Inr $ natΩ64 x :꘍ natΩ64 99
+    False → Inr $ natΩ64 x :* natΩ64 99
 
 corelib_vector_e2 ∷ 𝕍 ℂ
 corelib_vector_e2 = vec ['a','b','c','d','e','f']
 
 corelib_vector_e3 ∷ 𝕍 𝔹
-corelib_vector_e3 = vec $ map (elimAlt even (even ∘ fst)) $ iter corelib_vector_e1
+corelib_vector_e3 = vec $ map (elimChoice even $ even ∘ fst) $ iter corelib_vector_e1
 

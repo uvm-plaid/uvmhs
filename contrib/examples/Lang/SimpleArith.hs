@@ -56,19 +56,19 @@ makePrettySum ''Exp
 
 parseExp ∷ Parser ExpToken Exp 
 parseExp = pNew "exp" $ mixfixParser $ concat
-  [ mix $ Terminal $ do
+  [ mix $ MixTerminal $ do
       void $ pSatisfies "lparen" $ shape eTLParenL
       x ← parseExp
       void $ pSatisfies "rparen" $ shape eTRParenL
       return x
-  , mix $ Terminal $ EAtom ∘ ASymbol ^$ pShaped "symbol" $ view eTSymbolL
-  , mix $ Terminal $ EAtom ∘ ANatural ^$ pShaped "natural" $ view eTNaturalL
-  , mix $ Infr 5 $ const ESum ^$ surroundWhitespace $ pShaped "plus" $ view eTPlusL
-  , mix $ Infr 6 $ const EProduct ^$ surroundWhitespace $ pShaped "times" $ view eTTimesL
-  , mix $ Infl 7 $ const EExpo ^$ surroundWhitespace $ pShaped "power" $ view eTPowerL
-  , mix $ Post 7 $ const EFact ^$ preWhitespace $ pShaped "fact" $ view eTFactL
-  , mix $ Pre  8 $ const ENegate ^$ postWhitespace $ pShaped "neg" $ view eTNegativeL
-  , mix $ Inf  5 $ const EEquality ^$ surroundWhitespace $ pShaped "equal" $ view eTEqualL
+  , mix $ MixTerminal  $ EAtom ∘ ASymbol ^$ pShaped "symbol" $ view eTSymbolL
+  , mix $ MixTerminal  $ EAtom ∘ ANatural ^$ pShaped "natural" $ view eTNaturalL
+  , mix $ MixInfixR  5 $ const ESum ^$ surroundWhitespace $ pShaped "plus" $ view eTPlusL
+  , mix $ MixInfixR  6 $ const EProduct ^$ surroundWhitespace $ pShaped "times" $ view eTTimesL
+  , mix $ MixInfixL  7 $ const EExpo ^$ surroundWhitespace $ pShaped "power" $ view eTPowerL
+  , mix $ MixPostfix 7 $ const EFact ^$ preWhitespace $ pShaped "fact" $ view eTFactL
+  , mix $ MixPrefix  8 $ const ENegate ^$ postWhitespace $ pShaped "neg" $ view eTNegativeL
+  , mix $ MixInfix   5 $ const EEquality ^$ surroundWhitespace $ pShaped "equal" $ view eTEqualL
   ]
   where
     surroundWhitespace ∷ Parser ExpToken a → Parser ExpToken a

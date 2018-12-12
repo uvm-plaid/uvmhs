@@ -13,14 +13,12 @@ import UVMHS.Core.Data.Set
 import qualified Data.Map.Strict as Map
 import qualified Prelude as HS
 
+infixr 2 ↦
+
 instance (Ord k) ⇒ Lookup k v (k ⇰ v) where (⋕?) = lookup𝐷
 instance (Ord k) ⇒ Single (k ∧ v) (k ⇰ v) where single = single𝐷
 
-instance (Ord k,POrd v) ⇒ POrd (k ⇰ v) where 
-  kvs₁ ∇ kvs₂ 
-    | subDictBy (⊑) kvs₁ kvs₂ = PLT
-    | subDictBy (⊒) kvs₁ kvs₂ = PGT
-    | otherwise = PUN
+instance (Ord k,POrd v) ⇒ POrd (k ⇰ v) where (⊑) = subDictBy (⊑)
 
 instance Null (k ⇰ v) where null = dø
 instance (Ord k,Append v) ⇒ Append (k ⇰ v) where (⧺) = unionWith (⧺)
@@ -38,13 +36,13 @@ instance Functor ((⇰) k) where map = map𝐷
 instance ToStream (k ∧ v) (k ⇰ v) where stream = stream𝐷
 instance ToIter (k ∧ v) (k ⇰ v) where iter = iter ∘ stream
 
-instance (Show k,Show v) ⇒ Show (k ⇰ v) where show = chars ∘ showCollection "{" "}" "," (\ (k :꘍ v) → show𝕊 k ⧺ "⇒" ⧺ show𝕊 v)
+instance (Show k,Show v) ⇒ Show (k ⇰ v) where show = chars ∘ showCollection "{" "}" "," (\ (k :* v) → show𝕊 k ⧺ "⇒" ⧺ show𝕊 v)
 
 lookup𝐷 ∷ (Ord k) ⇒ k ⇰ v → k → 𝑂 v
 lookup𝐷 kvs k = frhs $ un𝐷 kvs Map.!? k
 
 single𝐷 ∷ k ∧ v → k ⇰ v
-single𝐷 (k :꘍ v) = 𝐷 $ Map.singleton k v
+single𝐷 (k :* v) = 𝐷 $ Map.singleton k v
 
 dø ∷ k ⇰ v
 dø = 𝐷 Map.empty

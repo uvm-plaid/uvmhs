@@ -17,6 +17,7 @@ import UVMHS.Lib.Pretty.Console
 import UVMHS.Lib.Pretty.ConsoleANSI
 import UVMHS.Lib.Pretty.ConsoleHTML
 import UVMHS.Lib.Pretty.Core
+import UVMHS.Lib.Pretty.DerivedInstances ()
 import UVMHS.Lib.Pretty.Deriving
 import UVMHS.Lib.Pretty.Examples
 import UVMHS.Lib.Pretty.NF

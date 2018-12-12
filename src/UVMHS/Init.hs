@@ -20,17 +20,17 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Sequence
 
 -- 0[R]: $
--- 1[L]: :꘍
+-- 1[L]: :*
 -- 2[R]: ≫= →
 -- 3[I]: ≡
 -- 4[L]: +
 -- 5[L]: ×
 -- 6[L]: ∘
 -- 7[L]: #,^
--- 8[*]: :&,:꘍
+-- 8[*]: :&
 -- 9[L]: ⋅
 
-infixl 1 :꘍
+infixl 1 :*
 infixr 2 ⇰
 infixl 4 ∨,⩔
 infixl 5 ∧,⩓
@@ -57,7 +57,7 @@ data Void
 type 𝔹 = HS.Bool
 data a ∨ b = Inl a | Inr b
   deriving (Eq,Ord,Show)
-data a ∧ b = a :꘍ b
+data a ∧ b = a :* b
   deriving (Eq,Ord,Show)
 data 𝑂 a = None | Some a
   deriving (Eq,Ord,Show)
@@ -190,7 +190,7 @@ stream𝐿 ∷ 𝐿 a → 𝑆 a
 stream𝐿 xs₀ = 𝑆 xs₀ g
   where
     g Nil = None
-    g (x :& xs) = Some (x :꘍ xs)
+    g (x :& xs) = Some (x :* xs)
 
 list𝐼 ∷ 𝐼 a → 𝐿 a
 list𝐼 = foldr𝐼 Nil (:&)
@@ -201,7 +201,7 @@ streamLL ∷ [a] → 𝑆 a
 streamLL xs₀ = 𝑆 xs₀ g
   where
     g [] = None
-    g (x:xs) = Some (x :꘍ xs)
+    g (x:xs) = Some (x :* xs)
 
 lazyList𝐼 ∷ 𝐼 a → [a]
 lazyList𝐼 = foldr𝐼 [] (:)
@@ -226,7 +226,7 @@ iter𝑆 ∷ 𝑆 a → 𝐼 a
 iter𝑆 (𝑆 s₀ g) = 𝐼 $ \ f i₀ →
   let loop i s = case g s of
         None → i
-        Some (x :꘍ s') → loop (f x i) s'
+        Some (x :* s') → loop (f x i) s'
   in loop i₀ s₀
 
 -- Compat --
@@ -243,11 +243,11 @@ instance {-# OVERLAPPING #-} (CHS a b) ⇒ CHS (𝐿 a) [b] where
   tohs = lazyList𝐼 ∘ map𝐼 tohs ∘ iter𝑆 ∘ stream𝐿
   frhs = list𝐼 ∘ map𝐼 frhs ∘ iter𝑆 ∘ streamLL
 instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃) ⇒ CHS (a₁ ∧ a₂ ∧ a₃) (b₁,b₂,b₃) where
-  tohs (x :꘍ y :꘍ z) = (tohs x,tohs y,tohs z)
-  frhs (x,y,z) = frhs x :꘍ frhs y :꘍ frhs z
+  tohs (x :* y :* z) = (tohs x,tohs y,tohs z)
+  frhs (x,y,z) = frhs x :* frhs y :* frhs z
 instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂) ⇒ CHS (a₁ ∧ a₂) (b₁,b₂) where
-  tohs (x :꘍ y) = (tohs x,tohs y)
-  frhs (x,y) = frhs x :꘍ frhs y
+  tohs (x :* y) = (tohs x,tohs y)
+  frhs (x,y) = frhs x :* frhs y
 instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂) ⇒ CHS (a₁ ∨ a₂) (HS.Either b₁ b₂) where
   tohs = \case
     Inl x → HS.Left $ tohs x

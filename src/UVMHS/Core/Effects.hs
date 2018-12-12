@@ -88,10 +88,10 @@ instance MonadReader r ((→) r) where
 
 instance (Null o) ⇒ MonadWriter o ((∧) o) where
   tell ∷ o → (o ∧ ())
-  tell o = (o :꘍ ())
+  tell o = (o :* ())
 
   listen ∷ ∀ a. o ∧ a → o ∧ (o ∧ a)
-  listen ox = null :꘍ ox
+  listen ox = null :* ox
 
 instance MonadFail 𝑂 where
   abort ∷ ∀ a. 𝑂 a
@@ -157,19 +157,19 @@ tellL l o = tell $ update l o null
 
 listenL ∷ (Monad m,MonadWriter o₁ m,Monoid o₂) ⇒ o₁ ⟢ o₂ → m a → m (o₂ ∧ a)
 listenL l aM = do
-  (o₁ :꘍ a) ← listen aM
+  (o₁ :* a) ← listen aM
   tell $ update l null o₁
-  return (access l o₁ :꘍ a)
+  return (access l o₁ :* a)
 
 mapOut ∷ (Monad m,MonadWriter o m) ⇒ (o → o) → m a → m a
 mapOut f aM = do
-  (o :꘍ a) ← listen aM
+  (o :* a) ← listen aM
   tell $ f o
   return a
 
 retOut ∷ ∀ o m a. (Monad m,MonadWriter o m) ⇒ m a → m o
 retOut xM = do
-  (o :꘍ _) ← listen xM
+  (o :* _) ← listen xM
   return o
 
 -- # State
@@ -223,14 +223,14 @@ localize s xM = do
   s' ← getput s
   x ← xM
   s'' ← getput s'
-  return (s'' :꘍ x)
+  return (s'' :* x)
 
 localizeL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → s₂ → m a → m (s₂ ∧ a)
 localizeL 𝓁 s₂ aM = do
   s₂' ← getputL 𝓁 s₂
   x ← aM
   s₂'' ← getputL 𝓁 s₂'
-  return (s₂'' :꘍ x)
+  return (s₂'' :* x)
 
 localState ∷ (Monad m,MonadState s m) ⇒ s → m a → m a
 localState s = map snd ∘ localize s
@@ -268,11 +268,11 @@ oneOrMoreSplit ∷ (Monad m,MonadNondet m) ⇒ m a → m (a ∧ 𝐿 a)
 oneOrMoreSplit aM = do
   x ← aM
   xs ← many aM
-  return (x :꘍ xs)
+  return (x :* xs)
 
 oneOrMore ∷ (Monad m,MonadNondet m) ⇒ m a → m (𝐿 a)
 oneOrMore xM = do
-  (x :꘍ xs) ← oneOrMoreSplit xM
+  (x :* xs) ← oneOrMoreSplit xM
   return (x :& xs)
 
 many ∷ (Monad m,MonadNondet m) ⇒ m a → m (𝐿 a)
@@ -284,8 +284,8 @@ many aM = mconcat
 twoOrMoreSplit ∷ (Monad m,MonadNondet m) ⇒ m a → m (a ∧ a ∧ 𝐿 a)
 twoOrMoreSplit aM = do
   x₁ ← aM
-  (x₂ :꘍ xs) ← oneOrMoreSplit aM
-  return (x₁ :꘍ x₂ :꘍ xs)
+  (x₂ :* xs) ← oneOrMoreSplit aM
+  return (x₁ :* x₂ :* xs)
 
 manySepBy ∷ (Monad m,MonadNondet m) ⇒ m () → m a → m (𝐿 a)
 manySepBy uM xM = mconcat

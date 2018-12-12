@@ -23,15 +23,15 @@ testParsingBranching = parseIOMain parser input
     parser ∷ Parser ℂ 𝕊
     parser = tries
       [ pNew "XXX*" $ tries
-          [ pRender (list [FG pink]) $ pWord "xxxy"
-          , pRender (list [FG pink]) $ pWord "xxxz"
+          [ pRender (FG pink) $ pWord "xxxy"
+          , pRender (FG pink) $ pWord "xxxz"
           ]
       , pNew "XXXZ" $ do
-          x ← pErr "XX" $ pRender (list [FG blue]) $ pWord "xx"
-          y ← pErr "XZ" $ pRender (list [FG green]) $ pWord "xz"
+          x ← pErr "XX" $ pRender (FG blue) $ pWord "xx"
+          y ← pErr "XZ" $ pRender (FG green) $ pWord "xz"
           return $ x ⧺ y
       , pNew "XXZZ" $ pWord "xxzz"
-      , pNew "XXXAorB" $ pRender (list [FG teal]) $ do
+      , pNew "XXXAorB" $ pRender (FG teal) $ do
           x ← pWord "xxx"
           y ← single ^$ tries
             [ pLit 'a'
@@ -56,9 +56,9 @@ testParsingGreedy ∷ IO ()
 testParsingGreedy = parseIOMain parser input
   where
     parser = concat ^$ pOneOrMore $ tries 
-      [ ppFG yellow ∘ ppText ∘ single ^$ pRender (list [FG yellow]) $ pLit 'y'
-      , ppFG green ∘ ppText ∘ single ^$ pRender (list [FG green]) $ pLit 'x'
-      , ppFG blue ∘ ppText ^$ pRender (list [FG yellow]) $ pWord "xx" 
+      [ ppFG yellow ∘ ppText ∘ single ^$ pRender (FG yellow) $ pLit 'y'
+      , ppFG green ∘ ppText ∘ single ^$ pRender (FG green) $ pLit 'x'
+      , ppFG blue ∘ ppText ^$ pRender (FG yellow) $ pWord "xx" 
       ]
     input = tokens "xxx"
 
@@ -66,19 +66,19 @@ testParsingGreedyAmbiguity ∷ IO ()
 testParsingGreedyAmbiguity = parseIOMain parser input
   where
     parser = concat ^$ pOneOrMore $ tries 
-      [ ppFG yellow ∘ ppText ∘ single ^$ pRender (list [FG yellow]) $ pLit 'y'
+      [ ppFG yellow ∘ ppText ∘ single ^$ pRender (FG yellow) $ pLit 'y'
       , tries
-          [ ppFG blue ∘ ppText ^$ pRender (list [FG blue]) $ pWord "x" 
-          , ppFG pink ∘ ppText ^$ pRender (list [FG pink]) $ pWord "xx" 
+          [ ppFG blue ∘ ppText ^$ pRender (FG blue) $ pWord "x" 
+          , ppFG pink ∘ ppText ^$ pRender (FG pink) $ pWord "xx" 
           ]
-      , ppFG green ∘ ppText ∘ single ^$ pRender (list [FG green]) $ pLit 'x'
+      , ppFG green ∘ ppText ∘ single ^$ pRender (FG green) $ pLit 'x'
       ]
     input = tokens "xxx"
 
 testParsingSuccess ∷ IO ()
 testParsingSuccess = parseIOMain parser input
   where
-    parser = concat ^$ pOneOrMore $ tries [pRender (list [FG green]) $ pWord "xx",pRender (list [FG blue]) $ pWord "yy"]
+    parser = concat ^$ pOneOrMore $ tries [pRender (FG green) $ pWord "xx",pRender (FG blue) $ pWord "yy"]
     input = tokens "xxxxyyxxyy"
 
 testParsingErrorNewline ∷ IO ()
@@ -96,21 +96,21 @@ testTokenize = tokenizeIOMain (list [pWord "x",pWord "xy",pWord "y"]) $ tokens "
 testTokenizeFailure1 ∷ IO ()
 testTokenizeFailure1 = tokenizeIOMain
   (list 
-     [ pRender (list [FG green]) $ pWord "x"
-     , pRender (list [FG yellow]) $ pWord "x"
-     , pRender (list [FG blue]) $ pWord "xx"
-     , pRender (list [FG teal]) $ pWord "xy"
-     , pRender (list [FG pink]) $ pWord "xz"
+     [ pRender (FG green) $ pWord "x"
+     , pRender (FG yellow) $ pWord "x"
+     , pRender (FG blue) $ pWord "xx"
+     , pRender (FG teal) $ pWord "xy"
+     , pRender (FG pink) $ pWord "xz"
      ]) 
   $ tokens "xxxxy"
 
 testTokenizeFailure2 ∷ IO ()
 testTokenizeFailure2 = tokenizeIOMain
   (list 
-     [ pRender (list [FG green]) $ pWord "x"
-     , pRender (list [FG yellow]) $ pWord "x"
-     , pRender (list [FG blue]) $ pWord "xx"
-     , pRender (list [FG teal]) $ pWord "xy"
-     , pRender (list [FG pink]) $ pWord "xz"
+     [ pRender (FG green) $ pWord "x"
+     , pRender (FG yellow) $ pWord "x"
+     , pRender (FG blue) $ pWord "xx"
+     , pRender (FG teal) $ pWord "xy"
+     , pRender (FG pink) $ pWord "xz"
      ]) 
   $ tokens "xxxyxxxzxc"

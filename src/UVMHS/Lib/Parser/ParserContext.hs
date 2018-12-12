@@ -67,7 +67,6 @@ data ParserContext = ParserContext
   , parserContextNewlines ∷ ℕ
   , parserContextLines ∷ ContextLines
   }
-  -- deriving (Eq,Ord)
   deriving (Eq,Ord)
 makeLenses ''ParserContext
 makePrettySum ''ParserContext
@@ -79,8 +78,8 @@ instance Monoid ParserContext
 onParserContext ∷ (RWS ParserContextMode Doc () () → RWS ParserContextMode Doc () ()) → ParserContext → ParserContext
 onParserContext = alter parserContextLinesL ∘ map ∘ alter parserContextChunkDocL ∘ onParserContextDocCached
 
-execParserContext ∷ ParserContext → ParserContextDocCached
-execParserContext = concat ∘ map parserContextChunkDoc ∘ iter ∘ parserContextLines
+execParserContext ∷ ParserContext → ParserContextDoc
+execParserContext = concat ∘ map (parserContextDocCachedDoc ∘ parserContextChunkDoc) ∘ iter ∘ parserContextLines
 
 parserContextFromLines ∷ ContextLines → ParserContext
 parserContextFromLines pcl₀ = let (lr,n) = parserContextLinesMeta pcl₀ in ParserContext lr n pcl₀
@@ -93,11 +92,9 @@ parserContextFromLines pcl₀ = let (lr,n) = parserContextLinesMeta pcl₀ in Pa
 truncateParserContext ∷ ℕ → ParserContext → ParserContext
 truncateParserContext n (ParserContext _lr _n l) = parserContextFromLines $ lastNSepR n l
 
-newtype InputContext = InputContext { runInputContext ∷ ParserContext }
-  --deriving ({-Eq,Ord,-}Null,Append,Monoid)
+newtype InputContext = InputContext { unInputContext ∷ ParserContext }
   deriving (Eq,Ord,Null,Append,Monoid)
 makePrettySum ''InputContext
-newtype ExpressionContext = ExpressionContext { runExpressionContext ∷ ParserContext }
-  --deriving ({-Eq,Ord,-}Null,Append,Monoid)
+newtype ExpressionContext = ExpressionContext { unExpressionContext ∷ ParserContext }
   deriving (Eq,Ord,Null,Append,Monoid)
 makePrettySum ''ExpressionContext

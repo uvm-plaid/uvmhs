@@ -1,5 +1,6 @@
 module UVMHS.Core.Data
-  (module UVMHS.Core.Data.Char
+  (module UVMHS.Core.Data.Arithmetic
+  ,module UVMHS.Core.Data.Char
   ,module UVMHS.Core.Data.Choice
   ,module UVMHS.Core.Data.Dict
   ,module UVMHS.Core.Data.Iter
@@ -13,7 +14,7 @@ module UVMHS.Core.Data
   ,module UVMHS.Core.Data.String
   ) where
 
-import UVMHS.Core.Data.Arithmetic ()
+import UVMHS.Core.Data.Arithmetic
 import UVMHS.Core.Data.Char
 import UVMHS.Core.Data.Choice
 import UVMHS.Core.Data.Bool ()

@@ -15,11 +15,7 @@ import qualified Prelude as HS
 
 instance (Ord a) ⇒ Single a (𝑃 a) where single = single𝑃
 
-instance (Ord a) ⇒ POrd (𝑃 a) where 
-  xs ∇ ys 
-    | xs ⊆ ys = PLT
-    | xs ⊇ ys = PGT
-    | otherwise = PUN
+instance (Ord a) ⇒ POrd (𝑃 a) where (⊑) = (⊆)
 
 instance Null (𝑃 a) where null = pø
 instance (Ord a) ⇒ Append (𝑃 a) where (⧺) = (∪)
@@ -83,6 +79,6 @@ pow = pow𝐼 ∘ iter
 
 uniques ∷ (Ord a,ToIter a t) ⇒ t → 𝐼 a
 uniques xs = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
-  snd $ foldWith xs (bot :꘍ i₀) $ \ (x ∷ a) (seen :꘍ i ∷ 𝑃 a ∧ b) → case x ∈ seen of
-    True → seen :꘍ i
-    False → (single x ∪ seen) :꘍ f x i
+  snd $ foldWith xs (bot :* i₀) $ \ (x ∷ a) (seen :* i ∷ 𝑃 a ∧ b) → case x ∈ seen of
+    True → seen :* i
+    False → (single x ∪ seen) :* f x i

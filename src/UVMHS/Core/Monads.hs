@@ -95,13 +95,13 @@ instance (Functor m) ⇒ Functor (WriterT o m) where
 
 instance (Return m,Null o) ⇒ Return (WriterT o m) where
   return ∷ ∀ a. a → WriterT o m a
-  return x = WriterT $ return (null :꘍ x)
+  return x = WriterT $ return (null :* x)
 instance (Monad m,Append o) ⇒ Bind (WriterT o m) where
   (≫=) ∷ ∀ a b. WriterT o m a → (a → WriterT o m b) → WriterT o m b
   xM ≫= k = WriterT $ do
-    (o₁ :꘍ x) ← unWriterT xM
-    (o₂ :꘍ y) ← unWriterT $ k x
-    return ((o₁ ⧺ o₂) :꘍ y)
+    (o₁ :* x) ← unWriterT xM
+    (o₂ :* y) ← unWriterT $ k x
+    return ((o₁ ⧺ o₂) :* y)
 instance (Monad m,Monoid o) ⇒ Monad (WriterT o m)
 
 instance (Monoid o) ⇒ Functor2 (WriterT o) where
@@ -110,12 +110,12 @@ instance (Monoid o) ⇒ Functor2 (WriterT o) where
 
 instance (Monad m,Null o) ⇒ MonadWriter o (WriterT o m) where
   tell ∷ o → WriterT o m ()
-  tell o = WriterT $ return (o :꘍ ())
+  tell o = WriterT $ return (o :* ())
 
   listen ∷ ∀ a. WriterT o m a → WriterT o m (o ∧ a)
   listen xM = WriterT $ do
     oa ← unWriterT xM
-    return (null :꘍ oa)
+    return (null :* oa)
 
 instance (∀ a'. Null a' ⇒ Null (m a'),Null o,Null a) ⇒ Null (WriterT o m a) where
   null ∷ WriterT o m a
@@ -148,11 +148,11 @@ instance (Functor m) ⇒ Functor (StateT s m) where
 
 instance (Return m) ⇒ Return (StateT s m) where
   return ∷ ∀ a. a → StateT s m a
-  return x = StateT $ \ s → return (s :꘍ x)
+  return x = StateT $ \ s → return (s :* x)
 instance (Bind m) ⇒ Bind (StateT s m) where
   (≫=) ∷ ∀ a b. StateT s m a → (a → StateT s m b) → StateT s m b
   xM ≫= k = StateT $ \ s → do
-    (s' :꘍ x) ← unStateT xM s
+    (s' :* x) ← unStateT xM s
     unStateT (k x) s'
 instance (Monad m) ⇒ Monad (StateT s m)
 
@@ -162,10 +162,10 @@ instance Functor2 (StateT s) where
 
 instance (Return m) ⇒ MonadState s (StateT s m) where
   get ∷ StateT s m s
-  get = StateT $ \ s → return (s :꘍ s)
+  get = StateT $ \ s → return (s :* s)
   
   put ∷ s → StateT s m ()
-  put s = StateT $ \ _ → return (s :꘍ ())
+  put s = StateT $ \ _ → return (s :* ())
 
 instance (∀ a'. Null a' ⇒ Null (m a'),Null s,Null a) ⇒ Null (StateT s m a) where
   null ∷ StateT s m a
@@ -444,13 +444,13 @@ instance (Null o) ⇒ LiftIO (WriterT o) where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → WriterT o m a)
   liftIO ioM xM = WriterT $ do
     x ← ioM xM
-    return (null :꘍ x)
+    return (null :* x)
 
 instance (Null o) ⇒ LiftReader (WriterT o) where
   liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → WriterT o m r
   liftAsk askM = WriterT $ do
     r ← askM
-    return (null :꘍ r)
+    return (null :* r)
 
   liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → WriterT o m a → WriterT o m a)
   liftLocal localM r xM = WriterT $ localM r $ unWriterT xM
@@ -459,23 +459,23 @@ instance (Null o) ⇒ LiftWriter (WriterT o) where
   liftTell ∷ ∀ m o'. (Monad m) ⇒ (o' → m ()) → (o' → WriterT o m ())
   liftTell tellM o' = WriterT $ do
     tellM o'
-    return (null :꘍ ())
+    return (null :* ())
 
   liftListen ∷ ∀ m o'. (Monad m) ⇒ (∀ a. m a → m (o' ∧ a)) → (∀ a. WriterT o m a → WriterT o m (o' ∧ a))
   liftListen listenM xM = WriterT $ do
-    (o' :꘍ (o :꘍ a)) ← listenM $ unWriterT xM
-    return (o :꘍ (o' :꘍ a))
+    (o' :* (o :* a)) ← listenM $ unWriterT xM
+    return (o :* (o' :* a))
 
 instance (Null o) ⇒ LiftState (WriterT o) where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → WriterT o m s
   liftGet getM = WriterT $ do
     s ← getM
-    return (null :꘍ s)
+    return (null :* s)
 
   liftPut ∷ ∀ m s. (Monad m) ⇒ (s → m ()) → (s → WriterT o m ())
   liftPut putM s = WriterT $ do
     putM s
-    return (null :꘍ ())
+    return (null :* ())
 
 instance LiftFail (WriterT o) where
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. WriterT o m a)
@@ -506,14 +506,14 @@ instance (Monoid o,Monad m,MonadCont (o ∧ r) m) ⇒ MonadCont r (WriterT o m) 
   callCC ∷ ∀ a. ((a → WriterT o m r) → WriterT o m r) → WriterT o m a
   callCC kk = WriterT $ callCC $ \ (k ∷ (o ∧ a) → m (o ∧ r)) →
     unWriterT $ kk $ \ (x ∷ a) → 
-      WriterT $ k (null :꘍ x)
+      WriterT $ k (null :* x)
 
   withC ∷ ∀ a. (a → WriterT o m r) → WriterT o m a → WriterT o m r
   withC k xM = WriterT $ 
     withC 
-    (\ (o₁ :꘍ x ∷ o ∧ a) → do 
-         (o₂ :꘍ r) ← unWriterT (k x) 
-         return ((o₁ ⧺ o₂) :꘍ r)
+    (\ (o₁ :* x ∷ o ∧ a) → do 
+         (o₂ :* r) ← unWriterT (k x) 
+         return ((o₁ ⧺ o₂) :* r)
     )
     (unWriterT xM)
 
@@ -525,13 +525,13 @@ instance LiftIO (StateT s) where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → StateT s m a)
   liftIO ioM xM = StateT $ \ s → do
     x ← ioM xM
-    return (s :꘍ x)
+    return (s :* x)
 
 instance LiftReader (StateT s) where
   liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → StateT s m r
   liftAsk askM = StateT $ \ s → do
     r ← askM
-    return (s :꘍ r)
+    return (s :* r)
 
   liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → StateT s m a → StateT s m a)
   liftLocal localM r xM = StateT $ \ s → localM r $ unStateT xM s
@@ -540,23 +540,23 @@ instance LiftWriter (StateT s) where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → StateT s m ())
   liftTell tellM o = StateT $ \ s → do
     tellM o
-    return (s :꘍ ())
+    return (s :* ())
 
   liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. StateT s m a → StateT s m (o ∧ a))
   liftListen listenM xM = StateT $ \ s → do
-    (o :꘍ (s' :꘍ x)) ← listenM $ unStateT xM s
-    return (s' :꘍ (o :꘍ x))
+    (o :* (s' :* x)) ← listenM $ unStateT xM s
+    return (s' :* (o :* x))
 
 instance LiftState (StateT s) where
   liftGet ∷ ∀ m s'. (Monad m) ⇒ m s' → StateT s m s'
   liftGet getM = StateT $ \ s → do
     s' ← getM
-    return (s :꘍ s')
+    return (s :* s')
 
   liftPut ∷ ∀ m s'. (Monad m) ⇒ (s' → m ()) → s' → StateT s m ()
   liftPut putM s' = StateT $ \ s → do
     putM s'
-    return (s :꘍ ())
+    return (s :* ())
 
 instance LiftFail (StateT s) where
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. StateT s m a)
@@ -589,12 +589,12 @@ instance (Monad m,MonadCont (s ∧ r) m) ⇒ MonadCont r (StateT s m) where
     callCC $ \ (k ∷ (s ∧ a) → m (s ∧ r)) →
       runStateT s₁ $ kk $ \ (x ∷ a) → 
         StateT $ \ s₂ →
-          k (s₂ :꘍ x)
+          k (s₂ :* x)
 
   withC ∷ ∀ a. (a → StateT s m r) → StateT s m a → StateT s m r
   withC k xM = StateT $ \ s₁ →
     withC 
-    (\ (s₂ :꘍ x ∷ s ∧ a) → runStateT s₂ (k x))
+    (\ (s₂ :* x ∷ s ∧ a) → runStateT s₂ (k x))
     (runStateT s₁ xM)
 
 ----------
@@ -624,10 +624,10 @@ instance LiftWriter FailT where
 
   liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. FailT m a → FailT m (o ∧ a))
   liftListen listenM xM = FailT $ do
-    (o :꘍ xO) ← listenM $ unFailT xM
+    (o :* xO) ← listenM $ unFailT xM
     case xO of
       None → return None
-      Some x → return $ Some (o :꘍ x)
+      Some x → return $ Some (o :* x)
 
 instance LiftState FailT where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → FailT m s
@@ -707,10 +707,10 @@ instance LiftWriter (ErrorT e) where
 
   liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. ErrorT e m a → ErrorT e m (o ∧ a))
   liftListen listenM xM = ErrorT $ do
-    (o :꘍ xE) ← listenM $ unErrorT xM
+    (o :* xE) ← listenM $ unErrorT xM
     case xE of
       Inl e → return $ Inl e
-      Inr x → return $ Inr (o :꘍ x)
+      Inr x → return $ Inr (o :* x)
 
 instance LiftState (ErrorT e) where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → ErrorT e m s
@@ -790,8 +790,8 @@ instance LiftWriter NondetT where
 
   liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. NondetT m a → NondetT m (o ∧ a))
   liftListen listenM xM = NondetT $ do
-    (o :꘍ xs) ← listenM $ unNondetT xM
-    return $ map (o :꘍ ) xs
+    (o :* xs) ← listenM $ unNondetT xM
+    return $ map (o :* ) xs
 
 instance LiftState NondetT where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → NondetT m s
@@ -866,8 +866,8 @@ instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT (o ∧ r) m
     k ()
   listen ∷ ∀ a. ContT (o ∧ r) m a → ContT (o ∧ r) m (o ∧ a)
   listen xM = ContT $ \ (k ∷ (o ∧ a) → m (o ∧ r)) → do
-    (o₂ :꘍ (o₁ :꘍ r)) ← listen $ unContT xM (\ (x ∷ a) → k (null :꘍ x))
-    return ((o₁ ⧺ o₂) :꘍ r)
+    (o₂ :* (o₁ :* r)) ← listen $ unContT xM (\ (x ∷ a) → k (null :* x))
+    return ((o₁ ⧺ o₂) :* r)
 
 instance (Monad m,MonadState s m) ⇒ MonadState s (ContT (s ∧ r) m) where
   get ∷ ContT (s ∧ r) m s
@@ -932,13 +932,13 @@ newtype RWST r o s m a = RWST { unRWST ∷ ReaderT r (WriterT o (StateT s m)) a 
 
 mkRWST ∷ ∀ r o s m a. (Monad m) ⇒ (r → s → m (s ∧ o ∧ a)) → RWST r o s m a
 mkRWST f = RWST $ ReaderT $ \ r → WriterT $ StateT $ \ s → do
-  (s' :꘍ o :꘍ a) ← f r s
-  return (s' :꘍ (o :꘍ a))
+  (s' :* o :* a) ← f r s
+  return (s' :* (o :* a))
 
 runRWST ∷ ∀ r o s m a. (Monad m) ⇒ r → s → RWST r o s m a → m (s ∧ o ∧ a)
 runRWST r s xM = do
-  (s' :꘍ (o :꘍ a)) ← unStateT (unWriterT (unReaderT (unRWST xM) r)) s
-  return (s' :꘍ o :꘍ a)
+  (s' :* (o :* a)) ← unStateT (unWriterT (unReaderT (unRWST xM) r)) s
+  return (s' :* o :* a)
 
 evalRWST ∷ ∀ r o s m a. (Monad m) ⇒ r → s → RWST r o s m a → m a
 evalRWST r s = map snd ∘ runRWST r s

@@ -46,7 +46,7 @@ mmap ∷ (Monad m) ⇒ (a → b) → m a → m b
 mmap f xM = do {x ← xM;return $ f x}
 
 (<×>) ∷ (Monad m) ⇒ m a → m b → m (a ∧ b)
-xM <×> yM = do {x ← xM;y ← yM;return (x :꘍ y)}
+xM <×> yM = do {x ← xM;y ← yM;return (x :* y)}
 
 (<⋅>) ∷ (Monad m) ⇒ m (a → b) → m a → m b
 fM <⋅> xM = do {f ← fM;x ← xM;return $ f x}

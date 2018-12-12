@@ -42,14 +42,19 @@ sgrBd ∷ 𝔹 → 𝕊
 sgrBd True = "1"
 sgrBd False = "22"
 
+sgrIt ∷ 𝔹 → 𝕊
+sgrIt True = "3"
+sgrIt False = "23"
+
 sgrFormat ∷ Formats → 𝑄 𝕊
-sgrFormat (Formats fg bg ul bd) = single $ concat
+sgrFormat (Formats fg bg ul bd it) = single $ concat
   [ sgrLeader 
   , concat $ inbetween ";" $ list $ mconcat $ map (mzero𝑂 @ 𝑄)
       [ sgrFg ^$ fg
       , sgrBg ^$ bg
       , sgrUl ^$ ul
       , sgrBd ^$ bd
+      , sgrIt ^$ it
       ]
   , sgrCloser
   ]
@@ -97,4 +102,4 @@ pptraceM ∷ (Monad m,Pretty a) ⇒ a → m ()
 pptraceM a = pptrace a skip
 
 ioError ∷ (Pretty e) ⇒ e ∨ a → IO a
-ioError = elimAlt (\ e → pprint e ≫ abortIO) return
+ioError = elimChoice (\ e → pprint e ≫ abortIO) return

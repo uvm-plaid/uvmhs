@@ -35,12 +35,17 @@ htmlBDCode ∷ 𝔹 → 𝑄 𝕊 → 𝑄 𝕊
 htmlBDCode True s = concat [single "<b>",s,single"</b>"]
 htmlBDCode False s = concat[single "<span style='font-weight:normal'>",s,single "</span>"]
 
+htmlITCode ∷ 𝔹 → 𝑄 𝕊 → 𝑄 𝕊
+htmlITCode True s = concat [single "<em>",s,single"</em>"]
+htmlITCode False s = concat [single "<span style='font-style:normal'>",s,single"</span>"]
+
 consoleFormatHTML ∷ Formats → 𝑄 𝕊 → 𝑄 𝕊
-consoleFormatHTML (Formats fgM bgM ulM bdM) = compose $ concat $ map (mzero𝑂 @ 𝑄)
+consoleFormatHTML (Formats fgM bgM ulM bdM itM) = compose $ concat $ map (mzero𝑂 @ 𝑄)
   [ htmlFGCode ^$ fgM
   , htmlBGCode ^$ bgM
   , htmlULCode ^$ ulM
   , htmlBDCode ^$ bdM
+  , htmlITCode ^$ itM
   ]
 
 htmlEscapeChar ∷ ℂ → 𝕊
