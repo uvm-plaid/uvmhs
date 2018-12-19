@@ -26,8 +26,9 @@ doc:
 
 .PHONY: clean
 clean:
-	stack clean
+	stack clean --full
 	rm -f $(NAME).cabal
+	rm -rf doc
 
 .PHONY: hoogle
 hoogle:
