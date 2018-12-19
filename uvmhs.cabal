@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 80fddf28dea47ac63858b830b8e5ee791781bd59f0213dc826ac6f54cc249eba
+-- hash: 3e1e2fbe08fd15f5aa61959e867f5a2e65e25fe0f62a22c81a350f38279683e7
 
 name:           uvmhs
 version:        0.0.0.2
@@ -79,7 +79,7 @@ library
       Paths_uvmhs
   hs-source-dirs:
       src/
-  default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses NoImplicitPrelude OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
+  default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses NoImplicitPrelude OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
   ghc-options: -Wall -Wno-orphans
   build-depends:
       array
@@ -88,19 +88,4 @@ library
     , process
     , template-haskell
     , text
-  default-language: Haskell2010
-
-executable uvmhs-examples
-  main-is: Main.hs
-  other-modules:
-      Lang.SExp
-      Lang.SimpleArith
-      Paths_uvmhs
-  hs-source-dirs:
-      contrib/examples
-  default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses NoImplicitPrelude OverloadedStrings PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
-  ghc-options: -Wall -Wno-orphans
-  build-depends:
-      base
-    , uvmhs
   default-language: Haskell2010

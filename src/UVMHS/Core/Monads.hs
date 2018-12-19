@@ -112,10 +112,10 @@ instance (Monad m,Null o) ⇒ MonadWriter o (WriterT o m) where
   tell ∷ o → WriterT o m ()
   tell o = WriterT $ return (o :* ())
 
-  listen ∷ ∀ a. WriterT o m a → WriterT o m (o ∧ a)
-  listen xM = WriterT $ do
+  hijack ∷ ∀ a. WriterT o m a → WriterT o m (o ∧ a)
+  hijack xM = WriterT $ do
     oa ← unWriterT xM
-    return (null :* oa)
+    return $ null :* oa
 
 instance (∀ a'. Null a' ⇒ Null (m a'),Null o,Null a) ⇒ Null (WriterT o m a) where
   null ∷ WriterT o m a
@@ -390,8 +390,8 @@ instance LiftWriter (ReaderT r) where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → ReaderT r m ())
   liftTell tellM o = ReaderT $ \ _ → tellM o
 
-  liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. ReaderT r m a → ReaderT r m (o ∧ a))
-  liftListen listenM xM = ReaderT $ \ r → listenM $ unReaderT xM r
+  liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. ReaderT r m a → ReaderT r m (o ∧ a))
+  liftHijack hijackM xM = ReaderT $ \ r → hijackM $ unReaderT xM r
 
 instance LiftState (ReaderT r) where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → ReaderT r m s
@@ -461,9 +461,9 @@ instance (Null o) ⇒ LiftWriter (WriterT o) where
     tellM o'
     return (null :* ())
 
-  liftListen ∷ ∀ m o'. (Monad m) ⇒ (∀ a. m a → m (o' ∧ a)) → (∀ a. WriterT o m a → WriterT o m (o' ∧ a))
-  liftListen listenM xM = WriterT $ do
-    (o' :* (o :* a)) ← listenM $ unWriterT xM
+  liftHijack ∷ ∀ m o'. (Monad m) ⇒ (∀ a. m a → m (o' ∧ a)) → (∀ a. WriterT o m a → WriterT o m (o' ∧ a))
+  liftHijack hijackM xM = WriterT $ do
+    (o' :* (o :* a)) ← hijackM $ unWriterT xM
     return (o :* (o' :* a))
 
 instance (Null o) ⇒ LiftState (WriterT o) where
@@ -542,9 +542,9 @@ instance LiftWriter (StateT s) where
     tellM o
     return (s :* ())
 
-  liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. StateT s m a → StateT s m (o ∧ a))
-  liftListen listenM xM = StateT $ \ s → do
-    (o :* (s' :* x)) ← listenM $ unStateT xM s
+  liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. StateT s m a → StateT s m (o ∧ a))
+  liftHijack hijackM xM = StateT $ \ s → do
+    (o :* (s' :* x)) ← hijackM $ unStateT xM s
     return (s' :* (o :* x))
 
 instance LiftState (StateT s) where
@@ -622,9 +622,9 @@ instance LiftWriter FailT where
     tellM o
     return $ Some ()
 
-  liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. FailT m a → FailT m (o ∧ a))
-  liftListen listenM xM = FailT $ do
-    (o :* xO) ← listenM $ unFailT xM
+  liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. FailT m a → FailT m (o ∧ a))
+  liftHijack hijackM xM = FailT $ do
+    (o :* xO) ← hijackM $ unFailT xM
     case xO of
       None → return None
       Some x → return $ Some (o :* x)
@@ -705,9 +705,9 @@ instance LiftWriter (ErrorT e) where
     tellM o
     return $ Inr ()
 
-  liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. ErrorT e m a → ErrorT e m (o ∧ a))
-  liftListen listenM xM = ErrorT $ do
-    (o :* xE) ← listenM $ unErrorT xM
+  liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. ErrorT e m a → ErrorT e m (o ∧ a))
+  liftHijack hijackM xM = ErrorT $ do
+    (o :* xE) ← hijackM $ unErrorT xM
     case xE of
       Inl e → return $ Inl e
       Inr x → return $ Inr (o :* x)
@@ -788,9 +788,9 @@ instance LiftWriter NondetT where
     tellM o
     return $ single ()
 
-  liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. NondetT m a → NondetT m (o ∧ a))
-  liftListen listenM xM = NondetT $ do
-    (o :* xs) ← listenM $ unNondetT xM
+  liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. NondetT m a → NondetT m (o ∧ a))
+  liftHijack hijackM xM = NondetT $ do
+    (o :* xs) ← hijackM $ unNondetT xM
     return $ map (o :* ) xs
 
 instance LiftState NondetT where
@@ -864,9 +864,9 @@ instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT (o ∧ r) m
   tell o = ContT $ \ (k ∷ () → m (o ∧ r)) → do
     tell o
     k ()
-  listen ∷ ∀ a. ContT (o ∧ r) m a → ContT (o ∧ r) m (o ∧ a)
-  listen xM = ContT $ \ (k ∷ (o ∧ a) → m (o ∧ r)) → do
-    (o₂ :* (o₁ :* r)) ← listen $ unContT xM (\ (x ∷ a) → k (null :* x))
+  hijack ∷ ∀ a. ContT (o ∧ r) m a → ContT (o ∧ r) m (o ∧ a)
+  hijack xM = ContT $ \ (k ∷ (o ∧ a) → m (o ∧ r)) → do
+    (o₂ :* (o₁ :* r)) ← hijack $ unContT xM (\ (x ∷ a) → k (null :* x))
     return ((o₁ ⧺ o₂) :* r)
 
 instance (Monad m,MonadState s m) ⇒ MonadState s (ContT (s ∧ r) m) where

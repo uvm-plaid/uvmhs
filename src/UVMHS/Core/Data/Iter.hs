@@ -133,6 +133,12 @@ joins = fold bot (⊔)
 meets ∷ (MeetLattice a,ToIter a t) ⇒ t → a
 meets = fold top (⊓)
 
+or ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
+or = fold False (⩔)
+
+and ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
+and = fold True (⩓)
+
 count ∷ (ToIter a t) ⇒ t → ℕ
 count = fold 0 $ const succ
 

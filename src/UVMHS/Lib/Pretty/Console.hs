@@ -93,7 +93,9 @@ finalize aM = do
 
 interpAnnotation ∷ Annotation → ConsoleM () → ConsoleM ()
 interpAnnotation (FormatA f) = mapOut $ FormatCO $ concat $ map formats f
-interpAnnotation (UndertagA f c) = mapEnv (update ρUnderFormatL $ Some ((concat $ map formats f) :* c))
+interpAnnotation (UndertagA fcO) = mapEnv $ update ρUnderFormatL $ case fcO of
+  None → None
+  Some (f :* c) → Some $ (concat $ map formats f) :* c
 
 interpOutputElem ∷ OutputElem → ConsoleM ()
 interpOutputElem (RawChunk c) = interpChunk c

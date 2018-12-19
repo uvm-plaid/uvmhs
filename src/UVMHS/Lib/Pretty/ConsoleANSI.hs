@@ -28,11 +28,33 @@ sgrCloser = "m"
 sgrReset ∷ 𝕊
 sgrReset = sgrLeader ⧺ "0" ⧺ sgrCloser
 
-sgrFg ∷ Color → 𝕊
-sgrFg = (⧺) "38;5;" ∘ string ∘ show ∘ colorCode
+sgrFg ∷ 𝑂 Color → 𝕊
+sgrFg None = "39"
+sgrFg (Some (Color c)) = case c of
+  Black → "90"
+  Red → "91"
+  Green → "92"
+  Yellow → "93"
+  Blue → "94"
+  Magenta → "95"
+  Cyan → "96"
+  White → "97"
+sgrFg (Some (Color8 c)) = "38;5;" ⧺ show𝕊 c
+sgrFg (Some (Color24 r g b)) = "38;2;" ⧺ show𝕊 r ⧺ ";" ⧺ show𝕊 g ⧺ ";" ⧺ show𝕊 b
 
-sgrBg ∷ Color → 𝕊
-sgrBg = (⧺) "48;5;" ∘ string ∘ show ∘ colorCode
+sgrBg ∷ 𝑂 Color → 𝕊
+sgrBg None = "49"
+sgrBg (Some (Color c)) = case c of
+  Black → "100"
+  Red → "101"
+  Green → "102"
+  Yellow → "103"
+  Blue → "104"
+  Magenta → "105"
+  Cyan → "106"
+  White → "107"
+sgrBg (Some (Color8 c)) = "48;5;" ⧺ show𝕊 c
+sgrBg (Some (Color24 r g b)) = "48;2;" ⧺ show𝕊 r ⧺ ";" ⧺ show𝕊 g ⧺ ";" ⧺ show𝕊 b
 
 sgrUl ∷ 𝔹 → 𝕊
 sgrUl True = "4"

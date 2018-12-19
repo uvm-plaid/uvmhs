@@ -23,11 +23,11 @@ class LiftReader t where
 
 class MonadWriter o m | m → o where
   tell ∷ o → m ()
-  listen ∷ ∀ a. m a → m (o ∧ a)
+  hijack ∷ ∀ a. m a → m (o ∧ a)
 
 class LiftWriter t where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → t m ())
-  liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. t m a → t m (o ∧ a))
+  liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. t m a → t m (o ∧ a))
 
 class MonadState s m | m → s where
   get ∷ m s
@@ -90,8 +90,8 @@ instance (Null o) ⇒ MonadWriter o ((∧) o) where
   tell ∷ o → (o ∧ ())
   tell o = (o :* ())
 
-  listen ∷ ∀ a. o ∧ a → o ∧ (o ∧ a)
-  listen ox = null :* ox
+  hijack ∷ ∀ a. o ∧ a → o ∧ (o ∧ a)
+  hijack ox = null :* ox
 
 instance MonadFail 𝑂 where
   abort ∷ ∀ a. 𝑂 a
@@ -155,21 +155,21 @@ mapEnvL 𝓁 f = mapEnv $ alter 𝓁 f
 tellL ∷ (Monoid o₁,Monad m,MonadWriter o₁ m) ⇒ o₁ ⟢ o₂ → o₂ → m ()
 tellL l o = tell $ update l o null
 
-listenL ∷ (Monad m,MonadWriter o₁ m,Monoid o₂) ⇒ o₁ ⟢ o₂ → m a → m (o₂ ∧ a)
-listenL l aM = do
-  (o₁ :* a) ← listen aM
+hijackL ∷ (Monad m,MonadWriter o₁ m,Monoid o₂) ⇒ o₁ ⟢ o₂ → m a → m (o₂ ∧ a)
+hijackL l aM = do
+  (o₁ :* a) ← hijack aM
   tell $ update l null o₁
   return (access l o₁ :* a)
 
 mapOut ∷ (Monad m,MonadWriter o m) ⇒ (o → o) → m a → m a
 mapOut f aM = do
-  (o :* a) ← listen aM
+  (o :* a) ← hijack aM
   tell $ f o
   return a
 
 retOut ∷ ∀ o m a. (Monad m,MonadWriter o m) ⇒ m a → m o
 retOut xM = do
-  (o :* _) ← listen xM
+  (o :* _) ← hijack xM
   return o
 
 -- # State
@@ -336,8 +336,8 @@ deriveLocal r = isofr2 ∘ local r ∘ isoto2
 deriveTell ∷ ∀ m₁ m₂ o. (m₁ ⇄⁻ m₂,MonadWriter o m₂) ⇒ o → m₁ ()
 deriveTell = isofr2 ∘ tell
 
-deriveListen ∷ ∀ m₁ m₂ o a. (m₁ ⇄⁻ m₂,MonadWriter o m₂) ⇒ m₁ a → m₁ (o ∧ a)
-deriveListen = isofr2 ∘ listen ∘ isoto2
+deriveHijack ∷ ∀ m₁ m₂ o a. (m₁ ⇄⁻ m₂,MonadWriter o m₂) ⇒ m₁ a → m₁ (o ∧ a)
+deriveHijack = isofr2 ∘ hijack ∘ isoto2
 
 deriveGet ∷ ∀ m₁ m₂ s. (m₁ ⇄⁻ m₂,MonadState s m₂) ⇒ m₁ s
 deriveGet = isofr2 get

@@ -31,6 +31,7 @@ default-extensions:
   - StrictData
   - TemplateHaskell
   - TypeApplications
+  - TypeFamilies
   - TypeOperators
   - UndecidableInstances
   - UndecidableSuperClasses
@@ -51,12 +52,3 @@ library:
     - process
     - template-haskell
     - array
-
-executables:
-  uvmhs-examples:
-    source-dirs:
-      - contrib/examples
-    main: Main.hs
-    dependencies:
-      - base
-      - uvmhs

@@ -24,11 +24,30 @@ instance Null (k ⇰ v) where null = dø
 instance (Ord k,Append v) ⇒ Append (k ⇰ v) where (⧺) = unionWith (⧺)
 instance (Ord k,Append v) ⇒ Monoid (k ⇰ v) 
 
-instance (Ord k,Additive v) ⇒ Additive (k ⇰ v) where {zero = dø;(+) = (⊎)}
+instance (Ord k,Null k,Null v) ⇒ Unit (k ⇰ v) where unit = null ↦ null
+instance (Ord k,Append k,Append v,Cross v) ⇒ Cross (k ⇰ v) where
+  kvs₁ ⨳ kvs₂ = foldr dø (unionWith (⧺)) $ do
+    (k₁ :* v₁) ← iter kvs₁
+    (k₂ :* v₂) ← iter kvs₂
+    return $ (k₁ ⧺ k₂) ↦ (v₁ ⨳ v₂)
+instance (Ord k,Monoid k,Prodoid v) ⇒ Prodoid (k ⇰ v)
+
+instance Zero (k ⇰ v) where zero = dø
+instance (Ord k,Plus v) ⇒ Plus (k ⇰ v) where (+) = unionWith (+)
+instance (Ord k,Plus v) ⇒ Additive (k ⇰ v)
+
+instance (Ord k,Zero k,Zero v) ⇒ One (k ⇰ v) where one = zero ↦ zero
+instance (Ord k,Plus k,Plus v,Times v) ⇒ Times (k ⇰ v) where
+  kvs₁ × kvs₂ = fold dø (unionWith (+)) $ do
+    (k₁ :* v₁) ← iter kvs₁
+    (k₂ :* v₂) ← iter kvs₂
+    return $ (k₁ + k₂) ↦ (v₁ × v₂)
+instance (Ord k,Additive k,Multiplicative v) ⇒ Multiplicative (k ⇰ v)
 
 instance Bot (k ⇰ v) where bot = dø
 instance (Ord k,Join v) ⇒ Join (k ⇰ v) where (⊔) = unionWith (⊔)
 instance (Ord k,Join v) ⇒ JoinLattice (k ⇰ v)
+
 instance (Ord k,Meet v) ⇒ Meet (k ⇰ v) where (⊓) = unionWith (⊓)
 
 instance Functor ((⇰) k) where map = map𝐷
@@ -89,14 +108,22 @@ dmin = map (mapSnd 𝐷) ∘ frhs ∘ Map.minViewWithKey ∘ un𝐷
 dmax ∷ k ⇰ v → 𝑂 (k ∧ v ∧ (k ⇰ v))
 dmax = map (mapSnd 𝐷) ∘ frhs ∘ Map.maxViewWithKey ∘ un𝐷
 
+dview ∷ (Ord k) ⇒ k → k ⇰ v → 𝑂 (v ∧ (k ⇰ v))
+dview k kvs
+  | k ⋵ kvs = Some (kvs ⋕! k :* delete k kvs)
+  | otherwise = None
+
+without ∷ (Ord k) ⇒ 𝑃 k → k ⇰ v → k ⇰ v
+without ks kvs = 𝐷 $ Map.withoutKeys (un𝐷 kvs) $ un𝑃 ks
+
+restrict ∷ (Ord k) ⇒ 𝑃 k → k ⇰ v → k ⇰ v
+restrict ks kvs = 𝐷 $ Map.restrictKeys (un𝐷 kvs) (un𝑃 ks)
+
 keys ∷ (Ord k) ⇒ k ⇰ v → 𝑃 k
 keys = pow ∘ Map.keys ∘ un𝐷
 
 values ∷ k ⇰ v → 𝐼 v
 values = iter ∘ Map.elems ∘ un𝐷
-
-restrict ∷ (Ord k) ⇒ 𝑃 k → k ⇰ v → k ⇰ v
-restrict ks kvs = 𝐷 $ Map.restrictKeys (un𝐷 kvs) (un𝑃 ks)
 
 map𝐷 ∷ (v₁ → v₂) → k ⇰ v₁ → k ⇰ v₂
 map𝐷 f = 𝐷 ∘ Map.map f ∘ un𝐷
@@ -109,3 +136,6 @@ dict𝐼 = 𝐷 ∘ Map.fromList ∘ lazyList ∘ map tohs
 
 dict ∷ (Ord k,ToIter (k ⇰ v) t) ⇒ t → k ⇰ v
 dict = foldr dø (⩌) ∘ iter
+
+assoc ∷ (Ord k,ToIter (k ∧ v) t) ⇒ t → k ⇰ v
+assoc = dict ∘ map single ∘ iter

@@ -89,3 +89,21 @@ singleL = Prism single $ \case
   x :& Nil → Some x
   _ → None
 
+--------------------------
+-- HasPrism and HasLens --
+--------------------------
+
+class HasPrism a b where hasPrism ∷ a ⌲ b
+class HasLens a b where hasLens ∷ a ⟢ b
+
+instance HasPrism a a where hasPrism = refl
+instance HasLens a a where hasLens = refl
+
+ι ∷ (HasPrism a b) ⇒ b → a
+ι = construct hasPrism
+
+ιview ∷ ∀ b a. (HasPrism a b) ⇒ a → 𝑂 b
+ιview = view hasPrism
+
+π ∷ (HasLens a b) ⇒ a → b
+π = access hasLens

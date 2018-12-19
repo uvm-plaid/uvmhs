@@ -7,11 +7,15 @@ import qualified Prelude as HS
 
 -- ℕ --
 
-instance Additive ℕ where {zero = 0;(+) = (HS.+)}
-instance Subtractive ℕ where (-) = (HS.-)
-instance Multiplicative ℕ where {one = 1;(×) = (HS.*)}
-instance TruncateDivisible ℕ where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℕ where zero = 0
+instance Plus ℕ where (+) = (HS.+)
+instance Minus ℕ where (-) = (HS.-)
+instance One ℕ where one = 1
+instance Times ℕ where (×) = (HS.*)
+instance DivMod ℕ where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℕ where (^) = (HS.^)
+instance Additive ℕ
+instance Multiplicative ℕ
 
 instance ToNat ℕ where nat = id
 instance ToNatO64 ℕ where 
@@ -58,11 +62,15 @@ instance Meet ℕ where (⊓) = (⩎)
 
 -- ℕ64 --
 
-instance Additive ℕ64 where {zero = HS.fromIntegral 0;(+) = (HS.+)}
-instance Subtractive ℕ64 where (-) = (HS.-)
-instance Multiplicative ℕ64 where {one = HS.fromIntegral 1;(×) = (HS.*)}
-instance TruncateDivisible ℕ64 where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℕ64 where zero = HS.fromIntegral 0
+instance Plus ℕ64 where (+) = (HS.+)
+instance Minus ℕ64 where (-) = (HS.-)
+instance One ℕ64 where one = HS.fromIntegral 1
+instance Times ℕ64 where (×) = (HS.*)
+instance DivMod ℕ64 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℕ64 where (^) = (HS.^)
+instance Additive ℕ64
+instance Multiplicative ℕ64
 
 instance ToNat ℕ64 where nat = HS.fromIntegral
 instance ToNat64 ℕ64 where nat64 = id
@@ -106,11 +114,15 @@ instance Meet ℕ64 where (⊓) = (⩎)
 
 -- ℕ32 --
 
-instance Additive ℕ32 where {zero = HS.fromIntegral 0;(+) = (HS.+)}
-instance Subtractive ℕ32 where (-) = (HS.-)
-instance Multiplicative ℕ32 where {one = HS.fromIntegral 1;(×) = (HS.*)}
-instance TruncateDivisible ℕ32 where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℕ32 where zero = HS.fromIntegral 0
+instance Plus ℕ32 where (+) = (HS.+)
+instance Minus ℕ32 where (-) = (HS.-)
+instance One ℕ32 where one = HS.fromIntegral 1
+instance Times ℕ32 where (×) = (HS.*)
+instance DivMod ℕ32 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℕ32 where (^) = (HS.^)
+instance Additive ℕ32
+instance Multiplicative ℕ32
 
 instance ToNat ℕ32 where nat = HS.fromIntegral
 instance ToNat64 ℕ32 where nat64 = HS.fromIntegral
@@ -148,11 +160,15 @@ instance Meet ℕ32 where (⊓) = (⩎)
 
 -- ℕ16 --
 
-instance Additive ℕ16 where {zero = HS.fromIntegral 0;(+) = (HS.+)}
-instance Subtractive ℕ16 where (-) = (HS.-)
-instance Multiplicative ℕ16 where {one = HS.fromIntegral 1;(×) = (HS.*)}
-instance TruncateDivisible ℕ16 where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℕ16 where zero = HS.fromIntegral 0
+instance Plus ℕ16 where (+) = (HS.+)
+instance Minus ℕ16 where (-) = (HS.-)
+instance One ℕ16 where one = HS.fromIntegral 1
+instance Times ℕ16 where (×) = (HS.*)
+instance DivMod ℕ16 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℕ16 where (^) = (HS.^)
+instance Additive ℕ16
+instance Multiplicative ℕ16
 
 instance ToNat ℕ16 where nat = HS.fromIntegral
 instance ToNat64 ℕ16 where nat64 = HS.fromIntegral
@@ -184,11 +200,15 @@ instance Meet ℕ16 where (⊓) = (⩎)
 
 -- ℕ8 --
 
-instance Additive ℕ8 where {zero = HS.fromIntegral 0;(+) = (HS.+)}
-instance Subtractive ℕ8 where (-) = (HS.-)
-instance Multiplicative ℕ8 where {one = HS.fromIntegral 1;(×) = (HS.*)}
-instance TruncateDivisible ℕ8 where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℕ8 where zero = HS.fromIntegral 0
+instance Plus ℕ8 where (+) = (HS.+)
+instance Minus ℕ8 where (-) = (HS.-)
+instance One ℕ8 where one = HS.fromIntegral 1
+instance Times ℕ8 where (×) = (HS.*)
+instance DivMod ℕ8 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℕ8 where (^) = (HS.^)
+instance Additive ℕ8
+instance Multiplicative ℕ8
 
 instance ToNat ℕ8 where nat = HS.fromIntegral
 instance ToNat64 ℕ8 where nat64 = HS.fromIntegral
@@ -214,11 +234,15 @@ instance Meet ℕ8 where (⊓) = (⩎)
 
 -- ℤ --
 
-instance Additive ℤ where {zero = HS.fromIntegral 0;(+) = (HS.+)}
-instance Subtractive ℤ where (-) = (HS.-)
-instance Multiplicative ℤ where {one = HS.fromIntegral 1;(×) = (HS.*)}
-instance TruncateDivisible ℤ where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℤ where zero = HS.fromIntegral 0
+instance Plus ℤ where (+) = (HS.+)
+instance Minus ℤ where (-) = (HS.-)
+instance One ℤ where one = HS.fromIntegral 1
+instance Times ℤ where (×) = (HS.*)
+instance DivMod ℤ where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℤ where (^) = (HS.^)
+instance Additive ℤ
+instance Multiplicative ℤ
 
 instance ToNatO ℤ where 
   natO i 
@@ -276,11 +300,15 @@ instance Meet ℤ where (⊓) = (⩎)
 
 -- ℤ64 --
 
-instance Additive ℤ64 where {zero = HS.fromIntegral 0;(+) = (HS.+)}
-instance Subtractive ℤ64 where (-) = (HS.-)
-instance Multiplicative ℤ64 where {one = HS.fromIntegral 1;(×) = (HS.*)}
-instance TruncateDivisible ℤ64 where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℤ64 where zero = HS.fromIntegral 0
+instance Plus ℤ64 where (+) = (HS.+)
+instance Minus ℤ64 where (-) = (HS.-)
+instance One ℤ64 where one = HS.fromIntegral 1
+instance Times ℤ64 where (×) = (HS.*)
+instance DivMod ℤ64 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℤ64 where (^) = (HS.^)
+instance Additive ℤ64
+instance Multiplicative ℤ64
 
 instance ToNatO ℤ64 where 
   natO i
@@ -333,11 +361,15 @@ instance Meet ℤ64 where (⊓) = (⩎)
 
 -- ℤ32 --
 
-instance Additive ℤ32 where {zero = HS.fromIntegral 0;(+) = (HS.+)}
-instance Subtractive ℤ32 where (-) = (HS.-)
-instance Multiplicative ℤ32 where {one = HS.fromIntegral 1;(×) = (HS.*)}
-instance TruncateDivisible ℤ32 where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℤ32 where zero = HS.fromIntegral 0
+instance Plus ℤ32 where (+) = (HS.+)
+instance Minus ℤ32 where (-) = (HS.-)
+instance One ℤ32 where one = HS.fromIntegral 1
+instance Times ℤ32 where (×) = (HS.*)
+instance DivMod ℤ32 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℤ32 where (^) = (HS.^)
+instance Additive ℤ32
+instance Multiplicative ℤ32
 
 instance ToNatO ℤ32 where
   natO i 
@@ -385,11 +417,15 @@ instance Meet ℤ32 where (⊓) = (⩎)
 
 -- ℤ16 --
 
-instance Additive ℤ16 where {zero = HS.fromIntegral 0;(+) = (HS.+)}
-instance Subtractive ℤ16 where (-) = (HS.-)
-instance Multiplicative ℤ16 where {one = HS.fromIntegral 1;(×) = (HS.*)}
-instance TruncateDivisible ℤ16 where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℤ16 where zero = HS.fromIntegral 0
+instance Plus ℤ16 where (+) = (HS.+)
+instance Minus ℤ16 where (-) = (HS.-)
+instance One ℤ16 where one = HS.fromIntegral 1
+instance Times ℤ16 where (×) = (HS.*)
+instance DivMod ℤ16 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℤ16 where (^) = (HS.^)
+instance Additive ℤ16
+instance Multiplicative ℤ16
 
 instance ToNatO ℤ16 where 
   natO i 
@@ -432,11 +468,15 @@ instance Meet ℤ16 where (⊓) = (⩎)
 
 -- ℤ8 --
 
-instance Additive ℤ8 where {zero = HS.fromIntegral 0;(+) = (HS.+)}
-instance Subtractive ℤ8 where (-) = (HS.-)
-instance Multiplicative ℤ8 where {one = HS.fromIntegral 1;(×) = (HS.*)}
-instance TruncateDivisible ℤ8 where {(⌿) = HS.div;(÷) = HS.mod}
+instance Zero ℤ8 where zero = HS.fromIntegral 0
+instance Plus ℤ8 where (+) = (HS.+)
+instance Minus ℤ8 where (-) = (HS.-)
+instance One ℤ8 where one = HS.fromIntegral 1
+instance Times ℤ8 where (×) = (HS.*)
+instance DivMod ℤ8 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℤ8 where (^) = (HS.^)
+instance Additive ℤ8
+instance Multiplicative ℤ8
 
 instance ToNatO ℤ8 where
   natO i 
@@ -474,11 +514,15 @@ instance Meet ℤ8 where (⊓) = (⩎)
 
 -- 𝔻 --
 
-instance Additive 𝔻 where {zero = 0.0;(+) = (HS.+)}
-instance Subtractive 𝔻 where (-) = (HS.-)
-instance Multiplicative 𝔻 where {one = 1.0;(×) = (HS.*)}
-instance Divisible 𝔻 where (/) = (HS./)
+instance Zero 𝔻 where zero = 0.0
+instance Plus 𝔻 where (+) = (HS.+)
+instance Minus 𝔻 where (-) = (HS.-)
+instance One 𝔻 where one = 1.0
+instance Times 𝔻 where (×) = (HS.*)
+instance Divide 𝔻 where (/) = (HS./)
 instance Exponential 𝔻 where (^) = (HS.**)
+instance Additive 𝔻
+instance Multiplicative 𝔻
 
 instance ToDouble 𝔻 where dbl = id
 
@@ -489,8 +533,5 @@ instance Top 𝔻 where top = 1.0/0.0
 instance Meet 𝔻 where (⊓) = (⩎)
 instance MeetLattice 𝔻
 
-sqrt ∷ 𝔻 → 𝔻
-sqrt = HS.sqrt
-
-log ∷ 𝔻 → 𝔻
-log = HS.log
+instance Root 𝔻 where root = HS.sqrt
+instance Log 𝔻 where log = HS.log

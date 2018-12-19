@@ -88,7 +88,7 @@ data Chunk = LineNumber ℕ | Text 𝕊 | Newline
   deriving (Eq, Ord,Show)
 data Annotation = 
     FormatA      (𝐿 Format)
-  | UndertagA    (𝐿 Format) ℂ
+  | UndertagA    (𝑂 (𝐿 Format ∧  ℂ))
   deriving (Eq,Ord,Show)
 type Output = 𝑄 OutputElem
 data OutputElem =
@@ -191,14 +191,21 @@ doLineNumber b = do
       lnf ← askL $ lineNumberFormatL ⊚ prettyParamsL
       dln ← getL displayLineNumberL
       whenM shouldOutput $ do
-        tellL outputL *$ annotateOutput (FormatA lnf) $ single $ RawChunk $ LineNumber dln
+        tellL outputL 
+          *$ annotateOutput (FormatA (lnf ⧺ override)) 
+          *$ annotateOutput (UndertagA None) 
+          *$ return $ single $ RawChunk $ LineNumber dln
         tellL maxDisplayLineNumberL $ length𝕊 $ show𝕊 dln
 
 doNesting ∷ 𝔹 → PrettyM ()
 doNesting b = do
   when b $ do
     n ← askL nestingL
-    spit $ build𝕊 $ repeat n " "
+    o :* () ← hijackL outputL $ spit $ build𝕊 $ repeat n " "
+    tellL outputL 
+      *$ annotateOutput (FormatA override) 
+      *$ annotateOutput (UndertagA None)
+      *$ return o
 
 word ∷ 𝕊 → PrettyM ()
 word s | isEmpty𝕊 s = skip
@@ -254,7 +261,7 @@ ppText = Doc ∘ exec ∘ inbetween newline ∘ map word ∘ splitOn𝕊 "\n"
 
 ppAnnotate ∷ Annotation → Doc → Doc
 ppAnnotate a aM = Doc $ do
-  (o :* ()) ← listenL outputL $ runDoc aM
+  (o :* ()) ← hijackL outputL $ runDoc aM
   tellL outputL *$ annotateOutput a o
 
 ppFormat ∷ 𝐿 Format → Doc → Doc
@@ -264,7 +271,7 @@ ppNoFormat ∷ Doc → Doc
 ppNoFormat = onDoc $ mapEnv $ update doFormatL False
 
 ppUndertagFormat ∷ 𝐿 Format → ℂ → Doc → Doc
-ppUndertagFormat fmts = ppAnnotate ∘ UndertagA fmts
+ppUndertagFormat fmts c = ppAnnotate $ UndertagA $ Some $ fmts :* c
 
 ppIfFlat ∷ Doc → Doc → Doc
 ppIfFlat flatAction breakAction = Doc $ do

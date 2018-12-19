@@ -19,9 +19,31 @@ instance (Ord a) ⇒ POrd (𝑃 a) where (⊑) = (⊆)
 
 instance Null (𝑃 a) where null = pø
 instance (Ord a) ⇒ Append (𝑃 a) where (⧺) = (∪)
-instance (Ord a) ⇒ Additive (𝑃 a) where {zero = pø;(+) = (∪)}
+instance (Ord a) ⇒ Monoid (𝑃 a)
+
+instance (Ord a,Null a) ⇒ Unit (𝑃 a) where unit = single null
+instance (Ord a,Append a) ⇒ Cross (𝑃 a) where
+  xs ⨳ ys = pow $ do
+    x ← iter xs
+    y ← iter ys
+    return $ x ⧺ y
+instance (Ord a,Monoid a) ⇒ Prodoid (𝑃 a)
+
+instance Zero (𝑃 a) where zero = pø
+instance (Ord a) ⇒ Plus (𝑃 a) where (+) = (∪)
+instance (Ord a) ⇒ Additive (𝑃 a)
+
+instance (Ord a,Zero a) ⇒ One (𝑃 a) where one = single zero
+instance (Ord a,Plus a) ⇒ Times (𝑃 a) where
+  xs × ys = pow $ do
+    x ← iter xs
+    y ← iter ys
+    return $ x + y
+
 instance Bot (𝑃 a) where bot = pø
 instance (Ord a) ⇒ Join (𝑃 a) where (⊔) = (∪)
+instance (Ord a) ⇒ JoinLattice (𝑃 a)
+
 instance (Ord a) ⇒ Meet (𝑃 a) where (⊓) = (∩)
 
 instance ToStream a (𝑃 a) where stream = stream𝑃

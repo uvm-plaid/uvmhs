@@ -3,29 +3,39 @@ module UVMHS.Core.Classes.Arithmetic where
 import UVMHS.Init
 
 import UVMHS.Core.Classes.Order
+import UVMHS.Core.Classes.Functor
 
 infixl 4 +,-
-infixl 5 ×,/,⌿,÷
+infixl 5 ×,⨵,/,⌿,÷
 infixl 7 ^
 
-class Additive a where {zero ∷ a;(+) ∷ a → a → a}
-class (Additive a) ⇒ Subtractive a where (-) ∷ a → a → a
-class (Additive a) ⇒ Multiplicative a where {one ∷ a;(×) ∷ a → a → a}
-class (Multiplicative a) ⇒ Divisible a where (/) ∷ a → a → a
-class (Multiplicative a) ⇒ TruncateDivisible a where {(⌿) ∷ a → a → a;(÷) ∷ a → a → a}
-class (Multiplicative a) ⇒ Exponential a where (^) ∷ a → a → a
+class Zero a where zero ∷ a
+class Plus a where (+) ∷ a → a → a
+class Minus a where (-) ∷ a → a → a
+class One a where one ∷ a
+class Times a where (×) ∷ a → a → a
+class Divide a where (/) ∷ a → a → a
+class DivMod a where {(⌿) ∷ a → a → a;(÷) ∷ a → a → a}
+class Exponential a where (^) ∷ a → a → a
+class Root a where root ∷ a → a
+class Log a where log ∷ a → a
+class (Zero a,Plus a) ⇒ Additive a
+class (Additive a,One a,Times a) ⇒ Multiplicative a
 
-even ∷ (Eq a,TruncateDivisible a) ⇒ a → 𝔹
+succ ∷ (One a,Plus a) ⇒ a → a
+succ x = one + x
+
+even ∷ (Eq a,Additive a,One a,DivMod a) ⇒ a → 𝔹
 even x = x ÷ (one + one) ≡ zero
 
-odd ∷ (Eq a,TruncateDivisible a) ⇒ a → 𝔹
+odd ∷ (Eq a,Additive a,One a,DivMod a) ⇒ a → 𝔹
 odd x = x ÷ (one + one) ≢ zero
 
-succ ∷ (Additive a,Multiplicative a) ⇒ a → a
-succ x = x + one
-
-neg ∷ (Subtractive a) ⇒ a → a
+neg ∷ (Zero a,Minus a) ⇒ a → a
 neg x = zero - x
+
+(⨵) ∷ (Functor f,Multiplicative a) ⇒ a → f a → f a
+x ⨵ xs = map (x ×) xs
 
 class ToNat   a where nat   ∷ a → ℕ
 class ToNat64 a where nat64 ∷ a → ℕ64

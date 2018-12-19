@@ -42,8 +42,8 @@ instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftWriter t₁,LiftWriter t₂) 
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → (t₁ ⊡ t₂) m ())
   liftTell tellM = Compose2 ∘ (liftTell $ liftTell tellM)
 
-  liftListen ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m (o ∧ a))
-  liftListen listenM = Compose2 ∘ (liftListen $ liftListen listenM) ∘ unCompose2
+  liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m (o ∧ a))
+  liftHijack hijackM = Compose2 ∘ (liftHijack $ liftHijack hijackM) ∘ unCompose2
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftState t₁,LiftState t₂) ⇒ LiftState (t₁ ⊡ t₂) where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → (t₁ ⊡ t₂) m s
@@ -95,7 +95,7 @@ instance {-# OVERLAPPABLE #-} (Monad m,MonadReader r m,LiftReader t) ⇒ MonadRe
   local = liftLocal local
 instance {-# OVERLAPPABLE #-} (Monad m,MonadWriter o m,LiftWriter t) ⇒ MonadWriter o (t m) where
   tell = liftTell tell
-  listen = liftListen listen
+  hijack = liftHijack hijack
 instance {-# OVERLAPPABLE #-} (Monad m,MonadState s m,LiftState t) ⇒ MonadState s (t m) where
   get = liftGet get
   put = liftPut put
@@ -130,8 +130,8 @@ deriveLiftLocal localM r = isofr3 ∘ liftLocal localM r ∘ isoto3
 deriveLiftTell ∷ ∀ t₁ t₂ m o. (Monad m,t₁ ⇄⁼ t₂,LiftWriter t₂) ⇒ (o → m ()) → (o → t₁ m ())
 deriveLiftTell tellM = isofr3 ∘ liftTell tellM
 
-deriveLiftListen ∷ ∀ t₁ t₂ m o. (Monad m,t₁ ⇄⁼ t₂,LiftWriter t₂) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. t₁ m a → t₁ m (o ∧ a))
-deriveLiftListen listenM = isofr3 ∘ liftListen listenM ∘ isoto3
+deriveLiftHijack ∷ ∀ t₁ t₂ m o. (Monad m,t₁ ⇄⁼ t₂,LiftWriter t₂) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. t₁ m a → t₁ m (o ∧ a))
+deriveLiftHijack hijackM = isofr3 ∘ liftHijack hijackM ∘ isoto3
 
 deriveLiftGet ∷ ∀ t₁ t₂ m s. (Monad m,t₁ ⇄⁼ t₂,LiftState t₂) ⇒ m s → t₁ m s
 deriveLiftGet getM = isofr3 $ liftGet getM
@@ -173,7 +173,7 @@ instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftReader t₂) ⇒ LiftReader 
   liftLocal = deriveLiftLocal
 instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftWriter t₂) ⇒ LiftWriter t₁ where
   liftTell = deriveLiftTell
-  liftListen = deriveLiftListen
+  liftHijack = deriveLiftHijack
 instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftState t₂) ⇒ LiftState t₁ where
   liftGet = deriveLiftGet
   liftPut = deriveLiftPut

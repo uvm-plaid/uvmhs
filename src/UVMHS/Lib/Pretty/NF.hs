@@ -17,18 +17,6 @@ data OutputElemNF =
   | NewlineNF
   deriving (Eq,Ord,Show)
 
-type OutputElemNFIso = 𝑂 (FormatsIso ∧ ℕ64) ∨ FormatsIso ∧ (𝑂 (ℂ ∧ FormatsIso)) ∧ ℂ
-
-instance OutputElemNF ⇄ OutputElemNFIso where
-  isoto = \case
-    LineNumberNF fmts n → Inl $ Some $ isoto fmts :* natΩ64 n
-    CharNF fmts ufmts c → Inr $ isoto fmts :* map (mapSnd isoto) ufmts :* c
-    NewlineNF → Inl None
-  isofr = \case
-    Inl None → NewlineNF
-    Inl (Some (fmts :* n)) → LineNumberNF (isofr fmts) (nat n)
-    Inr (fmts :* ufmts :* c) → CharNF (isofr fmts) (map (mapSnd isofr) ufmts) c
-
 chunkNF ∷ Chunk → ReaderT NFEnv 𝑄 OutputElemNF
 chunkNF = \case
   LineNumber n → do
@@ -45,8 +33,11 @@ annotatedOutputNF ∷ Annotation → Output → ReaderT NFEnv 𝑄 OutputElemNF
 annotatedOutputNF a o = case a of
   FormatA fmts → do
     mapEnvL nfformatsL ((⧺) $ concat $ map formats $ iter fmts) $ outputNF o
-  UndertagA fmts c → do
-    localL nfundertagFormatsL (Some (c :* (concat $ map formats $ iter fmts))) $ outputNF o
+  UndertagA fmtscO → 
+    let f = case fmtscO of
+          None → None
+          Some (fmts :* c) → Some (c :* (concat $ map formats $ iter fmts))
+    in localL nfundertagFormatsL f $ outputNF o
 
 outputNF ∷ Output → ReaderT NFEnv 𝑄 OutputElemNF
 outputNF os = do
