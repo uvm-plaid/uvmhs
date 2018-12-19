@@ -248,8 +248,9 @@ pNumber = do
     return $ dot ⧺ digits'
   exp ← ifNone "" ^$ pOptional $ do
     e ← single ^$ pLit 'e'
+    s ← elim𝑂 "" single ^$ pOptional $ pLit '-'
     digits' ← string ^$ pOneOrMore pDigit
-    return $ e ⧺ digits'
+    return $ e ⧺ s ⧺ digits'
   return $ case (decimal ≡ null) ⩓ (exp ≡ null) of
     True → Inl $ read𝕊 $ sign ⧺ digits
     False → Inr $ read𝕊 $ sign ⧺ digits ⧺ decimal ⧺ exp
