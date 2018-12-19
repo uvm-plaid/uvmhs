@@ -242,13 +242,17 @@ pNumber ∷ Parser ℂ (ℤ ∨ 𝔻)
 pNumber = do
   sign ← elim𝑂 "" single ^$ pOptional $ pLit '-'
   digits ← string ^$ pOneOrMore pDigit
-  decimalM ← pOptional $ do
+  decimal ← ifNone "" ^$ pOptional $ do
     dot ← single ^$ pLit '.'
     digits' ← string ^$ pOneOrMore pDigit
     return $ dot ⧺ digits'
-  case decimalM of
-    None → return $ Inl $ read𝕊 $ sign ⧺ digits
-    Some decimal → return $ Inr $ read𝕊 $ sign ⧺ digits ⧺ decimal
+  exp ← ifNone "" ^$ pOptional $ do
+    e ← single ^$ pLit 'e'
+    digits' ← string ^$ pOneOrMore pDigit
+    return $ e ⧺ digits'
+  return $ case (decimal ≡ null) ⩓ (exp ≡ null) of
+    True → Inl $ read𝕊 $ sign ⧺ digits
+    False → Inr $ read𝕊 $ sign ⧺ digits ⧺ decimal ⧺ exp
 
 pLetter ∷ Parser ℂ ℂ
 pLetter = pSatisfies "letter [a-zA-Z]" isLetter
