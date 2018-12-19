@@ -2,7 +2,7 @@ NAME := uvmhs
 
 .PHONY: interact
 interact: $(NAME).cabal
-	stack ghci $(NAME):lib
+	stack ghci $(NAME)
 
 .PHONY: build
 build: $(NAME).cabal
@@ -24,9 +24,6 @@ doc:
 	stack haddock
 	cp -r `stack path --local-doc-root` ./
 
-$(NAME).cabal: package.yaml
-	hpack --force
-
 .PHONY: clean
 clean:
 	stack clean
@@ -35,6 +32,9 @@ clean:
 .PHONY: hoogle
 hoogle:
 	stack hoogle -- generate --local
-	open http://localhost:8080
+	(sleep 1 && open http://localhost:8080/?scope=package%3A$(NAME)) &
 	stack hoogle -- server --local --port=8080
+
+$(NAME).cabal: package.yaml
+	hpack --force
 
