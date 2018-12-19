@@ -31,3 +31,10 @@ $(NAME).cabal: package.yaml
 clean:
 	stack clean
 	rm -f $(NAME).cabal
+
+.PHONY: hoogle
+hoogle:
+	stack hoogle -- generate --local
+	open http://localhost:8080
+	stack hoogle -- server --local --port=8080
+
