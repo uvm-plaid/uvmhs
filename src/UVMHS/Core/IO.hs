@@ -29,11 +29,17 @@ outs ss = eachWith ss out
 shout ∷ (Show a) ⇒ a → IO ()
 shout = out ∘ show𝕊
 
+flushOut ∷ IO ()
+flushOut = HS.hFlush HS.stdout
+
 writeErr ∷ 𝕊 → IO ()
 writeErr = Text.hPutStr HS.stderr
 
 err ∷ 𝕊 → IO ()
 err s = exec [writeErr s,writeErr "\n"]
+
+flushErr ∷ IO ()
+flushErr = HS.hFlush HS.stderr
 
 abortIO ∷ IO a
 abortIO = exitWith $ ExitFailure $ tohs $ intΩ32 1
