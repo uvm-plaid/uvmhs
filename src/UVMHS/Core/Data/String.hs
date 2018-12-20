@@ -5,10 +5,11 @@ import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.Arithmetic ()
 
-import qualified Data.Text              as Text
-import qualified Data.Text.Lazy         as TextLazy
-import qualified Data.Text.Lazy.Builder as TextBuilder
-import qualified Prelude                as HS
+import qualified Data.Text                 as Text
+import qualified Data.Text.Internal.Fusion as TextI
+import qualified Data.Text.Lazy            as TextLazy
+import qualified Data.Text.Lazy.Builder    as TextBuilder
+import qualified Prelude                   as HS
 
 instance Null 𝕊 where null = Text.empty
 instance Append 𝕊 where (⧺) = Text.append
@@ -16,7 +17,15 @@ instance Monoid 𝕊
 
 instance Single ℂ 𝕊 where single = Text.singleton
 
-instance ToStream ℂ 𝕊 where stream = streamLL ∘ chars
+instance ToStream ℂ 𝕊 where 
+  stream cs = 
+    case TextI.stream cs of
+      TextI.Stream f s₀ _ →
+        let loop s = case f s of
+              TextI.Done → None
+              TextI.Skip s' → loop s'
+              TextI.Yield x s' → Some (x :* s')
+        in 𝑆 s₀ loop
 instance ToIter ℂ 𝕊 where iter = iter𝑆 ∘ stream
 
 empty𝕊 ∷ 𝕊 → 𝔹

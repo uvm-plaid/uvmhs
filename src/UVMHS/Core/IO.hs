@@ -62,6 +62,7 @@ write fn = io ∘ Text.writeFile (chars fn)
 trace ∷ 𝕊 → a → a
 trace s x = unsafePerformIO $ do
   out s
+  flushOut
   return x
 
 traceM ∷ (Monad m) ⇒ 𝕊 → m ()
