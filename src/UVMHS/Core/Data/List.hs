@@ -52,3 +52,10 @@ mapM𝐿 f xs = case xs of
     y ← f x
     ys ← mapM𝐿 f xs'
     return $ y :& ys
+
+cart ∷ 𝐿 (𝐿 a) → 𝐿 (𝐿 a)
+cart Nil = Nil :& Nil
+cart (xs:&xss) = do
+  x ← xs
+  xs' ← cart xss
+  return $ x :& xs'

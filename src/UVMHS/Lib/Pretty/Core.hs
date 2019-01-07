@@ -27,6 +27,7 @@ data PrettyParams = PrettyParams
   , errorFormat              ∷ 𝐿 Format
   , lineNumberFormat         ∷ 𝐿 Format
   , appLevel                 ∷ ℕ
+  , ratioLevel               ∷ ℕ
   } deriving (Eq,Ord,Show)
 makeLenses ''PrettyParams
 
@@ -44,6 +45,7 @@ prettyParams₀ = PrettyParams
   , errorFormat              = list [FG white,BG darkRed]
   , lineNumberFormat         = list [FG gray]
   , appLevel                 = 100
+  , ratioLevel               = 50
   }
 
 data PrettyEnv = PrettyEnv

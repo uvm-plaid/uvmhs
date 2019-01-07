@@ -26,8 +26,26 @@ instance Pretty ℤ64 where pretty = ppLit ∘ show𝕊
 instance Pretty ℤ32 where pretty = ppLit ∘ show𝕊
 instance Pretty ℤ16 where pretty = ppLit ∘ show𝕊
 instance Pretty ℤ8 where pretty = ppLit ∘ show𝕊
+instance Pretty ℙ  where pretty = ppLit ∘ show𝕊
 instance Pretty 𝔻  where pretty = ppLit ∘ show𝕊
 instance Pretty () where pretty = ppCon ∘ show𝕊
+
+instance Pretty 𝕋 where 
+  pretty = pretty ∘ rat
+instance Pretty ℚ where 
+  pretty q = pretty (ratNum q) ⧺ ppText "/" ⧺ pretty (ratDen q)
+
+instance Pretty NNNumber where
+  pretty = \case
+    Natural n → pretty n
+    Ratio q → pretty q
+    NNDouble d → pretty d
+
+instance Pretty Number where
+  pretty = \case
+    Integer i → pretty i
+    Rational q → pretty q
+    Double d → pretty d
 
 escape ∷ ℂ → 𝐼 ℂ
 escape = \case
@@ -66,6 +84,10 @@ instance (Pretty a) ⇒ Pretty [a] where pretty = ppCollection "[" "]" "," ∘ m
 instance (Pretty a) ⇒ Pretty (𝑄 a) where pretty xs = ppApp (ppText "𝑄") $ list [pretty $ list xs]
 instance (Pretty a) ⇒ Pretty (𝑃 a) where pretty = ppCollection "{" "}"  "," ∘ map pretty ∘ list
 instance (Pretty k,Pretty v) ⇒ Pretty (k ⇰ v) where pretty = ppRecord "↦" ∘ map (mapPair pretty pretty) ∘ list
+
+instance Pretty 𝕏 where
+  pretty (𝕏 x None) = ppText x
+  pretty (𝕏 x (Some n)) = concat [pretty x,ppText "@",pretty n]
 
 instance (Pretty a) ⇒ Pretty (AddNull a) where
   pretty Null = ppCon "•"

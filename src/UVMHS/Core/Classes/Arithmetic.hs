@@ -80,4 +80,18 @@ intΩ16 x = case intO16 x of {None → error "failed intΩ16 conversion";Some n 
 intΩ8 ∷ (ToIntO8 a) ⇒ a → ℤ8
 intΩ8 x = case intO8 x of {None → error "failed intΩ8 conversion";Some n → n}
 
+class ToRatio a where rio ∷ a → 𝕋
+class ToRatioO a where rioO ∷ a → 𝑂 𝕋
+
+class ToNNDouble a where nndbl ∷ a → ℙ
+class ToNNDoubleO a where nndblO ∷ a → 𝑂 ℙ
+
+rioΩ ∷ (ToRatioO a) ⇒ a → 𝕋
+rioΩ x = case rioO x of {None → error "failed rioΩ conversion";Some n → n}
+
+nndblΩ ∷ (ToNNDoubleO a) ⇒ a → ℙ
+nndblΩ x = case nndblO x of {None → error "failed nndblΩ conversion";Some n → n}
+
+class ToRational a where rat ∷ a → ℚ
 class ToDouble a where dbl ∷ a → 𝔻
+

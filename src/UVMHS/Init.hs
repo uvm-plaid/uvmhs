@@ -11,6 +11,7 @@ import qualified Prelude as HS
 
 import qualified Data.Int as HS
 import qualified Data.Word as HS
+import qualified Data.Ratio as HS
 import qualified Numeric.Natural as HS
 
 import qualified Data.Text as Text
@@ -48,7 +49,16 @@ type ℤ32 = HS.Int32
 type ℤ16 = HS.Int16
 type ℤ8  = HS.Int8
 type ℚ = HS.Rational
+type 𝕋 = HS.Ratio ℕ
 type 𝔻 = HS.Double
+-- non-negative double
+newtype ℙ = ℙ 𝔻
+  deriving (Eq,Ord,Show,HS.Num,HS.Fractional,HS.Floating,HS.Real)
+
+data NNNumber = Natural ℕ | Ratio 𝕋 | NNDouble ℙ 
+  deriving (Eq,Ord,Show)
+data Number = Integer ℤ | Rational ℚ | Double 𝔻
+  deriving (Eq,Ord,Show)
 
 type ℂ = HS.Char
 type 𝕊 = Text.Text
@@ -72,11 +82,41 @@ newtype 𝑃 a = 𝑃 { un𝑃 ∷ Set.Set a }
 newtype k ⇰ v = 𝐷 { un𝐷 ∷ Map.Map k v }
   deriving (Eq,Ord)
 
-data W (c ∷ Constraint) where W ∷ (c) ⇒ W c
+data (≟) (a ∷ k) (b ∷ k) ∷ ★ where 
+  Refl ∷ ∀ (a ∷ k). a ≟ a
+
+data P (a ∷ k) = P
 
 data Nat = Z | S Nat
 
-data P (a ∷ k) = P
+data W (c ∷ Constraint) where W ∷ (c) ⇒ W c
+
+with ∷ W c → ((c) ⇒ a) → a
+with W x = x
+
+data Ex (t ∷ k → ★) ∷ ★ where 
+  Ex ∷ ∀ (t ∷ k → ★) (a ∷ k). t a → Ex t
+
+unpack ∷ ∀ (t ∷ k → ★) (b ∷ ★). Ex t → (∀ (a ∷ k). t a → b) → b
+unpack (Ex x) f = f x
+
+data Ex_C (c ∷ k → Constraint) (t ∷ k → ★) ∷ ★ where
+  Ex_C ∷ ∀ (c ∷ k → Constraint) (t ∷ k → ★) (a ∷ k). (c a) ⇒ t a → Ex_C c t
+
+unpack_C ∷ ∀ (k ∷ ★) (c ∷ k → Constraint) (t ∷ k → ★) (b ∷ ★). Ex_C c t → (∀ (a ∷ k). (c a) ⇒ t a → b) → b
+unpack_C (Ex_C x) f = f x
+
+rioNum ∷ 𝕋 → ℕ
+rioNum = HS.numerator
+
+rioDen ∷ 𝕋 → ℕ
+rioDen = HS.denominator
+
+ratNum ∷ ℚ → ℤ
+ratNum = HS.numerator
+
+ratDen ∷ ℚ → ℕ
+ratDen = HS.fromIntegral ∘ HS.denominator
 
 -- Syntax --
 
@@ -94,6 +134,16 @@ fromRational = HS.fromRational
 
 fail ∷ [ℂ] → m a
 fail = HS.error
+
+-- variables --
+
+data 𝕏 = 𝕏 
+  { 𝕩name ∷ 𝕊 
+  , 𝕩Gen ∷ 𝑂 ℕ
+  } deriving (Eq,Ord,Show)
+
+var ∷ 𝕊 → 𝕏
+var x = 𝕏 x None
 
 -- Conversion --
 
@@ -129,9 +179,6 @@ chars = Text.unpack
 
 fromChars ∷ [ℂ] → 𝕊
 fromChars = Text.pack
-
-with ∷ W c → ((c) ⇒ a) → a
-with W x = x
 
 error ∷ 𝕊 → a
 error = HS.error ∘ chars
