@@ -5,7 +5,7 @@ import UVMHS.Core.Classes.Functor
 
 infixr 0 *$
 infixr 2 ≫=, ≫
-infixl 5 <×>
+infixl 5 ⧆
 infixl 6 *∘
 
 (>>=) ∷ (Bind m) ⇒ m a → (a → m b) → m b
@@ -45,11 +45,11 @@ mjoin = extend id
 mmap ∷ (Monad m) ⇒ (a → b) → m a → m b
 mmap f xM = do {x ← xM;return $ f x}
 
-(<×>) ∷ (Monad m) ⇒ m a → m b → m (a ∧ b)
-xM <×> yM = do {x ← xM;y ← yM;return (x :* y)}
+(⧆) ∷ (Monad m) ⇒ m a → m b → m (a ∧ b)
+xM ⧆ yM = do {x ← xM;y ← yM;return (x :* y)}
 
-(<⋅>) ∷ (Monad m) ⇒ m (a → b) → m a → m b
-fM <⋅> xM = do {f ← fM;x ← xM;return $ f x}
+(⊡) ∷ (Monad m) ⇒ m (a → b) → m a → m b
+fM ⊡ xM = do {f ← fM;x ← xM;return $ f x}
 
 skip ∷ (Return m) ⇒ m ()
 skip = return ()

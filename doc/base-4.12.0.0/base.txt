@@ -12503,7 +12503,9 @@ stderr :: Handle
 --   <ul>
 --   <li><tt>isAlreadyInUseError</tt> if the file is already open and
 --   cannot be reopened;</li>
---   <li><tt>isDoesNotExistError</tt> if the file does not exist; or</li>
+--   <li><tt>isDoesNotExistError</tt> if the file does not exist or (on
+--   POSIX systems) is a FIFO without a reader and <a>WriteMode</a> was
+--   requested; or</li>
 --   <li><tt>isPermissionError</tt> if the user does not have permission to
 --   open the file.</li>
 --   </ul>
@@ -12518,7 +12520,7 @@ openFile :: FilePath -> IOMode -> IO Handle
 --   want with text files. With binary files this is undesirable; also, as
 --   usual under Microsoft operating systems, text mode treats control-Z as
 --   EOF. Binary mode turns off all special treatment of end-of-line and
---   end-of-file characters. (See also <tt>hSetBinaryMode</tt>.)
+--   end-of-file characters. (See also <a>hSetBinaryMode</a>.)
 openBinaryFile :: FilePath -> IOMode -> IO Handle
 
 -- | Like <a>openFile</a>, but opens the file in ordinary blocking mode.
@@ -13280,7 +13282,9 @@ withFile :: FilePath -> IOMode -> (Handle -> IO r) -> IO r
 --   <ul>
 --   <li><tt>isAlreadyInUseError</tt> if the file is already open and
 --   cannot be reopened;</li>
---   <li><tt>isDoesNotExistError</tt> if the file does not exist; or</li>
+--   <li><tt>isDoesNotExistError</tt> if the file does not exist or (on
+--   POSIX systems) is a FIFO without a reader and <a>WriteMode</a> was
+--   requested; or</li>
 --   <li><tt>isPermissionError</tt> if the user does not have permission to
 --   open the file.</li>
 --   </ul>
@@ -13741,7 +13745,7 @@ withBinaryFile :: FilePath -> IOMode -> (Handle -> IO r) -> IO r
 --   want with text files. With binary files this is undesirable; also, as
 --   usual under Microsoft operating systems, text mode treats control-Z as
 --   EOF. Binary mode turns off all special treatment of end-of-line and
---   end-of-file characters. (See also <tt>hSetBinaryMode</tt>.)
+--   end-of-file characters. (See also <a>hSetBinaryMode</a>.)
 openBinaryFile :: FilePath -> IOMode -> IO Handle
 
 -- | Select binary mode (<a>True</a>) or text mode (<a>False</a>) on a open

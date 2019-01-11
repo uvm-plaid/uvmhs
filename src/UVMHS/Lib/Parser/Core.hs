@@ -200,7 +200,7 @@ pManySepBy sepM xM = tries
 pOneOrMoreSepBy ∷ Parser t () → Parser t a → Parser t (𝐿 a)
 pOneOrMoreSepBy sepM xM = do
   x ← xM
-  xs ← map snd ^$ pMany $ sepM <×> xM
+  xs ← map snd ^$ pMany $ sepM ⧆ xM
   return $ x :& xs
 
 pSkip ∷ (t → 𝔹) → Parser t a → Parser t a

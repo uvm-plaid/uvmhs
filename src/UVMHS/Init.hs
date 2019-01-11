@@ -1,4 +1,4 @@
-module UVMHS.Init 
+module UVMHS.Init
   (module UVMHS.Init
   ,module GHC.Exts
   ,module Prelude
@@ -55,7 +55,7 @@ type 𝔻 = HS.Double
 newtype ℙ = ℙ 𝔻
   deriving (Eq,Ord,Show,HS.Num,HS.Fractional,HS.Floating,HS.Real)
 
-data NNNumber = Natural ℕ | Ratio 𝕋 | NNDouble ℙ 
+data NNNumber = Natural ℕ | Ratio 𝕋 | NNDouble ℙ
   deriving (Eq,Ord,Show)
 data Number = Integer ℤ | Rational ℚ | Double 𝔻
   deriving (Eq,Ord,Show)
@@ -82,7 +82,7 @@ newtype 𝑃 a = 𝑃 { un𝑃 ∷ Set.Set a }
 newtype k ⇰ v = 𝐷 { un𝐷 ∷ Map.Map k v }
   deriving (Eq,Ord)
 
-data (≟) (a ∷ k) (b ∷ k) ∷ ★ where 
+data (≟) (a ∷ k) (b ∷ k) ∷ ★ where
   Refl ∷ ∀ (a ∷ k). a ≟ a
 
 data P (a ∷ k) = P
@@ -94,7 +94,7 @@ data W (c ∷ Constraint) where W ∷ (c) ⇒ W c
 with ∷ W c → ((c) ⇒ a) → a
 with W x = x
 
-data Ex (t ∷ k → ★) ∷ ★ where 
+data Ex (t ∷ k → ★) ∷ ★ where
   Ex ∷ ∀ (t ∷ k → ★) (a ∷ k). t a → Ex t
 
 unpack ∷ ∀ (t ∷ k → ★) (b ∷ ★). Ex t → (∀ (a ∷ k). t a → b) → b
@@ -137,8 +137,8 @@ fail = HS.error
 
 -- variables --
 
-data 𝕏 = 𝕏 
-  { 𝕩name ∷ 𝕊 
+data 𝕏 = 𝕏
+  { 𝕩name ∷ 𝕊
   , 𝕩Gen ∷ 𝑂 ℕ
   } deriving (Eq,Ord,Show)
 
@@ -243,7 +243,7 @@ list𝐼 ∷ 𝐼 a → 𝐿 a
 list𝐼 = foldr𝐼 Nil (:&)
 
 -- LazyLists --
- 
+
 streamLL ∷ [a] → 𝑆 a
 streamLL xs₀ = 𝑆 xs₀ g
   where
@@ -278,7 +278,7 @@ iter𝑆 (𝑆 s₀ g) = 𝐼 $ \ f i₀ →
 
 -- Compat --
 
-class CHS a b | b → a where 
+class CHS a b | b → a where
   tohs ∷ a → b
   frhs ∷ b → a
 
@@ -286,7 +286,7 @@ instance {-# OVERLAPPABLE #-} (a ~ b) ⇒ CHS a b where {tohs = id;frhs = id}
 instance {-# OVERLAPPING #-} CHS ℤ32 HS.Int where
   tohs = HS.fromIntegral
   frhs = HS.fromIntegral
-instance {-# OVERLAPPING #-} (CHS a b) ⇒ CHS (𝐿 a) [b] where 
+instance {-# OVERLAPPING #-} (CHS a b) ⇒ CHS (𝐿 a) [b] where
   tohs = lazyList𝐼 ∘ map𝐼 tohs ∘ iter𝑆 ∘ stream𝐿
   frhs = list𝐼 ∘ map𝐼 frhs ∘ iter𝑆 ∘ streamLL
 instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃) ⇒ CHS (a₁ ∧ a₂ ∧ a₃) (b₁,b₂,b₃) where
@@ -300,7 +300,7 @@ instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂) ⇒ CHS (a₁ ∨ a�
     Inl x → HS.Left $ tohs x
     Inr y → HS.Right $ tohs y
   frhs = \case
-    HS.Left x → Inl $ frhs x 
+    HS.Left x → Inl $ frhs x
     HS.Right y → Inr $ frhs y
 instance {-# OVERLAPPING #-} (CHS a b) ⇒ CHS (𝑂 a) (HS.Maybe b) where
   tohs = \case
