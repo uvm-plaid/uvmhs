@@ -682,7 +682,7 @@ instance Divide 𝔻 where (/) = (HS./)
 instance Exponential 𝔻 where (^) = (HS.**)
 instance Root 𝔻 where root = HS.sqrt
 instance Log 𝔻 where log = HS.log
-instance Exp 𝔻 where exp = HS.exp
+instance ExponentialFn 𝔻 where exp = HS.exp
 instance Sin 𝔻 where sin = HS.sin
 instance Cos 𝔻 where cos = HS.cos
 
