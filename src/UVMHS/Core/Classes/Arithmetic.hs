@@ -19,6 +19,9 @@ class DivMod a where {(⌿) ∷ a → a → a;(÷) ∷ a → a → a}
 class Exponential a where (^) ∷ a → a → a
 class Root a where root ∷ a → a
 class Log a where log ∷ a → a
+class Exp a where exp ∷ a → a
+class Sin a where sin ∷ a → a
+class Cos a where cos ∷ a → a
 class (Zero a,Plus a) ⇒ Additive a
 class (Additive a,One a,Times a) ⇒ Multiplicative a
 

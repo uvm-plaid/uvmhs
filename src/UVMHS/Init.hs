@@ -13,6 +13,7 @@ import qualified Data.Int as HS
 import qualified Data.Word as HS
 import qualified Data.Ratio as HS
 import qualified Numeric.Natural as HS
+import qualified Control.Exception as HS
 
 import qualified Data.Text as Text
 
@@ -182,6 +183,9 @@ fromChars = Text.pack
 
 error ∷ 𝕊 → a
 error = HS.error ∘ chars
+
+assert ∷ 𝔹 → a → a
+assert = HS.assert
 
 -- Functions --
 
