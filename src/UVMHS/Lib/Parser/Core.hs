@@ -246,14 +246,14 @@ pNumber = do
     dot ← single ^$ pLit '.'
     digits' ← string ^$ pOneOrMore pDigit
     return $ dot ⧺ digits'
-  exp ← ifNone "" ^$ pOptional $ do
+  expr ← ifNone "" ^$ pOptional $ do
     e ← single ^$ pLit 'e'
     s ← elim𝑂 "" single ^$ pOptional $ pLit '-'
     digits' ← string ^$ pOneOrMore pDigit
     return $ e ⧺ s ⧺ digits'
-  return $ case (decimal ≡ null) ⩓ (exp ≡ null) of
+  return $ case (decimal ≡ null) ⩓ (expr ≡ null) of
     True → Inl $ read𝕊 $ sign ⧺ digits
-    False → Inr $ read𝕊 $ sign ⧺ digits ⧺ decimal ⧺ exp
+    False → Inr $ read𝕊 $ sign ⧺ digits ⧺ decimal ⧺ expr
 
 pLetter ∷ Parser ℂ ℂ
 pLetter = pSatisfies "letter [a-zA-Z]" isLetter

@@ -28,6 +28,11 @@ instance ToStream ℂ 𝕊 where
         in 𝑆 s₀ loop
 instance ToIter ℂ 𝕊 where iter = iter𝑆 ∘ stream
 
+instance Lookup ℕ ℂ 𝕊 where 
+  s ⋕? n 
+    | (n > 0) ⩓ (n ≤ length𝕊 s) = Some $ Text.index s $ HS.fromIntegral $ n - 1
+    | otherwise = None
+
 empty𝕊 ∷ 𝕊 → 𝔹
 empty𝕊 = Text.null
 
