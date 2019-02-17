@@ -245,11 +245,16 @@ retState xM = do
 
 -- Fail
 
-abort𝑂 ∷ ∀ m a. (Monad m,MonadFail m) ⇒ 𝑂 a → m a
+abort𝑂 ∷ (Monad m,MonadFail m) ⇒ 𝑂 a → m a
 abort𝑂 = elim𝑂 abort return
 
 tries ∷ (Monad m,MonadFail m,ToIter (m a) t) ⇒ t → m a
 tries = foldr abort (⎅)
+
+guard ∷ (Monad m,MonadFail m) ⇒ 𝔹 → m a → m a
+guard = \case
+  True → id
+  False → const abort
 
 -- Error
 
