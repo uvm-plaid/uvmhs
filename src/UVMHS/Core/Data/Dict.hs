@@ -48,7 +48,9 @@ instance Bot (k ⇰ v) where bot = dø
 instance (Ord k,Join v) ⇒ Join (k ⇰ v) where (⊔) = unionWith (⊔)
 instance (Ord k,Join v) ⇒ JoinLattice (k ⇰ v)
 
+instance Top (k ⇰ v) where top = dø
 instance (Ord k,Meet v) ⇒ Meet (k ⇰ v) where (⊓) = unionWith (⊓)
+instance (Ord k,Meet v) ⇒ MeetLattice (k ⇰ v)
 
 instance Functor ((⇰) k) where map = map𝐷
 
