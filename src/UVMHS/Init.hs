@@ -87,10 +87,16 @@ data (≟) (a ∷ k) (b ∷ k) ∷ ★ where
   Refl ∷ ∀ (a ∷ k). a ≟ a
 
 data P (a ∷ k) = P
+  deriving (Eq,Ord,Show)
 
 data Nat = Z | S Nat
+  deriving (Eq,Ord,Show)
 
 data W (c ∷ Constraint) where W ∷ (c) ⇒ W c
+
+deriving instance Eq (W c)
+deriving instance Ord (W c)
+deriving instance Show (W c)
 
 with ∷ W c → ((c) ⇒ a) → a
 with W x = x
@@ -98,11 +104,17 @@ with W x = x
 data Ex (t ∷ k → ★) ∷ ★ where
   Ex ∷ ∀ (t ∷ k → ★) (a ∷ k). t a → Ex t
 
+deriving instance (∀ a. Show (t a)) ⇒ Show (Ex t)
+
 unpack ∷ ∀ (t ∷ k → ★) (b ∷ ★). Ex t → (∀ (a ∷ k). t a → b) → b
 unpack (Ex x) f = f x
 
 data Ex_C (c ∷ k → Constraint) (t ∷ k → ★) ∷ ★ where
   Ex_C ∷ ∀ (c ∷ k → Constraint) (t ∷ k → ★) (a ∷ k). (c a) ⇒ t a → Ex_C c t
+
+-- TODO: this could maybe be more general:
+-- deriving instance (∀ a. c a ⇒ Show (t a)) ⇒ Show (Ex_C c t)
+deriving instance (∀ a. Show (t a)) ⇒ Show (Ex_C c t)
 
 unpack_C ∷ ∀ (k ∷ ★) (c ∷ k → Constraint) (t ∷ k → ★) (b ∷ ★). Ex_C c t → (∀ (a ∷ k). (c a) ⇒ t a → b) → b
 unpack_C (Ex_C x) f = f x
