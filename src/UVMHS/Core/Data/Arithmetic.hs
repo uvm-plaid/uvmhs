@@ -19,10 +19,13 @@ instance Exponential ℕ where (^) = (HS.^)
 instance Bot ℕ where bot = 0
 instance Join ℕ where (⊔) = (⩏)
 instance Meet ℕ where (⊓) = (⩎)
+instance Null ℕ where null = 0
+instance Append ℕ where (⧺) = (+)
 
 instance Additive ℕ
 instance Multiplicative ℕ
 instance JoinLattice ℕ
+instance Monoid ℕ
 
 instance ToNat ℕ where nat = id
 instance ToNatO64 ℕ where 
@@ -77,13 +80,16 @@ instance Times ℕ64 where (×) = (HS.*)
 instance DivMod ℕ64 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Exponential ℕ64 where (^) = (HS.^)
 
-instance Bot ℕ64 where bot = HS.fromIntegral 0
+instance Bot ℕ64 where bot = zero
 instance Join ℕ64 where (⊔) = (⩏)
 instance Meet ℕ64 where (⊓) = (⩎)
+instance Null ℕ64 where null = zero
+instance Append ℕ64 where (⧺) = (+)
 
 instance Additive ℕ64
 instance Multiplicative ℕ64
 instance JoinLattice ℕ64
+instance Monoid ℕ64
 
 instance ToNat ℕ64 where nat = HS.fromIntegral
 instance ToNat64 ℕ64 where nat64 = id
@@ -137,10 +143,13 @@ instance Exponential ℕ32 where (^) = (HS.^)
 instance Bot ℕ32 where bot = HS.fromIntegral 0
 instance Join ℕ32 where (⊔) = (⩏)
 instance Meet ℕ32 where (⊓) = (⩎)
+instance Null ℕ32 where null = zero
+instance Append ℕ32 where (⧺) = (+)
 
 instance Additive ℕ32
 instance Multiplicative ℕ32
 instance JoinLattice ℕ32
+instance Monoid ℕ32
 
 instance ToNat ℕ32 where nat = HS.fromIntegral
 instance ToNat64 ℕ32 where nat64 = HS.fromIntegral
@@ -188,10 +197,13 @@ instance Exponential ℕ16 where (^) = (HS.^)
 instance Bot ℕ16 where bot = HS.fromIntegral 0
 instance Join ℕ16 where (⊔) = (⩏)
 instance Meet ℕ16 where (⊓) = (⩎)
+instance Null ℕ16 where null = zero
+instance Append ℕ16 where (⧺) = (+)
 
 instance Additive ℕ16
 instance Multiplicative ℕ16
 instance JoinLattice ℕ16
+instance Monoid ℕ16
 
 instance ToNat ℕ16 where nat = HS.fromIntegral
 instance ToNat64 ℕ16 where nat64 = HS.fromIntegral
@@ -233,10 +245,13 @@ instance Exponential ℕ8 where (^) = (HS.^)
 instance Bot ℕ8 where bot = HS.fromIntegral 0
 instance Join ℕ8 where (⊔) = (⩏)
 instance Meet ℕ8 where (⊓) = (⩎)
+instance Null ℕ8 where null = zero
+instance Append ℕ8 where (⧺) = (+)
 
 instance Additive ℕ8
 instance Multiplicative ℕ8
 instance JoinLattice ℕ8
+instance Monoid ℕ8
 
 instance ToNat ℕ8 where nat = HS.fromIntegral
 instance ToNat64 ℕ8 where nat64 = HS.fromIntegral
@@ -271,10 +286,13 @@ instance DivMod ℤ where {(⌿) = HS.div;(÷) = HS.mod}
 instance Bot ℤ where bot = HS.fromIntegral 0
 instance Join ℤ where (⊔) = (⩏)
 instance Meet ℤ where (⊓) = (⩎)
+instance Null ℤ where null = zero
+instance Append ℤ where (⧺) = (+)
 
 instance Additive ℤ
 instance Multiplicative ℤ
 instance JoinLattice ℤ
+instance Monoid ℤ
 
 instance ToNatO ℤ where 
   natO i 
@@ -347,10 +365,13 @@ instance DivMod ℤ64 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Bot ℤ64 where bot = HS.fromIntegral 0
 instance Join ℤ64 where (⊔) = (⩏)
 instance Meet ℤ64 where (⊓) = (⩎)
+instance Null ℤ64 where null = zero
+instance Append ℤ64 where (⧺) = (+)
 
 instance JoinLattice ℤ64
 instance Additive ℤ64
 instance Multiplicative ℤ64
+instance Monoid ℤ64
 
 instance ToNatO ℤ64 where 
   natO i
@@ -418,10 +439,13 @@ instance DivMod ℤ32 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Bot ℤ32 where bot = HS.fromIntegral 0
 instance Join ℤ32 where (⊔) = (⩏)
 instance Meet ℤ32 where (⊓) = (⩎)
+instance Null ℤ32 where null = zero
+instance Append ℤ32 where (⧺) = (+)
 
 instance Additive ℤ32
 instance Multiplicative ℤ32
 instance JoinLattice ℤ32
+instance Monoid ℤ32
 
 instance ToNatO ℤ32 where
   natO i 
@@ -484,10 +508,13 @@ instance DivMod ℤ16 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Bot ℤ16 where bot = HS.fromIntegral 0
 instance Join ℤ16 where (⊔) = (⩏)
 instance Meet ℤ16 where (⊓) = (⩎)
+instance Null ℤ16 where null = zero
+instance Append ℤ16 where (⧺) = (+)
 
 instance Additive ℤ16
 instance Multiplicative ℤ16
 instance JoinLattice ℤ16
+instance Monoid ℤ16
 
 instance ToNatO ℤ16 where 
   natO i 
@@ -545,10 +572,13 @@ instance DivMod ℤ8 where {(⌿) = HS.div;(÷) = HS.mod}
 instance Bot ℤ8 where bot = HS.fromIntegral 0
 instance Join ℤ8 where (⊔) = (⩏)
 instance Meet ℤ8 where (⊓) = (⩎)
+instance Null ℤ8 where null = zero
+instance Append ℤ8 where (⧺) = (+)
 
 instance Additive ℤ8
 instance Multiplicative ℤ8
 instance JoinLattice ℤ8
+instance Monoid ℤ8
 
 instance ToNatO ℤ8 where
   natO i 
@@ -601,10 +631,13 @@ instance Divide 𝕋 where (/) = (HS./)
 instance Bot 𝕋 where bot = HS.fromIntegral 0
 instance Join 𝕋 where (⊔) = (⩏)
 instance Meet 𝕋 where (⊓) = (⩎)
+instance Null 𝕋 where null = zero
+instance Append 𝕋 where (⧺) = (+)
 
 instance Additive 𝕋
 instance Multiplicative 𝕋
 instance JoinLattice 𝕋
+instance Monoid 𝕋
 
 instance ToRatio 𝕋 where rio = id
 instance ToNNDouble 𝕋 where nndbl = HS.realToFrac
@@ -630,11 +663,14 @@ instance Bot ℙ where bot = HS.fromIntegral 0
 instance Join ℙ where (⊔) = (⩏)
 instance Top ℙ where top = HS.realToFrac $ 1.0 / 0.0
 instance Meet ℙ where (⊓) = (⩎)
+instance Null ℙ where null = zero
+instance Append ℙ where (⧺) = (+)
 
 instance Additive ℙ
 instance Multiplicative ℙ
 instance JoinLattice ℙ
 instance MeetLattice ℙ
+instance Monoid ℙ
 
 instance ToRatio ℙ where rio = HS.realToFrac
 instance ToNNDouble ℙ where nndbl = id
@@ -654,10 +690,13 @@ instance Divide ℚ where (/) = (HS./)
 instance Bot ℚ where bot = HS.fromIntegral 0
 instance Join ℚ where (⊔) = (⩏)
 instance Meet ℚ where (⊓) = (⩎)
+instance Null ℚ where null = zero
+instance Append ℚ where (⧺) = (+)
 
 instance Additive ℚ
 instance Multiplicative ℚ
 instance JoinLattice ℚ
+instance Monoid ℚ
 
 instance ToRatioO ℚ where
   rioO q 
@@ -690,11 +729,14 @@ instance Bot 𝔻 where bot = neg 1.0/0.0
 instance Join 𝔻 where (⊔) = (⩏)
 instance Top 𝔻 where top = 1.0/0.0
 instance Meet 𝔻 where (⊓) = (⩎)
+instance Null 𝔻 where null = zero
+instance Append 𝔻 where (⧺) = (+)
 
 instance Additive 𝔻
 instance Multiplicative 𝔻
 instance JoinLattice 𝔻
 instance MeetLattice 𝔻
+instance Monoid 𝔻
 
 instance ToRatioO 𝔻 where
   rioO d 
@@ -761,10 +803,13 @@ instance Log NNNumber where
 instance Bot NNNumber where bot = zero
 instance Join NNNumber where (⊔) = nnnumberBOp (Natural ∘∘ (⊔)) (Ratio ∘∘ (⊔)) (NNDouble ∘∘ (⊔))
 instance Meet NNNumber where (⊓) = nnnumberBOp (Natural ∘∘ (⊓)) (Ratio ∘∘ (⊓)) (NNDouble ∘∘ (⊓))
+instance Null NNNumber where null = zero
+instance Append NNNumber where (⧺) = (+)
 
 instance Additive NNNumber
 instance Multiplicative NNNumber
 instance JoinLattice NNNumber
+instance Monoid NNNumber
 
 instance Zero Number where zero = Integer zero
 instance Plus Number where (+) = numberBOp (Integer ∘∘ (+)) (Rational ∘∘ (+)) (Double ∘∘ (+))
@@ -781,7 +826,10 @@ instance Log Number where
 instance Bot Number where bot = zero
 instance Join Number where (⊔) = numberBOp (Integer ∘∘ (⊔)) (Rational ∘∘ (⊔)) (Double ∘∘ (⊔))
 instance Meet Number where (⊓) = numberBOp (Integer ∘∘ (⊓)) (Rational ∘∘ (⊓)) (Double ∘∘ (⊓))
+instance Null Number where null = zero
+instance Append Number where (⧺) = (+)
 
 instance Additive Number
 instance Multiplicative Number
 instance JoinLattice Number
+instance Monoid Number
