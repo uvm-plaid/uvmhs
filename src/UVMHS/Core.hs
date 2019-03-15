@@ -6,6 +6,7 @@ module UVMHS.Core
   ,module UVMHS.Core.Lens
   ,module UVMHS.Core.LensDeriving
   ,module UVMHS.Core.LensDerivedInstances
+  ,module UVMHS.Core.Matrix
   ,module UVMHS.Core.Monads
   ,module UVMHS.Core.Pointed
   ,module UVMHS.Core.TH
@@ -21,6 +22,7 @@ import UVMHS.Core.IO
 import UVMHS.Core.Lens
 import UVMHS.Core.LensDeriving
 import UVMHS.Core.LensDerivedInstances
+import UVMHS.Core.Matrix
 import UVMHS.Core.Monads
 import UVMHS.Core.Pointed
 import UVMHS.Core.TH
