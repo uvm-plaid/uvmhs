@@ -204,13 +204,13 @@ instance ToIter a (Vᴍ m n a) where iter = xiter
 -- DERIVED --
 -------------
 
+xtranspose ∷ Vᴍ m n a → Vᴍ n m a
+xtranspose xs = matrix (xcols xs) (xrows xs) $ \ j i → xs 𝄪 (i,j)
+
 xmap ∷ (a → b) → Vᴍ m n a → Vᴍ m n b
 xmap f xs = matrix (xrows xs) (xcols xs) $ \ i j → f $ xs 𝄪 (i,j)
 
 instance Functor (Vᴍ m n) where map = xmap
-
-xtranspose ∷ Vᴍ m n a → Vᴍ n m a
-xtranspose xs = matrix (xcols xs) (xrows xs) $ \ j i → xs 𝄪 (i,j)
 
 xmap2 ∷ (a → b → c) → Vᴍ m n a → Vᴍ m n b → Vᴍ m n c
 xmap2 f xs ys = matrix (xrows xs) (xcols xs) $ \ i j → f (xs 𝄪 (i,j)) (ys 𝄪 (i,j))
@@ -249,6 +249,17 @@ xb𝐿 xs f =
       d𝕟32 uc $ \ n →
       d𝕟32 (natΩ32 $ count xs) $ \ m →
         f $ Bᴍ m n $ Repa.fromList (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ tohs $ concat xs
+    False → error "`xb𝐿`: bad input list: input list is either empty (no columns) or has columns of different length"
+
+xu𝐿 ∷ (Repa.Unbox a) ⇒ 𝐿 (𝐿 a) → (∀ m n. Uᴍ m n a → b) → b
+xu𝐿 xs f =
+  let uc = joins $ map (natΩ32 ∘ count) xs
+      lc = meets $ map (AddTop ∘ natΩ32 ∘ count) xs
+  in case AddTop uc ≡ lc of
+    True → 
+      d𝕟32 uc $ \ n →
+      d𝕟32 (natΩ32 $ count xs) $ \ m →
+        f $ Uᴍ m n $ Repa.fromList (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ tohs $ concat xs
     False → error "`xb𝐿`: bad input list: input list is either empty (no columns) or has columns of different length"
 
 testMatrix1 ∷ IO ()
