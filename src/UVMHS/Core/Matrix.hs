@@ -1,4 +1,4 @@
-{-# OPTIONS_GHC -rtsopts -threaded -fno-liberate-case -funfolding-use-threshold1000 -funfolding-keeness-factor1000 -fllvm -optlo-O3 #-}
+{-# OPTIONS_GHC -rtsopts -threaded -fno-liberate-case -funfolding-use-threshold1000 -funfolding-keeness-factor1000 -optlo-O3 #-}
 module UVMHS.Core.Matrix where
 
 import UVMHS.Init
