@@ -82,8 +82,8 @@ instance Pretty FullContext where
     where
       ln = case pre of
         InputContext (ParserContext lrB _ _) → case lrB of
-          Bot → 1
-          AddBot lr → locRow $ locRangeBegin lr
+          Bot → 0
+          AddBot lr → 1 + locRow (locRangeBegin lr)
 
 -- Annotated --
 
