@@ -74,13 +74,16 @@ data FullContext = FullContext
   }
 
 instance Pretty FullContext where
-  pretty (FullContext pre d _pi) = concat
-    [ ppPun "⟬"
-    , ppAlign $ 
+  pretty (FullContext pre d _pi) =
+    ppSetLineNumber ln $
+      ppAlign $ 
         (execParserContextDoc $ execParserContext $ unInputContext pre) 
         ⧺ (ppUT '^' green $ execParserContextDoc $ execParserContext $ unExpressionContext d)
-    , ppPun "⟭"
-    ]
+    where
+      ln = case pre of
+        InputContext (ParserContext lrB _ _) → case lrB of
+          Bot → 1
+          AddBot lr → locRow $ locRangeBegin lr
 
 -- Annotated --
 
