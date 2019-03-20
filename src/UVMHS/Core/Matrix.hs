@@ -263,7 +263,7 @@ xiter2 = iter ∘ map iter ∘ xsplit
 xlist2 ∷ Vᴍ m n a → 𝐿 (𝐿 a)
 xlist2 = list ∘ map list ∘ xiter2
 
-xb𝐿 ∷ 𝐿 (𝐿 a) → (∀ m n. Bᴍ m n a → b) → b
+xb𝐿 ∷ 𝐿 (𝐿 a) → (∀ m n. (Rℕ m,Rℕ n) ⇒ Bᴍ m n a → b) → b
 xb𝐿 xs f =
   let uc = joins $ map (natΩ32 ∘ count) xs
       lc = meets $ map (AddTop ∘ natΩ32 ∘ count) xs
@@ -274,7 +274,7 @@ xb𝐿 xs f =
         f $ Bᴍ m n $ Repa.fromList (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ tohs $ concat xs
     False → error "`xb𝐿`: bad input list: input list is either empty (no columns) or has columns of different length"
 
-xu𝐿 ∷ (Repa.Unbox a) ⇒ 𝐿 (𝐿 a) → (∀ m n. Uᴍ m n a → b) → b
+xu𝐿 ∷ (Repa.Unbox a) ⇒ 𝐿 (𝐿 a) → (∀ m n. (Rℕ m,Rℕ n) ⇒ Uᴍ m n a → b) → b
 xu𝐿 xs f =
   let uc = joins $ map (natΩ32 ∘ count) xs
       lc = meets $ map (AddTop ∘ natΩ32 ∘ count) xs
