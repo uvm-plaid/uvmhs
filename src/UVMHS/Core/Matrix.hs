@@ -14,6 +14,7 @@ import qualified Data.Array.Repa.Eval as Repa
 import qualified Prelude as HS
 import qualified Data.Proxy as HS
 import qualified Data.Functor.Identity as HS
+import qualified Data.Type.Equality as HS
 
 import qualified GHC.TypeLits as HS
 
@@ -49,6 +50,11 @@ class (HS.KnownSymbol s) ⇒ R𝕊 (s ∷ T𝕊) where reify𝕊 ∷ P s → �
 instance (HS.KnownNat n) ⇒ Rℕ (n ∷ Tℕ) where reifyℕ P = natΩ $ HS.natVal @ n P
 instance (HS.KnownNat n) ⇒ Rℕ32 (n ∷ Tℕ) where reifyℕ32 P = natΩ32 $ HS.natVal @ n P
 instance (HS.KnownSymbol s) ⇒ R𝕊 (s ∷ T𝕊) where reify𝕊 P = string $ HS.symbolVal @ s P
+
+compareTℕ ∷ ∀ (a ∷ Tℕ) (b ∷ Tℕ). (Rℕ a,Rℕ b) ⇒ 𝑂 (a ≟ b)
+compareTℕ = case HS.sameNat (HS.Proxy @ a) (HS.Proxy @ b) of
+  HS.Nothing → None
+  HS.Just HS.Refl → Some Refl
 
 s𝕟 ∷ ∀ n. (Rℕ n) ⇒ Sℕ n
 s𝕟 = TRUSTME_Sℕ $ reifyℕ @ n P
@@ -101,29 +107,33 @@ s𝕚 ∷ ∀ m n. (Rℕ32 m,m < n) ⇒ P m → 𝕀32 n
 s𝕚 P = 𝕀32 (s𝕟32 @ m) TRUSTME_LT
 
 d𝕚 ∷ Sℕ32 m → ℕ32 → 𝑂 (𝕀32 m)
-d𝕚 m n = case unSℕ32 m ⋚ n of
+d𝕚 m n = case n ⋚ unSℕ32 m of
   LT → d𝕟32 n $ \ n' → Some $ 𝕀32 n' TRUSTME_LT
   _ → None
 
 -- vectors --
 
-data Bᴍ (m ∷ Tℕ) (n ∷ Tℕ) a = Bᴍ  
-  { rowsBᴍ ∷ Sℕ32 m
-  , colsBᴍ ∷ Sℕ32 n
-  , dataBᴍ ∷ Repa.Array Repa.V (Repa.Z Repa.:. HS.Int Repa.:. HS.Int) a
-  }
+data Bᴍ (m ∷ Tℕ) (n ∷ Tℕ) a where
+  Bᴍ ∷ (Rℕ m,Rℕ n) 
+     ⇒ { rowsBᴍ ∷ Sℕ32 m
+       , colsBᴍ ∷ Sℕ32 n
+       , dataBᴍ ∷ Repa.Array Repa.V (Repa.Z Repa.:. HS.Int Repa.:. HS.Int) a
+       }
+     → Bᴍ m n a
 data Uᴍ (m ∷ Tℕ) (n ∷ Tℕ) a where
-  Uᴍ ∷ (Repa.Unbox a)
+  Uᴍ ∷ (Rℕ m,Rℕ n,Repa.Unbox a)
      ⇒ { rowsUᴍ ∷ Sℕ32 m
        , colsUᴍ ∷ Sℕ32 n
        , dataUᴍ ∷ Repa.Array Repa.U (Repa.Z Repa.:. HS.Int Repa.:. HS.Int) a
        }
      → Uᴍ m n a
-data Vᴍ (m ∷ Tℕ) (n ∷ Tℕ) a = Vᴍ  
-  { rowsVᴍ ∷ Sℕ32 m
-  , colsVᴍ ∷ Sℕ32 n
-  , dataVᴍ ∷ Repa.Array Repa.D (Repa.Z Repa.:. HS.Int Repa.:. HS.Int) a
-  }
+data Vᴍ (m ∷ Tℕ) (n ∷ Tℕ) a where
+  Vᴍ ∷ (Rℕ m,Rℕ n)
+     ⇒ { rowsVᴍ ∷ Sℕ32 m
+       , colsVᴍ ∷ Sℕ32 n
+       , dataVᴍ ∷ Repa.Array Repa.D (Repa.Z Repa.:. HS.Int Repa.:. HS.Int) a
+       }
+     → Vᴍ m n a
 
 infixl 7 𝄪
 class Matrix t where 
@@ -171,14 +181,14 @@ instance Matrix Vᴍ where
   xs 𝄪 (i,j) = indexVᴍ i j xs
   xvirt = id
 
-matrix ∷ Sℕ32 m → Sℕ32 n → (𝕀32 m → 𝕀32 n → a) → Vᴍ m n a
+matrix ∷ (Rℕ m,Rℕ n) ⇒ Sℕ32 m → Sℕ32 n → (𝕀32 m → 𝕀32 n → a) → Vᴍ m n a
 matrix m n f = 
   Vᴍ m n $ Repa.fromFunction (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ \ (Repa.Z Repa.:. i Repa.:. j) → 
     d𝕟32 (HS.fromIntegral i) $ \ i' → 
       d𝕟32 (HS.fromIntegral j) $ \ j' →
         f (𝕀32 i' TRUSTME_LT) (𝕀32 j' TRUSTME_LT)
 
-xconst ∷ Sℕ32 m → Sℕ32 n → a → Vᴍ m n a
+xconst ∷ (Rℕ m,Rℕ n) ⇒ Sℕ32 m → Sℕ32 n → a → Vᴍ m n a
 xconst m n x = matrix m n $ \ _ _ → x
 
 xbs ∷ Vᴍ m n a → Bᴍ m n a
@@ -205,34 +215,47 @@ instance ToIter a (Vᴍ m n a) where iter = xiter
 -------------
 
 xtranspose ∷ Vᴍ m n a → Vᴍ n m a
-xtranspose xs = matrix (xcols xs) (xrows xs) $ \ j i → xs 𝄪 (i,j)
+xtranspose xs@(Vᴍ _ _ _) = matrix (xcols xs) (xrows xs) $ \ j i → xs 𝄪 (i,j)
 
 xmap ∷ (a → b) → Vᴍ m n a → Vᴍ m n b
-xmap f xs = matrix (xrows xs) (xcols xs) $ \ i j → f $ xs 𝄪 (i,j)
+xmap f xs@(Vᴍ _ _ _) = matrix (xrows xs) (xcols xs) $ \ i j → f $ xs 𝄪 (i,j)
 
 instance Functor (Vᴍ m n) where map = xmap
 
 xmap2 ∷ (a → b → c) → Vᴍ m n a → Vᴍ m n b → Vᴍ m n c
-xmap2 f xs ys = matrix (xrows xs) (xcols xs) $ \ i j → f (xs 𝄪 (i,j)) (ys 𝄪 (i,j))
+xmap2 f xs@(Vᴍ _ _ _) ys@(Vᴍ _ _ _) = matrix (xrows xs) (xcols xs) $ \ i j → f (xs 𝄪 (i,j)) (ys 𝄪 (i,j))
 
-xmeld ∷ Sℕ32 n → Vᴍ m 1 (Vᴍ 1 n a) → Vᴍ m n a
-xmeld n xys = matrix (xrows xys) n $ \ i j → indexVᴍ (s𝕚 @ 0 P) j $ indexVᴍ i (s𝕚 @ 0 P) xys
+xmeld ∷ (Rℕ n) ⇒ Sℕ32 n → Vᴍ m 1 (Vᴍ 1 n a) → Vᴍ m n a
+xmeld n xys@(Vᴍ _ _ _) = matrix (xrows xys) n $ \ i j → indexVᴍ (s𝕚 @ 0 P) j $ indexVᴍ i (s𝕚 @ 0 P) xys
 
 xsplit ∷ Vᴍ m n a → Vᴍ m 1 (Vᴍ 1 n a)
-xsplit xys = matrix (xrows xys) (s𝕟32 @ 1) $ \ i _ → matrix (s𝕟32 @ 1) (colsVᴍ xys) $ \ _ j → indexVᴍ i j xys
+xsplit xys@(Vᴍ _ _ _) = matrix (xrows xys) (s𝕟32 @ 1) $ \ i _ → matrix (s𝕟32 @ 1) (colsVᴍ xys) $ \ _ j → indexVᴍ i j xys
 
 xrow ∷ 𝕀32 m → Vᴍ m n a → Vᴍ 1 n a
-xrow i xs = matrix (s𝕟32 @ 1) (colsVᴍ xs) $ \ _ j → indexVᴍ i j xs
+xrow i xs@(Vᴍ _ _ _) = matrix (s𝕟32 @ 1) (colsVᴍ xs) $ \ _ j → indexVᴍ i j xs
 
 xcol ∷ 𝕀32 n → Vᴍ m n a → Vᴍ 1 m a
 xcol i xs = xrow i $ xtranspose xs
 
 xproduct ∷ (Additive a,Times a) ⇒ Vᴍ m n a → Vᴍ n o a → Vᴍ m o a
-xproduct xs ys =
+xproduct xs@(Vᴍ _ _ _) ys@(Vᴍ _ _ _) =
   matrix (xrows xs) (xcols ys) $ \ i k →
     let r₁ = xrow i xs
         r₂ = xcol k ys
     in sum $ iter $ xmap2 (×) r₁ r₂
+
+xbmapM ∷ (Monad m) ⇒ (a → m b) → Vᴍ n o a → m (Bᴍ n o b)
+xbmapM f xs@(Vᴍ _ _ _) = do
+  xs' ← mapM (mapM f) $ xiter2 xs
+  return $ xb𝐿 (list $ map list xs') $ \ (Bᴍ _ _ xs'') → Bᴍ (xrows xs) (xcols xs) xs''
+
+xumapM ∷ (Monad m,Repa.Unbox a,Repa.Unbox b) ⇒ (a → m b) → Vᴍ n o a → m (Uᴍ n o b)
+xumapM f xs@(Vᴍ _ _ _) = do
+  xs' ← mapM (mapM f) $ xiter2 xs
+  return $ xu𝐿 (list $ map list xs') $ \ (Uᴍ _ _ xs'') → Uᴍ (xrows xs) (xcols xs) xs''
+
+xindirect ∷ Vᴍ m n a → Vᴍ 1 o (𝕀32 m) → Vᴍ o n a
+xindirect xs@(Vᴍ _ _ _) is@(Vᴍ _ _ _) = matrix (xcols is) (xcols xs) $ \ o n → xs 𝄪 (is 𝄪 (s𝕚 @ 0 P,o),n)
 
 xiter2 ∷ Vᴍ m n a → 𝐼 (𝐼 a)
 xiter2 = iter ∘ map iter ∘ xsplit

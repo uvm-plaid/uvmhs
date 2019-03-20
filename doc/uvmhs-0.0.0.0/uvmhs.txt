@@ -121,6 +121,7 @@ var :: 𝕊 -> 𝕏
 chars :: 𝕊 -> [ℂ]
 fromChars :: [ℂ] -> 𝕊
 error :: 𝕊 -> a
+assert :: 𝔹 -> a -> a
 id :: a -> a
 const :: a -> b -> a
 (∘) :: (b -> c) -> (a -> b) -> a -> c
@@ -334,6 +335,12 @@ undefined :: HasCallStack => a
 instance GHC.Show.Show UVMHS.Init.𝕏
 instance GHC.Classes.Ord UVMHS.Init.𝕏
 instance GHC.Classes.Eq UVMHS.Init.𝕏
+instance GHC.Show.Show UVMHS.Init.Nat
+instance GHC.Classes.Ord UVMHS.Init.Nat
+instance GHC.Classes.Eq UVMHS.Init.Nat
+instance forall k (a :: k). GHC.Show.Show (UVMHS.Init.P a)
+instance forall k (a :: k). GHC.Classes.Ord (UVMHS.Init.P a)
+instance forall k (a :: k). GHC.Classes.Eq (UVMHS.Init.P a)
 instance (GHC.Classes.Ord k, GHC.Classes.Ord v) => GHC.Classes.Ord (k UVMHS.Init.⇰ v)
 instance (GHC.Classes.Eq k, GHC.Classes.Eq v) => GHC.Classes.Eq (k UVMHS.Init.⇰ v)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Init.𝑃 a)
@@ -364,6 +371,11 @@ instance GHC.Num.Num UVMHS.Init.ℙ
 instance GHC.Show.Show UVMHS.Init.ℙ
 instance GHC.Classes.Ord UVMHS.Init.ℙ
 instance GHC.Classes.Eq UVMHS.Init.ℙ
+instance GHC.Classes.Eq (UVMHS.Init.W c)
+instance GHC.Classes.Ord (UVMHS.Init.W c)
+instance GHC.Show.Show (UVMHS.Init.W c)
+instance forall k (t :: k -> *). (forall (a :: k). GHC.Show.Show (t a)) => GHC.Show.Show (UVMHS.Init.Ex t)
+instance forall k (t :: k -> *) (c :: k -> GHC.Types.Constraint). (forall (a :: k). GHC.Show.Show (t a)) => GHC.Show.Show (UVMHS.Init.Ex_C c t)
 instance (a Data.Type.Equality.~ b) => UVMHS.Init.CHS a b
 instance UVMHS.Init.CHS UVMHS.Init.ℤ32 GHC.Types.Int
 instance UVMHS.Init.CHS a b => UVMHS.Init.CHS (UVMHS.Init.𝐿 a) [b]
@@ -484,6 +496,7 @@ infix 3 ⊒
 (⪤) :: POrd a => a -> a -> 𝔹
 infix 3 ⪤
 lfp :: POrd a => a -> (a -> a) -> a
+gfp :: POrd a => a -> (a -> a) -> a
 
 module UVMHS.Core.Classes.Functor
 class Functor (t :: ★ -> ★)
@@ -631,6 +644,12 @@ class Root a
 root :: Root a => a -> a
 class Log a
 log :: Log a => a -> a
+class ExponentialFn a
+exp :: ExponentialFn a => a -> a
+class Sin a
+sin :: Sin a => a -> a
+class Cos a
+cos :: Cos a => a -> a
 class (Zero a, Plus a) => Additive a
 class (Additive a, One a, Times a) => Multiplicative a
 succ :: (One a, Plus a) => a -> a
@@ -892,6 +911,7 @@ module UVMHS.Core.Data.Bool
 instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.𝔹
 instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.𝔹
 instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.𝔹
+instance UVMHS.Core.Classes.Lattice.POrd UVMHS.Init.𝔹
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.𝔹
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.𝔹
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.𝔹
@@ -915,9 +935,12 @@ instance UVMHS.Core.Classes.Arithmetic.Exponential UVMHS.Init.ℕ
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℕ
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℕ
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℕ
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℕ
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℕ
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℕ
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℕ
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℕ
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℕ
 instance UVMHS.Core.Classes.Arithmetic.ToNat UVMHS.Init.ℕ
 instance UVMHS.Core.Classes.Arithmetic.ToNatO64 UVMHS.Init.ℕ
 instance UVMHS.Core.Classes.Arithmetic.ToNatO32 UVMHS.Init.ℕ
@@ -942,9 +965,12 @@ instance UVMHS.Core.Classes.Arithmetic.Exponential UVMHS.Init.ℕ64
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℕ64
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℕ64
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℕ64
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℕ64
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℕ64
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℕ64
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℕ64
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℕ64
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℕ64
 instance UVMHS.Core.Classes.Arithmetic.ToNat UVMHS.Init.ℕ64
 instance UVMHS.Core.Classes.Arithmetic.ToNat64 UVMHS.Init.ℕ64
 instance UVMHS.Core.Classes.Arithmetic.ToNatO32 UVMHS.Init.ℕ64
@@ -969,9 +995,12 @@ instance UVMHS.Core.Classes.Arithmetic.Exponential UVMHS.Init.ℕ32
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℕ32
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℕ32
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℕ32
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℕ32
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℕ32
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℕ32
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℕ32
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℕ32
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℕ32
 instance UVMHS.Core.Classes.Arithmetic.ToNat UVMHS.Init.ℕ32
 instance UVMHS.Core.Classes.Arithmetic.ToNat64 UVMHS.Init.ℕ32
 instance UVMHS.Core.Classes.Arithmetic.ToNat32 UVMHS.Init.ℕ32
@@ -996,9 +1025,12 @@ instance UVMHS.Core.Classes.Arithmetic.Exponential UVMHS.Init.ℕ16
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℕ16
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℕ16
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℕ16
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℕ16
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℕ16
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℕ16
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℕ16
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℕ16
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℕ16
 instance UVMHS.Core.Classes.Arithmetic.ToNat UVMHS.Init.ℕ16
 instance UVMHS.Core.Classes.Arithmetic.ToNat64 UVMHS.Init.ℕ16
 instance UVMHS.Core.Classes.Arithmetic.ToNat32 UVMHS.Init.ℕ16
@@ -1023,9 +1055,12 @@ instance UVMHS.Core.Classes.Arithmetic.Exponential UVMHS.Init.ℕ8
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℕ8
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℕ8
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℕ8
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℕ8
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℕ8
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℕ8
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℕ8
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℕ8
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℕ8
 instance UVMHS.Core.Classes.Arithmetic.ToNat UVMHS.Init.ℕ8
 instance UVMHS.Core.Classes.Arithmetic.ToNat64 UVMHS.Init.ℕ8
 instance UVMHS.Core.Classes.Arithmetic.ToNat32 UVMHS.Init.ℕ8
@@ -1049,9 +1084,12 @@ instance UVMHS.Core.Classes.Arithmetic.DivMod UVMHS.Init.ℤ
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℤ
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℤ
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℤ
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℤ
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℤ
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℤ
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℤ
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℤ
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℤ
 instance UVMHS.Core.Classes.Arithmetic.ToNatO UVMHS.Init.ℤ
 instance UVMHS.Core.Classes.Arithmetic.ToNatO64 UVMHS.Init.ℤ
 instance UVMHS.Core.Classes.Arithmetic.ToNatO32 UVMHS.Init.ℤ
@@ -1075,9 +1113,12 @@ instance UVMHS.Core.Classes.Arithmetic.DivMod UVMHS.Init.ℤ64
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℤ64
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℤ64
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℤ64
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℤ64
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℤ64
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℤ64
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℤ64
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℤ64
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℤ64
 instance UVMHS.Core.Classes.Arithmetic.ToNatO UVMHS.Init.ℤ64
 instance UVMHS.Core.Classes.Arithmetic.ToNatO64 UVMHS.Init.ℤ64
 instance UVMHS.Core.Classes.Arithmetic.ToNatO32 UVMHS.Init.ℤ64
@@ -1101,9 +1142,12 @@ instance UVMHS.Core.Classes.Arithmetic.DivMod UVMHS.Init.ℤ32
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℤ32
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℤ32
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℤ32
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℤ32
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℤ32
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℤ32
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℤ32
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℤ32
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℤ32
 instance UVMHS.Core.Classes.Arithmetic.ToNatO UVMHS.Init.ℤ32
 instance UVMHS.Core.Classes.Arithmetic.ToNatO64 UVMHS.Init.ℤ32
 instance UVMHS.Core.Classes.Arithmetic.ToNatO32 UVMHS.Init.ℤ32
@@ -1127,9 +1171,12 @@ instance UVMHS.Core.Classes.Arithmetic.DivMod UVMHS.Init.ℤ16
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℤ16
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℤ16
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℤ16
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℤ16
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℤ16
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℤ16
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℤ16
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℤ16
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℤ16
 instance UVMHS.Core.Classes.Arithmetic.ToNatO UVMHS.Init.ℤ16
 instance UVMHS.Core.Classes.Arithmetic.ToNatO64 UVMHS.Init.ℤ16
 instance UVMHS.Core.Classes.Arithmetic.ToNatO32 UVMHS.Init.ℤ16
@@ -1153,9 +1200,12 @@ instance UVMHS.Core.Classes.Arithmetic.DivMod UVMHS.Init.ℤ8
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℤ8
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℤ8
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℤ8
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℤ8
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℤ8
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℤ8
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℤ8
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℤ8
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℤ8
 instance UVMHS.Core.Classes.Arithmetic.ToNatO UVMHS.Init.ℤ8
 instance UVMHS.Core.Classes.Arithmetic.ToNatO64 UVMHS.Init.ℤ8
 instance UVMHS.Core.Classes.Arithmetic.ToNatO32 UVMHS.Init.ℤ8
@@ -1179,9 +1229,12 @@ instance UVMHS.Core.Classes.Arithmetic.Divide UVMHS.Init.𝕋
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.𝕋
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.𝕋
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.𝕋
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.𝕋
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.𝕋
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.𝕋
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.𝕋
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.𝕋
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.𝕋
 instance UVMHS.Core.Classes.Arithmetic.ToRatio UVMHS.Init.𝕋
 instance UVMHS.Core.Classes.Arithmetic.ToNNDouble UVMHS.Init.𝕋
 instance UVMHS.Core.Classes.Arithmetic.ToRational UVMHS.Init.𝕋
@@ -1199,10 +1252,13 @@ instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Lattice.Top UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℙ
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℙ
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Lattice.MeetLattice UVMHS.Init.ℙ
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Arithmetic.ToRatio UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Arithmetic.ToNNDouble UVMHS.Init.ℙ
 instance UVMHS.Core.Classes.Arithmetic.ToRational UVMHS.Init.ℙ
@@ -1216,9 +1272,12 @@ instance UVMHS.Core.Classes.Arithmetic.Divide UVMHS.Init.ℚ
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.ℚ
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.ℚ
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.ℚ
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.ℚ
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.ℚ
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.ℚ
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.ℚ
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.ℚ
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.ℚ
 instance UVMHS.Core.Classes.Arithmetic.ToRatioO UVMHS.Init.ℚ
 instance UVMHS.Core.Classes.Arithmetic.ToNNDoubleO UVMHS.Init.ℚ
 instance UVMHS.Core.Classes.Arithmetic.ToRational UVMHS.Init.ℚ
@@ -1232,14 +1291,20 @@ instance UVMHS.Core.Classes.Arithmetic.Divide UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Arithmetic.Exponential UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Arithmetic.Root UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Arithmetic.Log UVMHS.Init.𝔻
+instance UVMHS.Core.Classes.Arithmetic.ExponentialFn UVMHS.Init.𝔻
+instance UVMHS.Core.Classes.Arithmetic.Sin UVMHS.Init.𝔻
+instance UVMHS.Core.Classes.Arithmetic.Cos UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Lattice.Top UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.𝔻
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.𝔻
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Lattice.MeetLattice UVMHS.Init.𝔻
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Arithmetic.ToRatioO UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Arithmetic.ToNNDoubleO UVMHS.Init.𝔻
 instance UVMHS.Core.Classes.Arithmetic.ToRational UVMHS.Init.𝔻
@@ -1256,9 +1321,12 @@ instance UVMHS.Core.Classes.Arithmetic.Log UVMHS.Init.NNNumber
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.NNNumber
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.NNNumber
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.NNNumber
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.NNNumber
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.NNNumber
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.NNNumber
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.NNNumber
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.NNNumber
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.NNNumber
 instance UVMHS.Core.Classes.Arithmetic.Zero UVMHS.Init.Number
 instance UVMHS.Core.Classes.Arithmetic.Plus UVMHS.Init.Number
 instance UVMHS.Core.Classes.Arithmetic.Minus UVMHS.Init.Number
@@ -1270,9 +1338,12 @@ instance UVMHS.Core.Classes.Arithmetic.Log UVMHS.Init.Number
 instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Init.Number
 instance UVMHS.Core.Classes.Lattice.Join UVMHS.Init.Number
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Init.Number
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Init.Number
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Init.Number
 instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Init.Number
 instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Init.Number
 instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Init.Number
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.Number
 
 module UVMHS.Core.Data.String
 empty𝕊 :: 𝕊 -> 𝔹
@@ -1291,6 +1362,7 @@ instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Init.𝕊
 instance UVMHS.Core.Classes.Collections.Single UVMHS.Init.ℂ UVMHS.Init.𝕊
 instance UVMHS.Core.Classes.Collections.ToStream UVMHS.Init.ℂ UVMHS.Init.𝕊
 instance UVMHS.Core.Classes.Collections.ToIter UVMHS.Init.ℂ UVMHS.Init.𝕊
+instance UVMHS.Core.Classes.Collections.Lookup UVMHS.Init.ℕ UVMHS.Init.ℂ UVMHS.Init.𝕊
 
 module UVMHS.Core.Data.Iter
 empty𝐼 :: 𝐼 a
@@ -1518,7 +1590,9 @@ instance (GHC.Classes.Ord k, UVMHS.Core.Classes.Arithmetic.Additive k, UVMHS.Cor
 instance UVMHS.Core.Classes.Lattice.Bot (k UVMHS.Init.⇰ v)
 instance (GHC.Classes.Ord k, UVMHS.Core.Classes.Lattice.Join v) => UVMHS.Core.Classes.Lattice.Join (k UVMHS.Init.⇰ v)
 instance (GHC.Classes.Ord k, UVMHS.Core.Classes.Lattice.Join v) => UVMHS.Core.Classes.Lattice.JoinLattice (k UVMHS.Init.⇰ v)
+instance UVMHS.Core.Classes.Lattice.Top (k UVMHS.Init.⇰ v)
 instance (GHC.Classes.Ord k, UVMHS.Core.Classes.Lattice.Meet v) => UVMHS.Core.Classes.Lattice.Meet (k UVMHS.Init.⇰ v)
+instance (GHC.Classes.Ord k, UVMHS.Core.Classes.Lattice.Meet v) => UVMHS.Core.Classes.Lattice.MeetLattice (k UVMHS.Init.⇰ v)
 instance UVMHS.Core.Classes.Functor.Functor ((UVMHS.Init.⇰) k)
 instance UVMHS.Core.Classes.Collections.ToStream (k UVMHS.Init.∧ v) (k UVMHS.Init.⇰ v)
 instance UVMHS.Core.Classes.Collections.ToIter (k UVMHS.Init.∧ v) (k UVMHS.Init.⇰ v)
@@ -1647,8 +1721,9 @@ localizeL :: (Monad m, MonadState s₁ m) => (s₁ ⟢ s₂) -> s₂ -> m a -> m
 localState :: (Monad m, MonadState s m) => s -> m a -> m a
 localStateL :: (Monad m, MonadState s₁ m) => (s₁ ⟢ s₂) -> s₂ -> m a -> m a
 retState :: forall s m a. (Monad m, MonadState s m) => m a -> m s
-abort𝑂 :: forall m a. (Monad m, MonadFail m) => 𝑂 a -> m a
+abort𝑂 :: (Monad m, MonadFail m) => 𝑂 a -> m a
 tries :: (Monad m, MonadFail m, ToIter (m a) t) => t -> m a
+guard :: (Monad m, MonadFail m) => 𝔹 -> m ()
 throw𝑂 :: (Monad m, MonadError e m) => e -> 𝑂 a -> m a
 mconcat :: (MonadNondet m, ToIter (m a) t) => t -> m a
 from :: (Monad m, MonadNondet m, ToIter a t) => t -> m a
@@ -2039,6 +2114,109 @@ shellOK :: 𝕊 -> IO 𝕊
 shelll :: 𝕊 -> IO ((𝔹 ∧ 𝕊) ∧ 𝕊)
 shelllOK :: 𝕊 -> IO 𝕊
 ioUNSAFE :: IO a -> a
+
+module UVMHS.Core.Matrix
+type Tℕ = Nat
+type T𝕊 = Symbol
+type (m :: Tℕ) + (n :: Tℕ) = m + n
+type (m :: Tℕ) × (n :: Tℕ) = m * n
+type (m :: Tℕ) ^ (n :: Tℕ) = m ^ n
+type (m :: Tℕ) - (n :: Tℕ) = m - n
+type (m :: Tℕ) / (n :: Tℕ) = m `Div` n
+type (m :: Tℕ) % (n :: Tℕ) = m `Mod` n
+type Log2 (n :: Tℕ) = Log2 n
+type (m :: Tℕ) ⋚? (n :: Tℕ) = CmpNat m n
+type (m :: Tℕ) < (n :: Tℕ) = (m ⋚? n) ~  'LT
+type (m :: Tℕ) ≡ (n :: Tℕ) = (m ⋚? n) ~  'EQ
+type (m :: Tℕ) > (n :: Tℕ) = (m ⋚? n) ~  'GT
+data (m :: Tℕ) :<: (n :: Tℕ)
+TRUSTME_LT :: (:<:)
+newtype Sℕ (n :: Tℕ)
+TRUSTME_Sℕ :: ℕ -> Sℕ
+[unSℕ] :: Sℕ -> ℕ
+newtype Sℕ32 (n :: Tℕ)
+TRUSTME_Sℕ32 :: ℕ32 -> Sℕ32
+[unSℕ32] :: Sℕ32 -> ℕ32
+newtype S𝕊 (s :: T𝕊)
+TRUSTME_S𝕊 :: 𝕊 -> S𝕊
+[unS𝕊] :: S𝕊 -> 𝕊
+class (KnownNat n) => Rℕ (n :: Tℕ)
+reifyℕ :: Rℕ n => P n -> ℕ
+class (KnownNat n) => Rℕ32 (n :: Tℕ)
+reifyℕ32 :: Rℕ32 n => P n -> ℕ32
+class (KnownSymbol s) => R𝕊 (s :: T𝕊)
+reify𝕊 :: R𝕊 s => P s -> 𝕊
+compareTℕ :: forall (a :: Tℕ) (b :: Tℕ). (Rℕ a, Rℕ b) => 𝑂 (a ≟ b)
+s𝕟 :: forall n. Rℕ n => Sℕ n
+d𝕟 :: ℕ -> (forall n. Rℕ n => Sℕ n -> a) -> a
+s𝕟32 :: forall n. Rℕ32 n => Sℕ32 n
+d𝕟32 :: ℕ32 -> (forall n. Rℕ32 n => Sℕ32 n -> a) -> a
+s𝕤 :: forall s. KnownSymbol s => S𝕊 s
+d𝕤 :: 𝕊 -> (forall s. R𝕊 s => S𝕊 s -> a) -> a
+data S𝐿 (a :: sa -> ★) :: [sa] -> ★
+[SNil] :: S𝐿 a '[]
+[:&&] :: a x -> S𝐿 a xs -> S𝐿 a (x : xs)
+infixr 8 :&&
+mapS𝐿 :: forall (a :: sa -> ★) (b :: sa -> ★) (xs :: [sa]). (forall (x :: sa). a x -> b x) -> S𝐿 a xs -> S𝐿 b xs
+newtype Const (a :: ★) (b :: k)
+Const :: a -> Const
+[unConst] :: Const -> a
+type family (xs :: [a]) ⧺ (ys :: [a]) :: [a]
+data 𝕀32 (n :: Tℕ)
+[𝕀32] :: Sℕ32 m -> (m :<: n) -> 𝕀32 n
+un𝕀32 :: 𝕀32 n -> ℕ32
+s𝕚 :: forall m n. (Rℕ32 m, m < n) => P m -> 𝕀32 n
+d𝕚 :: Sℕ32 m -> ℕ32 -> 𝑂 (𝕀32 m)
+data Bᴍ (m :: Tℕ) (n :: Tℕ) a
+[Bᴍ] :: (Rℕ m, Rℕ n) => {rowsBᴍ :: Sℕ32 m, colsBᴍ :: Sℕ32 n, dataBᴍ :: Array V ((Z :. Int) :. Int) a} -> Bᴍ m n a
+data Uᴍ (m :: Tℕ) (n :: Tℕ) a
+[Uᴍ] :: (Rℕ m, Rℕ n, Unbox a) => {rowsUᴍ :: Sℕ32 m, colsUᴍ :: Sℕ32 n, dataUᴍ :: Array U ((Z :. Int) :. Int) a} -> Uᴍ m n a
+data Vᴍ (m :: Tℕ) (n :: Tℕ) a
+[Vᴍ] :: (Rℕ m, Rℕ n) => {rowsVᴍ :: Sℕ32 m, colsVᴍ :: Sℕ32 n, dataVᴍ :: Array D ((Z :. Int) :. Int) a} -> Vᴍ m n a
+class Matrix t
+xrows :: Matrix t => t m n a -> Sℕ32 m
+xcols :: Matrix t => t m n a -> Sℕ32 n
+(𝄪) :: Matrix t => t m n a -> (𝕀32 m, 𝕀32 n) -> a
+xvirt :: Matrix t => t m n a -> Vᴍ m n a
+infixl 7 𝄪
+indexBᴍ :: 𝕀32 m -> 𝕀32 n -> Bᴍ m n a -> a
+virtBᴍ :: Bᴍ m n a -> Vᴍ m n a
+indexUᴍ :: 𝕀32 m -> 𝕀32 n -> Uᴍ m n a -> a
+virtUᴍ :: Uᴍ m n a -> Vᴍ m n a
+indexVᴍ :: 𝕀32 m -> 𝕀32 n -> Vᴍ m n a -> a
+matrix :: (Rℕ m, Rℕ n) => Sℕ32 m -> Sℕ32 n -> (𝕀32 m -> 𝕀32 n -> a) -> Vᴍ m n a
+xconst :: (Rℕ m, Rℕ n) => Sℕ32 m -> Sℕ32 n -> a -> Vᴍ m n a
+xbs :: Vᴍ m n a -> Bᴍ m n a
+xbp :: Vᴍ m n a -> Bᴍ m n a
+xus :: Unbox a => Vᴍ m n a -> Uᴍ m n a
+xup :: Unbox a => Vᴍ m n a -> Uᴍ m n a
+xiter :: Vᴍ m n a -> 𝐼 a
+xtranspose :: Vᴍ m n a -> Vᴍ n m a
+xmap :: (a -> b) -> Vᴍ m n a -> Vᴍ m n b
+xmap2 :: (a -> b -> c) -> Vᴍ m n a -> Vᴍ m n b -> Vᴍ m n c
+xmeld :: Rℕ n => Sℕ32 n -> Vᴍ m 1 (Vᴍ 1 n a) -> Vᴍ m n a
+xsplit :: Vᴍ m n a -> Vᴍ m 1 (Vᴍ 1 n a)
+xrow :: 𝕀32 m -> Vᴍ m n a -> Vᴍ 1 n a
+xcol :: 𝕀32 n -> Vᴍ m n a -> Vᴍ 1 m a
+xproduct :: (Additive a, Times a) => Vᴍ m n a -> Vᴍ n o a -> Vᴍ m o a
+xbmapM :: Monad m => (a -> m b) -> Vᴍ n o a -> m (Bᴍ n o b)
+xumapM :: (Monad m, Unbox a, Unbox b) => (a -> m b) -> Vᴍ n o a -> m (Uᴍ n o b)
+xindirect :: Vᴍ m n a -> Vᴍ 1 o (𝕀32 m) -> Vᴍ o n a
+xiter2 :: Vᴍ m n a -> 𝐼 (𝐼 a)
+xlist2 :: Vᴍ m n a -> 𝐿 (𝐿 a)
+xb𝐿 :: 𝐿 (𝐿 a) -> (forall m n. Bᴍ m n a -> b) -> b
+xu𝐿 :: Unbox a => 𝐿 (𝐿 a) -> (forall m n. Uᴍ m n a -> b) -> b
+testMatrix1 :: IO ()
+instance UVMHS.Core.Matrix.Matrix UVMHS.Core.Matrix.Bᴍ
+instance UVMHS.Core.Matrix.Matrix UVMHS.Core.Matrix.Uᴍ
+instance UVMHS.Core.Matrix.Matrix UVMHS.Core.Matrix.Vᴍ
+instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Matrix.Bᴍ m n a)
+instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Matrix.Uᴍ m n a)
+instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Matrix.Vᴍ m n a)
+instance UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Matrix.Vᴍ m n)
+instance GHC.TypeLits.KnownSymbol s => UVMHS.Core.Matrix.R𝕊 s
+instance GHC.TypeNats.KnownNat n => UVMHS.Core.Matrix.Rℕ32 n
+instance GHC.TypeNats.KnownNat n => UVMHS.Core.Matrix.Rℕ n
 
 module UVMHS.Core.LensDeriving
 makeLensLogic :: Cxt -> Name -> 𝐿 TyVarBndr -> Name -> Type -> Q (𝐿 Dec)
@@ -2665,8 +2843,8 @@ data ParserToken t
 ParserToken :: t -> ParserContext -> ParserToken t
 [parserTokenValue] :: ParserToken t -> t
 [parserTokenContext] :: ParserToken t -> ParserContext
-parserTokenContextL :: forall (t_a2uPO :: Type). (⟢) (ParserToken t_a2uPO) ParserContext
-parserTokenValueL :: forall (t_a2uPO :: Type). (⟢) (ParserToken t_a2uPO) t_a2uPO
+parserTokenContextL :: forall (t_a2IzB :: Type). (⟢) (ParserToken t_a2IzB) ParserContext
+parserTokenValueL :: forall (t_a2IzB :: Type). (⟢) (ParserToken t_a2IzB) t_a2IzB
 renderNL :: ParserContextDoc
 renderEOF :: ParserContextDoc
 renderEOFContext :: AddBot Loc -> ParserContext
@@ -2676,8 +2854,8 @@ data ParserInput t
 ParserInput :: 𝑆 (ParserToken t) -> AddBot Loc -> ParserInput t
 [parserInputStream] :: ParserInput t -> 𝑆 (ParserToken t)
 [parserInputEndPos] :: ParserInput t -> AddBot Loc
-parserInputEndPosL :: forall (t_a2uRz :: Type). (⟢) (ParserInput t_a2uRz) (AddBot Loc)
-parserInputStreamL :: forall (t_a2uRz :: Type). (⟢) (ParserInput t_a2uRz) (𝑆 (ParserToken t_a2uRz))
+parserInputEndPosL :: forall (t_a2IBm :: Type). (⟢) (ParserInput t_a2IBm) (AddBot Loc)
+parserInputStreamL :: forall (t_a2IBm :: Type). (⟢) (ParserInput t_a2IBm) (𝑆 (ParserToken t_a2IBm))
 parserInput₀ :: 𝑆 (ParserToken t) -> ParserInput t
 advanceInput :: ParserInput t -> 𝑂 (ParserToken t, ParserInput t)
 data FullContext
@@ -2689,8 +2867,8 @@ data Annotated e a
 Annotated :: e -> a -> Annotated e a
 [annotatedTag] :: Annotated e a -> e
 [annotatedElem] :: Annotated e a -> a
-annotatedElemL :: forall (e_a2uXw :: Type) (a_a2uXx :: Type). (⟢) (Annotated e_a2uXw a_a2uXx) a_a2uXx
-annotatedTagL :: forall (e_a2uXw :: Type) (a_a2uXx :: Type). (⟢) (Annotated e_a2uXw a_a2uXx) e_a2uXw
+annotatedElemL :: forall (e_a2IHj :: Type) (a_a2IHk :: Type). (⟢) (Annotated e_a2IHj a_a2IHk) a_a2IHk
+annotatedTagL :: forall (e_a2IHj :: Type) (a_a2IHk :: Type). (⟢) (Annotated e_a2IHj a_a2IHk) e_a2IHj
 instance (UVMHS.Lib.Pretty.Class.Pretty e, UVMHS.Lib.Pretty.Class.Pretty a) => UVMHS.Lib.Pretty.Class.Pretty (UVMHS.Lib.Parser.ParserInput.Annotated e a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Lib.Parser.ParserInput.Annotated t a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Lib.Parser.ParserInput.Annotated t a)
@@ -2731,23 +2909,23 @@ ParserEnv :: ℕ -> 𝐿 Format -> (𝐿 𝕊 ∧ 𝕊) -> (t -> 𝔹) -> Parser
 [parserEnvRenderFormat] :: ParserEnv t -> 𝐿 Format
 [parserEnvErrorStack] :: ParserEnv t -> 𝐿 𝕊 ∧ 𝕊
 [parserEnvSkip] :: ParserEnv t -> t -> 𝔹
-parserEnvSkipL :: forall (t_a2ytt :: Type). (⟢) (ParserEnv t_a2ytt) (t_a2ytt -> 𝔹)
-parserEnvErrorStackL :: forall (t_a2ytt :: Type). (⟢) (ParserEnv t_a2ytt) ((∧) (𝐿 𝕊) 𝕊)
-parserEnvRenderFormatL :: forall (t_a2ytt :: Type). (⟢) (ParserEnv t_a2ytt) (𝐿 Format)
-parserEnvContextPaddingL :: forall (t_a2ytt :: Type). (⟢) (ParserEnv t_a2ytt) ℕ
+parserEnvSkipL :: forall (t_a2MeE :: Type). (⟢) (ParserEnv t_a2MeE) (t_a2MeE -> 𝔹)
+parserEnvErrorStackL :: forall (t_a2MeE :: Type). (⟢) (ParserEnv t_a2MeE) ((∧) (𝐿 𝕊) 𝕊)
+parserEnvRenderFormatL :: forall (t_a2MeE :: Type). (⟢) (ParserEnv t_a2MeE) (𝐿 Format)
+parserEnvContextPaddingL :: forall (t_a2MeE :: Type). (⟢) (ParserEnv t_a2MeE) ℕ
 parserEnv₀ :: ParserEnv t
 data ParserOut t
 ParserOut :: AddNull ParserError -> ParserOut t
 [parserOutError] :: ParserOut t -> AddNull ParserError
-parserOutErrorL :: forall (t_a2ywh :: k_a2ywH). (⟢) (ParserOut t_a2ywh) (AddNull ParserError)
+parserOutErrorL :: forall (t_a2Mhs :: k_a2MhS). (⟢) (ParserOut t_a2Mhs) (AddNull ParserError)
 data ParserState t
 ParserState :: ExpressionContext -> InputContext -> ParserInput t -> ParserState t
 [parserStateExpressionContext] :: ParserState t -> ExpressionContext
 [parserStateInputContext] :: ParserState t -> InputContext
 [parserStateInput] :: ParserState t -> ParserInput t
-parserStateInputL :: forall (t_a2yz6 :: Type). (⟢) (ParserState t_a2yz6) (ParserInput t_a2yz6)
-parserStateInputContextL :: forall (t_a2yz6 :: Type). (⟢) (ParserState t_a2yz6) InputContext
-parserStateExpressionContextL :: forall (t_a2yz6 :: Type). (⟢) (ParserState t_a2yz6) ExpressionContext
+parserStateInputL :: forall (t_a2Mkh :: Type). (⟢) (ParserState t_a2Mkh) (ParserInput t_a2Mkh)
+parserStateInputContextL :: forall (t_a2Mkh :: Type). (⟢) (ParserState t_a2Mkh) InputContext
+parserStateExpressionContextL :: forall (t_a2Mkh :: Type). (⟢) (ParserState t_a2Mkh) ExpressionContext
 parserState₀ :: ParserInput t -> ParserState t
 newtype Parser t a
 Parser :: ReaderT (ParserEnv t) (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a
