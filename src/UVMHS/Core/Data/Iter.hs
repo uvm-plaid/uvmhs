@@ -116,16 +116,16 @@ product ∷ (ToIter a t,Multiplicative a) ⇒ t → a
 product = fold one (×)
 
 concat ∷ (Monoid a,ToIter a t) ⇒ t → a
-concat = fold null $ flip (⧺)
+concat = foldr null (⧺)
 
 compose ∷ (ToIter (a → a) t) ⇒ t → a → a
-compose = fold id $ flip (∘)
+compose = foldr id (∘)
 
 mcompose ∷ (Monad m) ⇒ (ToIter (a → m a) t) ⇒ t → a → m a
-mcompose = fold return $ flip (*∘)
+mcompose = foldr return (*∘)
 
 wcompose ∷ (Comonad w) ⇒ (ToIter (w a → a) t) ⇒ t → w a → a
-wcompose = fold extract $ flip (%∘)
+wcompose = foldr extract (%∘)
 
 joins ∷ (JoinLattice a,ToIter a t) ⇒ t → a
 joins = fold bot (⊔)

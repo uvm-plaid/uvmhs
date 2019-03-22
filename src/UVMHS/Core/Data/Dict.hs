@@ -6,7 +6,7 @@ import UVMHS.Core.Classes
 import UVMHS.Core.Data.LazyList
 import UVMHS.Core.Data.Iter
 import UVMHS.Core.Data.Pair
-import UVMHS.Core.Data.Stream ()
+import UVMHS.Core.Data.Stream
 import UVMHS.Core.Data.String
 import UVMHS.Core.Data.Set
 
@@ -141,3 +141,6 @@ dict = foldr dø (⩌) ∘ iter
 
 assoc ∷ (Ord k,ToIter (k ∧ v) t) ⇒ t → k ⇰ v
 assoc = dict ∘ map single ∘ iter
+
+djoin ∷ (Ord k,Ord v₁,Ord v₂) ⇒ k ⇰ 𝑃 v₁ → k ⇰ 𝑃 v₂ → k ⇰ 𝑃 (v₁ ∧ v₂)
+djoin = interWith $ \ vs₁ vs₂ → pow $ zipWith (:*) vs₁ vs₂

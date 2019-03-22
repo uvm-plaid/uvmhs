@@ -106,11 +106,14 @@ isEmpty (stream → 𝑆 s g) = isNone $ g s
 naturals ∷ 𝑆 ℕ
 naturals = 𝑆 0 $ \ i → Some (i :* succ i)
 
-zip ∷ (ToStream a t₁,ToStream b t₂) ⇒ t₁ → t₂ → 𝑆 (a ∧ b)
-zip (stream → 𝑆 s₁₀ g₁) (stream → 𝑆 s₂₀ g₂) = 𝑆 (s₁₀ :* s₂₀) $ \ (s₁ :* s₂) → do
+zipWith :: (ToStream a t₁,ToStream b t₂) ⇒ (a → b → c) → t₁ → t₂ → 𝑆 c
+zipWith f (stream → 𝑆 s₁₀ g₁) (stream → 𝑆 s₂₀ g₂) = 𝑆 (s₁₀ :* s₂₀) $ \ (s₁ :* s₂) → do
   (x :* s₁') ← g₁ s₁
   (y :* s₂') ← g₂ s₂
-  return ((x :* y) :* (s₁' :* s₂'))
+  return $ f x y :* (s₁' :* s₂')
+
+zip ∷ (ToStream a t₁,ToStream b t₂) ⇒ t₁ → t₂ → 𝑆 (a ∧ b)
+zip = zipWith (:*)
 
 firstN ∷ (ToStream a t) ⇒ ℕ → t → 𝑆 a
 firstN n₀ (stream → 𝑆 s₀ g) = 𝑆 (s₀ :* 0) $ \ (s :* n) → case n ≡ n₀ of
