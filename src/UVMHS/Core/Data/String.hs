@@ -57,8 +57,8 @@ upper𝕊 = Text.toUpper
 isEmpty𝕊 ∷ 𝕊 → 𝔹
 isEmpty𝕊 = Text.null
 
-splitOn𝕊 ∷ 𝕊 → 𝕊 → 𝐿 𝕊
-splitOn𝕊 i s = frhs $ Text.splitOn i s
+splitOn𝕊 ∷ 𝕊 → 𝕊 → 𝑆 𝕊
+splitOn𝕊 i s = streamLL $ Text.splitOn i s
 
 length𝕊 ∷ 𝕊 → ℕ
 length𝕊 = natΩ ∘ frhs ∘ Text.length
