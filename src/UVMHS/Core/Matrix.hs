@@ -258,7 +258,7 @@ xindirect ∷ Vᴍ m n a → Vᴍ 1 o (𝕀32 m) → Vᴍ o n a
 xindirect xs@(Vᴍ _ _ _) is@(Vᴍ _ _ _) = matrix (xcols is) (xcols xs) $ \ o n → xs 𝄪 (is 𝄪 (s𝕚 @ 0 P,o),n)
 
 xiter2 ∷ Vᴍ m n a → 𝐼 (𝐼 a)
-xiter2 = iter ∘ map iter ∘ xsplit
+xiter2 = map iter ∘ iter ∘ xsplit
 
 xlist2 ∷ Vᴍ m n a → 𝐿 (𝐿 a)
 xlist2 = list ∘ map list ∘ xiter2
