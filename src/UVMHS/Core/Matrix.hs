@@ -246,13 +246,13 @@ xproduct xs@(Vᴍ _ _ _) ys@(Vᴍ _ _ _) =
 
 xbmapM ∷ (Monad m) ⇒ (a → m b) → Vᴍ n o a → m (Bᴍ n o b)
 xbmapM f xs@(Vᴍ _ _ _) = do
-  xs' ← mapM (mapM f) $ xiter2 xs
-  return $ xb𝐿 (list $ map list xs') $ \ (Bᴍ _ _ xs'') → Bᴍ (xrows xs) (xcols xs) xs''
+  xs' ← mapM (mapM f) $ xlist2 xs
+  return $ xb xs' $ \ (Bᴍ _ _ xs'') → Bᴍ (xrows xs) (xcols xs) xs''
 
 xumapM ∷ (Monad m,Repa.Unbox a,Repa.Unbox b) ⇒ (a → m b) → Vᴍ n o a → m (Uᴍ n o b)
 xumapM f xs@(Vᴍ _ _ _) = do
-  xs' ← mapM (mapM f) $ xiter2 xs
-  return $ xu𝐿 (list $ map list xs') $ \ (Uᴍ _ _ xs'') → Uᴍ (xrows xs) (xcols xs) xs''
+  xs' ← mapM (mapM f) $ xlist2 xs
+  return $ xu xs' $ \ (Uᴍ _ _ xs'') → Uᴍ (xrows xs) (xcols xs) xs''
 
 xindirect ∷ Vᴍ m n a → Vᴍ 1 o (𝕀32 m) → Vᴍ o n a
 xindirect xs@(Vᴍ _ _ _) is@(Vᴍ _ _ _) = matrix (xcols is) (xcols xs) $ \ o n → xs 𝄪 (is 𝄪 (s𝕚 @ 0 P,o),n)
@@ -263,32 +263,44 @@ xiter2 = map iter ∘ iter ∘ xsplit
 xlist2 ∷ Vᴍ m n a → 𝐿 (𝐿 a)
 xlist2 = list ∘ map list ∘ xiter2
 
-xb𝐿 ∷ 𝐿 (𝐿 a) → (∀ m n. (Rℕ m,Rℕ n) ⇒ Bᴍ m n a → b) → b
-xb𝐿 xs f =
+xb𝐼 ∷ 𝐼 (𝐼 a) → (∀ m n. (Rℕ m,Rℕ n) ⇒ Bᴍ m n a → b) → b
+xb𝐼 xs f =
   let uc = joins $ map (natΩ32 ∘ count) xs
       lc = meets $ map (AddTop ∘ natΩ32 ∘ count) xs
   in case AddTop uc ≡ lc of
     True → 
       d𝕟32 uc $ \ n →
       d𝕟32 (natΩ32 $ count xs) $ \ m →
-        f $ Bᴍ m n $ Repa.fromList (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ tohs $ concat xs
+        f $ Bᴍ m n $ Repa.fromList (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ lazyList $ concat xs
     False → error "`xb𝐿`: bad input list: input list is either empty (no columns) or has columns of different length"
 
-xu𝐿 ∷ (Repa.Unbox a) ⇒ 𝐿 (𝐿 a) → (∀ m n. (Rℕ m,Rℕ n) ⇒ Uᴍ m n a → b) → b
-xu𝐿 xs f =
+xb ∷ (ToIter a t,ToIter t u) ⇒ u → (∀ m n. (Rℕ m,Rℕ n) ⇒ Bᴍ m n a → b) → b
+xb xs f = xb𝐼 (map iter (iter xs)) f
+
+xu𝐼 ∷ (Repa.Unbox a) ⇒ 𝐼 (𝐼 a) → (∀ m n. (Rℕ m,Rℕ n) ⇒ Uᴍ m n a → b) → b
+xu𝐼 xs f =
   let uc = joins $ map (natΩ32 ∘ count) xs
       lc = meets $ map (AddTop ∘ natΩ32 ∘ count) xs
   in case AddTop uc ≡ lc of
     True → 
       d𝕟32 uc $ \ n →
       d𝕟32 (natΩ32 $ count xs) $ \ m →
-        f $ Uᴍ m n $ Repa.fromList (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ tohs $ concat xs
+        f $ Uᴍ m n $ Repa.fromList (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ lazyList $ concat xs
     False → error "`xb𝐿`: bad input list: input list is either empty (no columns) or has columns of different length"
+
+xu ∷ (Repa.Unbox a,ToIter a t,ToIter t u) ⇒ u → (∀ m n. (Rℕ m,Rℕ n) ⇒ Uᴍ m n a → b) → b
+xu xs f = xu𝐼 (map iter (iter xs)) f
+
+instance (Times a) ⇒ Times (Vᴍ m n a) where (×) = xmap2 (×)
+
+(✖) ∷ (Additive a,Times a) ⇒ Vᴍ m n a → Vᴍ n o a → Vᴍ m o a
+(✖) = xproduct
 
 testMatrix1 ∷ IO ()
 testMatrix1 = do
   let xs = list [list [1,2,3],list [4,5,6],list [7,8,9]]
   shout xs
-  xb𝐿 xs $ \ xs' → do
+  xb xs $ \ xs' → do
     let ys = xlist2 $ xtranspose $ xvirt xs'
     shout ys
+
