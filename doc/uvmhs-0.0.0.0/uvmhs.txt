@@ -3639,29 +3639,4 @@ instance (UVMHS.Lib.Pretty.Core.Pretty UVMHSContrib.Lang.SExp.Lit, UVMHS.Lib.Pre
 instance (UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.ℤ, UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.𝔻, UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.𝕊) => UVMHS.Lib.Pretty.Core.Pretty UVMHSContrib.Lang.SExp.Lit
 
 module UVMHSMain
-data TokenClass
-NameT :: TokenClass
-IntegerT :: TokenClass
-DoubleT :: TokenClass
-StringT :: TokenClass
-KeywordT :: TokenClass
-WhitespaceT :: TokenClass
-CommentT :: TokenClass
-data Token
-Token :: TokenClass -> 𝕊 -> Token
-[tokenClass] :: Token -> TokenClass
-[tokenValue] :: Token -> 𝕊
-lKeyword :: (Ord u, Additive u) => Regex CharClass ℂ TokenClass u
-mainRegex :: Regex CharClass ℂ TokenClass ℕ64
-commentRegex :: Regex CharClass ℂ TokenClass ℕ64
-buildToken :: 𝐼S ℂ -> 𝑂 TokenClass -> 𝔹 ∧ Token
-lNatural' :: (Ord u, Ord o, Additive u) => Regex CharClass ℂ o u
 main :: IO ()
-instance (UVMHS.Lib.Pretty.Core.Pretty UVMHSMain.TokenClass, UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.𝕊) => UVMHS.Lib.Pretty.Core.Pretty UVMHSMain.Token
-instance UVMHS.Lib.Pretty.Core.Pretty UVMHSMain.TokenClass
-instance GHC.Show.Show UVMHSMain.Token
-instance GHC.Classes.Ord UVMHSMain.Token
-instance GHC.Classes.Eq UVMHSMain.Token
-instance GHC.Show.Show UVMHSMain.TokenClass
-instance GHC.Classes.Ord UVMHSMain.TokenClass
-instance GHC.Classes.Eq UVMHSMain.TokenClass
