@@ -1,6 +1,6 @@
 module UVMHS.Core.Classes.DSL where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes.Collections
 
 infixr 0 ⊙$

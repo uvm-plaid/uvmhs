@@ -1,7 +1,6 @@
-{-# OPTIONS_GHC -rtsopts -threaded -fno-liberate-case -funfolding-use-threshold1000 -funfolding-keeness-factor1000 -optlo-O3 #-}
 module UVMHS.Core.Matrix where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 import UVMHS.Core.Pointed
@@ -145,7 +144,7 @@ class Matrix t where
 -- boxed --
 
 indexBᴍ ∷ 𝕀32 m → 𝕀32 n → Bᴍ m n a → a
-indexBᴍ i j xs = dataBᴍ xs Repa.! (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j))
+indexBᴍ i j xs = Repa.unsafeIndex (dataBᴍ xs) (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j))
 
 virtBᴍ ∷ Bᴍ m n a → Vᴍ m n a
 virtBᴍ (Bᴍ m n xs) = Vᴍ m n $ Repa.delay xs
@@ -159,7 +158,7 @@ instance Matrix Bᴍ where
 -- unboxed --
 
 indexUᴍ ∷ 𝕀32 m → 𝕀32 n → Uᴍ m n a → a
-indexUᴍ i j (Uᴍ _ _ xs) = xs Repa.! (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j))
+indexUᴍ i j (Uᴍ _ _ xs) = Repa.unsafeIndex xs (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j))
 
 virtUᴍ ∷ Uᴍ m n a → Vᴍ m n a
 virtUᴍ (Uᴍ m n xs) = Vᴍ m n $ Repa.delay xs
@@ -173,7 +172,7 @@ instance Matrix Uᴍ where
 -- virtual --
 
 indexVᴍ ∷ 𝕀32 m → 𝕀32 n → Vᴍ m n a → a
-indexVᴍ i j xs = dataVᴍ xs Repa.! (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j)) 
+indexVᴍ i j xs = Repa.unsafeIndex (dataVᴍ xs) (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j)) 
 
 instance Matrix Vᴍ where
   xrows = rowsVᴍ

@@ -1,12 +1,13 @@
 module UVMHS.Lib.Parser.Loc where
 
 import UVMHS.Core
+
 import UVMHS.Lib.Pretty
 
 data Loc = Loc
-  { locPos ∷ ℕ
-  , locRow ∷ ℕ
-  , locCol ∷ ℕ
+  { locPos ∷ ℕ64
+  , locRow ∷ ℕ64
+  , locCol ∷ ℕ64
   }
 makeLenses ''Loc
 makePrettyRecord ''Loc
@@ -20,10 +21,10 @@ instance JoinLattice Loc
 instance Meet Loc where l₁ ⊓ l₂ = case locPos l₁ ≤ locPos l₂ of {True → l₁;False → l₂}
 
 bumpRow ∷ Loc → Loc
-bumpRow (Loc pos row _) = Loc (pos + 1) (row + 1) 0
+bumpRow (Loc pos row _) = Loc (pos + one) (row + one) zero
 
 bumpCol ∷ Loc → Loc
-bumpCol (Loc pos row col) = Loc (pos + 1) row (col + 1)
+bumpCol (Loc pos row col) = Loc (pos + one) row (col + one)
 
 -- # LocRange
 

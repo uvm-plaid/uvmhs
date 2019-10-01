@@ -1,23 +1,32 @@
-NAME := uvmhs
+E    := UVMHSMain.main
 
-.PHONY: interact
-interact: $(NAME).cabal
-	stack ghci $(NAME)
+.PHONY: dev
+dev:
+	ghcid --test $E
+
+.PHONY: run
+eval:
+	stack ghci --ghci-options -e --ghci-options $E
 
 .PHONY: build
-build: $(NAME).cabal
+build:
 	stack build
 
-.PHONY: build-profile
-build-profile: $(NAME).cabal
-	stack build --profile
+.PHONY: run
+run:
+	stack run
 
-.PHONY: install
-install: $(NAME).cabal
-	stack install
+.PHONY: profile
+profile:
+	stack run --profile -- +RTS -p
 
-.PHONY: configure
-configure: $(NAME).cabal
+.PHONY: trace
+trace:
+	stack run --profile -- +RTS -xc
+
+.PHONY: ghci
+ghci:
+	stack ghci
 
 .PHONY: doc
 doc:
@@ -35,7 +44,3 @@ hoogle:
 	stack hoogle -- generate --local
 	(sleep 1 && open http://localhost:8080/?scope=package%3A$(NAME)) &
 	stack hoogle -- server --local --port=8080
-
-$(NAME).cabal: package.yaml
-	hpack --force
-

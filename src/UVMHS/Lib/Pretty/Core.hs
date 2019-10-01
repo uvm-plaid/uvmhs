@@ -2,462 +2,730 @@ module UVMHS.Lib.Pretty.Core where
 
 import UVMHS.Core
 
-import UVMHS.Lib.Pretty.Color
+import UVMHS.Lib.ATree
+import UVMHS.Lib.IterS
 
----------------
--- PrettyEnv --
----------------
+import UVMHS.Lib.Pretty.Annotation
 
-
-data Layout = Flat | Break
+-----------
+-- CHUNK --
+-----------
+  
+data IChunk =
+    RawIChunk ℕ64 𝕊
+  | NewlineIChunk ℕ64
   deriving (Eq,Ord,Show)
-data FailMode = CanFail | CannotFail
+
+data OChunk =
+    RawOChunk ℕ64 𝕊
+  | NewlineOChunk ℕ64
+  | PaddingOChunk ℕ64
   deriving (Eq,Ord,Show)
+
+----------------
+-- PrettyMode --
+----------------
+
+data PrettyMode = NullMode | AMode | GMode | AGMode
+  deriving (Eq,Ord,Show)
+
+instance Null PrettyMode where null = NullMode
+instance Append PrettyMode where
+  NullMode ⧺ m = m
+  m ⧺ NullMode = m
+  AGMode ⧺ _ = AGMode
+  _ ⧺ AGMode = AGMode
+  AMode ⧺ AMode = AMode
+  GMode ⧺ GMode = GMode
+  AMode ⧺ GMode = AGMode
+  GMode ⧺ AMode = AGMode
+instance Monoid PrettyMode
+
+------------
+-- SSHAPE --
+------------
+
+data MultiShape = MultiShape
+  { multiShapeAligned ∷ 𝔹
+  , multiShapeFirstLength ∷ ℕ64
+  , multiShapeMidMaxLength ∷ ℕ64
+  , multiShapeLastLength ∷ ℕ64
+  , multiShapeLines ∷ ℕ64
+  } deriving (Eq,Ord,Show)
+
+data Shape = SShape ℕ64 | MShape MultiShape
+  deriving (Eq,Ord,Show)
+makePrisms ''Shape
+
+alignShape ∷ Shape → Shape
+alignShape (SShape l) = SShape l
+alignShape (MShape ms) = MShape ms { multiShapeAligned = True }
+
+getShapeAligned ∷ Shape → 𝔹
+getShapeAligned (SShape _) = False
+getShapeAligned (MShape ms) = multiShapeAligned ms
+
+instance Null Shape where 
+  null = SShape $ 𝕟64 0
+instance Append Shape where
+  SShape l₁ ⧺ SShape l₂ = SShape $ l₁ ⧺ l₂
+  SShape l₁ ⧺ MShape (MultiShape a₂ fl₂ mml₂ ll₂ lines₂)
+    | not a₂ = MShape $ 
+        MultiShape False (l₁ + fl₂) mml₂ ll₂ lines₂
+    | otherwise = MShape $ 
+        MultiShape True (l₁ + fl₂) (l₁ + mml₂) (l₁ + ll₂) lines₂
+  MShape (MultiShape a₁ fl₁ mml₁ ll₁ lines₁) ⧺ SShape l₂ = MShape $ 
+    MultiShape a₁ fl₁ mml₁ (ll₁ + l₂) lines₁
+  MShape (MultiShape a₁ fl₁ mml₁ ll₁ lines₁) ⧺ MShape (MultiShape a₂ fl₂ mml₂ ll₂ lines₂)
+    | not a₂ = MShape $ 
+        MultiShape a₁ fl₁ (mml₁ ⊔ (ll₁ + fl₂) ⊔ mml₂) ll₂ (lines₁ + lines₂)
+    | otherwise = MShape $ 
+        MultiShape a₁ fl₁ (mml₁ ⊔ (ll₁ + fl₂) ⊔ (ll₁ + mml₂)) (ll₁ + ll₂) (lines₁ + lines₂)
+instance Monoid Shape
+
+-------------
+-- Summary --
+-------------
+
+data Summary = Summary
+  { summaryShape ∷ Shape
+  , summaryContents ∷ 𝐼 (RDoc IChunk)
+  } deriving (Show)
+
+instance Null Summary where null = Summary null null
+instance Append Summary where
+  Summary sh₁ cs₁ ⧺ Summary sh₂ cs₂ = case (sh₁,sh₂) of
+    (SShape l₁,SShape l₂) → 
+      let sh = SShape $ l₁ ⧺ l₂
+      in Summary sh $ cs₁ ⧺ cs₂
+    (SShape l₁,MShape (MultiShape a₂ fl₂ mml₂ ll₂ lines₂))
+      | not a₂ → 
+          let sh = MShape $ MultiShape False (l₁ + fl₂) mml₂ ll₂ lines₂
+          in Summary sh $ cs₁ ⧺ cs₂
+      | otherwise →
+          let sh = MShape $ MultiShape True (l₁ + fl₂) (l₁ + mml₂) (l₁ + ll₂) lines₂
+              cs₂' = mapOn cs₂ $ mapp $ \case
+                NewlineIChunk n → NewlineIChunk $ n + l₁
+                c → c
+          in Summary sh $ cs₁ ⧺ cs₂'
+    (MShape (MultiShape a₁ fl₁ mml₁ ll₁ lines₁),SShape l₂) →
+      let sh = MShape $ MultiShape a₁ fl₁ mml₁ (ll₁ + l₂) lines₁
+      in Summary sh $ cs₁ ⧺ cs₂
+    (MShape (MultiShape a₁ fl₁ mml₁ ll₁ lines₁),MShape (MultiShape a₂ fl₂ mml₂ ll₂ lines₂))
+      | not a₂ → 
+          let sh = MShape $ 
+                MultiShape a₁ fl₁ (mml₁ ⊔ (ll₁ + fl₂) ⊔ mml₂) ll₂ (lines₁ + lines₂)
+          in Summary sh $ cs₁ ⧺ cs₂
+      | otherwise → 
+          let sh = MShape $ 
+                MultiShape a₁ fl₁ (mml₁ ⊔ (ll₁ + fl₂) ⊔ (ll₁ + mml₂)) (ll₁ + ll₂) (lines₁ + lines₂)
+              cs₂' = mapOn cs₂ $ mapp $ \case
+                NewlineIChunk n → NewlineIChunk $ n + ll₁
+                c → c
+          in Summary sh $ cs₁ ⧺ cs₂'
+instance Monoid Summary
+
+------------------------
+-- LDOC + RDoc + SDoc --
+------------------------
+
+type LDoc = 𝐴 Summary () PrettyMode (Shape ∧ 𝐼 (RDoc IChunk))
+type RDoc a = 𝐴 () Annotation () (𝐼 a)
+type SDoc = 𝐴 () Formats () (𝐼 OChunk)
+
+makeLenses ''Summary
+
+ichunkShape ∷ IChunk → Shape
+ichunkShape (RawIChunk l _) = SShape l
+ichunkShape (NewlineIChunk n) = MShape $ MultiShape False (𝕟64 0) (𝕟64 0) n (𝕟64 1)
+
+rawIChunk𝕊 ∷ 𝕊 → IChunk
+rawIChunk𝕊 s = RawIChunk (𝕟64 $ length𝕊 s) s
+
+splitIChunks𝕊 ∷ 𝕊 → 𝐼 IChunk
+splitIChunks𝕊 s = iter $ list $ filter (\ s' → s' ≢ RawIChunk (𝕟64 0) "") $ inbetween (NewlineIChunk zero) $ map rawIChunk𝕊 $ iter $ splitOn𝕊 "\n" s
+
+renderIChunks𝕊 ∷ Shape → 𝐼 IChunk → 𝐼 (RDoc IChunk)
+renderIChunks𝕊 sh chunks
+  | sh ≡ null = null
+  | otherwise = single $ Leaf𝐴 () null () chunks
+
+stringCChunk ∷ 𝕊 → LDoc
+stringCChunk s =
+  let chunks = splitIChunks𝕊 s
+      sh = concat $ map ichunkShape chunks
+      rd = renderIChunks𝕊 sh chunks
+  in Leaf𝐴 (Summary sh rd) () null (sh :* rd)
+
+stringCChunkModal ∷ 𝕊 → 𝕊 → LDoc
+stringCChunkModal sf sb =
+  let chunksf = splitIChunks𝕊 sf
+      chunksb = splitIChunks𝕊 sb
+      shf = concat $ map ichunkShape chunksf
+      shb = concat $ map ichunkShape chunksb
+      rdf = renderIChunks𝕊 shf chunksf
+      rdb = renderIChunks𝕊 shb chunksb
+  in Leaf𝐴 (Summary shf rdf) () null (shb :* rdb)
+
+-- ######### --
+-- COMPILERS --
+-- ######### --
+
+-----------------
+-- LDOC ⇒ RDOC --
+-----------------
+
+data LDocEnv = LDocEnv
+  -- global env
+  { ldocEnvMaxLineWidth ∷ 𝑂 ℕ64
+  , ldocEnvMaxRibbonWidth ∷ 𝑂 ℕ64
+  -- local env
+  , ldocEnvNest ∷ ℕ64
+  } deriving (Eq,Ord,Show)
+makeLenses ''LDocEnv
+
+ldocEnv₀ ∷ LDocEnv
+ldocEnv₀ = LDocEnv
+  { ldocEnvMaxLineWidth = Some $ 𝕟64 120
+  , ldocEnvMaxRibbonWidth = Some $ 𝕟64 100
+  , ldocEnvNest = 𝕟64 0
+  }
+
+data LDocState = LDocState
+  { ldocStateRib ∷ ℕ64
+  , ldocStateRow ∷ ℕ64
+  , ldocStateCol ∷ ℕ64
+  } deriving (Eq,Ord,Show)
+makeLenses ''LDocState
+
+ldocState₀ ∷ LDocState
+ldocState₀ = LDocState
+  { ldocStateRib = 𝕟64 0
+  , ldocStateRow = 𝕟64 0
+  , ldocStateCol = 𝕟64 0
+  }
+
+type LDocM = RWS LDocEnv (𝐼 (RDoc IChunk)) LDocState
+
+renderRDoc ∷ Shape → 𝐼 (RDoc IChunk) → LDocM ()
+renderRDoc sh rdis = do
+  nest ← askL ldocEnvNestL
+  tell $ mapOn rdis $ mapp $ \case
+    NewlineIChunk n → NewlineIChunk $ n + nest
+    c → c
+  case sh of
+    SShape l → do
+      modifyL ldocStateRibL $ (+) l
+      modifyL ldocStateColL $ (+) l
+    MShape (MultiShape _ _ _ ll lines) → do
+      modifyL ldocStateRowL $ (+) lines
+      putL ldocStateRibL ll
+      putL ldocStateColL ll
+
+alignLDoc ∷ LDocM a → LDocM a
+alignLDoc xM = do
+  col ← getL ldocStateColL
+  nest ← askL ldocEnvNestL
+  putL ldocStateColL $ 𝕟64 0
+  x ← localL ldocEnvNestL (nest + col) xM
+  modifyL ldocStateColL $ (+) col
+  return x
+
+groupLDoc ∷ Shape → 𝐼 (RDoc IChunk) → LDocM () → LDocM ()
+groupLDoc sh rdis xM 
+  | shape mShapeL sh = xM
+  | otherwise = do
+      lwO ← askL ldocEnvMaxLineWidthL
+      rwO ← askL ldocEnvMaxRibbonWidthL
+      nest ← askL ldocEnvNestL
+      rib ← getL ldocStateRibL
+      col ← getL ldocStateColL
+      let ml :* mr = case sh of
+            SShape l → (nest + col + l) :* (rib + l)
+            MShape (MultiShape _ fl mml ll _) → 
+              joins [ nest + col + fl , nest + mml , nest + ll ]
+              :*
+              joins [ rib + fl , mml , ll ]
+          mlb = case lwO of
+            None → True
+            Some lw → ml ≤ lw
+          mrb = case rwO of
+            None → True
+            Some rw → mr ≤ rw
+      case mlb ⩓ mrb of 
+        True → renderRDoc sh rdis
+        False → xM
+  
+modeLDoc ∷ Shape → 𝐼 (RDoc IChunk) → PrettyMode → LDocM () → LDocM ()
+modeLDoc sh rdis = \case
+  NullMode → id
+  AMode → alignLDoc
+  GMode → groupLDoc sh rdis
+  AGMode → alignLDoc ∘ groupLDoc sh rdis
+
+compileLDoc ∷ LDoc → LDocM ()
+compileLDoc = \case
+  Leaf𝐴 (Summary shf rdisf) () m (shb :* rdisb) → modeLDoc shf rdisf m $ renderRDoc shb rdisb
+  Append𝐴 (Summary shf rdisf) () m ld₁ lds₂ ld₃ → modeLDoc shf rdisf m $ do
+    compileLDoc ld₁
+    eachWith compileLDoc lds₂
+    compileLDoc ld₃
+
+execLDocWith ∷ (LDocM () → LDocM ()) → LDoc → RDoc IChunk
+execLDocWith f = concat ∘ evalRWS ldocEnv₀ ldocState₀ ∘ retOut ∘ f ∘ compileLDoc
+
+execLDoc ∷ LDoc → RDoc IChunk
+execLDoc = execLDocWith id
+
+-----------------
+-- RDoc ⇒ SDoc --
+-----------------
+
+data RDocEnv = RDocEnv
+  -- local env
+  { rdocEnvUnderFormat ∷ 𝑂 (ℂ ∧ Formats)
+  }
+makeLenses ''RDocEnv
+
+rdocEnv₀ ∷ RDocEnv
+rdocEnv₀ = RDocEnv 
+  { rdocEnvUnderFormat = None
+  }
+
+data RDocState = RDocState
+  { rdocStateCol ∷ ℕ64
+  , rdocStateUnders ∷ 𝐼 (ℕ64 ∧ ℕ64 ∧ ℂ ∧ Formats)
+  }
+makeLenses ''RDocState
+
+rdocState₀ ∷ RDocState
+rdocState₀ = RDocState
+  { rdocStateCol = 𝕟64 0
+  , rdocStateUnders = null
+  }
+
+type RDocM = RWS RDocEnv SDoc RDocState
+
+buildUndertags ∷ ℕ64 → RDocM ()
+buildUndertags l = do
+  uf ← askL rdocEnvUnderFormatL
+  case uf of
+    None → skip
+    Some (c :* fm) → do
+      col ← getL rdocStateColL
+      modifyL rdocStateUndersL $ flip (⧺) $ single (col :* l :* c :* fm)
+
+renderNewline ∷ ℕ64 → RDocM ()
+renderNewline n = do
+  tell $ Leaf𝐴 () null () $ single $ NewlineOChunk n
+  putL rdocStateColL n
+
+renderRaw ∷ ℕ64 → 𝕊 → RDocM ()
+renderRaw l s = do
+  tell $ Leaf𝐴 () null () $ single $ RawOChunk l s
+  modifyL rdocStateColL $ (+) l
+
+renderPadding ∷ ℕ64 → RDocM ()
+renderPadding n =
+  case n ≡ zero of
+    True → skip
+    False → do
+      tell $ Leaf𝐴 () null () $ single $ PaddingOChunk n
+      modifyL rdocStateColL $ (+) n
+
+renderUndertags ∷ RDocM ()
+renderUndertags = do
+  us ← list ^$ getL rdocStateUndersL
+  putL rdocStateUndersL null
+  case us ≡ null of
+    True → skip
+    False → do
+      renderNewline zero
+      eachOn us $ \ (colf :* l :* c :* fm) → do
+        col ← getL rdocStateColL
+        renderPadding $ colf - col
+        formatRDoc fm $ renderRaw l $ string $ repeat (nat l) c
+
+renderChunk ∷ IChunk → RDocM ()
+renderChunk = \case
+  RawIChunk l s → do buildUndertags l ; renderRaw l s
+  NewlineIChunk n → do renderUndertags ; renderNewline n
+  -- PaddingOChunk n → renderPadding n
+
+formatRDoc ∷ Formats → RDocM () → RDocM ()
+formatRDoc fm xM = do
+  sd :* () ← hijack xM
+  tell $ annoi fm sd
+
+annotateRDoc ∷ Annotation → RDocM () → RDocM ()
+annotateRDoc (Annotation fm ut) = formatRDoc fm ∘ localL rdocEnvUnderFormatL ut
+
+compileRDoc ∷ RDoc IChunk → RDocM ()
+compileRDoc = \case
+  Leaf𝐴 () a () chs → annotateRDoc a $ eachWith renderChunk chs
+  Append𝐴 () a () rd₁ rds₂ rd₃ → annotateRDoc a $ do
+    compileRDoc rd₁
+    eachWith compileRDoc rds₂
+    compileRDoc rd₃
+
+execRDoc ∷ RDoc IChunk → SDoc
+execRDoc = evalRWS rdocEnv₀ rdocState₀ ∘ retOut ∘ compileRDoc
+
+---------
+-- Doc --
+---------
 
 data PrettyParams = PrettyParams
-  { punctuationFormat        ∷ 𝐿 Format
-  , keywordPunctuationFormat ∷ 𝐿 Format
-  , keywordFormat            ∷ 𝐿 Format
-  , constructorFormat        ∷ 𝐿 Format
-  , operatorFormat           ∷ 𝐿 Format
-  , binderFormat             ∷ 𝐿 Format
-  , literalFormat            ∷ 𝐿 Format
-  , highlightFormat          ∷ 𝐿 Format
-  , headerFormat             ∷ 𝐿 Format
-  , errorFormat              ∷ 𝐿 Format
-  , lineNumberFormat         ∷ 𝐿 Format
-  , appLevel                 ∷ ℕ
-  , ratioLevel               ∷ ℕ
+  { punctuationFormat        ∷ Formats
+  , keywordPunctuationFormat ∷ Formats
+  , keywordFormat            ∷ Formats
+  , constructorFormat        ∷ Formats
+  , operatorFormat           ∷ Formats
+  , binderFormat             ∷ Formats
+  , literalFormat            ∷ Formats
+  , highlightFormat          ∷ Formats
+  , headerFormat             ∷ Formats
+  , errorFormat              ∷ Formats
+  , lineNumberFormat         ∷ Formats
+  , appLevel                 ∷ ℕ64
   } deriving (Eq,Ord,Show)
 makeLenses ''PrettyParams
 
 prettyParams₀ ∷ PrettyParams
 prettyParams₀ = PrettyParams
-  { punctuationFormat        = list [FG darkGray]
-  , keywordPunctuationFormat = list [FG darkYellow,BD]
-  , keywordFormat            = list [FG darkYellow,BD,UL]
-  , constructorFormat        = list [FG darkGreen,BD]
-  , operatorFormat           = list [FG darkBlue]
-  , binderFormat             = list [FG darkTeal]
-  , literalFormat            = list [FG darkRed]
-  , highlightFormat          = list [BG highlight]
-  , headerFormat             = list [FG darkPink,BD,UL]
-  , errorFormat              = list [FG white,BG darkRed]
-  , lineNumberFormat         = list [FG gray]
-  , appLevel                 = 100
-  , ratioLevel               = 50
+  { punctuationFormat        = formats [FG darkGray]
+  , keywordPunctuationFormat = formats [FG darkYellow,BD]
+  , keywordFormat            = formats [FG darkYellow,BD]
+  , constructorFormat        = formats [FG darkGreen,BD]
+  , operatorFormat           = formats [FG darkBlue]
+  , binderFormat             = formats [FG darkTeal]
+  , literalFormat            = formats [FG darkRed]
+  , highlightFormat          = formats [BG highlight]
+  , headerFormat             = formats [FG darkPink,BD,UL]
+  , errorFormat              = formats [FG white,BG darkRed]
+  , lineNumberFormat         = formats [FG gray]
+  , appLevel                 = 𝕟64 100
   }
 
-data PrettyEnv = PrettyEnv
+data DocEnv = DocEnv
   -- global env
-  { prettyParams ∷ PrettyParams
-  , maxColumnWidth ∷ ℕ
-  , maxRibbonWidth ∷ ℕ
-  , doFormat ∷ 𝔹
-  , doLineNumbers ∷ 𝔹
-  , blinders ∷ 𝑂 (ℕ ∧ ℕ)
+  { docEnvPrettyParams ∷ PrettyParams
   -- local env
-  , layout ∷ Layout
-  , failMode ∷ FailMode
-  , nesting ∷ ℕ
-  , level ∷ ℕ
-  , bumped ∷ 𝔹
+  , docEnvPrecLevel ∷ ℕ64
+  , docEnvPrecBumped ∷ 𝔹
   } deriving (Eq,Ord,Show)
-makeLenses ''PrettyEnv
+makeLenses ''DocEnv
 
-prettyEnv₀ ∷ PrettyEnv
-prettyEnv₀ = PrettyEnv
+docEnv₀ ∷ DocEnv
+docEnv₀ = DocEnv
   -- global env
-  { prettyParams = prettyParams₀
-  , maxColumnWidth = 100
-  , maxRibbonWidth = 60
-  , doFormat = True
-  , doLineNumbers = False
-  , blinders = None
+  { docEnvPrettyParams = prettyParams₀
   -- local env
-  , layout = Break
-  , failMode = CannotFail
-  , nesting = 0
-  , level = 0
-  , bumped = False
+  , docEnvPrecLevel = 𝕟64 0
+  , docEnvPrecBumped = False
   }
 
----------------
--- PrettyOut --
----------------
+type DocM = RWS DocEnv LDoc ()
+newtype Doc = Doc { unDoc ∷ DocM () }
 
-data Chunk = LineNumber ℕ | Text 𝕊 | Newline
-  deriving (Eq, Ord,Show)
-data Annotation = 
-    FormatA      (𝐿 Format)
-  | UndertagA    (𝑂 (𝐿 Format ∧  ℂ))
-  deriving (Eq,Ord,Show)
-type Output = 𝑄 OutputElem
-data OutputElem =
-    RawChunk Chunk
-  | AnnotatedOutput Annotation Output
-  deriving (Eq,Ord,Show)
-
-data PrettyOut = PrettyOut
-  { output ∷ Output
-  , maxDisplayLineNumber ∷ ℕ
-  } deriving (Eq,Ord,Show)
-makeLenses ''PrettyOut
-instance Null PrettyOut where null = PrettyOut null 0
-instance Append PrettyOut where PrettyOut o₁ n₁ ⧺ PrettyOut o₂ n₂ = PrettyOut (o₁ ⧺ o₂) (n₁ ⊔ n₂) 
-instance Monoid PrettyOut
-
------------------
--- PrettyState --
------------------
-
-data PrettyState = PrettyState
-  { column ∷ ℕ
-  , ribbon ∷ ℕ
-  , lineNumber ∷ ℕ
-  , beginning ∷ 𝔹
-  , displayLineNumber ∷ ℕ
-  } deriving (Eq,Ord,Show)
-makeLenses ''PrettyState
-
-prettyState₀ ∷ PrettyState
-prettyState₀ = PrettyState
-  { column = 0
-  , ribbon = 0
-  , lineNumber = 0
-  , beginning = True
-  , displayLineNumber = 1
-  }
-
--------------
--- PrettyM --
--------------
-
-newtype PrettyM a = PrettyM { unPrettyM ∷ RWST PrettyEnv PrettyOut PrettyState 𝑂 a }
-  deriving
-  (Functor,Return,Bind,Monad
-  ,MonadReader PrettyEnv
-  ,MonadWriter PrettyOut
-  ,MonadState PrettyState
-  ,MonadFail)
-
-runPrettyM ∷ PrettyEnv → PrettyState → PrettyM a → 𝑂 (PrettyState ∧ PrettyOut ∧ a)
-runPrettyM r s = runRWST r s ∘ unPrettyM
-
-evalPrettyM ∷ PrettyEnv → PrettyState → PrettyM a → 𝑂 a
-evalPrettyM r s = evalRWST r s ∘ unPrettyM
-
-execPrettyM ∷ PrettyM () → PrettyOut
-execPrettyM aM =
-  let errOut = PrettyOut
-        { output = single $ AnnotatedOutput (FormatA $ errorFormat prettyParams₀) $ single $ RawChunk $ Text "<internal pretty printing error>"
-        , maxDisplayLineNumber = 0
-        }
-  in ifNone errOut $ evalPrettyM prettyEnv₀ prettyState₀ $ retOut aM
-
--- # Low-Level Helpers
-
-shouldOutput ∷ PrettyM 𝔹
-shouldOutput = do
-  ln ← getL lineNumberL
-  bl ← askL blindersL
-  return $ case bl of
-    None → True
-    Some (low :* high) → (low ≤ ln) ⩓ (ln ≤ high)
-
-shouldOutputNewline ∷ PrettyM 𝔹
-shouldOutputNewline = do
-  ln ← getL lineNumberL
-  bl ← askL blindersL
-  return $ case bl of
-    None → True
-    Some (low :* high) → (low ≤ ln) ⩓ (ln < high)
-
-spit ∷ 𝕊 → PrettyM ()
-spit s = do
-  modifyL columnL $ (+) $ length𝕊 s
-  modifyL ribbonL $ (+) $ countWith (not ∘ isSpace) s
-  whenM shouldOutput $ tellL outputL $ single $ RawChunk $ Text s
-
-annotateOutput ∷ Annotation → Output → PrettyM Output
-annotateOutput a o = do
-  df ← askL doFormatL
-  return $ case df of 
-    True → single $ AnnotatedOutput a o
-    False → o
-
-doLineNumber ∷ 𝔹 → PrettyM ()
-doLineNumber b = do
-  when b $ do
-    whenM (askL doLineNumbersL) $ do
-      lnf ← askL $ lineNumberFormatL ⊚ prettyParamsL
-      dln ← getL displayLineNumberL
-      whenM shouldOutput $ do
-        tellL outputL 
-          *$ annotateOutput (FormatA (lnf ⧺ override)) 
-          *$ annotateOutput (UndertagA None) 
-          *$ return $ single $ RawChunk $ LineNumber dln
-        tellL maxDisplayLineNumberL $ length𝕊 $ show𝕊 dln
-
-doNesting ∷ 𝔹 → PrettyM ()
-doNesting b = do
-  when b $ do
-    n ← askL nestingL
-    o :* () ← hijackL outputL $ spit $ build𝕊 $ repeat n " "
-    tellL outputL 
-      *$ annotateOutput (FormatA override) 
-      *$ annotateOutput (UndertagA None)
-      *$ return o
-
-word ∷ 𝕊 → PrettyM ()
-word s | isEmpty𝕊 s = skip
-word s = do
-  b ← getputL beginningL False
-  doLineNumber b
-  doNesting b
-  spit s
-  cf ← askL failModeL
-  when (cf == CanFail) $ do
-    cmax ← askL maxColumnWidthL
-    rmax ← askL maxRibbonWidthL
-    c ← getL columnL
-    r ← getL ribbonL
-    when (c > cmax) abort
-    when (r > rmax) abort
-
-newline ∷ PrettyM ()
-newline = do
-  whenM shouldOutputNewline $ tellL outputL $ single $ RawChunk Newline
-  modifyL lineNumberL succ
-  modifyL displayLineNumberL succ
-  putL columnL 0
-  putL ribbonL 0
-  putL beginningL True
-
--- # Doc
-
-newtype Doc = Doc { runDoc ∷ PrettyM () }
--- instance Eq Doc where (==) = (≡) `on` (normalizeOutput ∘ output ∘ execDoc)
--- instance Ord Doc where compare = compare `on` (normalizeOutput ∘ output ∘ execDoc)
 instance Null Doc where null = Doc skip
-instance Append Doc where d₁ ⧺ d₂ = Doc $ exec [runDoc d₁,runDoc d₂]
+instance Append Doc where d₁ ⧺ d₂ = Doc $ unDoc d₁ ≫  unDoc d₂
 instance Monoid Doc
--- instance HasOrd [ChunkNF] Doc where ord = normalizeOutput ∘ output ∘ execDoc
 
-execDoc ∷ Doc → PrettyOut
-execDoc = execPrettyM ∘ runDoc
+execDoc ∷ Doc → LDoc
+execDoc = evalRWS docEnv₀ () ∘ retOut ∘ unDoc
 
-onDoc ∷ (PrettyM () → PrettyM ()) → Doc → Doc
-onDoc f = Doc ∘ f ∘ runDoc
+onDoc ∷ (DocM () → DocM ()) → Doc → Doc
+onDoc f = Doc ∘ f ∘ unDoc
 
--- # Low Level Interface
-
-ppSpace ∷ ℕ → Doc
-ppSpace n = Doc $ word $ build𝕊 $ repeat n " "
-
-ppNewline ∷ Doc
-ppNewline = Doc newline
-
-ppText ∷ 𝕊 → Doc
-ppText = Doc ∘ exec ∘ inbetween newline ∘ map word ∘ splitOn𝕊 "\n"
+-----------------
+-- COMBINATORS --
+-----------------
 
 ppAnnotate ∷ Annotation → Doc → Doc
-ppAnnotate a aM = Doc $ do
-  (o :* ()) ← hijackL outputL $ runDoc aM
-  tellL outputL *$ annotateOutput a o
+ppAnnotate a = onDoc $ mapOut $ homMap𝐴 (alter summaryContentsL $ map $ annoi a) $ mapSnd $ map $ annoi a
 
-ppFormat ∷ 𝐿 Format → Doc → Doc
-ppFormat = ppAnnotate ∘ FormatA
+ppFormat ∷ Formats → Doc → Doc
+ppFormat = ppAnnotate ∘ formatAnnotation
 
-ppNoFormat ∷ Doc → Doc
-ppNoFormat = onDoc $ mapEnv $ update doFormatL False
+ppFormatParam ∷ PrettyParams ⟢ Formats → Doc → Doc
+ppFormatParam l d = Doc $ do
+  fmt ← askL $ l ⊚ docEnvPrettyParamsL
+  unDoc $ ppFormat fmt d
 
-ppUndertagFormat ∷ 𝐿 Format → ℂ → Doc → Doc
-ppUndertagFormat fmts c = ppAnnotate $ UndertagA $ Some $ fmts :* c
-
-ppIfFlat ∷ Doc → Doc → Doc
-ppIfFlat flatAction breakAction = Doc $ do
-  l ← askL $ layoutL
-  runDoc $ case l of
-    Flat → flatAction
-    Break → breakAction
-
-ppTryFlat ∷ Doc → Doc
-ppTryFlat = onDoc $ mapEnv $ update failModeL CanFail ∘ update layoutL Flat
-
-ppFlat ∷ Doc → Doc
-ppFlat = onDoc $ mapEnv $ update layoutL Flat
-
-ppBreak ∷ Doc → Doc
-ppBreak = onDoc $ mapEnv $ update layoutL Break
+ppUndertag ∷ ℂ → Formats → Doc → Doc
+ppUndertag = ppAnnotate ∘∘ undertagAnnotation
 
 ppGroup ∷ Doc → Doc
-ppGroup xM = ppIfFlat xM $ Doc $ tries [runDoc $ ppTryFlat xM,runDoc xM]
-
-ppNest ∷ ℕ → Doc → Doc
-ppNest n = onDoc $ mapEnv $ alter nestingL $ (+) n
+ppGroup = onDoc ∘ mapOut $ annoj GMode
 
 ppAlign ∷ Doc → Doc
-ppAlign d = Doc $ do
-  i ← askL $ nestingL
-  c ← getL columnL
-  runDoc $ ppNest (c - (i ⊓ c)) d
+ppAlign = onDoc $ mapOut $ mapSummary (alter summaryShapeL alignShape) ∘ annoj AMode
 
-ppLength ∷ Doc → ℕ
-ppLength d = elim𝑂 0 column $ evalPrettyM prettyEnv₀ prettyState₀ $ retState $ runDoc d
+ppGA ∷ Doc → Doc
+ppGA = ppAlign ∘ ppGroup
 
-ppFormatParam ∷ PrettyParams ⟢ 𝐿 Format → 𝕊 → Doc
-ppFormatParam l s = Doc $ do
-  fmt ← askL $ l ⊚ prettyParamsL
-  runDoc $ ppFormat fmt $ ppText s
+ppString ∷ 𝕊 → Doc
+ppString = Doc ∘ tell ∘ stringCChunk
 
-ppBlinders ∷ ℕ → ℕ → Doc → Doc
-ppBlinders low high = onDoc $ mapEnv $ update blindersL $ Some (low :* high)
-
-ppLineNumbers ∷ Doc → Doc
-ppLineNumbers = onDoc $ mapEnv $ update doLineNumbersL True
-
-ppSetLineNumber ∷ ℕ → Doc → Doc
-ppSetLineNumber n = onDoc $ localStateL displayLineNumberL n
-
--- # Formatting Helpers
+ppStringModal ∷ 𝕊 → 𝕊 → Doc
+ppStringModal sf sb = Doc $ tell $ stringCChunkModal sf sb
 
 ppFG ∷ Color → Doc → Doc
-ppFG c = ppFormat $ list [FG c]
+ppFG c = ppFormat $ formats [FG c]
 
 ppBG ∷ Color → Doc → Doc
-ppBG c = ppFormat $ list [BG c]
+ppBG c = ppFormat $ formats [BG c]
 
 ppUL ∷ Doc → Doc
-ppUL = ppFormat $ list [UL]
+ppUL = ppFormat $ formats [UL]
 
 ppBD ∷ Doc → Doc
-ppBD = ppFormat $ list [BD]
-
-ppPun ∷ 𝕊 → Doc
-ppPun = ppFormatParam punctuationFormatL
-
-ppKeyPun ∷ 𝕊 → Doc
-ppKeyPun = ppFormatParam keywordPunctuationFormatL
-
-ppKey ∷ 𝕊 → Doc
-ppKey = ppFormatParam keywordFormatL
-
-ppCon ∷ 𝕊 → Doc
-ppCon = ppFormatParam constructorFormatL
-
-ppOp ∷ 𝕊 → Doc
-ppOp = ppFormatParam operatorFormatL
-
-ppBdr ∷ 𝕊 → Doc
-ppBdr = ppFormatParam binderFormatL
-
-ppLit ∷ 𝕊 → Doc
-ppLit = ppFormatParam literalFormatL
-
-ppHl ∷ 𝕊 → Doc
-ppHl = ppFormatParam highlightFormatL
-
-ppHeader ∷ 𝕊 → Doc
-ppHeader = ppFormatParam headerFormatL
-
-ppErr ∷ 𝕊 → Doc
-ppErr = ppFormatParam errorFormatL
+ppBD = ppFormat $ formats [BD]
 
 ppUT ∷ ℂ → Color → Doc → Doc
-ppUT c o = ppUndertagFormat (list [FG o]) c
+ppUT c o = ppUndertag c $ formats [FG o]
 
-ppAlignLeft ∷ ℕ → Doc → Doc
-ppAlignLeft n d = concat [d,ppSpace $ n - (n ⊓ ppLength d)]
+ppPun ∷ 𝕊 → Doc
+ppPun = ppFormatParam punctuationFormatL ∘ ppString
 
-ppAlignRight ∷ ℕ → Doc → Doc
-ppAlignRight n d = concat [ppSpace $ n - (n ⊓ ppLength d),d]
+ppKeyPun ∷ 𝕊 → Doc
+ppKeyPun = ppFormatParam keywordPunctuationFormatL ∘ ppString
 
--- # Precedence
+ppKey ∷ 𝕊 → Doc
+ppKey = ppFormatParam keywordFormatL ∘ ppString
 
-ppBotLevel ∷ Doc → Doc
-ppBotLevel = Doc ∘ mapEnv (update levelL 0 ∘ update bumpedL False) ∘ runDoc
+ppCon ∷ 𝕊 → Doc
+ppCon = ppFormatParam constructorFormatL ∘ ppString
+
+ppOp ∷ 𝕊 → Doc
+ppOp = ppFormatParam operatorFormatL ∘ ppString
+
+ppBdr ∷ 𝕊 → Doc
+ppBdr = ppFormatParam binderFormatL ∘ ppString
+
+ppLit ∷ 𝕊 → Doc
+ppLit = ppFormatParam literalFormatL ∘ ppString
+
+ppHl ∷ 𝕊 → Doc
+ppHl = ppFormatParam highlightFormatL ∘ ppString
+
+ppHeader ∷ 𝕊 → Doc
+ppHeader = ppFormatParam headerFormatL ∘ ppString
+
+ppErr ∷ 𝕊 → Doc
+ppErr = ppFormatParam errorFormatL ∘ ppString
+
+
+ppSpace ∷ ℕ64 → Doc
+ppSpace n = ppString $ string $ repeat (nat n) ' '
+
+ppNewline ∷ Doc
+ppNewline = ppString "\n"
+
+ppSpaceIfBreak ∷ Doc
+ppSpaceIfBreak = ppStringModal "" " "
+
+ppNewlineIfBreak ∷ Doc
+ppNewlineIfBreak = ppStringModal "" "\n"
+
+ppSpaceNewlineIfBreak ∷ Doc
+ppSpaceNewlineIfBreak = ppStringModal " " "\n"
+
+
+ppHorizontal ∷ (ToIter Doc t) ⇒ t → Doc
+ppHorizontal = concat ∘ inbetween (ppSpace $ 𝕟64 1) ∘ iter
+
+ppVertical ∷ (ToIter Doc t) ⇒ t → Doc
+ppVertical = concat ∘ inbetween ppNewline ∘ iter
+
+ppSeparated ∷ (ToIter Doc t) ⇒ t → Doc
+ppSeparated = ppGroup ∘ concat ∘ inbetween ppSpaceNewlineIfBreak ∘ iter
+
+
+
+
+ppSetLevel ∷ ℕ64 → Doc → Doc
+ppSetLevel n = onDoc $ mapEnv $ update docEnvPrecLevelL n ∘ update docEnvPrecBumpedL False
+
+ppSetBotLevel ∷ Doc → Doc
+ppSetBotLevel = ppSetLevel zero
+
+ppBump ∷ Doc → Doc
+ppBump = onDoc $ mapEnv $ update docEnvPrecBumpedL True
 
 ppClosed ∷ Doc → Doc → Doc → Doc
-ppClosed alM arM aM = concat $ map ppAlign
+ppClosed alM arM aM = ppSetBotLevel $ concat
   [ alM
-  , ppBotLevel aM
+  , ppGA aM
   , arM
   ]
 
 ppParens ∷ Doc → Doc
 ppParens = ppClosed (ppPun "(") (ppPun ")")
 
-ppAtLevel ∷ ℕ → Doc → Doc
-ppAtLevel i' aM = Doc $ do
-  i ← askL $ levelL
-  b ← askL $ bumpedL
-  let aM' = onDoc (mapEnv $ update levelL i' ∘ update bumpedL False)  aM
-  runDoc $ case (i < i') ⩔ ((i ≡ i') ⩓ not b) of
-    True → aM'
-    False → ppParens aM'
+ppLevel ∷ ℕ64 → Doc → Doc
+ppLevel i' aM = Doc $ do
+  i ← askL $ docEnvPrecLevelL
+  b ← askL $ docEnvPrecBumpedL
+  unDoc $ case (i < i') ⩔ ((i ≡ i') ⩓ not b) of
+    True → ppSetLevel i' aM
+    False → ppParens $ ppSetLevel i' aM
 
-ppBump ∷ Doc → Doc
-ppBump = Doc ∘ mapEnv (update bumpedL True) ∘ runDoc
+ppInf ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInf i oM x₁M x₂M = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [ppBump x₁M,oM,ppBump x₂M]
 
-ppInf ∷ ℕ → Doc → Doc → Doc → Doc
-ppInf i oM x₁M x₂M = ppGroup $ ppAtLevel i $ ppSeparated $ list [ppBump x₁M,oM,ppBump x₂M]
+ppInfl ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfl i oM x₁M x₂M = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [x₁M,oM,ppBump x₂M]
 
-ppInfl ∷ ℕ → Doc → Doc → Doc → Doc
-ppInfl i oM x₁M x₂M = ppGroup $ ppAtLevel i $ ppSeparated $ list [x₁M,oM,ppBump x₂M]
+ppInfr ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfr i oM x₁M x₂M = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [ppBump x₁M,oM,x₂M]
 
-ppInfr ∷ ℕ → Doc → Doc → Doc → Doc
-ppInfr i oM x₁M x₂M = ppGroup $ ppAtLevel i $ ppSeparated $ list [ppBump x₁M,oM,x₂M]
+ppPre ∷ ℕ64 → Doc → Doc → Doc
+ppPre i oM xM = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [oM,xM]
 
-ppPre ∷ ℕ → Doc → Doc → Doc
-ppPre i oM xM = ppGroup $ ppAtLevel i $ ppSeparated $ list [oM,xM]
+ppPost ∷ ℕ64 → Doc → Doc → Doc
+ppPost i oM xM = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [xM,oM]
 
-ppPost ∷ ℕ → Doc → Doc → Doc
-ppPost i oM xM = ppGroup $ ppAtLevel i $ ppSeparated $ list [xM,oM]
-
-ppApp ∷ Doc → 𝐿 Doc → Doc
-ppApp x Nil = x
-ppApp x xs = ppGroup $ Doc $ do
-  l ← askL $ appLevelL ⊚ prettyParamsL
-  runDoc $ ppAtLevel l $ ppSeparated $ x :& map ppBump xs
-
--- # Combinators
-
-ppHorizontal ∷ 𝐿 Doc → Doc
-ppHorizontal = concat ∘ inbetween (ppSpace 1) ∘ map ppAlign
-
-ppVertical ∷ 𝐿 Doc → Doc
-ppVertical = concat ∘ inbetween ppNewline ∘ map ppAlign
-
-ppSoftline ∷ Doc
-ppSoftline = ppIfFlat (ppSpace 1) ppNewline
-
-ppSeparated ∷ 𝐿 Doc → Doc
-ppSeparated = ppGroup ∘ concat ∘ inbetween ppSoftline ∘ map ppAlign
-
-ppCollection ∷ 𝕊 → 𝕊 → 𝕊 → 𝐿 Doc → Doc
-ppCollection open close sep xs = ppGroup $ ppBotLevel $ ppIfFlat flatCollection breakCollection
-  where
-    flatCollection = concat [ppPun open,concat $ inbetween (ppPun sep) xs,ppPun close]
-    breakCollection = ppVertical $ concat
-      [ list 
-          $ mapFirst (\ x → ppHorizontal $ list [ppPun open,x]) 
-          $ mapAfterFirst (\ x → ppHorizontal $ list [ppPun sep,x]) 
-          $ map ppAlign 
-          $ iter xs
-      , return $ ppPun close
+ppApp ∷ (ToIter Doc t) ⇒ Doc → t → Doc
+ppApp x xs 
+  | count xs ≡ zero = ppAlign x
+  | otherwise = ppGA $ Doc $ do
+    l ← askL $ appLevelL ⊚ docEnvPrettyParamsL
+    unDoc $ ppLevel l $ ppGroup $ concat 
+      [ ppAlign x
+      , ppSpaceNewlineIfBreak
+      , concat $ inbetween ppSpaceNewlineIfBreak $ map (ppAlign ∘ ppBump) $ iter xs
       ]
 
-ppRecord ∷ 𝕊 → 𝐿 (Doc ∧ Doc) → Doc
-ppRecord rel kvs = ppCollection "{" "}" "," $ map mapping kvs
+ppCollection ∷ (ToIter Doc t) ⇒ Doc → Doc → Doc → t → Doc
+ppCollection l r i xs = ppGA $ ppSetBotLevel $ concat
+  [ l
+  , ppSpaceIfBreak
+  , concat $ inbetween spacer $ iter xs
+  , ppNewlineIfBreak
+  , r
+  ]
   where
-    mapping (k :* v) = concat
+    spacer ∷ Doc
+    spacer = concat
+      [ ppNewlineIfBreak
+      , i
+      , ppSpaceIfBreak
+      ]
+
+ppRecord ∷ (ToIter (Doc ∧ Doc) t) ⇒ Doc → t → Doc
+ppRecord rel kvs = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") $ map mapping $ iter kvs
+  where
+    mapping (k :* v) = ppGroup $ concat
       [ ppAlign k
-      , ppIfFlat null $ ppSpace 1
-      , ppPun rel
-      , ppIfFlat null $ ppSpace 1
-      , ppNest 2 $ ppGroup $ concat
-          [ ppIfFlat null ppNewline
-          , ppAlign v
-          ]
+      , ppSpaceIfBreak
+      , rel
+      , ppNewlineIfBreak
+      , ppSpaceIfBreak
+      , ppSpaceIfBreak
+      , ppAlign v
       ]
+
+-----------
+-- CLASS --
+-----------
+
+class Pretty a where 
+  pretty ∷ a → Doc
+
+instance Pretty Doc where pretty = id
+instance Pretty () where pretty = ppCon ∘ show𝕊
+instance Pretty 𝔹 where pretty = ppCon ∘ show𝕊
+instance Pretty ℕ where pretty = ppLit ∘ show𝕊
+instance Pretty ℕ64 where pretty = ppLit ∘ show𝕊
+instance Pretty ℕ32 where pretty = ppLit ∘ show𝕊
+instance Pretty ℕ16 where pretty = ppLit ∘ show𝕊
+instance Pretty ℕ8 where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ64 where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ32 where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ16 where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ8 where pretty = ppLit ∘ show𝕊
+instance Pretty ℚ where pretty = ppLit ∘ show𝕊
+instance Pretty ℚᴾ where pretty = ppLit ∘ show𝕊
+instance Pretty 𝔻  where pretty = ppLit ∘ show𝕊
+instance Pretty 𝔻ᴾ  where pretty (𝔻ᴾ d) = ppLit $ show𝕊 d
+instance Pretty ℝ  where 
+  pretty = \case 
+    Integer i → pretty i 
+    Rational q → pretty q 
+    Double d → pretty d
+instance Pretty ℝᴾ  where 
+  pretty = \case 
+    Natural n → pretty n 
+    Rationalᴾ q → pretty q 
+    Doubleᴾ d → pretty d
+
+instance Pretty Time where pretty = ppLit ∘ show𝕊
+
+escape ∷ ℂ → 𝐼 ℂ
+escape = \case
+  '"' → iter "\\\""
+  '\\' → iter "\\\\"
+  '\n' → iter "\\n"
+  '\t' → iter "\\t"
+  '\r' → iter "\\r"
+  '\b' → iter "\\b"
+  '\f' → iter "\\f"
+  c' → single c'
+
+instance Pretty ℂ where 
+  pretty c = ppLit $ string $ concat
+    [ iter "'"
+    , escape c
+    , iter "'"
+    ]
+
+instance Pretty 𝕊 where 
+  pretty s = ppLit $ string $ concat
+    [ iter "\""
+    , escape *$ iter s
+    , iter "\""
+    ]
+
+instance (Pretty a,Pretty b) ⇒ Pretty (a,b) where
+  pretty (a,b) = ppCollection (ppPun "(") (ppPun ")") (ppPun ",") [pretty a, pretty b]
+instance (Pretty a,Pretty b) ⇒ Pretty (a ∧ b) where
+  pretty (a :* b) = ppCollection (ppPun "⟨") (ppPun "⟩") (ppPun ",") [pretty a, pretty b]
+
+instance (Pretty a) ⇒ Pretty (𝐿 a) where 
+  pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
+instance (Pretty a) ⇒ Pretty [a] where 
+  pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
+instance (Pretty a) ⇒ Pretty (𝕍 a) where 
+  pretty xs = ppApp (ppString "𝕍") $ list [pretty $ list xs]
+instance (Pretty a) ⇒ Pretty (𝑆 a) where 
+  pretty xs = ppApp (ppString "𝑆") $ list [pretty $ list xs]
+instance (Pretty a) ⇒ Pretty (𝐼 a) where 
+  pretty xs = ppApp (ppString "𝐼") $ list [pretty $ list xs]
+instance (Pretty a) ⇒ Pretty (𝐼S a) where 
+  pretty xs = ppApp (ppString "𝐼S") $ list [pretty $ list xs]
+instance (Pretty a) ⇒ Pretty (𝑄 a) where 
+  pretty xs = ppApp (ppString "𝑄") $ list [pretty $ list xs]
+instance (Pretty a) ⇒ Pretty (𝑃 a) where 
+  pretty = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") ∘ map pretty ∘ iter
+instance (Pretty k,Pretty v) ⇒ Pretty (k ⇰ v) where 
+  pretty = ppRecord (ppPun "↦") ∘ map (mapPair pretty pretty) ∘ iter
+
+instance (Pretty a) ⇒ Pretty (AddNull a) where
+  pretty Null = ppCon "•"
+  pretty (AddNull x) = pretty x
+
+instance (Pretty a) ⇒ Pretty (AddBot a) where
+  pretty Bot = ppCon "⊥"
+  pretty (AddBot x) = pretty x
+
+instance (Pretty a) ⇒ Pretty (AddTop a) where
+  pretty Top = ppCon "⊤"
+  pretty (AddTop x) = pretty x
+
+instance (Pretty a) ⇒ Pretty (AddBT a) where
+  pretty BotBT = ppCon "⊥"
+  pretty TopBT = ppCon "⊤"
+  pretty (AddBT x) = pretty x

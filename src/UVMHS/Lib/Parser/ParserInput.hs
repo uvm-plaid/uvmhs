@@ -1,53 +1,67 @@
 module UVMHS.Lib.Parser.ParserInput where
 
 import UVMHS.Core
+
 import UVMHS.Lib.Pretty
+import UVMHS.Lib.Window
+import UVMHS.Lib.IterS
+
 import UVMHS.Lib.Parser.Loc
 import UVMHS.Lib.Parser.ParserContext
-import UVMHS.Lib.Parser.Sep
 
 -- # ParserToken
 
 data ParserToken t = ParserToken
   { parserTokenValue ∷ t
+  , parserTokenSkip ∷ 𝔹
   , parserTokenContext ∷ ParserContext
+  , parserTokenSuffix ∷ WindowL Doc Doc
   }
 makeLenses ''ParserToken
 makePrettySum ''ParserToken
 
-renderNL ∷ ParserContextDoc
-renderNL = ParserContextDoc $ do
-  mode ← ask
-  tell $ case mode ≡ ParserContextError  of
-    True → concat [ppErr "\\n",ppText"\n"]
-    False → ppText "\n"
+renderNLDisplay ∷ Doc
+renderNLDisplay = ppString "\n"
 
-renderEOF ∷ ParserContextDoc
-renderEOF = ParserContextDoc $ do
-  mode ← ask
-  tell $ case mode ≡ ParserContextError of
-    True → ppErr "EOF"
-    False → null
+renderNLError ∷ Doc
+renderNLError = concat [ppErr "\\n",ppString "\n"]
 
-renderEOFContext ∷ AddBot Loc → ParserContext
-renderEOFContext lM = parserContextFromLines $ eSepR $ ParserContextChunk (map (\ l → LocRange l l) lM) 0 $ mkParserContextDocCached renderEOF
+renderEOFDisplay ∷ Doc
+renderEOFDisplay = null
 
-tokens ∷ 𝕊 → 𝑆 (ParserToken ℂ)
-tokens (stream → 𝑆 s₀ g) = 𝑆 (bot :* s₀) $ \ (loc :* s) → do
-  (c :* s') ← g s
-  let isNL = c ≡ '\n'
-      pc = parserContextFromLines $ case isNL of
-        True → iSepR $ ParserContextChunk (AddBot $ LocRange loc loc) (nat 1) $ mkParserContextDocCached renderNL
-        False → eSepR $ ParserContextChunk (AddBot $ LocRange loc loc) (nat 0) $ mkParserContextDocCached $ ParserContextDoc $ tell $ ppText $ single c
-  let loc' = case isNL of 
-        True → bumpRow loc 
-        False → bumpCol loc
-  return $ ParserToken c pc:*(loc':*s')
+renderEOFError ∷ Doc
+renderEOFError = ppErr "EOF"
 
-renderParserInput ∷ 𝑆 (ParserToken t) → ParserContextDoc
-renderParserInput = concat ∘ map (execParserContext ∘ parserTokenContext)
+eofContext ∷ AddBot Loc → ParserContext
+eofContext lM = 
+  let lr = map (\ l → LocRange l l) lM
+  in ParserContext lr (eWindowL renderEOFDisplay) (eWindowR renderEOFDisplay) (eWindowR renderEOFError)
 
--- # ParserInput
+nlContext ∷ Loc → ParserContext
+nlContext l =
+  let lr = AddBot $ LocRange l l
+  in ParserContext lr (iWindowL renderNLDisplay) (iWindowR renderNLDisplay) (iWindowR renderNLError)
+
+charContext ∷ Loc → ℂ → ParserContext
+charContext l c =
+  let lr = AddBot $ LocRange l l
+      d = ppString $ single c
+  in ParserContext lr (eWindowL d) (eWindowR d) (eWindowR d)
+
+tokens ∷ 𝕊 → 𝕍 (ParserToken ℂ)
+tokens cs = 
+  vecS $ fst $ snd $ foldbpOnFrom cs bot (null @ (𝐼S _) :* null) $ \ c loc →
+    let (loc',pc) = 
+          if c ≡ '\n'
+            then (bumpRow loc,nlContext loc)
+            else (bumpCol loc,charContext loc c)
+    in (:*) loc' $ \ (ts :* ps) →
+      let t = ParserToken c False pc ps
+      in (single t ⧺ ts) :* (parserContextDisplayL pc ⧺ ps)
+
+-----------------
+-- ParserInput --
+-----------------
 
 data ParserInput t = ParserInput
   { parserInputStream ∷ 𝑆 (ParserToken t)
@@ -59,44 +73,8 @@ makePrettySum ''ParserInput
 parserInput₀ ∷ 𝑆 (ParserToken t) → ParserInput t
 parserInput₀ xs = ParserInput xs $ AddBot $ Loc bot bot bot
 
-advanceInput ∷ ParserInput t → 𝑂 (ParserToken t,ParserInput t)
+advanceInput ∷ ParserInput t → 𝑂 (ParserToken t ∧ ParserInput t)
 advanceInput (ParserInput ts _) = do
   (t :* ts') ← uncons𝑆 ts
   let endPos = map (bumpCol ∘ locRangeEnd) $ parserContextLocRange $ parserTokenContext t
-  return (t,ParserInput ts' endPos)
-
--- Full Context --
-
-data FullContext = FullContext
-  { withContextPrefix ∷ InputContext
-  , withContextDisplay ∷ ExpressionContext
-  , withContextSuffix ∷ ParserContextDoc
-  }
-
-instance Pretty FullContext where
-  pretty (FullContext pre d _pi) =
-    ppSetLineNumber ln $
-      ppAlign $ 
-        (execParserContextDoc $ execParserContext $ unInputContext pre) 
-        ⧺ (ppUT '^' green $ execParserContextDoc $ execParserContext $ unExpressionContext d)
-    where
-      ln = case pre of
-        InputContext (ParserContext lrB _ _) → case lrB of
-          Bot → 0
-          AddBot lr → 1 + locRow (locRangeBegin lr)
-
--- Annotated --
-
-data Annotated e a = Annotated
-  { annotatedTag ∷ e
-  , annotatedElem ∷ a
-  } deriving (Show)
-makeLenses ''Annotated
-makePrettySum ''Annotated
-
-instance (Eq a) ⇒ Eq (Annotated t a) where (==) = (≡) `on` annotatedElem
-instance (Ord a) ⇒ Ord (Annotated t a) where compare = compare `on` annotatedElem
-instance Extract (Annotated t) where extract = annotatedElem
-instance Cobind (Annotated t) where Annotated e x =≫ f = Annotated e $ f $ Annotated e x
-instance Functor (Annotated t) where map = wmap
-instance Comonad (Annotated t)
+  return (t :* ParserInput ts' endPos)

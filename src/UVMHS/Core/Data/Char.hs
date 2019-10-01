@@ -1,6 +1,6 @@
 module UVMHS.Core.Data.Char where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 
 import qualified Data.Char as HS
 

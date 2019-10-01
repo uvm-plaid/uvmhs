@@ -1,6 +1,6 @@
 module UVMHS.Core.Classes.Comonad where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes.Functor
 
 infixr 2 =≫ 

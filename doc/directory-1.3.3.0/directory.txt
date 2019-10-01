@@ -1196,7 +1196,6 @@ copyGroupFromStatus :: FileStatus -> FilePath -> IO ()
 tryCopyOwnerAndGroupFromStatus :: FileStatus -> FilePath -> IO ()
 copyFileWithMetadataInternal :: (Metadata -> FilePath -> IO ()) -> (Metadata -> FilePath -> IO ()) -> FilePath -> FilePath -> IO ()
 setTimes :: FilePath -> (Maybe POSIXTime, Maybe POSIXTime) -> IO ()
-setFileTimes' :: FilePath -> POSIXTime -> POSIXTime -> IO ()
 
 -- | Get the contents of the <tt>PATH</tt> environment variable.
 getPath :: IO [FilePath]

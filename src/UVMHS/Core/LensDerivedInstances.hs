@@ -1,7 +1,4 @@
 module UVMHS.Core.LensDerivedInstances where
 
-import UVMHS.Init
-import UVMHS.Core.LensDeriving
-
-makeLenses ''𝕏
-
+-- import UVMHS.Core.Init
+-- import UVMHS.Core.LensDeriving

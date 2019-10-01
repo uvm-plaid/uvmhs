@@ -1,6 +1,6 @@
 module UVMHS.Core.Classes.Lattice where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 -- import Core.Classes.Constraints
 import UVMHS.Core.Classes.Order
 

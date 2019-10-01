@@ -20,6 +20,7 @@ default-extensions:
   - MultiParamTypeClasses
   - NoImplicitPrelude
   - OverloadedStrings
+  - PartialTypeSignatures
   - PatternSynonyms
   - PolyKinds
   - QuantifiedConstraints
@@ -41,15 +42,24 @@ default-extensions:
 ghc-options:
   - -Wall
   - -Wno-orphans
+  - -fspecialise-aggressively
+  - -fexpose-all-unfoldings
+  - -O2
+
+dependencies: 
+  - base
+  - text
+  - containers
+  - process
+  - template-haskell
+  - array
+  - repa
+  - time
 
 library:
-  source-dirs: 
-    - src/
-  dependencies: 
-    - base
-    - text
-    - containers
-    - process
-    - template-haskell
-    - array
-    - repa
+  source-dirs: src
+
+executable:
+  source-dirs: main
+  main: Main.hs
+  dependencies: uvmhs

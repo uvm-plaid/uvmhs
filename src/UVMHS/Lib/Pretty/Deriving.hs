@@ -1,7 +1,7 @@
 module UVMHS.Lib.Pretty.Deriving where
 
 import UVMHS.Core
-import UVMHS.Lib.Pretty.Class
+
 import UVMHS.Lib.Pretty.Core
 
 import qualified Language.Haskell.TH as TH
@@ -71,7 +71,13 @@ makePrettyUnionLogic cx ty tyargs concontys = do
           x :& Nil → TH.VarE 'pretty ⊙ TH.VarE x
           _ → 
             let prettyXs = mapOn tmpˣˢ $ \ x → TH.VarE 'pretty ⊙ TH.VarE x
-            in TH.VarE 'ppCollection ⊙ thString "⟨" ⊙ thString "⟩" ⊙ thString "," ⊙$ TH.VarE 'list ⊙$ TH.ListE (tohs prettyXs)
+            in 
+            TH.VarE 'ppCollection 
+            ⊙ (TH.VarE 'ppPun ⊙ thString "⟨") 
+            ⊙ (TH.VarE 'ppPun ⊙ thString "⟩") 
+            ⊙ (TH.VarE 'ppPun ⊙ thString ",") 
+            ⊙$ TH.VarE 'list 
+            ⊙$ TH.ListE (tohs prettyXs)
   return $ single $ TH.InstanceD (tohs None) (tohs instanceCx) instanceTy $ single $ instanceDec
 
 makePrettyUnion ∷ TH.Name → TH.Q [TH.Dec]
@@ -105,13 +111,23 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
       instanceTy = TH.ConT ''Pretty ⊙ (TH.ConT ty ⊙⋆ tyargVars)
       instanceDec ∷ TH.Dec
       instanceDec = 
-        TH.FunD 'pretty $ single $ thSingleClause 
-           (single $ TH.RecP con $ tohs $ mapOn fieldNameTmps $ \ (field :* _name :* tmpˣ) → (field :* TH.VarP tmpˣ)) 
-           $ TH.VarE 'ppApp ⊙ (TH.VarE 'ppCon ⊙ (thString $ string $ TH.nameBase con)) ⊙$ TH.VarE 'list ⊙$ TH.ListE $ single $
-               TH.VarE 'ppRecord ⊙ thString "≔" ⊙$ TH.VarE 'list ⊙$ TH.ListE $ tohs $ mapOn fieldNameTmps $ \ (frhs → _field :* name :* tmpˣ) →
-                 TH.ConE '(:*)
-                 ⊙ (TH.VarE 'ppText ⊙ (thString name))
-                 ⊙ (TH.VarE 'pretty ⊙ TH.VarE tmpˣ)
+        TH.FunD 'pretty 
+        $ single 
+        $ thSingleClause (single $ TH.RecP con $ tohs $ mapOn fieldNameTmps $ \ (field :* _name :* tmpˣ) → (field :* TH.VarP tmpˣ)) 
+        $ TH.VarE 'ppApp 
+          ⊙ (TH.VarE 'ppCon ⊙ (thString $ string $ TH.nameBase con)) 
+          ⊙$ TH.VarE 'list 
+          ⊙$ TH.ListE 
+             $ single 
+             $ TH.VarE 'ppRecord 
+               ⊙ (TH.VarE 'ppPun ⊙ thString "⇒") 
+               ⊙$ TH.VarE 'list 
+               ⊙$ TH.ListE 
+                  $ tohs 
+                  $ mapOn fieldNameTmps $ \ (frhs → _field :* name :* tmpˣ) → 
+                      TH.ConE '(:*)
+                      ⊙ (TH.VarE 'ppString ⊙ (thString name))
+                      ⊙ (TH.VarE 'pretty ⊙ TH.VarE tmpˣ)
   return $ single $ TH.InstanceD (tohs None) (tohs instanceCx) instanceTy $ single $ instanceDec
 
 makePrettyRecord ∷ TH.Name → TH.Q [TH.Dec]
@@ -120,3 +136,4 @@ makePrettyRecord name = do
   (con :* fields) ← return𝑂 (io abortIO) $ view thRecCL c
   let fieldfieldtys = mapOn fields $ \ (frhs → field :* _ :* fieldty) → (field :* fieldty)
   map tohs $ makePrettyRecordLogic cx ty tyargs con fieldfieldtys
+

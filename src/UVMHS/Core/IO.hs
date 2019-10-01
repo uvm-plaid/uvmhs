@@ -1,10 +1,11 @@
 module UVMHS.Core.IO where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 import UVMHS.Core.Effects
 import UVMHS.Core.Monads ()
+import UVMHS.Core.Time
 
 import System.Exit
 import System.IO.Unsafe
@@ -16,6 +17,8 @@ import qualified System.Exit as Exit
 import qualified System.Process as Process
 import qualified System.IO as HS
 import qualified System.IO.Unsafe as UNSAFE
+import qualified GHC.Stats  as HS
+import qualified System.Mem as HS
 
 writeOut ∷ 𝕊 → IO ()
 writeOut = Text.putStr
@@ -24,7 +27,7 @@ out ∷ 𝕊 → IO ()
 out s = exec [writeOut s,writeOut "\n"]
 
 outs ∷ (ToIter 𝕊 t) ⇒ t → IO ()
-outs ss = eachWith ss out
+outs ss = eachOn ss out
 
 shout ∷ (Show a) ⇒ a → IO ()
 shout = out ∘ show𝕊
@@ -60,10 +63,10 @@ write ∷ 𝕊 → 𝕊 → IO ()
 write fn = io ∘ Text.writeFile (chars fn)
 
 trace ∷ 𝕊 → a → a
-trace s x = unsafePerformIO $ do
+trace s = unsafePerformIO $ do
   out s
   flushOut
-  return x
+  return id
 
 traceM ∷ (Monad m) ⇒ 𝕊 → m ()
 traceM msg = trace msg skip
@@ -98,3 +101,50 @@ shelllOK c = do
 
 ioUNSAFE ∷ IO a → a
 ioUNSAFE = UNSAFE.unsafePerformIO
+
+gc ∷ IO ()
+gc = HS.performGC
+
+time ∷ (() → a) → IO (a ∧ TimeD)
+time f = do
+  gc
+  t₁ ← now
+  let x = f ()
+  gc
+  t₂ ← now
+  return $ x :* (t₂ ⨺ t₁)
+
+rtime ∷ 𝕊 → (() → a) → IO a
+rtime s f = do
+  do out $ "TIMING: " ⧺ s ; flushOut
+  x :* t ← time f
+  do out $ "RESULT: " ⧺ show𝕊 t ; flushOut
+  return x
+
+timeIO ∷ IO a → IO (a ∧ TimeD)
+timeIO xM = do
+  gc
+  t₁ ← now
+  x ← xM
+  gc
+  t₂ ← now
+  return $ x :* (t₂ ⨺ t₁)
+
+rtimeIO ∷ 𝕊 → IO a → IO a
+rtimeIO s xM = do
+  do out $ "TIMING: " ⧺ s ; flushOut
+  x :* t ← timeIO xM
+  do out $ "RESULT: " ⧺ show𝕊 t ; flushOut
+  return x
+
+profile ∷ (() → a) → IO (TimeD ∧ 𝔻)
+profile f = do
+  gc
+  s₁ ← HS.getRTSStats
+  let (n₁,u₁) = (HS.major_gcs s₁,HS.cumulative_live_bytes s₁)
+  t₁ ← now
+  let _ = f ()
+  t₂ ← now
+  s₂ ← HS.getRTSStats
+  let (n₂,u₂) = (HS.major_gcs s₂,HS.cumulative_live_bytes s₂)
+  return $ (t₂ ⨺ t₁) :* (dbl (HS.fromIntegral u₂ - HS.fromIntegral u₁ ∷ ℕ) / dbl (HS.fromIntegral n₂ - HS.fromIntegral n₁ ∷ ℕ))

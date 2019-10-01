@@ -1,6 +1,6 @@
 module UVMHS.Core.Data.Dict where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.LazyList
@@ -80,8 +80,8 @@ kvs₁ ⩌ kvs₂ = 𝐷 $ un𝐷 kvs₁ `Map.union` un𝐷 kvs₂
 (⩍) ∷ (Ord k) ⇒ k ⇰ v → k ⇰ v → k ⇰ v
 kvs₁ ⩍ kvs₂ = 𝐷 $ un𝐷 kvs₁ `Map.intersection` un𝐷 kvs₂
 
-(∸) ∷ (Ord k) ⇒ k ⇰ v → k ⇰ v → k ⇰ v
-kvs₁ ∸ kvs₂ = 𝐷 $ un𝐷 kvs₁ `Map.difference` un𝐷 kvs₂
+-- (∸) ∷ (Ord k) ⇒ k ⇰ v → k ⇰ v → k ⇰ v
+-- kvs₁ ∸ kvs₂ = 𝐷 $ un𝐷 kvs₁ `Map.difference` un𝐷 kvs₂
 
 delete ∷ (Ord k) ⇒ k → k ⇰ v → k ⇰ v
 delete k kvs = 𝐷 $ Map.delete k $ un𝐷 kvs
@@ -98,17 +98,26 @@ unionWith f kvs₁ kvs₂ = 𝐷 $ Map.unionWith f (un𝐷 kvs₁) (un𝐷 kvs�
 (⊎) ∷ (Ord k,Additive v) ⇒ k ⇰ v → k ⇰ v → k ⇰ v
 (⊎) = unionWith (+)
 
+unionsWith ∷ (Ord k,ToIter (k ⇰ v) t) ⇒ (v → v → v) → t → k ⇰ v
+unionsWith = fold dø ∘ unionWith
+
 interWith ∷ (Ord k) ⇒ (v₁ → v₂ → v₃) → k ⇰ v₁ → k ⇰ v₂ → k ⇰ v₃
 interWith f kvs₁ kvs₂ = 𝐷 $ Map.intersectionWith f (un𝐷 kvs₁) (un𝐷 kvs₂)
 
-diffWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
-diffWith f kvs₁ kvs₂ = 𝐷 $ Map.differenceWith (\ x y → HS.Just (f x y)) (un𝐷 kvs₁) (un𝐷 kvs₂)
+-- diffWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
+-- diffWith f kvs₁ kvs₂ = 𝐷 $ Map.differenceWith (\ x y → HS.Just (f x y)) (un𝐷 kvs₁) (un𝐷 kvs₂)
 
-dmin ∷ k ⇰ v → 𝑂 (k ∧ v ∧ (k ⇰ v))
-dmin = map (mapSnd 𝐷) ∘ frhs ∘ Map.minViewWithKey ∘ un𝐷
+dminView ∷ k ⇰ v → 𝑂 (k ∧ v ∧ (k ⇰ v))
+dminView = map (mapSnd 𝐷) ∘ frhs ∘ Map.minViewWithKey ∘ un𝐷
 
-dmax ∷ k ⇰ v → 𝑂 (k ∧ v ∧ (k ⇰ v))
-dmax = map (mapSnd 𝐷) ∘ frhs ∘ Map.maxViewWithKey ∘ un𝐷
+dmaxView ∷ k ⇰ v → 𝑂 (k ∧ v ∧ (k ⇰ v))
+dmaxView = map (mapSnd 𝐷) ∘ frhs ∘ Map.maxViewWithKey ∘ un𝐷
+
+dminKey ∷ k ⇰ v → 𝑂 k
+dminKey kvs = fst ∘ fst ^$ dminView kvs
+
+dmaxKey ∷ k ⇰ v → 𝑂 k
+dmaxKey kvs = fst ∘ fst ^$ dmaxView kvs
 
 dview ∷ (Ord k) ⇒ k → k ⇰ v → 𝑂 (v ∧ (k ⇰ v))
 dview k kvs
@@ -129,6 +138,9 @@ values = iter ∘ Map.elems ∘ un𝐷
 
 map𝐷 ∷ (v₁ → v₂) → k ⇰ v₁ → k ⇰ v₂
 map𝐷 f = 𝐷 ∘ Map.map f ∘ un𝐷
+
+mapK𝐷 ∷ (Ord k) ⇒ (k → v₁ → v₂) → k ⇰ v₁ → k ⇰ v₂
+mapK𝐷 f kvs = dict $ mapOn (iter kvs) $ \ (k :* v) → k ↦ f k v
 
 stream𝐷 ∷ k ⇰ v → 𝑆 (k ∧ v)
 stream𝐷 = map frhs ∘ stream ∘ Map.toList ∘ un𝐷

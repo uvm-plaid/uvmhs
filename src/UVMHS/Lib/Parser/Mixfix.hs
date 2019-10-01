@@ -1,155 +1,210 @@
 module UVMHS.Lib.Parser.Mixfix where
 
 import UVMHS.Core
-import UVMHS.Lib.Pretty
+
+import UVMHS.Lib.Annotated
+
 import UVMHS.Lib.Parser.Core
-import UVMHS.Lib.Parser.ParserInput
+import UVMHS.Lib.Parser.ParserContext
+import UVMHS.Lib.Parser.CParser
+
+-------------------
+-- STATIC LEVELS --
+-------------------
+
+pLAM,pCOMMA,pLET,pARR,pOR,pAND,pCMP,pSUM,pPROD,pNEG,pPOW,pFAC,pAPP ∷ ℕ64
+
+pLAM   = 𝕟64 10
+pCOMMA = 𝕟64 20
+pLET   = 𝕟64 30
+pARR   = 𝕟64 40
+pOR    = 𝕟64 50
+pAND   = 𝕟64 60
+pCMP   = 𝕟64 90
+
+pSUM   = 𝕟64 150
+pPROD  = 𝕟64 160
+pNEG   = 𝕟64 170
+pPOW   = 𝕟64 180
+pFAC   = 𝕟64 190
+
+pAPP   = 𝕟64 200
 
 -----------------------------------
 -- Fully Functor/Comonad general --
 -----------------------------------
 
 data MixesF t f a = MixesF
-  { mixesFPrefix  ∷ Parser t (f a → a)
-  , mixesFPostfix ∷ Parser t (f a → a)
-  , mixesFInfix  ∷ Parser t (f a → f a → a)
-  , mixesFInfixL ∷ Parser t (f a → f a → a)
-  , mixesFInfixR ∷ Parser t (f a → f a → a)
+  { mixesFPrefix  ∷ CParser t (f a → a)
+  , mixesFPostfix ∷ CParser t (f a → a)
+  , mixesFInfix  ∷ CParser t (f a → f a → a)
+  , mixesFInfixL ∷ CParser t (f a → f a → a)
+  , mixesFInfixR ∷ CParser t (f a → f a → a)
   }
 
-instance Null (MixesF t f a) where null = MixesF abort abort abort abort abort
-instance Append (MixesF t f a) where
+instance Null (MixesF t f a) where null = MixesF null null null null null
+instance (Ord t) ⇒ Append (MixesF t f a) where
   MixesF pre₁ post₁ inf₁ infl₁ infr₁ ⧺ MixesF pre₂ post₂ inf₂ infl₂ infr₂ = 
-    MixesF (pre₁ ⎅ pre₂) (post₁ ⎅ post₂) (inf₁ ⎅ inf₂) (infl₁ ⎅ infl₂) (infr₁ ⎅ infr₂)
-instance Monoid (MixesF t f a)
-
-data MixF t f a =
-    MixFPrefix  ℕ (Parser t (f a → a))
-  | MixFPostfix ℕ (Parser t (f a → a))
-  | MixFInfix  ℕ (Parser t (f a → f a → a))
-  | MixFInfixL ℕ (Parser t (f a → f a → a))
-  | MixFInfixR ℕ (Parser t (f a → f a → a))
-  | MixFTerminal (Parser t a)
+    MixesF (pre₁ ⧺ pre₂) (post₁ ⧺ post₂) (inf₁ ⧺ inf₂) (infl₁ ⧺ infl₂) (infr₁ ⧺ infr₂)
+instance (Ord t) ⇒ Monoid (MixesF t f a)
 
 data MixfixF t f a = MixfixF
-  { mixfixFTerminals ∷ Parser t a
-  , mixfixFLevels ∷ ℕ ⇰ MixesF t f a
+  { mixfixFTerminals ∷ CParser t a
+  , mixfixFLevels ∷ ℕ64 ⇰ MixesF t f a
   }
-instance Null (MixfixF t f a) where null = MixfixF abort bot
-instance Append (MixfixF t f a) where MixfixF ts₁ ls₁ ⧺ MixfixF ts₂ ls₂ = MixfixF (ts₁ ⎅ ts₂) (ls₁ ⧺ ls₂)
-instance Monoid (MixfixF t f a)
+instance Null (MixfixF t f a) where null = MixfixF null null
+instance (Ord t) ⇒ Append (MixfixF t f a) where MixfixF ts₁ ls₁ ⧺ MixfixF ts₂ ls₂ = MixfixF (ts₁ ⧺ ts₂) (ls₁ ⧺ ls₂)
+instance (Ord t) ⇒ Monoid (MixfixF t f a)
 
-mixF ∷ MixF t f a → MixfixF t f a
-mixF (MixFPrefix l pre) = null {mixfixFLevels = dict [l ↦ null {mixesFPrefix = pre}]}
-mixF (MixFPostfix l post) = null {mixfixFLevels = dict [l ↦ null {mixesFPostfix = post}]}
-mixF (MixFInfix l inf) = null {mixfixFLevels = dict [l ↦ null {mixesFInfix = inf}]}
-mixF (MixFInfixL l infl) = null {mixfixFLevels = dict [l ↦ null {mixesFInfixL = infl}]}
-mixF (MixFInfixR l infr) = null {mixfixFLevels = dict [l ↦ null {mixesFInfixR = infr}]}
-mixF (MixFTerminal term) = null {mixfixFTerminals = term}
+fmixPrefix ∷ ℕ64 → CParser t (f a → a) → MixfixF t f a
+fmixPrefix l p = null { mixfixFLevels = dict [ l ↦ null {mixesFPrefix = p} ] }
 
--- PRE (PRE (x INFR (PRE (PRE y))))
+fmixPostfix ∷ ℕ64 → CParser t (f a → a) → MixfixF t f a
+fmixPostfix l p = null { mixfixFLevels = dict [ l ↦ null {mixesFPostfix = p} ] }
+
+fmixInfix ∷ ℕ64 → CParser t (f a → f a → a) → MixfixF t f a
+fmixInfix l p = null { mixfixFLevels = dict [ l ↦ null {mixesFInfix = p} ] }
+
+fmixInfixL ∷ ℕ64 → CParser t (f a → f a → a) → MixfixF t f a
+fmixInfixL l p = null { mixfixFLevels = dict [ l ↦ null {mixesFInfixL = p} ] }
+
+fmixInfixR ∷ ℕ64 → CParser t (f a → f a → a) → MixfixF t f a
+fmixInfixR l p = null { mixfixFLevels = dict [ l ↦ null {mixesFInfixR = p} ] }
+
+fmixTerminal ∷ CParser t a → MixfixF t f a
+fmixTerminal p = null { mixfixFTerminals = p}
+
 -- PRE PRE x INFR PRE PRE y
+-- ≈
+-- PRE (PRE (x INFR (PRE (PRE y))))
 -- 
--- ((((x POST) POST) INFL y) POST) POST
 -- x POST POST INFL y POST POST
+-- ≈
+-- ((((x POST) POST) INFL y) POST) POST
 
-mixfixParserF ∷ 
-  ∀ t f a. (Comonad f)
-  ⇒ MixfixF t f a → (Parser t a → Parser t (f a)) → Parser t (f a)
-mixfixParserF (MixfixF terms levels₀) fld = loop levels₀
+fmixfix ∷ 
+  ∀ t f a. (Ord t,Comonad f)
+  ⇒ (CParser t (f a) → CParser t (f a)) 
+  → (CParser t (f a) → CParser t (f a)) 
+  → (CParser t a → CParser t (f a)) 
+  → MixfixF t f a 
+  → CParser t (f a)
+fmixfix new bracket cxt (MixfixF terms levels₀) = loop levels₀
   where
-    loop ∷ ℕ ⇰ MixesF t f a → Parser t (f a)
-    loop levels = case dmin levels of
-      None → fld terms
+    loop ∷ ℕ64 ⇰ MixesF t f a → CParser t (f a)
+    loop levels = case dminView levels of
+      None → new $ cxt terms
       Some ((i :* mixes) :* levels') →
-        let msg = "lvl " ⧺ alignRightFill '0' 3 (pprender i)
+        let msg = "lvl " ⧺ alignRightFill '0' 3 (show𝕊 i)
         in 
-        fld $ buildLevelDirected msg mixes $ 
-        fld $ buildLevelNondirected msg mixes $ 
+        new $ cxt $ buildLevelDirected msg mixes $ 
+        new $ cxt $ buildLevelNondirected msg mixes $ 
         loop levels'
-    buildLevelNondirected ∷ 𝕊 → MixesF t f a → Parser t (f a) → Parser t a
+    buildLevelNondirected ∷ 𝕊 → MixesF t f a → CParser t (f a) → CParser t a
     buildLevelNondirected msg mixes nextLevel = do
       x ← nextLevel
-      tries
-        [ pErr (msg ⧺ " infix") $ levelInfAfterOne x nextLevel mixes
+      concat
+        [ toCParser $ pErr (msg ⧺ " infix") $ frCParser $ levelInfAfterOne x mixes nextLevel
         , return $ extract x
         ]
-    buildLevelDirected ∷ 𝕊 → MixesF t f a → Parser t (f a) → Parser t a
-    buildLevelDirected msg mixes nextLevel = tries
+    buildLevelDirected ∷ 𝕊 → MixesF t f a → CParser t (f a) → CParser t a
+    buildLevelDirected msg mixes nextLevel = concat
       [ do
           x ← nextLevel
-          tries
-            [ pErr (msg ⧺ " infixl") $ levelInflAfterOne x nextLevel mixes
-            , pErr (msg ⧺ " infixr") $ levelInfrAfterOne x nextLevel mixes
+          concat
+            [ toCParser $ pErr (msg ⧺ " infixl") $ frCParser $ levelInflAfterOne x mixes nextLevel
+            , toCParser $ pErr (msg ⧺ " infixr") $ frCParser $ levelInfrAfterOne x mixes nextLevel
             , return $ extract x
             ]
-      , pErr (msg ⧺ " infixr") $ levelInfrNotAfterOne nextLevel mixes
+      , toCParser $ pErr (msg ⧺ " infixr") $ frCParser $ levelInfrNotAfterOne mixes nextLevel
       ]
-    levelInflAfterOne ∷ f a → Parser t (f a) → MixesF t f a → Parser t a
-    levelInflAfterOne x nextLevel mixes = do
-      fxs ← pOneOrMore $ tries
-        [ mixesFPostfix mixes
-        , do
-            f ← mixesFInfixL mixes
-            x₂ ← nextLevel
-            return $ \ x₁ → f x₁ x₂
-        ]
-      return $ wcompose (reverse fxs) x
-    _levelInfr ∷ Parser t (f a) → MixesF t f a → Parser t a
-    _levelInfr nextLevel mixes = do
-      fxs ← pOneOrMore $ tries
-        [ mixesFPrefix mixes
-        , do
-            x₁ ← nextLevel
-            f ← mixesFInfixR mixes
-            return $ \ x₂ → f x₁ x₂
-        ]
-      x ← nextLevel
-      return $ wcompose fxs x
-    levelInfrAfterOne ∷ f a → Parser t (f a) → MixesF t f a → Parser t a
-    levelInfrAfterOne x₁ nextLevel mixes = do
-      f ← mixesFInfixR mixes
-      levelInfrAfterOneCombo (\ x₂ → f x₁ x₂) nextLevel mixes
-    levelInfrNotAfterOne ∷ Parser t (f a) → MixesF t f a → Parser t a
-    levelInfrNotAfterOne nextLevel mixes = do
-      f ← mixesFPrefix mixes
-      levelInfrAfterOneCombo f nextLevel mixes
-    levelInfrAfterOneCombo ∷ (f a → a) → Parser t (f a) → MixesF t f a → Parser t a
-    levelInfrAfterOneCombo f nextLevel mixes = do
-      fxs ∷ 𝐿 (f a → a) ← pMany $ tries
-        [ mixesFPrefix mixes
-        , do
-            x₁ ← nextLevel
-            f' ← mixesFInfixR mixes
-            return $ \ x₂ → f' x₁ x₂
-        ]
-      x₂ ← nextLevel
-      return $ wcompose (f:&fxs) x₂
-    levelInfAfterOne ∷ f a → Parser t (f a) → MixesF t f a → Parser t a
-    levelInfAfterOne x₁ nextLevel mixes = do
+    levelInfAfterOne ∷ f a → MixesF t f a → CParser t (f a) → CParser t a
+    levelInfAfterOne x₁ mixes nextLevel = do
       f ← mixesFInfix mixes
       x₂ ← nextLevel
       return $ f x₁ x₂
+    levelInflAfterOne ∷ f a → MixesF t f a → CParser t (f a) → CParser t a
+    levelInflAfterOne x₁ mixes nextLevel = do
+      x₁' ← cxt $ concat
+        [ do f ← mixesFInfixL mixes
+             x₂ ← nextLevel
+             return $ f x₁ x₂
+        , do f ← mixesFPostfix mixes
+             return $ f x₁
+        ]
+      concat
+        [ levelInflAfterOne x₁' mixes nextLevel
+        , return $ extract x₁'
+        ]
+    levelInfrAfterOne ∷ f a → MixesF t f a → CParser t (f a) → CParser t a
+    levelInfrAfterOne x₁ mixes nextLevel = do
+      f ← mixesFInfixR mixes
+      x₂ ← bracket $ cxt $ levelInfr mixes nextLevel
+      return $ f x₁ x₂
+    levelInfr ∷ MixesF t f a → CParser t (f a) → CParser t a
+    levelInfr mixes nextLevel = concat
+      [ do x₁ ← nextLevel
+           concat
+             [ levelInfrAfterOne x₁ mixes nextLevel
+             , return $ extract x₁
+             ]
+      , levelInfrNotAfterOne mixes nextLevel
+      ]
+    levelInfrNotAfterOne ∷ MixesF t f a → CParser t (f a) → CParser t a
+    levelInfrNotAfterOne mixes nextLevel = do
+      f ← mixesFPrefix mixes
+      x ← bracket $ cxt $ levelInfr mixes nextLevel
+      return $ f x
+
+fmixfixWithContext ∷ ∀ t a. (Ord t) ⇒ 𝕊 → MixfixF t (Annotated FullContext) a → CParser t (Annotated FullContext a)
+fmixfixWithContext s = fmixfix (cpNewContext s) cpNewExpressionContext cpWithContextRendered
 
 ---------------
 -- Non-fancy --
 ---------------
 
 data Mixes t a = Mixes
-  { mixesPrefix  ∷ Parser t (a → a)
-  , mixesPostfix ∷ Parser t (a → a)
-  , mixesInfix  ∷ Parser t (a → a → a)
-  , mixesInfixL ∷ Parser t (a → a → a)
-  , mixesInfixR ∷ Parser t (a → a → a)
+  { mixesPrefix  ∷ CParser t (a → a)
+  , mixesPostfix ∷ CParser t (a → a)
+  , mixesInfix  ∷ CParser t (a → a → a)
+  , mixesInfixL ∷ CParser t (a → a → a)
+  , mixesInfixR ∷ CParser t (a → a → a)
   }
 
-instance Null (Mixes t a) where null = Mixes abort abort abort abort abort
-instance Append (Mixes t a) where 
+instance Null (Mixes t a) where null = Mixes null null null null null
+instance (Ord t) ⇒ Append (Mixes t a) where 
   Mixes pre₁ post₁ inf₁ infl₁ infr₁ ⧺ Mixes pre₂ post₂ inf₂ infl₂ infr₂ = 
-    Mixes (pre₁ ⎅ pre₂) (post₁ ⎅ post₂) (inf₁ ⎅ inf₂) (infl₁ ⎅ infl₂) (infr₁ ⎅ infr₂)
-instance Monoid (Mixes t a)
+    Mixes (pre₁ ⧺ pre₂) (post₁ ⧺ post₂) (inf₁ ⧺ inf₂) (infl₁ ⧺ infl₂) (infr₁ ⧺ infr₂)
+instance (Ord t) ⇒ Monoid (Mixes t a)
 
-mixesPure ∷ Mixes t a → MixesF t ID a
+data Mixfix t a = Mixfix 
+  { mixfixTerminals ∷ CParser t a
+  , mixfixLevels ∷ ℕ64 ⇰ Mixes t a
+  }
+
+instance Null (Mixfix t a) where null = Mixfix null bot
+instance (Ord t) ⇒ Append (Mixfix t a) where Mixfix ts₁ ls₁ ⧺ Mixfix ts₂ ls₂ = Mixfix (ts₁ ⧺ ts₂) (ls₁ ⧺ ls₂)
+instance (Ord t) ⇒ Monoid (Mixfix t a)
+
+mixPrefix ∷ ℕ64 → CParser t (a → a) → Mixfix t a
+mixPrefix l p = null { mixfixLevels = dict [ l ↦ null {mixesPrefix = p} ] }
+
+mixPostfix ∷ ℕ64 → CParser t (a → a) → Mixfix t a
+mixPostfix l p = null { mixfixLevels = dict [ l ↦ null {mixesPostfix = p} ] }
+
+mixInfix ∷ ℕ64 → CParser t (a → a → a) → Mixfix t a
+mixInfix l p = null { mixfixLevels = dict [ l ↦ null {mixesInfix = p} ] }
+
+mixInfixL ∷ ℕ64 → CParser t (a → a → a) → Mixfix t a
+mixInfixL l p = null { mixfixLevels = dict [ l ↦ null {mixesInfixL = p} ] }
+
+mixInfixR ∷ ℕ64 → CParser t (a → a → a) → Mixfix t a
+mixInfixR l p = null { mixfixLevels = dict [ l ↦ null {mixesInfixR = p} ] }
+
+mixTerminal ∷ CParser t a → Mixfix t a
+mixTerminal p = null { mixfixTerminals = p}
+
+mixesPure ∷ (Ord t) ⇒ Mixes t a → MixesF t ID a
 mixesPure (Mixes pre post inf infl infr) =
   MixesF
   (map kextract pre)
@@ -158,36 +213,11 @@ mixesPure (Mixes pre post inf infl infr) =
   (map kextract2 infl)
   (map kextract2 infr)
 
-data Mixfix t a = Mixfix 
-  { mixfixTerminals ∷ Parser t a
-  , mixfixLevels ∷ ℕ ⇰ Mixes t a
-  }
-
-instance Null (Mixfix t a) where null = Mixfix abort bot
-instance Append (Mixfix t a) where Mixfix ts₁ ls₁ ⧺ Mixfix ts₂ ls₂ = Mixfix (ts₁ ⎅ ts₂) (ls₁ ⧺ ls₂)
-instance Monoid (Mixfix t a)
-
-data Mix t a =
-    MixPrefix  ℕ (Parser t (a → a))
-  | MixPostfix ℕ (Parser t (a → a))
-  | MixInfix  ℕ (Parser t (a → a → a))
-  | MixInfixL ℕ (Parser t (a → a → a))
-  | MixInfixR ℕ (Parser t (a → a → a))
-  | MixTerminal (Parser t a)
-
-mix ∷ Mix t a → Mixfix t a
-mix (MixPrefix l pre) = null {mixfixLevels = dict [l ↦ null {mixesPrefix = pre}]}
-mix (MixPostfix l post) = null {mixfixLevels = dict [l ↦ null {mixesPostfix = post}]}
-mix (MixInfix l inf) = null {mixfixLevels = dict [l ↦ null {mixesInfix = inf}]}
-mix (MixInfixL l infl) = null {mixfixLevels = dict [l ↦ null {mixesInfixL = infl}]}
-mix (MixInfixR l infr) = null {mixfixLevels = dict [l ↦ null {mixesInfixR = infr}]}
-mix (MixTerminal term) = null {mixfixTerminals = term}
-
-mixfixPure ∷ Mixfix t a → MixfixF t ID a
+mixfixPure ∷ (Ord t) ⇒ Mixfix t a → MixfixF t ID a
 mixfixPure (Mixfix terminals levels) = MixfixF terminals $ map mixesPure levels
 
-mixfixParser ∷ Mixfix t a → Parser t a
-mixfixParser mixfix = unID ^$ mixfixParserF (mixfixPure mixfix) (map ID)
+mixfix ∷ (Ord t) ⇒ Mixfix t a → CParser t a
+mixfix mix = unID ^$ fmixfix id id (map ID) (mixfixPure mix) 
 
-mixfixParserWithContext ∷ 𝕊 → MixfixF t (Annotated FullContext) a → Parser t (Annotated FullContext a)
-mixfixParserWithContext s mixfix = mixfixParserF mixfix $ pWithContext s
+mixfixWithContext ∷ (Ord t) ⇒ 𝕊 → Mixfix t a → CParser t (Annotated FullContext a)
+mixfixWithContext s = toCParser ∘ pNewContext s ∘ pWithContextRendered ∘ frCParser ∘ mixfix

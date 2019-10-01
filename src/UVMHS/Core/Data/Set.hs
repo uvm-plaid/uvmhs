@@ -1,6 +1,6 @@
 module UVMHS.Core.Data.Set where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 
 import UVMHS.Core.Classes
 
@@ -101,6 +101,9 @@ pow = pow𝐼 ∘ iter
 
 uniques ∷ (Ord a,ToIter a t) ⇒ t → 𝐼 a
 uniques xs = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
-  snd $ foldWith xs (bot :* i₀) $ \ (x ∷ a) (seen :* i ∷ 𝑃 a ∧ b) → case x ∈ seen of
+  snd $ foldOnFrom xs (bot :* i₀) $ \ (x ∷ a) (seen :* i ∷ 𝑃 a ∧ b) → case x ∈ seen of
     True → seen :* i
     False → (single x ∪ seen) :* f x i
+
+unions ∷ (Ord a,ToIter (𝑃 a) t) ⇒ t → 𝑃 a
+unions = fold pø (∪)

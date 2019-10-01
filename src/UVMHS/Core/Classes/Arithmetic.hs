@@ -1,6 +1,6 @@
 module UVMHS.Core.Classes.Arithmetic where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 
 import UVMHS.Core.Classes.Order
 import UVMHS.Core.Classes.Functor
@@ -16,12 +16,14 @@ class One a where one ∷ a
 class Times a where (×) ∷ a → a → a
 class Divide a where (/) ∷ a → a → a
 class DivMod a where {(⌿) ∷ a → a → a;(÷) ∷ a → a → a}
-class Exponential a where (^) ∷ a → a → a
+class Pon a where (^^) ∷ a → ℕ → a
+class Pow a where (^) ∷ a → a → a
 class Root a where root ∷ a → a
 class Log a where log ∷ a → a
-class ExponentialFn a where exp ∷ a → a
+class Efn a where efn ∷ a → a
 class Sin a where sin ∷ a → a
 class Cos a where cos ∷ a → a
+
 class (Zero a,Plus a) ⇒ Additive a
 class (Additive a,One a,Times a) ⇒ Multiplicative a
 
@@ -69,11 +71,14 @@ class ToInt32 a where int32 ∷ a → ℤ32
 class ToInt16 a where int16 ∷ a → ℤ16
 class ToInt8  a where int8  ∷ a → ℤ8
 
+class ToIntO   a where intO   ∷ a → 𝑂 ℤ
 class ToIntO64 a where intO64 ∷ a → 𝑂 ℤ64
 class ToIntO32 a where intO32 ∷ a → 𝑂 ℤ32
 class ToIntO16 a where intO16 ∷ a → 𝑂 ℤ16
 class ToIntO8  a where intO8  ∷ a → 𝑂 ℤ8
 
+intΩ ∷ (ToIntO a) ⇒ a → ℤ
+intΩ x = case intO x of {None → error "failed intΩ6";Some n → n}
 intΩ64 ∷ (ToIntO64 a) ⇒ a → ℤ64
 intΩ64 x = case intO64 x of {None → error "failed intΩ64 conversion";Some n → n}
 intΩ32 ∷ (ToIntO32 a) ⇒ a → ℤ32
@@ -83,18 +88,34 @@ intΩ16 x = case intO16 x of {None → error "failed intΩ16 conversion";Some n 
 intΩ8 ∷ (ToIntO8 a) ⇒ a → ℤ8
 intΩ8 x = case intO8 x of {None → error "failed intΩ8 conversion";Some n → n}
 
-class ToRatio a where rio ∷ a → 𝕋
-class ToRatioO a where rioO ∷ a → 𝑂 𝕋
-
-class ToNNDouble a where nndbl ∷ a → ℙ
-class ToNNDoubleO a where nndblO ∷ a → 𝑂 ℙ
-
-rioΩ ∷ (ToRatioO a) ⇒ a → 𝕋
-rioΩ x = case rioO x of {None → error "failed rioΩ conversion";Some n → n}
-
-nndblΩ ∷ (ToNNDoubleO a) ⇒ a → ℙ
-nndblΩ x = case nndblO x of {None → error "failed nndblΩ conversion";Some n → n}
-
 class ToRational a where rat ∷ a → ℚ
-class ToDouble a where dbl ∷ a → 𝔻
+class ToRationalO a where ratO ∷ a → 𝑂 ℚ
 
+class ToRationalᴾ a where ratᴾ ∷ a → ℚᴾ
+class ToRationalᴾO a where ratᴾO ∷ a → 𝑂 ℚᴾ
+
+class ToDouble a where dbl ∷ a → 𝔻
+class ToDoubleO a where dblO ∷ a → 𝑂 𝔻
+
+class ToDoubleᴾ a where dblᴾ ∷ a → 𝔻ᴾ
+class ToDoubleᴾO a where dblᴾO ∷ a → 𝑂 𝔻ᴾ
+
+class ToNumber a where num ∷ a → ℝ
+
+class ToNumberᴾ a where numᴾ ∷ a → ℝᴾ
+class ToNumberᴾO a where numᴾO ∷ a → 𝑂 ℝᴾ
+
+ratΩ ∷ (ToRationalO a) ⇒ a → ℚ
+ratΩ x = case ratO x of {None → error "failed ratΩ conversion";Some n → n}
+
+ratᴾΩ ∷ (ToRationalᴾO a) ⇒ a → ℚᴾ
+ratᴾΩ x = case ratᴾO x of {None → error "failed ratᴾΩ conversion";Some n → n}
+
+dblΩ ∷ (ToDoubleO a) ⇒ a → 𝔻
+dblΩ x = case dblO x of {None → error "failed dblΩ conversion";Some n → n}
+
+dblᴾΩ ∷ (ToDoubleᴾO a) ⇒ a → 𝔻ᴾ
+dblᴾΩ x = case dblᴾO x of {None → error "failed dblᴾΩ conversion";Some n → n}
+
+numᴾΩ ∷ (ToNumberᴾO a) ⇒ a → ℝᴾ
+numᴾΩ x = case numᴾO x of {None → error "failed numᴾΩ conversion";Some n → n}

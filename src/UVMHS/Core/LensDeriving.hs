@@ -1,6 +1,6 @@
 module UVMHS.Core.LensDeriving where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 
@@ -22,7 +22,8 @@ makeLensLogic cx ty tyargs field fieldty = do
   tmpˣ ← TH.newName $ chars "x"
   tmpˢ ← TH.newName $ chars "s"
   return $ list
-    [ TH.SigD lensName $ 
+    [ TH.PragmaD $ TH.InlineP lensName TH.Inline TH.FunLike TH.AllPhases
+    , TH.SigD lensName $ 
         TH.ForallT (tohs tyargs) cx $
           TH.ConT ''(⟢) ⊙ (TH.ConT ty ⊙⋆ tyargVars) ⊙ fieldty
     , TH.FunD lensName $ single $ thSingleClause null $ 
@@ -52,7 +53,8 @@ makePrismLogic cx ty tyargs con fieldtys numcons = do
   tmpˣˢ ← mapMOn fieldtys $ const $ TH.newName $ chars "x"
   return $
     list
-    [ TH.SigD prismName $ 
+    [ TH.PragmaD $ TH.InlineP prismName TH.Inline TH.FunLike TH.AllPhases
+    , TH.SigD prismName $ 
         TH.ForallT (tohs tyargs) cx $ 
           TH.ConT ''(⌲) ⊙ (TH.ConT ty ⊙⋆ tyargVars) ⊙ tup fieldtys
     , TH.FunD prismName $ single $ thSingleClause null $ 

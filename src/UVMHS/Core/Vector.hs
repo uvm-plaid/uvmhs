@@ -1,13 +1,14 @@
 module UVMHS.Core.Vector where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 import UVMHS.Core.Effects
 import UVMHS.Core.Monads
 
-import qualified Data.Array.Unboxed as Arr
+import qualified Data.Array as BArr
+import qualified Data.Array.Unboxed as UArr
 
 import qualified Prelude as HS
 import qualified Data.Bits as HS
@@ -15,8 +16,77 @@ import qualified Data.Char as HS
 
 import qualified Unsafe.Coerce as UNSAFE
 
+-------
+-- 𝕍 --
+-------
+
+newtype 𝕍 a = 𝕍 (BArr.Array ℕ64 a)
+
+instance ToStream a (𝕍 a) where stream = stream𝕍
+instance ToIter a (𝕍 a) where iter = iter ∘ stream
+instance (Show a) ⇒ Show (𝕍 a) where show = chars ∘ showCollection "𝕍[" "]" "," show𝕊
+instance Lookup ℕ64 a (𝕍 a) where (⋕?) = idx𝕍𝑂
+instance Null (𝕍 a) where null = 𝕍 $ BArr.listArray (𝕟64 1,𝕟64 0) []
+instance Append (𝕍 a) where xs ⧺ ys = vec (iter xs ⧺ iter ys)
+
+instance (Eq a) ⇒ Eq (𝕍 a) where xs == ys = stream xs ≡ stream ys
+instance (Ord a) ⇒ Ord (𝕍 a) where compare xs ys = stream xs ⋚ stream ys
+
+instance Sized (𝕍 a) where size = size𝕍
+
+instance Functor 𝕍 where map = map𝕍
+
+vecN ∷ (ToIter a t) ⇒ ℕ64 → t → 𝕍 a
+vecN l xs
+  | l ≡ 𝕟64 0 = 𝕍 $ BArr.listArray (𝕟64 1,𝕟64 0) []
+  | otherwise = 𝕍 $ BArr.listArray (𝕟64 0,l - 𝕟64 1) $ lazyList $ iter xs
+
+vecS ∷ (ToIter a t,Sized t) ⇒ t → 𝕍 a
+vecS xs = vecN (size xs) xs
+
+vec ∷ (ToIter a t) ⇒ t → 𝕍 a
+vec xs = vecN (𝕟64 $ count xs) xs
+
+vecF ∷ ℕ64 → (ℕ64 → a) → 𝕍 a
+vecF n f = vecN n $ map (f ∘ 𝕟64) $ upTo $ nat n
+
+vecD ∷ ℕ64 ⇰ a → 𝕍 a
+vecD d = case dmaxKey d of
+  None → error "vecD on empty dictionary"
+  Some k → vecF (k + one) $ \ n → d ⋕! n
+
+idxOK𝕍 ∷ 𝕍 a → ℕ64 → 𝔹
+idxOK𝕍 (𝕍 a) ι =
+  let (ιᴮ,ιᵀ) = BArr.bounds a
+  in (ι ≥ ιᴮ) ⩓ (ι ≤ ιᵀ)
+
+idx𝕍 ∷ 𝕍 a → ℕ64 → a
+idx𝕍 (𝕍 a) ι = a BArr.! ι
+
+idx𝕍𝑂 ∷ 𝕍 a → ℕ64 → 𝑂 a
+idx𝕍𝑂 a ι 
+  | idxOK𝕍 a ι = Some $ idx𝕍 a ι
+  | otherwise = None
+
+stream𝕍 ∷ 𝕍 a → 𝑆 a
+stream𝕍 xs = 𝑆 (𝕟64 0) $ \ ι → do
+  x ← idx𝕍𝑂 xs ι
+  return $ x :* succ ι
+
+size𝕍 ∷ 𝕍 a → ℕ64
+size𝕍 (𝕍 a) = 
+  let (ιᴮ,ιᵀ) = BArr.bounds a 
+  in if ιᴮ > ιᵀ then zero else ιᵀ + one
+
+map𝕍 ∷ (a → b) → 𝕍 a → 𝕍 b
+map𝕍 f xs = vecN (size xs) $ map f $ iter xs
+
+------------
+-- Chunks --
+------------
+
 skipChunk ∷ (Monad m) ⇒ m ℕ8 → ℕ64 → m ()
-skipChunk g n₀ = loop (natΩ64 0)
+skipChunk g n₀ = loop (𝕟64 0)
   where
     loop n
       | n ≡ n₀ = return ()
@@ -25,7 +95,7 @@ skipChunk g n₀ = loop (natΩ64 0)
           loop $ succ n
 
 emptyChunk ∷ ℕ64 → 𝐼 ℕ8
-emptyChunk n = repeat (nat n) (natΩ8 0)
+emptyChunk n = repeat (nat n) (𝕟8 0)
 
 joinBytes ∷ (ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8) → ℕ64
 joinBytes (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈) =
@@ -60,37 +130,37 @@ instance {-# OVERLAPPABLE #-} (Chunky b,a ⇄ b) ⇒ Chunky a where
   toChunk = toChunk ∘ isoto
 
 instance Chunky () where
-  chunkSize P = natΩ64 0
+  chunkSize P = 𝕟64 0
   fromChunk _g = return ()
   toChunk () = empty𝐼
 
 instance Chunky ℕ8 where
-  chunkSize P = natΩ64 1
+  chunkSize P = 𝕟64 1
   fromChunk = id
   toChunk = single
 
 instance Chunky 𝔹 where
-  chunkSize P = natΩ64 1
+  chunkSize P = 𝕟64 1
   fromChunk g = do
     b ← g
-    return $ case b ≡ natΩ8 0 of
+    return $ case b ≡ 𝕟8 0 of
       True → False 
       False → True
   toChunk b = toChunk $ case b of
-    False → natΩ8 0
-    True → natΩ8 1
+    False → 𝕟8 0
+    True → 𝕟8 1
 
 instance Chunky ℂ where
-  chunkSize P = natΩ64 4
+  chunkSize P = 𝕟64 4
   fromChunk g = do
     b₁ ← g ; b₂ ← g ; b₃ ← g ; b₄ ← g
-    return $ HS.chr $ HS.fromIntegral $ joinBytes (b₁,b₂,b₃,b₄,natΩ8 0,natΩ8 0,natΩ8 0,natΩ8 0)
+    return $ HS.chr $ HS.fromIntegral $ joinBytes (b₁,b₂,b₃,b₄,𝕟8 0,𝕟8 0,𝕟8 0,𝕟8 0)
   toChunk c = 𝐼 $ \ (f ∷ ℕ8 → b → b) →
     let (b₁,b₂,b₃,b₄,_,_,_,_) = splitBytes $ HS.fromIntegral $ HS.ord c
     in f b₄ ∘ f b₃ ∘ f b₂ ∘ f b₁
 
 instance Chunky ℕ64 where
-  chunkSize P = natΩ64 8
+  chunkSize P = 𝕟64 8
   fromChunk g = do
     b₁ ← g ; b₂ ← g ; b₃ ← g ; b₄ ← g
     b₅ ← g ; b₆ ← g ; b₇ ← g ; b₈ ← g
@@ -100,12 +170,12 @@ instance Chunky ℕ64 where
     in f b₈ ∘ f b₇ ∘ f b₆ ∘ f b₅ ∘ f b₄ ∘ f b₃ ∘ f b₂ ∘ f b₁
 
 instance Chunky ℤ64 where
-  chunkSize P = natΩ64 8
+  chunkSize P = 𝕟64 8
   fromChunk = map (UNSAFE.unsafeCoerce ∷ ℕ64 → ℤ64) ∘ fromChunk
   toChunk = toChunk ∘ (UNSAFE.unsafeCoerce ∷ ℤ64 → ℕ64)
 
 instance Chunky 𝔻 where
-  chunkSize P = natΩ64 8
+  chunkSize P = 𝕟64 8
   fromChunk = map (UNSAFE.unsafeCoerce ∷ ℕ64 → 𝔻) ∘ fromChunk
   toChunk = toChunk ∘ (UNSAFE.unsafeCoerce ∷ 𝔻 → ℕ64)
 
@@ -118,10 +188,10 @@ instance (Chunky a,Chunky b) ⇒ Chunky (a ∧ b) where
   toChunk (x :* y) = toChunk x ⧺ toChunk y
 
 instance (Chunky a,Chunky b) ⇒ Chunky (a ∨ b) where
-  chunkSize P = natΩ64 1 + (chunkSize @ a P ⩏ chunkSize @ b P)
+  chunkSize P = 𝕟64 1 + (chunkSize @ a P ⩏ chunkSize @ b P)
   fromChunk g = do
     b ← g
-    case b ≡ natΩ8 0 of
+    case b ≡ 𝕟8 0 of
       True → do
         x ← fromChunk g
         skipChunk g $ (chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ a P
@@ -131,82 +201,82 @@ instance (Chunky a,Chunky b) ⇒ Chunky (a ∨ b) where
         skipChunk g $ (chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ b P
         return $ Inr y
   toChunk = \case
-    Inl x → single (natΩ8 0) ⧺ toChunk x ⧺ emptyChunk ((chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ a P)
-    Inr y → single (natΩ8 1) ⧺ toChunk y ⧺ emptyChunk ((chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ b P)
+    Inl x → single (𝕟8 0) ⧺ toChunk x ⧺ emptyChunk ((chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ a P)
+    Inr y → single (𝕟8 1) ⧺ toChunk y ⧺ emptyChunk ((chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ b P)
 
-chunkIOBytes ∷ Arr.UArray ℕ64 ℕ8 → State ℕ64 ℕ8
+chunkIOBytes ∷ UArr.UArray ℕ64 ℕ8 → State ℕ64 ℕ8
 chunkIOBytes a = do
   i ← next
-  return $ a Arr.! i
+  return $ a UArr.! i
 
-newtype 𝕍 a = 𝕍 (Arr.UArray ℕ64 ℕ8)
+-------
+-- 𝕌 --
+-------
 
-instance (Chunky a) ⇒ ToStream a (𝕍 a) where stream = stream𝕍
-instance (Chunky a) ⇒ ToIter a (𝕍 a) where iter = iter ∘ stream
-instance (Chunky a,Show a) ⇒ Show (𝕍 a) where show = chars ∘ showWith𝕍 show𝕊
-instance (Chunky a) ⇒ Lookup ℕ64 a (𝕍 a) where (⋕?) = idx𝕍𝑂
-instance Null (𝕍 a) where null = 𝕍 $ Arr.listArray (natΩ64 1,natΩ64 0) []
-instance (Chunky a) ⇒ Append (𝕍 a) where xs ⧺ ys = vec (iter xs ⧺ iter ys)
+newtype 𝕌 a = 𝕌 (UArr.UArray ℕ64 ℕ8)
 
-instance Eq (𝕍 a) where xs == ys = streamBytes𝕍 xs ≡ streamBytes𝕍 ys
-instance Ord (𝕍 a) where compare xs ys = streamBytes𝕍 xs ⋚ streamBytes𝕍 ys
+instance (Chunky a) ⇒ ToStream a (𝕌 a) where stream = stream𝕌
+instance (Chunky a) ⇒ ToIter a (𝕌 a) where iter = iter ∘ stream
+instance (Chunky a,Show a) ⇒ Show (𝕌 a) where show = chars ∘ showWith𝕌 show𝕊
+instance (Chunky a) ⇒ Lookup ℕ64 a (𝕌 a) where (⋕?) = idx𝕌𝑂
+instance Null (𝕌 a) where null = 𝕌 $ UArr.listArray (𝕟64 1,𝕟64 0) []
+instance (Chunky a) ⇒ Append (𝕌 a) where xs ⧺ ys = uvec (iter xs ⧺ iter ys)
 
-idxᐪ𝕍 ∷ ∀ a. (Chunky a) ⇒ 𝕍 a → ℕ64
-idxᐪ𝕍 (𝕍 a) =
-  let (_,iᵀ) = Arr.bounds a
-  in iᵀ ⌿ chunkSize @ a P
+instance (Chunky a,Eq a) ⇒ Eq (𝕌 a) where xs == ys = stream xs ≡ stream ys
+instance (Chunky a,Ord a) ⇒ Ord (𝕌 a) where compare xs ys = stream xs ⋚ stream ys
 
-rawIdx𝕍 ∷ (Chunky a) ⇒ P a → ℕ64 → ℕ64
-rawIdx𝕍 p i = (i - natΩ64 1) × chunkSize p + natΩ64 1
+uvecN ∷ ∀ t a. (ToIter a t,Chunky a) ⇒ ℕ64 → t → 𝕌 a
+uvecN l xs
+  | l ≡ 𝕟64 0 = 𝕌 $ UArr.listArray (𝕟64 1,𝕟64 0) []
+  | otherwise = 𝕌 $ UArr.listArray (𝕟64 0,l × chunkSize @ a P - 𝕟64 1) $ lazyList $ iter xs ≫= toChunk
 
-idx𝕍 ∷ ∀ a. (Chunky a) ⇒ 𝕍 a → ℕ64 → a
-idx𝕍 (𝕍 a) i = evalState (rawIdx𝕍 @ a P i) $ fromChunk $ chunkIOBytes a
+uvec ∷ (ToIter a t,Chunky a) ⇒ t → 𝕌 a
+uvec xs = uvecN (𝕟64 $ count xs) xs
 
-idx𝕍𝑂 ∷ (Chunky a) ⇒ 𝕍 a → ℕ64 → 𝑂 a
-idx𝕍𝑂 a i 
-  | (i < natΩ64 0) ⩔ (i > idxᐪ𝕍 a) = None
-  | otherwise = Some $ idx𝕍 a i
+idxOK𝕌 ∷ ∀ a. (Chunky a) ⇒ 𝕌 a → ℕ64 → 𝔹
+idxOK𝕌 (𝕌 a) ι =
+  let (ιᴮ,ιᵀ) = UArr.bounds a
+      ιᵀ' = ((ιᵀ + 𝕟64 1) ⌿ chunkSize @ a P) - 𝕟64 1
+  in (ι ≥ ιᴮ) ⩓ (ι ≤ ιᵀ')
 
-vec ∷ ∀ t a. (ToIter a t,Chunky a) ⇒ t → 𝕍 a
-vec xs = 𝕍 $ Arr.listArray (natΩ64 1,natΩ64 (count xs) × chunkSize @ a P) $ lazyList $ mjoin $ map toChunk $ iter xs
+rawIdx𝕌 ∷ (Chunky a) ⇒ P a → ℕ64 → ℕ64
+rawIdx𝕌 p i = i × chunkSize p
 
-stream𝕍 ∷ ∀ a. (Chunky a) ⇒ 𝕍 a → 𝑆 a
-stream𝕍 xs = 
-  let ιᵀ = idxᐪ𝕍 xs
-      g ∷ ℕ64 → 𝑂 (a ∧ ℕ64)
-      g ι | ι > ιᵀ = None
-          | otherwise = Some (idx𝕍 xs ι :* succ ι)
-  in 𝑆 (natΩ64 1) g
+idx𝕌 ∷ ∀ a. (Chunky a) ⇒ 𝕌 a → ℕ64 → a
+idx𝕌 (𝕌 a) i = evalState (rawIdx𝕌 @ a P i) $ fromChunk $ chunkIOBytes a
 
--- iter𝕍 ∷ ∀ a. (Chunky a) ⇒ 𝕍 a → 𝐼 a
--- iter𝕍 a = 
---   let ιᐪ = idxᐪ𝕍 a
---   in 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
---     let loop ι 
---           | ι > ιᐪ = id
---           | otherwise = loop (succ ι) ∘ f (idx𝕍 a ι)
---     in loop (natΩ64 1) i₀
+idx𝕌𝑂 ∷ (Chunky a) ⇒ 𝕌 a → ℕ64 → 𝑂 a
+idx𝕌𝑂 a i 
+  | idxOK𝕌 a i = Some $ idx𝕌 a i
+  | otherwise = None
 
-showWith𝕍 ∷ (Chunky a) ⇒ (a → 𝕊) → 𝕍 a → 𝕊
-showWith𝕍 = showCollection "𝕍[" "]" ","
+stream𝕌 ∷ ∀ a. (Chunky a) ⇒ 𝕌 a → 𝑆 a
+stream𝕌 xs = 𝑆 (𝕟64 0) $ \ ι → do
+  x ← idx𝕌𝑂 xs ι
+  return $ x :* succ ι
 
-streamBytes𝕍 ∷ 𝕍 a → 𝑆 ℕ8
-streamBytes𝕍 (𝕍 a) =
-  let (i₁,iₙ) = Arr.bounds a
+showWith𝕌 ∷ (Chunky a) ⇒ (a → 𝕊) → 𝕌 a → 𝕊
+showWith𝕌 = showCollection "𝕌[" "]" ","
+
+streamBytes𝕌 ∷ 𝕌 a → 𝑆 ℕ8
+streamBytes𝕌 (𝕌 a) =
+  let (i₁,iₙ) = UArr.bounds a
   in 𝑆 i₁ $ \ i →
     case i > iₙ of
       True → abort
-      False → return $ (a Arr.! i) :* succ i
+      False → return $ (a UArr.! i) :* succ i
 
-corelib_vector_e1 ∷ 𝕍 (ℕ64 ∨ (ℕ64 ∧ ℕ64))
-corelib_vector_e1 = vec $ vec $ mapOn (upTo 10) $ \ x → 
+-- examples --
+
+corelib_vector_e1 ∷ 𝕌 (ℕ64 ∨ (ℕ64 ∧ ℕ64))
+corelib_vector_e1 = uvec $ mapOn (upTo 10) $ \ x → 
   case even x of
-    True → Inl $ natΩ64 x 
-    False → Inr $ natΩ64 x :* natΩ64 99
+    True → Inl $ 𝕟64 x 
+    False → Inr $ 𝕟64 x :* 𝕟64 99
 
-corelib_vector_e2 ∷ 𝕍 ℂ
-corelib_vector_e2 = vec ['a','b','c','d','e','f']
+corelib_vector_e2 ∷ 𝕌 ℂ
+corelib_vector_e2 = uvec ['a','b','c','d','e','f']
 
-corelib_vector_e3 ∷ 𝕍 𝔹
-corelib_vector_e3 = vec $ map (elimChoice even $ even ∘ fst) $ iter corelib_vector_e1
+corelib_vector_e3 ∷ 𝕌 𝔹
+corelib_vector_e3 = uvec $ map (elimChoice even $ even ∘ fst) $ iter corelib_vector_e1
 

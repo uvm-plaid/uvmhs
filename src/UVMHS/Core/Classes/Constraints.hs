@@ -1,6 +1,6 @@
 module UVMHS.Core.Classes.Constraints where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 
 infixr 2 :⇒:
 infixl 4 :∧:

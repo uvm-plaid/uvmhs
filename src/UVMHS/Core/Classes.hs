@@ -1,5 +1,6 @@
 module UVMHS.Core.Classes
-  (module UVMHS.Core.Classes.Arithmetic
+  (module UVMHS.Core.Classes.All
+  ,module UVMHS.Core.Classes.Arithmetic
   ,module UVMHS.Core.Classes.Collections
   ,module UVMHS.Core.Classes.Comonad
   ,module UVMHS.Core.Classes.Constraints
@@ -13,6 +14,7 @@ module UVMHS.Core.Classes
   ,module UVMHS.Core.Classes.Order
   ) where
 
+import UVMHS.Core.Classes.All
 import UVMHS.Core.Classes.Arithmetic
 import UVMHS.Core.Classes.Collections
 import UVMHS.Core.Classes.Comonad

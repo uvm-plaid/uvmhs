@@ -1,29 +1,36 @@
 module UVMHS.Core.Classes.Order where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 
 import qualified Prelude as HS
 
 infix 3 ≡,≢,⋚,≤,≥,<,>
 
+-- {-# INLINE (≡) #-}
 (≡) ∷ (Eq a) ⇒ a → a → 𝔹
 (≡) = (HS.==)
 
+-- {-# INLINE (≢) #-}
 (≢) ∷ (Eq a) ⇒ a → a → 𝔹
 (≢) = (HS./=)
 
+-- {-# INLINE (⋚) #-}
 (⋚) ∷ (Ord a) ⇒ a → a → Ordering
 (⋚) = compare
 
+-- {-# INLINE (≤) #-}
 (≤) ∷ (Ord a) ⇒ a → a → 𝔹
 x ≤ y = case x ⋚ y of {LT → True;EQ → True;GT → False}
 
+-- {-# INLINE (≥) #-}
 (≥) ∷ (Ord a) ⇒ a → a → 𝔹
 x ≥ y = case x ⋚ y of {LT → False;EQ → True;GT → True}
 
+-- {-# INLINE (<) #-}
 (<) ∷ (Ord a) ⇒ a → a → 𝔹
 (<) = (HS.<)
 
+-- {-# INLINE (>) #-}
 (>) ∷ (Ord a) ⇒ a → a → 𝔹
 (>) = (HS.>)
 

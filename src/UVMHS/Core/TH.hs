@@ -1,6 +1,6 @@
 module UVMHS.Core.TH where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 

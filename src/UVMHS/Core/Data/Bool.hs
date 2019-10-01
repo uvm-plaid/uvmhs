@@ -1,6 +1,6 @@
 module UVMHS.Core.Data.Bool where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
 instance Null 𝔹 where null = False

@@ -1,6 +1,6 @@
 module UVMHS.Core.Data.Stream where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.Arithmetic ()
@@ -115,6 +115,17 @@ zipWith f (stream → 𝑆 s₁₀ g₁) (stream → 𝑆 s₂₀ g₂) = 𝑆 (
 zip ∷ (ToStream a t₁,ToStream b t₂) ⇒ t₁ → t₂ → 𝑆 (a ∧ b)
 zip = zipWith (:*)
 
+zip3With ∷ (ToStream a t₁,ToStream b t₂,ToStream c t₃) ⇒ (a → b → c → d) → t₁ → t₂ → t₃ → 𝑆 d
+zip3With f (stream → 𝑆 s₁₀ g₁) (stream → 𝑆 s₂₀ g₂) (stream → 𝑆 s₃₀ g₃) =
+  𝑆 (s₁₀ :* s₂₀ :* s₃₀) $ \ (s₁ :* s₂ :* s₃) → do
+    (x :* s₁') ← g₁ s₁
+    (y :* s₂') ← g₂ s₂
+    (z :* s₃') ← g₃ s₃
+    return $ f x y z :* (s₁' :* s₂' :* s₃')
+
+zip3 ∷ (ToStream a t₁,ToStream b t₂,ToStream c t₃) ⇒ t₁ → t₂ → t₃ → 𝑆 (a ∧ b ∧ c)
+zip3 = zip3With $ (:*) ∘∘ (:*)
+
 firstN ∷ (ToStream a t) ⇒ ℕ → t → 𝑆 a
 firstN n₀ (stream → 𝑆 s₀ g) = 𝑆 (s₀ :* 0) $ \ (s :* n) → case n ≡ n₀ of
   True → None 
@@ -171,11 +182,17 @@ postfixAfter𝑆 p (stream → 𝑆 s₀ g) = ifNone empty𝑆 $ loop s₀
         True → Some (𝑆 s' g) 
         False → loop s'
 
--- applyUntil𝑆 ∷ (a → a) → (a → a → 𝔹) → a → 𝑆 a
--- applyUntil𝑆 f p x₀ = 𝑆 (Some x₀) $ \ xM → do
---   x ← xM
---   let x' = f x
---   return (x :* if p x x' then None else Some x')
+inbetween𝑆 ∷ (ToStream a t) ⇒ a → t → 𝑆 a
+inbetween𝑆 i (stream → 𝑆 s₀ g) = 𝑆 (s₀ :* None) $ \ (s :* xMM) → do
+  case xMM of
+    None → do
+      x :* s' ← g s
+      return $ x :* (s' :* Some None)
+    Some None → do
+      x :* s' ← g s
+      return $ i :* (s' :* Some (Some x))
+    Some (Some x) → do
+      return $ x :* (s :* Some None)
 
 coredata_stream_e1 ∷ 𝑆 ℕ
 coredata_stream_e1 = stream [1,2,3,4,5,4,3,2,1]

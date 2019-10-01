@@ -1,6 +1,6 @@
 module UVMHS.Core.Data.LazyList where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 
 import UVMHS.Core.Classes
 

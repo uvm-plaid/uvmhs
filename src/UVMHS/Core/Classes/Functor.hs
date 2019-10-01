@@ -1,6 +1,6 @@
 module UVMHS.Core.Classes.Functor where
 
-import UVMHS.Init
+import UVMHS.Core.Init
 import UVMHS.Core.Classes.Morphism
 
 infixr 0 ^$, ^^$
@@ -9,27 +9,39 @@ infixl 9 ^⋅, ^^⋅
 
 class Functor (t ∷ ★ → ★) where map ∷ (a → b) → (t a → t b)
 
+-- {-# INLINE mapOn #-}
 mapOn ∷ (Functor t) ⇒ t a → (a → b) → t b 
 mapOn = flip map
 
+-- {-# INLINE mapp #-}
 mapp ∷ (Functor t,Functor u) ⇒ (a → b) → t (u a) → t (u b)
 mapp = map ∘ map
 
+-- {-# INLINE mappp #-}
+mappp ∷ (Functor t,Functor u,Functor v) ⇒ (a → b) → t (u (v a)) → t (u (v b))
+mappp = mapp ∘ map
+
+-- {-# INLINE (^⋅) #-}
 (^⋅) ∷ (Functor t) ⇒ (a → b) → t a → t b 
 (^⋅) = map
 
+-- {-# INLINE (^^⋅) #-}
 (^^⋅) ∷ (Functor t,Functor u) ⇒ (a → b) → t (u a) → t (u b)
 (^^⋅) = mapp
 
+-- {-# INLINE (^$) #-}
 (^$) ∷ (Functor t) ⇒ (a → b) → t a → t b 
 (^$) = map
 
+-- {-# INLINE (^^$) #-}
 (^^$) ∷ (Functor t,Functor u) ⇒ (a → b) → t (u a) → t (u b)
 (^^$) = mapp
 
+-- {-# INLINE (^∘) #-}
 (^∘) ∷ (Functor t) ⇒ (b → c) → (a → t b) → a → t c 
 g ^∘ f = map g ∘ f
 
+-- {-# INLINE (^^∘) #-}
 (^^∘) ∷ (Functor t,Functor u) ⇒ (b → c) → (a → t (u b)) → a → t (u c)
 g ^^∘ f = mapp g ∘ f
 
