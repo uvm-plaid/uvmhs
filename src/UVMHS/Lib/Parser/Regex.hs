@@ -449,7 +449,11 @@ lName = sequence
 
 lNatPre ∷ (Zero u,Ord u,Ord o,Additive u) ⇒ Regex CharClass ℂ o u
 lNatPre = sequence
-  [ oomRegex $ concat $ map tokRegex ['0'..'9']
+  [ concat $ map tokRegex ['0'..'9']
+  , starRegex $ concat
+      [ concat $ map tokRegex ['0'..'9']
+      , tokRegex '_'
+      ]
   , fepsRegex $ formats [FG darkRed]
   ]
 
@@ -599,9 +603,9 @@ mkTokenBasic cs = \case
   Some SyntaxCBasic → (:*) False $ SyntaxTBasic $ stringS cs
   Some StringCBasic → (:*) False $ StringTBasic $ read𝕊 $ stringS cs
   Some NameCBasic → (:*) False $ NameTBasic $ stringS cs
-  Some NaturalCBasic → (:*) False $ NaturalTBasic $ read𝕊 $ stringS cs
-  Some IntegerCBasic → (:*) False $ IntegerTBasic $ read𝕊 $ stringS cs
-  Some DoubleCBasic → (:*) False $ DoubleTBasic $ read𝕊 $ stringS cs
+  Some NaturalCBasic → (:*) False $ NaturalTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
+  Some IntegerCBasic → (:*) False $ IntegerTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
+  Some DoubleCBasic → (:*) False $ DoubleTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
 
 lSyntaxBasic ∷ (Ord u,Additive u) ⇒ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassBasic u
 lSyntaxBasic puns kws prims ops = concat
