@@ -459,6 +459,13 @@ lNat = sequence
   , lepsRegex $ 𝕟64 102
   ]
 
+lNatCoded ∷ (Zero u,Ord u,Ord o,Additive u) ⇒ Regex CharClass ℂ o u
+lNatCoded = sequence
+  [ lNatPre
+  , tokRegex 'n'
+  , lepsRegex $ 𝕟64 102
+  ]
+
 lIntPre ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex CharClass ℂ o u
 lIntPre = sequence
   [ optRegex $ tokRegex '-'
@@ -564,6 +571,7 @@ data TokenClassBasic =
   | SyntaxCBasic
   | StringCBasic
   | NameCBasic
+  | NaturalCBasic
   | IntegerCBasic
   | DoubleCBasic
   deriving (Eq,Ord,Show)
@@ -576,6 +584,7 @@ data TokenBasic =
   | SyntaxTBasic 𝕊
   | StringTBasic 𝕊
   | NameTBasic 𝕊
+  | NaturalTBasic ℕ
   | IntegerTBasic ℤ
   | DoubleTBasic 𝔻
   deriving (Eq,Ord,Show)
@@ -590,6 +599,7 @@ mkTokenBasic cs = \case
   Some SyntaxCBasic → (:*) False $ SyntaxTBasic $ stringS cs
   Some StringCBasic → (:*) False $ StringTBasic $ read𝕊 $ stringS cs
   Some NameCBasic → (:*) False $ NameTBasic $ stringS cs
+  Some NaturalCBasic → (:*) False $ NaturalTBasic $ read𝕊 $ stringS cs
   Some IntegerCBasic → (:*) False $ IntegerTBasic $ read𝕊 $ stringS cs
   Some DoubleCBasic → (:*) False $ DoubleTBasic $ read𝕊 $ stringS cs
 
@@ -619,7 +629,8 @@ lSyntaxBasic puns kws prims ops = concat
 
 lTokenBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassBasic ℕ64
 lTokenBasic puns kws prims ops = concat
-  [ lInt                            ▷ oepsRegex IntegerCBasic
+  [ lNatCoded                       ▷ oepsRegex NaturalCBasic
+  , lInt                            ▷ oepsRegex IntegerCBasic
   , lDbl                            ▷ oepsRegex DoubleCBasic
   , lSyntaxBasic puns kws prims ops ▷ oepsRegex SyntaxCBasic
   , lString                         ▷ oepsRegex StringCBasic
