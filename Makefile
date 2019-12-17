@@ -1,8 +1,11 @@
 E    := UVMHSMain.main
 
 .PHONY: dev
-dev:
+dev: .stack-work
 	ghcid --test $E
+
+.stack-work:
+	stack setup
 
 .PHONY: run
 eval:
