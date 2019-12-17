@@ -128,16 +128,10 @@ cpSyntax ∷ 𝕊 → CParser TokenBasic ()
 cpSyntax = cpToken ∘ SyntaxTBasic
 
 cpName ∷ CParser TokenBasic 𝕏
-cpName = do
-  x ← cpShaped $ view nameTBasicL
-  return $ var x
+cpName = var ^$ cpShaped $ view nameTBasicL
 
 cpNatural ∷ CParser TokenBasic ℕ
-cpNatural = do
-  i ← cpInteger
-  case natO i of
-    Some n → return n
-    None → abort
+cpNatural = cpShaped $ view naturalTBasicL
 
 cpInteger ∷ CParser TokenBasic ℤ
 cpInteger = cpShaped $ view integerTBasicL
