@@ -603,7 +603,7 @@ mkTokenBasic cs = \case
   Some SyntaxCBasic → (:*) False $ SyntaxTBasic $ stringS cs
   Some StringCBasic → (:*) False $ StringTBasic $ read𝕊 $ stringS cs
   Some NameCBasic → (:*) False $ NameTBasic $ stringS cs
-  Some NaturalCBasic → (:*) False $ NaturalTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
+  Some NaturalCBasic → (:*) False $ NaturalTBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow ['_','n']) cs
   Some IntegerCBasic → (:*) False $ IntegerTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some DoubleCBasic → (:*) False $ DoubleTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
 
