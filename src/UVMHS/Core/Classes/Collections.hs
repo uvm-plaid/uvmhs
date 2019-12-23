@@ -14,7 +14,7 @@ class ToIter a t | t → a where iter ∷ t → 𝐼 a
 class Sized t where size ∷ t → ℕ64
 
 -- {-# INLINE (⋕!) #-}
-(⋕!) ∷ (Lookup k v t) ⇒ t → k → v
+(⋕!) ∷ (Lookup k v t,STACK) ⇒ t → k → v
 kvs ⋕! k = case kvs ⋕? k of
   Some v → v
   None → error "failed ⋕! lookup"

@@ -8,6 +8,8 @@ import Prelude(Bool(..),($),undefined,otherwise,IO,Eq((==)),Ord(compare),Show(sh
 import GHC.Exts (type Constraint)
 
 import qualified Prelude as HS
+import qualified GHC.Types as HS
+import qualified GHC.Stack as HS
 
 import qualified Data.Int as HS
 import qualified Data.Word as HS
@@ -38,6 +40,8 @@ infixl 4 ∨,⩔
 infixl 5 ∧,⩓
 infixl 6 ∘
 infixr 8 :&
+
+type STACK = HS.HasCallStack
 
 type ℕ = HS.Natural
 type ℕ64 = HS.Word64
@@ -189,7 +193,7 @@ fromRational ∷ HS.Rational → 𝔻
 fromRational = HS.fromRational
 
 {-# INLINE fail #-}
-fail ∷ [ℂ] → m a
+fail ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r) m. (STACK) ⇒ [ℂ] → m a
 fail = HS.error
 
 {-# INLINE ifThenElse #-}
@@ -243,8 +247,8 @@ fromChars ∷ [ℂ] → 𝕊
 fromChars = Text.pack
 
 {-# INLINE error #-}
-error ∷ 𝕊 → a
-error = HS.error ∘ chars
+error ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r). (STACK) ⇒ 𝕊 → a
+error s = HS.error (chars s)
 
 {-# INLINE assert #-}
 assert ∷ 𝔹 → a → a

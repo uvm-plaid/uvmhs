@@ -54,15 +54,15 @@ class ToNatO32 a where natO32 ∷ a → 𝑂 ℕ32
 class ToNatO16 a where natO16 ∷ a → 𝑂 ℕ16
 class ToNatO8  a where natO8  ∷ a → 𝑂 ℕ8
 
-natΩ ∷ (ToNatO a) ⇒ a → ℕ
+natΩ ∷ (ToNatO a,STACK) ⇒ a → ℕ
 natΩ x = case natO x of {None → error "failed natΩ conversion";Some n → n}
-natΩ64 ∷ (ToNatO64 a) ⇒ a → ℕ64
+natΩ64 ∷ (ToNatO64 a,STACK) ⇒ a → ℕ64
 natΩ64 x = case natO64 x of {None → error "failed natΩ64 conversion";Some n → n}
-natΩ32 ∷ (ToNatO32 a) ⇒ a → ℕ32
+natΩ32 ∷ (ToNatO32 a,STACK) ⇒ a → ℕ32
 natΩ32 x = case natO32 x of {None → error "failed natΩ32 conversion";Some n → n}
-natΩ16 ∷ (ToNatO16 a) ⇒ a → ℕ16
+natΩ16 ∷ (ToNatO16 a,STACK) ⇒ a → ℕ16
 natΩ16 x = case natO16 x of {None → error "failed natΩ16 conversion";Some n → n}
-natΩ8 ∷ (ToNatO8 a) ⇒ a → ℕ8
+natΩ8 ∷ (ToNatO8 a,STACK) ⇒ a → ℕ8
 natΩ8 x = case natO8 x of {None → error "failed natΩ8 conversion";Some n → n}
 
 class ToInt   a where int   ∷ a → ℤ
@@ -77,15 +77,15 @@ class ToIntO32 a where intO32 ∷ a → 𝑂 ℤ32
 class ToIntO16 a where intO16 ∷ a → 𝑂 ℤ16
 class ToIntO8  a where intO8  ∷ a → 𝑂 ℤ8
 
-intΩ ∷ (ToIntO a) ⇒ a → ℤ
+intΩ ∷ (ToIntO a,STACK) ⇒ a → ℤ
 intΩ x = case intO x of {None → error "failed intΩ6";Some n → n}
-intΩ64 ∷ (ToIntO64 a) ⇒ a → ℤ64
+intΩ64 ∷ (ToIntO64 a,STACK) ⇒ a → ℤ64
 intΩ64 x = case intO64 x of {None → error "failed intΩ64 conversion";Some n → n}
-intΩ32 ∷ (ToIntO32 a) ⇒ a → ℤ32
+intΩ32 ∷ (ToIntO32 a,STACK) ⇒ a → ℤ32
 intΩ32 x = case intO32 x of {None → error "failed intΩ32 conversion";Some n → n}
-intΩ16 ∷ (ToIntO16 a) ⇒ a → ℤ16
+intΩ16 ∷ (ToIntO16 a,STACK) ⇒ a → ℤ16
 intΩ16 x = case intO16 x of {None → error "failed intΩ16 conversion";Some n → n}
-intΩ8 ∷ (ToIntO8 a) ⇒ a → ℤ8
+intΩ8 ∷ (ToIntO8 a,STACK) ⇒ a → ℤ8
 intΩ8 x = case intO8 x of {None → error "failed intΩ8 conversion";Some n → n}
 
 class ToRational a where rat ∷ a → ℚ
@@ -105,17 +105,17 @@ class ToNumber a where num ∷ a → ℝ
 class ToNumberᴾ a where numᴾ ∷ a → ℝᴾ
 class ToNumberᴾO a where numᴾO ∷ a → 𝑂 ℝᴾ
 
-ratΩ ∷ (ToRationalO a) ⇒ a → ℚ
+ratΩ ∷ (ToRationalO a,STACK) ⇒ a → ℚ
 ratΩ x = case ratO x of {None → error "failed ratΩ conversion";Some n → n}
 
-ratᴾΩ ∷ (ToRationalᴾO a) ⇒ a → ℚᴾ
+ratᴾΩ ∷ (ToRationalᴾO a,STACK) ⇒ a → ℚᴾ
 ratᴾΩ x = case ratᴾO x of {None → error "failed ratᴾΩ conversion";Some n → n}
 
-dblΩ ∷ (ToDoubleO a) ⇒ a → 𝔻
+dblΩ ∷ (ToDoubleO a,STACK) ⇒ a → 𝔻
 dblΩ x = case dblO x of {None → error "failed dblΩ conversion";Some n → n}
 
-dblᴾΩ ∷ (ToDoubleᴾO a) ⇒ a → 𝔻ᴾ
+dblᴾΩ ∷ (ToDoubleᴾO a,STACK) ⇒ a → 𝔻ᴾ
 dblᴾΩ x = case dblᴾO x of {None → error "failed dblᴾΩ conversion";Some n → n}
 
-numᴾΩ ∷ (ToNumberᴾO a) ⇒ a → ℝᴾ
+numᴾΩ ∷ (ToNumberᴾO a,STACK) ⇒ a → ℝᴾ
 numᴾΩ x = case numᴾO x of {None → error "failed numᴾΩ conversion";Some n → n}
