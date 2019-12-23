@@ -8,8 +8,6 @@ import Prelude(Bool(..),($),undefined,otherwise,IO,Eq((==)),Ord(compare),Show(sh
 import GHC.Exts (type Constraint)
 
 import qualified Prelude as HS
-import qualified GHC.Types as HS
-import qualified GHC.Stack as HS
 
 import qualified Data.Int as HS
 import qualified Data.Word as HS
@@ -245,8 +243,8 @@ fromChars ∷ [ℂ] → 𝕊
 fromChars = Text.pack
 
 {-# INLINE error #-}
-error ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r). (HS.HasCallStack) ⇒ 𝕊 → a
-error s = HS.error (chars s)
+error ∷ 𝕊 → a
+error = HS.error ∘ chars
 
 {-# INLINE assert #-}
 assert ∷ 𝔹 → a → a
