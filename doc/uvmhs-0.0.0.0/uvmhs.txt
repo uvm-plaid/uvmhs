@@ -101,6 +101,7 @@ type ℕ16 = Word16
 type ℕ32 = Word32
 type ℕ64 = Word64
 type ℕ = Natural
+type STACK = HasCallStack
 with :: W c -> (c => a) -> a
 unpack :: forall (t :: k -> ★) (b :: ★). Ex t -> (forall (a :: k). t a -> b) -> b
 unpack_C :: forall (k :: ★) (c :: k -> Constraint) (t :: k -> ★) (b :: ★). Ex_C c t -> (forall (a :: k). c a => t a -> b) -> b
@@ -120,7 +121,7 @@ fromString :: [ℂ] -> 𝕊
 fromInteger :: ℤ -> ℕ
 negate :: ℕ -> ℤ
 fromRational :: Rational -> 𝔻
-fail :: [ℂ] -> m a
+fail :: forall (r :: RuntimeRep) (a :: TYPE r) m. STACK => [ℂ] -> m a
 ifThenElse :: 𝔹 -> a -> a -> a
 𝕟64 :: ℕ -> ℕ64
 𝕟32 :: ℕ -> ℕ32
@@ -133,7 +134,7 @@ ifThenElse :: 𝔹 -> a -> a -> a
 𝕫8 :: ℕ -> ℤ8
 chars :: 𝕊 -> [ℂ]
 fromChars :: [ℂ] -> 𝕊
-error :: 𝕊 -> a
+error :: forall (r :: RuntimeRep) (a :: TYPE r). STACK => 𝕊 -> a
 assert :: 𝔹 -> a -> a
 id :: a -> a
 const :: a -> b -> a
@@ -613,7 +614,7 @@ class ToIter a t | t -> a
 iter :: ToIter a t => t -> 𝐼 a
 class Sized t
 size :: Sized t => t -> ℕ64
-(⋕!) :: Lookup k v t => t -> k -> v
+(⋕!) :: (Lookup k v t, STACK) => t -> k -> v
 infixl 7 ⋕!
 
 module UVMHS.Core.Classes.DSL
@@ -695,11 +696,11 @@ class ToNatO16 a
 natO16 :: ToNatO16 a => a -> 𝑂 ℕ16
 class ToNatO8 a
 natO8 :: ToNatO8 a => a -> 𝑂 ℕ8
-natΩ :: ToNatO a => a -> ℕ
-natΩ64 :: ToNatO64 a => a -> ℕ64
-natΩ32 :: ToNatO32 a => a -> ℕ32
-natΩ16 :: ToNatO16 a => a -> ℕ16
-natΩ8 :: ToNatO8 a => a -> ℕ8
+natΩ :: (ToNatO a, STACK) => a -> ℕ
+natΩ64 :: (ToNatO64 a, STACK) => a -> ℕ64
+natΩ32 :: (ToNatO32 a, STACK) => a -> ℕ32
+natΩ16 :: (ToNatO16 a, STACK) => a -> ℕ16
+natΩ8 :: (ToNatO8 a, STACK) => a -> ℕ8
 class ToInt a
 int :: ToInt a => a -> ℤ
 class ToInt64 a
@@ -720,11 +721,11 @@ class ToIntO16 a
 intO16 :: ToIntO16 a => a -> 𝑂 ℤ16
 class ToIntO8 a
 intO8 :: ToIntO8 a => a -> 𝑂 ℤ8
-intΩ :: ToIntO a => a -> ℤ
-intΩ64 :: ToIntO64 a => a -> ℤ64
-intΩ32 :: ToIntO32 a => a -> ℤ32
-intΩ16 :: ToIntO16 a => a -> ℤ16
-intΩ8 :: ToIntO8 a => a -> ℤ8
+intΩ :: (ToIntO a, STACK) => a -> ℤ
+intΩ64 :: (ToIntO64 a, STACK) => a -> ℤ64
+intΩ32 :: (ToIntO32 a, STACK) => a -> ℤ32
+intΩ16 :: (ToIntO16 a, STACK) => a -> ℤ16
+intΩ8 :: (ToIntO8 a, STACK) => a -> ℤ8
 class ToRational a
 rat :: ToRational a => a -> ℚ
 class ToRationalO a
@@ -747,11 +748,11 @@ class ToNumberᴾ a
 numᴾ :: ToNumberᴾ a => a -> ℝᴾ
 class ToNumberᴾO a
 numᴾO :: ToNumberᴾO a => a -> 𝑂 ℝᴾ
-ratΩ :: ToRationalO a => a -> ℚ
-ratᴾΩ :: ToRationalᴾO a => a -> ℚᴾ
-dblΩ :: ToDoubleO a => a -> 𝔻
-dblᴾΩ :: ToDoubleᴾO a => a -> 𝔻ᴾ
-numᴾΩ :: ToNumberᴾO a => a -> ℝᴾ
+ratΩ :: (ToRationalO a, STACK) => a -> ℚ
+ratᴾΩ :: (ToRationalᴾO a, STACK) => a -> ℚᴾ
+dblΩ :: (ToDoubleO a, STACK) => a -> 𝔻
+dblᴾΩ :: (ToDoubleᴾO a, STACK) => a -> 𝔻ᴾ
+numᴾΩ :: (ToNumberᴾO a, STACK) => a -> ℝᴾ
 
 module UVMHS.Core.Classes.All
 class All a
@@ -2972,8 +2973,8 @@ data Annotated e a
 Annotated :: e -> a -> Annotated e a
 [annotatedTag] :: Annotated e a -> e
 [annotatedElem] :: Annotated e a -> a
-annotatedElemL :: forall (e_a2ABk :: Type) (a_a2ABl :: Type). (⟢) (Annotated e_a2ABk a_a2ABl) a_a2ABl
-annotatedTagL :: forall (e_a2ABk :: Type) (a_a2ABl :: Type). (⟢) (Annotated e_a2ABk a_a2ABl) e_a2ABk
+annotatedElemL :: forall (e_a2CGk :: Type) (a_a2CGl :: Type). (⟢) (Annotated e_a2CGk a_a2CGl) a_a2CGl
+annotatedTagL :: forall (e_a2CGk :: Type) (a_a2CGl :: Type). (⟢) (Annotated e_a2CGk a_a2CGl) e_a2CGk
 instance (UVMHS.Lib.Pretty.Core.Pretty e, UVMHS.Lib.Pretty.Core.Pretty a) => UVMHS.Lib.Pretty.Core.Pretty (UVMHS.Lib.Annotated.Annotated e a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Lib.Annotated.Annotated t a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Lib.Annotated.Annotated t a)
@@ -3073,10 +3074,10 @@ ParserToken :: t -> 𝔹 -> ParserContext -> WindowL Doc Doc -> ParserToken t
 [parserTokenSkip] :: ParserToken t -> 𝔹
 [parserTokenContext] :: ParserToken t -> ParserContext
 [parserTokenSuffix] :: ParserToken t -> WindowL Doc Doc
-parserTokenSuffixL :: forall (t_a2GlP :: Type). (⟢) (ParserToken t_a2GlP) (WindowL Doc Doc)
-parserTokenContextL :: forall (t_a2GlP :: Type). (⟢) (ParserToken t_a2GlP) ParserContext
-parserTokenSkipL :: forall (t_a2GlP :: Type). (⟢) (ParserToken t_a2GlP) 𝔹
-parserTokenValueL :: forall (t_a2GlP :: Type). (⟢) (ParserToken t_a2GlP) t_a2GlP
+parserTokenSuffixL :: forall (t_a2IqP :: Type). (⟢) (ParserToken t_a2IqP) (WindowL Doc Doc)
+parserTokenContextL :: forall (t_a2IqP :: Type). (⟢) (ParserToken t_a2IqP) ParserContext
+parserTokenSkipL :: forall (t_a2IqP :: Type). (⟢) (ParserToken t_a2IqP) 𝔹
+parserTokenValueL :: forall (t_a2IqP :: Type). (⟢) (ParserToken t_a2IqP) t_a2IqP
 renderNLDisplay :: Doc
 renderNLError :: Doc
 renderEOFDisplay :: Doc
@@ -3089,8 +3090,8 @@ data ParserInput t
 ParserInput :: 𝑆 (ParserToken t) -> AddBot Loc -> ParserInput t
 [parserInputStream] :: ParserInput t -> 𝑆 (ParserToken t)
 [parserInputEndPos] :: ParserInput t -> AddBot Loc
-parserInputEndPosL :: forall (t_a2GoF :: Type). (⟢) (ParserInput t_a2GoF) (AddBot Loc)
-parserInputStreamL :: forall (t_a2GoF :: Type). (⟢) (ParserInput t_a2GoF) (𝑆 (ParserToken t_a2GoF))
+parserInputEndPosL :: forall (t_a2ItF :: Type). (⟢) (ParserInput t_a2ItF) (AddBot Loc)
+parserInputStreamL :: forall (t_a2ItF :: Type). (⟢) (ParserInput t_a2ItF) (𝑆 (ParserToken t_a2ItF))
 parserInput₀ :: 𝑆 (ParserToken t) -> ParserInput t
 advanceInput :: ParserInput t -> 𝑂 (ParserToken t ∧ ParserInput t)
 instance (UVMHS.Lib.Pretty.Core.Pretty (UVMHS.Core.Init.𝑆 (UVMHS.Lib.Parser.ParserInput.ParserToken t)), UVMHS.Lib.Pretty.Core.Pretty (UVMHS.Core.Pointed.AddBot UVMHS.Lib.Parser.Loc.Loc)) => UVMHS.Lib.Pretty.Core.Pretty (UVMHS.Lib.Parser.ParserInput.ParserInput t)
@@ -3154,11 +3155,11 @@ RegexState :: ℕ64 -> (Regex c t o u ⇰ ℕ64) -> ((t ∨ c) ⇰ (ℕ64 ⇰ �
 [regexStateTransitions] :: RegexState c t o u -> (t ∨ c) ⇰ (ℕ64 ⇰ ℕ64)
 [regexStateResults] :: RegexState c t o u -> ℕ64 ⇰ 𝑂 (RegexResult o u)
 [regexStateDead] :: RegexState c t o u -> ℕ64 ⇰ 𝔹
-regexStateDeadL :: forall (c_a2IH7 :: Type) (t_a2IH8 :: Type) (o_a2IH9 :: Type) (u_a2IHa :: Type). (⟢) (RegexState c_a2IH7 t_a2IH8 o_a2IH9 u_a2IHa) ((⇰) ℕ64 𝔹)
-regexStateResultsL :: forall (c_a2IH7 :: Type) (t_a2IH8 :: Type) (o_a2IH9 :: Type) (u_a2IHa :: Type). (⟢) (RegexState c_a2IH7 t_a2IH8 o_a2IH9 u_a2IHa) ((⇰) ℕ64 (𝑂 (RegexResult o_a2IH9 u_a2IHa)))
-regexStateTransitionsL :: forall (c_a2IH7 :: Type) (t_a2IH8 :: Type) (o_a2IH9 :: Type) (u_a2IHa :: Type). (⟢) (RegexState c_a2IH7 t_a2IH8 o_a2IH9 u_a2IHa) ((⇰) ((∨) t_a2IH8 c_a2IH7) ((⇰) ℕ64 ℕ64))
-regexStateMapL :: forall (c_a2IH7 :: Type) (t_a2IH8 :: Type) (o_a2IH9 :: Type) (u_a2IHa :: Type). (⟢) (RegexState c_a2IH7 t_a2IH8 o_a2IH9 u_a2IHa) ((⇰) (Regex c_a2IH7 t_a2IH8 o_a2IH9 u_a2IHa) ℕ64)
-regexStateNextIDL :: forall (c_a2IH7 :: Type) (t_a2IH8 :: Type) (o_a2IH9 :: Type) (u_a2IHa :: Type). (⟢) (RegexState c_a2IH7 t_a2IH8 o_a2IH9 u_a2IHa) ℕ64
+regexStateDeadL :: forall (c_a2KM7 :: Type) (t_a2KM8 :: Type) (o_a2KM9 :: Type) (u_a2KMa :: Type). (⟢) (RegexState c_a2KM7 t_a2KM8 o_a2KM9 u_a2KMa) ((⇰) ℕ64 𝔹)
+regexStateResultsL :: forall (c_a2KM7 :: Type) (t_a2KM8 :: Type) (o_a2KM9 :: Type) (u_a2KMa :: Type). (⟢) (RegexState c_a2KM7 t_a2KM8 o_a2KM9 u_a2KMa) ((⇰) ℕ64 (𝑂 (RegexResult o_a2KM9 u_a2KMa)))
+regexStateTransitionsL :: forall (c_a2KM7 :: Type) (t_a2KM8 :: Type) (o_a2KM9 :: Type) (u_a2KMa :: Type). (⟢) (RegexState c_a2KM7 t_a2KM8 o_a2KM9 u_a2KMa) ((⇰) ((∨) t_a2KM8 c_a2KM7) ((⇰) ℕ64 ℕ64))
+regexStateMapL :: forall (c_a2KM7 :: Type) (t_a2KM8 :: Type) (o_a2KM9 :: Type) (u_a2KMa :: Type). (⟢) (RegexState c_a2KM7 t_a2KM8 o_a2KM9 u_a2KMa) ((⇰) (Regex c_a2KM7 t_a2KM8 o_a2KM9 u_a2KMa) ℕ64)
+regexStateNextIDL :: forall (c_a2KM7 :: Type) (t_a2KM8 :: Type) (o_a2KM9 :: Type) (u_a2KMa :: Type). (⟢) (RegexState c_a2KM7 t_a2KM8 o_a2KM9 u_a2KMa) ℕ64
 regexState₀ :: RegexState c t o u
 data DFA c t o u
 DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult o u)) -> 𝕍 𝔹 -> DFA c t o u
@@ -3192,6 +3193,7 @@ lSpace :: (Zero u, Ord o, Ord u, Additive u) => Regex CharClass ℂ o u
 lName :: (Zero u, Ord u, Ord o, Additive u) => Regex CharClass ℂ o u
 lNatPre :: (Zero u, Ord u, Ord o, Additive u) => Regex CharClass ℂ o u
 lNat :: (Zero u, Ord u, Ord o, Additive u) => Regex CharClass ℂ o u
+lNatCoded :: (Zero u, Ord u, Ord o, Additive u) => Regex CharClass ℂ o u
 lIntPre :: (Zero u, Ord o, Ord u, Additive u) => Regex CharClass ℂ o u
 lInt :: (Zero u, Ord o, Ord u, Additive u) => Regex CharClass ℂ o u
 lDbl :: (Zero u, Ord o, Ord u, Additive u) => Regex CharClass ℂ o u
@@ -3207,10 +3209,12 @@ CommentCBasic :: TokenClassBasic
 SyntaxCBasic :: TokenClassBasic
 StringCBasic :: TokenClassBasic
 NameCBasic :: TokenClassBasic
+NaturalCBasic :: TokenClassBasic
 IntegerCBasic :: TokenClassBasic
 DoubleCBasic :: TokenClassBasic
 doubleCBasicL :: (⌲) TokenClassBasic ()
 integerCBasicL :: (⌲) TokenClassBasic ()
+naturalCBasicL :: (⌲) TokenClassBasic ()
 nameCBasicL :: (⌲) TokenClassBasic ()
 stringCBasicL :: (⌲) TokenClassBasic ()
 syntaxCBasicL :: (⌲) TokenClassBasic ()
@@ -3222,10 +3226,12 @@ CommentTBasic :: 𝕊 -> TokenBasic
 SyntaxTBasic :: 𝕊 -> TokenBasic
 StringTBasic :: 𝕊 -> TokenBasic
 NameTBasic :: 𝕊 -> TokenBasic
+NaturalTBasic :: ℕ -> TokenBasic
 IntegerTBasic :: ℤ -> TokenBasic
 DoubleTBasic :: 𝔻 -> TokenBasic
 doubleTBasicL :: (⌲) TokenBasic 𝔻
 integerTBasicL :: (⌲) TokenBasic ℤ
+naturalTBasicL :: (⌲) TokenBasic ℕ
 nameTBasicL :: (⌲) TokenBasic 𝕊
 stringTBasicL :: (⌲) TokenBasic 𝕊
 syntaxTBasicL :: (⌲) TokenBasic 𝕊
@@ -3237,7 +3243,7 @@ lTokenBasic :: 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> Regex CharCla
 lCommentMLBasic :: Regex CharClass ℂ TokenClassBasic ℕ64
 dfaBasic :: 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> ℕ64 -> DFA CharClass ℂ TokenClassBasic ℕ64
 lexerBasic :: 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-instance (UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.𝕊, UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.ℤ, UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.𝔻) => UVMHS.Lib.Pretty.Core.Pretty UVMHS.Lib.Parser.Regex.TokenBasic
+instance (UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.𝕊, UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.ℕ, UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.ℤ, UVMHS.Lib.Pretty.Core.Pretty UVMHS.Core.Init.𝔻) => UVMHS.Lib.Pretty.Core.Pretty UVMHS.Lib.Parser.Regex.TokenBasic
 instance GHC.Show.Show UVMHS.Lib.Parser.Regex.TokenBasic
 instance GHC.Classes.Ord UVMHS.Lib.Parser.Regex.TokenBasic
 instance GHC.Classes.Eq UVMHS.Lib.Parser.Regex.TokenBasic
@@ -3294,9 +3300,9 @@ ParserEnv :: 𝔹 -> Formats -> (𝕊 ∧ 𝐼 𝕊) -> ParserEnv t
 [parserEnvReportErrors] :: ParserEnv t -> 𝔹
 [parserEnvRenderFormat] :: ParserEnv t -> Formats
 [parserEnvErrorStack] :: ParserEnv t -> 𝕊 ∧ 𝐼 𝕊
-parserEnvErrorStackL :: forall (t_a33Dv :: k_a33Dw). (⟢) (ParserEnv t_a33Dv) ((∧) 𝕊 (𝐼 𝕊))
-parserEnvRenderFormatL :: forall (t_a33Dv :: k_a33Dw). (⟢) (ParserEnv t_a33Dv) Formats
-parserEnvReportErrorsL :: forall (t_a33Dv :: k_a33Dw). (⟢) (ParserEnv t_a33Dv) 𝔹
+parserEnvErrorStackL :: forall (t_a375z :: k_a375A). (⟢) (ParserEnv t_a375z) ((∧) 𝕊 (𝐼 𝕊))
+parserEnvRenderFormatL :: forall (t_a375z :: k_a375A). (⟢) (ParserEnv t_a375z) Formats
+parserEnvReportErrorsL :: forall (t_a375z :: k_a375A). (⟢) (ParserEnv t_a375z) 𝔹
 parserEnv₀ :: ParserEnv t
 type ParserOut t = AddNull (ParserError t)
 data ParserState t
@@ -3306,11 +3312,11 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateContext] :: ParserState t -> ParserContext
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateInput] :: ParserState t -> ParserInput t
-parserStateInputL :: forall (t_a33Gv :: Type). (⟢) (ParserState t_a33Gv) (ParserInput t_a33Gv)
-parserStateSuffixL :: forall (t_a33Gv :: Type). (⟢) (ParserState t_a33Gv) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a33Gv :: Type). (⟢) (ParserState t_a33Gv) ParserContext
-parserStateSkipContextL :: forall (t_a33Gv :: Type). (⟢) (ParserState t_a33Gv) ParserContext
-parserStatePrefixL :: forall (t_a33Gv :: Type). (⟢) (ParserState t_a33Gv) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a378z :: Type). (⟢) (ParserState t_a378z) (ParserInput t_a378z)
+parserStateSuffixL :: forall (t_a378z :: Type). (⟢) (ParserState t_a378z) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a378z :: Type). (⟢) (ParserState t_a378z) ParserContext
+parserStateSkipContextL :: forall (t_a378z :: Type). (⟢) (ParserState t_a378z) ParserContext
+parserStatePrefixL :: forall (t_a378z :: Type). (⟢) (ParserState t_a378z) (WindowR Doc Doc)
 parserState₀ :: ParserInput t -> ParserState t
 newtype Parser t a
 Parser :: ReaderT (ParserEnv t) (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a
@@ -3382,12 +3388,20 @@ cpManySepBy :: Ord t => CParser t () -> CParser t a -> CParser t (𝐿 a)
 cpOneOrMoreSepBy :: Ord t => CParser t () -> CParser t a -> CParser t (𝐿 a)
 cpSyntax :: 𝕊 -> CParser TokenBasic ()
 cpName :: CParser TokenBasic 𝕏
+cpNatural :: CParser TokenBasic ℕ
 cpInteger :: CParser TokenBasic ℤ
 cpDouble :: CParser TokenBasic 𝔻
 cpString :: CParser TokenBasic 𝕊
 cpNewExpressionContext :: Ord t => CParser t a -> CParser t a
 cpNewContext :: Ord t => 𝕊 -> CParser t a -> CParser t a
 cpWithContextRendered :: Ord t => CParser t a -> CParser t (Annotated FullContext a)
+cpNewWithContextRendered :: Ord t => 𝕊 -> CParser t a -> CParser t (Annotated FullContext a)
+cpGetContextRendered :: CParser t FullContext
+cpNewGetContextRendered :: Ord t => CParser t FullContext
+cpManyContext :: (Ord t, Comonad f) => (forall b. CParser t b -> CParser t (f b)) -> CParser t a -> CParser t (𝐿 (f a))
+cpOneOrMoreContext :: (Ord t, Comonad f) => (forall b. CParser t b -> CParser t (f b)) -> CParser t a -> CParser t (𝐿 (f a))
+cpManySepByContext :: (Ord t, Comonad f) => (forall b. CParser t b -> CParser t (f b)) -> CParser t () -> CParser t a -> CParser t (𝐿 (f a))
+cpOneOrMoreSepByContext :: (Ord t, Comonad f) => (forall b. CParser t b -> CParser t (f b)) -> CParser t () -> CParser t a -> CParser t (𝐿 (f a))
 runParser₀ :: (ToStream (ParserToken t) ts, Ord t) => ts -> CParser t a -> ParserOut t ∧ 𝑂 (ParserState t ∧ a)
 parse :: (Pretty a, ToStream (ParserToken t) ts, Ord t) => CParser t a -> ts -> Doc ∨ a
 parseIO :: (Pretty a, ToStream (ParserToken t) ts, Ord t) => CParser t a -> ts -> IO a
