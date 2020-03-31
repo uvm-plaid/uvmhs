@@ -108,6 +108,9 @@ singleL = Prism single $ \case
   x :& Nil → Some x
   _ → None
 
+unconsL ∷ 𝐿 a ⌲ (a ∧ 𝐿 a)
+unconsL = Prism (curry (:&)) $ \case { x:&xs → Some (x:*xs) ; _ → None}
+
 --------------------------
 -- HasPrism and HasLens --
 --------------------------

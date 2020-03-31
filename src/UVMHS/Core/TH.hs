@@ -27,7 +27,7 @@ instance Tup TH.Exp where tup = TH.TupE ∘ lazyList
 instance Tup TH.Pat where tup = TH.TupP ∘ lazyList
 
 instance Apply TH.Type where (⊙) = TH.AppT
-instance Tup TH.Type where tup ts = TH.TupleT (tohs $ intΩ32 $ count ts) ⊙⋆ ts
+instance Tup TH.Type where tup ts = TH.TupleT (tohs $ intΩ64 $ count ts) ⊙⋆ ts
 instance Arrow TH.Type where f ⇨ x = TH.ArrowT ⊙ f ⊙ x
 
 thString ∷ 𝕊 → TH.Exp

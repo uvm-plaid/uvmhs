@@ -12,13 +12,14 @@ import System.IO.Unsafe
 
 import qualified Data.Text.IO as Text
 import qualified Prelude as HS
-import qualified System.Environment as Environment
 import qualified System.Exit as Exit
 import qualified System.Process as Process
 import qualified System.IO as HS
 import qualified System.IO.Unsafe as UNSAFE
 import qualified GHC.Stats  as HS
 import qualified System.Mem as HS
+import qualified System.Environment as HS
+import qualified System.Directory as HS
 
 writeOut ∷ 𝕊 → IO ()
 writeOut = Text.putStr
@@ -45,16 +46,13 @@ flushErr ∷ IO ()
 flushErr = HS.hFlush HS.stderr
 
 abortIO ∷ IO a
-abortIO = exitWith $ ExitFailure $ tohs $ intΩ32 1
+abortIO = exitWith $ ExitFailure $ tohs $ 𝕫64 1
 
 failIO ∷ 𝕊 → IO a
 failIO = HS.fail ∘ chars
 
 stdin ∷ IO 𝕊
 stdin = Text.getContents
-
-args ∷ IO (𝐼 𝕊)
-args = map string ∘ iter ^$ Environment.getArgs
 
 read ∷ 𝕊 → IO 𝕊
 read = io ∘ Text.readFile ∘ chars
@@ -148,3 +146,15 @@ profile f = do
   s₂ ← HS.getRTSStats
   let (n₂,u₂) = (HS.major_gcs s₂,HS.cumulative_live_bytes s₂)
   return $ (t₂ ⨺ t₁) :* (dbl (HS.fromIntegral u₂ - HS.fromIntegral u₁ ∷ ℕ) / dbl (HS.fromIntegral n₂ - HS.fromIntegral n₁ ∷ ℕ))
+
+askArgs ∷ IO (𝐿 𝕊)
+askArgs = map (list ∘ map string) HS.getArgs
+
+localArgs ∷ 𝐿 𝕊 → IO a → IO a
+localArgs args = HS.withArgs $ lazyList $ map chars $ iter args
+
+files ∷ IO (𝐿 𝕊)
+files = list ∘ map string ^$ HS.listDirectory $ chars "."
+
+indir ∷ 𝕊 → IO a → IO a
+indir = HS.withCurrentDirectory ∘ chars

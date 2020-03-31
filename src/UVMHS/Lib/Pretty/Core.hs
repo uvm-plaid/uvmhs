@@ -7,6 +7,8 @@ import UVMHS.Lib.IterS
 
 import UVMHS.Lib.Pretty.Annotation
 
+import qualified GHC.Stack as Stack
+
 -----------
 -- CHUNK --
 -----------
@@ -729,3 +731,5 @@ instance (Pretty a) ⇒ Pretty (AddBT a) where
   pretty BotBT = ppCon "⊥"
   pretty TopBT = ppCon "⊤"
   pretty (AddBT x) = pretty x
+
+instance Pretty Stack.CallStack where pretty = ppString ∘ string ∘ Stack.prettyCallStack

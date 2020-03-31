@@ -104,3 +104,12 @@ iswivelR x Nil = Nil :* x
 iswivelR x ((i :* y) :& ixs) =
   let xis :* x' = iswivelR y ixs
   in ((x :* i) :& xis) :* x'
+
+zipSameLength ∷ 𝐿 a → 𝐿 b → 𝑂 (𝐿 (a ∧ b))
+zipSameLength xs ys = case (xs,ys) of
+  (Nil,Nil) → Some Nil
+  (x:&xs',y:&ys') → case zipSameLength xs' ys' of
+    None → None
+    Some xys → Some $ (x :* y) :& xys
+  _ → None
+

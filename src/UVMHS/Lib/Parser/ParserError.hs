@@ -51,9 +51,11 @@ parserErrorFailuresMap eis =
     mapOn eis $ \ (ParserErrorInfo p c sh st) → 
       (ppRender (concat c) :* overflowR c) ↦ (p :* c :* stackTraces sh st)
 
-displaySourceError ∷ AddNull (ParserError t) → Doc
-displaySourceError peM = ppVertical $ concat
+displaySourceError ∷ 𝕊 → AddNull (ParserError t) → Doc
+displaySourceError so peM = ppVertical $ concat
   [ return $ ppHeader "Parse Failure"
+  , return $ ppHeader "Source:"
+  , if so ≡ null then mzero else return $ ppHorizontal [ppErr ">",ppBD $ ppString so]
   , case peM of
       Null → return $ ppErr "> No Reported Errors"
       AddNull (ParserError l tc ts fs) → concat
@@ -97,5 +99,4 @@ displayErrorTraces (ParserErrorStackTraces final chain) = ppVertical $ concat
           ]
       , concat [ppSpace $ 𝕟64 2,ppAlign $ displayErrorTraces tr]
       ]
-  ]
-
+  ]    

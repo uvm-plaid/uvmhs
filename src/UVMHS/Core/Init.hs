@@ -385,7 +385,7 @@ instance {-# OVERLAPPABLE #-} (a ~ b) ⇒ CHS a b where
   tohs = id
   {-# INLINE frhs #-}
   frhs = id
-instance {-# OVERLAPPING #-} CHS ℤ32 HS.Int where
+instance {-# OVERLAPPING #-} CHS ℤ64 HS.Int where
   {-# INLINE tohs #-}
   tohs = HS.fromIntegral
   {-# INLINE frhs #-}

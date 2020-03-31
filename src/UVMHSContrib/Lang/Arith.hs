@@ -7,7 +7,7 @@ lexer = lexerBasic (list ["(",")"]) null null (list ["==","+","*","-","^","!"])
 
 testTokenizerSuccess ∷ IO ()
 testTokenizerSuccess = 
-  tokenizeIOMain lexer $ tokens "1 + 2 - 3 * 4 ^ 5 ! == 1 \n -- blah blah \n {- ml {{- ml --}-} -- blah\nb" 
+  tokenizeIOMain lexer "" $ tokens "1 + 2 - 3 * 4 ^ 5 ! == 1 \n -- blah blah \n {- ml {{- ml --}-} -- blah\nb" 
 
 data Lit =
     IntegerL ℤ
@@ -63,11 +63,11 @@ cpExp = fmixfixWithContext "exp" $ concat
 
 testParserSuccess ∷ IO ()
 testParserSuccess = do
-  parseIOMain cpExp ∘ stream *$ tokenizeIO lexer $ tokens "(- 1) + - 2 + 3 * 4 ^ 5 ^ 6 !"
+  parseIOMain cpExp "" ∘ stream *$ tokenizeIO lexer "" $ tokens "(- 1) + - 2 + 3 * 4 ^ 5 ^ 6 !"
 
 testParserFailure1 ∷ IO ()
-testParserFailure1 = parseIOMain cpExp ∘ stream *$ tokenizeIO lexer $ tokens "((9 == ((- 1))) + 2 + 3 * 4 ^ 5 ^ 6 !))"
+testParserFailure1 = parseIOMain cpExp "" ∘ stream *$ tokenizeIO lexer "" $ tokens "((9 == ((- 1))) + 2 + 3 * 4 ^ 5 ^ 6 !))"
 
 testParserFailure2 ∷ IO ()
-testParserFailure2 = parseIOMain cpExp ∘ stream *$ tokenizeIO lexer $ tokens "(((((- 1))) + 2 + 3 * 4 ^ 5 ^ ! == 0))"
+testParserFailure2 = parseIOMain cpExp "" ∘ stream *$ tokenizeIO lexer "" $ tokens "(((((- 1))) + 2 + 3 * 4 ^ 5 ^ ! == 0))"
 

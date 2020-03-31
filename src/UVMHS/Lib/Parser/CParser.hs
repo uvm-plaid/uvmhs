@@ -197,21 +197,20 @@ cpOneOrMoreSepByContext f sepM xM = do
 runParser₀ ∷ (ToStream (ParserToken t) ts,Ord t) ⇒ ts → CParser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
 runParser₀ = (∘ frCParser) ∘ runParser parserEnv₀ ∘ parserState₀ ∘ parserInput₀ ∘ stream
 
-parse ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → ts → Doc ∨ a
-parse p ts = case runParser₀ ts $ cpFinal p of
-  (pe :* None) → Inl $ displaySourceError pe
+parse ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → Doc ∨ a
+parse p so ts = case runParser₀ ts $ cpFinal p of
+  (pe :* None) → Inl $ displaySourceError so pe
   (_ :* Some (_ :* x)) → Inr x
 
-parseIO ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → ts → IO a
-parseIO p ts = case parse p ts of
+parseIO ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → IO a
+parseIO p s ts = case parse p s ts of
   Inl d → pprint d ≫ abortIO
   Inr a → return a
 
-parseIOMain ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → ts → IO ()
-parseIOMain p ts = do
-  x ← parseIO p ts
+parseIOMain ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → IO ()
+parseIOMain p s ts = do
+  x ← parseIO p s ts
   pprint $ ppVertical 
     [ ppHeader "Success"
     , pretty x
     ]
-

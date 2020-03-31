@@ -331,8 +331,8 @@ data Lexer c t o u w = Lexer
 
 tokenize ∷ 
   ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
-  ⇒ Lexer c t o u w → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (ParserToken w)
-tokenize (Lexer dfas f u₀) ts₀ = vecS ∘ fst ^$ oloop u₀ (dfas u₀) null $ parserInput₀ $ stream ts₀
+  ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (ParserToken w)
+tokenize (Lexer dfas f u₀) so ts₀ = vecS ∘ fst ^$ oloop u₀ (dfas u₀) null $ parserInput₀ $ stream ts₀
   where
   oloop ∷ u → DFA c t o u → WindowR Doc Doc → ParserInput t → Doc ∨ 𝐼S (ParserToken w) ∧ WindowL Doc Doc
   oloop u (DFA lits n₀ δt δs δd) pp₀ pi₀' = iloop n₀ (LexDFAState pp₀ null pi₀' null) None None
@@ -349,7 +349,7 @@ tokenize (Lexer dfas f u₀) ts₀ = vecS ∘ fst ^$ oloop u₀ (dfas u₀) null
       failure (LexDFAState pp pc _ _) (ParserToken _ _ tc s) =
         let le = map locRangeEnd $ parserContextLocRange tc
             d = parserContextError tc
-        in displaySourceError $ AddNull $ ParserError le d s $ single $ ParserErrorInfo pp (parserContextDisplayR pc) "<token>" null
+        in displaySourceError so $ AddNull $ ParserError le d s $ single $ ParserErrorInfo pp (parserContextDisplayR pc) "<token>" null
       iloop ∷ ℕ64 → LexDFAState t → 𝑂 (ParserToken t ∧ LexDFAState t) → 𝑂 (RegexResult o u ∧ LexDFAState t) → Doc ∨ 𝐼S (ParserToken w) ∧ WindowL Doc Doc
       iloop n σ@(LexDFAState pp pc pi ts) tO rO = case advanceInput pi of
         -- end of stream
@@ -402,16 +402,16 @@ tokenize (Lexer dfas f u₀) ts₀ = vecS ∘ fst ^$ oloop u₀ (dfas u₀) null
 
 tokenizeIO ∷
   ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
-  ⇒ Lexer c t o u w → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken w))
-tokenizeIO l pi = case tokenize l pi of
+  ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken w))
+tokenizeIO l so pi = case tokenize l so pi of
   Inl d → pprint d ≫ abortIO
   Inr a → return a
 
 tokenizeIOMain ∷
   ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty w) 
-  ⇒ Lexer c t o u w → 𝕍 (ParserToken t) → IO ()
-tokenizeIOMain l pi = do
-  x ← tokenizeIO l pi
+  ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO ()
+tokenizeIOMain l so pi = do
+  x ← tokenizeIO l so pi
   pprint $ ppVertical 
     [ ppHeader "Success"
     , pretty $ map parserTokenValue x

@@ -7,15 +7,15 @@ lexer = lexerBasic (list ["(",")"]) (list ["KEY"]) (list ["PRIM"]) (list ["+"])
 
 testSExpTokenizerSuccess ∷ IO ()
 testSExpTokenizerSuccess = 
-  tokenizeIOMain lexer $ tokens "((-1-2-1.42(\"astringwith\\\\stuff\\n\" ( "
+  tokenizeIOMain lexer "" $ tokens "((-1-2-1.42(\"astringwith\\\\stuff\\n\" ( "
 
 testSExpTokenizerFailure1 ∷ IO ()
 testSExpTokenizerFailure1 =
-  tokenizeIOMain lexer $ tokens "((foo-1and0.01+bar"
+  tokenizeIOMain lexer "" $ tokens "((foo-1and0.01+bar"
 
 testSExpTokenizerFailure2 ∷ IO ()
 testSExpTokenizerFailure2 =
-  tokenizeIOMain lexer $ tokens "()foo-1\"astring\\badescape\""
+  tokenizeIOMain lexer "" $ tokens "()foo-1\"astring\\badescape\""
 
 data Lit =
     IntegerL ℤ
@@ -71,9 +71,9 @@ cpExp = cpNewContext "Exp" $ cpWithContextRendered cpExpPre
 
 testSExpParserSuccess ∷ IO ()
 testSExpParserSuccess = do
-  tokenizeIOMain lexer input
-  toks ← tokenizeIO lexer input
-  parseIOMain cpExp $ stream toks
+  tokenizeIOMain lexer "" input
+  toks ← tokenizeIO lexer "" input
+  parseIOMain cpExp "" $ stream toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
     input = tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12  )  "

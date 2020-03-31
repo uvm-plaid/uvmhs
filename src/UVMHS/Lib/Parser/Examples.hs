@@ -8,19 +8,19 @@ import UVMHS.Lib.Parser.Regex
 import UVMHS.Lib.Parser.CParser
 
 testParsingSmall ∷ IO ()
-testParsingSmall = parseIOMain parser input
+testParsingSmall = parseIOMain parser "<small example>" input
   where
     parser = cpWord "xyzxyz"
     input = tokens "xyzxycxyz"
 
 testParsingMultiline ∷ IO ()
-testParsingMultiline = parseIOMain parser input
+testParsingMultiline = parseIOMain parser "<multiline example>" input
   where
     parser = exec $ inbetween (void $ cpWord "\n") $ list $ repeatI 7 $ \ n → cpNewContext "line" $ void $ cpWord ("xyz" ⧺ show𝕊 n)
     input = tokens "xyz0\nxyz1\nxyz2\nxyc3\nxyz4\nxyz5\nxyz6\n"
 
 testParsingBranching ∷ IO ()
-testParsingBranching = parseIOMain parser input
+testParsingBranching = parseIOMain parser "<branching example>" input
   where
     parser ∷ CParser ℂ 𝕊
     parser = tries
@@ -55,7 +55,7 @@ testParsingBranching = parseIOMain parser input
 --     input = tokens "xxx"
 
 testParsingGreedy ∷ IO ()
-testParsingGreedy = parseIOMain parser input
+testParsingGreedy = parseIOMain parser "<greedy example>" input
   where
     parser = concat ^$ cpOneOrMore $ tries 
       [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ pToken 'y'
@@ -65,7 +65,7 @@ testParsingGreedy = parseIOMain parser input
     input = tokens "xxx"
 
 testParsingGreedyAmbiguity ∷ IO ()
-testParsingGreedyAmbiguity = parseIOMain parser input
+testParsingGreedyAmbiguity = parseIOMain parser "<greedy ambiguity example>" input
   where
     parser = concat ^$ cpOneOrMore $ tries 
       [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ pToken 'y'
@@ -78,7 +78,7 @@ testParsingGreedyAmbiguity = parseIOMain parser input
     input = tokens "xxx"
 
 testParsingSuccess ∷ IO ()
-testParsingSuccess = parseIOMain parser input
+testParsingSuccess = parseIOMain parser "<success example>" input
   where
     parser = concat ^$ cpOneOrMore $ tries 
       [ cpRender (formats [FG green]) $ cpWord "xx"
@@ -87,22 +87,22 @@ testParsingSuccess = parseIOMain parser input
     input = tokens "xxxxyyxxyy"
 
 testParsingErrorNewline ∷ IO ()
-testParsingErrorNewline = parseIOMain (string ^$ cpMany $ toCParser $ pToken 'x') $ tokens "xxx\nx"
+testParsingErrorNewline = parseIOMain (string ^$ cpMany $ toCParser $ pToken 'x') "<error newline example>" $ tokens "xxx\nx"
 
 testParsingErrorEof ∷ IO ()
-testParsingErrorEof = parseIOMain (exec $ repeat 3 $ cpToken 'x') $ tokens "xx"
+testParsingErrorEof = parseIOMain (exec $ repeat 3 $ cpToken 'x') "<error eof example>" $ tokens "xx"
 
 testTokenizeSimple ∷ IO ()
 testTokenizeSimple = 
   let rgx = lWord "x" ▷ oepsRegex ()
       dfa = compileRegex rgx
-  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) $ tokens "xxx"
+  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize simple example>" $ tokens "xxx"
 
 testTokenize ∷ IO ()
 testTokenize = 
   let rgx = concat [lWord "x",lWord "xy",lWord "y"] ▷ oepsRegex ()
       dfa = compileRegex rgx
-  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) $ tokens "xxyxyxyxyxxyy"
+  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize example>" $ tokens "xxyxyxyxyxxyy"
 
 testTokenizeFailure1 ∷ IO ()
 testTokenizeFailure1 = 
@@ -114,7 +114,7 @@ testTokenizeFailure1 =
         , lWord "xz" ▷ fepsRegex (formats [FG pink])
         ] ▷ oepsRegex ()
       dfa = compileRegex rgx
-  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) $ tokens "xxxxy"
+  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize failure1 example>" $ tokens "xxxxy"
 
 testTokenizeFailure2 ∷ IO ()
 testTokenizeFailure2 = 
@@ -126,4 +126,4 @@ testTokenizeFailure2 =
         , lWord "xz" ▷ fepsRegex (formats [FG pink])
         ] ▷ oepsRegex ()
       dfa = compileRegex rgx
-  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) $ tokens "xxxyxxxzxc"
+  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize failiure2 example>" $ tokens "xxxyxxxzxc"

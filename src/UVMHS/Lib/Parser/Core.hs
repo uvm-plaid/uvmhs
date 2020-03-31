@@ -398,7 +398,7 @@ dep__tokenize sps rps ts = mapInr (vecS ∘ fst) $ loop $ parserState₀ $ parse
                 return $ map locPos (parserInputEndPos $ parserStateInput s') :* (s' :* pc :* t :* b)
               xM = snd ^$ firstMaxByLT ((<) `on` fst) xs
           in case xM of
-            None → throw $ displaySourceError pe
+            None → throw $ displaySourceError "" pe
             Some (s' :* pc :* t :* b) → do
               ts' :* ps ← loop s'
               return $ (single (ParserToken t b pc ps) ⧺ ts') :* (parserContextDisplayL pc ⧺ ps)
