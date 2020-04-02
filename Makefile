@@ -1,5 +1,9 @@
 E    := UVMHSMain.main
 
+.PHONY: build
+build:
+	stack build
+
 .PHONY: dev
 dev: .stack-work
 	ghcid --test $E
@@ -11,9 +15,6 @@ dev: .stack-work
 eval:
 	stack ghci --ghci-options -e --ghci-options $E
 
-.PHONY: build
-build:
-	stack build
 
 .PHONY: run
 run:

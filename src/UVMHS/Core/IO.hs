@@ -158,3 +158,6 @@ files = list ∘ map string ^$ HS.listDirectory $ chars "."
 
 indir ∷ 𝕊 → IO a → IO a
 indir = HS.withCurrentDirectory ∘ chars
+
+touchDirs ∷ 𝕊 → IO ()
+touchDirs = HS.createDirectoryIfMissing True ∘ chars

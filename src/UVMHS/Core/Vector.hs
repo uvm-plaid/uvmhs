@@ -81,6 +81,9 @@ size𝕍 (𝕍 a) =
 map𝕍 ∷ (a → b) → 𝕍 a → 𝕍 b
 map𝕍 f xs = vecN (size xs) $ map f $ iter xs
 
+set𝕍 ∷ ℕ64 → a → 𝕍 a → 𝕍 a
+set𝕍 i x (𝕍 a) = 𝕍 $ a BArr.// [(i,x)]
+
 ------------
 -- Chunks --
 ------------

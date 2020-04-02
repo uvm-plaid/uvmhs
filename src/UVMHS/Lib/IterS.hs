@@ -2,6 +2,10 @@ module UVMHS.Lib.IterS where
 
 import UVMHS.Core
 
+--------
+-- 𝐼S --
+--------
+
 data 𝐼S a = 𝐼S 
   { 𝑖SSize ∷ ℕ64
   , 𝑖SIter ∷ 𝐼 a
@@ -16,6 +20,13 @@ instance Monoid (𝐼S a)
 instance ToIter a (𝐼S a) where iter = 𝑖SIter
 instance Single a (𝐼S a) where single = 𝐼S one ∘ single
 instance Sized (𝐼S a) where size = 𝑖SSize
+
+iterS ∷ (ToIter a t,Sized t) ⇒ t → 𝐼S a
+iterS xs = 𝐼S (size xs) $ iter xs
+
+---------
+-- 𝐼S𝕊 --
+---------
 
 data 𝐼S𝕊 = 𝐼S𝕊
   { 𝕤SSize ∷ ℕ64
