@@ -3,7 +3,6 @@ module UVMHS.Core.Data.Dict where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
-import UVMHS.Core.Data.LazyList
 import UVMHS.Core.Data.Iter
 import UVMHS.Core.Data.Pair
 import UVMHS.Core.Data.Stream

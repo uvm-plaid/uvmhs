@@ -52,6 +52,3 @@ mapMLL f xs = case xs of
     y ← f x
     ys ← mapMLL f xs'
     return $ y : ys
-
-lazyList ∷ (ToIter a t) ⇒ t → [a]
-lazyList = lazyList𝐼 ∘ iter

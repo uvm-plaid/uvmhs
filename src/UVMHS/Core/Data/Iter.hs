@@ -8,6 +8,8 @@ import UVMHS.Core.Data.List ()
 import UVMHS.Core.Data.String
 import UVMHS.Core.Data.Pair
 
+import qualified Data.List as HS
+
 instance (Show a) ⇒ Show (𝐼 a) where 
   {-# INLINE show #-}
   show = chars ∘ showWith𝐼 show𝕊
@@ -408,6 +410,11 @@ alignRight = alignRightFill ' '
 list ∷ (ToIter a t) ⇒ t → 𝐿 a
 list = list𝐼 ∘ iter
 
+
+{-# INLINE lazyList #-}
+lazyList ∷ (ToIter a t) ⇒ t → [a]
+lazyList = lazyList𝐼 ∘ iter
+
 {-# INLINE string #-}
 string ∷ (ToIter ℂ t) ⇒ t → 𝕊
 string = build𝕊
@@ -466,3 +473,12 @@ instance (All a,All b) ⇒ All (a ∨ b) where
 instance (All a,All b) ⇒ All (a ∧ b) where 
   {-# INLINE all #-}
   all = do x ← iter all ; y ← iter all ; return $ x :* y
+
+sortWith ∷ (ToIter a t) ⇒ (a → a → Ordering) → t → 𝐿 a
+sortWith f = list ∘ HS.sortBy f ∘ lazyList
+
+sortOn ∷ (ToIter a t,Ord b) ⇒ (a → b) → t → 𝐿 a
+sortOn f = sortWith $ (⋚) `on` f
+
+sort ∷ (ToIter a t,Ord a) ⇒ t → 𝐿 a
+sort = sortWith (⋚)

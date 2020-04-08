@@ -5,7 +5,6 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.Iter
-import UVMHS.Core.Data.LazyList
 import UVMHS.Core.Data.Pair
 import UVMHS.Core.Data.Stream ()
 import UVMHS.Core.Data.String

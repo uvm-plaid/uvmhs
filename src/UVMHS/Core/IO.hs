@@ -3,23 +3,24 @@ module UVMHS.Core.IO where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
-import UVMHS.Core.Effects
 import UVMHS.Core.Monads ()
 import UVMHS.Core.Time
 
 import System.Exit
 import System.IO.Unsafe
 
+import qualified Data.ByteString as BS
+import qualified Data.Text.Encoding as Text
 import qualified Data.Text.IO as Text
+import qualified GHC.Stats  as HS
 import qualified Prelude as HS
+import qualified System.Directory as HS
+import qualified System.Environment as HS
 import qualified System.Exit as Exit
-import qualified System.Process as Process
 import qualified System.IO as HS
 import qualified System.IO.Unsafe as UNSAFE
-import qualified GHC.Stats  as HS
 import qualified System.Mem as HS
-import qualified System.Environment as HS
-import qualified System.Directory as HS
+import qualified System.Process as Process
 
 writeOut ∷ 𝕊 → IO ()
 writeOut = Text.putStr
@@ -54,11 +55,11 @@ failIO = HS.fail ∘ chars
 stdin ∷ IO 𝕊
 stdin = Text.getContents
 
-read ∷ 𝕊 → IO 𝕊
-read = io ∘ Text.readFile ∘ chars
+readFile ∷ 𝕊 → IO 𝕊
+readFile = Text.decodeUtf8 ^∘ BS.readFile ∘ chars
 
-write ∷ 𝕊 → 𝕊 → IO ()
-write fn = io ∘ Text.writeFile (chars fn)
+writeFile ∷ 𝕊 → 𝕊 → IO ()
+writeFile file = BS.writeFile (chars file) ∘ Text.encodeUtf8
 
 trace ∷ 𝕊 → a → a
 trace s = unsafePerformIO $ do

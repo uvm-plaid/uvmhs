@@ -112,4 +112,3 @@ zipSameLength xs ys = case (xs,ys) of
     None → None
     Some xys → Some $ (x :* y) :& xys
   _ → None
-
