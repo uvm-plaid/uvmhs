@@ -11,7 +11,6 @@ import System.IO.Unsafe
 
 import qualified Data.ByteString as BS
 import qualified Data.Text.Encoding as Text
-import qualified Data.Text.IO as Text
 import qualified GHC.Stats  as HS
 import qualified Prelude as HS
 import qualified System.Directory as HS
@@ -22,8 +21,13 @@ import qualified System.IO.Unsafe as UNSAFE
 import qualified System.Mem as HS
 import qualified System.Process as Process
 
+initUVMHS ∷ IO ()
+initUVMHS = do
+  HS.hSetEncoding HS.stdout HS.utf8
+  HS.hSetEncoding HS.stdin HS.utf8
+
 writeOut ∷ 𝕊 → IO ()
-writeOut = Text.putStr
+writeOut = BS.putStr ∘ Text.encodeUtf8
 
 out ∷ 𝕊 → IO ()
 out s = exec [writeOut s,writeOut "\n"]
@@ -38,7 +42,7 @@ flushOut ∷ IO ()
 flushOut = HS.hFlush HS.stdout
 
 writeErr ∷ 𝕊 → IO ()
-writeErr = Text.hPutStr HS.stderr
+writeErr = BS.hPutStr HS.stderr ∘ Text.encodeUtf8
 
 err ∷ 𝕊 → IO ()
 err s = exec [writeErr s,writeErr "\n"]
@@ -53,7 +57,7 @@ failIO ∷ 𝕊 → IO a
 failIO = HS.fail ∘ chars
 
 stdin ∷ IO 𝕊
-stdin = Text.getContents
+stdin = Text.decodeUtf8 ^$ BS.getContents
 
 readFile ∷ 𝕊 → IO 𝕊
 readFile = Text.decodeUtf8 ^∘ BS.readFile ∘ chars
@@ -77,7 +81,7 @@ optionIO (Some x) = return x
 shell ∷ 𝕊 → IO (𝔹 ∧ 𝕊 ∧ 𝕊)
 shell c = do
   (e,o,r) ← Process.readCreateProcessWithExitCode (Process.shell $ chars c) []
-  return (e ≡ Exit.ExitSuccess :* string o :* string r)
+  return $ e ≡ Exit.ExitSuccess :* string o :* string r
 
 shellOK ∷ 𝕊 → IO 𝕊
 shellOK c = do
