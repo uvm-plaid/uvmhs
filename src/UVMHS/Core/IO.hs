@@ -24,8 +24,9 @@ import qualified System.Process as Proc
 
 initUVMHS ∷ IO ()
 initUVMHS = do
+  IO.hSetEncoding IO.stdin  IO.utf8
   IO.hSetEncoding IO.stdout IO.utf8
-  IO.hSetEncoding IO.stdin IO.utf8
+  IO.hSetEncoding IO.stderr IO.utf8
 
 ------------------
 -- Standard Out --
