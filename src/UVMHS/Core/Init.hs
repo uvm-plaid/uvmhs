@@ -2,10 +2,12 @@ module UVMHS.Core.Init
   (module UVMHS.Core.Init
   ,module GHC.Exts
   ,module Prelude
+  ,module GHC.Stack
   ) where
 
 import Prelude(Bool(..),($),undefined,otherwise,IO,Eq((==)),Ord(compare),Show(show),Ordering(..))
 import GHC.Exts (type Constraint)
+import GHC.Stack (type CallStack,callStack,withFrozenCallStack)
 
 import qualified Prelude as HS
 import qualified GHC.Types as HS
