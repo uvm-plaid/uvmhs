@@ -197,4 +197,5 @@ inbetween𝑆 i (stream → 𝑆 s₀ g) = 𝑆 (s₀ :* None) $ \ (s :* xMM) �
 coredata_stream_e1 ∷ 𝑆 ℕ
 coredata_stream_e1 = stream [1,2,3,4,5,4,3,2,1]
 
-
+split ∷ (ToStream (a ∧ b) t) ⇒ t → 𝑆 a ∧ 𝑆 b
+split (stream → xs) = map fst xs :* map snd xs
