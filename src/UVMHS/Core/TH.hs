@@ -22,12 +22,27 @@ instance MonadIO TH.Q where io = TH.runIO
 instance MonadQ TH.Q where qio = id
 
 instance Apply TH.Exp where (⊙) = TH.AppE
-instance Tup TH.Exp where tup = TH.TupE ∘ lazyList
 
-instance Tup TH.Pat where tup = TH.TupP ∘ lazyList
+-- instance Tup TH.Exp where tup = TH.TupE ∘ lazyList
+-- instance Tup TH.Pat where tup = TH.TupP ∘ lazyList
+-- instance Tup TH.Type where tup ts = TH.TupleT (tohs $ intΩ64 $ count ts) ⊙⋆ ts
+
+instance Tup TH.Exp where 
+  tup es = case list es of
+    Nil → TH.ConE '()
+    e :& es' → foldOnFrom es' e $ \ e' eᵢ → TH.ConE '(:*) ⊙ eᵢ ⊙ e'
+
+instance Tup TH.Pat where 
+  tup ps = case list ps of
+    Nil → TH.ConP '() []
+    p :& ps' → foldOnFrom ps' p $ \ p' pᵢ → TH.ConP '(:*) [pᵢ,p']
+
+instance Tup TH.Type where 
+  tup ts = case list ts of
+    Nil → TH.ConT ''()
+    t :& ts' → foldOnFrom ts' t $ \ t' tᵢ → TH.ConT ''(∧) ⊙ tᵢ ⊙ t'
 
 instance Apply TH.Type where (⊙) = TH.AppT
-instance Tup TH.Type where tup ts = TH.TupleT (tohs $ intΩ64 $ count ts) ⊙⋆ ts
 instance Arrow TH.Type where f ⇨ x = TH.ArrowT ⊙ f ⊙ x
 
 thString ∷ 𝕊 → TH.Exp

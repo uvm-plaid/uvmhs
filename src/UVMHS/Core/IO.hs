@@ -27,29 +27,65 @@ initUVMHS = do
   IO.hSetEncoding IO.stdout IO.utf8
   IO.hSetEncoding IO.stdin IO.utf8
 
-writeOut ∷ 𝕊 → IO ()
-writeOut = BS.putStr ∘ Text.encodeUtf8
+------------------
+-- Standard Out --
+------------------
+
+owrite ∷ 𝕊 → IO ()
+owrite = BS.putStr ∘ Text.encodeUtf8
 
 out ∷ 𝕊 → IO ()
-out s = exec [writeOut s,writeOut "\n"]
+out s = exec [owrite s,owrite "\n"]
 
 outs ∷ (ToIter 𝕊 t) ⇒ t → IO ()
 outs ss = eachOn ss out
 
+oflush ∷ IO ()
+oflush = IO.hFlush IO.stdout
+
 shout ∷ (Show a) ⇒ a → IO ()
 shout = out ∘ show𝕊
 
-flushOut ∷ IO ()
-flushOut = IO.hFlush IO.stdout
+trace ∷ 𝕊 → ()
+trace s = unsafePerformIO $ do
+  out s
+  oflush
+  return ()
 
-writeErr ∷ 𝕊 → IO ()
-writeErr = BS.hPutStr IO.stderr ∘ Text.encodeUtf8
+traceM ∷ (Monad m) ⇒ 𝕊 → m ()
+traceM msg =
+  let _ = trace msg 
+  in skip
+
+------------------
+-- Standard Err --
+------------------
+
+ewrite ∷ 𝕊 → IO ()
+ewrite = BS.hPutStr IO.stderr ∘ Text.encodeUtf8
 
 err ∷ 𝕊 → IO ()
-err s = exec [writeErr s,writeErr "\n"]
+err s = exec [ewrite s,ewrite "\n"]
 
-flushErr ∷ IO ()
-flushErr = IO.hFlush IO.stderr
+eflush ∷ IO ()
+eflush = IO.hFlush IO.stderr
+
+-----------------
+-- Standard In --
+-----------------
+
+iread ∷ IO 𝕊
+iread = Text.decodeUtf8 ^$ BS.getContents
+
+iargs ∷ IO (𝐿 𝕊)
+iargs = map (list ∘ map string) Env.getArgs
+
+ilocalArgs ∷ 𝐿 𝕊 → IO a → IO a
+ilocalArgs args = Env.withArgs $ lazyList $ map chars $ iter args
+
+------------
+-- Errors --
+------------
 
 abortIO ∷ IO a
 abortIO = exitWith $ ExitFailure $ tohs $ 𝕫64 1
@@ -57,27 +93,67 @@ abortIO = exitWith $ ExitFailure $ tohs $ 𝕫64 1
 failIO ∷ 𝕊 → IO a
 failIO = HS.fail ∘ chars
 
-stdin ∷ IO 𝕊
-stdin = Text.decodeUtf8 ^$ BS.getContents
+-----------
+-- Files --
+-----------
 
-readFile ∷ 𝕊 → IO 𝕊
-readFile = Text.decodeUtf8 ^∘ BS.readFile ∘ chars
+fread ∷ 𝕊 → IO 𝕊
+fread = Text.decodeUtf8 ^∘ BS.readFile ∘ chars
 
-writeFile ∷ 𝕊 → 𝕊 → IO ()
-writeFile file = BS.writeFile (chars file) ∘ Text.encodeUtf8
+fwrite ∷ 𝕊 → 𝕊 → IO ()
+fwrite file = BS.writeFile (chars file) ∘ Text.encodeUtf8
 
-trace ∷ 𝕊 → a → a
-trace s = unsafePerformIO $ do
-  out s
-  flushOut
-  return id
+fappend ∷ 𝕊 → 𝕊 → IO ()
+fappend fn = BS.appendFile (chars fn) ∘ Text.encodeUtf8
 
-traceM ∷ (Monad m) ⇒ 𝕊 → m ()
-traceM msg = trace msg skip
+fcopy ∷ 𝕊 → 𝕊 → IO ()
+fcopy fr to = Dir.copyFile (chars fr) $ chars to
 
-optionIO ∷ 𝑂 a → IO a
-optionIO None = abortIO
-optionIO (Some x) = return x
+-----------------
+-- Directories --
+-----------------
+
+dfilesAll ∷ IO (𝐿 𝕊)
+dfilesAll = sort ∘ list ∘ map string ^$ Dir.listDirectory $ chars "."
+
+dfiles ∷ IO (𝐿 𝕊)
+dfiles = do
+  files ← dfilesAll
+  return $ list $ filterOn files $ \ f → case fst ^$ uncons f of
+    None → False
+    Some c → c ≢ '.'
+
+din ∷ 𝕊 → IO a → IO a
+din = Dir.withCurrentDirectory ∘ chars
+
+dtouch ∷ 𝕊 → IO ()
+dtouch = Dir.createDirectoryIfMissing True ∘ chars
+
+drremove ∷ 𝕊 → IO ()
+drremove = Dir.removeDirectoryRecursive ∘ chars
+
+-----------
+-- Paths --
+-----------
+
+pexists ∷ 𝕊 → IO 𝔹
+pexists = Dir.doesPathExist ∘ chars
+
+pfilename ∷ 𝕊 → 𝕊
+pfilename = string ∘ FP.takeFileName ∘ chars
+
+pbasename ∷ 𝕊 → 𝕊
+pbasename = string ∘ FP.takeBaseName ∘ chars
+
+pdirectory ∷ 𝕊 → 𝕊
+pdirectory = string ∘ FP.takeDirectory ∘ chars
+
+pextension ∷ 𝕊 → 𝕊
+pextension = string ∘ FP.takeExtension ∘ chars
+
+-----------
+-- Shell --
+-----------
 
 shell ∷ 𝕊 → IO (𝔹 ∧ 𝕊 ∧ 𝕊)
 shell c = do
@@ -103,11 +179,16 @@ shelllOK c = do
   out $ "(sh) > " ⧺ c
   shellOK c
 
-ioUNSAFE ∷ IO a → a
-ioUNSAFE = IO_UNSAFE.unsafePerformIO
+--------
+-- GC --
+--------
 
 gc ∷ IO ()
 gc = Mem.performGC
+
+---------------
+-- Profiling --
+---------------
 
 time ∷ (() → a) → IO (a ∧ TimeD)
 time f = do
@@ -120,9 +201,9 @@ time f = do
 
 rtime ∷ 𝕊 → (() → a) → IO a
 rtime s f = do
-  do out $ "TIMING: " ⧺ s ; flushOut
+  do out $ "TIMING: " ⧺ s ; oflush
   x :* t ← time f
-  do out $ "RESULT: " ⧺ show𝕊 t ; flushOut
+  do out $ "RESULT: " ⧺ show𝕊 t ; oflush
   return x
 
 timeIO ∷ IO a → IO (a ∧ TimeD)
@@ -136,9 +217,9 @@ timeIO xM = do
 
 rtimeIO ∷ 𝕊 → IO a → IO a
 rtimeIO s xM = do
-  do out $ "TIMING: " ⧺ s ; flushOut
+  do out $ "TIMING: " ⧺ s ; oflush
   x :* t ← timeIO xM
-  do out $ "RESULT: " ⧺ show𝕊 t ; flushOut
+  do out $ "RESULT: " ⧺ show𝕊 t ; oflush
   return x
 
 profile ∷ (() → a) → IO (TimeD ∧ 𝔻)
@@ -153,41 +234,9 @@ profile f = do
   let (n₂,u₂) = (Stat.major_gcs s₂,Stat.cumulative_live_bytes s₂)
   return $ (t₂ ⨺ t₁) :* (dbl (HS.fromIntegral u₂ - HS.fromIntegral u₁ ∷ ℕ) / dbl (HS.fromIntegral n₂ - HS.fromIntegral n₁ ∷ ℕ))
 
-askArgs ∷ IO (𝐿 𝕊)
-askArgs = map (list ∘ map string) Env.getArgs
+---------------
+-- Unsafe IO --
+---------------
 
-localArgs ∷ 𝐿 𝕊 → IO a → IO a
-localArgs args = Env.withArgs $ lazyList $ map chars $ iter args
-
-files ∷ IO (𝐿 𝕊)
-files = list ∘ map string ^$ Dir.listDirectory $ chars "."
-
-indir ∷ 𝕊 → IO a → IO a
-indir = Dir.withCurrentDirectory ∘ chars
-
-touchDirs ∷ 𝕊 → IO ()
-touchDirs = Dir.createDirectoryIfMissing True ∘ chars
-
-copyFile ∷ 𝕊 → 𝕊 → IO ()
-copyFile fr to = Dir.copyFile (chars fr) $ chars to
-
-writeAppend ∷ 𝕊 → 𝕊 → IO ()
-writeAppend fn = BS.appendFile (chars fn) ∘ Text.encodeUtf8
-
-pathFn ∷ 𝕊 → 𝕊
-pathFn = string ∘ FP.takeFileName ∘ chars
-
-pathBn ∷ 𝕊 → 𝕊
-pathBn = string ∘ FP.takeBaseName ∘ chars
-
-pathDir ∷ 𝕊 → 𝕊
-pathDir = string ∘ FP.takeDirectory ∘ chars
-
-pathExt ∷ 𝕊 → 𝕊
-pathExt = string ∘ FP.takeExtension ∘ chars
-
-rmDirs ∷ 𝕊 → IO ()
-rmDirs = Dir.removeDirectoryRecursive ∘ chars
-
-pathExists ∷ 𝕊 → IO 𝔹
-pathExists = Dir.doesPathExist ∘ chars
+ioUNSAFE ∷ IO a → a
+ioUNSAFE = IO_UNSAFE.unsafePerformIO

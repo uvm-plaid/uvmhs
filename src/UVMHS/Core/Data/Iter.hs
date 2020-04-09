@@ -364,6 +364,10 @@ filterMap g xs = 𝐼 $ \ (f ∷ b → c → c) (i₀ ∷ c) →
 filter ∷ (ToIter a t) ⇒ (a → 𝔹) → t → 𝐼 a
 filter f = filterMap $ \ x → case f x of {True → Some x;False → None}
 
+{-# INLINE filterOn #-}
+filterOn ∷ (ToIter a t) ⇒ t → (a → 𝔹) → 𝐼 a
+filterOn = flip filter
+
 {-# INLINE inbetween #-}
 inbetween ∷ (ToIter a t) ⇒ a → t → 𝐼 a
 inbetween xⁱ xs = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →

@@ -103,6 +103,11 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append a) ⇒ Append (ReaderT r m 
   (⧺) ∷ ReaderT r m a → ReaderT r m a → ReaderT r m a
   (⧺) xM₁ xM₂ = ReaderT $ \ r → unReaderT xM₁ r ⧺ unReaderT xM₂ r
 
+instance Transformer (ReaderT r) where
+  {-# INLINE lift #-}
+  lift ∷ ∀ m a. (Monad m) ⇒ m a → ReaderT r m a
+  lift xM = ReaderT $ \ _ → xM
+
 ------------
 -- WRITER --
 ------------
@@ -161,6 +166,11 @@ instance
   ,∀ a'. Monoid a' ⇒ Monoid (m a')
   ,Monoid o,Monoid a) 
   ⇒ Monoid (WriterT o m a)
+
+instance (Null o) ⇒ Transformer (WriterT o) where
+  {-# INLINE lift #-}
+  lift ∷ ∀ m a. (Monad m) ⇒ m a → WriterT o m a
+  lift xM = WriterT $ (null :*) ^$ xM
 
 -----------
 -- STATE --
@@ -232,6 +242,11 @@ runState s = unID ∘ runStateT s
 evalState ∷ s → State s a → a
 evalState s = unID ∘ evalStateT s
 
+instance Transformer (StateT s) where
+  {-# INLINE lift #-}
+  lift ∷ ∀ m a. (Monad m) ⇒ m a → StateT s m a
+  lift xM = StateT $ \ s → (s :*) ^$ xM
+
 ----------
 -- FAIL --
 ----------
@@ -289,6 +304,11 @@ instance
   ,∀ a'. Monoid a' ⇒ Monoid (m a')
   ,Monoid a) 
   ⇒ Monoid (FailT m a)
+
+instance Transformer FailT where
+  {-# INLINE lift #-}
+  lift ∷ ∀ m a. (Monad m) ⇒ m a → FailT m a
+  lift xM = FailT $ Some ^$ xM
 
 -----------
 -- ERROR --
@@ -348,6 +368,11 @@ instance
   ,Append e,Monoid a) 
   ⇒ Monoid (ErrorT e m a)
 
+instance Transformer (ErrorT e) where
+  {-# INLINE lift #-}
+  lift ∷ ∀ m a. (Monad m) ⇒ m a → ErrorT e m a
+  lift xM = ErrorT $ Inr ^$ xM
+
 ------------
 -- NONDET --
 ------------
@@ -374,6 +399,11 @@ instance (∀ a'. Monoid a' ⇒ Monoid (m a')) ⇒ MonadNondet (NondetT m) where
 
   (⊞) ∷ ∀ a. NondetT m a → NondetT m a → NondetT m a
   xM₁ ⊞ xM₂ = NondetT $ unNondetT xM₁ ⧺ unNondetT xM₂
+
+instance Transformer NondetT where
+  {-# INLINE lift #-}
+  lift ∷ ∀ m a. (Monad m) ⇒ m a → NondetT m a
+  lift xM = NondetT $ single ^$ xM
 
 ----------
 -- Cont --
@@ -426,6 +456,11 @@ instance
   ,∀ a'. Monoid a' ⇒ Monoid (m a')
   ,Monoid r) 
   ⇒ Monoid (ContT r m a)
+
+instance Transformer (ContT r) where
+  {-# INLINE lift #-}
+  lift ∷ ∀ m a. (Monad m) ⇒ m a → ContT r m a
+  lift xM = ContT $ \ (κ ∷ a → m r) → κ *$ xM
 
 -- ================= --
 -- AUTOMATIC LIFTING --

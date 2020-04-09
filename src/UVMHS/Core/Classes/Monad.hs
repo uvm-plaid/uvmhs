@@ -19,6 +19,7 @@ xM >> ~yM = xM ≫= \ _ → let yM' = yM in yM'
 class Return (m ∷ ★ → ★) where return ∷ a → m a
 class Bind (m ∷ ★ → ★) where (≫=) ∷ m a → (a → m b) → m b
 class (Functor m,Return m,Bind m) ⇒ Monad m
+class Transformer (t ∷ (★ → ★) → (★ → ★)) where lift ∷ ∀ m a. (Monad m) ⇒ m a → t m a
 
 {-# INLINE (*⋅) #-}
 (*⋅) ∷ (Bind m) ⇒ (a → m b) → (m a → m b)

@@ -74,6 +74,9 @@ uncons𝑆 (𝑆 s g) = case g s of
   None → None
   Some (x :* s') → Some (x :* 𝑆 s' g)
 
+uncons ∷ (ToStream a t) ⇒ t → 𝑂 (a ∧ 𝑆 a)
+uncons = uncons𝑆 ∘ stream
+
 eqBy𝑆 ∷ (a → a → 𝔹) → 𝑆 a → 𝑆 a → 𝔹
 eqBy𝑆 f (𝑆 s₁₀ g₁) (𝑆 s₂₀ g₂) = loop s₁₀ s₂₀
   where
