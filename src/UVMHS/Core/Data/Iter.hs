@@ -251,6 +251,7 @@ product = fold one (×)
 concat ∷ (Monoid a,ToIter a t) ⇒ t → a
 concat = foldr null (⧺)
 
+{-# INLINE sequence #-}
 sequence ∷ (Seqoid a,ToIter a t) ⇒ t → a
 sequence = foldr eps (▷)
 

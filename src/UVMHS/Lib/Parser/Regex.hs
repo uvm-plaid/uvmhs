@@ -92,12 +92,15 @@ makePrettySum ''RegexAtom
 
 -- Construction --
 
-instance (Zero u) ⇒ Null (Regex c t o u) where null = nullRegex
-instance (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ Append (Regex c t o u) where (⧺) = sumRegex
+instance (Zero u)                             ⇒ Null   (Regex c t o u) where null = nullRegex
+instance (Ord c,Ord t,Ord o,Ord u,Plus u)     ⇒ Append (Regex c t o u) where (⧺) = sumRegex
+instance (Ord c,Ord t,Ord o,Ord u,Zero u)     ⇒ Eps    (Regex c t o u) where eps = epsRegex
+instance (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Seq    (Regex c t o u) where (▷) = seqRegex
+instance (Ord c,Ord t,Ord o,Ord u,Zero u)     ⇒ Star   (Regex c t o u) where star = starRegex
+
 instance (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Monoid (Regex c t o u)
-instance (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ Eps (Regex c t o u) where eps = epsRegex
-instance (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Seq (Regex c t o u) where (▷) = seqRegex
 instance (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Seqoid (Regex c t o u)
+instance (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Kleene (Regex c t o u)
 
 nullRegex ∷ (Zero u) ⇒ Regex c t o u
 nullRegex = Annotated null NullR
@@ -198,12 +201,6 @@ starRegex e@(Annotated i e') = case e' of
   StarR _ _ → e
   _ → Annotated (eps ⧺ i) $ StarR eps e
 
-oomRegex ∷ (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Regex c t o u → Regex c t o u
-oomRegex r = r ▷ starRegex r
-
-optRegex ∷ (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Regex c t o u → Regex c t o u
-optRegex r = r ⧺ eps
-
 -- Derivative --
 
 derRegex ∷ (Ord c,Ord t,Classified c t,Ord o,Ord u,Additive u) ⇒ t ∨ c → Regex c t o u → Regex c t o u
@@ -213,7 +210,7 @@ derRegex xc e₀ = case extract e₀ of
   AtomR r a → consEpsRegex r $ derRegexAtom xc a
   SumsR es → concat $ map (derRegex xc) $ iter es
   SeqsR es → derRegexSequence xc es
-  StarR r e → consEpsRegex r (derRegex xc e) ▷ starRegex e
+  StarR r e → consEpsRegex r (derRegex xc e) ▷ star e
 
 derRegexAtom ∷ (Ord c,Ord t,Classified c t,Ord o,Ord u,Additive u) ⇒ t ∨ c → RegexAtom c t o u → Regex c t o u
 derRegexAtom xc = \case
@@ -436,21 +433,33 @@ lWord ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ 𝕊 → Regex CharClass ℂ o u
 lWord = fold eps $ \ c r → r ▷ tokRegex c
 
 lSpace ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex CharClass ℂ o u
-lSpace = oomRegex $ classRegex SpaceClass
+lSpace = oom $ classRegex SpaceClass
 
 lName ∷ (Zero u,Ord u,Ord o,Additive u) ⇒ Regex CharClass ℂ o u
-lName = sequence
-  [ classRegex LetterClass
-  , starRegex $ concat
-      [ concat $ map classRegex [LetterClass,NumberClass]
-      , concat $ map tokRegex $ iter "_-'′"
-      ]
-  ]
+lName = 
+  let begTok = concat
+        [ classRegex LetterClass
+        , concat $ map tokRegex $ iter "_'′"
+        ]
+      endTok = concat
+        [ begTok
+        , classRegex NumberClass
+        ]
+      midTok = begTok ⧺ endTok ⧺ tokRegex '-'
+  in 
+  sequence
+    [ classRegex LetterClass
+    , begTok
+    , opt $ sequence
+        [ star $ midTok
+        , endTok
+        ]
+    ]
 
 lNatPre ∷ (Zero u,Ord u,Ord o,Additive u) ⇒ Regex CharClass ℂ o u
 lNatPre = sequence
   [ concat $ map tokRegex ['0'..'9']
-  , starRegex $ concat
+  , star $ concat
       [ concat $ map tokRegex ['0'..'9']
       , tokRegex '_'
       ]
@@ -472,7 +481,7 @@ lNatCoded = sequence
 
 lIntPre ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex CharClass ℂ o u
 lIntPre = sequence
-  [ optRegex $ tokRegex '-'
+  [ opt $ tokRegex '-'
   , lNatPre
   ]
 
@@ -485,11 +494,11 @@ lInt = sequence
 lDbl ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex CharClass ℂ o u
 lDbl = sequence
   [ lIntPre
-  , optRegex $ sequence
+  , opt $ sequence
     [ tokRegex '.'
     , lNatPre
     ]
-  , optRegex $ sequence
+  , opt $ sequence
     [ tokRegex 'e'
     , lIntPre
     ]
@@ -499,7 +508,7 @@ lDbl = sequence
 lString ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex CharClass ℂ o u
 lString = sequence
   [ tokRegex '"'
-  , starRegex $ concat
+  , star $ concat
       [ ntokRegex $ pow ['\\','"']
       , lWord "\\\\"
       , lWord "\\\""
@@ -512,8 +521,8 @@ lString = sequence
 lComment ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lComment = sequence
   [ lWord "--"
-  , starRegex $ ntokRegex $ single '\n'
-  , optRegex $ tokRegex '\n'
+  , star $ ntokRegex $ single '\n'
+  , opt $ tokRegex '\n'
   , fepsRegex $ formats [IT,FG gray]
   , lepsRegex $ 𝕟64 100
   ]
@@ -528,7 +537,7 @@ lComment = sequence
 -- 
 -- lCommentBody ∷ (Ord o) ⇒ Regex CharClass ℂ o ℤ64
 -- lCommentBody = sequence
---   [ starRegex $ ntokRegex $ single '\n'
+--   [ star $ ntokRegex $ single '\n'
 --   , optRegex $ tokRegex '\n'
 --   , uepsRegex one
 --   , fepsRegex $ formats [IT,FG gray]
@@ -544,22 +553,22 @@ lCommentMLOpen = sequence
 
 lCommentMLBodyOpen ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lCommentMLBodyOpen = sequence
-  [ oomRegex (tokRegex '{') ▷ tokRegex '-'
+  [ oom (tokRegex '{') ▷ tokRegex '-'
   , uepsRegex one
   ]
 
 lCommentMLBodyClose ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lCommentMLBodyClose = sequence
-  [ oomRegex (tokRegex '-') ▷ tokRegex '}'
+  [ oom (tokRegex '-') ▷ tokRegex '}'
   , uepsRegex (neg one)
   ]
 
 lCommentMLBody ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lCommentMLBody = sequence
-  [ starRegex $ concat
+  [ star $ concat
       [ ntokRegex $ pow ['-','{']
-      , oomRegex (tokRegex '-') ▷ ntokRegex (pow ['-','}'])
-      , oomRegex (tokRegex '{') ▷ ntokRegex (pow ['{','-'])
+      , oom (tokRegex '-') ▷ ntokRegex (pow ['-','}'])
+      , oom (tokRegex '{') ▷ ntokRegex (pow ['{','-'])
       ]
   , lCommentMLBodyOpen ⧺ lCommentMLBodyClose
   , fepsRegex $ formats [IT,FG gray]
