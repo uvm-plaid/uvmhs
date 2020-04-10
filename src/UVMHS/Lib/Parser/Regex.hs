@@ -448,8 +448,7 @@ lName =
       midTok = begTok ⧺ endTok ⧺ tokRegex '-'
   in 
   sequence
-    [ classRegex LetterClass
-    , begTok
+    [ begTok
     , opt $ sequence
         [ star $ midTok
         , endTok
