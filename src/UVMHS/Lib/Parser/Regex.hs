@@ -450,7 +450,7 @@ lName =
   sequence
     [ begTok
     , opt $ sequence
-        [ star $ midTok
+        [ star midTok
         , endTok
         ]
     ]
