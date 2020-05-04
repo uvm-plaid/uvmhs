@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: aeb929a96827605db72fca520ff54d1baa6906618222e6cf86c59041b189b2ef
+-- hash: 8dc3016178cb5fdbd73cf45a5919cb9a14653b14d54f69bfa946c4080525a6fe
 
 name:           uvmhs
 version:        0.0.0.0
@@ -88,7 +88,7 @@ library
   hs-source-dirs:
       src
   default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
-  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2
+  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2 -optP-Wno-nonportable-include-path
   build-depends:
       array
     , base
@@ -108,7 +108,7 @@ executable uvmhs
   hs-source-dirs:
       main
   default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
-  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2
+  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2 -optP-Wno-nonportable-include-path
   build-depends:
       array
     , base
