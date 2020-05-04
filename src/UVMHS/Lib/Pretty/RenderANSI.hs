@@ -8,6 +8,9 @@ import UVMHS.Lib.ATree
 import UVMHS.Lib.Pretty.Annotation
 import UVMHS.Lib.Pretty.Core
 
+import Data.IORef (IORef)
+import qualified Data.IORef as IORef
+
 data ANSIEnv = ANSIEnv
   -- global env
   { ansiEnvDoFormat ∷ 𝔹
@@ -150,8 +153,22 @@ ppRenderNofmtWide =
 ppshow ∷ (Pretty a) ⇒ a → 𝕊
 ppshow = ppRenderNofmtWide ∘ pretty
 
+{-# NOINLINE gv_PPRINT_COLOR #-}
+gv_PPRINT_COLOR ∷ IORef 𝔹
+gv_PPRINT_COLOR = ioUNSAFE $ IORef.newIORef True
+
 pprint ∷ (Pretty a) ⇒ a → IO ()
-pprint = out ∘ ppRender ∘ pretty
+pprint x = do
+  b ← IORef.readIORef gv_PPRINT_COLOR
+  if b
+     then out $ ppRender $ pretty x
+     else out $ ppRenderNofmt $ pretty x
+
+ppColorOn ∷ IO ()
+ppColorOn = IORef.writeIORef gv_PPRINT_COLOR True
+
+ppColorOff ∷ IO ()
+ppColorOff = IORef.writeIORef gv_PPRINT_COLOR False
 
 pptrace ∷ (Pretty a) ⇒ a → b → b
 pptrace a = ioUNSAFE $ do
