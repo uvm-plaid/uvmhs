@@ -32,10 +32,11 @@ trace:
 ghci:
 	stack ghci
 
-.PHONY: doc
-doc:
+.PHONY: docs
+docs:
 	stack haddock
-	cp -r `stack path --local-doc-root` ./
+	rm -rf ./docs
+	cp -r `stack path --local-doc-root` ./docs
 
 .PHONY: clean
 clean:

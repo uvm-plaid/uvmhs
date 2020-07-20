@@ -1,4 +1,4 @@
-HTML documentation [here](https://uvm-plaid.github.io/uvmhs/doc).
+HTML documentation [here](https://uvm-plaid.github.io/uvmhs).
 
 # Quick Introduction
 
