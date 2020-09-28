@@ -16,7 +16,7 @@ import UVMHS.Lib.Parser.Loc
 -- ParserEnv --
 ---------------
 
-data ParserEnv t = ParserEnv
+data ParserEnv = ParserEnv
   { parserEnvReportErrors ∷ 𝔹
   , parserEnvRenderFormat ∷ Formats
   , parserEnvErrorStack ∷ 𝕊 ∧ 𝐼 𝕊
@@ -24,7 +24,7 @@ data ParserEnv t = ParserEnv
 makeLenses ''ParserEnv
 makePrettyRecord ''ParserEnv
 
-parserEnv₀ ∷ ParserEnv t
+parserEnv₀ ∷ ParserEnv
 parserEnv₀ = ParserEnv True null $ "<top level>" :* null
 
 ---------------
@@ -52,16 +52,16 @@ parserState₀ = ParserState null null null null
 
 -- # Parser
 
-newtype Parser t a = Parser { unParser ∷ ReaderT (ParserEnv t) (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a } 
+newtype Parser t a = Parser { unParser ∷ ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a } 
   deriving 
   ( Functor,Return,Bind,Monad
   , MonadFail
-  , MonadReader (ParserEnv t)
+  , MonadReader ParserEnv
   , MonadWriter (ParserOut t)
   , MonadState (ParserState t)
   )
 
-runParser ∷ ParserEnv t → ParserState t → Parser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
+runParser ∷ ParserEnv → ParserState t → Parser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
 runParser e s = unFailT ∘ runStateT s ∘ runReaderT e ∘ unParser
 
 -------------------------
