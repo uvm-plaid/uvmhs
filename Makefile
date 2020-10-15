@@ -6,7 +6,7 @@ build:
 
 .PHONY: dev
 dev: .stack-work
-	ghcid --test $E
+	ghcid --test=$E --warnings
 
 .stack-work:
 	stack setup
@@ -26,7 +26,7 @@ profile:
 
 .PHONY: trace
 trace:
-	stack run --profile -- +RTS -xc
+	stack run --trace
 
 .PHONY: ghci
 ghci:

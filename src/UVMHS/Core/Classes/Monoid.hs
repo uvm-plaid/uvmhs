@@ -1,10 +1,19 @@
 module UVMHS.Core.Classes.Monoid where
 
+import UVMHS.Core.Init
+
 infixl 4 ⧺
 
 class Null a where null ∷ a
 class Append a where (⧺) ∷ a → a → a
 class (Null a,Append a) ⇒ Monoid a
+
+prepend ∷ (Append a) ⇒ a → a → a
+prepend = (⧺)
+
+postpend ∷ (Append a) ⇒ a → a → a
+postpend = flip (⧺)
+
 class Unit a where unit ∷ a
 class Cross a where (⨳) ∷ a → a → a
 class (Monoid a,Unit a,Cross a) ⇒ Prodoid a

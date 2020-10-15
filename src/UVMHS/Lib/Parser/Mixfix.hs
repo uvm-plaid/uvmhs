@@ -4,7 +4,6 @@ import UVMHS.Core
 
 import UVMHS.Lib.Annotated
 
-import UVMHS.Lib.Parser.Core
 import UVMHS.Lib.Parser.ParserContext
 import UVMHS.Lib.Parser.CParser
 
@@ -104,7 +103,7 @@ fmixfix new bracket cxt (MixfixF terms levels₀) = loop levels₀
     buildLevelNondirected msg mixes nextLevel = do
       x ← nextLevel
       concat
-        [ toCParser $ pErr (msg ⧺ " infix") $ frCParser $ levelInfAfterOne x mixes nextLevel
+        [ cpErr (msg ⧺ " infix") $ levelInfAfterOne x mixes nextLevel
         , return $ extract x
         ]
     buildLevelDirected ∷ 𝕊 → MixesF t f a → CParser t (f a) → CParser t a
@@ -112,11 +111,11 @@ fmixfix new bracket cxt (MixfixF terms levels₀) = loop levels₀
       [ do
           x ← nextLevel
           concat
-            [ toCParser $ pErr (msg ⧺ " infixl") $ frCParser $ levelInflAfterOne x mixes nextLevel
-            , toCParser $ pErr (msg ⧺ " infixr") $ frCParser $ levelInfrAfterOne x mixes nextLevel
+            [ cpErr (msg ⧺ " infixl") $ levelInflAfterOne x mixes nextLevel
+            , cpErr (msg ⧺ " infixr") $ levelInfrAfterOne x mixes nextLevel
             , return $ extract x
             ]
-      , toCParser $ pErr (msg ⧺ " infixr") $ frCParser $ levelInfrNotAfterOne mixes nextLevel
+      , cpErr (msg ⧺ " infixr") $ levelInfrNotAfterOne mixes nextLevel
       ]
     levelInfAfterOne ∷ f a → MixesF t f a → CParser t (f a) → CParser t a
     levelInfAfterOne x₁ mixes nextLevel = do
@@ -220,4 +219,4 @@ mixfix ∷ (Ord t) ⇒ Mixfix t a → CParser t a
 mixfix mix = unID ^$ fmixfix id id (map ID) (mixfixPure mix) 
 
 mixfixWithContext ∷ (Ord t) ⇒ 𝕊 → Mixfix t a → CParser t (Annotated FullContext a)
-mixfixWithContext s = toCParser ∘ pNewContext s ∘ pWithContextRendered ∘ frCParser ∘ mixfix
+mixfixWithContext s = cpNewContext s ∘ cpWithContextRendered ∘ mixfix

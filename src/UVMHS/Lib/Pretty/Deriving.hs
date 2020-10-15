@@ -2,7 +2,7 @@ module UVMHS.Lib.Pretty.Deriving where
 
 import UVMHS.Core
 
-import UVMHS.Lib.Pretty.Core
+import UVMHS.Lib.Pretty.Doc
 
 import qualified Language.Haskell.TH as TH
 

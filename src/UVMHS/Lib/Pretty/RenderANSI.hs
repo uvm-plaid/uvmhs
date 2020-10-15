@@ -6,7 +6,10 @@ import UVMHS.Lib.IterS
 import UVMHS.Lib.ATree
 
 import UVMHS.Lib.Pretty.Annotation
-import UVMHS.Lib.Pretty.Core
+import UVMHS.Lib.Pretty.Common
+import UVMHS.Lib.Pretty.Doc
+import UVMHS.Lib.Pretty.RenderGroups
+import UVMHS.Lib.Pretty.RenderUndertags
 
 import Data.IORef (IORef)
 import qualified Data.IORef as IORef
@@ -93,7 +96,7 @@ tellSgrFormat = do
 
 localFormat ∷ Formats → RenderANSIM () → RenderANSIM ()
 localFormat f aM = do
-  localL ansiEnvFormatsL f $ do
+  mapEnvL ansiEnvFormatsL (prepend f) $ do
     tellSgrFormat
     aM
   tell $ single sgrReset
@@ -102,53 +105,62 @@ localFormat f aM = do
 renderChunk' ∷ OChunk → 𝐼S𝕊
 renderChunk' = \case
   RawOChunk n s → 𝐼S𝕊 n $ single s
-  NewlineOChunk n → concat [single "\n",𝐼S𝕊 n $ single $ string $ repeat (nat n) ' ']
+  NewlineOChunk → single "\n"
   PaddingOChunk n → 𝐼S𝕊 n $ single $ string $ repeat (nat n) ' '
   
-formatSDoc ∷ Formats → RenderANSIM () → RenderANSIM ()
-formatSDoc fm xM = do
+formatRenderANSI ∷ Formats → RenderANSIM () → RenderANSIM ()
+formatRenderANSI fm xM = do
   b ← askL ansiEnvDoFormatL
   case b of
     True → localFormat fm xM
     False → xM
 
-compileSDoc ∷ SDoc → RenderANSIM ()
-compileSDoc = \case
-  Leaf𝐴 () fm () chs → formatSDoc fm $ eachWith (tell ∘ renderChunk') chs
-  Append𝐴 () fm () sd₁ sds₂ sd₃ → formatSDoc fm $ do
-    compileSDoc sd₁
-    eachWith compileSDoc sds₂
-    compileSDoc sd₃
+compileOTree ∷ OTree → RenderANSIM ()
+compileOTree sd = un𝑉𝐴 sd fₑ fₐ
+  where
+    fₑ chs = eachWith (tell ∘ renderChunk') chs
+    fₐ fm = formatRenderANSI fm
 
-execSDocWith ∷ (RenderANSIM () → RenderANSIM ()) → SDoc → 𝕊
-execSDocWith f = stringCS ∘ evalRWS ansiEnv₀ () ∘ retOut ∘ f ∘ compileSDoc
+execRenderANSIWith ∷ (RenderANSIM () → RenderANSIM ()) → OTree → 𝐼S𝕊
+execRenderANSIWith f = evalRWS ansiEnv₀ () ∘ retOut ∘ f ∘ compileOTree
 
-execSDoc ∷ SDoc → 𝕊
-execSDoc = execSDocWith id
+execRenderANSI ∷ OTree → 𝐼S𝕊
+execRenderANSI = execRenderANSIWith id
+
+-- execOTreeWith ∷ (RenderANSIM () → RenderANSIM ()) → OTree → 𝕊
+-- execOTreeWith f = {- stringCS ∘ evalRWS ansiEnv₀ () ∘ retOut ∘ f -} _ f ∘ compileOTree
+-- 
+-- execOTree ∷ ITree → 𝕊
+-- execOTree = execOTreeWith id
+
+ppRenderWith ∷ (RenderANSIM () → RenderANSIM ()) 
+             → (RenderGroupsM () → RenderGroupsM ())
+             → (DocM () → DocM ())
+             → Doc → 𝕊
+ppRenderWith f₁ f₃ f₄ =
+  stringCS
+  ∘ execRenderANSIWith f₁
+  ∘ execRenderUT
+  ∘ execRenderGroupsWith f₃
+  ∘ execDocWith f₄
 
 ppRender ∷ Doc → 𝕊
-ppRender = execSDoc ∘ execRDoc ∘ execLDoc ∘ execDoc
+ppRender = ppRenderWith id id id
 
 ppRenderNofmt ∷ Doc → 𝕊
-ppRenderNofmt = 
-  execSDocWith (localL ansiEnvDoFormatL False) 
-  ∘ execRDoc 
-  ∘ execLDoc 
-  ∘ execDoc
+ppRenderNofmt = ppRenderWith (localL ansiEnvDoFormatL False) id id
 
 ppRenderWide ∷ Doc → 𝕊
 ppRenderWide = 
-  execSDoc
-  ∘ execRDoc 
-  ∘ execLDocWith (localL ldocEnvMaxLineWidthL None ∘ localL ldocEnvMaxRibbonWidthL None)
-  ∘ execDoc
+  ppRenderWith id 
+               (localL renderGroupsEnvMaxLineWidthL None ∘ localL renderGroupsEnvMaxRibbonWidthL None) 
+               id
 
 ppRenderNofmtWide ∷ Doc → 𝕊
 ppRenderNofmtWide = 
-  execSDocWith (localL ansiEnvDoFormatL False) 
-  ∘ execRDoc 
-  ∘ execLDocWith (localL ldocEnvMaxLineWidthL None ∘ localL ldocEnvMaxRibbonWidthL None)
-  ∘ execDoc
+  ppRenderWith (localL ansiEnvDoFormatL False) 
+               (localL renderGroupsEnvMaxLineWidthL None ∘ localL renderGroupsEnvMaxRibbonWidthL None)
+               id
 
 ppshow ∷ (Pretty a) ⇒ a → 𝕊
 ppshow = ppRenderNofmtWide ∘ pretty

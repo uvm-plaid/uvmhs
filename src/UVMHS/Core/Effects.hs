@@ -150,45 +150,45 @@ instance MonadNondet 𝑄 where
 
 -- Reader
 
--- {-# INLINE askL #-}
+{-# INLINE askL #-}
 askL ∷ (Monad m,MonadReader r m) ⇒ r ⟢ a → m a 
 askL l = access l ^$ ask
 
--- {-# INLINE mapEnv #-}
+{-# INLINE mapEnv #-}
 mapEnv ∷ (Monad m,MonadReader r m) ⇒ (r → r) → m a → m a 
 mapEnv f aM = do
   r ← ask
   local (f r) aM
 
--- {-# INLINE localL #-}
+{-# INLINE localL #-}
 localL ∷ (Monad m,MonadReader r₁ m) ⇒ (r₁ ⟢ r₂) → r₂ → m a → m a
 localL 𝓁 r = mapEnv $ update 𝓁 r
 
--- {-# INLINE mapEnvL #-}
+{-# INLINE mapEnvL #-}
 mapEnvL ∷ (Monad m,MonadReader r₁ m) ⇒ (r₁ ⟢ r₂) → (r₂ → r₂) → m a → m a
 mapEnvL 𝓁 f = mapEnv $ alter 𝓁 f
 
 -- Writer
 
--- {-# INLINE tellL #-}
+{-# INLINE tellL #-}
 tellL ∷ (Monoid o₁,Monad m,MonadWriter o₁ m) ⇒ o₁ ⟢ o₂ → o₂ → m ()
 tellL l o = tell $ update l o null
 
--- {-# INLINE hijackL #-}
+{-# INLINE hijackL #-}
 hijackL ∷ (Monad m,MonadWriter o₁ m,Monoid o₂) ⇒ o₁ ⟢ o₂ → m a → m (o₂ ∧ a)
 hijackL l aM = do
   (o₁ :* a) ← hijack aM
   tell $ update l null o₁
   return (access l o₁ :* a)
 
--- {-# INLINE mapOut #-}
+{-# INLINE mapOut #-}
 mapOut ∷ (Monad m,MonadWriter o m) ⇒ (o → o) → m a → m a
 mapOut f aM = do
   (o :* a) ← hijack aM
   tell $ f o
   return a
 
--- {-# INLINE retOut #-}
+{-# INLINE retOut #-}
 retOut ∷ ∀ o m a. (Monad m,MonadWriter o m) ⇒ m a → m o
 retOut xM = do
   (o :* _) ← hijack xM
@@ -196,61 +196,61 @@ retOut xM = do
 
 -- # State
 
--- {-# INLINE getL #-}
+{-# INLINE getL #-}
 getL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → m a 
 getL l = map (access l) get
 
--- {-# INLINE putL #-}
+{-# INLINE putL #-}
 putL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → a → m () 
 putL 𝓁 = modify ∘ update 𝓁
 
--- {-# INLINE modify #-}
+{-# INLINE modify #-}
 modify ∷ (Monad m,MonadState s m) ⇒ (s → s) → m () 
 modify f = do
   s ← get
   put $ f s
 
--- {-# INLINE modifyL #-}
+{-# INLINE modifyL #-}
 modifyL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → (a → a) → m () 
 modifyL 𝓁 = modify ∘ alter 𝓁
 
--- {-# INLINE getput #-}
+{-# INLINE getput #-}
 getput ∷ (Monad m,MonadState s m) ⇒ s → m s
 getput s = do
   s' ← get
   put s
   return s'
 
--- {-# INLINE getputL #-}
+{-# INLINE getputL #-}
 getputL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → s₂ → m s₂
 getputL 𝓁 x = do
   x' ← getL 𝓁
   putL 𝓁 x
   return x'
 
--- {-# INLINE next #-}
+{-# INLINE next #-}
 next ∷ (Monad m,MonadState s m,Multiplicative s) ⇒ m s
 next = do
   i ← get
   put $ succ i
   return i
 
--- {-# INLINE nextL #-}
+{-# INLINE nextL #-}
 nextL ∷ (Monad m,MonadState s m,Multiplicative a) ⇒ s ⟢ a → m a
 nextL l = do
   i ← getL l
   putL l $ succ i
   return i
 
--- {-# INLINE bump #-}
+{-# INLINE bump #-}
 bump ∷ (Monad m,MonadState s m,Multiplicative s) ⇒ m ()
 bump = modify succ
 
--- {-# INLINE bumpL #-}
+{-# INLINE bumpL #-}
 bumpL ∷ (Monad m,MonadState s m,Multiplicative a) ⇒ s ⟢ a → m ()
 bumpL l = modifyL l succ
 
--- {-# INLINE localize #-}
+{-# INLINE localize #-}
 localize ∷ (Monad m,MonadState s m) ⇒ s → m a → m (s ∧ a)
 localize s xM = do
   s' ← getput s
@@ -258,7 +258,7 @@ localize s xM = do
   s'' ← getput s'
   return (s'' :* x)
 
--- {-# INLINE localizeL #-}
+{-# INLINE localizeL #-}
 localizeL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → s₂ → m a → m (s₂ ∧ a)
 localizeL 𝓁 s₂ aM = do
   s₂' ← getputL 𝓁 s₂
@@ -266,15 +266,15 @@ localizeL 𝓁 s₂ aM = do
   s₂'' ← getputL 𝓁 s₂'
   return (s₂'' :* x)
 
--- {-# INLINE localState #-}
+{-# INLINE localState #-}
 localState ∷ (Monad m,MonadState s m) ⇒ s → m a → m a
 localState s = map snd ∘ localize s
 
--- {-# INLINE localStateL #-}
+{-# INLINE localStateL #-}
 localStateL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → s₂ → m a → m a
 localStateL 𝓁 s = map snd ∘ localizeL 𝓁 s
 
--- {-# INLINE retState #-}
+{-# INLINE retState #-}
 retState ∷ ∀ s m a. (Monad m,MonadState s m) ⇒ m a → m s
 retState xM = do
   _ ← xM
@@ -282,15 +282,15 @@ retState xM = do
 
 -- Fail
 
--- {-# INLINE abort𝑂 #-}
+{-# INLINE abort𝑂 #-}
 abort𝑂 ∷ (Monad m,MonadFail m) ⇒ 𝑂 a → m a
 abort𝑂 = elim𝑂 abort return
 
--- {-# INLINE tries #-}
+{-# INLINE tries #-}
 tries ∷ (Monad m,MonadFail m,ToIter (m a) t) ⇒ t → m a
 tries = foldr abort (⎅)
 
--- {-# INLINE guard #-}
+{-# INLINE guard #-}
 guard ∷ (Monad m,MonadFail m) ⇒ 𝔹 → m ()
 guard = \case
   True → return ()
@@ -315,17 +315,17 @@ many aM = tries
 
 -- Error
 
--- {-# INLINE throw𝑂 #-}
+{-# INLINE throw𝑂 #-}
 throw𝑂 ∷ (Monad m,MonadError e m) ⇒ e → 𝑂 a → m a 
 throw𝑂 e = elim𝑂 (throw e) return
 
 -- # Nondet
 
--- {-# INLINE mconcat #-}
+{-# INLINE mconcat #-}
 mconcat ∷ (MonadNondet m,ToIter (m a) t) ⇒ t → m a
 mconcat = foldr mzero (⊞)
 
--- {-# INLINE from #-}
+{-# INLINE from #-}
 from ∷ (Monad m,MonadNondet m,ToIter a t) ⇒ t → m a
 from = mconcat ∘ map return ∘ iter
 

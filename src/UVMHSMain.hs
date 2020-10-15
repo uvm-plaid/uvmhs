@@ -7,4 +7,5 @@ import qualified UVMHSContrib.Lang.Arith as Arith
 import qualified UVMHSContrib.Lang.SExp as SExp
 
 main ∷ IO ()
-main = out "¯\\_﹙ツ﹚_/¯"
+main = cleanExit $ do
+  out "¯\\_﹙ツ﹚_/¯"

@@ -75,7 +75,7 @@ data Formats = Formats
 instance Null Formats where null = Formats None None None None None
 instance Append Formats where
   Formats fg₁ bg₁ ul₁ bd₁ it₁ ⧺ Formats fg₂ bg₂ ul₂ bd₂ it₂ = 
-    Formats (last fg₁ fg₂) (last bg₁ bg₂) (last ul₁ ul₂) (last bd₁ bd₂) (last it₁ it₂)
+    Formats (first fg₁ fg₂) (first bg₁ bg₂) (first ul₁ ul₂) (first bd₁ bd₂) (first it₁ it₂)
 instance Monoid Formats
 
 format ∷ Format → Formats

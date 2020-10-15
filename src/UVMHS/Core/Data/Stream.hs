@@ -202,3 +202,12 @@ coredata_stream_e1 = stream [1,2,3,4,5,4,3,2,1]
 
 split ∷ (ToStream (a ∧ b) t) ⇒ t → 𝑆 a ∧ 𝑆 b
 split (stream → xs) = map fst xs :* map snd xs
+
+filter𝑆 ∷ (ToStream a t) ⇒ (a → 𝔹) → t → 𝑆 a
+filter𝑆 f (stream → 𝑆 s₀ g) = 𝑆 s₀ loop
+  where
+    loop s = do
+      (x :* s') ← g s
+      if f x 
+         then Some $ x :* s'
+         else loop s'

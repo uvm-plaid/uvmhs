@@ -75,8 +75,8 @@ cpRender fm = toCParser ∘ pRender fm ∘ frCParser
 cpErr ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t a
 cpErr s = toCParser ∘ pErr s ∘ frCParser
 
-cpToken ∷ (Ord t) ⇒ t → CParser t ()
-cpToken t = CParser (t ↦ eps) abort
+cpToken ∷ (Ord t) ⇒ t → CParser t t
+cpToken t = CParser (t ↦ return t) abort
 
 cpFinal ∷ (Ord t) ⇒ CParser t a → CParser t a
 cpFinal = toCParser ∘ pFinal ∘ frCParser
@@ -124,7 +124,7 @@ cpOneOrMoreSepBy sepM xM = do
 -- Basic Language Parsing --
 ----------------------------
 
-cpSyntax ∷ 𝕊 → CParser TokenBasic ()
+cpSyntax ∷ 𝕊 → CParser TokenBasic TokenBasic
 cpSyntax = cpToken ∘ SyntaxTBasic
 
 cpName ∷ CParser TokenBasic 𝕏
@@ -144,6 +144,9 @@ cpString = cpShaped $ view stringTBasicL
 
 cpNewExpressionContext ∷ (Ord t) ⇒ CParser t a → CParser t a
 cpNewExpressionContext = toCParser ∘ pNewExpressionContext ∘ frCParser
+
+cpNewErrContext ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t a
+cpNewErrContext msg = toCParser ∘ pNewErrContext msg ∘ frCParser
 
 cpNewContext ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t a
 cpNewContext s = toCParser ∘ pNewContext s ∘ frCParser

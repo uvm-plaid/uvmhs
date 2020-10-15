@@ -48,9 +48,9 @@ cpAtom = cpNewContext "atom" $ tries
 cpExp ∷ CParser TokenBasic Exp 
 cpExp = fmixfixWithContext "exp" $ concat
   [ fmixTerminal $ do
-      cpToken $ SyntaxTBasic "("
+      void $ cpToken $ SyntaxTBasic "("
       e ← cpExp
-      cpToken $ SyntaxTBasic ")"
+      void $ cpToken $ SyntaxTBasic ")"
       return $ extract e
   , fmixTerminal      $ AtomE         ^$ cpAtom
   , fmixInfix   pCMP  $ const EqualE  ^$ cpSyntax "=="

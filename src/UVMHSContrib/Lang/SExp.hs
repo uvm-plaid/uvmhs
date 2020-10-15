@@ -37,6 +37,10 @@ data ExpPre =
   | ListE (𝐿 Exp)
 makePrettySum ''ExpPre
 
+------------
+-- Parser --
+------------
+
 cpLit ∷ CParser TokenBasic Lit
 cpLit = concat
   [ IntegerL ^$ cpShaped $ view integerTBasicL
@@ -46,28 +50,25 @@ cpLit = concat
 
 cpAtom ∷ CParser TokenBasic Atom
 cpAtom = cpNewContext "atom" $ concat
-  [ LitA ^$ cpLit
-  , NameA ^$ cpShaped $ view nameTBasicL
-  , const KeyA ^$ cpSyntax "KEY"
-  , const PrimA ^$ cpSyntax "PRIM"
-  , const PlusA ^$ cpSyntax "+"
+  [ cpErr "literal" $ LitA ^$ cpLit
+  , cpErr "name" $ NameA ^$ cpShaped $ view nameTBasicL
+  , cpErr "keyword" $ const KeyA ^$ cpSyntax "KEY"
+  , cpErr "primitive" $ const PrimA ^$ cpSyntax "PRIM"
+  , cpErr "“+”" $ const PlusA ^$ cpSyntax "+"
   ]
 
-cpExpPre ∷ CParser TokenBasic ExpPre
-cpExpPre = concat
+cpExp ∷ CParser TokenBasic Exp
+cpExp = cpNewContext "expression" $ cpWithContextRendered $ concat
   [ AtomE ^$ cpAtom
   , ListE ^$ cpList
   ]
 
 cpList ∷ CParser TokenBasic (𝐿 Exp)
-cpList = do
-  void $ cpSyntax "("
+cpList = cpNewContext "list" $ do
+  cpErr "“(”" $ void $ cpSyntax "("
   es ← cpMany cpExp
-  void $ cpSyntax ")"
+  cpErr "“)”" $ void $ cpSyntax ")"
   return es
-
-cpExp ∷ CParser TokenBasic Exp
-cpExp = cpNewContext "Exp" $ cpWithContextRendered cpExpPre
 
 testSExpParserSuccess ∷ IO ()
 testSExpParserSuccess = do
@@ -77,3 +78,30 @@ testSExpParserSuccess = do
   where
     input ∷ 𝕍 (ParserToken ℂ)
     input = tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12  )  "
+
+testSExpParserFailure1 ∷ IO ()
+testSExpParserFailure1 = do
+  tokenizeIOMain lexer "" input
+  toks ← tokenizeIO lexer "" input
+  parseIOMain cpExp "" $ stream toks
+  where
+    input ∷ 𝕍 (ParserToken ℂ)
+    input = tokens " (( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )  "
+
+testSExpParserFailure2 ∷ IO ()
+testSExpParserFailure2 = do
+  tokenizeIOMain lexer "" input
+  toks ← tokenizeIO lexer "" input
+  parseIOMain cpExp "" $ stream toks
+  where
+    input ∷ 𝕍 (ParserToken ℂ)
+    input = tokens " )( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )  "
+
+testSExpParserFailure3 ∷ IO ()
+testSExpParserFailure3 = do
+  tokenizeIOMain lexer "" input
+  toks ← tokenizeIO lexer "" input
+  parseIOMain cpExp "" $ stream toks
+  where
+    input ∷ 𝕍 (ParserToken ℂ)
+    input = tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )(  "

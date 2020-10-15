@@ -487,3 +487,6 @@ sortOn f = sortWith $ (⋚) `on` f
 
 sort ∷ (ToIter a t,Ord a) ⇒ t → 𝐿 a
 sort = sortWith (⋚)
+
+materialize ∷ (ToIter a t) ⇒ t → 𝐼 a
+materialize = iter ∘ list

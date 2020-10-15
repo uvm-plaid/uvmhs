@@ -2,6 +2,34 @@ module UVMHS.Lib.ATree where
 
 import UVMHS.Core
 
+data 𝑉𝐴 i a = 𝑉𝐴 
+  { un𝑉𝐴 ∷ ∀ b. (Monoid b) 
+              ⇒ (a → b) 
+              → (i → b → b) 
+              → b 
+  }
+
+element𝑉𝐴 ∷ a → 𝑉𝐴 i a
+element𝑉𝐴 e = 𝑉𝐴 $ \ fₑ _fₐ → fₑ e
+
+annotate𝑉𝐴 ∷ i → 𝑉𝐴 i a → 𝑉𝐴 i a
+annotate𝑉𝐴 i (𝑉𝐴 g) = 𝑉𝐴 $ \ fₑ fₐ → fₐ i $ g fₑ fₐ
+
+null𝑉𝐴 ∷ 𝑉𝐴 i a
+null𝑉𝐴 = 𝑉𝐴 $ \ _fₑ _fₐ → null
+
+append𝑉𝐴 ∷ 𝑉𝐴 i a → 𝑉𝐴 i a → 𝑉𝐴 i a
+append𝑉𝐴 (𝑉𝐴 g₁) (𝑉𝐴 g₂) = 𝑉𝐴 $ \ fₑ fₐ →
+  g₁ fₑ fₐ ⧺ g₂ fₑ fₐ
+
+instance Null (𝑉𝐴 i a) where null = null𝑉𝐴
+instance Append (𝑉𝐴 i a) where (⧺) = append𝑉𝐴
+instance Monoid (𝑉𝐴 i a)
+
+instance Functor (𝑉𝐴 i) where
+  map ∷ ∀ a b. (a → b) → 𝑉𝐴 i a → 𝑉𝐴 i b
+  map f (𝑉𝐴 g) = 𝑉𝐴 $ \ fₑ fₐ → g (fₑ ∘ f) fₐ
+
 -------
 -- 𝐴 --
 -------

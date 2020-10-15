@@ -119,7 +119,7 @@ pFail tc ps = do
   abort
 
 pErr ∷ 𝕊 → Parser t a → Parser t a
-pErr msg = mapEnv $ alter parserEnvErrorStackL $ \ (msg' :* stack) → msg :* (single msg' ⧺ stack)
+pErr msg = mapEnv $ alter parserEnvErrorStackL $ \ (msg' :* stack) → msg :* (stack ⧺ single msg')
 
 pNewErrContext ∷ 𝕊 → Parser t a → Parser t a
 pNewErrContext msg = mapEnv $ update parserEnvErrorStackL $ msg :* null
@@ -159,7 +159,7 @@ pPluck ∷ Parser t (ParserToken t)
 pPluck = do
   tM ← pAdvance
   case tM of
-    Inl l → pErr "more input" $ pFail (eofContext l) null
+    Inl l → {- pErr "more input" $ -} pFail (eofContext l) null
     Inr t → return t
 
 pRecord ∷ ParserToken t → Parser t ()
@@ -172,7 +172,7 @@ pEnd = do
   tM ← pAdvance
   case tM of
     Inl _ → return ()
-    Inr t → pErr "end of input" $ pFail (parserTokenContext t) (parserTokenSuffix t)
+    Inr t → pNewContext "end of input" $ pFail (parserTokenContext t) (parserTokenSuffix t)
 
 ----------------
 -- High Level --

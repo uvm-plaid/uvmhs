@@ -36,8 +36,8 @@ testParsingBranching = parseIOMain parser "<branching example>" input
       , cpNewContext "XXXAorB" $ cpRender (formats [FG teal]) $ do
           x ← cpWord "xxx"
           y ← single ^$ tries
-            [ toCParser $ pToken 'a'
-            , toCParser $ pToken 'b'
+            [ cpToken 'a'
+            , cpToken 'b'
             ]
           return $ x ⧺ y
       ]
@@ -90,7 +90,7 @@ testParsingErrorNewline ∷ IO ()
 testParsingErrorNewline = parseIOMain (string ^$ cpMany $ toCParser $ pToken 'x') "<error newline example>" $ tokens "xxx\nx"
 
 testParsingErrorEof ∷ IO ()
-testParsingErrorEof = parseIOMain (exec $ repeat 3 $ cpToken 'x') "<error eof example>" $ tokens "xx"
+testParsingErrorEof = parseIOMain (exec $ repeat 3 $ void $ cpToken 'x') "<error eof example>" $ tokens "xx"
 
 testTokenizeSimple ∷ IO ()
 testTokenizeSimple = 

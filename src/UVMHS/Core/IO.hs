@@ -9,18 +9,20 @@ import UVMHS.Core.Time
 import System.Exit
 import System.IO.Unsafe
 
-import qualified Data.ByteString as BS
-import qualified Data.Text.Encoding as Text
-import qualified GHC.Stats  as Stat
-import qualified Prelude as HS
-import qualified System.Directory as Dir
-import qualified System.Environment as Env
-import qualified System.Exit as Exit
+import qualified Data.ByteString       as BS
+import qualified Data.Text.Encoding    as Text
+import qualified GHC.IO.Handle         as IO
+import qualified GHC.Stats             as Stat
+import qualified Prelude               as HS
+import qualified System.Directory      as Dir
+import qualified System.Environment    as Env
+import qualified System.Exit           as Exit
 import qualified System.FilePath.Posix as FP
-import qualified System.IO as IO
-import qualified System.IO.Unsafe as IO_UNSAFE
-import qualified System.Mem as Mem
-import qualified System.Process as Proc
+import qualified System.IO             as IO
+import qualified System.IO.Unsafe      as IO_UNSAFE
+import qualified System.Mem            as Mem
+import qualified System.Process        as Proc
+import qualified Control.Exception     as HS
 
 initUVMHS ∷ IO ()
 initUVMHS = do
@@ -71,6 +73,9 @@ err s = exec [ewrite s,ewrite "\n"]
 eflush ∷ IO ()
 eflush = IO.hFlush IO.stderr
 
+redirectErrToOut ∷ IO ()
+redirectErrToOut = IO.hDuplicateTo IO.stdout IO.stderr
+
 -----------------
 -- Standard In --
 -----------------
@@ -88,11 +93,20 @@ ilocalArgs args = Env.withArgs $ lazyList $ map chars $ iter args
 -- Errors --
 ------------
 
+abortIOCode ∷ ℤ64 → IO a
+abortIOCode i = exitWith $ ExitFailure $ tohs i
+
 abortIO ∷ IO a
-abortIO = exitWith $ ExitFailure $ tohs $ 𝕫64 1
+abortIO = abortIOCode $ 𝕫64 1
+
+exitIO ∷ IO a
+exitIO = exitWith $ ExitSuccess
 
 failIO ∷ 𝕊 → IO a
 failIO = HS.fail ∘ chars
+
+cleanExit ∷ IO a → IO a
+cleanExit xM = HS.catch xM (\ (c ∷ ExitCode) → shout c ≫ exitIO)
 
 -----------
 -- Files --
