@@ -2,9 +2,9 @@ module UVMHS.Core.Classes.Constraints where
 
 import UVMHS.Core.Init
 
-infixr 2 :⇒:
-infixl 4 :∧:
-infixl 6 :∘:
+infixr 1 :⇒:
+infixl 3 :∧:
+infixl 7 :∘:
 
 class U a
 instance U a

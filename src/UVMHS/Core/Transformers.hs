@@ -9,7 +9,7 @@ import UVMHS.Core.Effects
 -- COMPOSE --
 -------------
 
-infixr 6 ⊡
+infixl 7 ⊡
 
 newtype (⊡) (t₁ ∷ (★ → ★) → (★ → ★)) (t₂ ∷ (★ → ★) → (★ → ★)) m a = Compose2 { unCompose2 ∷ t₁ (t₂ m) a }
 

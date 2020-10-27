@@ -4,9 +4,9 @@ import UVMHS.Core.Init
 -- import Core.Classes.Constraints
 import UVMHS.Core.Classes.Order
 
-infix  3 ∇,⊑,⊒,⪤
-infixl 4 ⊔,⊟
-infixl 5 ⊓
+infix  4 ∇,⊑,⊒,⪤
+infixl 5 ⊔,⊟
+infixl 6 ⊓
 
 class POrd a where (⊑) ∷ a → a → 𝔹
 

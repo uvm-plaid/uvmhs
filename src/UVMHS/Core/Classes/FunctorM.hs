@@ -6,10 +6,10 @@ import UVMHS.Core.Classes.Monad
 
 class FunctorM (t ∷ ★ → ★) where mapM ∷ (Monad m) ⇒ (a → m b) → t a → m (t b)
 
--- {-# INLINE mapMOn #-}
+{-# INLINE mapMOn #-}
 mapMOn ∷ (Monad m,FunctorM t) ⇒ t a → (a → m b) → m (t b)
 mapMOn = flip mapM
 
--- {-# INLINE exchange #-}
+{-# INLINE exchange #-}
 exchange ∷ (Monad m, FunctorM t) ⇒ t (m a) → m (t a)
 exchange = mapM id

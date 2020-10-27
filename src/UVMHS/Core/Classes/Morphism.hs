@@ -2,8 +2,8 @@ module UVMHS.Core.Classes.Morphism where
 
 import UVMHS.Core.Init
 
-infixr 2 →⁻,→⁼,⇄,⇄⁻,⇄⁼
-infixl 6 ⊚
+infixr 1 →⁻,→⁼,⇄,⇄⁻,⇄⁼
+infixl 7 ⊚
 
 type (m ∷ ★ → ★) →⁻ (n ∷ ★ → ★) = ∀ a. m a → n a
 type (t ∷ (★ → ★) → ★ → ★) →⁼ (u ∷ (★ → ★) → ★ → ★) = ∀ m. t m →⁻ u m

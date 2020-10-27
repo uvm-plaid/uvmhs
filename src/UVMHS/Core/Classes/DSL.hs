@@ -4,9 +4,9 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes.Collections
 
 infixr 0 ⊙$
-infixr 2 ⇨
-infixl 6 ⊙
-infixl 6 ⊙⋆
+infixr 1 ⇨
+infixl 7 ⊙
+infixl 7 ⊙⋆
 
 class Arrow a where (⇨) ∷ a → a → a
 class Apply a where (⊙) ∷ a → a → a

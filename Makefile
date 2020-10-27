@@ -49,3 +49,10 @@ hoogle:
 	stack hoogle -- generate --local
 	(sleep 1 && open http://localhost:8080/?scope=package%3A$(NAME)) &
 	stack hoogle -- server --local --port=8080
+
+ALL_HS_FILES := $(shell find src -name '*.hs')
+
+fixity-levels.txt: Makefile $(ALL_HS_FILES)
+	grep -hE '^infix' $(ALL_HS_FILES) | sed -E "s/^infix([rl]?)[ ]*(.*)$$/\\2 [\\1]/g" | sort > $@
+	echo "\n" >> $@
+	grep -E '^infix' $(ALL_HS_FILES) >> $@

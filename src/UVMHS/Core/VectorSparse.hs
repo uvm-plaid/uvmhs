@@ -118,7 +118,7 @@ maxKey𝑊 ixs = fst ∘ fst ^$ maxView𝑊 ixs
 
 view𝑊 ∷ ℤ64 → 𝑊 a → 𝑂 (a ∧ (𝑊 a))
 view𝑊 i ixs
-  | i ⋵♮ ixs = Some (ixs ⋕! i :* delete𝑊 i ixs)
+  | i ⋵♮ ixs = Some $ (ixs ⋕! i) :* delete𝑊 i ixs
   | otherwise = None
 
 without𝑊 ∷ 𝑃 ℤ64 → 𝑊 a → 𝑊 a

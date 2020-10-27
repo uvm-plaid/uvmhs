@@ -4,8 +4,8 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 
-infixr 2 ⟢
-infixr 2 ⌲
+infixr 1 ⟢
+infixr 1 ⌲
 
 newtype a ⟢ b = Lens {runLens ∷ a → b ∧ (b → a)}
 data a ⌲ b = Prism {construct ∷ b → a,view ∷ a → 𝑂 b}

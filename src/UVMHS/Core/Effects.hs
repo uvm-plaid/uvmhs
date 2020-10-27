@@ -6,7 +6,7 @@ import UVMHS.Core.Data
 
 import UVMHS.Core.Lens
 
-infixl 4 ⊞,⎅
+infixl 5 ⊞,⎅
 
 class MonadIO (m ∷ ★ → ★) where io ∷ IO a → m a
 

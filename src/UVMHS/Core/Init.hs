@@ -26,21 +26,23 @@ import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Sequence
 
 -- 0[R]: $
--- 1[L]: :*
--- 2[R]: ≫= →
--- 3[I]: ≡
--- 4[L]: +
--- 5[L]: ×
--- 6[L]: ∘
--- 7[L]: #,^
--- 8[*]: :&
+-- 1[R]: ≫= →
+-- 2[L]: ⩔
+-- 3[L]: ⩓
+-- 4[I]: ≡
+-- 5[L]: +,∨
+-- 6[L]: ×,∧
+-- 7[L]: ∘,#,^
+-- 8[*]: :*,:&
 -- 9[L]: ⋅
 
-infixl 1 :*
-infixr 2 ⇰
-infixl 4 ∨,⩔
-infixl 5 ∧,⩓
-infixl 6 ∘
+infixr 1 ⇰
+infixl 2 ⩔
+infixl 3 ⩓
+infixl 5 ∨
+infixl 6 ∧
+infixl 7 ∘
+infixl 8 :*
 infixr 8 :&
 
 type STACK = HS.HasCallStack

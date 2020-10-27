@@ -5,8 +5,8 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes.Order
 import UVMHS.Core.Classes.Functor
 
-infixl 4 +,-
-infixl 5 ×,⨵,/,⌿,÷
+infixl 5 +,-
+infixl 6 ×,⨵,/,⌿,÷
 infixl 7 ^
 
 class Zero a where zero ∷ a

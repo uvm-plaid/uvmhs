@@ -12,7 +12,7 @@ import UVMHS.Core.Data.Set
 import qualified Data.Map.Strict as Map
 import qualified Prelude as HS
 
-infixr 2 ↦
+infixr 1 ↦
 
 instance (Ord k) ⇒ Lookup k v (k ⇰ v) where (⋕?) = lookup𝐷
 instance (Ord k) ⇒ Single (k ∧ v) (k ⇰ v) where single = single𝐷
@@ -120,7 +120,7 @@ dmaxKey kvs = fst ∘ fst ^$ dmaxView kvs
 
 dview ∷ (Ord k) ⇒ k → k ⇰ v → 𝑂 (v ∧ (k ⇰ v))
 dview k kvs
-  | k ⋵ kvs = Some (kvs ⋕! k :* delete k kvs)
+  | k ⋵ kvs = Some $ (kvs ⋕! k) :* delete k kvs
   | otherwise = None
 
 without ∷ (Ord k) ⇒ 𝑃 k → k ⇰ v → k ⇰ v

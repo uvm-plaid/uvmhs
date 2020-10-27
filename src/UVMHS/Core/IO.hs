@@ -173,7 +173,7 @@ pextension = string ∘ FP.takeExtension ∘ chars
 shell ∷ 𝕊 → IO (𝔹 ∧ 𝕊 ∧ 𝕊)
 shell c = do
   (e,o,r) ← Proc.readCreateProcessWithExitCode (Proc.shell $ chars c) []
-  return $ e ≡ Exit.ExitSuccess :* string o :* string r
+  return $ (e ≡ Exit.ExitSuccess) :* string o :* string r
 
 shellOK ∷ 𝕊 → IO 𝕊
 shellOK c = do

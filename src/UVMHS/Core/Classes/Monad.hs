@@ -4,9 +4,9 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes.Functor
 
 infixr 0 *$
-infixr 2 ≫=, ≫
-infixl 5 ⧆
-infixl 6 *∘
+infixr 1 ≫=, ≫
+infixl 6 ⧆
+infixl 7 *∘
 
 {-# INLINE (>>=) #-}
 (>>=) ∷ (Bind m) ⇒ m a → (a → m b) → m b

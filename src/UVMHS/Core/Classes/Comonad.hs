@@ -3,7 +3,7 @@ module UVMHS.Core.Classes.Comonad where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes.Functor
 
-infixr 2 =≫ 
+infixr 1 =≫ 
 
 class Extract (w ∷ ★ → ★) where extract ∷ w a → a
 class Cobind (w ∷ ★ → ★) where (=≫) ∷ w a → (w a → b) → w b

@@ -1129,11 +1129,11 @@ instance (Monoid o) ⇒ Functor2 (RWST r o s) where
 instance (RWST r o s) ⇄⁼ (ReaderT r ⊡ WriterT o ⊡ StateT s) where
   {-# INLINE isoto3 #-}
   isoto3 ∷ ∀ f a. RWST r o s f a → (ReaderT r ⊡ WriterT o ⊡ StateT s) f a
-  isoto3 = Compose2 ∘ map2 Compose2 ∘ unRWST
+  isoto3 = Compose2 ∘ Compose2 ∘ unRWST
 
   {-# INLINE isofr3 #-}
   isofr3 ∷ ∀ f a. (ReaderT r ⊡ WriterT o ⊡ StateT s) f a → RWST r o s f a
-  isofr3 = RWST ∘ map2 unCompose2 ∘ unCompose2
+  isofr3 = RWST ∘ unCompose2 ∘ unCompose2
 
 deriving instance (Monoid o,Monad m,MonadCont (s ∧ (o ∧ r')) m) ⇒ MonadCont r' (RWST r o s m)
 

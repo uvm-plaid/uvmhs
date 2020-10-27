@@ -4,7 +4,7 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes.Morphism
 
 infixr 0 ^$, ^^$
-infixl 6 ^∘, ^^∘
+infixl 7 ^∘, ^^∘
 infixl 9 ^⋅, ^^⋅
 
 class Functor (t ∷ ★ → ★) where map ∷ (a → b) → (t a → t b)

@@ -4,33 +4,33 @@ import UVMHS.Core.Init
 
 import qualified Prelude as HS
 
-infix 3 ≡,≢,⋚,≤,≥,<,>
+infix 4 ≡,≢,⋚,≤,≥,<,>
 
--- {-# INLINE (≡) #-}
+{-# INLINE (≡) #-}
 (≡) ∷ (Eq a) ⇒ a → a → 𝔹
 (≡) = (HS.==)
 
--- {-# INLINE (≢) #-}
+{-# INLINE (≢) #-}
 (≢) ∷ (Eq a) ⇒ a → a → 𝔹
 (≢) = (HS./=)
 
--- {-# INLINE (⋚) #-}
+{-# INLINE (⋚) #-}
 (⋚) ∷ (Ord a) ⇒ a → a → Ordering
 (⋚) = compare
 
--- {-# INLINE (≤) #-}
+{-# INLINE (≤) #-}
 (≤) ∷ (Ord a) ⇒ a → a → 𝔹
 x ≤ y = case x ⋚ y of {LT → True;EQ → True;GT → False}
 
--- {-# INLINE (≥) #-}
+{-# INLINE (≥) #-}
 (≥) ∷ (Ord a) ⇒ a → a → 𝔹
 x ≥ y = case x ⋚ y of {LT → False;EQ → True;GT → True}
 
--- {-# INLINE (<) #-}
+{-# INLINE (<) #-}
 (<) ∷ (Ord a) ⇒ a → a → 𝔹
 (<) = (HS.<)
 
--- {-# INLINE (>) #-}
+{-# INLINE (>) #-}
 (>) ∷ (Ord a) ⇒ a → a → 𝔹
 (>) = (HS.>)
 

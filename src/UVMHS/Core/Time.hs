@@ -6,7 +6,7 @@ import UVMHS.Core.Classes
 import qualified Data.Time.Clock as Time
 import qualified Prelude as HS
 
-infixl 3 ⨺,⨹
+infixl 5 ⨺,⨹
 
 type Time = Time.UTCTime
 type TimeD = Time.NominalDiffTime
