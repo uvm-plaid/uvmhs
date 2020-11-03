@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 26c19f623d7b8119b1346b4432c44012eb58d842ec6cb1df4a53bb81e91c838e
+-- hash: 8e93e3e3a103aae4a5777a4a044133b7daa4d720578f981e69500e7d56d70b1a
 
 name:           uvmhs
 version:        0.0.0.0
@@ -75,6 +75,7 @@ library
       UVMHS.Lib.Parser.Regex
       UVMHS.Lib.Pretty
       UVMHS.Lib.Pretty.Annotation
+      UVMHS.Lib.Pretty.Color
       UVMHS.Lib.Pretty.Common
       UVMHS.Lib.Pretty.DerivedInstances
       UVMHS.Lib.Pretty.Deriving
@@ -85,13 +86,14 @@ library
       UVMHS.Lib.Window
       UVMHS.Lib.ZerInf
       UVMHSContrib.Lang.Arith
+      UVMHSContrib.Lang.ArithBlocks
       UVMHSContrib.Lang.SExp
       UVMHSMain
   other-modules:
       Paths_uvmhs
   hs-source-dirs:
       src
-  default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
+  default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
   ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2 -optP-Wno-nonportable-include-path
   build-depends:
       array
@@ -113,7 +115,7 @@ executable uvmhs
       Paths_uvmhs
   hs-source-dirs:
       main
-  default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
+  default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
   ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2 -optP-Wno-nonportable-include-path
   build-depends:
       array

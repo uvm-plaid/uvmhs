@@ -85,14 +85,14 @@ renderWindowL ∷ WindowL Doc Doc → Doc
 renderWindowL dL
   | overflowL dL = ppVertical
       [ concat dL
-      , ppFormat (formats [BG gray]) $ ppString "…"
+      , ppFormat (formats [BG lightGray]) $ ppString "…"
       ]
   | otherwise = concat dL
 
 renderWindowR ∷ WindowR Doc Doc → Doc
 renderWindowR dR
   | overflowR dR = ppVertical
-      [ ppFormat (formats [BG gray]) $ ppString "…"
+      [ ppFormat (formats [BG lightGray]) $ ppString "…"
       , concat dR
       ]
   | otherwise = concat dR

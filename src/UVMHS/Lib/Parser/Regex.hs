@@ -315,7 +315,7 @@ compileRegex e₀ =
 data LexDFAState t = LexDFAState
   { lexDFAStatePrefix ∷ WindowR Doc Doc
   , lexDFAStateContext ∷ ParserContext
-  , lexDFAStateInput ∷ ParserInput t
+  , lexDFAStateInput ∷ 𝑆 (ParserToken t)
   , lexDFAStateTokens ∷ 𝐼S t
   }
 makePrettySum ''LexDFAState
@@ -328,27 +328,27 @@ data Lexer c t o u w = Lexer
 
 tokenize ∷ 
   ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
-  ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (ParserToken w)
-tokenize (Lexer dfas f u₀) so ts₀ = vecS ∘ fst ^$ oloop u₀ (dfas u₀) null $ parserInput₀ $ stream ts₀
+  ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (PreParserToken w)
+tokenize (Lexer dfas f u₀) so ts₀ = vecS ^$ oloop u₀ (dfas u₀) null $ stream ts₀
   where
-  oloop ∷ u → DFA c t o u → WindowR Doc Doc → ParserInput t → Doc ∨ 𝐼S (ParserToken w) ∧ WindowL Doc Doc
+  oloop ∷ u → DFA c t o u → WindowR Doc Doc → 𝑆 (ParserToken t) → Doc ∨ 𝐼S (PreParserToken w)
   oloop u (DFA lits n₀ δt δs δd) pp₀ pi₀' = iloop n₀ (LexDFAState pp₀ null pi₀' null) None None
     where
-      success ∷ RegexResult o u → LexDFAState t → Doc ∨ 𝐼S (ParserToken w) ∧ WindowL Doc Doc
+      success ∷ RegexResult o u → LexDFAState t → Doc ∨ 𝐼S (PreParserToken w)
       success (RegexResult _ fm oO u') (LexDFAState pp pc pi ts) = do
         let u'' = u + u'
             pc' = formatParserContext fm pc
-        wts :* wps ← oloop u'' (dfas u'') (pp ⧺ parserContextDisplayR pc') pi
+        wts ← oloop u'' (dfas u'') (pp ⧺ parserContextDisplayR pc') pi
         let sk :* w = f ts oO
-            wt = ParserToken w sk pc' wps
-        return $ (single wt ⧺ wts) :* (parserContextDisplayL pc' ⧺ wps)
+            wt = PreParserToken w sk pc'
+        return $ (single wt ⧺ wts)
       failure ∷ LexDFAState t → ParserToken t → Doc
       failure (LexDFAState pp pc _ _) (ParserToken _ _ tc s) =
-        let le = map locRangeEnd $ parserContextLocRange tc
+        let le = locRangeEnd $ parserContextLocRange tc
             d = parserContextError tc
         in displaySourceError so $ AddNull $ ParserError le d s $ single $ ParserErrorInfo pp (parserContextDisplayR pc) "<token>" null
-      iloop ∷ ℕ64 → LexDFAState t → 𝑂 (ParserToken t ∧ LexDFAState t) → 𝑂 (RegexResult o u ∧ LexDFAState t) → Doc ∨ 𝐼S (ParserToken w) ∧ WindowL Doc Doc
-      iloop n σ@(LexDFAState pp pc pi ts) tO rO = case advanceInput pi of
+      iloop ∷ ℕ64 → LexDFAState t → 𝑂 (ParserToken t ∧ LexDFAState t) → 𝑂 (RegexResult o u ∧ LexDFAState t) → Doc ∨ 𝐼S (PreParserToken w)
+      iloop n σ@(LexDFAState pp pc pi ts) tO rO = case uncons𝑆 pi of
         -- end of stream
         None → case rO of
           -- end of stream
@@ -358,7 +358,7 @@ tokenize (Lexer dfas f u₀) so ts₀ = vecS ∘ fst ^$ oloop u₀ (dfas u₀) n
             -- no results to report
             -- no prior token
             -- DONE
-            None → return $ null :* null
+            None → return $ null -- :* null
             -- end of stream
             -- no results to report
             -- yes prior token
@@ -399,24 +399,30 @@ tokenize (Lexer dfas f u₀) so ts₀ = vecS ∘ fst ^$ oloop u₀ (dfas u₀) n
 
 tokenizeIO ∷
   ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
-  ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken w))
+  ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (PreParserToken w))
 tokenizeIO l so pi = case tokenize l so pi of
   Inl d → pprint d ≫ abortIO
   Inr a → return a
 
+tokenizeIOMainF ∷ 
+  ∀ c t o u w v. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty v) 
+  ⇒ Lexer c t o u w → 𝕊 → (𝕍 (PreParserToken w) → 𝕍 (PreParserToken v)) → 𝕍 (ParserToken t) → IO ()
+tokenizeIOMainF l so f pi = do
+  x ← f ^$ tokenizeIO l so pi
+  pprint $ ppVertical 
+    [ ppHeader "Success"
+    , pretty $ map (\ y → preParserTokenValue y :* parserContextLocRange (preParserTokenContext y)) x
+    ]
+  pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ preParserTokenContext) x
+
 tokenizeIOMain ∷
   ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty w) 
   ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO ()
-tokenizeIOMain l so pi = do
-  x ← tokenizeIO l so pi
-  pprint $ ppVertical 
-    [ ppHeader "Success"
-    , pretty $ map parserTokenValue x
-    ]
+tokenizeIOMain l so = tokenizeIOMainF l so id
 
 -- API --
 
-data CharClass = LetterClass | NumberClass | SpaceClass | OtherClass
+data CharClass = LetterClass | NumberClass | SpaceClass | NewlineClass | OtherClass
   deriving (Eq,Ord,Show)
 makePrettySum ''CharClass
 
@@ -426,14 +432,21 @@ instance Classified CharClass ℂ where
   classify c
     | isLetter c = LetterClass
     | isNumber c = NumberClass
-    | isSpace c = SpaceClass
+    | isSpace c ⩓ c ≢ '\n' ⩓ c ≢ '\r' = SpaceClass
+    | c ≡ '\n' ⩔ c ≡ '\r' = NewlineClass
     | otherwise = OtherClass
 
 lWord ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ 𝕊 → Regex CharClass ℂ o u
 lWord = fold eps $ \ c r → r ▷ tokRegex c
 
+lSpaceOrNl ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex CharClass ℂ o u
+lSpaceOrNl = oom $ classRegex SpaceClass ⧺ classRegex NewlineClass
+
 lSpace ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex CharClass ℂ o u
 lSpace = oom $ classRegex SpaceClass
+
+lNl ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex CharClass ℂ o u
+lNl = oom $ classRegex NewlineClass
 
 lName ∷ (Zero u,Ord u,Ord o,Additive u) ⇒ Regex CharClass ℂ o u
 lName = 
@@ -462,7 +475,7 @@ lNatPre = sequence
       [ concat $ map tokRegex ['0'..'9']
       , tokRegex '_'
       ]
-  , fepsRegex $ formats [FG darkRed]
+  , fepsRegex $ formats [FG red]
   ]
 
 lNat ∷ (Zero u,Ord u,Ord o,Additive u) ⇒ Regex CharClass ℂ o u
@@ -514,7 +527,7 @@ lString = sequence
       , lWord "\\n"
       ]
   , tokRegex '"'
-  , fepsRegex $ formats [FG darkRed]
+  , fepsRegex $ formats [FG red]
   ]
 
 lComment ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
@@ -522,31 +535,15 @@ lComment = sequence
   [ lWord "--"
   , star $ ntokRegex $ single '\n'
   , opt $ tokRegex '\n'
-  , fepsRegex $ formats [IT,FG gray]
+  , fepsRegex $ formats [IT,FG lightGray]
   , lepsRegex $ 𝕟64 100
   ]
-
--- lCommentOpen ∷ (Ord o) ⇒ Regex CharClass ℂ o ℤ64
--- lCommentOpen = sequence
---   [ lWord "--"
---   , uepsRegex $ neg one
---   , fepsRegex $ formats [IT,FG gray]
---   , lepsRegex $ 𝕟64 100
---   ]
--- 
--- lCommentBody ∷ (Ord o) ⇒ Regex CharClass ℂ o ℤ64
--- lCommentBody = sequence
---   [ star $ ntokRegex $ single '\n'
---   , optRegex $ tokRegex '\n'
---   , uepsRegex one
---   , fepsRegex $ formats [IT,FG gray]
---   ]
 
 lCommentMLOpen ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lCommentMLOpen = sequence
   [ lWord "{-" 
   , uepsRegex one
-  , fepsRegex $ formats [IT,FG gray]
+  , fepsRegex $ formats [IT,FG lightGray]
   , lepsRegex $ 𝕟64 100
   ]
 
@@ -570,7 +567,7 @@ lCommentMLBody = sequence
       , oom (tokRegex '{') ▷ ntokRegex (pow ['{','-'])
       ]
   , lCommentMLBodyOpen ⧺ lCommentMLBodyClose
-  , fepsRegex $ formats [IT,FG gray]
+  , fepsRegex $ formats [IT,FG lightGray]
   ]
 
 --------------------------
@@ -625,17 +622,17 @@ lSyntaxBasic puns kws prims ops = concat
   -- keywords
   , sequence
     [ concat $ map lWord kws
-    , fepsRegex $ formats [FG darkYellow,BD]
+    , fepsRegex $ formats [FG yellow,BD]
     ]
   -- primitives
   , sequence
     [ concat $ map lWord prims
-    , fepsRegex $ formats [FG darkBlue]
+    , fepsRegex $ formats [FG blue]
     ]
   -- operators
   , sequence
     [ concat $ map lWord ops
-    , fepsRegex $ formats [FG darkTeal]
+    , fepsRegex $ formats [FG teal]
     ]
   ]
 
@@ -647,13 +644,10 @@ lTokenBasic puns kws prims ops = concat
   , lSyntaxBasic puns kws prims ops ▷ oepsRegex SyntaxCBasic
   , lString                         ▷ oepsRegex StringCBasic
   , lName                           ▷ oepsRegex NameCBasic
-  , lSpace                          ▷ oepsRegex SpaceCBasic
+  , lSpaceOrNl                      ▷ oepsRegex SpaceCBasic
   , lComment                        ▷ oepsRegex CommentCBasic
   , lCommentMLOpen                  ▷ oepsRegex CommentCBasic
   ]
-
--- lCommentBasic ∷ Regex CharClass ℂ TokenClassBasic ℕ64
--- lCommentBasic = lCommentBody ▷ oepsRegex CommentCBasic
 
 lCommentMLBasic ∷ Regex CharClass ℂ TokenClassBasic ℕ64
 lCommentMLBasic = lCommentMLBody ▷ oepsRegex CommentCBasic
@@ -661,7 +655,6 @@ lCommentMLBasic = lCommentMLBody ▷ oepsRegex CommentCBasic
 dfaBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → ℕ64 → DFA CharClass ℂ TokenClassBasic ℕ64
 dfaBasic puns kws prims ops =
   let dfaTokenBasic = compileRegex $ lTokenBasic puns kws prims ops
-      -- dfaCommentBasic = compileRegex lCommentBasic
       dfaCommentMLBasic = compileRegex lCommentMLBasic
       dfa n | n ≡ 𝕟64 0 = dfaTokenBasic
             | otherwise = dfaCommentMLBasic
@@ -670,100 +663,323 @@ dfaBasic puns kws prims ops =
 lexerBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
 lexerBasic puns kws prims ops = Lexer (dfaBasic puns kws prims ops) mkTokenBasic zero
 
-------------------------
--- TLC Language Lexer --
-------------------------
+-----------------------------------------------
+-- Basic Whitespace-sensitive Language Lexer --
+-----------------------------------------------
 
---
--- WORK IN PROGRESS...
---
+-- Blockifying Tokens --
 
--- data TokenClassTLC =
---     SpaceCTLC
---   | NewlineCTLC
---   | CommentCTLC
---   | SyntaxCTLC
---   | StringCTLC
---   | NameCTLC
---   | IntegerCTLC
---   | DoubleCTLC
---   deriving (Eq,Ord,Show)
--- makePrisms ''TokenClassTLC
--- makePrettySum ''TokenClassTLC
--- 
--- data TokenTLC =
---     SpaceTTLC 𝕊
---   | NewlineTTLC 𝕊
---   | CommentTTLC 𝕊
---   | SyntaxTTLC 𝕊
---   | StringTTLC 𝕊
---   | NameTTLC 𝕊
---   | IntegerTTLC ℤ
---   | DoubleTTLC 𝔻
---   deriving (Eq,Ord,Show)
--- makePrisms ''TokenTLC
--- makePrettySum ''TokenTLC
--- 
--- mkTokenTLC ∷ 𝐼S ℂ → 𝑂 TokenClassTLC → 𝔹 ∧ TokenTLC
--- mkTokenTLC cs = \case
---   None → error "no token class"
---   Some SpaceCTLC → (:*) True $ SpaceTTLC $ stringS cs
---   Some NewlineCTLC → (:*) False $ NewlineTTLC $ stringS cs
---   Some CommentCTLC → (:*) True $ CommentTTLC $ stringS cs
---   Some SyntaxCTLC → (:*) False $ SyntaxTTLC $ stringS cs
---   Some StringCTLC → (:*) False $ StringTTLC $ read𝕊 $ stringS cs
---   Some NameCTLC → (:*) False $ NameTTLC $ stringS cs
---   Some IntegerCTLC → (:*) False $ IntegerTTLC $ read𝕊 $ stringS cs
---   Some DoubleCTLC → (:*) False $ DoubleTTLC $ read𝕊 $ stringS cs
--- 
--- lSyntaxTLC ∷ (Ord u,Additive u) ⇒ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassTLC u
--- lSyntaxTLC puns ops kws = concat
---   -- punctuation
---   [ sequence
---     [ concat $ map lWord puns
---     , fepsRegex $ formats [FG darkGray]
---     ]
---   -- operators
---   , sequence
---     [ concat $ map lWord ops
---     , fepsRegex $ formats [FG darkYellow,BD]
---     ]
---   -- keywords
---   , sequence
---     [ concat $ map lWord kws
---     , fepsRegex $ formats [FG darkYellow,BD,UL]
---     ]
---   ]
--- 
--- lTokenTLC ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassTLC ℤ64
--- lTokenTLC puns ops kws = concat
---   [ lInt                    ▷ oepsRegex IntegerCTLC
---   , lDbl                    ▷ oepsRegex DoubleCTLC
---   , lSyntaxTLC puns ops kws ▷ oepsRegex SyntaxCTLC
---   , lString                 ▷ oepsRegex StringCTLC
---   , lName                   ▷ oepsRegex NameCTLC
---   , lSpace                  ▷ oepsRegex SpaceCTLC
---   , lCommentOpen            ▷ oepsRegex CommentCTLC
---   , lCommentMLOpen          ▷ oepsRegex CommentCTLC
---   ]
--- 
--- lCommentTLC ∷ Regex CharClass ℂ TokenClassTLC ℤ64
--- lCommentTLC = lCommentBody ▷ oepsRegex CommentCTLC
--- 
--- lCommentMLTLC ∷ Regex CharClass ℂ TokenClassTLC ℤ64
--- lCommentMLTLC = lCommentMLBody ▷ oepsRegex CommentCTLC
--- 
--- dfaTLC ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → ℤ64 → DFA CharClass ℂ TokenClassTLC ℤ64
--- dfaTLC puns ops kws =
---   let dfaTokenTLC = compileRegex $ lTokenTLC puns ops kws
---       dfaCommentTLC = compileRegex lCommentTLC
---       dfaCommentMLTLC = compileRegex lCommentMLTLC
---       dfa n | n ≡ 𝕫64 0 = dfaTokenTLC
---             | n < 𝕫64 0 = dfaCommentTLC
---             | n > 𝕫64 0 = dfaCommentMLTLC
---             | otherwise = error "impossible"
---   in dfa
--- 
--- lexerTLC ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Lexer CharClass ℂ TokenClassTLC ℤ64 TokenTLC
--- lexerTLC puns ops kws = Lexer (dfaTLC puns ops kws) mkTokenTLC zero
--- 
+data IndentCommand = OpenIC | CloseIC | NewlineIC
+
+-- ... anchor ->| blah blah blah
+--                  blah
+--                  ^^^^
+blockifyTokens ∷ ∀ t. 𝐿 (AddBT Loc) → (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
+blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecS $ loop null bot False False anchors₀ $ stream ts₀
+  where
+    syntheticToken ∷ AddBT Loc → IndentCommand → PreParserToken t
+    syntheticToken loc x =
+      let pcS = case x of
+            OpenIC → ppBG white $ ppFG lightGray $ ppString "⦗"
+            CloseIC → ppBG white $ ppFG lightGray $ ppString "⦘"
+            NewlineIC → ppBG white $ ppFG lightGray $ ppString "‣"
+          pc = ParserContext (LocRange loc loc) (eWindowL pcS) (eWindowR pcS) $ eWindowR pcS
+      in
+      PreParserToken (mkIndentToken x) False pc
+    loop ∷ 𝐼S (PreParserToken t) → LocRange → 𝔹 → 𝔹 → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼S (PreParserToken t)
+    loop prefix prefixLocRangeBumped isFreshBlock isAfterNewline = \case
+      Nil → loopUnanchored prefix prefixLocRangeBumped isFreshBlock
+      anchor :& anchors → loopAnchored prefix prefixLocRangeBumped isFreshBlock isAfterNewline anchor anchors
+    loopUnanchored ∷ 𝐼S (PreParserToken t) → LocRange → 𝔹 → 𝑆 (PreParserToken t) → 𝐼S (PreParserToken t)
+    loopUnanchored prefix prefixLocRangeBumped isFreshBlock ts = case uncons𝑆 ts of
+      None → prefix
+      Some (t :* ts') →
+        let locₜ = locRangeBegin $ parserContextLocRange $ preParserTokenContext t
+            prefixLocRangeBumpedEnd = locRangeEnd prefixLocRangeBumped
+        in
+        if
+        | preParserTokenSkip t → 
+          loopUnanchored (prefix ⧺ single t) 
+                         (prefixLocRangeBumped ⊔ bumpColEnd₂ (parserContextLocRange $ preParserTokenContext t)) 
+                         isFreshBlock 
+                         ts'
+        | {- not (parserTokenSkip t) ⩓ -} 
+          isFreshBlock → concat
+            -- 
+            --     ... <block> <token>
+            --                 ^^^^^^^
+            [ prefix
+            , single $ syntheticToken prefixLocRangeBumpedEnd OpenIC
+            , single t
+            , loopAnchored null 
+                           (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd) 
+                           (isBlock $ preParserTokenValue t) 
+                           False 
+                           locₜ 
+                           null 
+                           ts'
+            ]
+        | {- not (parserTokenSkip t) ⩓ not (isFreshBlock t) ⩓ -} 
+          otherwise → concat
+          --
+          --     ... <token>
+          --         ^^^^^^^
+          [ prefix
+          , single t
+          , loopUnanchored null 
+                           (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd) 
+                           (isBlock $ preParserTokenValue t) 
+                           ts'
+          ]
+    loopAnchored ∷ 𝐼S (PreParserToken t) → LocRange → 𝔹 → 𝔹 → AddBT Loc → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼S (PreParserToken t)
+    loopAnchored prefix prefixLocRangeBumped isFreshBlock isAfterNewline anchor anchors ts = case uncons𝑆 ts of
+      None → 
+        let loop' ∷ 𝐿 (AddBT Loc) → 𝐼S (PreParserToken t)
+            loop' anchors' =
+              if anchors' ≡ anchors₀
+              then null
+              else case anchors' of
+                Nil → null
+                (_ :& anchors'') → concat
+                  [ single $ syntheticToken (locRangeBegin prefixLocRangeBumped) CloseIC
+                  , loop' anchors''
+                  ]
+            -- () = pptrace $ ppHorizontal [ppBD $ ppString "COUNT",pretty $ count prefix]
+        in concat
+          [ if isFreshBlock 
+              then concat
+                [ single $ syntheticToken (locRangeBegin prefixLocRangeBumped) OpenIC 
+                , single $ syntheticToken (locRangeBegin prefixLocRangeBumped) CloseIC 
+                ]
+              else
+              null
+          , loop' (anchor :& anchors) 
+          , prefix
+          ]
+      Some (t :* ts') → 
+        let locₜ = locRangeBegin $ parserContextLocRange $ preParserTokenContext t
+            prefixLocRangeBumpedEnd = locRangeEnd prefixLocRangeBumped
+            prefixLocRangeBumpedBegin = locRangeBegin prefixLocRangeBumped
+            recordTokenKeepGoing ∷ 𝐼S (PreParserToken t) → LocRange → 𝔹 → 𝐼S (PreParserToken t)
+            recordTokenKeepGoing prefix' prefixLocRangeBumped' weHaveANewAnchor = 
+              let prefixLocRangeBumpedEnd' = locRangeEnd prefixLocRangeBumped'
+                  anchor' :* anchors' = 
+                    if weHaveANewAnchor 
+                    --
+                    --     anchor ->| <block> <token>
+                    --                        ^^^^^^^
+                    --                        (new anchor)
+                    --
+                    then locₜ :* (anchor :& anchors)
+                    --
+                    --     anchor ->|... <token>
+                    --                   ^^^^^^^
+                    else anchor :* anchors
+              in concat
+                -- record the prefix
+                [ prefix'
+                -- record an “open” if we have a new anchor
+                , if weHaveANewAnchor then single $ syntheticToken prefixLocRangeBumpedEnd' OpenIC else null
+                -- record the token
+                , single t
+                -- keep going with new anchor
+                , loopAnchored null 
+                               (LocRange prefixLocRangeBumpedEnd' prefixLocRangeBumpedEnd') 
+                               (isBlock $ preParserTokenValue t) 
+                               False 
+                               anchor' 
+                               anchors' 
+                               ts'
+                ]
+        in
+        if 
+        | preParserTokenSkip t →
+         -- this is a skip token; add it to the list
+         loopAnchored (prefix ⧺ single t) 
+                      (prefixLocRangeBumped ⊔ bumpColEnd₂ (parserContextLocRange $ preParserTokenContext t)) 
+                      isFreshBlock 
+                      (isAfterNewline ⩔ isNewline (preParserTokenValue t)) 
+                      anchor 
+                      anchors 
+                      ts'
+        | {- not (parserTokenSkip t) ⩓ -} 
+          not isAfterNewline → 
+            --
+            --     anchor ->|... <token>
+            --                   ^^^^^^^
+            --     OR
+            --
+            --     anchor ->|...
+            --         ... ... <token>
+            --                 ^^^^^^^
+            -- continue as normal
+            recordTokenKeepGoing prefix prefixLocRangeBumped isFreshBlock
+        | {- not (parserTokenSkip t) ⩓ isAfterNewline ⩓ -} 
+          map locCol locₜ > map locCol anchor →
+            --
+            --     anchor ->|...
+            --                  <token>
+            --                  ^^^^^^^
+            -- continue as normal
+            recordTokenKeepGoing prefix prefixLocRangeBumped isFreshBlock
+        | {- not (parserTokenSkip t) ⩓ isAfterNewline ⩓ -} 
+          map locCol locₜ ≡ map locCol anchor → concat
+          --
+          --     anchor ->|...
+          --               <token>
+          --               ^^^^^^^
+          -- this is logically a “newline”
+          -- if we just opened a new block, open and close it
+          [ if isFreshBlock 
+            then concat
+              [ single $ syntheticToken prefixLocRangeBumpedBegin OpenIC 
+              , single $ syntheticToken prefixLocRangeBumpedBegin CloseIC 
+              ]
+            else null
+          -- record the prefix
+          , prefix
+          -- record a “newline”
+          , single $ syntheticToken prefixLocRangeBumpedEnd NewlineIC
+          -- keep going
+          , recordTokenKeepGoing null (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd) False
+          ]
+        | {- not (parserTokenSkip t) ⩓ isAfterNewline ⩓ -} 
+          map locCol locₜ < map locCol anchor → concat
+          --
+          --     anchor ->|...
+          --         <token>
+          --         ^^^^^^^
+          -- this is logically a “close”
+          -- if we just opened a new block, close it
+          [ if isFreshBlock 
+            then concat
+              [ single $ syntheticToken prefixLocRangeBumpedBegin OpenIC 
+              , single $ syntheticToken prefixLocRangeBumpedBegin CloseIC 
+              ]
+            else null
+          -- record a “close”
+          , single $ syntheticToken prefixLocRangeBumpedBegin CloseIC
+          -- restart this token with new anchor 
+          , loop prefix prefixLocRangeBumped False isAfterNewline anchors ts
+          ]
+        | otherwise → error "impossible"
+
+blockifyTokensTL ∷ (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
+blockifyTokensTL = blockifyTokens $ single $ AddBT bot
+
+-- The Language --
+
+data TokenClassWSBasic =
+    SpaceCWSBasic
+  | NewlineCWSBasic
+  | CommentCWSBasic
+  | SyntaxCWSBasic
+  | BlockCWSBasic
+  | StringCWSBasic
+  | NameCWSBasic
+  | NaturalCWSBasic
+  | IntegerCWSBasic
+  | DoubleCWSBasic
+  deriving (Eq,Ord,Show)
+makePrisms ''TokenClassWSBasic
+makePrettySum ''TokenClassWSBasic
+
+data TokenWSBasic =
+    SpaceTWSBasic 𝕊
+  | NewlineTWSBasic 𝕊
+  | CommentTWSBasic 𝕊
+  | SyntaxTWSBasic 𝕊
+  | BlockTWSBasic 𝕊
+  | StringTWSBasic 𝕊
+  | NameTWSBasic 𝕊
+  | NaturalTWSBasic ℕ
+  | IntegerTWSBasic ℤ
+  | DoubleTWSBasic 𝔻
+  | OpenTWSBasic
+  | CloseTWSBasic
+  | DelimiterTWSBasic
+  deriving (Eq,Ord,Show)
+makePrisms ''TokenWSBasic
+makePrettySum ''TokenWSBasic
+
+mkTokenWSBasic ∷ 𝐼S ℂ → 𝑂 TokenClassWSBasic → 𝔹 ∧ TokenWSBasic
+mkTokenWSBasic cs = \case
+  None → error "no token class"
+  Some SpaceCWSBasic → (:*) True $ SpaceTWSBasic $ stringS cs
+  Some NewlineCWSBasic → (:*) True $ NewlineTWSBasic $ string cs
+  Some CommentCWSBasic → (:*) True $ CommentTWSBasic $ stringS cs
+  Some SyntaxCWSBasic → (:*) False $ SyntaxTWSBasic $ stringS cs
+  Some BlockCWSBasic → (:*) False $ BlockTWSBasic $ stringS cs
+  Some StringCWSBasic → (:*) False $ StringTWSBasic $ read𝕊 $ stringS cs
+  Some NameCWSBasic → (:*) False $ NameTWSBasic $ stringS cs
+  Some NaturalCWSBasic → (:*) False $ NaturalTWSBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow ['_','n']) cs
+  Some IntegerCWSBasic → (:*) False $ IntegerTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs
+  Some DoubleCWSBasic → (:*) False $ DoubleTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs
+
+lSyntaxWSBasic ∷ (Ord u,Additive u) ⇒ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassWSBasic u
+lSyntaxWSBasic puns kws prims ops = concat
+  -- punctuation
+  [ sequence
+    [ concat $ map lWord puns
+    , fepsRegex $ formats [FG darkGray]
+    ]
+  -- keywords
+  , sequence
+    [ concat $ map lWord kws
+    , fepsRegex $ formats [FG yellow,BD]
+    ]
+  -- primitives
+  , sequence
+    [ concat $ map lWord prims
+    , fepsRegex $ formats [FG blue]
+    ]
+  -- operators
+  , sequence
+    [ concat $ map lWord ops
+    , fepsRegex $ formats [FG teal]
+    ]
+  ]
+
+lBlocksWSBasic ∷ (Ord u,Additive u) ⇒ 𝐿 𝕊 → Regex CharClass ℂ TokenClassWSBasic u
+lBlocksWSBasic blocks = sequence
+  [ concat $ map lWord blocks
+  , fepsRegex $ formats [BG white,FG yellow,BD]
+  ]
+
+lTokenWSBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassWSBasic ℕ64
+lTokenWSBasic puns kws prims ops blocks = concat
+  [ lNatCoded                         ▷ oepsRegex NaturalCWSBasic
+  , lInt                              ▷ oepsRegex IntegerCWSBasic
+  , lDbl                              ▷ oepsRegex DoubleCWSBasic
+  , lSyntaxWSBasic puns kws prims ops ▷ oepsRegex SyntaxCWSBasic
+  , lBlocksWSBasic blocks             ▷ oepsRegex BlockCWSBasic
+  , lString                           ▷ oepsRegex StringCWSBasic
+  , lName                             ▷ oepsRegex NameCWSBasic
+  , lSpace                            ▷ oepsRegex SpaceCWSBasic
+  , lNl                               ▷ oepsRegex NewlineCWSBasic
+  , lComment                          ▷ oepsRegex CommentCWSBasic
+  , lCommentMLOpen                    ▷ oepsRegex CommentCWSBasic
+  ]
+
+lCommentMLWSBasic ∷ Regex CharClass ℂ TokenClassWSBasic ℕ64
+lCommentMLWSBasic = lCommentMLBody ▷ oepsRegex CommentCWSBasic
+
+dfaWSBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → ℕ64 → DFA CharClass ℂ TokenClassWSBasic ℕ64
+dfaWSBasic puns kws prims ops blocks =
+  let dfaTokenBasic = compileRegex $ lTokenWSBasic puns kws prims ops blocks
+      dfaCommentMLBasic = compileRegex lCommentMLWSBasic
+      dfa n | n ≡ 𝕟64 0 = dfaTokenBasic
+            | otherwise = dfaCommentMLBasic
+  in dfa
+
+lexerWSBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
+lexerWSBasic puns kws prims ops blocks = Lexer (dfaWSBasic puns kws prims ops blocks) mkTokenWSBasic zero
+
+mkIndentTokenWSBasic ∷ IndentCommand → TokenWSBasic
+mkIndentTokenWSBasic = \case
+  OpenIC → OpenTWSBasic
+  CloseIC → CloseTWSBasic
+  NewlineIC → DelimiterTWSBasic
+
+blockifyTokensWSBasic ∷ 𝕍 (PreParserToken TokenWSBasic) → 𝕍 (PreParserToken TokenWSBasic)
+blockifyTokensWSBasic = blockifyTokensTL (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic

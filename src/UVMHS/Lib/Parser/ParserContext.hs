@@ -8,7 +8,7 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser.Loc
 
 data ParserContext = ParserContext
-  { parserContextLocRange ∷ AddBot LocRange
+  { parserContextLocRange ∷ LocRange
   , parserContextDisplayL ∷ WindowL Doc Doc
   , parserContextDisplayR ∷ WindowR Doc Doc
   , parserContextError ∷ WindowR Doc Doc
@@ -36,13 +36,13 @@ data FullContext = FullContext
 
 instance Pretty FullContext where
   pretty (FullContext pre d pi) = concat
-    [ ppFormat (formats [BG gray]) $ ppString "«"
+    [ ppFormat (formats [BG lightGray]) $ ppString "«"
     , ppAlign $ concat
         [ renderWindowR pre 
         , ppUT '^' green $ renderWindowL d
         , renderWindowL pi
         ]
-    , ppFormat (formats [BG gray]) $ ppString "»"
+    , ppFormat (formats [BG lightGray]) $ ppString "»"
     ]
 
 instance Show FullContext where show = chars ∘ ppshow

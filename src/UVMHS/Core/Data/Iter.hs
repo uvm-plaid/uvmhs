@@ -7,6 +7,7 @@ import UVMHS.Core.Data.Arithmetic ()
 import UVMHS.Core.Data.List ()
 import UVMHS.Core.Data.String
 import UVMHS.Core.Data.Pair
+import UVMHS.Core.Data.Function
 
 import qualified Data.List as HS
 
@@ -278,6 +279,12 @@ meets = fold top (⊓)
 {-# INLINE or #-}
 or ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
 or = fold False (⩔)
+
+orf ∷ (ToIter (a → 𝔹) t) ⇒ t → a → 𝔹
+orf fs x = or $ map (arg x) $ iter fs
+
+andf ∷ (ToIter (a → 𝔹) t) ⇒ t → a → 𝔹
+andf fs x = and $ map (arg x) $ iter fs
 
 {-# INLINE and #-}
 and ∷ (ToIter 𝔹 t) ⇒ t → 𝔹

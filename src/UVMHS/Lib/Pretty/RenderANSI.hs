@@ -5,6 +5,7 @@ import UVMHS.Core
 import UVMHS.Lib.IterS
 import UVMHS.Lib.ATree
 
+import UVMHS.Lib.Pretty.Color
 import UVMHS.Lib.Pretty.Annotation
 import UVMHS.Lib.Pretty.Common
 import UVMHS.Lib.Pretty.Doc
@@ -36,34 +37,52 @@ sgrCloser = "m"
 sgrReset ∷ 𝕊
 sgrReset = sgrLeader ⧺ "0" ⧺ sgrCloser
 
-sgrFg ∷ 𝑂 Color → 𝕊
-sgrFg None = "39"
-sgrFg (Some (Color c)) = case c of
-  Black → "90"
-  Red → "91"
-  Green → "92"
-  Yellow → "93"
-  Blue → "94"
-  Magenta → "95"
-  Cyan → "96"
-  White → "97"
-sgrFg (Some (Color8 c)) = "38;5;" ⧺ show𝕊 c
-sgrFg (Some (Color24 r g b)) = "38;2;" ⧺ show𝕊 r ⧺ ";" ⧺ show𝕊 g ⧺ ";" ⧺ show𝕊 b
+sgrFg ∷ Color → 𝕊
+sgrFg = \case
+  Color c → case c of
+    DefaultColor → "39"
+    Black        → "30"
+    Red          → "31"
+    Green        → "32"
+    Yellow       → "33"
+    Blue         → "34"
+    Magenta      → "35"
+    Cyan         → "36"
+    LightGray    → "37"
+    DarkGray     → "90"
+    LightRed     → "91"
+    LightGreen   → "92"
+    LightYellow  → "93"
+    LightBlue    → "94"
+    LightMagenta → "95"
+    LightCyan    → "96"
+    White        → "97"
+  Color8 c → "38;5;" ⧺ show𝕊 c
+  Color24 r g b → "38;2;" ⧺ show𝕊 r ⧺ ";" ⧺ show𝕊 g ⧺ ";" ⧺ show𝕊 b
 
-sgrBg ∷ 𝑂 Color → 𝕊
-sgrBg None = "49"
-sgrBg (Some (Color c)) = case c of
-  Black → "100"
-  Red → "101"
-  Green → "102"
-  Yellow → "103"
-  Blue → "104"
-  Magenta → "105"
-  Cyan → "106"
-  White → "107"
-sgrBg (Some (Color8 c)) = "48;5;" ⧺ show𝕊 c
-sgrBg (Some (Color24 r g b)) = "48;2;" ⧺ show𝕊 r ⧺ ";" ⧺ show𝕊 g ⧺ ";" ⧺ show𝕊 b
-
+sgrBg ∷ Color → 𝕊
+sgrBg = \case
+  Color c → case c of
+    DefaultColor → "49"
+    Black        → "40"
+    Red          → "41"
+    Green        → "42"
+    Yellow       → "43"
+    Blue         → "44"
+    Magenta      → "45"
+    Cyan         → "46"
+    LightGray    → "47"
+    DarkGray     → "100"
+    LightRed     → "101"
+    LightGreen   → "102"
+    LightYellow  → "103"
+    LightBlue    → "104"
+    LightMagenta → "105"
+    LightCyan    → "106"
+    White        → "107"
+  Color8 c → "48;5;" ⧺ show𝕊 c
+  Color24 r g b → "48;2;" ⧺ show𝕊 r ⧺ ";" ⧺ show𝕊 g ⧺ ";" ⧺ show𝕊 b
+  
 sgrUl ∷ 𝔹 → 𝕊
 sgrUl True = "4"
 sgrUl False = "24"
@@ -181,16 +200,25 @@ ppColorOn = IORef.writeIORef gv_PPRINT_COLOR True
 ppColorOff ∷ IO ()
 ppColorOff = IORef.writeIORef gv_PPRINT_COLOR False
 
-pptrace ∷ (Pretty a) ⇒ a → b → b
+pptrace ∷ (Pretty a) ⇒ a → ()
 pptrace a = ioUNSAFE $ do
   pprint a
-  return id
+  return ()
 
 pptraceM ∷ (Monad m,Pretty a) ⇒ a → m ()
-pptraceM a = pptrace a skip
+pptraceM a = let _ = pptrace a in skip
 
 ioError ∷ (Pretty e) ⇒ e ∨ a → IO a
 ioError = elimChoice (\ e → pprint e ≫ abortIO) return
+
+colorsDemo ∷ IO ()
+colorsDemo = pprint $ mapOn allColors $ \ (n :* c) → (:*) n $ ppHorizontal 
+  [ ppString n
+  , ppFG c $ ppString "XXXXX"
+  , ppBG c $ ppString "XXXXX"
+  , ppBG black $ ppFG c $ ppString "XXXXX"
+  , ppFG white $ ppBG c $ ppString "XXXXX"
+  ]
 
 {-
 interpConsoleOutANSI ∷ ConsoleOut → RenderANSIM ()

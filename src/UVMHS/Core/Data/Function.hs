@@ -21,3 +21,6 @@ instance (Append a) ⇒ Append (r → a) where
   {-# INLINE (⧺) #-}
   f ⧺ g = \ r → f r ⧺ g r
 instance (Monoid a) ⇒ Monoid (r → a)
+
+arg ∷ a → (a → b) → b
+arg x f = f x

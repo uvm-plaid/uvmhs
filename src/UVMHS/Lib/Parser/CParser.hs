@@ -142,6 +142,36 @@ cpDouble = cpShaped $ view doubleTBasicL
 cpString ∷ CParser TokenBasic 𝕊
 cpString = cpShaped $ view stringTBasicL
 
+cpSyntaxWS ∷ 𝕊 → CParser TokenWSBasic TokenWSBasic
+cpSyntaxWS = cpToken ∘ SyntaxTWSBasic
+
+cpNameWS ∷ CParser TokenWSBasic 𝕏
+cpNameWS = var ^$ cpShaped $ view nameTWSBasicL
+
+cpNaturalWS ∷ CParser TokenWSBasic ℕ
+cpNaturalWS = cpShaped $ view naturalTWSBasicL
+
+cpIntegerWS ∷ CParser TokenWSBasic ℤ
+cpIntegerWS = cpShaped $ view integerTWSBasicL
+
+cpDoubleWS ∷ CParser TokenWSBasic 𝔻
+cpDoubleWS = cpShaped $ view doubleTWSBasicL
+
+cpStringWS ∷ CParser TokenWSBasic 𝕊
+cpStringWS = cpShaped $ view stringTWSBasicL
+
+cpBlockWS ∷ 𝕊 → CParser TokenWSBasic TokenWSBasic
+cpBlockWS = cpToken ∘ BlockTWSBasic
+
+cpOpenWS ∷ CParser TokenWSBasic ()
+cpOpenWS = void $ cpToken OpenTWSBasic
+
+cpCloseWS ∷ CParser TokenWSBasic ()
+cpCloseWS = void $ cpToken CloseTWSBasic
+
+cpDelimWS ∷ CParser TokenWSBasic ()
+cpDelimWS = void $ cpToken DelimiterTWSBasic
+
 cpNewExpressionContext ∷ (Ord t) ⇒ CParser t a → CParser t a
 cpNewExpressionContext = toCParser ∘ pNewExpressionContext ∘ frCParser
 
@@ -198,7 +228,7 @@ cpOneOrMoreSepByContext f sepM xM = do
 ---------------------
              
 runParser₀ ∷ (ToStream (ParserToken t) ts,Ord t) ⇒ ts → CParser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
-runParser₀ = (∘ frCParser) ∘ runParser parserEnv₀ ∘ parserState₀ ∘ parserInput₀ ∘ stream
+runParser₀ = (∘ frCParser) ∘ runParser parserEnv₀ ∘ parserState₀ ∘ stream
 
 parse ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → Doc ∨ a
 parse p so ts = case runParser₀ ts $ cpFinal p of

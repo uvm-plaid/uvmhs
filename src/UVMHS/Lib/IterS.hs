@@ -21,6 +21,8 @@ instance ToIter a (𝐼S a) where iter = 𝑖SIter
 instance Single a (𝐼S a) where single = 𝐼S one ∘ single
 instance Sized (𝐼S a) where size = 𝑖SSize
 
+instance Functor 𝐼S where map f (𝐼S s xs) = 𝐼S s $ map f xs
+
 iterS ∷ (ToIter a t,Sized t) ⇒ t → 𝐼S a
 iterS xs = 𝐼S (size xs) $ iter xs
 

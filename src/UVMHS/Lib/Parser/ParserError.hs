@@ -15,7 +15,7 @@ data ParserErrorInfo = ParserErrorInfo
   }
 
 data ParserError t = ParserError
-  { parserErrorTokenLoc ∷ AddBot Loc
+  { parserErrorTokenLoc ∷ AddBT Loc
   , parserErrorTokenContext ∷ WindowR Doc Doc
   , parserErrorTokenSuffix ∷ WindowL Doc Doc
   , parserErrorFailures ∷ 𝐼 ParserErrorInfo
@@ -63,11 +63,11 @@ displaySourceError so peM = ppVertical $ concat
             [ ppErr ">"
             , concat 
                 [ ppString "line:"
-                , elimAddBot (ppString "?") (pretty ∘ succ ∘ locRow) l
+                , pretty $ succ ∘ locRow ^$ l
                 ]
             , concat 
                 [ ppString "column:"
-                , elimAddBot (ppString "?") (pretty ∘ succ ∘ locCol) l
+                , pretty $ succ ∘ locCol ^$ l
                 ]
             ]
         , return $ ppHeader "One of:"
@@ -94,7 +94,7 @@ displayErrorTraces (ParserErrorStackTraces final chain) = ppVertical $ concat
         ]
   , mapOn (iter chain) $ \ (msg :* tr) → ppVertical
       [ ppHorizontal
-          [ ppFG darkGreen $ ppString "Parsing"
+          [ ppFG green $ ppString "Parsing"
           , ppString msg
           ]
       , concat [ppSpace $ 𝕟64 2,ppAlign $ displayErrorTraces tr]

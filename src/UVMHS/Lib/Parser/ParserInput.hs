@@ -9,6 +9,14 @@ import UVMHS.Lib.IterS
 import UVMHS.Lib.Parser.Loc
 import UVMHS.Lib.Parser.ParserContext
 
+data PreParserToken t = PreParserToken
+  { preParserTokenValue ∷ t
+  , preParserTokenSkip ∷ 𝔹
+  , preParserTokenContext ∷ ParserContext
+  }
+makeLenses ''PreParserToken
+makePrettySum ''PreParserToken
+
 -- # ParserToken
 
 data ParserToken t = ParserToken
@@ -32,49 +40,34 @@ renderEOFDisplay = null
 renderEOFError ∷ Doc
 renderEOFError = ppErr "EOF"
 
-eofContext ∷ AddBot Loc → ParserContext
-eofContext lM = 
-  let lr = map (\ l → LocRange l l) lM
-  in ParserContext lr (eWindowL renderEOFDisplay) (eWindowR renderEOFDisplay) (eWindowR renderEOFError)
+eofContext ∷ AddBT Loc → ParserContext
+eofContext l = 
+  let lr = LocRange l l
+  in ParserContext lr (eWindowL renderEOFDisplay) (eWindowR renderEOFDisplay) $ eWindowR renderEOFError
 
 nlContext ∷ Loc → ParserContext
 nlContext l =
-  let lr = AddBot $ LocRange l l
-  in ParserContext lr (iWindowL renderNLDisplay) (iWindowR renderNLDisplay) (iWindowR renderNLError)
+  let lr = LocRange (AddBT l) $ AddBT l
+  in ParserContext lr (iWindowL renderNLDisplay) (iWindowR renderNLDisplay) $ iWindowR renderNLError
 
 charContext ∷ Loc → ℂ → ParserContext
 charContext l c =
-  let lr = AddBot $ LocRange l l
+  let lr = LocRange (AddBT l) $ AddBT l
       d = ppString $ single c
-  in ParserContext lr (eWindowL d) (eWindowR d) (eWindowR d)
+  in ParserContext lr (eWindowL d) (eWindowR d) $ eWindowR d
 
-tokens ∷ 𝕊 → 𝕍 (ParserToken ℂ)
+tokens ∷ 𝕊 → 𝕍 (PreParserToken ℂ)
 tokens cs = 
-  vecS $ fst $ snd $ foldbpOnFrom cs bot (null @ (𝐼S _) :* null) $ \ c loc →
+  vecS $ snd $ foldOnFrom cs (bot :* null @ (𝐼S _)) $ \ c (loc :* ts) →
     let (loc',pc) = 
           if c ≡ '\n'
-            then (bumpRow loc,nlContext loc)
-            else (bumpCol loc,charContext loc c)
-    in (:*) loc' $ \ (ts :* ps) →
-      let t = ParserToken c False pc ps
-      in (single t ⧺ ts) :* (parserContextDisplayL pc ⧺ ps)
+            then (bumpRow₁ loc,nlContext loc)
+            else (bumpCol₁ loc,charContext loc c)
+        t = PreParserToken c False pc
+    in loc' :* (ts ⧺ single t)
 
------------------
--- ParserInput --
------------------
-
-data ParserInput t = ParserInput
-  { parserInputStream ∷ 𝑆 (ParserToken t)
-  , parserInputEndPos ∷ AddBot Loc
-  }
-makeLenses ''ParserInput
-makePrettySum ''ParserInput
-
-parserInput₀ ∷ 𝑆 (ParserToken t) → ParserInput t
-parserInput₀ xs = ParserInput xs $ AddBot $ Loc bot bot bot
-
-advanceInput ∷ ParserInput t → 𝑂 (ParserToken t ∧ ParserInput t)
-advanceInput (ParserInput ts _) = do
-  (t :* ts') ← uncons𝑆 ts
-  let endPos = map (bumpCol ∘ locRangeEnd) $ parserContextLocRange $ parserTokenContext t
-  return (t :* ParserInput ts' endPos)
+prepTokens ∷ 𝕍 (PreParserToken t) → 𝕍 (ParserToken t)
+prepTokens ts₀ = vecS $ fst $ foldrOnFrom ts₀ (null @ (𝐼S _) :* null) $ \ (PreParserToken x sk pc) (ts :* ps) →
+  let t = ParserToken x sk pc ps
+  in
+  (single t ⧺ ts) :* (parserContextDisplayL pc ⧺ ps)

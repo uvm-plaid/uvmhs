@@ -5,7 +5,6 @@ import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Window
 import UVMHS.Lib.Annotated
-import UVMHS.Lib.IterS
 
 import UVMHS.Lib.Parser.ParserInput
 import UVMHS.Lib.Parser.ParserContext
@@ -42,13 +41,14 @@ data ParserState t = ParserState
   , parserStateSkipContext ∷ ParserContext
   , parserStateContext ∷ ParserContext
   , parserStateSuffix ∷ WindowL Doc Doc
-  , parserStateInput ∷ ParserInput t
+  , parserStateEndPos ∷ AddBT Loc
+  , parserStateInput ∷ 𝑆 (ParserToken t)
   }
 makeLenses ''ParserState
 makePrettyRecord ''ParserState
 
-parserState₀ ∷ ParserInput t → ParserState t
-parserState₀ = ParserState null null null null
+parserState₀ ∷ 𝑆 (ParserToken t) → ParserState t
+parserState₀ = ParserState null null null null $ AddBT bot
 
 -- # Parser
 
@@ -111,7 +111,7 @@ pWithContext aM = do
 pFail ∷ ParserContext → WindowL Doc Doc → Parser t a
 pFail tc ps = do
   whenM (askL parserEnvReportErrorsL) $ \ () → do
-    let l = map locRangeEnd $ parserContextLocRange tc
+    let l = locRangeEnd $ parserContextLocRange tc
         d = parserContextError tc
     e :* es ← askL parserEnvErrorStackL
     pp :* pc :* _ ← pGetContext
@@ -136,13 +136,16 @@ pWithContextRendered aM = do
 pRender ∷ Formats → Parser t a → Parser t a
 pRender fmt = mapEnv $ alter parserEnvRenderFormatL $ (⧺) fmt
 
-pAdvance ∷ Parser t (AddBot Loc ∨ ParserToken t)
+pAdvance ∷ Parser t (AddBT Loc ∨ ParserToken t)
 pAdvance = do
   pi ← getL parserStateInputL
-  case advanceInput pi of
-    None → return $ Inl $ parserInputEndPos pi
+  ep ← getL parserStateEndPosL
+  case uncons𝑆 pi of
+    None → return $ Inl ep
     Some (ParserToken x sk tc ts :* pi') → do
+      let ep' = bumpCol₁ ^$ locRangeEnd $ parserContextLocRange tc
       putL parserStateInputL pi'
+      putL parserStateEndPosL ep'
       if sk
         then do
           pk ← getL parserStateSkipContextL
@@ -245,182 +248,3 @@ pOneOrMoreSepBy sepM xM = do
 
 pWord ∷ ∀ s t. (Eq t,s ⇄ 𝐼 t) ⇒ s → Parser t s
 pWord s = isofr ^$ mapM pToken (isoto s ∷ 𝐼 t)
-
--- pLParen ∷ Parser ℂ ()
--- pLParen = void $ pToken '('
--- 
--- pRParen ∷ Parser ℂ ()
--- pRParen = void $ pToken ')'
--- 
--- pDigit ∷ Parser ℂ ℂ
--- pDigit = pSatisfies {- "digit [0-9]" -} isDigit
--- 
--- pNatural ∷ Parser ℂ ℕ
--- pNatural = read𝕊 ∘ string ^$ pOneOrMore pDigit
--- 
--- pInteger ∷ Parser ℂ ℤ
--- pInteger = do
---   sign ← elim𝑂 "" single ^$ pOptional $ pToken '-'
---   digits ← string ^$ pOneOrMore pDigit
---   return $ read𝕊 $ sign ⧺ digits
--- 
--- pDouble ∷ Parser ℂ 𝔻
--- pDouble = do
---   sign ← elim𝑂 "" single ^$ pOptional $ pToken '-'
---   digits ← string ^$ pOneOrMore pDigit
---   decimal ← elim𝑂 "" string ^$ pOptional $ do
---     dot ← single ^$ pToken '.'
---     digits' ← string ^$ pOneOrMore pDigit
---     return $ dot ⧺ digits'
---   return $ read𝕊 $ sign ⧺ digits ⧺ decimal
--- 
--- pNumber ∷ Parser ℂ (ℤ ∨ 𝔻)
--- pNumber = do
---   sign ← elim𝑂 "" single ^$ pOptional $ pToken '-'
---   digits ← string ^$ pOneOrMore pDigit
---   decimal ← ifNone "" ^$ pOptional $ do
---     dot ← single ^$ pToken '.'
---     digits' ← string ^$ pOneOrMore pDigit
---     return $ dot ⧺ digits'
---   expr ← ifNone "" ^$ pOptional $ do
---     e ← single ^$ pToken 'e'
---     s ← elim𝑂 "" single ^$ pOptional $ pToken '-'
---     digits' ← string ^$ pOneOrMore pDigit
---     return $ e ⧺ s ⧺ digits'
---   return $ case (decimal ≡ null) ⩓ (expr ≡ null) of
---     True → Inl $ read𝕊 $ sign ⧺ digits
---     False → Inr $ read𝕊 $ sign ⧺ digits ⧺ decimal ⧺ expr
--- 
--- pLetter ∷ Parser ℂ ℂ
--- pLetter = pSatisfies {- "letter [a-zA-Z]" -} isLetter
--- 
--- pName ∷ Parser ℂ 𝕊
--- pName = do -- pNewContext "name" $ do
---   s₁ ← single ^$ pSatisfies {- "first character" -} $ \ c → joins
---     [ isLetter c
---     ]
---   s₂ ← string ^$ pMany $ pSatisfies {- "character" -} $ \ c → joins
---     [ isLetter c 
---     , isNumber c 
---     , c ∈ pow "_-'′"
---     ]
---   return $ s₁ ⧺ s₂
--- 
--- pWhitespace ∷ Parser ℂ 𝕊
--- pWhitespace = string ^$ pOneOrMore $ pSatisfies {- "whitespace" -} isSpace
--- 
--- pOptionalWhitespace ∷ Parser ℂ ()
--- pOptionalWhitespace = void $ pOptional $ pWhitespace
--- 
--- pSurroundedBy ∷ Parser t () → Parser t () → Parser t a → Parser t a
--- pSurroundedBy luM ruM xM = do
---   luM
---   x ← xM
---   ruM
---   return x
--- 
--- pSurrounded ∷ Parser t () → Parser t a → Parser t a
--- pSurrounded uM = pSurroundedBy uM uM
--- 
--- pComment ∷ Parser ℂ 𝕊
--- pComment = do -- pNewContext "comment" $ do
---   s₁ ← pWord "--"
---   s₂ ← string ^$ pMany $ pSatisfies {- "not newline" -} $ \ c → c ≢ '\n'
---   s₃ ← single ^$ pToken '\n'
---   return $ s₁ ⧺ s₂ ⧺ s₃
--- 
--- pCommentML ∷ Parser ℂ 𝕊
--- pCommentML = do -- pNewContext "multiline comment" $ do
---   s₁ ← pWord "{-"
---   s₂ ← afterOther
---   return $ s₁ ⧺ s₂
---   where
---     afterOther ∷ Parser ℂ 𝕊
---     afterOther = tries
---       [ do s₁ ← single ^$ pSatisfies {- "non-delimiter" -} $ \ c → c ∉ pow ['{','-']
---            s₂ ← afterOther
---            return $ s₁ ⧺ s₂
---       , do s₁ ← single ^$ pToken '{'
---            s₂ ← afterBrack
---            return $ s₁ ⧺ s₂
---       , do s₁ ← single ^$ pToken '-'
---            s₂ ← afterDash
---            return $ s₁ ⧺ s₂
---       ]
---     afterBrack ∷ Parser ℂ 𝕊
---     afterBrack = tries
---       [ do s₁ ← single ^$ pSatisfies {- "non-delimiter" -} $ \ c → c ∉ pow ['{','-']
---            s₂ ← afterOther
---            return $ s₁ ⧺ s₂
---       , do s₁ ← single ^$ pToken '{'
---            s₂ ← afterBrack
---            return $ s₁ ⧺ s₂
---       , do s₁ ← single ^$ pToken '-'
---            s₂ ← afterOther
---            s₃ ← afterOther
---            return $ s₁ ⧺ s₂ ⧺ s₃
---       ]
---     afterDash ∷ Parser ℂ 𝕊
---     afterDash = tries
---       [ do s₁ ← single ^$ pSatisfies {- "non-delimiter" -} $ \ c → c ∉ pow ['{','-','}']
---            s₂ ← afterOther
---            return $ s₁ ⧺ s₂
---       , do s₁ ← single ^$ pToken '{'
---            s₂ ← afterBrack
---            return $ s₁ ⧺ s₂
---       , do s₁ ← single ^$ pToken '-'
---            s₂ ← afterDash
---            return $ s₁ ⧺ s₂
---       , do single ^$ pToken '}'
---       ]
-
-------------------------
--- Running Tokenizers --
-------------------------
-
-dep__tokenize ∷ ∀ t ts a. (ToStream (ParserToken t) ts) ⇒ 𝐿 (Parser t a) → 𝐿 (Parser t a) → ts → Doc ∨ 𝕍 (ParserToken a)
-dep__tokenize sps rps ts = mapInr (vecS ∘ fst) $ loop $ parserState₀ $ parserInput₀ $ stream ts
-  where
-    loop ∷ ParserState t → Doc ∨ (𝐼S (ParserToken a) ∧ WindowL Doc Doc)
-    loop s 
-      | isEmpty $ parserInputStream $ parserStateInput s = return $ null :* null
-      | otherwise =
-          let results ∷ 𝐼 (ParserOut t ∧ 𝑂 (ParserState t ∧ (WindowR Doc Doc ∧ ParserContext ∧ WindowL Doc Doc ∧ a) ∧ 𝔹))
-              results = concat
-                [ mapOn (iter sps) $ \ p → 
-                    mapSnd (map $ flip (:*) True) $ runParser parserEnv₀ s $ pNewContext "<token>" $ tries [localL parserEnvReportErrorsL False $ pWithContext p,pDie]
-                , mapOn (iter rps) $ \ p → 
-                    mapSnd (map $ flip (:*) False) $ runParser parserEnv₀ s $ pNewContext "<token>" $ tries [localL parserEnvReportErrorsL False $ pWithContext p,pDie]
-                ]
-              pe = concat $ map fst results
-              xs = do
-                s' :* (_pp :* pc :* _ps :* t) :* b ← mzero𝑂 *$ map snd results
-                return $ map locPos (parserInputEndPos $ parserStateInput s') :* (s' :* pc :* t :* b)
-              xM = snd ^$ firstMaxByLT ((<) `on` fst) xs
-          in case xM of
-            None → throw $ displaySourceError "" pe
-            Some (s' :* pc :* t :* b) → do
-              ts' :* ps ← loop s'
-              return $ (single (ParserToken t b pc ps) ⧺ ts') :* (parserContextDisplayL pc ⧺ ps)
-
-dep__tokenizeR ∷ (ToStream (ParserToken t) ts) ⇒ 𝐿 (Parser t a) → ts → Doc ∨ 𝕍 (ParserToken a)
-dep__tokenizeR = dep__tokenize null
-
-dep__tokenizeIO ∷ (ToStream (ParserToken t) ts) ⇒ 𝐿 (Parser t a) → 𝐿 (Parser t a) → ts → IO (𝕍 (ParserToken a))
-dep__tokenizeIO sps rps ts = case dep__tokenize sps rps ts of
-  Inl d → pprint d ≫ abortIO
-  Inr a → return a
-
-dep__tokenizeRIO ∷ (ToStream (ParserToken t) ts) ⇒ 𝐿 (Parser t a) → ts → IO (𝕍 (ParserToken a))
-dep__tokenizeRIO = dep__tokenizeIO null
-
-dep__tokenizeIOMain ∷ (Pretty a,ToStream (ParserToken t) ts) ⇒ 𝐿 (Parser t a) → 𝐿 (Parser t a) → ts → IO ()
-dep__tokenizeIOMain sps rps ss = do
-  x ← dep__tokenizeIO sps rps ss
-  pprint $ ppVertical 
-    [ ppHeader "Success"
-    , pretty $ map parserTokenValue x
-    ]
-
-dep__tokenizeRIOMain ∷ (Pretty a,ToStream (ParserToken t) ts) ⇒ 𝐿 (Parser t a) → ts → IO ()
-dep__tokenizeRIOMain = dep__tokenizeIOMain null

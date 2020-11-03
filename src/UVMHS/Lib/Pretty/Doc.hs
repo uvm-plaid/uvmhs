@@ -4,6 +4,7 @@ import UVMHS.Core
 
 import UVMHS.Lib.IterS
 
+import UVMHS.Lib.Pretty.Color
 import UVMHS.Lib.Pretty.Annotation
 import UVMHS.Lib.Pretty.RenderGroups
 
@@ -28,16 +29,16 @@ makeLenses ''PrettyParams
 prettyParams₀ ∷ PrettyParams
 prettyParams₀ = PrettyParams
   { punctuationFormat        = formats [FG darkGray]
-  , keywordPunctuationFormat = formats [FG darkYellow,BD]
-  , keywordFormat            = formats [FG darkYellow,BD]
-  , constructorFormat        = formats [FG darkGreen,BD]
-  , operatorFormat           = formats [FG darkBlue]
-  , binderFormat             = formats [FG darkTeal]
-  , literalFormat            = formats [FG darkRed]
+  , keywordPunctuationFormat = formats [FG yellow,BD]
+  , keywordFormat            = formats [FG yellow,BD]
+  , constructorFormat        = formats [FG green,BD]
+  , operatorFormat           = formats [FG blue]
+  , binderFormat             = formats [FG teal]
+  , literalFormat            = formats [FG red]
   , highlightFormat          = formats [BG highlight]
-  , headerFormat             = formats [FG darkPink,BD,UL]
-  , errorFormat              = formats [FG white,BG darkRed]
-  , lineNumberFormat         = formats [FG gray]
+  , headerFormat             = formats [FG pink,BD,UL]
+  , errorFormat              = formats [FG white,BG red]
+  , lineNumberFormat         = formats [FG lightGray]
   , appLevel                 = 𝕟64 100
   }
 
