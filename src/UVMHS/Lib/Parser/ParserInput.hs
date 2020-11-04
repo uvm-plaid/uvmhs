@@ -56,8 +56,8 @@ charContext l c =
       d = ppString $ single c
   in ParserContext lr (eWindowL d) (eWindowR d) $ eWindowR d
 
-tokens ∷ 𝕊 → 𝕍 (PreParserToken ℂ)
-tokens cs = 
+preTokens ∷ 𝕊 → 𝕍 (PreParserToken ℂ)
+preTokens cs = 
   vecS $ snd $ foldOnFrom cs (bot :* null @ (𝐼S _)) $ \ c (loc :* ts) →
     let (loc',pc) = 
           if c ≡ '\n'
@@ -66,8 +66,11 @@ tokens cs =
         t = PreParserToken c False pc
     in loc' :* (ts ⧺ single t)
 
-prepTokens ∷ 𝕍 (PreParserToken t) → 𝕍 (ParserToken t)
-prepTokens ts₀ = vecS $ fst $ foldrOnFrom ts₀ (null @ (𝐼S _) :* null) $ \ (PreParserToken x sk pc) (ts :* ps) →
+finalizeTokens ∷ 𝕍 (PreParserToken t) → 𝕍 (ParserToken t)
+finalizeTokens ts₀ = vecS $ fst $ foldrOnFrom ts₀ (null @ (𝐼S _) :* null) $ \ (PreParserToken x sk pc) (ts :* ps) →
   let t = ParserToken x sk pc ps
   in
   (single t ⧺ ts) :* (parserContextDisplayL pc ⧺ ps)
+
+tokens ∷ 𝕊 → 𝕍 (ParserToken ℂ)
+tokens = finalizeTokens ∘ preTokens

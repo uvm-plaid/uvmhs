@@ -397,28 +397,33 @@ tokenize (Lexer dfas f u₀) so ts₀ = vecS ^$ oloop u₀ (dfas u₀) null $ st
                     Some r → Some (r :* σ')
               iloop n' σ' (Some (t :* σ)) rO'
 
-tokenizeIO ∷
-  ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
-  ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (PreParserToken w))
-tokenizeIO l so pi = case tokenize l so pi of
+tokenizeFIO ∷
+  ∀ c t o u w w'. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
+  ⇒ Lexer c t o u w → 𝕊 → (𝕍 (PreParserToken w) → 𝕍 (PreParserToken w')) → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken w'))
+tokenizeFIO l so f pi = case map f $ tokenize l so pi of
   Inl d → pprint d ≫ abortIO
-  Inr a → return a
+  Inr xs → return $ finalizeTokens xs
 
-tokenizeIOMainF ∷ 
-  ∀ c t o u w v. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty v) 
-  ⇒ Lexer c t o u w → 𝕊 → (𝕍 (PreParserToken w) → 𝕍 (PreParserToken v)) → 𝕍 (ParserToken t) → IO ()
-tokenizeIOMainF l so f pi = do
-  x ← f ^$ tokenizeIO l so pi
+tokenizeIO ∷ 
+  ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
+  ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken w))
+tokenizeIO l so = tokenizeFIO l so id
+
+tokenizeFIOMain ∷ 
+  ∀ c t o u w w'. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty w') 
+  ⇒ Lexer c t o u w → 𝕊 → (𝕍 (PreParserToken w) → 𝕍 (PreParserToken w')) → 𝕍 (ParserToken t) → IO ()
+tokenizeFIOMain l so f pi = do
+  xs ← tokenizeFIO l so f pi
   pprint $ ppVertical 
     [ ppHeader "Success"
-    , pretty $ map (\ y → preParserTokenValue y :* parserContextLocRange (preParserTokenContext y)) x
+    , pretty $ mapOn xs $ \ x → parserTokenValue x :* parserContextLocRange (parserTokenContext x)
     ]
-  pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ preParserTokenContext) x
+  pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ parserTokenContext) xs
 
 tokenizeIOMain ∷
   ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty w) 
   ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO ()
-tokenizeIOMain l so = tokenizeIOMainF l so id
+tokenizeIOMain l so = tokenizeFIOMain l so id
 
 -- API --
 

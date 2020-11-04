@@ -11,13 +11,13 @@ testParsingSmall ∷ IO ()
 testParsingSmall = parseIOMain parser "<small example>" input
   where
     parser = cpWord "xyzxyz"
-    input = prepTokens $ tokens "xyzxycxyz"
+    input = tokens "xyzxycxyz"
 
 testParsingMultiline ∷ IO ()
 testParsingMultiline = parseIOMain parser "<multiline example>" input
   where
     parser = exec $ inbetween (void $ cpWord "\n") $ list $ repeatI 7 $ \ n → cpNewContext "line" $ void $ cpWord ("xyz" ⧺ show𝕊 n)
-    input = prepTokens $ tokens "xyz0\nxyz1\nxyz2\nxyc3\nxyz4\nxyz5\nxyz6\n"
+    input = tokens "xyz0\nxyz1\nxyz2\nxyc3\nxyz4\nxyz5\nxyz6\n"
 
 testParsingBranching ∷ IO ()
 testParsingBranching = parseIOMain parser "<branching example>" input
@@ -42,7 +42,7 @@ testParsingBranching = parseIOMain parser "<branching example>" input
           return $ x ⧺ y
       ]
     input ∷ 𝕍 (ParserToken ℂ)
-    input = prepTokens $ tokens "xxxx"
+    input = tokens "xxxx"
     
 -- testParsingAmbiguity ∷ IO ()
 -- testParsingAmbiguity = parseIOMain parser input
@@ -62,7 +62,7 @@ testParsingGreedy = parseIOMain parser "<greedy example>" input
       , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ pToken 'x'
       , ppFG blue ∘ ppString ^$ cpRender (formats [FG yellow]) $ cpWord "xx" 
       ]
-    input = prepTokens $ tokens "xxx"
+    input = tokens "xxx"
 
 testParsingGreedyAmbiguity ∷ IO ()
 testParsingGreedyAmbiguity = parseIOMain parser "<greedy ambiguity example>" input
@@ -75,7 +75,7 @@ testParsingGreedyAmbiguity = parseIOMain parser "<greedy ambiguity example>" inp
           ]
       , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ pToken 'x'
       ]
-    input = prepTokens $ tokens "xxx"
+    input = tokens "xxx"
 
 testParsingSuccess ∷ IO ()
 testParsingSuccess = parseIOMain parser "<success example>" input
@@ -84,25 +84,25 @@ testParsingSuccess = parseIOMain parser "<success example>" input
       [ cpRender (formats [FG green]) $ cpWord "xx"
       , cpRender (formats [FG blue]) $ cpWord "yy"
       ]
-    input = prepTokens $ tokens "xxxxyyxxyy"
+    input = tokens "xxxxyyxxyy"
 
 testParsingErrorNewline ∷ IO ()
-testParsingErrorNewline = parseIOMain (string ^$ cpMany $ toCParser $ pToken 'x') "<error newline example>" $ prepTokens $ tokens "xxx\nx"
+testParsingErrorNewline = parseIOMain (string ^$ cpMany $ toCParser $ pToken 'x') "<error newline example>" $ tokens "xxx\nx"
 
 testParsingErrorEof ∷ IO ()
-testParsingErrorEof = parseIOMain (exec $ repeat 3 $ void $ cpToken 'x') "<error eof example>" $ prepTokens $ tokens "xx"
+testParsingErrorEof = parseIOMain (exec $ repeat 3 $ void $ cpToken 'x') "<error eof example>" $ tokens "xx"
 
 testTokenizeSimple ∷ IO ()
 testTokenizeSimple = 
   let rgx = lWord "x" ▷ oepsRegex ()
       dfa = compileRegex rgx
-  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize simple example>" $ prepTokens $ tokens "xxx"
+  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize simple example>" $ tokens "xxx"
 
 testTokenize ∷ IO ()
 testTokenize = 
   let rgx = concat [lWord "x",lWord "xy",lWord "y"] ▷ oepsRegex ()
       dfa = compileRegex rgx
-  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize example>" $ prepTokens $ tokens "xxyxyxyxyxxyy"
+  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize example>" $ tokens "xxyxyxyxyxxyy"
 
 testTokenizeFailure1 ∷ IO ()
 testTokenizeFailure1 = 
@@ -114,7 +114,7 @@ testTokenizeFailure1 =
         , lWord "xz" ▷ fepsRegex (formats [FG pink])
         ] ▷ oepsRegex ()
       dfa = compileRegex rgx
-  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize failure1 example>" $ prepTokens $ tokens "xxxxy"
+  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize failure1 example>" $ tokens "xxxxy"
 
 testTokenizeFailure2 ∷ IO ()
 testTokenizeFailure2 = 
@@ -126,4 +126,4 @@ testTokenizeFailure2 =
         , lWord "xz" ▷ fepsRegex (formats [FG pink])
         ] ▷ oepsRegex ()
       dfa = compileRegex rgx
-  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize failiure2 example>" $ prepTokens $ tokens "xxxyxxxzxc"
+  in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize failiure2 example>" $ tokens "xxxyxxxzxc"

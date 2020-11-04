@@ -7,7 +7,7 @@ lexer = lexerWSBasic (list ["(",")"]) null null (list ["==","+","*","-","^","!"]
 
 testTokenizerSuccess ∷ IO ()
 testTokenizerSuccess = 
-  tokenizeIOMainF lexer "" blockifyTokensWSBasic $ prepTokens $ tokens $ concat $ inbetween "\n"
+  tokenizeFIOMain lexer "" blockifyTokensWSBasic $ tokens $ concat $ inbetween "\n"
     [ "1"
     , "2"
     , "3 4"
@@ -92,9 +92,7 @@ cpExpList = cpManySepBy cpDelimWS cpExp
 testParserSuccess ∷ IO ()
 testParserSuccess = do
   parseIOMain cpExpList "" ∘ stream 
-    *$ (prepTokens ∘ blockifyTokensWSBasic)
-    ^$ tokenizeIO lexer "" 
-     $ prepTokens
+    *$ tokenizeFIO lexer ""  blockifyTokensWSBasic
      $ tokens 
      $ concat 
      $ inbetween "\n"
@@ -107,9 +105,7 @@ testParserSuccess = do
 testParserFailure1 ∷ IO ()
 testParserFailure1 = 
   parseIOMain cpExpList "" ∘ stream 
-    *$ (prepTokens ∘ blockifyTokensWSBasic)
-    ^$ tokenizeIO lexer "" 
-     $ prepTokens
+    *$ tokenizeFIO lexer "" blockifyTokensWSBasic
      $ tokens 
      $ concat 
      $ inbetween "\n"

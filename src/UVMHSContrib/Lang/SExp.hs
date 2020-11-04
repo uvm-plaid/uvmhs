@@ -7,15 +7,15 @@ lexer = lexerBasic (list ["(",")"]) (list ["KEY"]) (list ["PRIM"]) (list ["+"])
 
 testSExpTokenizerSuccess ∷ IO ()
 testSExpTokenizerSuccess = 
-  tokenizeIOMain lexer "" $ prepTokens $ tokens "((-1-2-1.42(\"astringwith\\\\stuff\\n\" ( "
+  tokenizeIOMain lexer "" $ tokens "((-1-2-1.42(\"astringwith\\\\stuff\\n\" ( "
 
 testSExpTokenizerFailure1 ∷ IO ()
 testSExpTokenizerFailure1 =
-  tokenizeIOMain lexer "" $ prepTokens $ tokens "((foo-1and0.01+bar"
+  tokenizeIOMain lexer "" $ tokens "((foo-1and0.01+bar"
 
 testSExpTokenizerFailure2 ∷ IO ()
 testSExpTokenizerFailure2 =
-  tokenizeIOMain lexer "" $ prepTokens $ tokens "()foo-1\"astring\\badescape\""
+  tokenizeIOMain lexer "" $ tokens "()foo-1\"astring\\badescape\""
 
 data Lit =
     IntegerL ℤ
@@ -73,35 +73,35 @@ cpList = cpNewContext "list" $ do
 testSExpParserSuccess ∷ IO ()
 testSExpParserSuccess = do
   tokenizeIOMain lexer "" input
-  toks ← prepTokens ^$ tokenizeIO lexer "" input
+  toks ← tokenizeIO lexer "" input
   parseIOMain cpExp "" $ stream toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
-    input = prepTokens $ tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12  )  "
+    input = tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12  )  "
 
 testSExpParserFailure1 ∷ IO ()
 testSExpParserFailure1 = do
   tokenizeIOMain lexer "" input
-  toks ← prepTokens ^$ tokenizeIO lexer "" input
+  toks ← tokenizeIO lexer "" input
   parseIOMain cpExp "" $ stream toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
-    input = prepTokens $ tokens " (( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )  "
+    input = tokens " (( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )  "
 
 testSExpParserFailure2 ∷ IO ()
 testSExpParserFailure2 = do
   tokenizeIOMain lexer "" input
-  toks ← prepTokens ^$ tokenizeIO lexer "" input
+  toks ← tokenizeIO lexer "" input
   parseIOMain cpExp "" $ stream toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
-    input = prepTokens $ tokens " )( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )  "
+    input = tokens " )( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )  "
 
 testSExpParserFailure3 ∷ IO ()
 testSExpParserFailure3 = do
   tokenizeIOMain lexer "" input
-  toks ← prepTokens ^$ tokenizeIO lexer "" input
+  toks ← tokenizeIO lexer "" input
   parseIOMain cpExp "" $ stream toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
-    input = prepTokens $ tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )(  "
+    input = tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )(  "
