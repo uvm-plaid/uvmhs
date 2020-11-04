@@ -3,13 +3,10 @@ module UVMHSMain where
 
 import UVMHS 
 
-import qualified UVMHSContrib.Lang.Arith as Arith
-import qualified UVMHSContrib.Lang.ArithBlocks as ArithBlocks
-import qualified UVMHSContrib.Lang.SExp as SExp
+import qualified Examples.Lang.Arith as Arith
+import qualified Examples.Lang.ArithBlocks as ArithBlocks
+import qualified Examples.Lang.SExp as SExp
 
 main ∷ IO ()
 main = cleanExit $ do
-  -- ArithBlocks.testParserFailure1
-  ArithBlocks.testParserFailure1
-  -- colorsDemo
-  -- out "¯\\_﹙ツ﹚_/¯"
+  pprint $ ppFG green $ ppString "¯\\_﹙ツ﹚_/¯"

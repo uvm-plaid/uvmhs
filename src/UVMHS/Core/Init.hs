@@ -399,16 +399,21 @@ instance {-# OVERLAPPING #-} (CHS a b) ⇒ CHS (𝐿 a) [b] where
   tohs = lazyList𝐼 ∘ map𝐼 tohs ∘ iter𝑆 ∘ stream𝐿
   {-# INLINE frhs #-}
   frhs = list𝐼 ∘ map𝐼 frhs ∘ iter𝑆 ∘ streamLL
-instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃) ⇒ CHS (a₁ ∧ a₂ ∧ a₃) (b₁,b₂,b₃) where
-  {-# INLINE tohs #-}
-  tohs (x :* y :* z) = (tohs x,tohs y,tohs z)
-  {-# INLINE frhs #-}
-  frhs (x,y,z) = frhs x :* frhs y :* frhs z
 instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂) ⇒ CHS (a₁ ∧ a₂) (b₁,b₂) where
   {-# INLINE tohs #-}
   tohs (x :* y) = (tohs x,tohs y)
   {-# INLINE frhs #-}
   frhs (x,y) = frhs x :* frhs y
+instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃) ⇒ CHS (a₁ ∧ a₂ ∧ a₃) (b₁,b₂,b₃) where
+  {-# INLINE tohs #-}
+  tohs (x :* y :* z) = (tohs x,tohs y,tohs z)
+  {-# INLINE frhs #-}
+  frhs (x,y,z) = frhs x :* frhs y :* frhs z
+instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃,CHS a₄ b₄) ⇒ CHS (a₁ ∧ a₂ ∧ a₃ ∧ a₄) (b₁,b₂,b₃,b₄) where
+  {-# INLINE tohs #-}
+  tohs (w :* x :* y :* z) = (tohs w,tohs x,tohs y,tohs z)
+  {-# INLINE frhs #-}
+  frhs (w,x,y,z) = frhs w :* frhs x :* frhs y :* frhs z
 instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂) ⇒ CHS (a₁ ∨ a₂) (HS.Either b₁ b₂) where
   {-# INLINE tohs #-}
   tohs = \case

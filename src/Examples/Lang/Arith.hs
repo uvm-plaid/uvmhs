@@ -1,4 +1,4 @@
-module UVMHSContrib.Lang.Arith where
+module Examples.Lang.Arith where
 
 import UVMHS
 
@@ -52,13 +52,13 @@ cpExp = fmixfixWithContext "exp" $ concat
       e ← cpExp
       void $ cpToken $ SyntaxTBasic ")"
       return $ extract e
-  , fmixTerminal      $ AtomE         ^$ cpAtom
-  , fmixInfix   pCMP  $ const EqualE  ^$ cpSyntax "=="
-  , fmixInfixR  pSUM  $ const PlusE   ^$ cpSyntax "+"
-  , fmixInfixR  pPROD $ const TimesE  ^$ cpSyntax "*"
-  , fmixPrefix  pNEG  $ const NegateE ^$ cpSyntax "-"
-  , fmixInfixL  pPOW  $ const ExpoE   ^$ cpSyntax "^"
-  , fmixPostfix pFAC  $ const FactE   ^$ cpSyntax "!"
+  , fmixTerminal       $ AtomE         ^$ cpAtom
+  , fmixInfix   pCMP   $ const EqualE  ^$ cpSyntax "=="
+  , fmixInfixR  pPLUS  $ const PlusE   ^$ cpSyntax "+"
+  , fmixInfixR  pTIMES $ const TimesE  ^$ cpSyntax "*"
+  , fmixPrefix  pNEG   $ const NegateE ^$ cpSyntax "-"
+  , fmixInfixL  pPOW   $ const ExpoE   ^$ cpSyntax "^"
+  , fmixPostfix pFAC   $ const FactE   ^$ cpSyntax "!"
   ]
 
 testParserSuccess ∷ IO ()

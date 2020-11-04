@@ -1,4 +1,4 @@
-module UVMHSContrib.Lang.SExp where
+module Examples.Lang.SExp where
 
 import UVMHS
 

@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 47d796dcf9c58c1ba41fc03e6ed064139713696313b3ce287483b4f2595a6581
+-- hash: 2b9a7f805262aae937b88c95386a649fb987ccd1d2e6b66d037f8edaa32f5ff8
 
 name:           uvmhs
 version:        0.0.0.0
@@ -12,6 +12,10 @@ build-type:     Simple
 
 library
   exposed-modules:
+      Examples.Lang.Arith
+      Examples.Lang.ArithBlocks
+      Examples.Lang.SExp
+      Examples.Lang.WizPL
       UVMHS
       UVMHS.Core
       UVMHS.Core.Classes
@@ -85,10 +89,6 @@ library
       UVMHS.Lib.Pretty.RenderUndertags
       UVMHS.Lib.Window
       UVMHS.Lib.ZerInf
-      UVMHSContrib.Lang.Arith
-      UVMHSContrib.Lang.ArithBlocks
-      UVMHSContrib.Lang.SExp
-      UVMHSContrib.Lang.WizPL.Syntax
       UVMHSMain
   other-modules:
       Paths_uvmhs

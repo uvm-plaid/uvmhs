@@ -1,4 +1,4 @@
-module UVMHSContrib.Lang.ArithBlocks where
+module Examples.Lang.ArithBlocks where
 
 import UVMHS
 
@@ -76,13 +76,13 @@ cpExp = fmixfixWithContext "exp" $ concat
       e ← cpExp
       void $ cpToken $ SyntaxTWSBasic ")"
       return $ extract e
-  , fmixTerminal      $ AtomE         ^$ cpAtom
-  , fmixInfix   pCMP  $ const EqualE  ^$ cpSyntaxWS "=="
-  , fmixInfixR  pSUM  $ const PlusE   ^$ cpSyntaxWS "+"
-  , fmixInfixR  pPROD $ const TimesE  ^$ cpSyntaxWS "*"
-  , fmixPrefix  pNEG  $ const NegateE ^$ cpSyntaxWS "-"
-  , fmixInfixL  pPOW  $ const ExpoE   ^$ cpSyntaxWS "^"
-  , fmixPostfix pFAC  $ const FactE   ^$ cpSyntaxWS "!"
+  , fmixTerminal       $ AtomE         ^$ cpAtom
+  , fmixInfix   pCMP   $ const EqualE  ^$ cpSyntaxWS "=="
+  , fmixInfixR  pPLUS  $ const PlusE   ^$ cpSyntaxWS "+"
+  , fmixInfixR  pTIMES $ const TimesE  ^$ cpSyntaxWS "*"
+  , fmixPrefix  pNEG   $ const NegateE ^$ cpSyntaxWS "-"
+  , fmixInfixL  pPOW   $ const ExpoE   ^$ cpSyntaxWS "^"
+  , fmixPostfix pFAC   $ const FactE   ^$ cpSyntaxWS "!"
   , fmixTerminal $ BlockE ^$ cpBlock
   ]
 
@@ -102,8 +102,8 @@ testParserSuccess = do
     , "        * 4 ^ 5 ^ 6 !"
     ]
 
-testParserFailure1 ∷ IO ()
-testParserFailure1 = 
+testParserFailure ∷ IO ()
+testParserFailure = 
   parseIOMain cpExpList "" ∘ stream 
     *$ tokenizeFIO lexer "" blockifyTokensWSBasic
      $ tokens 
@@ -112,5 +112,5 @@ testParserFailure1 =
     [ "(- 1) + 2"
     , "local 2 + 3 + 4"
     , "      local - 2 + 3"
-    , "      * 4 ^ 5 ^ 6 !"
+    , "      + 4 ^ 5 ^ 6 !"
     ]
