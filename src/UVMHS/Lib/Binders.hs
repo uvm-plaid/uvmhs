@@ -17,7 +17,7 @@ makeLenses ''𝕏
 
 instance Pretty 𝕏 where
   pretty (𝕏 x nO) = concat
-    [ pretty x
+    [ ppString x
     , case nO of
         None → null
         Some n → concat [ppPun "#",pretty n]
