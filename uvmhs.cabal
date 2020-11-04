@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2b9a7f805262aae937b88c95386a649fb987ccd1d2e6b66d037f8edaa32f5ff8
+-- hash: ccf82ea1fcce40d2b859dedb5111321aac323e3d4c2135e89bd2c1608b0f95e5
 
 name:           uvmhs
 version:        0.0.0.0
@@ -15,7 +15,6 @@ library
       Examples.Lang.Arith
       Examples.Lang.ArithBlocks
       Examples.Lang.SExp
-      Examples.Lang.WizPL
       UVMHS
       UVMHS.Core
       UVMHS.Core.Classes
@@ -95,7 +94,7 @@ library
   hs-source-dirs:
       src
   default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
-  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2 -optP-Wno-nonportable-include-path
+  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2
   build-depends:
       array
     , base
@@ -117,7 +116,7 @@ executable uvmhs
   hs-source-dirs:
       main
   default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
-  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2 -optP-Wno-nonportable-include-path
+  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2
   build-depends:
       array
     , base
