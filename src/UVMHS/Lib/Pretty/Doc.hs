@@ -184,6 +184,8 @@ ppSeparated ∷ (ToIter Doc t) ⇒ t → Doc
 ppSeparated = ppGroup ∘ concat ∘ inbetween ppSpaceNewlineIfBreak ∘ iter
 
 
+ppNest ∷ ℕ64 → Doc → Doc
+ppNest = onDoc ∘ mapOut ∘ nestRenderGroups
 
 
 ppSetLevel ∷ ℕ64 → Doc → Doc

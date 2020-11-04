@@ -100,6 +100,9 @@ alignRenderGroupsM xM = do
 alignRenderGroups ∷ RenderGroups → RenderGroups
 alignRenderGroups (RenderGroups s r) = RenderGroups (alignSummary s) $ alignRenderGroupsM r
 
+nestRenderGroups ∷ ℕ64 → RenderGroups → RenderGroups
+nestRenderGroups n (RenderGroups s r) = RenderGroups s $ mapEnvL renderGroupsEnvNestL ((+) n) r
+
 groupRenderGroupsM ∷ Shape → ITree → RenderGroupsM () → RenderGroupsM ()
 groupRenderGroupsM sh rdis xM 
   | shape multiLineShapeL sh = xM
