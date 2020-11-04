@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="%24con2tag_4V4jAUPKHa8JnnyLutanIN"><span id="%24con2tag_2S7FzMPYb698atAPN6I1ae"></span></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHS.Lib.Pretty.Color</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Core.html"><span class="hs-identifier">UVMHS.Core</span></a></span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">data</span><span> </span><span id="Color3Bit"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color3Bit"><span class="hs-identifier hs-var">Color3Bit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-6"></span><span>    </span><span id="DefaultColor"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#DefaultColor"><span class="hs-identifier hs-var">DefaultColor</span></a></span></span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Black"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Black"><span class="hs-identifier hs-var">Black</span></a></span></span><span>
+</span><span id="line-8"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Red"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Red"><span class="hs-identifier hs-var">Red</span></a></span></span><span>
+</span><span id="line-9"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Green"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Green"><span class="hs-identifier hs-var">Green</span></a></span></span><span>
+</span><span id="line-10"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Yellow"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Yellow"><span class="hs-identifier hs-var">Yellow</span></a></span></span><span>
+</span><span id="line-11"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Blue"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Blue"><span class="hs-identifier hs-var">Blue</span></a></span></span><span>
+</span><span id="line-12"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Magenta"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Magenta"><span class="hs-identifier hs-var">Magenta</span></a></span></span><span>
+</span><span id="line-13"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Cyan"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Cyan"><span class="hs-identifier hs-var">Cyan</span></a></span></span><span>
+</span><span id="line-14"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="LightGray"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#LightGray"><span class="hs-identifier hs-var">LightGray</span></a></span></span><span>
+</span><span id="line-15"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="DarkGray"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#DarkGray"><span class="hs-identifier hs-var">DarkGray</span></a></span></span><span>
+</span><span id="line-16"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="LightRed"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#LightRed"><span class="hs-identifier hs-var">LightRed</span></a></span></span><span>
+</span><span id="line-17"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="LightGreen"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#LightGreen"><span class="hs-identifier hs-var">LightGreen</span></a></span></span><span>
+</span><span id="line-18"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="LightYellow"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#LightYellow"><span class="hs-identifier hs-var">LightYellow</span></a></span></span><span>
+</span><span id="line-19"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="LightBlue"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#LightBlue"><span class="hs-identifier hs-var">LightBlue</span></a></span></span><span>
+</span><span id="line-20"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="LightMagenta"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#LightMagenta"><span class="hs-identifier hs-var">LightMagenta</span></a></span></span><span>
+</span><span id="line-21"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="LightCyan"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#LightCyan"><span class="hs-identifier hs-var">LightCyan</span></a></span></span><span>
+</span><span id="line-22"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="White"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#White"><span class="hs-identifier hs-var">White</span></a></span></span><span>
+</span><span id="line-23"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679877149"><span id="local-6989586621679877151"><span class="annot"><span class="annottext">Color3Bit -&gt; Color3Bit -&gt; Bool
+(Color3Bit -&gt; Color3Bit -&gt; Bool)
+-&gt; (Color3Bit -&gt; Color3Bit -&gt; Bool) -&gt; Eq Color3Bit
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: Color3Bit -&gt; Color3Bit -&gt; Bool
+$c/= :: Color3Bit -&gt; Color3Bit -&gt; Bool
+== :: Color3Bit -&gt; Color3Bit -&gt; Bool
+$c== :: Color3Bit -&gt; Color3Bit -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679877133"><span id="local-6989586621679877135"><span id="local-6989586621679877137"><span id="local-6989586621679877139"><span id="local-6989586621679877141"><span id="local-6989586621679877143"><span id="local-6989586621679877145"><span class="annot"><span class="annottext">Eq Color3Bit
+Eq Color3Bit
+-&gt; (Color3Bit -&gt; Color3Bit -&gt; Ordering)
+-&gt; (Color3Bit -&gt; Color3Bit -&gt; Bool)
+-&gt; (Color3Bit -&gt; Color3Bit -&gt; Bool)
+-&gt; (Color3Bit -&gt; Color3Bit -&gt; Bool)
+-&gt; (Color3Bit -&gt; Color3Bit -&gt; Bool)
+-&gt; (Color3Bit -&gt; Color3Bit -&gt; Color3Bit)
+-&gt; (Color3Bit -&gt; Color3Bit -&gt; Color3Bit)
+-&gt; Ord Color3Bit
+Color3Bit -&gt; Color3Bit -&gt; Bool
+Color3Bit -&gt; Color3Bit -&gt; Ordering
+Color3Bit -&gt; Color3Bit -&gt; Color3Bit
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: Color3Bit -&gt; Color3Bit -&gt; Color3Bit
+$cmin :: Color3Bit -&gt; Color3Bit -&gt; Color3Bit
+max :: Color3Bit -&gt; Color3Bit -&gt; Color3Bit
+$cmax :: Color3Bit -&gt; Color3Bit -&gt; Color3Bit
+&gt;= :: Color3Bit -&gt; Color3Bit -&gt; Bool
+$c&gt;= :: Color3Bit -&gt; Color3Bit -&gt; Bool
+&gt; :: Color3Bit -&gt; Color3Bit -&gt; Bool
+$c&gt; :: Color3Bit -&gt; Color3Bit -&gt; Bool
+&lt;= :: Color3Bit -&gt; Color3Bit -&gt; Bool
+$c&lt;= :: Color3Bit -&gt; Color3Bit -&gt; Bool
+&lt; :: Color3Bit -&gt; Color3Bit -&gt; Bool
+$c&lt; :: Color3Bit -&gt; Color3Bit -&gt; Bool
+compare :: Color3Bit -&gt; Color3Bit -&gt; Ordering
+$ccompare :: Color3Bit -&gt; Color3Bit -&gt; Ordering
+$cp1Ord :: Eq Color3Bit
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679877126"><span id="local-6989586621679877128"><span id="local-6989586621679877130"><span class="annot"><span class="annottext">Int -&gt; Color3Bit -&gt; ShowS
+[Color3Bit] -&gt; ShowS
+Color3Bit -&gt; String
+(Int -&gt; Color3Bit -&gt; ShowS)
+-&gt; (Color3Bit -&gt; String)
+-&gt; ([Color3Bit] -&gt; ShowS)
+-&gt; Show Color3Bit
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Color3Bit] -&gt; ShowS
+$cshowList :: [Color3Bit] -&gt; ShowS
+show :: Color3Bit -&gt; String
+$cshow :: Color3Bit -&gt; String
+showsPrec :: Int -&gt; Color3Bit -&gt; ShowS
+$cshowsPrec :: Int -&gt; Color3Bit -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">data</span><span> </span><span id="Color"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><span id="line-25"></span><span>    </span><span id="Color"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color3Bit"><span class="hs-identifier hs-type">Color3Bit</span></a></span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Color8"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color8"><span class="hs-identifier hs-var">Color8</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Color24"><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color24"><span class="hs-identifier hs-var">Color24</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679877118"><span id="local-6989586621679877120"><span class="annot"><span class="annottext">Color -&gt; Color -&gt; Bool
+(Color -&gt; Color -&gt; Bool) -&gt; (Color -&gt; Color -&gt; Bool) -&gt; Eq Color
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: Color -&gt; Color -&gt; Bool
+$c/= :: Color -&gt; Color -&gt; Bool
+== :: Color -&gt; Color -&gt; Bool
+$c== :: Color -&gt; Color -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679877103"><span id="local-6989586621679877105"><span id="local-6989586621679877107"><span id="local-6989586621679877109"><span id="local-6989586621679877111"><span id="local-6989586621679877113"><span id="local-6989586621679877115"><span class="annot"><span class="annottext">Eq Color
+Eq Color
+-&gt; (Color -&gt; Color -&gt; Ordering)
+-&gt; (Color -&gt; Color -&gt; Bool)
+-&gt; (Color -&gt; Color -&gt; Bool)
+-&gt; (Color -&gt; Color -&gt; Bool)
+-&gt; (Color -&gt; Color -&gt; Bool)
+-&gt; (Color -&gt; Color -&gt; Color)
+-&gt; (Color -&gt; Color -&gt; Color)
+-&gt; Ord Color
+Color -&gt; Color -&gt; Bool
+Color -&gt; Color -&gt; Ordering
+Color -&gt; Color -&gt; Color
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: Color -&gt; Color -&gt; Color
+$cmin :: Color -&gt; Color -&gt; Color
+max :: Color -&gt; Color -&gt; Color
+$cmax :: Color -&gt; Color -&gt; Color
+&gt;= :: Color -&gt; Color -&gt; Bool
+$c&gt;= :: Color -&gt; Color -&gt; Bool
+&gt; :: Color -&gt; Color -&gt; Bool
+$c&gt; :: Color -&gt; Color -&gt; Bool
+&lt;= :: Color -&gt; Color -&gt; Bool
+$c&lt;= :: Color -&gt; Color -&gt; Bool
+&lt; :: Color -&gt; Color -&gt; Bool
+$c&lt; :: Color -&gt; Color -&gt; Bool
+compare :: Color -&gt; Color -&gt; Ordering
+$ccompare :: Color -&gt; Color -&gt; Ordering
+$cp1Ord :: Eq Color
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679877097"><span id="local-6989586621679877099"><span id="local-6989586621679877101"><span class="annot"><span class="annottext">Int -&gt; Color -&gt; ShowS
+[Color] -&gt; ShowS
+Color -&gt; String
+(Int -&gt; Color -&gt; ShowS)
+-&gt; (Color -&gt; String) -&gt; ([Color] -&gt; ShowS) -&gt; Show Color
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [Color] -&gt; ShowS
+$cshowList :: [Color] -&gt; ShowS
+show :: Color -&gt; String
+$cshow :: Color -&gt; String
+showsPrec :: Int -&gt; Color -&gt; ShowS
+$cshowsPrec :: Int -&gt; Color -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#defaultColor"><span class="hs-identifier hs-type">defaultColor</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-type">Color</span></a></span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#black"><span class="hs-identifier hs-type">black</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#red"><span class="hs-identifier hs-type">red</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#green"><span class="hs-identifier hs-type">green</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#yellow"><span class="hs-identifier hs-type">yellow</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#blue"><span class="hs-identifier hs-type">blue</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#pink"><span class="hs-identifier hs-type">pink</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-type">teal</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#lightGray"><span class="hs-identifier hs-type">lightGray</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-type">Color</span></a></span><span>
+</span><span id="line-33"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#darkGray"><span class="hs-identifier hs-type">darkGray</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#lightRed"><span class="hs-identifier hs-type">lightRed</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#lightGreen"><span class="hs-identifier hs-type">lightGreen</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#lightYellow"><span class="hs-identifier hs-type">lightYellow</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#lightBlue"><span class="hs-identifier hs-type">lightBlue</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#lightPink"><span class="hs-identifier hs-type">lightPink</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#lightTeal"><span class="hs-identifier hs-type">lightTeal</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#white"><span class="hs-identifier hs-type">white</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-type">Color</span></a></span><span>
+</span><span id="line-34"></span><span>
+</span><span id="line-35"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#highlight"><span class="hs-identifier hs-type">highlight</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-type">Color</span></a></span><span>
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span id="defaultColor"><span class="annot"><span class="annottext">defaultColor :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#defaultColor"><span class="hs-identifier hs-var hs-var">defaultColor</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#DefaultColor"><span class="hs-identifier hs-var">DefaultColor</span></a></span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span id="black"><span class="annot"><span class="annottext">black :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#black"><span class="hs-identifier hs-var hs-var">black</span></a></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#Black"><span class="hs-identifier hs-var">Black</span></a></span><span>
+</span><span id="line-40"></span><span id="red"><span class="annot"><span class="annottext">red :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#red"><span class="hs-identifier hs-var hs-var">red</span></a></span></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#Red"><span class="hs-identifier hs-var">Red</span></a></span><span>
+</span><span id="line-41"></span><span id="green"><span class="annot"><span class="annottext">green :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#green"><span class="hs-identifier hs-var hs-var">green</span></a></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#Green"><span class="hs-identifier hs-var">Green</span></a></span><span>
+</span><span id="line-42"></span><span id="yellow"><span class="annot"><span class="annottext">yellow :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#yellow"><span class="hs-identifier hs-var hs-var">yellow</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#Yellow"><span class="hs-identifier hs-var">Yellow</span></a></span><span>
+</span><span id="line-43"></span><span id="blue"><span class="annot"><span class="annottext">blue :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#blue"><span class="hs-identifier hs-var hs-var">blue</span></a></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#Blue"><span class="hs-identifier hs-var">Blue</span></a></span><span>
+</span><span id="line-44"></span><span id="pink"><span class="annot"><span class="annottext">pink :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#pink"><span class="hs-identifier hs-var hs-var">pink</span></a></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#Magenta"><span class="hs-identifier hs-var">Magenta</span></a></span><span>
+</span><span id="line-45"></span><span id="teal"><span class="annot"><span class="annottext">teal :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-var hs-var">teal</span></a></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#Cyan"><span class="hs-identifier hs-var">Cyan</span></a></span><span>
+</span><span id="line-46"></span><span id="lightGray"><span class="annot"><span class="annottext">lightGray :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightGray"><span class="hs-identifier hs-var hs-var">lightGray</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#LightGray"><span class="hs-identifier hs-var">LightGray</span></a></span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span id="darkGray"><span class="annot"><span class="annottext">darkGray :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#darkGray"><span class="hs-identifier hs-var hs-var">darkGray</span></a></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#DarkGray"><span class="hs-identifier hs-var">DarkGray</span></a></span><span>
+</span><span id="line-49"></span><span id="lightRed"><span class="annot"><span class="annottext">lightRed :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightRed"><span class="hs-identifier hs-var hs-var">lightRed</span></a></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#LightRed"><span class="hs-identifier hs-var">LightRed</span></a></span><span>
+</span><span id="line-50"></span><span id="lightGreen"><span class="annot"><span class="annottext">lightGreen :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightGreen"><span class="hs-identifier hs-var hs-var">lightGreen</span></a></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#LightGreen"><span class="hs-identifier hs-var">LightGreen</span></a></span><span>
+</span><span id="line-51"></span><span id="lightYellow"><span class="annot"><span class="annottext">lightYellow :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightYellow"><span class="hs-identifier hs-var hs-var">lightYellow</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#LightYellow"><span class="hs-identifier hs-var">LightYellow</span></a></span><span>
+</span><span id="line-52"></span><span id="lightBlue"><span class="annot"><span class="annottext">lightBlue :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightBlue"><span class="hs-identifier hs-var hs-var">lightBlue</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#LightBlue"><span class="hs-identifier hs-var">LightBlue</span></a></span><span>
+</span><span id="line-53"></span><span id="lightPink"><span class="annot"><span class="annottext">lightPink :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightPink"><span class="hs-identifier hs-var hs-var">lightPink</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#LightMagenta"><span class="hs-identifier hs-var">LightMagenta</span></a></span><span>
+</span><span id="line-54"></span><span id="lightTeal"><span class="annot"><span class="annottext">lightTeal :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightTeal"><span class="hs-identifier hs-var hs-var">lightTeal</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#LightCyan"><span class="hs-identifier hs-var">LightCyan</span></a></span><span>
+</span><span id="line-55"></span><span id="white"><span class="annot"><span class="annottext">white :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#white"><span class="hs-identifier hs-var hs-var">white</span></a></span></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
+</span><a href="UVMHS.Lib.Pretty.Color.html#White"><span class="hs-identifier hs-var">White</span></a></span><span>
+</span><span id="line-56"></span><span>
+</span><span id="line-57"></span><span id="highlight"><span class="annot"><span class="annottext">highlight :: Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#highlight"><span class="hs-identifier hs-var hs-var">highlight</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#Color8"><span class="hs-identifier hs-var">Color8</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;8 -&gt; Color) -&gt; &#8469;8 -&gt; Color
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
+</span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
+</span><span class="hs-number">229</span></span><span>
+</span><span id="line-58"></span><span>
+</span><span id="line-59"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#allColors"><span class="hs-identifier hs-type">allColors</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43F"><span class="hs-identifier hs-type">&#119871;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2227"><span class="hs-operator hs-type">&#8743;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-type">Color</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span id="allColors"><span class="annot"><span class="annottext">allColors :: &#119871; (&#120138; &#8743; Color)
+</span><a href="UVMHS.Lib.Pretty.Color.html#allColors"><span class="hs-identifier hs-var hs-var">allColors</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[(&#120138;, Color)] -&gt; &#119871; (&#120138; &#8743; Color)
+forall a b. CHS a b =&gt; b -&gt; a
+</span><a href="UVMHS.Core.Init.html#frhs"><span class="hs-identifier hs-var">frhs</span></a></span><span>
+</span><span id="line-61"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;defaultColor&quot;</span></span><span>      </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#defaultColor"><span class="hs-identifier hs-var">defaultColor</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;black&quot;</span></span><span>             </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#black"><span class="hs-identifier hs-var">black</span></a></span><span>       </span><span class="hs-special">)</span><span>
+</span><span id="line-63"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;darkGray&quot;</span></span><span>          </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#darkGray"><span class="hs-identifier hs-var">darkGray</span></a></span><span>    </span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;lightGray&quot;</span></span><span>         </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightGray"><span class="hs-identifier hs-var">lightGray</span></a></span><span>   </span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;white&quot;</span></span><span>             </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#white"><span class="hs-identifier hs-var">white</span></a></span><span>       </span><span class="hs-special">)</span><span>
+</span><span id="line-66"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;red&quot;</span></span><span>               </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#red"><span class="hs-identifier hs-var">red</span></a></span><span>         </span><span class="hs-special">)</span><span>
+</span><span id="line-67"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;lightRed&quot;</span></span><span>          </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightRed"><span class="hs-identifier hs-var">lightRed</span></a></span><span>    </span><span class="hs-special">)</span><span>
+</span><span id="line-68"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;green&quot;</span></span><span>             </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#green"><span class="hs-identifier hs-var">green</span></a></span><span>       </span><span class="hs-special">)</span><span>
+</span><span id="line-69"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;lightGreen&quot;</span></span><span>        </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightGreen"><span class="hs-identifier hs-var">lightGreen</span></a></span><span>  </span><span class="hs-special">)</span><span>
+</span><span id="line-70"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;yellow&quot;</span></span><span>            </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#yellow"><span class="hs-identifier hs-var">yellow</span></a></span><span>      </span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;lightYellow&quot;</span></span><span>       </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightYellow"><span class="hs-identifier hs-var">lightYellow</span></a></span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-72"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;blue&quot;</span></span><span>              </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#blue"><span class="hs-identifier hs-var">blue</span></a></span><span>        </span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;lightBlue&quot;</span></span><span>         </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightBlue"><span class="hs-identifier hs-var">lightBlue</span></a></span><span>   </span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;pink&quot;</span></span><span>              </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#pink"><span class="hs-identifier hs-var">pink</span></a></span><span>        </span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;lightPink&quot;</span></span><span>         </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightPink"><span class="hs-identifier hs-var">lightPink</span></a></span><span>   </span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;teal&quot;</span></span><span>              </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-var">teal</span></a></span><span>        </span><span class="hs-special">)</span><span>
+</span><span id="line-77"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;lightTeal&quot;</span></span><span>         </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#lightTeal"><span class="hs-identifier hs-var">lightTeal</span></a></span><span>   </span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;highlight&quot;</span></span><span>         </span><span class="hs-special">,</span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#highlight"><span class="hs-identifier hs-var">highlight</span></a></span><span>   </span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-80"></span><span>
+</span><span id="line-81"></span><span>
+</span><span id="line-82"></span></pre></body></html>

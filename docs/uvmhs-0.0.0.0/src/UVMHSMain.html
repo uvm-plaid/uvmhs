@@ -1,11 +1,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-imports #-}</span><span>
-</span><a name="line-2"></a><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHSMain</span><span> </span><span class="hs-keyword">where</span><span>
-</span><a name="line-3"></a><span>
-</span><a name="line-4"></a><span class="hs-keyword">import</span><span> </span><a href="UVMHS.html"><span class="hs-identifier">UVMHS</span></a><span>
-</span><a name="line-5"></a><span>
-</span><a name="line-6"></a><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><a href="UVMHSContrib.Lang.Arith.html"><span class="hs-identifier">UVMHSContrib.Lang.Arith</span></a><span> </span><span class="hs-keyword">as</span><span> </span><span class="hs-identifier">Arith</span><span>
-</span><a name="line-7"></a><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><a href="UVMHSContrib.Lang.SExp.html"><span class="hs-identifier">UVMHSContrib.Lang.SExp</span></a><span> </span><span class="hs-keyword">as</span><span> </span><span class="hs-identifier">SExp</span><span>
-</span><a name="line-8"></a><span>
-</span><a name="line-9"></a><span class="hs-identifier">main</span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-identifier hs-type">IO</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><a name="line-10"></a><a name="main"><a href="UVMHSMain.html#main"><span class="hs-identifier">main</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><a href="UVMHS.Core.IO.html#out"><span class="hs-identifier hs-var">out</span></a><span> </span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span><span>
-</span><a name="line-11"></a></pre></body></html>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHSMain</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.html"><span class="hs-identifier">UVMHS</span></a></span><span> </span><span>
+</span><span id="line-5"></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html"><span class="hs-identifier">Examples.Lang.Arith</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Arith</span></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.ArithBlocks.html"><span class="hs-identifier">Examples.Lang.ArithBlocks</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">ArithBlocks</span></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.SExp.html"><span class="hs-identifier">Examples.Lang.SExp</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">SExp</span></span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
+</span><a href="UVMHSMain.html#main"><span class="hs-identifier hs-var hs-var">main</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO ()
+forall a. IO a -&gt; IO a
+</span><a href="UVMHS.Core.IO.html#cleanExit"><span class="hs-identifier hs-var">cleanExit</span></a></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-12"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+forall a. Pretty a =&gt; a -&gt; IO ()
+</span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Color -&gt; Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppFG"><span class="hs-identifier hs-var">ppFG</span></a></span><span> </span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#green"><span class="hs-identifier hs-var">green</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span></span><span>
+</span><span id="line-13"></span></pre></body></html>
