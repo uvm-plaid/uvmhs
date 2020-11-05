@@ -12,14 +12,15 @@ import qualified GHC.Stack as Stack
 
 data PrettyParams = PrettyParams
   { punctuationFormat        ∷ Formats
-  , keywordPunctuationFormat ∷ Formats
   , keywordFormat            ∷ Formats
   , constructorFormat        ∷ Formats
   , operatorFormat           ∷ Formats
+  , primitiveFormat          ∷ Formats
   , binderFormat             ∷ Formats
   , literalFormat            ∷ Formats
   , highlightFormat          ∷ Formats
   , headerFormat             ∷ Formats
+  , commentFormat            ∷ Formats
   , errorFormat              ∷ Formats
   , lineNumberFormat         ∷ Formats
   , appLevel                 ∷ ℕ64
@@ -29,14 +30,15 @@ makeLenses ''PrettyParams
 prettyParams₀ ∷ PrettyParams
 prettyParams₀ = PrettyParams
   { punctuationFormat        = formats [FG darkGray]
-  , keywordPunctuationFormat = formats [FG yellow,BD]
-  , keywordFormat            = formats [FG yellow,BD]
-  , constructorFormat        = formats [FG green,BD]
-  , operatorFormat           = formats [FG blue]
-  , binderFormat             = formats [FG teal]
+  , keywordFormat            = formats [BD,FG yellow]
+  , constructorFormat        = formats [BD,FG green]
+  , operatorFormat           = formats [FG teal]
+  , primitiveFormat          = formats [FG green]
+  , binderFormat             = formats [FG blue]
   , literalFormat            = formats [FG red]
   , highlightFormat          = formats [BG highlight]
-  , headerFormat             = formats [FG pink,BD,UL]
+  , headerFormat             = formats [BD,UL,FG pink]
+  , commentFormat            = formats [IT,FG lightGray]
   , errorFormat              = formats [FG white,BG red]
   , lineNumberFormat         = formats [FG lightGray]
   , appLevel                 = 𝕟64 100
@@ -124,14 +126,14 @@ ppUL = ppFormat $ formats [UL]
 ppBD ∷ Doc → Doc
 ppBD = ppFormat $ formats [BD]
 
+ppIT ∷ Doc → Doc
+ppIT = ppFormat $ formats [IT]
+
 ppUT ∷ ℂ → Color → Doc → Doc
 ppUT c o = ppUndertag c (formats [FG o])
 
 ppPun ∷ 𝕊 → Doc
 ppPun = ppFormatParam punctuationFormatL ∘ ppString
-
-ppKeyPun ∷ 𝕊 → Doc
-ppKeyPun = ppFormatParam keywordPunctuationFormatL ∘ ppString
 
 ppKey ∷ 𝕊 → Doc
 ppKey = ppFormatParam keywordFormatL ∘ ppString
@@ -141,6 +143,9 @@ ppCon = ppFormatParam constructorFormatL ∘ ppString
 
 ppOp ∷ 𝕊 → Doc
 ppOp = ppFormatParam operatorFormatL ∘ ppString
+
+ppPrim ∷ 𝕊 → Doc
+ppPrim = ppFormatParam primitiveFormatL ∘ ppString
 
 ppBdr ∷ 𝕊 → Doc
 ppBdr = ppFormatParam binderFormatL ∘ ppString
@@ -153,6 +158,9 @@ ppHl = ppFormatParam highlightFormatL ∘ ppString
 
 ppHeader ∷ 𝕊 → Doc
 ppHeader = ppFormatParam headerFormatL ∘ ppString
+
+ppComment ∷ 𝕊 → Doc
+ppComment = ppFormatParam commentFormatL ∘ ppString
 
 ppErr ∷ 𝕊 → Doc
 ppErr = ppFormatParam errorFormatL ∘ ppString
@@ -183,11 +191,6 @@ ppVertical = concat ∘ inbetween ppNewline ∘ iter
 ppSeparated ∷ (ToIter Doc t) ⇒ t → Doc
 ppSeparated = ppGroup ∘ concat ∘ inbetween ppSpaceNewlineIfBreak ∘ iter
 
-
--- ppNest ∷ ℕ64 → Doc → Doc
--- ppNest = onDoc ∘ mapOut ∘ nestRenderGroups
-
-
 ppSetLevel ∷ ℕ64 → Doc → Doc
 ppSetLevel n = onDoc $ mapEnv $ update docEnvPrecLevelL n ∘ update docEnvPrecBumpedL False
 
@@ -216,19 +219,19 @@ ppLevel i' aM = Doc $ do
     False → ppParens $ ppSetLevel i' aM
 
 ppInf ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInf i oM x₁M x₂M = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [ppBump x₁M,oM,ppBump x₂M]
+ppInf i oM x₁M x₂M = ppLevel i $ ppHorizontal $ iter [ppBump x₁M,oM,ppBump x₂M]
 
 ppInfl ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfl i oM x₁M x₂M = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [x₁M,oM,ppBump x₂M]
+ppInfl i oM x₁M x₂M = ppLevel i $ ppHorizontal $ iter [x₁M,oM,ppBump x₂M]
 
 ppInfr ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfr i oM x₁M x₂M = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [ppBump x₁M,oM,x₂M]
+ppInfr i oM x₁M x₂M = ppLevel i $ ppHorizontal $ iter [ppBump x₁M,oM,x₂M]
 
 ppPre ∷ ℕ64 → Doc → Doc → Doc
-ppPre i oM xM = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [oM,xM]
+ppPre i oM xM = ppLevel i $ ppHorizontal $ iter [oM,xM]
 
 ppPost ∷ ℕ64 → Doc → Doc → Doc
-ppPost i oM xM = ppGA $ ppLevel i $ ppSeparated $ map ppAlign $ iter [xM,oM]
+ppPost i oM xM = ppLevel i $ ppHorizontal $ iter [xM,oM]
 
 ppApp ∷ (ToIter Doc t) ⇒ Doc → t → Doc
 ppApp x xs 

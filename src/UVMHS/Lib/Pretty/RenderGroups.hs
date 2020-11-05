@@ -100,9 +100,6 @@ alignRenderGroupsM xM = do
 alignRenderGroups ∷ RenderGroups → RenderGroups
 alignRenderGroups (RenderGroups s r) = RenderGroups (alignSummary s) $ alignRenderGroupsM r
 
--- nestRenderGroups ∷ ℕ64 → RenderGroups → RenderGroups
--- nestRenderGroups n (RenderGroups s r) = RenderGroups s $ mapEnvL renderGroupsEnvNestL ((+) n) r
-
 groupRenderGroupsM ∷ Shape → ITree → RenderGroupsM () → RenderGroupsM ()
 groupRenderGroupsM sh rdis xM 
   | shape multiLineShapeL sh = xM
@@ -131,33 +128,8 @@ groupRenderGroupsM sh rdis xM
 groupRenderGroups ∷ RenderGroups → RenderGroups
 groupRenderGroups (RenderGroups s@(Summary sh rdis) xM) = RenderGroups s $ groupRenderGroupsM sh rdis xM
 
--- modeRenderGroups ∷ Shape → 𝐼 (T2 IChunk) → PrettyMode → RenderGroupsM () → RenderGroupsM ()
--- modeRenderGroups sh rdis = \case
---   NullMode → id
---   AMode → alignRenderGroups
---   GMode → groupRenderGroups sh rdis
---   AGMode → alignRenderGroups ∘ groupRenderGroups sh rdis
--- 
--- compileRenderGroups ∷ RenderGroups → RenderGroupsM ()
--- compileRenderGroups = \case
---   Leaf𝐴 (Summary shf rdisf) () m (shb :* rdisb) → modeRenderGroups shf rdisf m $ renderITree shb rdisb
---   Append𝐴 (Summary shf rdisf) () m ld₁ lds₂ ld₃ → modeRenderGroups shf rdisf m $ do
---     compileRenderGroups ld₁
---     eachWith compileRenderGroups lds₂
---     compileRenderGroups ld₃
--- compileRenderGroups ∷ RenderGroups → RenderGroupsM ()
--- compileRenderGroups (𝑉𝐴 g) = g fₑ fₐ
---   where
---     fₑ ∷ Summary → RenderGroupsM ()
---     fₑ (Summary sh rd) = renderITree sh rd
---     fₐ ∷ Summary → RenderGroupsM () → RenderGroupsM ()
---     fₐ _ xM = xM
--- 
---
 execRenderGroupsWith ∷ (RenderGroupsM () → RenderGroupsM ()) → RenderGroups → ITree
 execRenderGroupsWith f = evalRWS renderGroupsEnv₀ renderGroupsState₀ ∘ retOut ∘ f ∘ renderGroupsRender
 
 execRenderGroups ∷ RenderGroups → ITree
 execRenderGroups = execRenderGroupsWith id
-
-

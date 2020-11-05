@@ -172,13 +172,28 @@ ppRenderNofmt = ppRenderWith (localL ansiEnvDoFormatL False) id id
 ppRenderWide ∷ Doc → 𝕊
 ppRenderWide = 
   ppRenderWith id 
-               (localL renderGroupsEnvMaxLineWidthL None ∘ localL renderGroupsEnvMaxRibbonWidthL None) 
+               (localL renderGroupsEnvMaxLineWidthL None 
+                ∘ localL renderGroupsEnvMaxRibbonWidthL None) 
+               id
+
+ppRenderNarrow ∷ Doc → 𝕊
+ppRenderNarrow = 
+  ppRenderWith id 
+               (localL renderGroupsEnvMaxLineWidthL (Some zero) 
+                ∘ localL renderGroupsEnvMaxRibbonWidthL (Some zero)) 
                id
 
 ppRenderNofmtWide ∷ Doc → 𝕊
 ppRenderNofmtWide = 
   ppRenderWith (localL ansiEnvDoFormatL False) 
                (localL renderGroupsEnvMaxLineWidthL None ∘ localL renderGroupsEnvMaxRibbonWidthL None)
+               id
+
+ppRenderNofmtNarrow ∷ Doc → 𝕊
+ppRenderNofmtNarrow = 
+  ppRenderWith (localL ansiEnvDoFormatL False) 
+               (localL renderGroupsEnvMaxLineWidthL (Some zero) 
+                ∘ localL renderGroupsEnvMaxRibbonWidthL (Some zero))
                id
 
 ppshow ∷ (Pretty a) ⇒ a → 𝕊
