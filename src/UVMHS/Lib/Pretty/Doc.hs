@@ -218,20 +218,35 @@ ppLevel i' aM = Doc $ do
     True → ppSetLevel i' aM
     False → ppParens $ ppSetLevel i' aM
 
+ppInfLevel ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfLevel i oM x₁M x₂M = ppLevel i $ concat $ iter [ppBump x₁M,oM,ppBump x₂M]
+
+ppInflLevel ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInflLevel i oM x₁M x₂M = ppLevel i $ concat $ iter [x₁M,oM,ppBump x₂M]
+
+ppInfrLevel ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfrLevel i oM x₁M x₂M = ppLevel i $ concat $ iter [ppBump x₁M,oM,x₂M]
+
+ppPreLevel ∷ ℕ64 → Doc → Doc → Doc
+ppPreLevel i oM xM = ppLevel i $ concat $ iter [oM,xM]
+
+ppPostLevel ∷ ℕ64 → Doc → Doc → Doc
+ppPostLevel i oM xM = ppLevel i $ concat $ iter [xM,oM]
+
 ppInf ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInf i oM x₁M x₂M = ppLevel i $ ppHorizontal $ iter [ppBump x₁M,oM,ppBump x₂M]
+ppInf i o = ppInfLevel i $ concat [ppNewlineIfBreak,o,ppSpaceIfBreak]
 
 ppInfl ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfl i oM x₁M x₂M = ppLevel i $ ppHorizontal $ iter [x₁M,oM,ppBump x₂M]
+ppInfl i o = ppInflLevel i $ concat [ppNewlineIfBreak,o,ppSpaceIfBreak]
 
 ppInfr ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfr i oM x₁M x₂M = ppLevel i $ ppHorizontal $ iter [ppBump x₁M,oM,x₂M]
+ppInfr i o = ppInfLevel i $ concat [ppNewlineIfBreak,o,ppSpaceIfBreak]
 
 ppPre ∷ ℕ64 → Doc → Doc → Doc
-ppPre i oM xM = ppLevel i $ ppHorizontal $ iter [oM,xM]
+ppPre = ppPreLevel
 
 ppPost ∷ ℕ64 → Doc → Doc → Doc
-ppPost i oM xM = ppLevel i $ ppHorizontal $ iter [xM,oM]
+ppPost = ppPostLevel
 
 ppApp ∷ (ToIter Doc t) ⇒ Doc → t → Doc
 ppApp x xs 
