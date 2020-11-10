@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0b18ab6c432ec9ba82dba8988dc04edb106de1afa129ef78fcf3e6ad99ea81cb
+-- hash: 0463fffdac7e6b17f8b4baa3271bc0b55492d6661c7eb253b3e869b46b335421
 
 name:           uvmhs
 version:        0.0.0.0
@@ -95,7 +95,7 @@ library
   hs-source-dirs:
       src
   default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
-  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2
+  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2 -optP-Wno-nonportable-include-path
   build-depends:
       array
     , base
@@ -117,7 +117,7 @@ executable uvmhs
   hs-source-dirs:
       main
   default-extensions: ConstraintKinds DataKinds ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
-  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2
+  ghc-options: -Wall -Wno-orphans -fspecialise-aggressively -fexpose-all-unfoldings -O2 -optP-Wno-nonportable-include-path
   build-depends:
       array
     , base

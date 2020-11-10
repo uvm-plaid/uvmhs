@@ -7,7 +7,7 @@ import UVMHS.Lib.Pretty
 
 data 𝕏 = 𝕏
   { 𝕩name ∷ 𝕊
-  , 𝕩Gen ∷ 𝑂 ℕ
+  , 𝕩Gen ∷ 𝑂 ℕ64
   } deriving (Eq,Ord,Show)
 
 var ∷ 𝕊 → 𝕏
@@ -20,5 +20,5 @@ instance Pretty 𝕏 where
     [ ppString x
     , case nO of
         None → null
-        Some n → concat [ppPun "#",pretty n]
+        Some n → concat [ppPun "#",ppPun $ show𝕊 n]
     ]
