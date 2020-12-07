@@ -5,7 +5,6 @@ import UVMHS.Core.Classes.Morphism
 
 infixr 0 ^$, ^^$
 infixl 7 ^∘, ^^∘
-infixl 9 ^⋅, ^^⋅
 
 class Functor (t ∷ ★ → ★) where map ∷ (a → b) → (t a → t b)
 
@@ -28,14 +27,6 @@ mappp = mapp ∘ map
 {-# INLINE mapppOn #-}
 mapppOn ∷ (Functor t,Functor u,Functor v) ⇒ t (u (v a)) → (a → b) → t (u (v b))
 mapppOn = flip mappp
-
-{-# INLINE (^⋅) #-}
-(^⋅) ∷ (Functor t) ⇒ (a → b) → t a → t b 
-(^⋅) = map
-
-{-# INLINE (^^⋅) #-}
-(^^⋅) ∷ (Functor t,Functor u) ⇒ (a → b) → t (u a) → t (u b)
-(^^⋅) = mapp
 
 {-# INLINE (^$) #-}
 (^$) ∷ (Functor t) ⇒ (a → b) → t a → t b 

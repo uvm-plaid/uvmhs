@@ -3,6 +3,8 @@ module UVMHS.Core.Data.Pair where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
+import UVMHS.Core.Data.Arithmetic ()
+
 instance (POrd a,POrd b) ⇒ POrd (a ∧ b) where 
   {-# INLINE (⊑) #-}
   (x₁ :* y₁) ⊑ (x₂ :* y₂) = (x₁ ⊑ x₂) ⩓ (y₁ ⊑ y₂)
@@ -50,6 +52,8 @@ instance (Monoid a) ⇒ Monad ((∧) a)
 instance FunctorM ((∧) a) where 
   {-# INLINE mapM #-}
   mapM f (x :* y) = map ((:*) x) $ f y
+
+instance (Sized a,Sized b) ⇒ Sized (a ∧ b) where size (x :* y)  = size x + size y
 
 {-# INLINE fst #-}
 fst ∷ a ∧ b → a

@@ -13,11 +13,12 @@ import qualified Prelude as HS
 import qualified GHC.Types as HS
 import qualified GHC.Stack as HS
 
-import qualified Data.Int as HS
-import qualified Data.Word as HS
-import qualified Data.Ratio as HS
-import qualified Numeric.Natural as HS
 import qualified Control.Exception as HS
+import qualified Data.Int as HS
+import qualified Data.Ratio as HS
+import qualified Data.Word as HS
+import qualified Numeric.Natural as HS
+import qualified Unsafe.Coerce as HS
 
 import qualified Data.Text as Text
 
@@ -73,6 +74,7 @@ type ℂ = HS.Char
 type 𝕊 = Text.Text
 
 data Void
+
 type 𝔹 = HS.Bool
 data a ∨ b = Inl a | Inr b
   deriving (Eq,Ord,Show)
@@ -103,6 +105,16 @@ data Nat = Z | S Nat
   deriving (Eq,Ord,Show)
 
 data W (c ∷ Constraint) where W ∷ (c) ⇒ W c
+
+{-# INLINE coerce_UNSAFE #-}
+coerce_UNSAFE ∷ a → b
+coerce_UNSAFE = HS.unsafeCoerce
+
+weq_UNSAFE ∷ P a → P b → W (a ~ b)
+weq_UNSAFE P P = coerce_UNSAFE $ W @ (() ~ ())
+
+void_UNSAFE ∷ Void
+void_UNSAFE = coerce_UNSAFE ()
 
 deriving instance Eq (W c)
 deriving instance Ord (W c)

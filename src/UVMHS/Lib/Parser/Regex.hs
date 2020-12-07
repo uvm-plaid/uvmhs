@@ -5,7 +5,6 @@ import UVMHS.Core
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Window
-import UVMHS.Lib.IterS
 
 import UVMHS.Lib.Parser.Loc
 import UVMHS.Lib.Parser.ParserContext
@@ -316,13 +315,13 @@ data LexDFAState t = LexDFAState
   { lexDFAStatePrefix ∷ WindowR Doc Doc
   , lexDFAStateContext ∷ ParserContext
   , lexDFAStateInput ∷ 𝑆 (ParserToken t)
-  , lexDFAStateTokens ∷ 𝐼S t
+  , lexDFAStateTokens ∷ 𝐼C t
   }
 makePrettySum ''LexDFAState
 
 data Lexer c t o u w = Lexer
   { lexerDFA ∷ u → DFA c t o u
-  , lexerMkToken ∷ 𝐼S t → 𝑂 o → 𝔹 ∧ w
+  , lexerMkToken ∷ 𝐼C t → 𝑂 o → 𝔹 ∧ w
   , lexerInitState ∷ u
   }
 
@@ -331,10 +330,10 @@ tokenize ∷
   ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (PreParserToken w)
 tokenize (Lexer dfas f u₀) so ts₀ = vecS ^$ oloop u₀ (dfas u₀) null $ stream ts₀
   where
-  oloop ∷ u → DFA c t o u → WindowR Doc Doc → 𝑆 (ParserToken t) → Doc ∨ 𝐼S (PreParserToken w)
+  oloop ∷ u → DFA c t o u → WindowR Doc Doc → 𝑆 (ParserToken t) → Doc ∨ 𝐼C (PreParserToken w)
   oloop u (DFA lits n₀ δt δs δd) pp₀ pi₀' = iloop n₀ (LexDFAState pp₀ null pi₀' null) None None
     where
-      success ∷ RegexResult o u → LexDFAState t → Doc ∨ 𝐼S (PreParserToken w)
+      success ∷ RegexResult o u → LexDFAState t → Doc ∨ 𝐼C (PreParserToken w)
       success (RegexResult _ fm oO u') (LexDFAState pp pc pi ts) = do
         let u'' = u + u'
             pc' = formatParserContext fm pc
@@ -347,7 +346,7 @@ tokenize (Lexer dfas f u₀) so ts₀ = vecS ^$ oloop u₀ (dfas u₀) null $ st
         let le = locRangeEnd $ parserContextLocRange tc
             d = parserContextError tc
         in displaySourceError so $ AddNull $ ParserError le d s $ single $ ParserErrorInfo pp (parserContextDisplayR pc) "<token>" null
-      iloop ∷ ℕ64 → LexDFAState t → 𝑂 (ParserToken t ∧ LexDFAState t) → 𝑂 (RegexResult o u ∧ LexDFAState t) → Doc ∨ 𝐼S (PreParserToken w)
+      iloop ∷ ℕ64 → LexDFAState t → 𝑂 (ParserToken t ∧ LexDFAState t) → 𝑂 (RegexResult o u ∧ LexDFAState t) → Doc ∨ 𝐼C (PreParserToken w)
       iloop n σ@(LexDFAState pp pc pi ts) tO rO = case uncons𝑆 pi of
         -- end of stream
         None → case rO of
@@ -540,7 +539,7 @@ lComment = sequence
   [ lWord "--"
   , star $ ntokRegex $ single '\n'
   , opt $ tokRegex '\n'
-  , fepsRegex $ formats [IT,FG lightGray]
+  , fepsRegex $ formats [IT,FG grayLight]
   , lepsRegex $ 𝕟64 100
   ]
 
@@ -548,7 +547,7 @@ lCommentMLOpen ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lCommentMLOpen = sequence
   [ lWord "{-" 
   , uepsRegex one
-  , fepsRegex $ formats [IT,FG lightGray]
+  , fepsRegex $ formats [IT,FG grayLight]
   , lepsRegex $ 𝕟64 100
   ]
 
@@ -572,7 +571,7 @@ lCommentMLBody = sequence
       , oom (tokRegex '{') ▷ ntokRegex (pow ['{','-'])
       ]
   , lCommentMLBodyOpen ⧺ lCommentMLBodyClose
-  , fepsRegex $ formats [IT,FG lightGray]
+  , fepsRegex $ formats [IT,FG grayLight]
   ]
 
 --------------------------
@@ -605,7 +604,7 @@ data TokenBasic =
 makePrisms ''TokenBasic
 makePrettySum ''TokenBasic
 
-mkTokenBasic ∷ 𝐼S ℂ → 𝑂 TokenClassBasic → 𝔹 ∧ TokenBasic
+mkTokenBasic ∷ 𝐼C ℂ → 𝑂 TokenClassBasic → 𝔹 ∧ TokenBasic
 mkTokenBasic cs = \case
   None → error "no token class"
   Some SpaceCBasic → (:*) True $ SpaceTBasic $ stringS cs
@@ -622,7 +621,7 @@ lSyntaxBasic puns kws prims ops = concat
   -- punctuation
   [ sequence
     [ concat $ map lWord puns
-    , fepsRegex $ formats [FG darkGray]
+    , fepsRegex $ formats [FG grayDark]
     ]
   -- keywords
   , sequence
@@ -685,17 +684,17 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecS $ loop nu
     syntheticToken ∷ AddBT Loc → IndentCommand → PreParserToken t
     syntheticToken loc x =
       let pcS = case x of
-            OpenIC → ppBG white $ ppFG lightGray $ ppString "⦗"
-            CloseIC → ppBG white $ ppFG lightGray $ ppString "⦘"
-            NewlineIC → ppBG white $ ppFG lightGray $ ppString "‣"
+            OpenIC → ppBG white $ ppFG grayLight $ ppString "⦗"
+            CloseIC → ppBG white $ ppFG grayLight $ ppString "⦘"
+            NewlineIC → ppBG white $ ppFG grayLight $ ppString "‣"
           pc = ParserContext (LocRange loc loc) (eWindowL pcS) (eWindowR pcS) $ eWindowR pcS
       in
       PreParserToken (mkIndentToken x) False pc
-    loop ∷ 𝐼S (PreParserToken t) → LocRange → 𝔹 → 𝔹 → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼S (PreParserToken t)
+    loop ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
     loop prefix prefixLocRangeBumped isFreshBlock isAfterNewline = \case
       Nil → loopUnanchored prefix prefixLocRangeBumped isFreshBlock
       anchor :& anchors → loopAnchored prefix prefixLocRangeBumped isFreshBlock isAfterNewline anchor anchors
-    loopUnanchored ∷ 𝐼S (PreParserToken t) → LocRange → 𝔹 → 𝑆 (PreParserToken t) → 𝐼S (PreParserToken t)
+    loopUnanchored ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
     loopUnanchored prefix prefixLocRangeBumped isFreshBlock ts = case uncons𝑆 ts of
       None → prefix
       Some (t :* ts') →
@@ -736,10 +735,10 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecS $ loop nu
                            (isBlock $ preParserTokenValue t) 
                            ts'
           ]
-    loopAnchored ∷ 𝐼S (PreParserToken t) → LocRange → 𝔹 → 𝔹 → AddBT Loc → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼S (PreParserToken t)
+    loopAnchored ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → AddBT Loc → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
     loopAnchored prefix prefixLocRangeBumped isFreshBlock isAfterNewline anchor anchors ts = case uncons𝑆 ts of
       None → 
-        let loop' ∷ 𝐿 (AddBT Loc) → 𝐼S (PreParserToken t)
+        let loop' ∷ 𝐿 (AddBT Loc) → 𝐼C (PreParserToken t)
             loop' anchors' =
               if anchors' ≡ anchors₀
               then null
@@ -765,7 +764,7 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecS $ loop nu
         let locₜ = locRangeBegin $ parserContextLocRange $ preParserTokenContext t
             prefixLocRangeBumpedEnd = locRangeEnd prefixLocRangeBumped
             prefixLocRangeBumpedBegin = locRangeBegin prefixLocRangeBumped
-            recordTokenKeepGoing ∷ 𝐼S (PreParserToken t) → LocRange → 𝔹 → 𝐼S (PreParserToken t)
+            recordTokenKeepGoing ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝐼C (PreParserToken t)
             recordTokenKeepGoing prefix' prefixLocRangeBumped' weHaveANewAnchor = 
               let prefixLocRangeBumpedEnd' = locRangeEnd prefixLocRangeBumped'
                   anchor' :* anchors' = 
@@ -907,7 +906,7 @@ data TokenWSBasic =
 makePrisms ''TokenWSBasic
 makePrettySum ''TokenWSBasic
 
-mkTokenWSBasic ∷ 𝐼S ℂ → 𝑂 TokenClassWSBasic → 𝔹 ∧ TokenWSBasic
+mkTokenWSBasic ∷ 𝐼C ℂ → 𝑂 TokenClassWSBasic → 𝔹 ∧ TokenWSBasic
 mkTokenWSBasic cs = \case
   None → error "no token class"
   Some SpaceCWSBasic → (:*) True $ SpaceTWSBasic $ stringS cs
@@ -926,7 +925,7 @@ lSyntaxWSBasic puns kws prims ops = concat
   -- punctuation
   [ sequence
     [ concat $ map lWord puns
-    , fepsRegex $ formats [FG darkGray]
+    , fepsRegex $ formats [FG grayLight]
     ]
   -- keywords
   , sequence

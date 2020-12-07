@@ -305,30 +305,30 @@ reverse ∷ (ToIter a t) ⇒ t → 𝐼 a
 reverse xs = 𝐼 $ \ (f ∷ a → b → b) (i ∷ b) → foldr i f xs
 
 {-# INLINE repeatI #-}
-repeatI ∷ ℕ → (ℕ → a) → 𝐼 a
+repeatI ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → (n → a) → 𝐼 a
 repeatI n₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
-  let loop ∷ ℕ → b → b
+  let loop ∷ n → b → b
       loop n i
         | n ≡ n₀ = i
         | otherwise = loop (succ n) (f (g n) i)
-  in loop 0 i₀
+  in loop zero i₀
 
 {-# INLINE repeat #-}
-repeat ∷ ℕ → a → 𝐼 a
+repeat ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → 𝐼 a
 repeat n = repeatI n ∘ const
 
 {-# INLINE build #-}
-build ∷ ∀ a. ℕ → a → (a → a) → 𝐼 a
+build ∷ ∀ n a. (Eq n,Zero n,One n,Additive n) ⇒ n → a → (a → a) → 𝐼 a
 build n₀ x₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
-  let loop ∷ ℕ → a → b → b
+  let loop ∷ n → a → b → b
       loop n x i
         | n ≡ n₀ = i
         | otherwise = loop (succ n) (g x) (f x i)
-  in loop 0 x₀ i₀
+  in loop zero x₀ i₀
 
 {-# INLINE upTo #-}
-upTo ∷ ℕ → 𝐼 ℕ
-upTo n = build n 0 succ
+upTo ∷ (Eq n,Zero n,One n,Additive n) ⇒ n → 𝐼 n
+upTo n = build n zero succ
 
 {-# INLINE withIndex #-}
 withIndex ∷ (ToIter a t) ⇒ t → 𝐼 (ℕ ∧ a)
@@ -497,3 +497,65 @@ sort = sortWith (⋚)
 
 materialize ∷ (ToIter a t) ⇒ t → 𝐼 a
 materialize = iter ∘ list
+
+--------
+-- 𝐼C --
+--------
+
+data 𝐼C a = 𝐼C
+  { 𝑖cCount ∷ ℕ64
+  , 𝑖cIter ∷ 𝐼 a
+  } deriving (Show)
+
+instance Null   (𝐼C a) where null                  = 𝐼C zero null
+instance Append (𝐼C a) where 𝐼C c₁ xs₁ ⧺ 𝐼C c₂ xs₂ = 𝐼C (c₁ + c₂) (xs₁ ⧺ xs₂)
+instance Monoid (𝐼C a)
+
+instance ToIter a (𝐼C a) where iter   = 𝑖cIter
+instance Single a (𝐼C a) where single = 𝐼C one ∘ single
+instance Sized    (𝐼C a) where size   = 𝑖cCount
+
+instance Functor 𝐼C where map f (𝐼C c xs) = 𝐼C c $ map f xs
+
+iterC ∷ (ToIter a t,Sized t) ⇒ t → 𝐼C a
+iterC xs = 𝐼C (size xs) $ iter xs
+
+---------
+-- 𝐼A --
+---------
+
+data 𝐼A a = 𝐼A
+  { 𝑖ASize ∷ ℕ64
+  , 𝑖AIter ∷ 𝐼 a
+  } deriving (Show)
+
+instance Null   (𝐼A a) where null                  = 𝐼A zero null
+instance Append (𝐼A a) where 𝐼A s₁ xs₁ ⧺ 𝐼A s₂ xs₂ = 𝐼A (s₁ + s₂) (xs₁ ⧺ xs₂)
+instance Monoid (𝐼A a)
+
+instance             ToIter a (𝐼A a) where iter     = 𝑖AIter
+instance (Sized a) ⇒ Single a (𝐼A a) where single s = 𝐼A (size s) $ single s
+instance             Sized    (𝐼A a) where size     = 𝑖ASize
+
+iterA ∷ (ToIter a t,Sized a) ⇒ t → 𝐼A a
+iterA xs = 𝐼A (sum $ map size $ iter xs) $ iter xs
+
+---------
+-- 𝐼CA --
+---------
+
+data 𝐼CA a = 𝐼CA
+  { 𝑖CACount ∷ ℕ64
+  , 𝑖CASize ∷ ℕ64
+  , 𝑖CAIter ∷ 𝐼 a
+  } deriving (Show)
+
+instance Null   (𝐼CA a) where null                          = 𝐼CA zero zero null
+instance Append (𝐼CA a) where 𝐼CA c₁ s₁ xs₁ ⧺ 𝐼CA c₂ s₂ xs₂ = 𝐼CA (c₁ + c₂) (s₁ + s₂) (xs₁ ⧺ xs₂)
+instance Monoid (𝐼CA a)
+
+instance             ToIter a (𝐼CA a) where iter     = 𝑖CAIter
+instance (Sized a) ⇒ Single a (𝐼CA a) where single s = 𝐼CA one (size s) $ single s
+
+iterCA ∷ (ToIter a t,Sized a,Sized t) ⇒ t → 𝐼CA a
+iterCA xs = 𝐼CA (size xs) (sum $ map size $ iter xs) $ iter xs

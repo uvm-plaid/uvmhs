@@ -26,9 +26,10 @@ instance Null (𝑉𝐴 i a) where null = null𝑉𝐴
 instance Append (𝑉𝐴 i a) where (⧺) = append𝑉𝐴
 instance Monoid (𝑉𝐴 i a)
 
-instance Functor (𝑉𝐴 i) where
-  map ∷ ∀ a b. (a → b) → 𝑉𝐴 i a → 𝑉𝐴 i b
-  map f (𝑉𝐴 g) = 𝑉𝐴 $ \ fₑ fₐ → g (fₑ ∘ f) fₐ
+map𝑉𝐴 ∷ (i → j) → (a → b) → 𝑉𝐴 i a → 𝑉𝐴 j b
+map𝑉𝐴 f g (𝑉𝐴 h) = 𝑉𝐴 $ \ fₑ fₐ → h (fₑ ∘ g) $ fₐ ∘ f
+
+instance Functor (𝑉𝐴 i) where map = map𝑉𝐴 id
 
 -------
 -- 𝐴 --

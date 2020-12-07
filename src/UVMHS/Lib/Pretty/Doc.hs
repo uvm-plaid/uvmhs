@@ -2,13 +2,17 @@ module UVMHS.Lib.Pretty.Doc where
 
 import UVMHS.Core
 
-import UVMHS.Lib.IterS
-
-import UVMHS.Lib.Pretty.Color
 import UVMHS.Lib.Pretty.Annotation
-import UVMHS.Lib.Pretty.RenderGroups
+import UVMHS.Lib.Pretty.Color
+import UVMHS.Lib.Pretty.Common
+import UVMHS.Lib.Pretty.DocA
+import UVMHS.Lib.Pretty.Shape
+import UVMHS.Lib.Pretty.RenderUndertags
 
 import qualified GHC.Stack as Stack
+
+-- Doc renders local configuration options such as colors and
+-- formatting
 
 data PrettyParams = PrettyParams
   { punctuationFormat        ∷ Formats
@@ -29,7 +33,7 @@ makeLenses ''PrettyParams
 
 prettyParams₀ ∷ PrettyParams
 prettyParams₀ = PrettyParams
-  { punctuationFormat        = formats [FG darkGray]
+  { punctuationFormat        = formats [FG grayDark]
   , keywordFormat            = formats [BD,FG yellow]
   , constructorFormat        = formats [BD,FG green]
   , operatorFormat           = formats [FG teal]
@@ -38,9 +42,9 @@ prettyParams₀ = PrettyParams
   , literalFormat            = formats [FG red]
   , highlightFormat          = formats [BG highlight]
   , headerFormat             = formats [BD,UL,FG pink]
-  , commentFormat            = formats [IT,FG lightGray]
+  , commentFormat            = formats [IT,FG grayLight]
   , errorFormat              = formats [FG white,BG red]
-  , lineNumberFormat         = formats [FG lightGray]
+  , lineNumberFormat         = formats [FG grayLight]
   , appLevel                 = 𝕟64 100
   }
 
@@ -62,13 +66,13 @@ docEnv₀ = DocEnv
   , docEnvPrecBumped = False
   }
 
-type DocM = RWS DocEnv RenderGroups ()
+type DocM = RWS DocEnv DocA ()
 newtype Doc = Doc { unDoc ∷ DocM () }
 
-execDocWith ∷ (DocM () → DocM ()) → Doc → RenderGroups
+execDocWith ∷ (DocM () → DocM ()) → Doc → DocA
 execDocWith f = evalRWS docEnv₀ () ∘ retOut ∘ f ∘ unDoc
 
-execDoc ∷ Doc → RenderGroups
+execDoc ∷ Doc → DocA
 execDoc = execDocWith id
 
 onDoc ∷ (DocM () → DocM ()) → Doc → Doc
@@ -86,7 +90,7 @@ instance Monoid Doc
 -----------------
 
 ppAnnotate ∷ Annotation → Doc → Doc
-ppAnnotate = onDoc ∘ mapOut ∘ annotateRenderGroups
+ppAnnotate = onDoc ∘ mapOut ∘ annotateDocA
 
 ppFormat ∷ Formats → Doc → Doc
 ppFormat = ppAnnotate ∘ formatAnnotation
@@ -100,19 +104,19 @@ ppUndertag ∷ ℂ → Formats → Doc → Doc
 ppUndertag = ppAnnotate ∘∘ undertagAnnotation
 
 ppGroup ∷ Doc → Doc
-ppGroup = onDoc $ mapOut groupRenderGroups
+ppGroup = onDoc $ mapOut groupDocA
 
 ppAlign ∷ Doc → Doc
-ppAlign = onDoc $ mapOut alignRenderGroups
+ppAlign = onDoc $ mapOut alignDocA
 
 ppGA ∷ Doc → Doc
 ppGA = ppAlign ∘ ppGroup
 
 ppString ∷ 𝕊 → Doc
-ppString = Doc ∘ tell ∘ stringCChunk
+ppString = Doc ∘ tell ∘ stringDocA
 
 ppStringModal ∷ 𝕊 → 𝕊 → Doc
-ppStringModal sf sb = Doc $ tell $ stringCChunkModal sf sb
+ppStringModal sf sb = Doc $ tell $ stringDocAModal sf sb
 
 ppFG ∷ Color → Doc → Doc
 ppFG c = ppFormat $ formats [FG c]
@@ -132,42 +136,74 @@ ppIT = ppFormat $ formats [IT]
 ppUT ∷ ℂ → Color → Doc → Doc
 ppUT c o = ppUndertag c (formats [FG o])
 
+ppPunFmt ∷ Doc → Doc
+ppPunFmt = ppFormatParam punctuationFormatL 
+
 ppPun ∷ 𝕊 → Doc
-ppPun = ppFormatParam punctuationFormatL ∘ ppString
+ppPun = ppPunFmt ∘ ppString
+
+ppKeyFmt ∷ Doc → Doc
+ppKeyFmt = ppFormatParam keywordFormatL 
 
 ppKey ∷ 𝕊 → Doc
-ppKey = ppFormatParam keywordFormatL ∘ ppString
+ppKey = ppKeyFmt ∘ ppString
+
+ppConFmt ∷ Doc → Doc
+ppConFmt = ppFormatParam constructorFormatL
 
 ppCon ∷ 𝕊 → Doc
-ppCon = ppFormatParam constructorFormatL ∘ ppString
+ppCon = ppConFmt ∘ ppString
+
+ppOpFmt ∷ Doc → Doc
+ppOpFmt = ppFormatParam operatorFormatL
 
 ppOp ∷ 𝕊 → Doc
-ppOp = ppFormatParam operatorFormatL ∘ ppString
+ppOp = ppOpFmt ∘ ppString
+
+ppPrimFmt ∷ Doc → Doc
+ppPrimFmt = ppFormatParam primitiveFormatL
 
 ppPrim ∷ 𝕊 → Doc
-ppPrim = ppFormatParam primitiveFormatL ∘ ppString
+ppPrim = ppPrimFmt ∘ ppString
+
+ppBdrFmt ∷ Doc → Doc
+ppBdrFmt = ppFormatParam binderFormatL
 
 ppBdr ∷ 𝕊 → Doc
-ppBdr = ppFormatParam binderFormatL ∘ ppString
+ppBdr = ppBdrFmt  ∘ ppString
+
+ppLitFmt ∷ Doc → Doc
+ppLitFmt = ppFormatParam literalFormatL
 
 ppLit ∷ 𝕊 → Doc
-ppLit = ppFormatParam literalFormatL ∘ ppString
+ppLit = ppLitFmt ∘ ppString
+
+ppHlFmt ∷ Doc → Doc
+ppHlFmt = ppFormatParam highlightFormatL
 
 ppHl ∷ 𝕊 → Doc
-ppHl = ppFormatParam highlightFormatL ∘ ppString
+ppHl = ppHlFmt ∘ ppString
+
+ppHeaderFmt ∷ Doc → Doc
+ppHeaderFmt = ppFormatParam headerFormatL
 
 ppHeader ∷ 𝕊 → Doc
-ppHeader = ppFormatParam headerFormatL ∘ ppString
+ppHeader = ppHeaderFmt ∘ ppString
+
+ppCommentFmt ∷ Doc → Doc
+ppCommentFmt = ppFormatParam commentFormatL
 
 ppComment ∷ 𝕊 → Doc
-ppComment = ppFormatParam commentFormatL ∘ ppString
+ppComment = ppCommentFmt ∘ ppString
+
+ppErrFmt ∷ Doc → Doc
+ppErrFmt = ppFormatParam errorFormatL
 
 ppErr ∷ 𝕊 → Doc
-ppErr = ppFormatParam errorFormatL ∘ ppString
-
+ppErr = ppErrFmt ∘ ppString
 
 ppSpace ∷ ℕ64 → Doc
-ppSpace n = ppString $ string $ repeat (nat n) ' '
+ppSpace n = ppString $ string $ repeat n ' '
 
 ppNewline ∷ Doc
 ppNewline = ppString "\n"
@@ -180,7 +216,6 @@ ppNewlineIfBreak = ppStringModal "" "\n"
 
 ppSpaceNewlineIfBreak ∷ Doc
 ppSpaceNewlineIfBreak = ppStringModal " " "\n"
-
 
 ppHorizontal ∷ (ToIter Doc t) ⇒ t → Doc
 ppHorizontal = concat ∘ inbetween (ppSpace $ 𝕟64 1) ∘ iter
@@ -288,6 +323,38 @@ ppRecord rel kvs = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") $ map mappin
       , ppAlign v
       ]
 
+
+matrixHelper ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n SummaryO) → 𝕍S n ℕ64 ∧ 𝕍S m (𝕍S n SummaryO)
+matrixHelper has vas sss =
+  let sssT       = 𝐭 sss
+      rowHeights = mapOn sss  $ \ ss → joins $ mapOn ss $ \ s → shapeNewlines $ summaryOShape s
+      colWidths  = mapOn sssT $ \ ss → joins $ mapOn ss $ \ s → shapeWidth    $ summaryOShape s
+      sss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j → hvalign (has ⋕ j) (vas ⋕ i) (colWidths ⋕ j) (rowHeights ⋕ i) $ sss ⋕ i ⋕ j
+  in colWidths :* sss'
+
+ppMatrix ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
+ppMatrix has vas dss =
+  let sss       = mapp (execRenderUT ∘ summaryIContents ∘ summaryDocA ∘ execDoc) dss
+      _ :* sss' = matrixHelper has vas sss
+      dss'      = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
+        let SummaryO sh t = sss' ⋕ i ⋕ j
+        in Doc $ tell $ StaticDocA $ SummaryI (ShapeA False sh) $ treeIO t
+  in 
+  ppVertical $ mapOn dss' $ \ ds →
+    ppHorizontal $ inbetween null ds
+
+ppMatrixCells ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
+ppMatrixCells has vas dss =
+  let sss        = mapp (execRenderUT ∘ summaryIContents ∘ summaryDocA ∘ execDoc) dss
+      ws :* sss' = matrixHelper has vas sss
+      sep        = ppFG white $ concat $ inbetween (ppString "─┼─") $ mapOn ws $ \ w → ppString $ string $ repeat w '─'
+      dss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
+        let SummaryO sh t = sss' ⋕ i ⋕ j
+        in Doc $ tell $ StaticDocA $ SummaryI (ShapeA False sh) $ treeIO t
+  in 
+  ppVertical $ inbetween sep $ mapOn dss' $ \ ds →
+    ppHorizontal $ inbetween (ppFG white $ ppString "│") ds
+
 -----------
 -- CLASS --
 -----------
@@ -359,20 +426,28 @@ instance (Pretty a) ⇒ Pretty (𝐿 a) where
   pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
 instance (Pretty a) ⇒ Pretty [a] where 
   pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
-instance (Pretty a) ⇒ Pretty (𝕍 a) where 
-  pretty xs = ppApp (ppString "𝕍") $ list [pretty $ list xs]
 instance (Pretty a) ⇒ Pretty (𝑆 a) where 
   pretty xs = ppApp (ppString "𝑆") $ list [pretty $ list xs]
 instance (Pretty a) ⇒ Pretty (𝐼 a) where 
   pretty xs = ppApp (ppString "𝐼") $ list [pretty $ list xs]
-instance (Pretty a) ⇒ Pretty (𝐼S a) where 
-  pretty xs = ppApp (ppString "𝐼S") $ list [pretty $ list xs]
+instance (Pretty a) ⇒ Pretty (𝐼C a) where 
+  pretty xs = ppApp (ppString "𝐼C") $ list [pretty $ list xs]
 instance (Pretty a) ⇒ Pretty (𝑄 a) where 
   pretty xs = ppApp (ppString "𝑄") $ list [pretty $ list xs]
 instance (Pretty a) ⇒ Pretty (𝑃 a) where 
   pretty = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") ∘ map pretty ∘ iter
 instance (Pretty k,Pretty v) ⇒ Pretty (k ⇰ v) where 
   pretty = ppRecord (ppPun "↦") ∘ map (mapPair pretty pretty) ∘ iter
+instance (Pretty a) ⇒ Pretty (𝕍 a) where 
+  pretty xs = ppApp (ppString "𝕍") $ list [pretty $ list xs]
+instance (Pretty a) ⇒ Pretty (𝕍S n a) where 
+  pretty xs = ppApp (ppString "𝕍S") $ list [pretty $ list xs]
+instance (Storable a,Pretty a) ⇒ Pretty (𝕌 a) where 
+  pretty xs = ppApp (ppString "𝕌") $ list [pretty $ list xs]
+instance (Storable a,Pretty a) ⇒ Pretty (𝕌S n a) where 
+  pretty xs = ppApp (ppString "𝕌S") $ list [pretty $ list xs]
+-- instance (Element a,Pretty a) ⇒ Pretty (𝕄S m n a) where 
+--   pretty xs = ppApp (ppString "𝕄S") $ list [pretty $ list xs]
 
 instance (Pretty a) ⇒ Pretty (AddNull a) where
   pretty Null = ppCon "•"
@@ -392,3 +467,13 @@ instance (Pretty a) ⇒ Pretty (AddBT a) where
   pretty (AddBT x) = pretty x
 
 instance Pretty Stack.CallStack where pretty = ppString ∘ string ∘ Stack.prettyCallStack
+
+colorsDemo ∷ Doc
+colorsDemo = 
+  d𝕍 (vec $ iter allColors) $ \ allColorsS → 
+    ppMatrix (const𝕍S 𝕟64s LH) (const𝕍S 𝕟64s TV) $ mapOn allColorsS $ \ (n :* c) → 
+      svec $ 𝔢 (ppString n)
+          ⧺♮ 𝔢 (ppFG c $ ppString "XXXXX")
+          ⧺♮ 𝔢 (ppBG c $ ppString "XXXXX")
+          ⧺♮ 𝔢 (ppBG black $ ppFG c $ ppString "XXXXX")
+          ⧺♮ 𝔢 (ppFG white $ ppBG c $ ppString "XXXXX")

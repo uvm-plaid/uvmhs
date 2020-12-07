@@ -11,14 +11,14 @@ data Color3Bit =
   | Blue
   | Magenta
   | Cyan
-  | LightGray
-  | DarkGray
-  | LightRed
-  | LightGreen
-  | LightYellow
-  | LightBlue
-  | LightMagenta
-  | LightCyan
+  | GrayLight
+  | GrayDark
+  | RedLight
+  | GreenLight
+  | YellowLight
+  | BlueLight
+  | PinkLight
+  | TealLight
   | White
   deriving (Eq,Ord,Show)
 data Color = 
@@ -29,8 +29,8 @@ data Color =
 
 defaultColor ∷ Color
 
-black,red,green,yellow,blue,pink,teal,lightGray ∷ Color
-darkGray,lightRed,lightGreen,lightYellow,lightBlue,lightPink,lightTeal,white ∷ Color
+black,red,green,yellow,blue,pink,teal,grayLight ∷ Color
+grayDark,redLight,greenLight,yellowLight,blueLight,pinkLight,tealLight,white ∷ Color
 
 highlight ∷ Color
 
@@ -43,15 +43,15 @@ yellow    = Color Yellow
 blue      = Color Blue
 pink      = Color Magenta
 teal      = Color Cyan
-lightGray = Color LightGray
+grayLight = Color GrayLight
 
-darkGray     = Color DarkGray
-lightRed     = Color LightRed
-lightGreen   = Color LightGreen
-lightYellow  = Color LightYellow
-lightBlue    = Color LightBlue
-lightPink    = Color LightMagenta
-lightTeal    = Color LightCyan
+grayDark     = Color GrayDark
+redLight     = Color RedLight
+greenLight   = Color GreenLight
+yellowLight  = Color YellowLight
+blueLight    = Color BlueLight
+pinkLight    = Color PinkLight
+tealLight    = Color TealLight
 white        = Color White
 
 highlight = Color8 $ 𝕟8 229
@@ -107,40 +107,40 @@ allColors ∷ 𝐿 (𝕊 ∧ Color)
 allColors = frhs
   [ ("defaultColor"      ,defaultColor  )
   , ("black"             ,black         )
-  , ("darkGray"          ,darkGray      )
-  , ("lightGray"         ,lightGray     )
+  , ("grayDark"          ,grayDark      )
+  , ("grayLight"         ,grayLight     )
   , ("white"             ,white         )
   , ("red"               ,red           )
-  , ("lightRed"          ,lightRed      )
+  , ("redLight"          ,redLight      )
   , ("green"             ,green         )
-  , ("lightGreen"        ,lightGreen    )
+  , ("greenLight"        ,greenLight    )
   , ("yellow"            ,yellow        )
-  , ("lightYellow"       ,lightYellow   )
+  , ("yellowLight"       ,yellowLight   )
   , ("blue"              ,blue          )
-  , ("lightBlue"         ,lightBlue     )
+  , ("blueLight"         ,blueLight     )
   , ("pink"              ,pink          )
-  , ("lightPink"         ,lightPink     )
+  , ("pinkLight"         ,pinkLight     )
   , ("teal"              ,teal          )
-  , ("lightTeal"         ,lightTeal     )
+  , ("tealLight"         ,tealLight     )
   , ("highlight"         ,highlight     )
   , ("altBlack"          ,altBlack      )
-  , ("altWhite"          ,altWhite      )
   , ("altNight"          ,altNight      )
-  , ("altRed"            ,altRed        )
-  , ("altGreen"          ,altGreen      )
-  , ("altOrange"         ,altOrange     )
-  , ("altBlue"           ,altBlue       )
-  , ("altPurple"         ,altPurple     )
-  , ("altTeal"           ,altTeal       )
-  , ("altGray"           ,altGray       )
   , ("altNightLight"     ,altNightLight )
-  , ("altRedLight"       ,altRedLight   )
-  , ("altGreenLight"     ,altGreenLight )
-  , ("altOrangeLight"    ,altOrangeLight)
-  , ("altBlueLight"      ,altBlueLight  )
-  , ("altPurpleLight"    ,altPurpleLight)
-  , ("altTealLight"      ,altTealLight  )
+  , ("altGray"           ,altGray       )
   , ("altGrayLight"      ,altGrayLight  )
+  , ("altWhite"          ,altWhite      )
+  , ("altRed"            ,altRed        )
+  , ("altRedLight"       ,altRedLight   )
+  , ("altGreen"          ,altGreen      )
+  , ("altGreenLight"     ,altGreenLight )
+  , ("altOrange"         ,altOrange     )
+  , ("altOrangeLight"    ,altOrangeLight)
+  , ("altBlue"           ,altBlue       )
+  , ("altBlueLight"      ,altBlueLight  )
+  , ("altPurple"         ,altPurple     )
+  , ("altPurpleLight"    ,altPurpleLight)
+  , ("altTeal"           ,altTeal       )
+  , ("altTealLight"      ,altTealLight  )
   ]
 
 

@@ -10,5 +10,5 @@ import qualified Examples.Lang.SExp as SExp
 main ∷ IO ()
 main = cleanExit $ do
   pprint $ ppHeader "COLOR TEST"
-  colorsDemo
-  pprint $ ppFG green $ ppString "¯\\_﹙ツ﹚_/¯"
+  pprint colorsDemo
+  pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"

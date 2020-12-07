@@ -9,147 +9,147 @@ import qualified Data.IntSet as IntSet
 
 import qualified Prelude as HS
 
-data 𝑊 a = 𝑊 { un𝑊 ∷ IntMap.IntMap a }
+data 𝑉 a = 𝑉 { un𝑉 ∷ IntMap.IntMap a }
   deriving (Eq,Ord)
 
-instance Lookup ℤ64 a (𝑊 a) where (⋕?) = lookup𝑊
-instance Single (ℤ64 ∧ a) (𝑊 a) where single = single𝑊
+instance Lookup ℤ64 a (𝑉 a) where (⋕?) = lookup𝑉
+instance Single (ℤ64 ∧ a) (𝑉 a) where single = single𝑉
 
-instance (POrd a) ⇒ POrd (𝑊 a) where (⊑) = subDictBy𝑊 (⊑)
+instance (POrd a) ⇒ POrd (𝑉 a) where (⊑) = subDictBy𝑉 (⊑)
 
-instance Null (𝑊 a) where null = wø
-instance (Append a) ⇒ Append (𝑊 a) where (⧺) = unionWith𝑊 (⧺)
-instance (Append a) ⇒ Monoid (𝑊 a) 
+instance Null (𝑉 a) where null = wø
+instance (Append a) ⇒ Append (𝑉 a) where (⧺) = unionWith𝑉 (⧺)
+instance (Append a) ⇒ Monoid (𝑉 a) 
 
-instance (Null a) ⇒ Unit (𝑊 a) where unit = null ↦♮ null
-instance (Append a,Cross a) ⇒ Cross (𝑊 a) where
-  ixs₁ ⨳ ixs₂ = foldr wø (unionWith𝑊 (⧺)) $ do
+instance (Null a) ⇒ Unit (𝑉 a) where unit = null ↦♮ null
+instance (Append a,Cross a) ⇒ Cross (𝑉 a) where
+  ixs₁ ⨳ ixs₂ = foldr wø (unionWith𝑉 (⧺)) $ do
     (i₁ :* x₁) ← iter ixs₁
     (i₂ :* x₂) ← iter ixs₂
     return $ (i₁ ⧺ i₂) ↦♮ (x₁ ⨳ x₂)
-instance (Prodoid a) ⇒ Prodoid (𝑊 a)
+instance (Prodoid a) ⇒ Prodoid (𝑉 a)
 
-instance Zero (𝑊 a) where zero = wø
-instance (Plus a) ⇒ Plus (𝑊 a) where (+) = unionWith𝑊 (+)
-instance (Plus a) ⇒ Additive (𝑊 a)
+instance Zero (𝑉 a) where zero = wø
+instance (Plus a) ⇒ Plus (𝑉 a) where (+) = unionWith𝑉 (+)
+instance (Plus a) ⇒ Additive (𝑉 a)
 
-instance (Zero a) ⇒ One (𝑊 a) where one = zero ↦♮ zero
-instance (Plus a,Times a) ⇒ Times (𝑊 a) where
-  ixs₁ × ixs₂ = fold wø (unionWith𝑊 (+)) $ do
+instance (Zero a) ⇒ One (𝑉 a) where one = zero ↦♮ zero
+instance (Plus a,Times a) ⇒ Times (𝑉 a) where
+  ixs₁ × ixs₂ = fold wø (unionWith𝑉 (+)) $ do
     (i₁ :* x₁) ← iter ixs₁
     (i₂ :* x₂) ← iter ixs₂
     return $ (i₁ + i₂) ↦♮ (x₁ × x₂)
-instance (Multiplicative a) ⇒ Multiplicative (𝑊 a)
+instance (Multiplicative a) ⇒ Multiplicative (𝑉 a)
 
-instance Bot (𝑊 a) where bot = wø
-instance (Join a) ⇒ Join (𝑊 a) where (⊔) = unionWith𝑊 (⊔)
-instance (Join a) ⇒ JoinLattice (𝑊 a)
+instance Bot (𝑉 a) where bot = wø
+instance (Join a) ⇒ Join (𝑉 a) where (⊔) = unionWith𝑉 (⊔)
+instance (Join a) ⇒ JoinLattice (𝑉 a)
 
-instance Top (𝑊 a) where top = wø
-instance (Meet a) ⇒ Meet (𝑊 a) where (⊓) = unionWith𝑊 (⊓)
-instance (Meet a) ⇒ MeetLattice (𝑊 a)
+instance Top (𝑉 a) where top = wø
+instance (Meet a) ⇒ Meet (𝑉 a) where (⊓) = unionWith𝑉 (⊓)
+instance (Meet a) ⇒ MeetLattice (𝑉 a)
 
-instance Functor 𝑊 where map = map𝑊
+instance Functor 𝑉 where map = map𝑉
 
-instance ToStream (ℤ64 ∧ a) (𝑊 a) where stream = stream𝑊
-instance ToIter (ℤ64 ∧ a) (𝑊 a) where iter = iter ∘ stream
+instance ToStream (ℤ64 ∧ a) (𝑉 a) where stream = stream𝑉
+instance ToIter (ℤ64 ∧ a) (𝑉 a) where iter = iter ∘ stream
 
-instance (Show a) ⇒ Show (𝑊 a) where show = chars ∘ showCollection "{" "}" "," (\ (i :* x) → show𝕊 i ⧺ "⇒" ⧺ show𝕊 x)
+instance (Show a) ⇒ Show (𝑉 a) where show = chars ∘ showCollection "{" "}" "," (\ (i :* x) → show𝕊 i ⧺ "⇒" ⧺ show𝕊 x)
 
-lookup𝑊 ∷ 𝑊 a → ℤ64 → 𝑂 a
-lookup𝑊 ixs i = frhs $ un𝑊 ixs IntMap.!? tohs i
+lookup𝑉 ∷ 𝑉 a → ℤ64 → 𝑂 a
+lookup𝑉 ixs i = frhs $ un𝑉 ixs IntMap.!? tohs i
 
-single𝑊 ∷ ℤ64 ∧ a → 𝑊 a
-single𝑊 (i :* x) = 𝑊 $ IntMap.singleton (tohs i) x
+single𝑉 ∷ ℤ64 ∧ a → 𝑉 a
+single𝑉 (i :* x) = 𝑉 $ IntMap.singleton (tohs i) x
 
-subDictBy𝑊 ∷ (a → a → 𝔹) → 𝑊 a → 𝑊 a → 𝔹
-subDictBy𝑊 f ixs₁ ixs₂ = IntMap.isSubmapOfBy f (un𝑊 ixs₁) (un𝑊 ixs₂)
+subDictBy𝑉 ∷ (a → a → 𝔹) → 𝑉 a → 𝑉 a → 𝔹
+subDictBy𝑉 f ixs₁ ixs₂ = IntMap.isSubmapOfBy f (un𝑉 ixs₁) (un𝑉 ixs₂)
 
-wø ∷ 𝑊 a
-wø = 𝑊 IntMap.empty
+wø ∷ 𝑉 a
+wø = 𝑉 IntMap.empty
 
-unionWith𝑊 ∷ (a → a → a) → 𝑊 a → 𝑊 a → 𝑊 a
-unionWith𝑊 f ixs₁ ixs₂ = 𝑊 $ IntMap.unionWith f (un𝑊 ixs₁) (un𝑊 ixs₂)
+unionWith𝑉 ∷ (a → a → a) → 𝑉 a → 𝑉 a → 𝑉 a
+unionWith𝑉 f ixs₁ ixs₂ = 𝑉 $ IntMap.unionWith f (un𝑉 ixs₁) (un𝑉 ixs₂)
   
-(↦♮) ∷ ℤ64 → a → 𝑊 a
-i ↦♮ x = 𝑊 $ IntMap.singleton (tohs i) x
+(↦♮) ∷ ℤ64 → a → 𝑉 a
+i ↦♮ x = 𝑉 $ IntMap.singleton (tohs i) x
 
-(⋵♮) ∷ ℤ64 → 𝑊 a → 𝔹
-i ⋵♮ ixs = tohs i `IntMap.member` un𝑊 ixs
+(⋵♮) ∷ ℤ64 → 𝑉 a → 𝔹
+i ⋵♮ ixs = tohs i `IntMap.member` un𝑉 ixs
 
-(⩌♮) ∷ 𝑊 a → 𝑊 a → 𝑊 a
-ixs₁ ⩌♮ ixs₂ = 𝑊 $ un𝑊 ixs₁ `IntMap.union` un𝑊 ixs₂
+(⩌♮) ∷ 𝑉 a → 𝑉 a → 𝑉 a
+ixs₁ ⩌♮ ixs₂ = 𝑉 $ un𝑉 ixs₁ `IntMap.union` un𝑉 ixs₂
 
-(⩍♮) ∷ 𝑊 a → 𝑊 a → 𝑊 a
-ixs₁ ⩍♮ ixs₂ = 𝑊 $ un𝑊 ixs₁ `IntMap.intersection` un𝑊 ixs₂
+(⩍♮) ∷ 𝑉 a → 𝑉 a → 𝑉 a
+ixs₁ ⩍♮ ixs₂ = 𝑉 $ un𝑉 ixs₁ `IntMap.intersection` un𝑉 ixs₂
  
--- (∸♮) ∷ 𝑊 a → 𝑊 a → 𝑊 a
--- ixs₁ ∸♮ ixs₂ = 𝑊 $ un𝑊 ixs₁ `IntMap.difference` un𝑊 ixs₂
+-- (∸♮) ∷ 𝑉 a → 𝑉 a → 𝑉 a
+-- ixs₁ ∸♮ ixs₂ = 𝑉 $ un𝑉 ixs₁ `IntMap.difference` un𝑉 ixs₂
 
-delete𝑊 ∷ ℤ64 → 𝑊 a → 𝑊 a
-delete𝑊 i ixs = 𝑊 $ IntMap.delete (tohs i) $ un𝑊 ixs
+delete𝑉 ∷ ℤ64 → 𝑉 a → 𝑉 a
+delete𝑉 i ixs = 𝑉 $ IntMap.delete (tohs i) $ un𝑉 ixs
 
-size𝑊 ∷ 𝑊 a → ℕ
-size𝑊 = HS.fromIntegral ∘ IntMap.size ∘ un𝑊
+size𝑉 ∷ 𝑉 a → ℕ
+size𝑉 = HS.fromIntegral ∘ IntMap.size ∘ un𝑉
 
-(⊎♮) ∷ (Additive a) ⇒ 𝑊 a → 𝑊 a → 𝑊 a
-(⊎♮) = unionWith𝑊 (+)
+(⊎♮) ∷ (Additive a) ⇒ 𝑉 a → 𝑉 a → 𝑉 a
+(⊎♮) = unionWith𝑉 (+)
 
-unionsWith𝑊 ∷ (ToIter (𝑊 a) t) ⇒ (a → a → a) → t → 𝑊 a
-unionsWith𝑊 = fold wø ∘ unionWith𝑊
+unionsWith𝑉 ∷ (ToIter (𝑉 a) t) ⇒ (a → a → a) → t → 𝑉 a
+unionsWith𝑉 = fold wø ∘ unionWith𝑉
  
-interWith𝑊 ∷ (a → b → c) → 𝑊 a → 𝑊 b → 𝑊 c
-interWith𝑊 f ixs₁ ixs₂ = 𝑊 $ IntMap.intersectionWith f (un𝑊 ixs₁) (un𝑊 ixs₂)
+interWith𝑉 ∷ (a → b → c) → 𝑉 a → 𝑉 b → 𝑉 c
+interWith𝑉 f ixs₁ ixs₂ = 𝑉 $ IntMap.intersectionWith f (un𝑉 ixs₁) (un𝑉 ixs₂)
 
--- -- diffWith ∷ (v → v → v) → 𝑊 a → 𝑊 a → 𝑊 a
--- -- diffWith f ixs₁ ixs₂ = 𝑊 $ IntMap.differenceWith (\ x y → HS.Just (f x y)) (un𝑊 ixs₁) (un𝑊 ixs₂)
+-- -- diffWith ∷ (v → v → v) → 𝑉 a → 𝑉 a → 𝑉 a
+-- -- diffWith f ixs₁ ixs₂ = 𝑉 $ IntMap.differenceWith (\ x y → HS.Just (f x y)) (un𝑉 ixs₁) (un𝑉 ixs₂)
 
-minView𝑊 ∷ 𝑊 a → 𝑂 (ℤ64 ∧ a ∧ (𝑊 a))
-minView𝑊 = map (mapSnd 𝑊) ∘ frhs ∘ IntMap.minViewWithKey ∘ un𝑊
+minView𝑉 ∷ 𝑉 a → 𝑂 (ℤ64 ∧ a ∧ (𝑉 a))
+minView𝑉 = map (mapSnd 𝑉) ∘ frhs ∘ IntMap.minViewWithKey ∘ un𝑉
 
-maxView𝑊 ∷ 𝑊 a → 𝑂 (ℤ64 ∧ a ∧ (𝑊 a))
-maxView𝑊 = map (mapSnd 𝑊) ∘ frhs ∘ IntMap.maxViewWithKey ∘ un𝑊
+maxView𝑉 ∷ 𝑉 a → 𝑂 (ℤ64 ∧ a ∧ (𝑉 a))
+maxView𝑉 = map (mapSnd 𝑉) ∘ frhs ∘ IntMap.maxViewWithKey ∘ un𝑉
 
-minKey𝑊 ∷ 𝑊 a → 𝑂 ℤ64
-minKey𝑊 ixs = fst ∘ fst ^$ minView𝑊 ixs
+minKey𝑉 ∷ 𝑉 a → 𝑂 ℤ64
+minKey𝑉 ixs = fst ∘ fst ^$ minView𝑉 ixs
 
-maxKey𝑊 ∷ 𝑊 a → 𝑂 ℤ64
-maxKey𝑊 ixs = fst ∘ fst ^$ maxView𝑊 ixs
+maxKey𝑉 ∷ 𝑉 a → 𝑂 ℤ64
+maxKey𝑉 ixs = fst ∘ fst ^$ maxView𝑉 ixs
 
-view𝑊 ∷ ℤ64 → 𝑊 a → 𝑂 (a ∧ (𝑊 a))
-view𝑊 i ixs
-  | i ⋵♮ ixs = Some $ (ixs ⋕! i) :* delete𝑊 i ixs
+view𝑉 ∷ ℤ64 → 𝑉 a → 𝑂 (a ∧ (𝑉 a))
+view𝑉 i ixs
+  | i ⋵♮ ixs = Some $ (ixs ⋕! i) :* delete𝑉 i ixs
   | otherwise = None
 
-without𝑊 ∷ 𝑃 ℤ64 → 𝑊 a → 𝑊 a
-without𝑊 is ixs = 𝑊 $ IntMap.withoutKeys (un𝑊 ixs) $ IntSet.fromList $ lazyList $ map tohs $ iter is
+without𝑉 ∷ 𝑃 ℤ64 → 𝑉 a → 𝑉 a
+without𝑉 is ixs = 𝑉 $ IntMap.withoutKeys (un𝑉 ixs) $ IntSet.fromList $ lazyList $ map tohs $ iter is
 
-restrict𝑊 ∷ 𝑃 ℤ64 → 𝑊 a → 𝑊 a
-restrict𝑊 is ixs = 𝑊 $ IntMap.restrictKeys (un𝑊 ixs) $ IntSet.fromList $ lazyList $ map tohs $ iter is
+restrict𝑉 ∷ 𝑃 ℤ64 → 𝑉 a → 𝑉 a
+restrict𝑉 is ixs = 𝑉 $ IntMap.restrictKeys (un𝑉 ixs) $ IntSet.fromList $ lazyList $ map tohs $ iter is
 
-keys𝑊 ∷ 𝑊 a → 𝐼 ℤ64
-keys𝑊 = map frhs ∘ iter ∘ IntMap.keys ∘ un𝑊
+keys𝑉 ∷ 𝑉 a → 𝐼 ℤ64
+keys𝑉 = map frhs ∘ iter ∘ IntMap.keys ∘ un𝑉
 
-values𝑊 ∷ 𝑊 a → 𝐼 a
-values𝑊 = map frhs ∘ iter ∘ IntMap.elems ∘ un𝑊
+values𝑉 ∷ 𝑉 a → 𝐼 a
+values𝑉 = map frhs ∘ iter ∘ IntMap.elems ∘ un𝑉
 
-map𝑊 ∷ (a → b) → 𝑊 a → 𝑊 b
-map𝑊 f = 𝑊 ∘ IntMap.map f ∘ un𝑊
+map𝑉 ∷ (a → b) → 𝑉 a → 𝑉 b
+map𝑉 f = 𝑉 ∘ IntMap.map f ∘ un𝑉
 
-mapK𝑊 ∷ (ℤ64 → a → b) → 𝑊 a → 𝑊 b
-mapK𝑊 f ixs = spvec $ mapOn (iter ixs) $ \ (i :* x) → i ↦♮ f i x
+mapK𝑉 ∷ (ℤ64 → a → b) → 𝑉 a → 𝑉 b
+mapK𝑉 f ixs = spvec $ mapOn (iter ixs) $ \ (i :* x) → i ↦♮ f i x
 
-stream𝑊 ∷ 𝑊 a → 𝑆 (ℤ64 ∧ a)
-stream𝑊 = map frhs ∘ stream ∘ IntMap.toList ∘ un𝑊
+stream𝑉 ∷ 𝑉 a → 𝑆 (ℤ64 ∧ a)
+stream𝑉 = map frhs ∘ stream ∘ IntMap.toList ∘ un𝑉
 
-spvec𝐼 ∷ 𝐼 (ℤ64 ∧ a) → 𝑊 a
-spvec𝐼 = 𝑊 ∘ IntMap.fromList ∘ lazyList ∘ map tohs
+spvec𝐼 ∷ 𝐼 (ℤ64 ∧ a) → 𝑉 a
+spvec𝐼 = 𝑉 ∘ IntMap.fromList ∘ lazyList ∘ map tohs
 
-spvec ∷ (ToIter (𝑊 a) t) ⇒ t → 𝑊 a
+spvec ∷ (ToIter (𝑉 a) t) ⇒ t → 𝑉 a
 spvec = foldr wø (⩌♮) ∘ iter
  
-assoc𝑊 ∷ (ToIter (ℤ64 ∧ a) t) ⇒ t → 𝑊 a
-assoc𝑊 = spvec ∘ map single ∘ iter
+assoc𝑉 ∷ (ToIter (ℤ64 ∧ a) t) ⇒ t → 𝑉 a
+assoc𝑉 = spvec ∘ map single ∘ iter
 
-join𝑊 ∷ (Ord a,Ord b) ⇒ 𝑊 (𝑃 a) → 𝑊 (𝑃 b) → 𝑊 (𝑃 (a ∧ b))
-join𝑊 = interWith𝑊 $ \ vs₁ vs₂ → pow $ zipWith (:*) vs₁ vs₂
+join𝑉 ∷ (Ord a,Ord b) ⇒ 𝑉 (𝑃 a) → 𝑉 (𝑃 b) → 𝑉 (𝑃 (a ∧ b))
+join𝑉 = interWith𝑉 $ \ vs₁ vs₂ → pow $ zipWith (:*) vs₁ vs₂

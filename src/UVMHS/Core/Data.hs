@@ -1,6 +1,7 @@
 module UVMHS.Core.Data
   (module UVMHS.Core.Data.Char
   ,module UVMHS.Core.Data.Choice
+  ,module UVMHS.Core.Data.Bitty
   ,module UVMHS.Core.Data.Dict
   ,module UVMHS.Core.Data.Iter
   ,module UVMHS.Core.Data.LazyList
@@ -15,6 +16,7 @@ module UVMHS.Core.Data
 
 import UVMHS.Core.Data.Arithmetic ()
 import UVMHS.Core.Data.Char
+import UVMHS.Core.Data.Bitty
 import UVMHS.Core.Data.Choice
 import UVMHS.Core.Data.Bool ()
 import UVMHS.Core.Data.Dict

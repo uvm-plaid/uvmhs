@@ -3,202 +3,203 @@ module UVMHS.Lib.Pretty.Common where
 import UVMHS.Core
 
 import UVMHS.Lib.ATree
+import UVMHS.Lib.Sep
 
 import UVMHS.Lib.Pretty.Annotation
+import UVMHS.Lib.Pretty.Shape
 
 -----------------
 -- Input Chunk --
 -----------------
   
-data IChunk =
+data ChunkI =
   --          length
   --          ⌄⌄⌄
-    RawIChunk ℕ64 𝕊
+    RawChunkI ℕ64 𝕊
   --              ^
   --              string with no newlines
-  | NewlineIChunk ℕ64
+  | NewlineChunkI ℕ64
   --              ^^^
   --              indent after newline
   deriving (Eq,Ord,Show)
 
-rawIChunk𝕊 ∷ 𝕊 → IChunk
-rawIChunk𝕊 s = RawIChunk (𝕟64 $ length𝕊 s) s
+rawChunksI ∷ 𝕊 → ChunkI
+rawChunksI s = RawChunkI (𝕟64 $ length𝕊 s) s
  
-splitIChunks𝕊 ∷ 𝕊 → 𝐼 IChunk
-splitIChunks𝕊 s = 
-  materialize $ filter (\ c → c ≢ RawIChunk (𝕟64 0) "") $ inbetween (NewlineIChunk zero) $ map rawIChunk𝕊 $ splitOn𝕊 "\n" s
+splitChunksI ∷ 𝕊 → 𝐼 ChunkI
+splitChunksI s = 
+  materialize 
+  $ filter (\ c → c ≢ RawChunkI (𝕟64 0) "") 
+  $ inbetween (NewlineChunkI zero) 
+  $ map rawChunksI $ splitOn𝕊 "\n" s
 
-extendNewlinesIChunk ∷ ℕ64 → IChunk → IChunk
+shapeIChunk ∷ ChunkI → Shape
+shapeIChunk = \case
+  RawChunkI l _ → SingleLine l
+  NewlineChunkI n → newlineShape ⧺ SingleLine n
+ 
+extendNewlinesIChunk ∷ ℕ64 → ChunkI → ChunkI
 extendNewlinesIChunk n = \case
-  RawIChunk l s → RawIChunk l s
-  NewlineIChunk l → NewlineIChunk $ n + l
+  RawChunkI l s → RawChunkI l s
+  NewlineChunkI l → NewlineChunkI $ n + l
 
 ------------------
 -- Output Chunk --
 ------------------
 
-data OChunk =
+data ChunkO =
   --          length
   --          ⌄⌄⌄
-    RawOChunk ℕ64 𝕊
+    RawChunkO ℕ64 𝕊
   --              ^
   --              string with no newlines
-  | NewlineOChunk
-  | PaddingOChunk ℕ64
+  | PaddingChunkO ℕ64
   --              ^^^
   --              padding length
   deriving (Eq,Ord,Show)
+
+instance Sized ChunkO where
+  size (RawChunkO n _) = n
+  size (PaddingChunkO n) = n
+
+shapeOChunk ∷ ChunkO → Shape
+shapeOChunk = \case
+  RawChunkO l _ → SingleLine l
+  PaddingChunkO n → SingleLine n
 
 --------------------
 -- Document Trees --
 --------------------
 
-type ITree = 𝑉𝐴 Annotation (𝐼 IChunk)
-type OTree = 𝑉𝐴 Formats (𝐼 OChunk)
+type TreeI = 𝑉𝐴 Annotation (𝐼 ChunkI)
 
------------
--- Shape --
------------
+--                              stuff 
+--                              between 
+--                              newlines
+--                              ⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄
+type TreeO = 𝑉𝐴 Formats (Sep () (𝐼A ChunkO))
+--                           ^^
+--                           newline indicator
 
--- An aligned shape looks like:
---
---     □□□□XXX
---         XXXXX
---         XXXX
---
--- and a non-aligned shape looks like:
---
---     □□□□XXX
---     XXXXX
---     XXXX
---
--- shapes are abstracted as:
---
--- XXX
--- YY
--- YY
--- YY
--- ZZZZ
--- 
--- where:
--- + XXX:  represented by the length of the first line
--- + YY:   represented by the maximum length of any line that isn't
---   the first or last
--- + ZZZZ: represented by the maximum length of the last line
--- + also: the total number of lines (i.e., how many lines of YY)
---
--- A special case is a single-line shape, which is represented as
--- just the length of the line.
---
--- shapes can be combined:
---
--- aligned + aligned = aligned
--- aligned + non-aligned = non-aligned
--- non-aligned + aligned = 
+chunkIO ∷ ChunkO → ChunkI
+chunkIO = \case
+  RawChunkO n s → RawChunkI n s
+  PaddingChunkO n → RawChunkI n $ string $ repeat n ' '
 
-data MShape = MShape
-  { multiShapeAligned ∷ 𝔹
-  , multiShapeFirstLength ∷ ℕ64
-  , multiShapeMidMaxLength ∷ ℕ64
-  , multiShapeLastLength ∷ ℕ64
-  , multiShapeLines ∷ ℕ64
-  } deriving (Eq,Ord,Show)
-makeLenses ''MShape
+treeIO ∷ TreeO → TreeI
+treeIO = map𝑉𝐴 formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @ _ @ (𝐼 _) $ NewlineChunkI zero) (map chunkIO ∘ iter)
 
-data Shape = SingleLineShape ℕ64 | MultiLineShape MShape
-  deriving (Eq,Ord,Show)
-makePrisms ''Shape
+--------------
+-- SummaryI --
+--------------
 
-instance Null Shape where 
-  null = SingleLineShape $ 𝕟64 0
-instance Append Shape where
-  SingleLineShape l₁ ⧺ SingleLineShape l₂ = 
-    -- AAA ⧺ XXX = AAAXXX
-    SingleLineShape $ l₁ ⧺ l₂
-  SingleLineShape l₁ ⧺ MultiLineShape (MShape a₂ fl₂ mml₂ ll₂ lines₂)
-    -- AAA  ⧺  □□□□XXX  =  □□□□AAAXXX
-    --         YY          YY
-    --         ZZZZ        ZZZZ
-    | not a₂ = MultiLineShape $ MShape False (l₁ + fl₂) mml₂ ll₂ lines₂
-    -- AAA  ⧺  □□□□XXX  =  □□□□AAAXXX
-    --             YY          ␣␣␣YY
-    --             ZZZZ        ␣␣␣ZZZZ
-    | otherwise = MultiLineShape $ MShape True (l₁ + fl₂) (l₁ + mml₂) (l₁ + ll₂) lines₂
-  MultiLineShape (MShape a₁ fl₁ mml₁ ll₁ lines₁) ⧺ SingleLineShape l₂ = 
-    -- □□□□XXX  ⧺  AAA  =  □□□□XXX
-    -- YY                  YY
-    -- ZZZZ                ZZZZAAA
-    -- □□□□XXX  ⧺  AAA  =  □□□□XXX
-    --     YY                  YY
-    --     ZZZZ                ZZZZAAA
-    MultiLineShape $ MShape a₁ fl₁ mml₁ (ll₁ + l₂) lines₁
-  MultiLineShape (MShape a₁ fl₁ mml₁ ll₁ lines₁) ⧺ MultiLineShape (MShape a₂ fl₂ mml₂ ll₂ lines₂)
-    -- □□□□XXX  ⧺  □□□□AAA  =  □□□□XXX
-    -- YY          BB          YY
-    -- ZZZZ        CCCC        ZZZZAAA
-    --                         BB
-    --                         CCCC
-    -- □□□□XXX   ⧺  □□□□AAA  =  □□□□XXX
-    --     YY       BB              YY
-    --     ZZZZ     CCCC            ZZZZAAA
-    --                              BB
-    --                              CCCC
-    | not a₂ = MultiLineShape $ MShape a₁ fl₁ (mml₁ ⊔ (ll₁ + fl₂) ⊔ mml₂) ll₂ (lines₁ + lines₂)
-    -- □□□□XXX  ⧺  □□□□AAA   =  □□□□XXX
-    -- YY              BB       YY
-    -- ZZZZ            CCCC     ZZZZAAA
-    --                          ␣␣␣␣BB
-    --                          ␣␣␣␣CCCC
-    -- □□□□XXX   ⧺  □□□□AAA   =  □□□□XXX
-    --     YY           BB           YY
-    --     ZZZZ         CCCC         ZZZZAAA
-    --                               ␣␣␣␣BB
-    --                               ␣␣␣␣CCCC
-    | otherwise = MultiLineShape $ MShape a₁ fl₁ (mml₁ ⊔ (ll₁ + fl₂) ⊔ (ll₁ + mml₂)) (ll₁ + ll₂) (lines₁ + lines₂)
-instance Monoid Shape
-
-alignShape ∷ Shape → Shape
-alignShape (SingleLineShape l) = SingleLineShape l
-alignShape (MultiLineShape ms) = MultiLineShape ms { multiShapeAligned = True }
-
--- getShapeAligned ∷ Shape → 𝔹
--- getShapeAligned (SingleLineShape _) = False
--- getShapeAligned (MultiLineShape ms) = multiShapeAligned ms
-
-shapeIChunk ∷ IChunk → Shape
-shapeIChunk (RawIChunk l _) = SingleLineShape l
-shapeIChunk (NewlineIChunk n) = MultiLineShape $ MShape False (𝕟64 0) (𝕟64 0) n (𝕟64 1)
- 
--------------
--- Summary --
--------------
-
-data Summary = Summary
-  { summaryShape ∷ Shape
-  , summaryContents ∷ ITree
+data SummaryI = SummaryI
+  { summaryIShape ∷ ShapeA
+  , summaryIContents ∷ TreeI
   }
-makeLenses ''Summary
+makeLenses ''SummaryI
 
-instance Null Summary where null = Summary null null
-instance Append Summary where
-  Summary sh₁ cs₁ ⧺ Summary sh₂ cs₂ = 
-    let sh = sh₁ ⧺ sh₂
-    in case (sh₁,sh₂) of
-    (SingleLineShape _,SingleLineShape _) → Summary sh $ cs₁ ⧺ cs₂
-    (SingleLineShape l₁,MultiLineShape ms₂)
-      | not $ multiShapeAligned ms₂ → Summary sh $ cs₁ ⧺ cs₂
-      | otherwise →
-          let cs₂' = mappOn cs₂ $ extendNewlinesIChunk l₁
-          in Summary sh $ cs₁ ⧺ cs₂'
-    (MultiLineShape _,SingleLineShape _) → Summary sh $ cs₁ ⧺ cs₂
-    (MultiLineShape ms₁,MultiLineShape ms₂)
-      | not $ multiShapeAligned ms₂ → Summary sh $ cs₁ ⧺ cs₂
-      | otherwise → 
-          let cs₂' = mappOn cs₂ $ extendNewlinesIChunk $ multiShapeLastLength ms₁
-          in Summary sh $ cs₁ ⧺ cs₂'
-instance Monoid Summary
+summaryIAlignedL ∷ SummaryI ⟢ 𝔹
+summaryIAlignedL = shapeIAlignedL ⊚ summaryIShapeL
 
-alignSummary ∷ Summary → Summary
-alignSummary (Summary sh cs) = Summary (alignShape sh) cs
+instance Null SummaryI where null = SummaryI null null
+instance Append SummaryI where
+  SummaryI sh₁ cs₁ ⧺ SummaryI sh₂ cs₂ = 
+    let cs₂' =
+          if shape singleLineL (shapeIShape sh₂) ⩔ not (shapeIAligned sh₂)
+          then cs₂
+          else mappOn cs₂ $ extendNewlinesIChunk $ shapeLastLength $ shapeIShape sh₁
+    in SummaryI (sh₁ ⧺ sh₂) $ cs₁ ⧺ cs₂'
+instance Monoid SummaryI
 
+summaryChunksI ∷ 𝐼 ChunkI → SummaryI
+summaryChunksI chunks =
+  let sh = concat $ map shapeIChunk $ iter chunks
+  in SummaryI (ShapeA False sh) $ element𝑉𝐴 chunks
 
+annotateSummaryI ∷ Annotation → SummaryI → SummaryI
+annotateSummaryI a (SummaryI sh cs) = SummaryI sh $ annotate𝑉𝐴 a cs
+
+--------------
+-- SummaryO --
+--------------
+
+data SummaryO = SummaryO
+  { summaryOShape ∷ Shape
+  , summaryOContents ∷ TreeO
+  }
+makeLenses ''SummaryO
+
+instance Null SummaryO where null = SummaryO null null
+instance Append SummaryO where SummaryO sh₁ cs₁ ⧺ SummaryO sh₂ cs₂ = SummaryO (sh₁ ⧺ sh₂) $ cs₁ ⧺ cs₂
+instance Monoid SummaryO
+
+summaryChunksO ∷ Sep () (𝐼A ChunkO) → SummaryO
+summaryChunksO chunks =
+  let sh = concat $ mapSep (const newlineShape) (concat ∘ map shapeOChunk ∘ iter) chunks
+  in SummaryO sh $ element𝑉𝐴 chunks
+
+annotateSummaryO ∷ Formats → SummaryO → SummaryO
+annotateSummaryO fm (SummaryO sh cs) = SummaryO sh $ annotate𝑉𝐴 fm cs
+
+---------------
+-- Alignment --
+---------------
+
+data HAlign = LH | CH | RH
+data VAlign = TV | CV | BV
+
+hvalign ∷ HAlign → VAlign → ℕ64 → ℕ64 → SummaryO → SummaryO
+hvalign ha va m n (SummaryO sh cs) =
+  let w   = shapeWidth sh
+      wd  = (w ⊔ m) - w
+      wdm = wd ⌿ 𝕟64 2
+      h   = shapeNewlines sh
+      hd  = (h ⊔ n) - h
+      hdm = hd ⌿ 𝕟64 2
+        -- mmmmmmmm
+        -- wwwwwddd
+        --        m 
+        --
+        -- nnnnnnnn
+        -- hhhhhddd
+        --        m
+      f ∷ 𝐼A ChunkO → 𝐼A ChunkO
+      f = case ha of
+        -- mmmmmmmmm
+        -- XX
+        -- →
+        -- XX␣␣␣␣␣␣␣
+        LH → hwrap (const zero) $ \ s → m - s
+        -- mmmmmmmmm
+        -- XX
+        -- →
+        -- ␣XX␣␣␣␣␣␣
+        CH → hwrap (const wdm) $ \ s → m - s - wdm
+        -- mmmmmmmmm
+        -- XX
+        -- →
+        -- ␣␣␣␣␣␣␣XX
+        RH → hwrap (\ s → m - s) $ const zero
+      g ∷ Sep () (𝐼A ChunkO) → Sep () (𝐼A ChunkO)
+      g = case va of
+        TV → vwrap (zero @ ℕ64) $ n - h
+        CV → vwrap hdm $ n - h - hdm
+        BV → vwrap (n - h) $ zero @ ℕ64
+  in SummaryO (boxShape m n) $ map (map f ∘ g) cs
+  where
+    hwrap fi fj xs =
+      let s = size xs
+          i = fi s
+          j = fj s
+      in concat
+        [ if i ≡ zero then null else single $ PaddingChunkO i
+        , xs 
+        , if j ≡ zero then null else single $ PaddingChunkO j
+        ]
+    vwrap i j xs =
+      concat
+      [ concat $ repeat i $ sepI ()
+      , xs
+      , concat $ repeat j $ sepI ()
+      ]

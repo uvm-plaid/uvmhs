@@ -25,14 +25,16 @@ updateM l xM = alterM l $ const xM
 
 -- ## Lens
 
-instance Category (⟢) where
+instance Reflexive (⟢) where
   {-# INLINE refl #-}
   refl = isoLens id id
+instance Transitive (⟢) where
   {-# INLINE (⊚) #-}
   Lens g ⊚ Lens f = Lens $ \ a →
     let (b :* ba) = f a
         (c :* cb) = g b
     in (c :* (ba ∘ cb))
+instance Category (⟢)
 instance Alter (⟢) where
   {-# INLINE alter #-}
   alter l f a = let (b :* ba) = runLens l a in ba $ f b
@@ -54,14 +56,16 @@ access l = fst ∘ runLens l
 
 -- ## Prism
 
-instance Category (⌲) where
+instance Reflexive (⌲) where
   {-# INLINE refl #-}
   refl = isoPrism id id
+instance Transitive (⌲) where
   {-# INLINE (⊚) #-}
   g ⊚ f = Prism
     { view = view g *∘ view f
     , construct = construct f ∘ construct g
     }
+instance Category (⌲)
 instance Alter (⌲) where
   {-# INLINE alter #-}
   alter p f a = elim𝑂 a (construct p ∘ f) $ view p a

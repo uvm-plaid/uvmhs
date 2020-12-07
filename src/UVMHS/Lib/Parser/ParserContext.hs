@@ -36,13 +36,13 @@ data FullContext = FullContext
 
 instance Pretty FullContext where
   pretty (FullContext pre d pi) = concat
-    [ ppFormat (formats [BG lightGray]) $ ppString "«"
+    [ ppFormat (formats [BG grayLight]) $ ppString "«"
     , ppAlign $ concat
         [ renderWindowR pre 
         , ppUT '^' green $ renderWindowL d
         , renderWindowL pi
         ]
-    , ppFormat (formats [BG lightGray]) $ ppString "»"
+    , ppFormat (formats [BG grayLight]) $ ppString "»"
     ]
 
 instance Show FullContext where show = chars ∘ ppshow

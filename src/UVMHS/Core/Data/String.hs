@@ -42,6 +42,8 @@ instance Lookup ℕ ℂ 𝕊 where
     | (n > 0) ⩓ (n ≤ length𝕊 s) = Some $ Text.index s $ HS.fromIntegral $ n - 1
     | otherwise = None
 
+instance Sized 𝕊 where size = length64𝕊
+
 {-# INLINE empty𝕊 #-}
 empty𝕊 ∷ 𝕊 → 𝔹
 empty𝕊 = Text.null
@@ -89,6 +91,10 @@ isEmpty𝕊 = Text.null
 {-# INLINE length𝕊 #-}
 length𝕊 ∷ 𝕊 → ℕ
 length𝕊 = natΩ ∘ frhs ∘ Text.length
+
+{-# INLINE length64𝕊 #-}
+length64𝕊 ∷ 𝕊 → ℕ64
+length64𝕊 = natΩ64 ∘ frhs ∘ Text.length
 
 {-# INLINE splitOn𝕊 #-}
 splitOn𝕊 ∷ 𝕊 → 𝕊 → 𝑆 𝕊

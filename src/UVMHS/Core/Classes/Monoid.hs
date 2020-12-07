@@ -11,8 +11,8 @@ class (Null a,Append a) ⇒ Monoid a
 prepend ∷ (Append a) ⇒ a → a → a
 prepend = (⧺)
 
-postpend ∷ (Append a) ⇒ a → a → a
-postpend = flip (⧺)
+pospend ∷ (Append a) ⇒ a → a → a
+pospend = flip (⧺)
 
 class Unit a where unit ∷ a
 class Cross a where (⨳) ∷ a → a → a

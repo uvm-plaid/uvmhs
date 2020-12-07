@@ -7,7 +7,6 @@ import UVMHS.Core.Monads ()
 import UVMHS.Core.Time
 
 import System.Exit
-import System.IO.Unsafe
 
 import qualified Data.ByteString       as BS
 import qualified Data.Text.Encoding    as Text
@@ -19,10 +18,21 @@ import qualified System.Environment    as Env
 import qualified System.Exit           as Exit
 import qualified System.FilePath.Posix as FP
 import qualified System.IO             as IO
-import qualified System.IO.Unsafe      as IO_UNSAFE
+import qualified System.IO.Unsafe      as IO
 import qualified System.Mem            as Mem
 import qualified System.Process        as Proc
 import qualified Control.Exception     as HS
+
+---------------
+-- Unsafe IO --
+---------------
+
+io_UNSAFE ∷ IO a → a
+io_UNSAFE = IO.unsafePerformIO
+
+----------
+-- INIT --
+----------
 
 initUVMHS ∷ IO ()
 initUVMHS = do
@@ -50,7 +60,7 @@ shout ∷ (Show a) ⇒ a → IO ()
 shout = out ∘ show𝕊
 
 trace ∷ 𝕊 → ()
-trace s = unsafePerformIO $ do
+trace s = io_UNSAFE $ do
   out s
   oflush
   return ()
@@ -249,9 +259,3 @@ profile f = do
   let (n₂,u₂) = (Stat.major_gcs s₂,Stat.cumulative_live_bytes s₂)
   return $ (t₂ ⨺ t₁) :* (dbl (HS.fromIntegral u₂ - HS.fromIntegral u₁ ∷ ℕ) / dbl (HS.fromIntegral n₂ - HS.fromIntegral n₁ ∷ ℕ))
 
----------------
--- Unsafe IO --
----------------
-
-ioUNSAFE ∷ IO a → a
-ioUNSAFE = IO_UNSAFE.unsafePerformIO

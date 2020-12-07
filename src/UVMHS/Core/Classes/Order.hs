@@ -34,15 +34,15 @@ x ≥ y = case x ⋚ y of {LT → False;EQ → True;GT → True}
 (>) ∷ (Ord a) ⇒ a → a → 𝔹
 (>) = (HS.>)
 
-(⩎) ∷ (Ord a) ⇒ a → a → a
-x ⩎ y 
-  | x ≤ y = x
-  | otherwise = y
-
 (⩏) ∷ (Ord a) ⇒ a → a → a
 x ⩏ y 
   | x ≤ y = y
   | otherwise = x
+
+(⩎) ∷ (Ord a) ⇒ a → a → a
+x ⩎ y 
+  | x ≤ y = x
+  | otherwise = y
 
 minBy ∷ (Ord b) ⇒ (a → b) → a → a → a
 minBy f x y 

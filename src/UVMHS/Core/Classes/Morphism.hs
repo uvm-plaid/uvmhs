@@ -56,37 +56,46 @@ toiso3 = Iso3 isoto3 isofr3
 friso3 ∷ (v ⇄⁼ w) ⇒ Iso3 w v
 friso3 = Iso3 isofr3 isoto3
 
-class Category t where {refl ∷ t a a;(⊚) ∷ t b c → t a b → t a c}
+class Reflexive t where refl ∷ t a a
+class Transitive t where (⊚) ∷ t b c → t a b → t a c
+class (Reflexive t,Transitive t) ⇒ Category t
 class Symmetric t where {sym ∷ t a b → t b a}
 
-instance Category (→) where 
+instance Reflexive (→) where 
   {-# INLINE refl #-}
   refl = id
+instance Transitive (→) where 
   {-# INLINE (⊚) #-}
   (⊚) = (∘)
+instance Category (→)
 
-instance Category Iso where 
+instance Reflexive Iso where 
   {-# INLINE refl #-}
   refl = Iso id id
+instance Transitive Iso where
   {-# INLINE (⊚) #-}
   Iso gto gfrom ⊚ Iso fto ffrom = Iso (gto ∘ fto) (ffrom ∘ gfrom)
-instance Category Iso2 where 
-  {-# INLINE refl #-}
-  refl = Iso2 id id
-  {-# INLINE (⊚) #-}
-  Iso2 gto gfrom ⊚ Iso2 fto ffrom = Iso2 (gto ∘ fto) (ffrom ∘ gfrom)
-instance Category Iso3 where 
-  {-# INLINE refl #-}
-  refl = Iso3 id id
-  {-# INLINE (⊚) #-}
-  Iso3 gto gfrom ⊚ Iso3 fto ffrom = Iso3 (gto ∘ fto) (ffrom ∘ gfrom)
-
 instance Symmetric Iso where 
   {-# INLINE sym #-}
   sym (Iso to from) = Iso from to
+instance Category Iso
+instance Reflexive Iso2 where 
+  {-# INLINE refl #-}
+  refl = Iso2 id id
+instance Transitive Iso2 where 
+  {-# INLINE (⊚) #-}
+  Iso2 gto gfrom ⊚ Iso2 fto ffrom = Iso2 (gto ∘ fto) (ffrom ∘ gfrom)
 instance Symmetric Iso2 where 
   {-# INLINE sym #-}
   sym (Iso2 to from) = Iso2 from to
+instance Category Iso2
+instance Reflexive Iso3 where 
+  {-# INLINE refl #-}
+  refl = Iso3 id id
+instance Transitive Iso3 where 
+  {-# INLINE (⊚) #-}
+  Iso3 gto gfrom ⊚ Iso3 fto ffrom = Iso3 (gto ∘ fto) (ffrom ∘ gfrom)
 instance Symmetric Iso3 where 
   {-# INLINE sym #-}
   sym (Iso3 to from) = Iso3 from to
+instance Category Iso3
