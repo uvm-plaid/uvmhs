@@ -3205,9 +3205,9 @@ boxShape :: ℕ64 -> ℕ64 -> Shape
 shapeWidth :: Shape -> ℕ64
 shapeNewlines :: Shape -> ℕ64
 data ShapeA
-ShapeA :: {-# UNPACK #-}𝔹 -> {-# UNPACK #-}Shape -> ShapeA
-[shapeIAligned] :: ShapeA -> {-# UNPACK #-}𝔹
-[shapeIShape] :: ShapeA -> {-# UNPACK #-}Shape
+ShapeA :: 𝔹 -> Shape -> ShapeA
+[shapeIAligned] :: ShapeA -> 𝔹
+[shapeIShape] :: ShapeA -> Shape
 shapeIShapeL :: (⟢) ShapeA Shape
 shapeIAlignedL :: (⟢) ShapeA 𝔹
 instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.Shape.ShapeA

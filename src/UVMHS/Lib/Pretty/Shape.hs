@@ -144,8 +144,8 @@ instance Join Shape where
 --     aligned     + aligned     = aligned
 
 data ShapeA = ShapeA
-  { shapeIAligned ∷ {-# UNPACK #-} 𝔹
-  , shapeIShape   ∷ {-# UNPACK #-} Shape
+  { shapeIAligned ∷ 𝔹
+  , shapeIShape   ∷ Shape
   }
   deriving (Eq,Ord,Show)
 makeLenses ''ShapeA
