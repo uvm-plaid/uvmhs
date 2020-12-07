@@ -21,15 +21,17 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppHeader"><span class="hs-identifier hs-var">ppHeader</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;COLOR TEST&quot;</span></span><span>
-</span><span id="line-13"></span><span>  </span><span class="annot"><span class="annottext">IO ()
-</span><a href="UVMHS.Lib.Pretty.RenderANSI.html#colorsDemo"><span class="hs-identifier hs-var">colorsDemo</span></a></span><span>
+</span><span id="line-13"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+forall a. Pretty a =&gt; a -&gt; IO ()
+</span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#colorsDemo"><span class="hs-identifier hs-var">colorsDemo</span></a></span><span>
 </span><span id="line-14"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">Color -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppFG"><span class="hs-identifier hs-var">ppFG</span></a></span><span> </span><span class="annot"><span class="annottext">Color
-</span><a href="UVMHS.Lib.Pretty.Color.html#green"><span class="hs-identifier hs-var">green</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-var">teal</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;

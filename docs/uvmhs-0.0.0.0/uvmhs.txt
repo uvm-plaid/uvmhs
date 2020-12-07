@@ -84,6 +84,9 @@ type ℕ32 = Word32
 type ℕ64 = Word64
 type ℕ = Natural
 type STACK = HasCallStack
+coerce_UNSAFE :: a -> b
+weq_UNSAFE :: P a -> P b -> W (a ~ b)
+void_UNSAFE :: Void
 with :: W c -> (c => a) -> a
 unpack :: forall (k :: ★) (t :: k -> ★) (b :: ★). Ex t -> (forall (a :: k). t a -> b) -> b
 unpack_C :: forall (k :: ★) (c :: k -> Constraint) (t :: k -> ★) (b :: ★). Ex_C c t -> (forall (a :: k). c a => t a -> b) -> b
@@ -485,8 +488,8 @@ infix 4 ≥
 infix 4 <
 (>) :: Ord a => a -> a -> 𝔹
 infix 4 >
-(⩎) :: Ord a => a -> a -> a
 (⩏) :: Ord a => a -> a -> a
+(⩎) :: Ord a => a -> a -> a
 minBy :: Ord b => (a -> b) -> a -> a -> a
 maxBy :: Ord b => (a -> b) -> a -> a -> a
 
@@ -525,10 +528,12 @@ Iso3 :: (v →⁼ w) -> (w →⁼ v) -> Iso3 v w
 [ifr3] :: Iso3 v w -> w →⁼ v
 toiso3 :: v ⇄⁼ w => Iso3 v w
 friso3 :: v ⇄⁼ w => Iso3 w v
-class Category t
-refl :: Category t => t a a
-(⊚) :: Category t => t b c -> t a b -> t a c
+class Reflexive t
+refl :: Reflexive t => t a a
+class Transitive t
+(⊚) :: Transitive t => t b c -> t a b -> t a c
 infixl 7 ⊚
+class (Reflexive t, Transitive t) => Category t
 class Symmetric t
 sym :: Symmetric t => t a b -> t b a
 instance UVMHS.Core.Classes.Morphism.Symmetric UVMHS.Core.Classes.Morphism.Iso
@@ -538,6 +543,14 @@ instance UVMHS.Core.Classes.Morphism.Category (->)
 instance UVMHS.Core.Classes.Morphism.Category UVMHS.Core.Classes.Morphism.Iso
 instance UVMHS.Core.Classes.Morphism.Category UVMHS.Core.Classes.Morphism.Iso2
 instance UVMHS.Core.Classes.Morphism.Category UVMHS.Core.Classes.Morphism.Iso3
+instance UVMHS.Core.Classes.Morphism.Transitive (->)
+instance UVMHS.Core.Classes.Morphism.Transitive UVMHS.Core.Classes.Morphism.Iso
+instance UVMHS.Core.Classes.Morphism.Transitive UVMHS.Core.Classes.Morphism.Iso2
+instance UVMHS.Core.Classes.Morphism.Transitive UVMHS.Core.Classes.Morphism.Iso3
+instance UVMHS.Core.Classes.Morphism.Reflexive (->)
+instance UVMHS.Core.Classes.Morphism.Reflexive UVMHS.Core.Classes.Morphism.Iso
+instance UVMHS.Core.Classes.Morphism.Reflexive UVMHS.Core.Classes.Morphism.Iso2
+instance UVMHS.Core.Classes.Morphism.Reflexive UVMHS.Core.Classes.Morphism.Iso3
 
 module UVMHS.Core.Classes.Monoid
 class Null a
@@ -547,7 +560,7 @@ class Append a
 infixl 5 ⧺
 class (Null a, Append a) => Monoid a
 prepend :: Append a => a -> a -> a
-postpend :: Append a => a -> a -> a
+pospend :: Append a => a -> a -> a
 class Unit a
 unit :: Unit a => a
 class Cross a
@@ -608,10 +621,6 @@ mapp :: (Functor t, Functor u) => (a -> b) -> t (u a) -> t (u b)
 mappOn :: (Functor t, Functor u) => t (u a) -> (a -> b) -> t (u b)
 mappp :: (Functor t, Functor u, Functor v) => (a -> b) -> t (u (v a)) -> t (u (v b))
 mapppOn :: (Functor t, Functor u, Functor v) => t (u (v a)) -> (a -> b) -> t (u (v b))
-(^⋅) :: Functor t => (a -> b) -> t a -> t b
-infixl 9 ^⋅
-(^^⋅) :: (Functor t, Functor u) => (a -> b) -> t (u a) -> t (u b)
-infixl 9 ^^⋅
 (^$) :: Functor t => (a -> b) -> t a -> t b
 infixr 0 ^$
 (^^$) :: (Functor t, Functor u) => (a -> b) -> t (u a) -> t (u b)
@@ -724,6 +733,37 @@ tup :: (Tup a, ToIter a t) => t -> a
 infixr 0 ⊙$
 (⊙⋆) :: (Apply e, ToIter e t) => e -> t -> e
 infixl 7 ⊙⋆
+
+module UVMHS.Core.Classes.Bitty
+class BitZero a
+bzero :: BitZero a => a
+class BitOne a
+bone :: BitOne a => a
+class BitComp a
+comp :: BitComp a => a -> a
+class BitAnd a
+(⟑) :: BitAnd a => a -> a -> a
+infixl 6 ⟑
+class BitOr a
+(⟇) :: BitOr a => a -> a -> a
+infixl 5 ⟇
+class BitXor a
+(⊻) :: BitXor a => a -> a -> a
+infixl 5 ⊻
+class BitShiftL a
+(⋘) :: BitShiftL a => a -> ℕ64 -> a
+infixl 7 ⋘
+class BitShiftR a
+(⋙) :: BitShiftR a => a -> ℕ64 -> a
+infixl 7 ⋙
+class BitSize a
+bsize :: BitSize a => P a -> ℕ64
+class (BitZero a, BitOne a, BitComp a, BitAnd a, BitOr a, BitXor a, BitShiftL a, BitShiftR a, BitSize a) => Bitty a
+bit :: (BitOne a, BitShiftL a) => ℕ64 -> a
+bget :: (Eq a, BitZero a, BitOne a, BitAnd a, BitShiftL a) => ℕ64 -> a -> Bool
+bset :: (BitOne a, BitOr a, BitShiftL a) => ℕ64 -> a -> a
+bflp :: (BitOne a, BitXor a, BitShiftL a) => ℕ64 -> a -> a
+bclr :: (BitOne a, BitComp a, BitAnd a, BitShiftL a) => ℕ64 -> a -> a
 
 module UVMHS.Core.Classes.Arithmetic
 class Zero a
@@ -862,31 +902,6 @@ instance UVMHS.Core.Classes.Arithmetic.Zero ()
 instance UVMHS.Core.Classes.Arithmetic.Plus ()
 instance UVMHS.Core.Classes.Arithmetic.Additive ()
 
-module UVMHS.Core.Data.Pair
-fst :: (a ∧ b) -> a
-snd :: (a ∧ b) -> b
-mapPair :: (a₁ -> a₂) -> (b₁ -> b₂) -> (a₁ ∧ b₁) -> a₂ ∧ b₂
-mapFst :: (a₁ -> a₂) -> (a₁ ∧ b) -> a₂ ∧ b
-mapSnd :: (b₁ -> b₂) -> (a ∧ b₁) -> a ∧ b₂
-instance (UVMHS.Core.Classes.Lattice.POrd a, UVMHS.Core.Classes.Lattice.POrd b) => UVMHS.Core.Classes.Lattice.POrd (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Lattice.Bot a, UVMHS.Core.Classes.Lattice.Bot b) => UVMHS.Core.Classes.Lattice.Bot (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Lattice.Join a, UVMHS.Core.Classes.Lattice.Join b) => UVMHS.Core.Classes.Lattice.Join (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Lattice.Top a, UVMHS.Core.Classes.Lattice.Top b) => UVMHS.Core.Classes.Lattice.Top (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Lattice.Meet a, UVMHS.Core.Classes.Lattice.Meet b) => UVMHS.Core.Classes.Lattice.Meet (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Lattice.Dual a, UVMHS.Core.Classes.Lattice.Dual b) => UVMHS.Core.Classes.Lattice.Dual (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Lattice.Difference a, UVMHS.Core.Classes.Lattice.Difference b) => UVMHS.Core.Classes.Lattice.Difference (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Lattice.JoinLattice a, UVMHS.Core.Classes.Lattice.JoinLattice b) => UVMHS.Core.Classes.Lattice.JoinLattice (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Lattice.MeetLattice a, UVMHS.Core.Classes.Lattice.MeetLattice b) => UVMHS.Core.Classes.Lattice.MeetLattice (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Lattice.Lattice a, UVMHS.Core.Classes.Lattice.Lattice b) => UVMHS.Core.Classes.Lattice.Lattice (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Monoid.Null a, UVMHS.Core.Classes.Monoid.Null b) => UVMHS.Core.Classes.Monoid.Null (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Monoid.Append a, UVMHS.Core.Classes.Monoid.Append b) => UVMHS.Core.Classes.Monoid.Append (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Classes.Monoid.Monoid a, UVMHS.Core.Classes.Monoid.Monoid b) => UVMHS.Core.Classes.Monoid.Monoid (a UVMHS.Core.Init.∧ b)
-instance UVMHS.Core.Classes.Functor.Functor ((UVMHS.Core.Init.∧) a)
-instance UVMHS.Core.Classes.Monoid.Null a => UVMHS.Core.Classes.Monad.Return ((UVMHS.Core.Init.∧) a)
-instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monad.Bind ((UVMHS.Core.Init.∧) a)
-instance UVMHS.Core.Classes.Monoid.Monoid a => UVMHS.Core.Classes.Monad.Monad ((UVMHS.Core.Init.∧) a)
-instance UVMHS.Core.Classes.FunctorM.FunctorM ((UVMHS.Core.Init.∧) a)
-
 module UVMHS.Core.Data.Option
 elim𝑂 :: b -> (a -> b) -> 𝑂 a -> b
 isNone :: 𝑂 a -> 𝔹
@@ -992,6 +1007,7 @@ instance UVMHS.Core.Classes.Lattice.MeetLattice UVMHS.Core.Init.𝔹
 instance UVMHS.Core.Classes.Lattice.Lattice UVMHS.Core.Init.𝔹
 
 module UVMHS.Core.Data.Arithmetic
+minus𝔻ᴾ :: 𝔻ᴾ -> 𝔻ᴾ -> 𝔻ᴾ
 numberBOp :: (ℤ -> ℤ -> ℝ) -> (ℚ -> ℚ -> ℝ) -> (𝔻 -> 𝔻 -> ℝ) -> ℝ -> ℝ -> ℝ
 numberBOpᴾ :: (ℕ -> ℕ -> ℝᴾ) -> (ℚᴾ -> ℚᴾ -> ℝᴾ) -> (𝔻ᴾ -> 𝔻ᴾ -> ℝᴾ) -> ℝᴾ -> ℝᴾ -> ℝᴾ
 instance UVMHS.Core.Classes.Arithmetic.Zero UVMHS.Core.Init.ℕ
@@ -1546,6 +1562,7 @@ lower𝕊 :: 𝕊 -> 𝕊
 upper𝕊 :: 𝕊 -> 𝕊
 isEmpty𝕊 :: 𝕊 -> 𝔹
 length𝕊 :: 𝕊 -> ℕ
+length64𝕊 :: 𝕊 -> ℕ64
 splitOn𝕊 :: 𝕊 -> 𝕊 -> 𝑆 𝕊
 instance UVMHS.Core.Classes.Monoid.Null UVMHS.Core.Init.𝕊
 instance UVMHS.Core.Classes.Monoid.Append UVMHS.Core.Init.𝕊
@@ -1554,6 +1571,33 @@ instance UVMHS.Core.Classes.Collections.Single UVMHS.Core.Init.ℂ UVMHS.Core.In
 instance UVMHS.Core.Classes.Collections.ToStream UVMHS.Core.Init.ℂ UVMHS.Core.Init.𝕊
 instance UVMHS.Core.Classes.Collections.ToIter UVMHS.Core.Init.ℂ UVMHS.Core.Init.𝕊
 instance UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ UVMHS.Core.Init.ℂ UVMHS.Core.Init.𝕊
+instance UVMHS.Core.Classes.Collections.Sized UVMHS.Core.Init.𝕊
+
+module UVMHS.Core.Data.Pair
+fst :: (a ∧ b) -> a
+snd :: (a ∧ b) -> b
+mapPair :: (a₁ -> a₂) -> (b₁ -> b₂) -> (a₁ ∧ b₁) -> a₂ ∧ b₂
+mapFst :: (a₁ -> a₂) -> (a₁ ∧ b) -> a₂ ∧ b
+mapSnd :: (b₁ -> b₂) -> (a ∧ b₁) -> a ∧ b₂
+instance (UVMHS.Core.Classes.Lattice.POrd a, UVMHS.Core.Classes.Lattice.POrd b) => UVMHS.Core.Classes.Lattice.POrd (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Lattice.Bot a, UVMHS.Core.Classes.Lattice.Bot b) => UVMHS.Core.Classes.Lattice.Bot (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Lattice.Join a, UVMHS.Core.Classes.Lattice.Join b) => UVMHS.Core.Classes.Lattice.Join (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Lattice.Top a, UVMHS.Core.Classes.Lattice.Top b) => UVMHS.Core.Classes.Lattice.Top (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Lattice.Meet a, UVMHS.Core.Classes.Lattice.Meet b) => UVMHS.Core.Classes.Lattice.Meet (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Lattice.Dual a, UVMHS.Core.Classes.Lattice.Dual b) => UVMHS.Core.Classes.Lattice.Dual (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Lattice.Difference a, UVMHS.Core.Classes.Lattice.Difference b) => UVMHS.Core.Classes.Lattice.Difference (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Lattice.JoinLattice a, UVMHS.Core.Classes.Lattice.JoinLattice b) => UVMHS.Core.Classes.Lattice.JoinLattice (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Lattice.MeetLattice a, UVMHS.Core.Classes.Lattice.MeetLattice b) => UVMHS.Core.Classes.Lattice.MeetLattice (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Lattice.Lattice a, UVMHS.Core.Classes.Lattice.Lattice b) => UVMHS.Core.Classes.Lattice.Lattice (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Monoid.Null a, UVMHS.Core.Classes.Monoid.Null b) => UVMHS.Core.Classes.Monoid.Null (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Monoid.Append a, UVMHS.Core.Classes.Monoid.Append b) => UVMHS.Core.Classes.Monoid.Append (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Classes.Monoid.Monoid a, UVMHS.Core.Classes.Monoid.Monoid b) => UVMHS.Core.Classes.Monoid.Monoid (a UVMHS.Core.Init.∧ b)
+instance UVMHS.Core.Classes.Functor.Functor ((UVMHS.Core.Init.∧) a)
+instance UVMHS.Core.Classes.Monoid.Null a => UVMHS.Core.Classes.Monad.Return ((UVMHS.Core.Init.∧) a)
+instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monad.Bind ((UVMHS.Core.Init.∧) a)
+instance UVMHS.Core.Classes.Monoid.Monoid a => UVMHS.Core.Classes.Monad.Monad ((UVMHS.Core.Init.∧) a)
+instance UVMHS.Core.Classes.FunctorM.FunctorM ((UVMHS.Core.Init.∧) a)
+instance (UVMHS.Core.Classes.Collections.Sized a, UVMHS.Core.Classes.Collections.Sized b) => UVMHS.Core.Classes.Collections.Sized (a UVMHS.Core.Init.∧ b)
 
 module UVMHS.Core.Data.Iter
 empty𝐼 :: 𝐼 a
@@ -1618,10 +1662,10 @@ and :: ToIter 𝔹 t => t -> 𝔹
 count :: ToIter a t => t -> ℕ
 countWith :: ToIter a t => (a -> 𝔹) -> t -> ℕ
 reverse :: ToIter a t => t -> 𝐼 a
-repeatI :: ℕ -> (ℕ -> a) -> 𝐼 a
-repeat :: ℕ -> a -> 𝐼 a
-build :: forall a. ℕ -> a -> (a -> a) -> 𝐼 a
-upTo :: ℕ -> 𝐼 ℕ
+repeatI :: forall n a. (Eq n, Zero n, One n, Plus n) => n -> (n -> a) -> 𝐼 a
+repeat :: forall n a. (Eq n, Zero n, One n, Plus n) => n -> a -> 𝐼 a
+build :: forall n a. (Eq n, Zero n, One n, Additive n) => n -> a -> (a -> a) -> 𝐼 a
+upTo :: (Eq n, Zero n, One n, Additive n) => n -> 𝐼 n
 withIndex :: ToIter a t => t -> 𝐼 (ℕ ∧ a)
 withFirst :: ToIter a t => t -> 𝐼 (𝔹 ∧ a)
 mapFirst :: ToIter a t => (a -> a) -> t -> 𝐼 a
@@ -1655,6 +1699,43 @@ sortWith :: ToIter a t => (a -> a -> Ordering) -> t -> 𝐿 a
 sortOn :: (ToIter a t, Ord b) => (a -> b) -> t -> 𝐿 a
 sort :: (ToIter a t, Ord a) => t -> 𝐿 a
 materialize :: ToIter a t => t -> 𝐼 a
+data 𝐼C a
+𝐼C :: ℕ64 -> 𝐼 a -> 𝐼C a
+[𝑖cCount] :: 𝐼C a -> ℕ64
+[𝑖cIter] :: 𝐼C a -> 𝐼 a
+iterC :: (ToIter a t, Sized t) => t -> 𝐼C a
+data 𝐼A a
+𝐼A :: ℕ64 -> 𝐼 a -> 𝐼A a
+[𝑖ASize] :: 𝐼A a -> ℕ64
+[𝑖AIter] :: 𝐼A a -> 𝐼 a
+iterA :: (ToIter a t, Sized a) => t -> 𝐼A a
+data 𝐼CA a
+𝐼CA :: ℕ64 -> ℕ64 -> 𝐼 a -> 𝐼CA a
+[𝑖CACount] :: 𝐼CA a -> ℕ64
+[𝑖CASize] :: 𝐼CA a -> ℕ64
+[𝑖CAIter] :: 𝐼CA a -> 𝐼 a
+iterCA :: (ToIter a t, Sized a, Sized t) => t -> 𝐼CA a
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Data.Iter.𝐼C a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Data.Iter.𝐼A a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Data.Iter.𝐼CA a)
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Data.Iter.𝐼CA a)
+instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Data.Iter.𝐼CA a)
+instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Data.Iter.𝐼CA a)
+instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Data.Iter.𝐼CA a)
+instance UVMHS.Core.Classes.Collections.Sized a => UVMHS.Core.Classes.Collections.Single a (UVMHS.Core.Data.Iter.𝐼CA a)
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Data.Iter.𝐼A a)
+instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Data.Iter.𝐼A a)
+instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Data.Iter.𝐼A a)
+instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Data.Iter.𝐼A a)
+instance UVMHS.Core.Classes.Collections.Sized a => UVMHS.Core.Classes.Collections.Single a (UVMHS.Core.Data.Iter.𝐼A a)
+instance UVMHS.Core.Classes.Collections.Sized (UVMHS.Core.Data.Iter.𝐼A a)
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Data.Iter.𝐼C a)
+instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Data.Iter.𝐼C a)
+instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Data.Iter.𝐼C a)
+instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Data.Iter.𝐼C a)
+instance UVMHS.Core.Classes.Collections.Single a (UVMHS.Core.Data.Iter.𝐼C a)
+instance UVMHS.Core.Classes.Collections.Sized (UVMHS.Core.Data.Iter.𝐼C a)
+instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Data.Iter.𝐼C
 instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Init.𝐼 a)
 instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Init.𝐼 a)
 instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Init.𝐼 a)
@@ -1837,7 +1918,127 @@ instance UVMHS.Core.Classes.Collections.ToStream (k UVMHS.Core.Init.∧ v) (k UV
 instance UVMHS.Core.Classes.Collections.ToIter (k UVMHS.Core.Init.∧ v) (k UVMHS.Core.Init.⇰ v)
 instance (GHC.Show.Show k, GHC.Show.Show v) => GHC.Show.Show (k UVMHS.Core.Init.⇰ v)
 
+module UVMHS.Core.Data.Bitty
+shiftL_shim :: Bits a => a -> ℕ64 -> a
+shiftR_shim :: Bits a => a -> ℕ64 -> a
+bsize_shim :: forall a. FiniteBits a => P a -> ℕ64
+instance UVMHS.Core.Classes.Bitty.BitZero UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.BitOne UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.BitComp UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.BitAnd UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.BitOr UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.BitXor UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.BitShiftL UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.BitShiftR UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.BitSize UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.Bitty UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Classes.Bitty.BitZero UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.BitOne UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.BitComp UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.BitAnd UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.BitOr UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.BitXor UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.BitShiftL UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.BitShiftR UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.BitSize UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.Bitty UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Classes.Bitty.BitZero UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.BitOne UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.BitComp UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.BitAnd UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.BitOr UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.BitXor UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.BitShiftL UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.BitShiftR UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.BitSize UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.Bitty UVMHS.Core.Init.ℕ32
+instance UVMHS.Core.Classes.Bitty.BitZero UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.BitOne UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.BitComp UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.BitAnd UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.BitOr UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.BitXor UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.BitShiftL UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.BitShiftR UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.BitSize UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.Bitty UVMHS.Core.Init.ℕ16
+instance UVMHS.Core.Classes.Bitty.BitZero UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.BitOne UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.BitComp UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.BitAnd UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.BitOr UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.BitXor UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.BitShiftL UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.BitShiftR UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.BitSize UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.Bitty UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Classes.Bitty.BitZero UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.BitOne UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.BitComp UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.BitAnd UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.BitOr UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.BitXor UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.BitShiftL UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.BitShiftR UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.BitSize UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.Bitty UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Classes.Bitty.BitZero UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.BitOne UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.BitComp UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.BitAnd UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.BitOr UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.BitXor UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.BitShiftL UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.BitShiftR UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.BitSize UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.Bitty UVMHS.Core.Init.ℤ32
+instance UVMHS.Core.Classes.Bitty.BitZero UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.BitOne UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.BitComp UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.BitAnd UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.BitOr UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.BitXor UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.BitShiftL UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.BitShiftR UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.BitSize UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.Bitty UVMHS.Core.Init.ℤ16
+instance UVMHS.Core.Classes.Bitty.BitZero UVMHS.Core.Init.ℤ8
+instance UVMHS.Core.Classes.Bitty.BitOne UVMHS.Core.Init.ℤ8
+instance UVMHS.Core.Classes.Bitty.BitComp UVMHS.Core.Init.ℤ8
+instance UVMHS.Core.Classes.Bitty.BitAnd UVMHS.Core.Init.ℤ8
+instance UVMHS.Core.Classes.Bitty.BitOr UVMHS.Core.Init.ℤ8
+instance UVMHS.Core.Classes.Bitty.BitXor UVMHS.Core.Init.ℤ8
+instance UVMHS.Core.Classes.Bitty.BitShiftL UVMHS.Core.Init.ℤ8
+instance UVMHS.Core.Classes.Bitty.BitShiftR UVMHS.Core.Init.ℤ8
+instance UVMHS.Core.Classes.Bitty.BitSize UVMHS.Core.Init.ℤ8
+instance UVMHS.Core.Classes.Bitty.Bitty UVMHS.Core.Init.ℤ8
+
 module UVMHS.Core.Data
+
+module UVMHS.Core.Chunky
+trℕ8 :: ℕ64 -> ℕ8
+toBitsℤ64 :: ℤ64 -> ℕ64
+frBitsℤ64 :: ℕ64 -> ℤ64
+toBits𝔻 :: 𝔻 -> ℕ64
+frBits𝔻 :: ℕ64 -> 𝔻
+skipChunk :: Monad m => m ℕ8 -> ℕ64 -> m ()
+emptyChunk :: ℕ64 -> 𝐼 ℕ8
+joinBytes :: (ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8) -> ℕ64
+splitBytes :: ℕ64 -> (ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8)
+class Chunky a
+chunkSize :: Chunky a => P a -> ℕ64
+fromChunk :: forall m. (Chunky a, Monad m) => m ℕ8 -> m a
+toChunk :: Chunky a => a -> 𝐼 ℕ8
+instance (UVMHS.Core.Chunky.Chunky b, a UVMHS.Core.Classes.Morphism.⇄ b) => UVMHS.Core.Chunky.Chunky a
+instance UVMHS.Core.Chunky.Chunky ()
+instance UVMHS.Core.Chunky.Chunky UVMHS.Core.Init.ℕ8
+instance UVMHS.Core.Chunky.Chunky UVMHS.Core.Init.𝔹
+instance UVMHS.Core.Chunky.Chunky UVMHS.Core.Init.ℂ
+instance UVMHS.Core.Chunky.Chunky UVMHS.Core.Init.ℕ64
+instance UVMHS.Core.Chunky.Chunky UVMHS.Core.Init.ℤ64
+instance UVMHS.Core.Chunky.Chunky UVMHS.Core.Init.𝔻
+instance (UVMHS.Core.Chunky.Chunky a, UVMHS.Core.Chunky.Chunky b) => UVMHS.Core.Chunky.Chunky (a UVMHS.Core.Init.∧ b)
+instance (UVMHS.Core.Chunky.Chunky a, UVMHS.Core.Chunky.Chunky b) => UVMHS.Core.Chunky.Chunky (a UVMHS.Core.Init.∨ b)
 
 module UVMHS.Core.Lens
 newtype a ⟢ b
@@ -1882,7 +2083,11 @@ instance UVMHS.Core.Lens.HasPrism a a
 instance UVMHS.Core.Lens.AlterM (UVMHS.Core.Lens.⟢)
 instance UVMHS.Core.Lens.Alter (UVMHS.Core.Lens.⟢)
 instance UVMHS.Core.Lens.Alter (UVMHS.Core.Lens.⌲)
+instance UVMHS.Core.Classes.Morphism.Reflexive (UVMHS.Core.Lens.⌲)
+instance UVMHS.Core.Classes.Morphism.Transitive (UVMHS.Core.Lens.⌲)
 instance UVMHS.Core.Classes.Morphism.Category (UVMHS.Core.Lens.⌲)
+instance UVMHS.Core.Classes.Morphism.Reflexive (UVMHS.Core.Lens.⟢)
+instance UVMHS.Core.Classes.Morphism.Transitive (UVMHS.Core.Lens.⟢)
 instance UVMHS.Core.Classes.Morphism.Category (UVMHS.Core.Lens.⟢)
 
 module UVMHS.Core.Effects
@@ -2006,8 +2211,6 @@ instance UVMHS.Core.Effects.MonadReader r ((->) r)
 
 module UVMHS.Core.LensDerivedInstances
 
-module UVMHS.Core.Matrix
-
 module UVMHS.Core.Pointed
 data AddNull a
 Null :: AddNull a
@@ -2081,6 +2284,112 @@ instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddNull
 instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddNull
 instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddNull
 instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddNull
+
+module UVMHS.Core.Static
+type family (a :: k) ≡ (b :: k)
+type family (x :: 𝔹) ⩔ (y :: 𝔹)
+type family (x :: 𝔹) ⩓ (y :: 𝔹)
+type 𝐍 = Nat
+type 𝐒 = Symbol
+type (m :: 𝐍) + (n :: 𝐍) = m + n
+type (m :: 𝐍) × (n :: 𝐍) = m * n
+type (m :: 𝐍) ^ (n :: 𝐍) = m ^ n
+type (m :: 𝐍) - (n :: 𝐍) = m - n
+type (m :: 𝐍) / (n :: 𝐍) = m `Div` n
+type (m :: 𝐍) % (n :: 𝐍) = m `Mod` n
+type Log2 (n :: 𝐍) = Log2 n
+type (m :: 𝐍) ⋚ (n :: 𝐍) = CmpNat m n
+type (m :: 𝐍) ≺ (n :: 𝐍) = (m ⋚ n) ≡ 'LT ~ 'True
+infix 4 ≺
+type (m :: 𝐍) ≍ (n :: 𝐍) = (m ⋚ n) ≡ 'EQ ~ 'True
+infix 4 ≍
+type (m :: 𝐍) ≻ (n :: 𝐍) = (m ⋚ n) ≡ 'GT ~ 'True
+infix 4 ≻
+type (m :: 𝐍) ≼ (n :: 𝐍) = ((m ⋚ n) ≡ 'LT) ⩔ ((m ⋚ n ≡ 'EQ)) ~ 'True
+infix 4 ≼
+wnlt_UNSAFE :: forall m n. P m -> P n -> W (m ≺ n)
+wneq_UNSAFE :: forall m n. P m -> P n -> W (m ≍ n)
+wngt_UNSAFE :: forall m n. P m -> P n -> W (m ≻ n)
+wnlte_UNSAFE :: forall m n. P m -> P n -> W (m ≼ n)
+data (m :: 𝐍) < (n :: 𝐍)
+[W_LT] :: m ≺ n => m < n
+infix 4 <
+withLT :: (m < n) -> (m ≺ n => a) -> a
+nlt_UNSAFE :: forall m n. P m -> P n -> m < n
+data (m :: 𝐍) ≤ (n :: 𝐍)
+[W_LTE] :: m ≼ n => m ≤ n
+infix 4 ≤
+withLTE :: (m ≤ n) -> (m ≼ n => a) -> a
+nlte_UNSAFE :: forall m n. P m -> P n -> m ≤ n
+irreflLT :: (n < n) -> Void
+weakenLT :: (n₁ < n₂) -> n₁ ≤ n₂
+succLT :: (n₁ < n₂) -> (n₁ + 1) ≤ n₂
+succLTE :: (n₁ ≤ n₂) -> n₁ < (n₂ + 1)
+(⊚♯) :: (n₁ ≤ n₂) -> (n₂ < n₃) -> n₁ < n₃
+(♯⊚) :: (n₁ < n₂) -> (n₂ ≤ n₃) -> n₁ < n₃
+newtype ℕS (n :: 𝐍)
+ℕS_UNSAFE :: ℕ -> ℕS (n :: 𝐍)
+[unℕS] :: ℕS (n :: 𝐍) -> ℕ
+newtype ℕ64S (n :: 𝐍)
+ℕ64S_UNSAFE :: ℕ64 -> ℕ64S (n :: 𝐍)
+[unℕ64S] :: ℕ64S (n :: 𝐍) -> ℕ64
+newtype 𝕊S (s :: 𝐒)
+𝕊S_UNSAFE :: 𝕊 -> 𝕊S (s :: 𝐒)
+[un𝕊S] :: 𝕊S (s :: 𝐒) -> 𝕊
+class (KnownNat n) => 𝒩 (n :: 𝐍)
+reifyℕ :: 𝒩 n => P n -> ℕ
+class (KnownNat n) => 𝒩64 (n :: 𝐍)
+reifyℕ64 :: 𝒩64 n => P n -> ℕ64
+class (KnownSymbol s) => 𝒮 (s :: 𝐒)
+reify𝕊 :: 𝒮 s => P s -> 𝕊
+compare𝐍 :: forall (a :: 𝐍) (b :: 𝐍). (𝒩 a, 𝒩 b) => 𝑂 (a ≟ b)
+𝕟s :: forall n. 𝒩 n => ℕS n
+𝕟d :: ℕ -> (forall n. 𝒩 n => ℕS n -> a) -> a
+𝕟64s :: forall n. 𝒩64 n => ℕ64S n
+𝕟64d :: ℕ64 -> (forall n. 𝒩64 n => ℕ64S n -> a) -> a
+𝕤s :: forall s. KnownSymbol s => 𝕊S s
+𝕤sd :: 𝕊 -> (forall s. 𝒮 s => 𝕊S s -> a) -> a
+type family (xs :: [a]) ⧺ (ys :: [a]) :: [a]
+type family Sum (ns :: [𝐍])
+type family Prod (ns :: [𝐍])
+type family AllC (c :: a -> Constraint) (xs :: [a]) :: Constraint
+data Spine :: [a] -> ★
+[NilSpine] :: Spine '[]
+[ConsSpine] :: Spine xs -> Spine (x : xs)
+class HasSpine xs
+spine :: HasSpine xs => Spine xs
+newtype 𝕀64 (n :: 𝐍)
+𝕀64_UNSAFE :: ℕ64 -> 𝕀64 (n :: 𝐍)
+[un𝕀64] :: 𝕀64 (n :: 𝐍) -> ℕ64
+𝕚64 :: forall m n. m ≺ n => ℕ64S m -> 𝕀64 n
+𝕚64d :: forall n. 𝒩64 n => ℕ64 -> 𝑂 (𝕀64 n)
+𝕟64di :: forall n a. 𝕀64 n -> (forall m. m ≺ n => ℕ64S m -> a) -> a
+upTo𝕀64 :: forall n. 𝒩64 n => ℕ64S n -> 𝐼S n (𝕀64 n)
+wk𝕀64 :: m ≼ n => 𝕀64 m -> 𝕀64 n
+newtype 𝐼S (n :: 𝐍) a
+𝐼S_UNSAFE :: 𝐼 a -> 𝐼S (n :: 𝐍) a
+[un𝐼S] :: 𝐼S (n :: 𝐍) a -> 𝐼 a
+class NullS t
+nullS :: NullS t => t 0 a
+class SingleS t
+𝔢 :: SingleS t => a -> t 1 a
+class AppendS t
+(⧺♮) :: AppendS t => t n₁ a -> t n₂ a -> t (n₁ + n₂) a
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Static.𝐼S n a)
+instance UVMHS.Core.Static.AppendS UVMHS.Core.Static.𝐼S
+instance UVMHS.Core.Static.SingleS UVMHS.Core.Static.𝐼S
+instance UVMHS.Core.Static.NullS UVMHS.Core.Static.𝐼S
+instance UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Static.𝐼S n)
+instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Static.𝐼S n a)
+instance UVMHS.Core.Static.HasSpine '[]
+instance forall a (xs :: [a]) (x :: a). UVMHS.Core.Static.HasSpine xs => UVMHS.Core.Static.HasSpine (x : xs)
+instance GHC.TypeLits.KnownSymbol s => UVMHS.Core.Static.𝒮 s
+instance GHC.TypeNats.KnownNat n => UVMHS.Core.Static.𝒩64 n
+instance GHC.TypeNats.KnownNat n => UVMHS.Core.Static.𝒩 n
+instance UVMHS.Core.Classes.Morphism.Reflexive (UVMHS.Core.Static.≤)
+instance UVMHS.Core.Classes.Morphism.Transitive (UVMHS.Core.Static.≤)
+instance UVMHS.Core.Classes.Morphism.Category (UVMHS.Core.Static.≤)
+instance UVMHS.Core.Classes.Morphism.Transitive (UVMHS.Core.Static.<)
 
 module UVMHS.Core.TH
 class MonadQ (m :: ★ -> ★)
@@ -2394,6 +2703,7 @@ instance UVMHS.Core.Classes.Monad.Bind GHC.Types.IO
 instance UVMHS.Core.Classes.Monad.Monad GHC.Types.IO
 
 module UVMHS.Core.IO
+io_UNSAFE :: IO a -> a
 initUVMHS :: IO ()
 owrite :: 𝕊 -> IO ()
 out :: 𝕊 -> IO ()
@@ -2438,7 +2748,6 @@ rtime :: 𝕊 -> (() -> a) -> IO a
 timeIO :: IO a -> IO (a ∧ TimeD)
 rtimeIO :: 𝕊 -> IO a -> IO a
 profile :: (() -> a) -> IO (TimeD ∧ 𝔻)
-ioUNSAFE :: IO a -> a
 
 module UVMHS.Core.LensDeriving
 makeLensLogic :: Cxt -> Name -> 𝐿 TyVarBndr -> Name -> Type -> Q (𝐿 Dec)
@@ -2447,133 +2756,263 @@ makePrismLogic :: Cxt -> Name -> 𝐿 TyVarBndr -> Name -> 𝐿 Type -> ℕ -> Q
 makePrisms :: Name -> Q [Dec]
 
 module UVMHS.Core.Vector
-newtype 𝕍 a
-𝕍 :: Array ℕ64 a -> 𝕍 a
-vecN :: ToIter a t => ℕ64 -> t -> 𝕍 a
-vecS :: (ToIter a t, Sized t) => t -> 𝕍 a
-vec :: ToIter a t => t -> 𝕍 a
-vecF :: ℕ64 -> (ℕ64 -> a) -> 𝕍 a
-vecD :: (ℕ64 ⇰ a) -> 𝕍 a
-idxOK𝕍 :: 𝕍 a -> ℕ64 -> 𝔹
-idx𝕍 :: 𝕍 a -> ℕ64 -> a
-idx𝕍𝑂 :: 𝕍 a -> ℕ64 -> 𝑂 a
-stream𝕍 :: 𝕍 a -> 𝑆 a
-size𝕍 :: 𝕍 a -> ℕ64
-map𝕍 :: (a -> b) -> 𝕍 a -> 𝕍 b
-set𝕍 :: ℕ64 -> a -> 𝕍 a -> 𝕍 a
-skipChunk :: Monad m => m ℕ8 -> ℕ64 -> m ()
-emptyChunk :: ℕ64 -> 𝐼 ℕ8
-joinBytes :: (ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8) -> ℕ64
-splitBytes :: ℕ64 -> (ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8, ℕ8)
-class Chunky a
-chunkSize :: Chunky a => P a -> ℕ64
-fromChunk :: forall m. (Chunky a, Monad m) => m ℕ8 -> m a
-toChunk :: Chunky a => a -> 𝐼 ℕ8
-chunkIOBytes :: UArray ℕ64 ℕ8 -> State ℕ64 ℕ8
+data 𝕄S (ns :: [𝐍]) a
+[Nil𝕄S] :: a -> 𝕄S '[] a
+[Cons𝕄S] :: 𝕍S n (𝕄S ns a) -> 𝕄S (n : ns) a
 newtype 𝕌 a
-𝕌 :: UArray ℕ64 ℕ8 -> 𝕌 a
-uvecN :: forall t a. (ToIter a t, Chunky a) => ℕ64 -> t -> 𝕌 a
-uvec :: (ToIter a t, Chunky a) => t -> 𝕌 a
-idxOK𝕌 :: forall a. Chunky a => 𝕌 a -> ℕ64 -> 𝔹
-rawIdx𝕌 :: Chunky a => P a -> ℕ64 -> ℕ64
-idx𝕌 :: forall a. Chunky a => 𝕌 a -> ℕ64 -> a
-idx𝕌𝑂 :: Chunky a => 𝕌 a -> ℕ64 -> 𝑂 a
-stream𝕌 :: forall a. Chunky a => 𝕌 a -> 𝑆 a
-showWith𝕌 :: Chunky a => (a -> 𝕊) -> 𝕌 a -> 𝕊
-streamBytes𝕌 :: 𝕌 a -> 𝑆 ℕ8
-corelib_vector_e1 :: 𝕌 (ℕ64 ∨ (ℕ64 ∧ ℕ64))
-corelib_vector_e2 :: 𝕌 ℂ
-corelib_vector_e3 :: 𝕌 𝔹
-instance UVMHS.Core.Vector.Chunky a => UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Vector.𝕌 a)
-instance UVMHS.Core.Vector.Chunky a => UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Vector.𝕌 a)
-instance (UVMHS.Core.Vector.Chunky a, GHC.Show.Show a) => GHC.Show.Show (UVMHS.Core.Vector.𝕌 a)
-instance UVMHS.Core.Vector.Chunky a => UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ64 a (UVMHS.Core.Vector.𝕌 a)
-instance forall k (a :: k). UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Vector.𝕌 a)
-instance UVMHS.Core.Vector.Chunky a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Vector.𝕌 a)
-instance (UVMHS.Core.Vector.Chunky a, GHC.Classes.Eq a) => GHC.Classes.Eq (UVMHS.Core.Vector.𝕌 a)
-instance (UVMHS.Core.Vector.Chunky a, GHC.Classes.Ord a) => GHC.Classes.Ord (UVMHS.Core.Vector.𝕌 a)
-instance (UVMHS.Core.Vector.Chunky b, a UVMHS.Core.Classes.Morphism.⇄ b) => UVMHS.Core.Vector.Chunky a
-instance UVMHS.Core.Vector.Chunky ()
-instance UVMHS.Core.Vector.Chunky UVMHS.Core.Init.ℕ8
-instance UVMHS.Core.Vector.Chunky UVMHS.Core.Init.𝔹
-instance UVMHS.Core.Vector.Chunky UVMHS.Core.Init.ℂ
-instance UVMHS.Core.Vector.Chunky UVMHS.Core.Init.ℕ64
-instance UVMHS.Core.Vector.Chunky UVMHS.Core.Init.ℤ64
-instance UVMHS.Core.Vector.Chunky UVMHS.Core.Init.𝔻
-instance (UVMHS.Core.Vector.Chunky a, UVMHS.Core.Vector.Chunky b) => UVMHS.Core.Vector.Chunky (a UVMHS.Core.Init.∧ b)
-instance (UVMHS.Core.Vector.Chunky a, UVMHS.Core.Vector.Chunky b) => UVMHS.Core.Vector.Chunky (a UVMHS.Core.Init.∨ b)
+𝕌 :: Vector a -> 𝕌 a
+[un𝕌] :: 𝕌 a -> Vector a
+newtype 𝕌S n a
+𝕌S_UNSAFE :: Vector a -> 𝕌S n a
+[un𝕌S] :: 𝕌S n a -> Vector a
+newtype 𝕍 a
+𝕍 :: Vector a -> 𝕍 a
+[un𝕍] :: 𝕍 a -> Vector a
+newtype 𝕍S n a
+𝕍S_UNSAFE :: Vector a -> 𝕍S n a
+[un𝕍S] :: 𝕍S n a -> Vector a
+newtype 𝕍SV n a
+𝕍SV :: (𝕀64 n -> a) -> 𝕍SV n a
+[un𝕍SV] :: 𝕍SV n a -> 𝕀64 n -> a
+svec :: forall n a. 𝒩 n => 𝐼S n a -> 𝕍S n a
+svecF :: forall n a. 𝒩 n => ℕ64S n -> (𝕀64 n -> a) -> 𝕍S n a
+idx𝕍S :: 𝕀64 n -> 𝕍S n a -> a
+idxChecked𝕍S :: ℕ64 -> 𝕍S n a -> 𝑂 a
+iter𝕍S :: 𝕍S n a -> 𝐼S n a
+stream𝕍S :: 𝕍S n a -> 𝑆 a
+show𝕍S :: Show a => 𝕍S n a -> 𝕊
+null𝕍S :: (𝒩 n, Null a) => ℕ64S n -> 𝕍S n a
+map𝕍S :: 𝒩 n => (a -> b) -> 𝕍S n a -> 𝕍S n b
+const𝕍S :: 𝒩 n => ℕ64S n -> a -> 𝕍S n a
+svirt :: 𝒩 n => 𝕍S n a -> 𝕍SV n a
+svirt2 :: (𝒩 m, 𝒩 n) => 𝕍S m (𝕍S n a) -> 𝕍SV m (𝕍SV n a)
+sconc :: 𝒩 n => ℕ64S n -> 𝕍SV n a -> 𝕍S n a
+sconc2 :: (𝒩 m, 𝒩 n) => ℕ64S m -> ℕ64S n -> 𝕍SV m (𝕍SV n a) -> 𝕍S m (𝕍S n a)
+𝐭 :: (𝒩 m, 𝒩 n) => 𝕍S m (𝕍S n a) -> 𝕍S n (𝕍S m a)
+(⋅) :: (𝒩 n, Additive a, Times a) => 𝕍S n a -> 𝕍S n a -> a
+infixl 6 ⋅
+(✖) :: (𝒩 m, 𝒩 n, 𝒩 o, Additive a, Times a) => 𝕍S m (𝕍S o a) -> 𝕍S n (𝕍S o a) -> 𝕍S m (𝕍S n a)
+infixl 6 ✖
+vec :: 𝐼 a -> 𝕍 a
+vecS :: 𝐼C a -> 𝕍 a
+vecF :: ℕ64 -> (ℕ64 -> a) -> 𝕍 a
+idx𝕍 :: ℕ64 -> 𝕍 a -> 𝑂 a
+stream𝕍 :: 𝕍 a -> 𝑆 a
+show𝕍 :: Show a => 𝕍 a -> 𝕊
+null𝕍 :: Null a => ℕ64 -> 𝕍 a
+map𝕍 :: (a -> b) -> 𝕍 a -> 𝕍 b
+d𝕍 :: 𝕍 a -> (forall n. 𝒩64 n => 𝕍S n a -> b) -> b
+vecD :: (ℕ64 ⇰ a) -> 𝕍 a
+suvec :: forall n a. (𝒩 n, Storable a) => 𝐼S n a -> 𝕌S n a
+suvecF :: forall n a. (𝒩 n, Storable a) => ℕ64S n -> (𝕀64 n -> a) -> 𝕌S n a
+idx𝕌S :: Storable a => 𝕀64 n -> 𝕌S n a -> a
+idxChecked𝕌S :: Storable a => ℕ64 -> 𝕌S n a -> 𝑂 a
+iter𝕌S :: Storable a => 𝕌S n a -> 𝐼S n a
+stream𝕌S :: Storable a => 𝕌S n a -> 𝑆 a
+show𝕌S :: (Storable a, Show a) => 𝕌S n a -> 𝕊
+null𝕌S :: (𝒩 n, Storable a, Null a) => ℕ64S n -> 𝕌S n a
+map𝕌S :: (𝒩 n, Storable a, Storable b) => (a -> b) -> 𝕌S n a -> 𝕌S n b
+uvec :: Storable a => 𝐼 a -> 𝕌 a
+uvecS :: Storable a => 𝐼C a -> 𝕌 a
+uvecF :: Storable a => ℕ64 -> (ℕ64 -> a) -> 𝕌 a
+idx𝕌 :: Storable a => ℕ64 -> 𝕌 a -> 𝑂 a
+stream𝕌 :: Storable a => 𝕌 a -> 𝑆 a
+show𝕌 :: (Storable a, Show a) => 𝕌 a -> 𝕊
+null𝕌 :: (Storable a, Null a) => ℕ64 -> 𝕌 a
+map𝕌 :: (Storable a, Storable b) => (a -> b) -> 𝕌 a -> 𝕌 b
+d𝕌 :: Storable a => 𝕌 a -> (forall n. 𝒩64 n => 𝕌S n a -> b) -> b
+uvecD :: Storable a => (ℕ64 ⇰ a) -> 𝕌 a
+zero𝕄S :: (AllC 𝒩 ns, Zero a) => Spine ns -> 𝕄S ns a
+mapUnder𝕄S :: AllC 𝒩 ns => Spine ns -> (𝕄S ms₁ a -> 𝕄S ms₂ b) -> 𝕄S (ns ⧺ ms₁) a -> 𝕄S (ns ⧺ ms₂) b
+
+-- | The member functions of this class facilitate writing values of
+--   primitive types to raw memory (which may have been allocated with the
+--   above mentioned routines) and reading values from blocks of raw
+--   memory. The class, furthermore, includes support for computing the
+--   storage requirements and alignment restrictions of storable types.
+--   
+--   Memory addresses are represented as values of type <tt><a>Ptr</a>
+--   a</tt>, for some <tt>a</tt> which is an instance of class
+--   <a>Storable</a>. The type argument to <a>Ptr</a> helps provide some
+--   valuable type safety in FFI code (you can't mix pointers of different
+--   types without an explicit cast), while helping the Haskell type system
+--   figure out which marshalling method is needed for a given pointer.
+--   
+--   All marshalling between Haskell and a foreign language ultimately
+--   boils down to translating Haskell data structures into the binary
+--   representation of a corresponding data structure of the foreign
+--   language and vice versa. To code this marshalling in Haskell, it is
+--   necessary to manipulate primitive data types stored in unstructured
+--   memory blocks. The class <a>Storable</a> facilitates this manipulation
+--   on all types for which it is instantiated, which are the standard
+--   basic types of Haskell, the fixed size <tt>Int</tt> types
+--   (<a>Int8</a>, <a>Int16</a>, <a>Int32</a>, <a>Int64</a>), the fixed
+--   size <tt>Word</tt> types (<a>Word8</a>, <a>Word16</a>, <a>Word32</a>,
+--   <a>Word64</a>), <a>StablePtr</a>, all types from
+--   <a>Foreign.C.Types</a>, as well as <a>Ptr</a>.
+class Storable a
+
+-- | Computes the storage requirements (in bytes) of the argument. The
+--   value of the argument is not used.
+sizeOf :: Storable a => a -> Int
+
+-- | Computes the alignment constraint of the argument. An alignment
+--   constraint <tt>x</tt> is fulfilled by any address divisible by
+--   <tt>x</tt>. The value of the argument is not used.
+alignment :: Storable a => a -> Int
+
+-- | Read a value from a memory area regarded as an array of values of the
+--   same kind. The first argument specifies the start address of the array
+--   and the second the index into the array (the first element of the
+--   array has index <tt>0</tt>). The following equality holds,
+--   
+--   <pre>
+--   peekElemOff addr idx = IOExts.fixIO $ \result -&gt;
+--     peek (addr `plusPtr` (idx * sizeOf result))
+--   </pre>
+--   
+--   Note that this is only a specification, not necessarily the concrete
+--   implementation of the function.
+peekElemOff :: Storable a => Ptr a -> Int -> IO a
+
+-- | Write a value to a memory area regarded as an array of values of the
+--   same kind. The following equality holds:
+--   
+--   <pre>
+--   pokeElemOff addr idx x = 
+--     poke (addr `plusPtr` (idx * sizeOf x)) x
+--   </pre>
+pokeElemOff :: Storable a => Ptr a -> Int -> a -> IO ()
+
+-- | Read a value from a memory location given by a base address and
+--   offset. The following equality holds:
+--   
+--   <pre>
+--   peekByteOff addr off = peek (addr `plusPtr` off)
+--   </pre>
+peekByteOff :: Storable a => Ptr b -> Int -> IO a
+
+-- | Write a value to a memory location given by a base address and offset.
+--   The following equality holds:
+--   
+--   <pre>
+--   pokeByteOff addr off x = poke (addr `plusPtr` off) x
+--   </pre>
+pokeByteOff :: Storable a => Ptr b -> Int -> a -> IO ()
+
+-- | Read a value from the given memory location.
+--   
+--   Note that the peek and poke functions might require properly aligned
+--   addresses to function correctly. This is architecture dependent; thus,
+--   portable code should ensure that when peeking or poking values of some
+--   type <tt>a</tt>, the alignment constraint for <tt>a</tt>, as given by
+--   the function <a>alignment</a> is fulfilled.
+peek :: Storable a => Ptr a -> IO a
+
+-- | Write the given value to the given memory location. Alignment
+--   restrictions might apply; see <a>peek</a>.
+poke :: Storable a => Ptr a -> a -> IO ()
+instance forall k (n :: k) a. GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Vector.𝕍S n a)
+instance forall k (n :: k) a. GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Vector.𝕍S n a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Vector.𝕍 a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Vector.𝕍 a)
+instance forall k (n :: k) a. (Foreign.Storable.Storable a, GHC.Classes.Ord a) => GHC.Classes.Ord (UVMHS.Core.Vector.𝕌S n a)
+instance forall k (n :: k) a. (Foreign.Storable.Storable a, GHC.Classes.Eq a) => GHC.Classes.Eq (UVMHS.Core.Vector.𝕌S n a)
+instance (Foreign.Storable.Storable a, GHC.Classes.Ord a) => GHC.Classes.Ord (UVMHS.Core.Vector.𝕌 a)
+instance (Foreign.Storable.Storable a, GHC.Classes.Eq a) => GHC.Classes.Eq (UVMHS.Core.Vector.𝕌 a)
+instance (UVMHS.Core.Static.HasSpine ns, UVMHS.Core.Static.AllC UVMHS.Core.Static.𝒩 ns, UVMHS.Core.Classes.Arithmetic.Zero a) => UVMHS.Core.Classes.Arithmetic.Zero (UVMHS.Core.Vector.𝕄S ns a)
+instance (UVMHS.Core.Static.AllC UVMHS.Core.Static.𝒩 ns, UVMHS.Core.Classes.Arithmetic.Plus a) => UVMHS.Core.Classes.Arithmetic.Plus (UVMHS.Core.Vector.𝕄S ns a)
+instance (UVMHS.Core.Static.AllC UVMHS.Core.Static.𝒩 ns, UVMHS.Core.Classes.Arithmetic.Times a) => UVMHS.Core.Classes.Arithmetic.Times (UVMHS.Core.Vector.𝕄S ns a)
+instance Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Vector.𝕌 a)
+instance Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Vector.𝕌 a)
+instance (Foreign.Storable.Storable a, GHC.Show.Show a) => GHC.Show.Show (UVMHS.Core.Vector.𝕌 a)
+instance Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ64 a (UVMHS.Core.Vector.𝕌 a)
+instance forall k a (n :: k). Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Vector.𝕌S n a)
+instance forall k a (n :: k). Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Vector.𝕌S n a)
+instance forall k a (n :: k). (Foreign.Storable.Storable a, GHC.Show.Show a) => GHC.Show.Show (UVMHS.Core.Vector.𝕌S n a)
+instance Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.Access (UVMHS.Core.Static.𝕀64 n) a (UVMHS.Core.Vector.𝕌S n a)
+instance forall k a (n :: k). Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ64 a (UVMHS.Core.Vector.𝕌S n a)
+instance (UVMHS.Core.Static.𝒩 n, Foreign.Storable.Storable a, UVMHS.Core.Classes.Monoid.Null a) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Vector.𝕌S n a)
 instance UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Vector.𝕍 a)
 instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Vector.𝕍 a)
 instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Vector.𝕍 a)
 instance UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ64 a (UVMHS.Core.Vector.𝕍 a)
-instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Vector.𝕍 a)
-instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Vector.𝕍 a)
-instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Vector.𝕍 a)
-instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Vector.𝕍 a)
-instance UVMHS.Core.Classes.Collections.Sized (UVMHS.Core.Vector.𝕍 a)
 instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Vector.𝕍
+instance forall k a (n :: k). UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Vector.𝕍S n a)
+instance forall k a (n :: k). UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Vector.𝕍S n a)
+instance forall k a (n :: k). GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Vector.𝕍S n a)
+instance UVMHS.Core.Classes.Collections.Access (UVMHS.Core.Static.𝕀64 n) a (UVMHS.Core.Vector.𝕍S n a)
+instance forall k a (n :: k). UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ64 a (UVMHS.Core.Vector.𝕍S n a)
+instance (UVMHS.Core.Static.𝒩 n, UVMHS.Core.Classes.Monoid.Null a) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Vector.𝕍S n a)
+instance UVMHS.Core.Static.𝒩 n => UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Vector.𝕍S n)
+instance (UVMHS.Core.Static.𝒩 n, UVMHS.Core.Classes.Arithmetic.Zero a) => UVMHS.Core.Classes.Arithmetic.Zero (UVMHS.Core.Vector.𝕍S n a)
+instance (UVMHS.Core.Static.𝒩 n, UVMHS.Core.Classes.Arithmetic.One a) => UVMHS.Core.Classes.Arithmetic.One (UVMHS.Core.Vector.𝕍S n a)
+instance (UVMHS.Core.Static.𝒩 n, UVMHS.Core.Classes.Arithmetic.Plus a) => UVMHS.Core.Classes.Arithmetic.Plus (UVMHS.Core.Vector.𝕍S n a)
+instance (UVMHS.Core.Static.𝒩 n, UVMHS.Core.Classes.Arithmetic.Times a) => UVMHS.Core.Classes.Arithmetic.Times (UVMHS.Core.Vector.𝕍S n a)
+instance UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Vector.𝕍SV n)
+instance UVMHS.Core.Classes.Collections.Access (UVMHS.Core.Static.𝕀64 n) a (UVMHS.Core.Vector.𝕍SV n a)
 
 module UVMHS.Core.VectorSparse
-data 𝑊 a
-𝑊 :: IntMap a -> 𝑊 a
-[un𝑊] :: 𝑊 a -> IntMap a
-lookup𝑊 :: 𝑊 a -> ℤ64 -> 𝑂 a
-single𝑊 :: (ℤ64 ∧ a) -> 𝑊 a
-subDictBy𝑊 :: (a -> a -> 𝔹) -> 𝑊 a -> 𝑊 a -> 𝔹
-wø :: 𝑊 a
-unionWith𝑊 :: (a -> a -> a) -> 𝑊 a -> 𝑊 a -> 𝑊 a
-(↦♮) :: ℤ64 -> a -> 𝑊 a
-(⋵♮) :: ℤ64 -> 𝑊 a -> 𝔹
-(⩌♮) :: 𝑊 a -> 𝑊 a -> 𝑊 a
-(⩍♮) :: 𝑊 a -> 𝑊 a -> 𝑊 a
-delete𝑊 :: ℤ64 -> 𝑊 a -> 𝑊 a
-size𝑊 :: 𝑊 a -> ℕ
-(⊎♮) :: Additive a => 𝑊 a -> 𝑊 a -> 𝑊 a
-unionsWith𝑊 :: ToIter (𝑊 a) t => (a -> a -> a) -> t -> 𝑊 a
-interWith𝑊 :: (a -> b -> c) -> 𝑊 a -> 𝑊 b -> 𝑊 c
-minView𝑊 :: 𝑊 a -> 𝑂 ((ℤ64 ∧ a) ∧ 𝑊 a)
-maxView𝑊 :: 𝑊 a -> 𝑂 ((ℤ64 ∧ a) ∧ 𝑊 a)
-minKey𝑊 :: 𝑊 a -> 𝑂 ℤ64
-maxKey𝑊 :: 𝑊 a -> 𝑂 ℤ64
-view𝑊 :: ℤ64 -> 𝑊 a -> 𝑂 (a ∧ 𝑊 a)
-without𝑊 :: 𝑃 ℤ64 -> 𝑊 a -> 𝑊 a
-restrict𝑊 :: 𝑃 ℤ64 -> 𝑊 a -> 𝑊 a
-keys𝑊 :: 𝑊 a -> 𝐼 ℤ64
-values𝑊 :: 𝑊 a -> 𝐼 a
-map𝑊 :: (a -> b) -> 𝑊 a -> 𝑊 b
-mapK𝑊 :: (ℤ64 -> a -> b) -> 𝑊 a -> 𝑊 b
-stream𝑊 :: 𝑊 a -> 𝑆 (ℤ64 ∧ a)
-spvec𝐼 :: 𝐼 (ℤ64 ∧ a) -> 𝑊 a
-spvec :: ToIter (𝑊 a) t => t -> 𝑊 a
-assoc𝑊 :: ToIter (ℤ64 ∧ a) t => t -> 𝑊 a
-join𝑊 :: (Ord a, Ord b) => 𝑊 (𝑃 a) -> 𝑊 (𝑃 b) -> 𝑊 (𝑃 (a ∧ b))
-instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.VectorSparse.𝑊 a)
-instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℤ64 a (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Collections.Single (UVMHS.Core.Init.ℤ64 UVMHS.Core.Init.∧ a) (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Lattice.POrd a => UVMHS.Core.Classes.Lattice.POrd (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Monoid.Null a => UVMHS.Core.Classes.Monoid.Unit (UVMHS.Core.VectorSparse.𝑊 a)
-instance (UVMHS.Core.Classes.Monoid.Append a, UVMHS.Core.Classes.Monoid.Cross a) => UVMHS.Core.Classes.Monoid.Cross (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Monoid.Prodoid a => UVMHS.Core.Classes.Monoid.Prodoid (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Arithmetic.Zero (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Arithmetic.Plus a => UVMHS.Core.Classes.Arithmetic.Plus (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Arithmetic.Plus a => UVMHS.Core.Classes.Arithmetic.Additive (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Arithmetic.Zero a => UVMHS.Core.Classes.Arithmetic.One (UVMHS.Core.VectorSparse.𝑊 a)
-instance (UVMHS.Core.Classes.Arithmetic.Plus a, UVMHS.Core.Classes.Arithmetic.Times a) => UVMHS.Core.Classes.Arithmetic.Times (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Arithmetic.Multiplicative a => UVMHS.Core.Classes.Arithmetic.Multiplicative (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Lattice.Bot (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.JoinLattice (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.MeetLattice (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.VectorSparse.𝑊
-instance UVMHS.Core.Classes.Collections.ToStream (UVMHS.Core.Init.ℤ64 UVMHS.Core.Init.∧ a) (UVMHS.Core.VectorSparse.𝑊 a)
-instance UVMHS.Core.Classes.Collections.ToIter (UVMHS.Core.Init.ℤ64 UVMHS.Core.Init.∧ a) (UVMHS.Core.VectorSparse.𝑊 a)
-instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.VectorSparse.𝑊 a)
+data 𝑉 a
+𝑉 :: IntMap a -> 𝑉 a
+[un𝑉] :: 𝑉 a -> IntMap a
+lookup𝑉 :: 𝑉 a -> ℤ64 -> 𝑂 a
+single𝑉 :: (ℤ64 ∧ a) -> 𝑉 a
+subDictBy𝑉 :: (a -> a -> 𝔹) -> 𝑉 a -> 𝑉 a -> 𝔹
+wø :: 𝑉 a
+unionWith𝑉 :: (a -> a -> a) -> 𝑉 a -> 𝑉 a -> 𝑉 a
+(↦♮) :: ℤ64 -> a -> 𝑉 a
+(⋵♮) :: ℤ64 -> 𝑉 a -> 𝔹
+(⩌♮) :: 𝑉 a -> 𝑉 a -> 𝑉 a
+(⩍♮) :: 𝑉 a -> 𝑉 a -> 𝑉 a
+delete𝑉 :: ℤ64 -> 𝑉 a -> 𝑉 a
+size𝑉 :: 𝑉 a -> ℕ
+(⊎♮) :: Additive a => 𝑉 a -> 𝑉 a -> 𝑉 a
+unionsWith𝑉 :: ToIter (𝑉 a) t => (a -> a -> a) -> t -> 𝑉 a
+interWith𝑉 :: (a -> b -> c) -> 𝑉 a -> 𝑉 b -> 𝑉 c
+minView𝑉 :: 𝑉 a -> 𝑂 ((ℤ64 ∧ a) ∧ 𝑉 a)
+maxView𝑉 :: 𝑉 a -> 𝑂 ((ℤ64 ∧ a) ∧ 𝑉 a)
+minKey𝑉 :: 𝑉 a -> 𝑂 ℤ64
+maxKey𝑉 :: 𝑉 a -> 𝑂 ℤ64
+view𝑉 :: ℤ64 -> 𝑉 a -> 𝑂 (a ∧ 𝑉 a)
+without𝑉 :: 𝑃 ℤ64 -> 𝑉 a -> 𝑉 a
+restrict𝑉 :: 𝑃 ℤ64 -> 𝑉 a -> 𝑉 a
+keys𝑉 :: 𝑉 a -> 𝐼 ℤ64
+values𝑉 :: 𝑉 a -> 𝐼 a
+map𝑉 :: (a -> b) -> 𝑉 a -> 𝑉 b
+mapK𝑉 :: (ℤ64 -> a -> b) -> 𝑉 a -> 𝑉 b
+stream𝑉 :: 𝑉 a -> 𝑆 (ℤ64 ∧ a)
+spvec𝐼 :: 𝐼 (ℤ64 ∧ a) -> 𝑉 a
+spvec :: ToIter (𝑉 a) t => t -> 𝑉 a
+assoc𝑉 :: ToIter (ℤ64 ∧ a) t => t -> 𝑉 a
+join𝑉 :: (Ord a, Ord b) => 𝑉 (𝑃 a) -> 𝑉 (𝑃 b) -> 𝑉 (𝑃 (a ∧ b))
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.VectorSparse.𝑉 a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℤ64 a (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Collections.Single (UVMHS.Core.Init.ℤ64 UVMHS.Core.Init.∧ a) (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Lattice.POrd a => UVMHS.Core.Classes.Lattice.POrd (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Monoid.Null a => UVMHS.Core.Classes.Monoid.Unit (UVMHS.Core.VectorSparse.𝑉 a)
+instance (UVMHS.Core.Classes.Monoid.Append a, UVMHS.Core.Classes.Monoid.Cross a) => UVMHS.Core.Classes.Monoid.Cross (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Monoid.Prodoid a => UVMHS.Core.Classes.Monoid.Prodoid (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Arithmetic.Zero (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Arithmetic.Plus a => UVMHS.Core.Classes.Arithmetic.Plus (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Arithmetic.Plus a => UVMHS.Core.Classes.Arithmetic.Additive (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Arithmetic.Zero a => UVMHS.Core.Classes.Arithmetic.One (UVMHS.Core.VectorSparse.𝑉 a)
+instance (UVMHS.Core.Classes.Arithmetic.Plus a, UVMHS.Core.Classes.Arithmetic.Times a) => UVMHS.Core.Classes.Arithmetic.Times (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Arithmetic.Multiplicative a => UVMHS.Core.Classes.Arithmetic.Multiplicative (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Lattice.Bot (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.JoinLattice (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.MeetLattice (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.VectorSparse.𝑉
+instance UVMHS.Core.Classes.Collections.ToStream (UVMHS.Core.Init.ℤ64 UVMHS.Core.Init.∧ a) (UVMHS.Core.VectorSparse.𝑉 a)
+instance UVMHS.Core.Classes.Collections.ToIter (UVMHS.Core.Init.ℤ64 UVMHS.Core.Init.∧ a) (UVMHS.Core.VectorSparse.𝑉 a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.VectorSparse.𝑉 a)
 
 module UVMHS.Core
 
@@ -2585,6 +3024,7 @@ element𝑉𝐴 :: a -> 𝑉𝐴 i a
 annotate𝑉𝐴 :: i -> 𝑉𝐴 i a -> 𝑉𝐴 i a
 null𝑉𝐴 :: 𝑉𝐴 i a
 append𝑉𝐴 :: 𝑉𝐴 i a -> 𝑉𝐴 i a -> 𝑉𝐴 i a
+map𝑉𝐴 :: (i -> j) -> (a -> b) -> 𝑉𝐴 i a -> 𝑉𝐴 j b
 data 𝐴 o i j a
 Leaf𝐴 :: o -> i -> j -> a -> 𝐴 o i j a
 Append𝐴 :: o -> i -> j -> 𝐴 o i j a -> 𝐼 (𝐴 o i j a) -> 𝐴 o i j a -> 𝐴 o i j a
@@ -2604,31 +3044,7 @@ instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.ATree.𝑉𝐴 i a)
 instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.ATree.𝑉𝐴 i a)
 instance UVMHS.Core.Classes.Functor.Functor (UVMHS.Lib.ATree.𝑉𝐴 i)
 
-module UVMHS.Lib.IterS
-data 𝐼S a
-𝐼S :: ℕ64 -> 𝐼 a -> 𝐼S a
-[𝑖SSize] :: 𝐼S a -> ℕ64
-[𝑖SIter] :: 𝐼S a -> 𝐼 a
-iterS :: (ToIter a t, Sized t) => t -> 𝐼S a
-data 𝐼S𝕊
-𝐼S𝕊 :: ℕ64 -> 𝐼 𝕊 -> 𝐼S𝕊
-[𝕤SSize] :: 𝐼S𝕊 -> ℕ64
-[𝕤SIter] :: 𝐼S𝕊 -> 𝐼 𝕊
-instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Lib.IterS.𝐼S a)
-instance GHC.Show.Show UVMHS.Lib.IterS.𝐼S𝕊
-instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.IterS.𝐼S𝕊
-instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.IterS.𝐼S𝕊
-instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.IterS.𝐼S𝕊
-instance UVMHS.Core.Classes.Collections.ToIter UVMHS.Core.Init.𝕊 UVMHS.Lib.IterS.𝐼S𝕊
-instance UVMHS.Core.Classes.Collections.Single UVMHS.Core.Init.𝕊 UVMHS.Lib.IterS.𝐼S𝕊
-instance UVMHS.Core.Classes.Collections.Sized UVMHS.Lib.IterS.𝐼S𝕊
-instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.IterS.𝐼S a)
-instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.IterS.𝐼S a)
-instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.IterS.𝐼S a)
-instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Lib.IterS.𝐼S a)
-instance UVMHS.Core.Classes.Collections.Single a (UVMHS.Lib.IterS.𝐼S a)
-instance UVMHS.Core.Classes.Collections.Sized (UVMHS.Lib.IterS.𝐼S a)
-instance UVMHS.Core.Classes.Functor.Functor UVMHS.Lib.IterS.𝐼S
+module UVMHS.Lib.Neural
 
 module UVMHS.Lib.Options
 option :: 𝐿 ℂ -> 𝐿 𝕊 -> ArgDescr a -> 𝕊 -> OptDescr a
@@ -2664,14 +3080,14 @@ Yellow :: Color3Bit
 Blue :: Color3Bit
 Magenta :: Color3Bit
 Cyan :: Color3Bit
-LightGray :: Color3Bit
-DarkGray :: Color3Bit
-LightRed :: Color3Bit
-LightGreen :: Color3Bit
-LightYellow :: Color3Bit
-LightBlue :: Color3Bit
-LightMagenta :: Color3Bit
-LightCyan :: Color3Bit
+GrayLight :: Color3Bit
+GrayDark :: Color3Bit
+RedLight :: Color3Bit
+GreenLight :: Color3Bit
+YellowLight :: Color3Bit
+BlueLight :: Color3Bit
+PinkLight :: Color3Bit
+TealLight :: Color3Bit
 White :: Color3Bit
 data Color
 Color :: Color3Bit -> Color
@@ -2685,14 +3101,14 @@ yellow :: Color
 blue :: Color
 pink :: Color
 teal :: Color
-lightGray :: Color
-darkGray :: Color
-lightRed :: Color
-lightGreen :: Color
-lightYellow :: Color
-lightBlue :: Color
-lightPink :: Color
-lightTeal :: Color
+grayLight :: Color
+grayDark :: Color
+redLight :: Color
+greenLight :: Color
+yellowLight :: Color
+blueLight :: Color
+pinkLight :: Color
+tealLight :: Color
 white :: Color
 highlight :: Color
 altBlack :: Color
@@ -2765,110 +3181,200 @@ instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.Annotation.Formats
 instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.Annotation.Formats
 instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.Annotation.Formats
 
-module UVMHS.Lib.Pretty.Common
-data IChunk
-RawIChunk :: ℕ64 -> 𝕊 -> IChunk
-NewlineIChunk :: ℕ64 -> IChunk
-rawIChunk𝕊 :: 𝕊 -> IChunk
-splitIChunks𝕊 :: 𝕊 -> 𝐼 IChunk
-extendNewlinesIChunk :: ℕ64 -> IChunk -> IChunk
-data OChunk
-RawOChunk :: ℕ64 -> 𝕊 -> OChunk
-NewlineOChunk :: OChunk
-PaddingOChunk :: ℕ64 -> OChunk
-type ITree = 𝑉𝐴 Annotation (𝐼 IChunk)
-type OTree = 𝑉𝐴 Formats (𝐼 OChunk)
-data MShape
-MShape :: 𝔹 -> ℕ64 -> ℕ64 -> ℕ64 -> ℕ64 -> MShape
-[multiShapeAligned] :: MShape -> 𝔹
-[multiShapeFirstLength] :: MShape -> ℕ64
-[multiShapeMidMaxLength] :: MShape -> ℕ64
-[multiShapeLastLength] :: MShape -> ℕ64
-[multiShapeLines] :: MShape -> ℕ64
-multiShapeLinesL :: (⟢) MShape ℕ64
-multiShapeLastLengthL :: (⟢) MShape ℕ64
-multiShapeMidMaxLengthL :: (⟢) MShape ℕ64
-multiShapeFirstLengthL :: (⟢) MShape ℕ64
-multiShapeAlignedL :: (⟢) MShape 𝔹
+module UVMHS.Lib.Pretty.Shape
+data ShapeM
+ShapeM :: {-# UNPACK #-}ℕ64 -> {-# UNPACK #-}ℕ64 -> {-# UNPACK #-}ℕ64 -> {-# UNPACK #-}ℕ64 -> ShapeM
+[shapeMFirstLength] :: ShapeM -> {-# UNPACK #-}ℕ64
+[shapeMMidMaxLength] :: ShapeM -> {-# UNPACK #-}ℕ64
+[shapeMLastLength] :: ShapeM -> {-# UNPACK #-}ℕ64
+[shapeMNewlines] :: ShapeM -> {-# UNPACK #-}ℕ64
+shapeMNewlinesL :: (⟢) ShapeM ℕ64
+shapeMLastLengthL :: (⟢) ShapeM ℕ64
+shapeMMidMaxLengthL :: (⟢) ShapeM ℕ64
+shapeMFirstLengthL :: (⟢) ShapeM ℕ64
 data Shape
-SingleLineShape :: ℕ64 -> Shape
-MultiLineShape :: MShape -> Shape
-multiLineShapeL :: (⌲) Shape MShape
-singleLineShapeL :: (⌲) Shape ℕ64
-alignShape :: Shape -> Shape
-shapeIChunk :: IChunk -> Shape
-data Summary
-Summary :: Shape -> ITree -> Summary
-[summaryShape] :: Summary -> Shape
-[summaryContents] :: Summary -> ITree
-summaryContentsL :: (⟢) Summary ITree
-summaryShapeL :: (⟢) Summary Shape
-alignSummary :: Summary -> Summary
-instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.Common.Summary
-instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.Common.Summary
-instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.Common.Summary
-instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.Common.Shape
-instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.Common.Shape
-instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.Common.Shape
-instance GHC.Show.Show UVMHS.Lib.Pretty.Common.Shape
-instance GHC.Classes.Ord UVMHS.Lib.Pretty.Common.Shape
-instance GHC.Classes.Eq UVMHS.Lib.Pretty.Common.Shape
-instance GHC.Show.Show UVMHS.Lib.Pretty.Common.IChunk
-instance GHC.Classes.Ord UVMHS.Lib.Pretty.Common.IChunk
-instance GHC.Classes.Eq UVMHS.Lib.Pretty.Common.IChunk
-instance GHC.Show.Show UVMHS.Lib.Pretty.Common.OChunk
-instance GHC.Classes.Ord UVMHS.Lib.Pretty.Common.OChunk
-instance GHC.Classes.Eq UVMHS.Lib.Pretty.Common.OChunk
-instance GHC.Show.Show UVMHS.Lib.Pretty.Common.MShape
-instance GHC.Classes.Ord UVMHS.Lib.Pretty.Common.MShape
-instance GHC.Classes.Eq UVMHS.Lib.Pretty.Common.MShape
+SingleLine :: {-# UNPACK #-}ℕ64 -> Shape
+MultiLine :: {-# UNPACK #-}ShapeM -> Shape
+multiLineL :: (⌲) Shape ShapeM
+singleLineL :: (⌲) Shape ℕ64
+shapeFirstLength :: Shape -> ℕ64
+shapeLastLength :: Shape -> ℕ64
+newlineShapeM :: ShapeM
+newlineShape :: Shape
+boxShape :: ℕ64 -> ℕ64 -> Shape
+shapeWidth :: Shape -> ℕ64
+shapeNewlines :: Shape -> ℕ64
+data ShapeA
+ShapeA :: {-# UNPACK #-}𝔹 -> {-# UNPACK #-}Shape -> ShapeA
+[shapeIAligned] :: ShapeA -> {-# UNPACK #-}𝔹
+[shapeIShape] :: ShapeA -> {-# UNPACK #-}Shape
+shapeIShapeL :: (⟢) ShapeA Shape
+shapeIAlignedL :: (⟢) ShapeA 𝔹
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.Shape.ShapeA
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.Shape.ShapeA
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.Shape.ShapeA
+instance GHC.Show.Show UVMHS.Lib.Pretty.Shape.ShapeA
+instance GHC.Classes.Ord UVMHS.Lib.Pretty.Shape.ShapeA
+instance GHC.Classes.Eq UVMHS.Lib.Pretty.Shape.ShapeA
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.Shape.Shape
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.Shape.Shape
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.Shape.Shape
+instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Lib.Pretty.Shape.Shape
+instance UVMHS.Core.Classes.Lattice.Join UVMHS.Lib.Pretty.Shape.Shape
+instance GHC.Show.Show UVMHS.Lib.Pretty.Shape.Shape
+instance GHC.Classes.Ord UVMHS.Lib.Pretty.Shape.Shape
+instance GHC.Classes.Eq UVMHS.Lib.Pretty.Shape.Shape
+instance GHC.Show.Show UVMHS.Lib.Pretty.Shape.ShapeM
+instance GHC.Classes.Ord UVMHS.Lib.Pretty.Shape.ShapeM
+instance GHC.Classes.Eq UVMHS.Lib.Pretty.Shape.ShapeM
 
-module UVMHS.Lib.Pretty.RenderGroups
-data RenderGroupsEnv
-RenderGroupsEnv :: 𝑂 ℕ64 -> 𝑂 ℕ64 -> ℕ64 -> RenderGroupsEnv
-[renderGroupsEnvMaxLineWidth] :: RenderGroupsEnv -> 𝑂 ℕ64
-[renderGroupsEnvMaxRibbonWidth] :: RenderGroupsEnv -> 𝑂 ℕ64
-[renderGroupsEnvNest] :: RenderGroupsEnv -> ℕ64
-renderGroupsEnvNestL :: (⟢) RenderGroupsEnv ℕ64
-renderGroupsEnvMaxRibbonWidthL :: (⟢) RenderGroupsEnv (𝑂 ℕ64)
-renderGroupsEnvMaxLineWidthL :: (⟢) RenderGroupsEnv (𝑂 ℕ64)
-renderGroupsEnv₀ :: RenderGroupsEnv
-data RenderGroupsState
-RenderGroupsState :: ℕ64 -> ℕ64 -> ℕ64 -> RenderGroupsState
-[renderGroupsStateRib] :: RenderGroupsState -> ℕ64
-[renderGroupsStateRow] :: RenderGroupsState -> ℕ64
-[renderGroupsStateCol] :: RenderGroupsState -> ℕ64
-renderGroupsStateColL :: (⟢) RenderGroupsState ℕ64
-renderGroupsStateRowL :: (⟢) RenderGroupsState ℕ64
-renderGroupsStateRibL :: (⟢) RenderGroupsState ℕ64
-renderGroupsState₀ :: RenderGroupsState
-type RenderGroupsM = RWS RenderGroupsEnv ITree RenderGroupsState
-data RenderGroups
-RenderGroups :: Summary -> RenderGroupsM () -> RenderGroups
-[renderGroupsSummary] :: RenderGroups -> Summary
-[renderGroupsRender] :: RenderGroups -> RenderGroupsM ()
-renderGroupsRenderL :: (⟢) RenderGroups (RenderGroupsM ())
-renderGroupsSummaryL :: (⟢) RenderGroups Summary
-annotateRenderGroups :: Annotation -> RenderGroups -> RenderGroups
-renderIChunks𝕊 :: Shape -> 𝐼 IChunk -> ITree
-renderITree :: Shape -> ITree -> RenderGroupsM ()
-stringCChunk :: 𝕊 -> RenderGroups
-stringCChunkModal :: 𝕊 -> 𝕊 -> RenderGroups
-alignRenderGroupsM :: RenderGroupsM a -> RenderGroupsM a
-alignRenderGroups :: RenderGroups -> RenderGroups
-groupRenderGroupsM :: Shape -> ITree -> RenderGroupsM () -> RenderGroupsM ()
-groupRenderGroups :: RenderGroups -> RenderGroups
-execRenderGroupsWith :: (RenderGroupsM () -> RenderGroupsM ()) -> RenderGroups -> ITree
-execRenderGroups :: RenderGroups -> ITree
-instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.RenderGroups.RenderGroups
-instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.RenderGroups.RenderGroups
-instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.RenderGroups.RenderGroups
-instance GHC.Show.Show UVMHS.Lib.Pretty.RenderGroups.RenderGroupsState
-instance GHC.Classes.Ord UVMHS.Lib.Pretty.RenderGroups.RenderGroupsState
-instance GHC.Classes.Eq UVMHS.Lib.Pretty.RenderGroups.RenderGroupsState
-instance GHC.Show.Show UVMHS.Lib.Pretty.RenderGroups.RenderGroupsEnv
-instance GHC.Classes.Ord UVMHS.Lib.Pretty.RenderGroups.RenderGroupsEnv
-instance GHC.Classes.Eq UVMHS.Lib.Pretty.RenderGroups.RenderGroupsEnv
+module UVMHS.Lib.Sep
+data Sep i a
+SepE :: a -> Sep i a
+SepN :: a -> i -> 𝐼C (a ∧ i) -> a -> Sep i a
+sepI :: Null a => i -> Sep i a
+mapSep :: (i -> j) -> (a -> b) -> Sep i a -> Sep j b
+mapSepI :: (i -> j) -> Sep i a -> Sep j a
+instance UVMHS.Core.Classes.Monoid.Null a => UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.Sep.Sep i a)
+instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.Sep.Sep i a)
+instance UVMHS.Core.Classes.Monoid.Monoid a => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.Sep.Sep i a)
+instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Lib.Sep.Sep a a)
+instance UVMHS.Core.Classes.Functor.Functor (UVMHS.Lib.Sep.Sep i)
+instance UVMHS.Core.Classes.Collections.Sized (UVMHS.Lib.Sep.Sep i a)
+
+module UVMHS.Lib.Pretty.Common
+data ChunkI
+RawChunkI :: ℕ64 -> 𝕊 -> ChunkI
+NewlineChunkI :: ℕ64 -> ChunkI
+rawChunksI :: 𝕊 -> ChunkI
+splitChunksI :: 𝕊 -> 𝐼 ChunkI
+shapeIChunk :: ChunkI -> Shape
+extendNewlinesIChunk :: ℕ64 -> ChunkI -> ChunkI
+data ChunkO
+RawChunkO :: ℕ64 -> 𝕊 -> ChunkO
+PaddingChunkO :: ℕ64 -> ChunkO
+shapeOChunk :: ChunkO -> Shape
+type TreeI = 𝑉𝐴 Annotation (𝐼 ChunkI)
+type TreeO = 𝑉𝐴 Formats (Sep () (𝐼A ChunkO))
+chunkIO :: ChunkO -> ChunkI
+treeIO :: TreeO -> TreeI
+data SummaryI
+SummaryI :: ShapeA -> TreeI -> SummaryI
+[summaryIShape] :: SummaryI -> ShapeA
+[summaryIContents] :: SummaryI -> TreeI
+summaryIContentsL :: (⟢) SummaryI TreeI
+summaryIShapeL :: (⟢) SummaryI ShapeA
+summaryIAlignedL :: SummaryI ⟢ 𝔹
+summaryChunksI :: 𝐼 ChunkI -> SummaryI
+annotateSummaryI :: Annotation -> SummaryI -> SummaryI
+data SummaryO
+SummaryO :: Shape -> TreeO -> SummaryO
+[summaryOShape] :: SummaryO -> Shape
+[summaryOContents] :: SummaryO -> TreeO
+summaryOContentsL :: (⟢) SummaryO TreeO
+summaryOShapeL :: (⟢) SummaryO Shape
+summaryChunksO :: Sep () (𝐼A ChunkO) -> SummaryO
+annotateSummaryO :: Formats -> SummaryO -> SummaryO
+data HAlign
+LH :: HAlign
+CH :: HAlign
+RH :: HAlign
+data VAlign
+TV :: VAlign
+CV :: VAlign
+BV :: VAlign
+hvalign :: HAlign -> VAlign -> ℕ64 -> ℕ64 -> SummaryO -> SummaryO
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.Common.SummaryO
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.Common.SummaryO
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.Common.SummaryO
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.Common.SummaryI
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.Common.SummaryI
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.Common.SummaryI
+instance GHC.Show.Show UVMHS.Lib.Pretty.Common.ChunkI
+instance GHC.Classes.Ord UVMHS.Lib.Pretty.Common.ChunkI
+instance GHC.Classes.Eq UVMHS.Lib.Pretty.Common.ChunkI
+instance GHC.Show.Show UVMHS.Lib.Pretty.Common.ChunkO
+instance GHC.Classes.Ord UVMHS.Lib.Pretty.Common.ChunkO
+instance GHC.Classes.Eq UVMHS.Lib.Pretty.Common.ChunkO
+instance UVMHS.Core.Classes.Collections.Sized UVMHS.Lib.Pretty.Common.ChunkO
+
+module UVMHS.Lib.Pretty.RenderUndertags
+data RenderUTEnv
+RenderUTEnv :: 𝑂 (ℂ ∧ Formats) -> RenderUTEnv
+[renderUTEnvUnderFormat] :: RenderUTEnv -> 𝑂 (ℂ ∧ Formats)
+renderUTEnvUnderFormatL :: (⟢) RenderUTEnv (𝑂 ((∧) ℂ Formats))
+renderUTEnv₀ :: RenderUTEnv
+data RenderUTState
+RenderUTState :: ℕ64 -> 𝐼 (((ℕ64 ∧ ℕ64) ∧ ℂ) ∧ Formats) -> RenderUTState
+[t2StateCol] :: RenderUTState -> ℕ64
+[t2StateUnders] :: RenderUTState -> 𝐼 (((ℕ64 ∧ ℕ64) ∧ ℂ) ∧ Formats)
+t2StateUndersL :: (⟢) RenderUTState (𝐼 ((∧) ((∧) ((∧) ℕ64 ℕ64) ℂ) Formats))
+t2StateColL :: (⟢) RenderUTState ℕ64
+t2State₀ :: RenderUTState
+type RenderUTM = RWS RenderUTEnv SummaryO RenderUTState
+newtype RenderUT
+RenderUT :: RenderUTM () -> RenderUT
+[unRenderUT] :: RenderUT -> RenderUTM ()
+onRenderUT :: (RenderUTM () -> RenderUTM ()) -> RenderUT -> RenderUT
+onRenderUT2 :: (RenderUTM () -> RenderUTM () -> RenderUTM ()) -> RenderUT -> RenderUT -> RenderUT
+buildUndertags :: ℕ64 -> RenderUTM ()
+renderNewline :: ℕ64 -> RenderUTM ()
+renderRaw :: ℕ64 -> 𝕊 -> RenderUTM ()
+renderPadding :: ℕ64 -> RenderUTM ()
+renderUndertags :: RenderUTM ()
+renderChunkUndertags :: ChunkI -> RenderUTM ()
+annotateRenderUT :: Annotation -> RenderUTM () -> RenderUTM ()
+compileRenderUT :: TreeI -> RenderUT
+execRenderUT :: TreeI -> SummaryO
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.RenderUndertags.RenderUT
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.RenderUndertags.RenderUT
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.RenderUndertags.RenderUT
+
+module UVMHS.Lib.Pretty.DocA
+data DocAEnv
+DocAEnv :: 𝑂 ℕ64 -> 𝑂 ℕ64 -> ℕ64 -> DocAEnv
+[docAEnvMaxLineWidth] :: DocAEnv -> 𝑂 ℕ64
+[docAEnvMaxRibbonWidth] :: DocAEnv -> 𝑂 ℕ64
+[docAEnvNest] :: DocAEnv -> ℕ64
+docAEnvNestL :: (⟢) DocAEnv ℕ64
+docAEnvMaxRibbonWidthL :: (⟢) DocAEnv (𝑂 ℕ64)
+docAEnvMaxLineWidthL :: (⟢) DocAEnv (𝑂 ℕ64)
+docAEnv₀ :: DocAEnv
+data DocAState
+DocAState :: ℕ64 -> ℕ64 -> ℕ64 -> DocAState
+[docAStateRib] :: DocAState -> ℕ64
+[docAStateRow] :: DocAState -> ℕ64
+[docAStateCol] :: DocAState -> ℕ64
+docAStateColL :: (⟢) DocAState ℕ64
+docAStateRowL :: (⟢) DocAState ℕ64
+docAStateRibL :: (⟢) DocAState ℕ64
+docAState₀ :: DocAState
+type DocAM = RWS DocAEnv TreeI DocAState
+data DocA
+StaticDocA :: SummaryI -> DocA
+DynamicDocA :: SummaryI -> DocAM () -> DocA
+dynamicDocAL :: (⌲) DocA ((∧) SummaryI (DocAM ()))
+staticDocAL :: (⌲) DocA SummaryI
+summaryDocA :: DocA -> SummaryI
+renderSummaryI :: SummaryI -> DocAM ()
+stringDocA :: 𝕊 -> DocA
+stringDocAModal :: 𝕊 -> 𝕊 -> DocA
+annotateDocA :: Annotation -> DocA -> DocA
+groupDocAM :: SummaryI -> DocAM () -> DocAM ()
+groupDocA :: DocA -> DocA
+alignDocAM :: DocAM a -> DocAM a
+alignDocA :: DocA -> DocA
+execDocAWith :: (DocAM () -> DocAM ()) -> DocA -> TreeI
+execDocA :: DocA -> TreeI
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.DocA.DocA
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.DocA.DocA
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.DocA.DocA
+instance GHC.Show.Show UVMHS.Lib.Pretty.DocA.DocAState
+instance GHC.Classes.Ord UVMHS.Lib.Pretty.DocA.DocAState
+instance GHC.Classes.Eq UVMHS.Lib.Pretty.DocA.DocAState
+instance GHC.Show.Show UVMHS.Lib.Pretty.DocA.DocAEnv
+instance GHC.Classes.Ord UVMHS.Lib.Pretty.DocA.DocAEnv
+instance GHC.Classes.Eq UVMHS.Lib.Pretty.DocA.DocAEnv
 
 module UVMHS.Lib.Pretty.Doc
 data PrettyParams
@@ -2909,12 +3415,12 @@ docEnvPrecBumpedL :: (⟢) DocEnv 𝔹
 docEnvPrecLevelL :: (⟢) DocEnv ℕ64
 docEnvPrettyParamsL :: (⟢) DocEnv PrettyParams
 docEnv₀ :: DocEnv
-type DocM = RWS DocEnv RenderGroups ()
+type DocM = RWS DocEnv DocA ()
 newtype Doc
 Doc :: DocM () -> Doc
 [unDoc] :: Doc -> DocM ()
-execDocWith :: (DocM () -> DocM ()) -> Doc -> RenderGroups
-execDoc :: Doc -> RenderGroups
+execDocWith :: (DocM () -> DocM ()) -> Doc -> DocA
+execDoc :: Doc -> DocA
 onDoc :: (DocM () -> DocM ()) -> Doc -> Doc
 onDoc2 :: (DocM () -> DocM () -> DocM ()) -> Doc -> Doc -> Doc
 ppAnnotate :: Annotation -> Doc -> Doc
@@ -2932,16 +3438,27 @@ ppUL :: Doc -> Doc
 ppBD :: Doc -> Doc
 ppIT :: Doc -> Doc
 ppUT :: ℂ -> Color -> Doc -> Doc
+ppPunFmt :: Doc -> Doc
 ppPun :: 𝕊 -> Doc
+ppKeyFmt :: Doc -> Doc
 ppKey :: 𝕊 -> Doc
+ppConFmt :: Doc -> Doc
 ppCon :: 𝕊 -> Doc
+ppOpFmt :: Doc -> Doc
 ppOp :: 𝕊 -> Doc
+ppPrimFmt :: Doc -> Doc
 ppPrim :: 𝕊 -> Doc
+ppBdrFmt :: Doc -> Doc
 ppBdr :: 𝕊 -> Doc
+ppLitFmt :: Doc -> Doc
 ppLit :: 𝕊 -> Doc
+ppHlFmt :: Doc -> Doc
 ppHl :: 𝕊 -> Doc
+ppHeaderFmt :: Doc -> Doc
 ppHeader :: 𝕊 -> Doc
+ppCommentFmt :: Doc -> Doc
 ppComment :: 𝕊 -> Doc
+ppErrFmt :: Doc -> Doc
 ppErr :: 𝕊 -> Doc
 ppSpace :: ℕ64 -> Doc
 ppNewline :: Doc
@@ -2970,9 +3487,13 @@ ppPost :: ℕ64 -> Doc -> Doc -> Doc
 ppApp :: ToIter Doc t => Doc -> t -> Doc
 ppCollection :: ToIter Doc t => Doc -> Doc -> Doc -> t -> Doc
 ppRecord :: ToIter (Doc ∧ Doc) t => Doc -> t -> Doc
+matrixHelper :: (𝒩 m, 𝒩 n) => 𝕍S n HAlign -> 𝕍S m VAlign -> 𝕍S m (𝕍S n SummaryO) -> 𝕍S n ℕ64 ∧ 𝕍S m (𝕍S n SummaryO)
+ppMatrix :: (𝒩 m, 𝒩 n) => 𝕍S n HAlign -> 𝕍S m VAlign -> 𝕍S m (𝕍S n Doc) -> Doc
+ppMatrixCells :: (𝒩 m, 𝒩 n) => 𝕍S n HAlign -> 𝕍S m VAlign -> 𝕍S m (𝕍S n Doc) -> Doc
 class Pretty a
 pretty :: Pretty a => a -> Doc
 escape :: ℂ -> 𝐼 ℂ
+colorsDemo :: Doc
 instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Pretty.Doc.Doc
 instance UVMHS.Lib.Pretty.Doc.Pretty ()
 instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.𝔹
@@ -2999,13 +3520,16 @@ instance (UVMHS.Lib.Pretty.Doc.Pretty a, UVMHS.Lib.Pretty.Doc.Pretty b) => UVMHS
 instance (UVMHS.Lib.Pretty.Doc.Pretty a, UVMHS.Lib.Pretty.Doc.Pretty b) => UVMHS.Lib.Pretty.Doc.Pretty (a UVMHS.Core.Init.∧ b)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝐿 a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty [a]
-instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Vector.𝕍 a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑆 a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝐼 a)
-instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.IterS.𝐼S a)
+instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Data.Iter.𝐼C a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑄 a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑃 a)
 instance (UVMHS.Lib.Pretty.Doc.Pretty k, UVMHS.Lib.Pretty.Doc.Pretty v) => UVMHS.Lib.Pretty.Doc.Pretty (k UVMHS.Core.Init.⇰ v)
+instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Vector.𝕍 a)
+instance forall k a (n :: k). UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Vector.𝕍S n a)
+instance (Foreign.Storable.Storable a, UVMHS.Lib.Pretty.Doc.Pretty a) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Vector.𝕌 a)
+instance forall k a (n :: k). (Foreign.Storable.Storable a, UVMHS.Lib.Pretty.Doc.Pretty a) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Vector.𝕌S n a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Pointed.AddNull a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Pointed.AddBot a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Pointed.AddTop a)
@@ -3020,6 +3544,50 @@ instance GHC.Classes.Eq UVMHS.Lib.Pretty.Doc.DocEnv
 instance GHC.Show.Show UVMHS.Lib.Pretty.Doc.PrettyParams
 instance GHC.Classes.Ord UVMHS.Lib.Pretty.Doc.PrettyParams
 instance GHC.Classes.Eq UVMHS.Lib.Pretty.Doc.PrettyParams
+
+module UVMHS.Lib.Pretty.RenderANSI
+data ANSIEnv
+ANSIEnv :: 𝔹 -> Formats -> ANSIEnv
+[ansiEnvDoFormat] :: ANSIEnv -> 𝔹
+[ansiEnvFormats] :: ANSIEnv -> Formats
+ansiEnvFormatsL :: (⟢) ANSIEnv Formats
+ansiEnvDoFormatL :: (⟢) ANSIEnv 𝔹
+ansiEnv₀ :: ANSIEnv
+type RenderANSIM = RWS ANSIEnv (𝐼A 𝕊) ()
+sgrLeader :: 𝕊
+sgrCloser :: 𝕊
+sgrReset :: 𝕊
+sgrFg :: Color -> 𝕊
+sgrBg :: Color -> 𝕊
+sgrUl :: 𝔹 -> 𝕊
+sgrBd :: 𝔹 -> 𝕊
+sgrIt :: 𝔹 -> 𝕊
+sgrFormat :: Formats -> 𝐼A 𝕊
+tellSgrFormat :: RenderANSIM ()
+localFormat :: Formats -> RenderANSIM () -> RenderANSIM ()
+renderChunkANSI :: ChunkO -> 𝐼A 𝕊
+formatRenderANSI :: Formats -> RenderANSIM () -> RenderANSIM ()
+compileOTree :: TreeO -> RenderANSIM ()
+execRenderANSIWith :: (RenderANSIM () -> RenderANSIM ()) -> TreeO -> 𝐼A 𝕊
+execRenderANSI :: TreeO -> 𝐼A 𝕊
+ppRenderWith :: (RenderANSIM () -> RenderANSIM ()) -> (DocAM () -> DocAM ()) -> (DocM () -> DocM ()) -> Doc -> 𝕊
+ppRender :: Doc -> 𝕊
+ppRenderNofmt :: Doc -> 𝕊
+ppRenderWide :: Doc -> 𝕊
+ppRenderNarrow :: Doc -> 𝕊
+ppRenderNofmtWide :: Doc -> 𝕊
+ppRenderNofmtNarrow :: Doc -> 𝕊
+ppshow :: Pretty a => a -> 𝕊
+gv_PPRINT_COLOR :: IORef 𝔹
+pprint :: Pretty a => a -> IO ()
+ppColorOn :: IO ()
+ppColorOff :: IO ()
+pptrace :: Pretty a => a -> ()
+pptraceM :: (Monad m, Pretty a) => a -> m ()
+ioError :: Pretty e => (e ∨ a) -> IO a
+instance GHC.Show.Show UVMHS.Lib.Pretty.RenderANSI.ANSIEnv
+instance GHC.Classes.Ord UVMHS.Lib.Pretty.RenderANSI.ANSIEnv
+instance GHC.Classes.Eq UVMHS.Lib.Pretty.RenderANSI.ANSIEnv
 
 module UVMHS.Lib.Pretty.Deriving
 makePrettySumLogic :: Cxt -> Name -> 𝐿 TyVarBndr -> 𝐿 (Name ∧ 𝐿 Type) -> Q (𝐿 Dec)
@@ -3036,84 +3604,6 @@ instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Pretty.Color.Color3Bit
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Monads.ID a)
 instance (UVMHS.Lib.Pretty.Doc.Pretty a, UVMHS.Lib.Pretty.Doc.Pretty b) => UVMHS.Lib.Pretty.Doc.Pretty (a UVMHS.Core.Init.∨ b)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑂 a)
-
-module UVMHS.Lib.Pretty.RenderUndertags
-data RenderUTEnv
-RenderUTEnv :: 𝑂 (ℂ ∧ Formats) -> RenderUTEnv
-[renderUTEnvUnderFormat] :: RenderUTEnv -> 𝑂 (ℂ ∧ Formats)
-renderUTEnvUnderFormatL :: (⟢) RenderUTEnv (𝑂 ((∧) ℂ Formats))
-renderUTEnv₀ :: RenderUTEnv
-data RenderUTState
-RenderUTState :: ℕ64 -> 𝐼 (((ℕ64 ∧ ℕ64) ∧ ℂ) ∧ Formats) -> RenderUTState
-[t2StateCol] :: RenderUTState -> ℕ64
-[t2StateUnders] :: RenderUTState -> 𝐼 (((ℕ64 ∧ ℕ64) ∧ ℂ) ∧ Formats)
-t2StateUndersL :: (⟢) RenderUTState (𝐼 ((∧) ((∧) ((∧) ℕ64 ℕ64) ℂ) Formats))
-t2StateColL :: (⟢) RenderUTState ℕ64
-t2State₀ :: RenderUTState
-type RenderUTM = RWS RenderUTEnv OTree RenderUTState
-newtype RenderUT
-RenderUT :: RenderUTM () -> RenderUT
-[unRenderUT] :: RenderUT -> RenderUTM ()
-onRenderUT :: (RenderUTM () -> RenderUTM ()) -> RenderUT -> RenderUT
-onRenderUT2 :: (RenderUTM () -> RenderUTM () -> RenderUTM ()) -> RenderUT -> RenderUT -> RenderUT
-buildUndertags :: ℕ64 -> RenderUTM ()
-renderNewline :: ℕ64 -> RenderUTM ()
-renderRaw :: ℕ64 -> 𝕊 -> RenderUTM ()
-renderPadding :: ℕ64 -> RenderUTM ()
-flushUndertags :: RenderUTM ()
-renderUndertags :: RenderUTM ()
-renderChunk :: IChunk -> RenderUTM ()
-annotateRenderUT :: Annotation -> RenderUTM () -> RenderUTM ()
-compileRenderUT :: ITree -> RenderUT
-execRenderUT :: ITree -> OTree
-instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Pretty.RenderUndertags.RenderUT
-instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Pretty.RenderUndertags.RenderUT
-instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Pretty.RenderUndertags.RenderUT
-
-module UVMHS.Lib.Pretty.RenderANSI
-data ANSIEnv
-ANSIEnv :: 𝔹 -> Formats -> ANSIEnv
-[ansiEnvDoFormat] :: ANSIEnv -> 𝔹
-[ansiEnvFormats] :: ANSIEnv -> Formats
-ansiEnvFormatsL :: (⟢) ANSIEnv Formats
-ansiEnvDoFormatL :: (⟢) ANSIEnv 𝔹
-ansiEnv₀ :: ANSIEnv
-type RenderANSIM = RWS ANSIEnv 𝐼S𝕊 ()
-sgrLeader :: 𝕊
-sgrCloser :: 𝕊
-sgrReset :: 𝕊
-sgrFg :: Color -> 𝕊
-sgrBg :: Color -> 𝕊
-sgrUl :: 𝔹 -> 𝕊
-sgrBd :: 𝔹 -> 𝕊
-sgrIt :: 𝔹 -> 𝕊
-sgrFormat :: Formats -> 𝐼S𝕊
-tellSgrFormat :: RenderANSIM ()
-localFormat :: Formats -> RenderANSIM () -> RenderANSIM ()
-renderChunk' :: OChunk -> 𝐼S𝕊
-formatRenderANSI :: Formats -> RenderANSIM () -> RenderANSIM ()
-compileOTree :: OTree -> RenderANSIM ()
-execRenderANSIWith :: (RenderANSIM () -> RenderANSIM ()) -> OTree -> 𝐼S𝕊
-execRenderANSI :: OTree -> 𝐼S𝕊
-ppRenderWith :: (RenderANSIM () -> RenderANSIM ()) -> (RenderGroupsM () -> RenderGroupsM ()) -> (DocM () -> DocM ()) -> Doc -> 𝕊
-ppRender :: Doc -> 𝕊
-ppRenderNofmt :: Doc -> 𝕊
-ppRenderWide :: Doc -> 𝕊
-ppRenderNarrow :: Doc -> 𝕊
-ppRenderNofmtWide :: Doc -> 𝕊
-ppRenderNofmtNarrow :: Doc -> 𝕊
-ppshow :: Pretty a => a -> 𝕊
-gv_PPRINT_COLOR :: IORef 𝔹
-pprint :: Pretty a => a -> IO ()
-ppColorOn :: IO ()
-ppColorOff :: IO ()
-pptrace :: Pretty a => a -> ()
-pptraceM :: (Monad m, Pretty a) => a -> m ()
-ioError :: Pretty e => (e ∨ a) -> IO a
-colorsDemo :: IO ()
-instance GHC.Show.Show UVMHS.Lib.Pretty.RenderANSI.ANSIEnv
-instance GHC.Classes.Ord UVMHS.Lib.Pretty.RenderANSI.ANSIEnv
-instance GHC.Classes.Eq UVMHS.Lib.Pretty.RenderANSI.ANSIEnv
 
 module UVMHS.Lib.Pretty
 
@@ -3170,8 +3660,8 @@ data Annotated e a
 Annotated :: e -> a -> Annotated e a
 [annotatedTag] :: Annotated e a -> e
 [annotatedElem] :: Annotated e a -> a
-annotatedElemL :: forall (e_a2rWw :: Type) (a_a2rWx :: Type). (⟢) (Annotated e_a2rWw a_a2rWx) a_a2rWx
-annotatedTagL :: forall (e_a2rWw :: Type) (a_a2rWx :: Type). (⟢) (Annotated e_a2rWw a_a2rWx) e_a2rWw
+annotatedElemL :: forall (e_a2SJF :: Type) (a_a2SJG :: Type). (⟢) (Annotated e_a2SJF a_a2SJG) a_a2SJG
+annotatedTagL :: forall (e_a2SJF :: Type) (a_a2SJG :: Type). (⟢) (Annotated e_a2SJF a_a2SJG) e_a2SJF
 instance (UVMHS.Lib.Pretty.Doc.Pretty e, UVMHS.Lib.Pretty.Doc.Pretty a) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Annotated.Annotated e a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Lib.Annotated.Annotated t a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Lib.Annotated.Annotated t a)
@@ -3180,6 +3670,55 @@ instance UVMHS.Core.Classes.Comonad.Cobind (UVMHS.Lib.Annotated.Annotated t)
 instance UVMHS.Core.Classes.Functor.Functor (UVMHS.Lib.Annotated.Annotated t)
 instance UVMHS.Core.Classes.Comonad.Comonad (UVMHS.Lib.Annotated.Annotated t)
 instance (GHC.Show.Show e, GHC.Show.Show a) => GHC.Show.Show (UVMHS.Lib.Annotated.Annotated e a)
+
+module UVMHS.Lib.AD
+data ADF a
+ADF :: a -> a -> ADF a
+[adfVal] :: ADF a -> a
+[adfDer] :: ADF a -> a
+adfDerL :: forall (a_a2Tzo :: Type). (⟢) (ADF a_a2Tzo) a_a2Tzo
+adfValL :: forall (a_a2Tzo :: Type). (⟢) (ADF a_a2Tzo) a_a2Tzo
+constADF :: Zero a => a -> ADF a
+sensADF :: a -> a -> ADF a
+plusADF :: Plus a => ADF a -> ADF a -> ADF a
+timesADF :: (Plus a, Times a) => ADF a -> ADF a -> ADF a
+data ADB a
+ADB :: a -> (a -> a -> a) -> ADB a
+[adbVal] :: ADB a -> a
+[adbDer] :: ADB a -> a -> a -> a
+adbDerL :: forall (a_a2TEI :: Type). (⟢) (ADB a_a2TEI) (a_a2TEI -> a_a2TEI -> a_a2TEI)
+adbValL :: forall (a_a2TEI :: Type). (⟢) (ADB a_a2TEI) a_a2TEI
+constADB :: Zero a => a -> ADB a
+sensADB :: a -> (a -> a -> a) -> ADB a
+plusADB :: Plus a => ADB a -> ADB a -> ADB a
+timesADB :: Times a => ADB a -> ADB a -> ADB a
+data ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
+ADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
+[adffVal] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
+[adffDer] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
+adffDerL :: forall (ns_a2TIN :: [𝐍]) (f_a2TIO :: [𝐍] -> Type -> Type) (ms_a2TIP :: [𝐍]) (a_a2TIQ :: Type). (⟢) (ADFF ns_a2TIN f_a2TIO ms_a2TIP a_a2TIQ) (f_a2TIO ((⧺) ns_a2TIN ms_a2TIP) a_a2TIQ)
+adffValL :: forall (ns_a2TIN :: [𝐍]) (f_a2TIO :: [𝐍] -> Type -> Type) (ms_a2TIP :: [𝐍]) (a_a2TIQ :: Type). (⟢) (ADFF ns_a2TIN f_a2TIO ms_a2TIP a_a2TIQ) (f_a2TIO ((⧺) ns_a2TIN ms_a2TIP) a_a2TIQ)
+constADFF :: Zero (f (ns ⧺ ms) a) => f (ns ⧺ ms) a -> ADFF ns f ms a
+sensADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF ns f ms a
+plusADFF :: Plus (f (ns ⧺ ms) a) => ADFF ns f ms a -> ADFF ns f ms a -> ADFF ns f ms a
+timesADFF :: (Plus (f (ns ⧺ ms) a), Times (f (ns ⧺ ms) a)) => ADFF ns f ms a -> ADFF ns f ms a -> ADFF ns f ms a
+data ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
+ADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
+[adfbVal] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
+[adfbDer] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a
+adfbDerL :: forall (ns_a2TOw :: [𝐍]) (f_a2TOx :: [𝐍] -> Type -> Type) (ms_a2TOy :: [𝐍]) (a_a2TOz :: Type). (⟢) (ADFB ns_a2TOw f_a2TOx ms_a2TOy a_a2TOz) (f_a2TOx ((⧺) ns_a2TOw ms_a2TOy) a_a2TOz -> f_a2TOx ((⧺) ns_a2TOw ms_a2TOy) a_a2TOz -> f_a2TOx ((⧺) ns_a2TOw ms_a2TOy) a_a2TOz)
+adfbValL :: forall (ns_a2TOw :: [𝐍]) (f_a2TOx :: [𝐍] -> Type -> Type) (ms_a2TOy :: [𝐍]) (a_a2TOz :: Type). (⟢) (ADFB ns_a2TOw f_a2TOx ms_a2TOy a_a2TOz) (f_a2TOx ((⧺) ns_a2TOw ms_a2TOy) a_a2TOz)
+constADFB :: f (ns ⧺ ms) a -> ADFB ns f ms a
+sensADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB ns f ms a
+plusADFB :: Plus (f (ns ⧺ ms) a) => ADFB ns f ms a -> ADFB ns f ms a -> ADFB ns f ms a
+timesADFB :: (Plus (f (ns ⧺ ms) a), Times (f (ns ⧺ ms) a)) => ADFB ns f ms a -> ADFB ns f ms a -> ADFB ns f ms a
+instance (UVMHS.Lib.Pretty.Doc.Pretty (f (ns UVMHS.Core.Static.⧺ ms) a), UVMHS.Lib.Pretty.Doc.Pretty (f (ns UVMHS.Core.Static.⧺ ms) a -> f (ns UVMHS.Core.Static.⧺ ms) a -> f (ns UVMHS.Core.Static.⧺ ms) a)) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.AD.ADFB ns f ms a)
+instance UVMHS.Lib.Pretty.Doc.Pretty (f (ns UVMHS.Core.Static.⧺ ms) a) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.AD.ADFF ns f ms a)
+instance (UVMHS.Lib.Pretty.Doc.Pretty a, UVMHS.Lib.Pretty.Doc.Pretty (a -> a -> a)) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.AD.ADB a)
+instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.AD.ADF a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Lib.AD.ADF a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Lib.AD.ADF a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Lib.AD.ADF a)
 
 module UVMHS.Lib.Window
 data WindowL i a
@@ -3270,19 +3809,19 @@ PreParserToken :: t -> 𝔹 -> ParserContext -> PreParserToken t
 [preParserTokenValue] :: PreParserToken t -> t
 [preParserTokenSkip] :: PreParserToken t -> 𝔹
 [preParserTokenContext] :: PreParserToken t -> ParserContext
-preParserTokenContextL :: forall (t_a2xLL :: Type). (⟢) (PreParserToken t_a2xLL) ParserContext
-preParserTokenSkipL :: forall (t_a2xLL :: Type). (⟢) (PreParserToken t_a2xLL) 𝔹
-preParserTokenValueL :: forall (t_a2xLL :: Type). (⟢) (PreParserToken t_a2xLL) t_a2xLL
+preParserTokenContextL :: forall (t_a30X3 :: Type). (⟢) (PreParserToken t_a30X3) ParserContext
+preParserTokenSkipL :: forall (t_a30X3 :: Type). (⟢) (PreParserToken t_a30X3) 𝔹
+preParserTokenValueL :: forall (t_a30X3 :: Type). (⟢) (PreParserToken t_a30X3) t_a30X3
 data ParserToken t
 ParserToken :: t -> 𝔹 -> ParserContext -> WindowL Doc Doc -> ParserToken t
 [parserTokenValue] :: ParserToken t -> t
 [parserTokenSkip] :: ParserToken t -> 𝔹
 [parserTokenContext] :: ParserToken t -> ParserContext
 [parserTokenSuffix] :: ParserToken t -> WindowL Doc Doc
-parserTokenSuffixL :: forall (t_a2xNQ :: Type). (⟢) (ParserToken t_a2xNQ) (WindowL Doc Doc)
-parserTokenContextL :: forall (t_a2xNQ :: Type). (⟢) (ParserToken t_a2xNQ) ParserContext
-parserTokenSkipL :: forall (t_a2xNQ :: Type). (⟢) (ParserToken t_a2xNQ) 𝔹
-parserTokenValueL :: forall (t_a2xNQ :: Type). (⟢) (ParserToken t_a2xNQ) t_a2xNQ
+parserTokenSuffixL :: forall (t_a30Z8 :: Type). (⟢) (ParserToken t_a30Z8) (WindowL Doc Doc)
+parserTokenContextL :: forall (t_a30Z8 :: Type). (⟢) (ParserToken t_a30Z8) ParserContext
+parserTokenSkipL :: forall (t_a30Z8 :: Type). (⟢) (ParserToken t_a30Z8) 𝔹
+parserTokenValueL :: forall (t_a30Z8 :: Type). (⟢) (ParserToken t_a30Z8) t_a30Z8
 renderNLDisplay :: Doc
 renderNLError :: Doc
 renderEOFDisplay :: Doc
@@ -3352,11 +3891,11 @@ RegexState :: ℕ64 -> (Regex c t o u ⇰ ℕ64) -> ((t ∨ c) ⇰ (ℕ64 ⇰ �
 [regexStateTransitions] :: RegexState c t o u -> (t ∨ c) ⇰ (ℕ64 ⇰ ℕ64)
 [regexStateResults] :: RegexState c t o u -> ℕ64 ⇰ 𝑂 (RegexResult o u)
 [regexStateDead] :: RegexState c t o u -> ℕ64 ⇰ 𝔹
-regexStateDeadL :: forall (c_a2A6F :: Type) (t_a2A6G :: Type) (o_a2A6H :: Type) (u_a2A6I :: Type). (⟢) (RegexState c_a2A6F t_a2A6G o_a2A6H u_a2A6I) ((⇰) ℕ64 𝔹)
-regexStateResultsL :: forall (c_a2A6F :: Type) (t_a2A6G :: Type) (o_a2A6H :: Type) (u_a2A6I :: Type). (⟢) (RegexState c_a2A6F t_a2A6G o_a2A6H u_a2A6I) ((⇰) ℕ64 (𝑂 (RegexResult o_a2A6H u_a2A6I)))
-regexStateTransitionsL :: forall (c_a2A6F :: Type) (t_a2A6G :: Type) (o_a2A6H :: Type) (u_a2A6I :: Type). (⟢) (RegexState c_a2A6F t_a2A6G o_a2A6H u_a2A6I) ((⇰) ((∨) t_a2A6G c_a2A6F) ((⇰) ℕ64 ℕ64))
-regexStateMapL :: forall (c_a2A6F :: Type) (t_a2A6G :: Type) (o_a2A6H :: Type) (u_a2A6I :: Type). (⟢) (RegexState c_a2A6F t_a2A6G o_a2A6H u_a2A6I) ((⇰) (Regex c_a2A6F t_a2A6G o_a2A6H u_a2A6I) ℕ64)
-regexStateNextIDL :: forall (c_a2A6F :: Type) (t_a2A6G :: Type) (o_a2A6H :: Type) (u_a2A6I :: Type). (⟢) (RegexState c_a2A6F t_a2A6G o_a2A6H u_a2A6I) ℕ64
+regexStateDeadL :: forall (c_a33gR :: Type) (t_a33gS :: Type) (o_a33gT :: Type) (u_a33gU :: Type). (⟢) (RegexState c_a33gR t_a33gS o_a33gT u_a33gU) ((⇰) ℕ64 𝔹)
+regexStateResultsL :: forall (c_a33gR :: Type) (t_a33gS :: Type) (o_a33gT :: Type) (u_a33gU :: Type). (⟢) (RegexState c_a33gR t_a33gS o_a33gT u_a33gU) ((⇰) ℕ64 (𝑂 (RegexResult o_a33gT u_a33gU)))
+regexStateTransitionsL :: forall (c_a33gR :: Type) (t_a33gS :: Type) (o_a33gT :: Type) (u_a33gU :: Type). (⟢) (RegexState c_a33gR t_a33gS o_a33gT u_a33gU) ((⇰) ((∨) t_a33gS c_a33gR) ((⇰) ℕ64 ℕ64))
+regexStateMapL :: forall (c_a33gR :: Type) (t_a33gS :: Type) (o_a33gT :: Type) (u_a33gU :: Type). (⟢) (RegexState c_a33gR t_a33gS o_a33gT u_a33gU) ((⇰) (Regex c_a33gR t_a33gS o_a33gT u_a33gU) ℕ64)
+regexStateNextIDL :: forall (c_a33gR :: Type) (t_a33gS :: Type) (o_a33gT :: Type) (u_a33gU :: Type). (⟢) (RegexState c_a33gR t_a33gS o_a33gT u_a33gU) ℕ64
 regexState₀ :: RegexState c t o u
 data DFA c t o u
 DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult o u)) -> 𝕍 𝔹 -> DFA c t o u
@@ -3367,15 +3906,15 @@ DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult 
 [dfaDead] :: DFA c t o u -> 𝕍 𝔹
 compileRegex :: forall c t o u. (Pretty c, Pretty t, Pretty o, Pretty u, Ord c, Ord t, Classified c t, All c, Ord o, Ord u, Additive u) => Regex c t o u -> DFA c t o u
 data LexDFAState t
-LexDFAState :: WindowR Doc Doc -> ParserContext -> 𝑆 (ParserToken t) -> 𝐼S t -> LexDFAState t
+LexDFAState :: WindowR Doc Doc -> ParserContext -> 𝑆 (ParserToken t) -> 𝐼C t -> LexDFAState t
 [lexDFAStatePrefix] :: LexDFAState t -> WindowR Doc Doc
 [lexDFAStateContext] :: LexDFAState t -> ParserContext
 [lexDFAStateInput] :: LexDFAState t -> 𝑆 (ParserToken t)
-[lexDFAStateTokens] :: LexDFAState t -> 𝐼S t
+[lexDFAStateTokens] :: LexDFAState t -> 𝐼C t
 data Lexer c t o u w
-Lexer :: (u -> DFA c t o u) -> (𝐼S t -> 𝑂 o -> 𝔹 ∧ w) -> u -> Lexer c t o u w
+Lexer :: (u -> DFA c t o u) -> (𝐼C t -> 𝑂 o -> 𝔹 ∧ w) -> u -> Lexer c t o u w
 [lexerDFA] :: Lexer c t o u w -> u -> DFA c t o u
-[lexerMkToken] :: Lexer c t o u w -> 𝐼S t -> 𝑂 o -> 𝔹 ∧ w
+[lexerMkToken] :: Lexer c t o u w -> 𝐼C t -> 𝑂 o -> 𝔹 ∧ w
 [lexerInitState] :: Lexer c t o u w -> u
 tokenize :: forall c t o u w. (Show u, Ord c, Ord t, Pretty t, Classified c t, Eq o, Eq u, Plus u) => Lexer c t o u w -> 𝕊 -> 𝕍 (ParserToken t) -> Doc ∨ 𝕍 (PreParserToken w)
 tokenizeFIO :: forall c t o u w w'. (Show u, Ord c, Ord t, Pretty t, Classified c t, Eq o, Eq u, Plus u) => Lexer c t o u w -> 𝕊 -> (𝕍 (PreParserToken w) -> 𝕍 (PreParserToken w')) -> 𝕍 (ParserToken t) -> IO (𝕍 (ParserToken w'))
@@ -3439,7 +3978,7 @@ stringTBasicL :: (⌲) TokenBasic 𝕊
 syntaxTBasicL :: (⌲) TokenBasic 𝕊
 commentTBasicL :: (⌲) TokenBasic 𝕊
 spaceTBasicL :: (⌲) TokenBasic 𝕊
-mkTokenBasic :: 𝐼S ℂ -> 𝑂 TokenClassBasic -> 𝔹 ∧ TokenBasic
+mkTokenBasic :: 𝐼C ℂ -> 𝑂 TokenClassBasic -> 𝔹 ∧ TokenBasic
 lSyntaxBasic :: (Ord u, Additive u) => 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> Regex CharClass ℂ TokenClassBasic u
 lTokenBasic :: 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> Regex CharClass ℂ TokenClassBasic ℕ64
 lCommentMLBasic :: Regex CharClass ℂ TokenClassBasic ℕ64
@@ -3499,7 +4038,7 @@ syntaxTWSBasicL :: (⌲) TokenWSBasic 𝕊
 commentTWSBasicL :: (⌲) TokenWSBasic 𝕊
 newlineTWSBasicL :: (⌲) TokenWSBasic 𝕊
 spaceTWSBasicL :: (⌲) TokenWSBasic 𝕊
-mkTokenWSBasic :: 𝐼S ℂ -> 𝑂 TokenClassWSBasic -> 𝔹 ∧ TokenWSBasic
+mkTokenWSBasic :: 𝐼C ℂ -> 𝑂 TokenClassWSBasic -> 𝔹 ∧ TokenWSBasic
 lSyntaxWSBasic :: (Ord u, Additive u) => 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> Regex CharClass ℂ TokenClassWSBasic u
 lBlocksWSBasic :: (Ord u, Additive u) => 𝐿 𝕊 -> Regex CharClass ℂ TokenClassWSBasic u
 lTokenWSBasic :: 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> 𝐿 𝕊 -> Regex CharClass ℂ TokenClassWSBasic ℕ64
@@ -3530,7 +4069,7 @@ instance UVMHS.Lib.Parser.Regex.Classified UVMHS.Lib.Parser.Regex.CharClass UVMH
 instance GHC.Show.Show UVMHS.Lib.Parser.Regex.CharClass
 instance GHC.Classes.Ord UVMHS.Lib.Parser.Regex.CharClass
 instance GHC.Classes.Eq UVMHS.Lib.Parser.Regex.CharClass
-instance (UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Window.WindowR UVMHS.Lib.Pretty.Doc.Doc UVMHS.Lib.Pretty.Doc.Doc), UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Parser.ParserContext.ParserContext, UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑆 (UVMHS.Lib.Parser.ParserInput.ParserToken t)), UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.IterS.𝐼S t)) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Parser.Regex.LexDFAState t)
+instance (UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Window.WindowR UVMHS.Lib.Pretty.Doc.Doc UVMHS.Lib.Pretty.Doc.Doc), UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Parser.ParserContext.ParserContext, UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑆 (UVMHS.Lib.Parser.ParserInput.ParserToken t)), UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Data.Iter.𝐼C t)) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Parser.Regex.LexDFAState t)
 instance (UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑃 t), UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.ℕ64, UVMHS.Lib.Pretty.Doc.Pretty ((t UVMHS.Core.Init.∨ c) UVMHS.Core.Init.⇰ UVMHS.Core.Vector.𝕍 UVMHS.Core.Init.ℕ64), UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Vector.𝕍 (UVMHS.Core.Init.𝑂 (UVMHS.Lib.Parser.Regex.RegexResult o u))), UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Vector.𝕍 UVMHS.Core.Init.𝔹)) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Parser.Regex.DFA c t o u)
 instance forall k1 k2 t c (o :: k1) (u :: k2). (UVMHS.Lib.Pretty.Doc.Pretty t, UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑃 t), UVMHS.Lib.Pretty.Doc.Pretty c) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Parser.Regex.RegexAtom c t o u)
 instance UVMHS.Core.Classes.Arithmetic.Zero u => UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.Parser.Regex.Regex c t o u)
@@ -3588,12 +4127,12 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateEndPos] :: ParserState t -> AddBT Loc
 [parserStateInput] :: ParserState t -> 𝑆 (ParserToken t)
-parserStateInputL :: forall (t_a34s5 :: Type). (⟢) (ParserState t_a34s5) (𝑆 (ParserToken t_a34s5))
-parserStateEndPosL :: forall (t_a34s5 :: Type). (⟢) (ParserState t_a34s5) (AddBT Loc)
-parserStateSuffixL :: forall (t_a34s5 :: Type). (⟢) (ParserState t_a34s5) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a34s5 :: Type). (⟢) (ParserState t_a34s5) ParserContext
-parserStateSkipContextL :: forall (t_a34s5 :: Type). (⟢) (ParserState t_a34s5) ParserContext
-parserStatePrefixL :: forall (t_a34s5 :: Type). (⟢) (ParserState t_a34s5) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a3xAW :: Type). (⟢) (ParserState t_a3xAW) (𝑆 (ParserToken t_a3xAW))
+parserStateEndPosL :: forall (t_a3xAW :: Type). (⟢) (ParserState t_a3xAW) (AddBT Loc)
+parserStateSuffixL :: forall (t_a3xAW :: Type). (⟢) (ParserState t_a3xAW) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a3xAW :: Type). (⟢) (ParserState t_a3xAW) ParserContext
+parserStateSkipContextL :: forall (t_a3xAW :: Type). (⟢) (ParserState t_a3xAW) ParserContext
+parserStatePrefixL :: forall (t_a3xAW :: Type). (⟢) (ParserState t_a3xAW) (WindowR Doc Doc)
 parserState₀ :: 𝑆 (ParserToken t) -> ParserState t
 newtype Parser t a
 Parser :: ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a
