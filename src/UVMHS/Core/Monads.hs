@@ -1034,24 +1034,26 @@ instance LiftReader (ContT r) where
   liftLocal ∷ ∀ m r'. (Monad m) ⇒ (∀ a. r' → m a → m a) → (∀ a. r' → ContT r m a → ContT r m a)
   liftLocal localM r xM = ContT $ \ (k ∷ a → m r) → localM r $ unContT xM k
 
-instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT (o ∧ r) m) where
-  tell ∷ o → ContT (o ∧ r) m ()
-  tell o = ContT $ \ (k ∷ () → m (o ∧ r)) → do
+instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT r m) where
+  tell ∷ o → ContT r m ()
+  tell o = ContT $ \ (k ∷ () → m r) → do
     tell o
     k ()
-  hijack ∷ ∀ a. ContT (o ∧ r) m a → ContT (o ∧ r) m (o ∧ a)
-  hijack xM = ContT $ \ (k ∷ (o ∧ a) → m (o ∧ r)) → do
-    (o₂ :* (o₁ :* r)) ← hijack $ unContT xM (\ (x ∷ a) → k (null :* x))
-    return ((o₁ ⧺ o₂) :* r)
 
-instance (Monad m,MonadState s m) ⇒ MonadState s (ContT (s ∧ r) m) where
-  get ∷ ContT (s ∧ r) m s
-  get = ContT $ \ (k ∷ s → m (s ∧ r)) → do
+  hijack ∷ ∀ a. ContT r m a → ContT r m (o ∧ a)
+  hijack xM = ContT $ \ (k ∷ (o ∧ a) → m r) → do
+    (o :* r) ← hijack $ unContT xM (\ (x ∷ a) → k (null :* x))
+    tell o
+    return r
+
+instance (Monad m,MonadState s m) ⇒ MonadState s (ContT r m) where
+  get ∷ ContT r m s
+  get = ContT $ \ (k ∷ s → m r) → do
     s ← get
     k s
 
-  put ∷ s → ContT (s ∧ r) m ()
-  put s = ContT $ \ (k ∷ () → m (s ∧ r)) → do
+  put ∷ s → ContT r m ()
+  put s = ContT $ \ (k ∷ () → m r) → do
     put s
     k ()
 
