@@ -69,6 +69,12 @@ ifNone i = \case
   None → i
   Some x → x
 
+{-# INLINE ifNoneM #-}
+ifNoneM ∷ (Return m) ⇒ m a → 𝑂 a → m a
+ifNoneM i = \case
+  None → i
+  Some x → return $ x
+
 {-# INLINE first #-}
 first ∷ 𝑂 a → 𝑂 a → 𝑂 a
 first = \case

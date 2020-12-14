@@ -61,7 +61,7 @@ mmap f xM = do {x ← xM;return $ f x}
 (⧆) ∷ (Monad m) ⇒ m a → m b → m (a ∧ b)
 xM ⧆ yM = do {x ← xM;y ← yM;return (x :* y)}
 
-{-# INLINE (⊡ ) #-}
+{-# INLINE (⊡) #-}
 (⊡) ∷ (Monad m) ⇒ m (a → b) → m a → m b
 fM ⊡ xM = do {f ← fM;x ← xM;return $ f x}
 
@@ -69,22 +69,13 @@ fM ⊡ xM = do {f ← fM;x ← xM;return $ f x}
 skip ∷ (Return m) ⇒ m ()
 skip = return ()
 
-when ∷ (Return m) ⇒ 𝔹 → (() → m ()) → m ()
-when b f
-  | b = f ()
+when ∷ (Return m) ⇒ 𝔹 → m () → m ()
+when b ~xM
+  | b = xM
   | otherwise = skip
+
+whenM ∷ (Monad m) ⇒ m 𝔹 → m () → m ()
+whenM bM ~xM = do b ← bM ; when b xM
 
 when𝑂 ∷ (Return m) ⇒ 𝑂 a → (a → m ()) → m ()
 when𝑂 aO f = case aO of {None → skip;Some x → f x}
-
-whenM ∷ (Monad m) ⇒ m 𝔹 → (() → m ()) → m ()
-whenM bM f = do
-  b ← bM
-  case b of
-    True → f ()
-    False → skip
-
-return𝑂 ∷ (Return m) ⇒ m a → 𝑂 a → m a
-return𝑂 i = \case
-  Some x → return x
-  None → i
