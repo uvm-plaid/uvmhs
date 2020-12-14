@@ -43,7 +43,7 @@ extend f xM = xM ≫= f
 
 {-# INLINE (≫) #-}
 (≫) ∷ (Bind m) ⇒ m a → m b → m b
-xM ≫ ~yM = xM ≫= \ _ → let yM' = yM in yM'
+xM ≫ ~yM = xM ≫= \ _ → yM
 
 {-# INLINE void #-}
 void ∷ (Functor m) ⇒ m a → m ()

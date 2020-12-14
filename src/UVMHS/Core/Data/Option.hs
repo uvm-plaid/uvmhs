@@ -71,8 +71,8 @@ ifNone i = \case
 
 {-# INLINE ifNoneM #-}
 ifNoneM ∷ (Return m) ⇒ m a → 𝑂 a → m a
-ifNoneM i = \case
-  None → i
+ifNoneM ~xM = \case
+  None → xM
   Some x → return $ x
 
 {-# INLINE first #-}
