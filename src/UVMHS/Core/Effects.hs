@@ -382,8 +382,8 @@ return𝑃 = fold mzero (\ x xM → xM ⊞ return x)
 reset ∷ (Monad m,MonadCont r m) ⇒ m r → m r 
 reset aM = callCC $ \ k → k *$ withC return aM
 
-modifyC ∷ (Monad m,MonadCont r m) ⇒ (r → m r) → m a → m a 
-modifyC f aM = callCC $ \ k → withC (f *∘ k) aM
+modifyC ∷ (Monad m,MonadCont r m) ⇒ (r → m r) → m ()
+modifyC f = callCC $ \ k → f *$ k ()
 
 withCOn ∷ (Monad m,MonadCont r m) ⇒ m a → (a → m r) → m r
 withCOn = flip withC
