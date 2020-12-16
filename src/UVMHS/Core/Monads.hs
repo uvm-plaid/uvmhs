@@ -1057,27 +1057,22 @@ instance (Monad m,MonadState s m) ⇒ MonadState s (ContT r m) where
     put s
     k ()
 
-instance (Monad m,MonadFail m) ⇒ MonadFail (ContT (𝑂 r) m) where
-  abort ∷ ∀ a. ContT (𝑂 r) m a
-  abort = ContT $ \ (_ ∷ a → m (𝑂 r)) → abort
+instance (Monad m,MonadFail m) ⇒ MonadFail (ContT r m) where
+  abort ∷ ∀ a. ContT r m a
+  abort = ContT $ \ (_ ∷ a → m r) → abort
 
-  (⎅) ∷ ∀ a. ContT (𝑂 r) m a → ContT (𝑂 r) m a → ContT (𝑂 r) m a
-  xM₁ ⎅ xM₂ = ContT $ \ (k ∷ a → m (𝑂 r)) → do
-    rO ← unContT xM₁ k
-    case rO of
-      Some r → return $ Some r
-      None → unContT xM₂ k
+  (⎅) ∷ ∀ a. ContT r m a → ContT r m a → ContT r m a
+  xM₁ ⎅ xM₂ = ContT $ \ (k ∷ a → m r) → do
+    runContT k xM₁ ⎅ runContT k xM₂
 
-instance (Monad m,MonadError e m) ⇒ MonadError e (ContT (e ∨ r) m) where
-  throw ∷ ∀ a. e → ContT (e ∨ r) m a
-  throw e = ContT $ \ (_ ∷ a → m (e ∨ r)) → throw e
+instance (Monad m,MonadError e m) ⇒ MonadError e (ContT r m) where
+  throw ∷ ∀ a. e → ContT r m a
+  throw e = ContT $ \ (_ ∷ a → m r) → throw e
 
-  catch ∷ ∀ a. ContT (e ∨ r) m a → (e → ContT (e ∨ r) m a) → ContT (e ∨ r) m a
-  catch xM₁ kk = ContT $ \ (k ∷ a → m (e ∨ r)) → do
-    ex ← unContT xM₁ k
-    case ex of
-      Inr r → return $ Inr r
-      Inl e → unContT (kk e) k
+  catch ∷ ∀ a. ContT r m a → (e → ContT r m a) → ContT r m a
+  catch xM₁ kk = ContT $ \ (k ∷ a → m r) → do
+    catch (runContT k xM₁) $ \ e →
+      runContT k $ kk e
 
 instance (Monad m,MonadNondet m) ⇒ MonadNondet (ContT r m) where
   mzero ∷ ∀ a. ContT r m a
@@ -1085,7 +1080,7 @@ instance (Monad m,MonadNondet m) ⇒ MonadNondet (ContT r m) where
 
   (⊞) ∷ ∀ a. ContT r m a → ContT r m a → ContT r m a
   xM₁ ⊞ xM₂ = ContT $ \ (k ∷ a → m r) → do
-    unContT xM₁ k ⊞ unContT xM₂ k
+    runContT k xM₁ ⊞ runContT k xM₂
 
 instance (Monad m,MonadTop m) ⇒ MonadTop (ContT r m) where
   mtop ∷ ∀ a. ContT r m a
