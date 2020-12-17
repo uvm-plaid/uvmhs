@@ -925,7 +925,7 @@ lSyntaxWSBasic puns kws prims ops = concat
   -- punctuation
   [ sequence
     [ concat $ map lWord puns
-    , fepsRegex $ formats [FG grayLight]
+    , fepsRegex $ formats [FG grayDark]
     ]
   -- keywords
   , sequence
