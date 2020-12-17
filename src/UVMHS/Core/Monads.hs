@@ -1027,12 +1027,14 @@ instance LiftIO (ContT r) where
     x ← ioM xM
     k x
 
-instance LiftReader (ContT r) where
-  liftAsk ∷ ∀ m r'. (Monad m) ⇒ m r' → ContT r m r'
-  liftAsk askM = ContT $ \ (k ∷ r' → m r) → k *$ askM
+instance (Monad m,MonadReader r' m) ⇒ MonadReader r' (ContT r m) where
+  ask ∷ ContT r m r'
+  ask = ContT $ \ (k ∷ r' → m r) → k *$ ask
 
-  liftLocal ∷ ∀ m r'. (Monad m) ⇒ (∀ a. r' → m a → m a) → (∀ a. r' → ContT r m a → ContT r m a)
-  liftLocal localM r xM = ContT $ \ (k ∷ a → m r) → localM r $ unContT xM k
+  local ∷ ∀ a. r' → ContT r m a → ContT r m a
+  local r xM = ContT $ \ (k ∷ a → m r) → do
+    r' ← ask
+    local r $ runContT (\ x → local r' $ k x) xM
 
 instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT r m) where
   tell ∷ o → ContT r m ()
