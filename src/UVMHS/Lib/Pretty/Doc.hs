@@ -275,7 +275,7 @@ ppInfl ∷ ℕ64 → Doc → Doc → Doc → Doc
 ppInfl i o = ppInflLevel i $ concat [ppNewlineIfBreak,o,ppSpaceIfBreak]
 
 ppInfr ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfr i o = ppInfLevel i $ concat [ppNewlineIfBreak,o,ppSpaceIfBreak]
+ppInfr i o = ppInfrLevel i $ concat [ppNewlineIfBreak,o,ppSpaceIfBreak]
 
 ppPre ∷ ℕ64 → Doc → Doc → Doc
 ppPre = ppPreLevel
