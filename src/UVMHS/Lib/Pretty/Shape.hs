@@ -56,12 +56,12 @@ makePrisms ''Shape
 shapeFirstLength ∷ Shape → ℕ64
 shapeFirstLength = \case
   SingleLine n → n
-  MultiLine (ShapeM fl _ _ _) → fl
+  MultiLine sh → shapeMFirstLength sh
 
 shapeLastLength ∷ Shape → ℕ64
 shapeLastLength = \case
   SingleLine n → n
-  MultiLine (ShapeM _ _ _ ll) → ll
+  MultiLine sh → shapeMLastLength sh
 
 newlineShapeM ∷ ShapeM
 newlineShapeM = ShapeM zero zero zero one
@@ -82,7 +82,7 @@ shapeWidth = \case
 shapeNewlines ∷ Shape → ℕ64
 shapeNewlines = \case
   SingleLine _ → zero
-  MultiLine (ShapeM _ _ _ nls) → nls 
+  MultiLine sh → shapeMNewlines sh
 
 instance Null Shape where null = SingleLine zero
 instance Append Shape where
@@ -154,7 +154,7 @@ instance Null ShapeA where null = ShapeA False null
 instance Append ShapeA where
   ShapeA a₁ sh₁ ⧺ ShapeA a₂ sh₂ =
     let sh₂' =
-          if shape singleLineL sh₂ ⩔ not a₂
+          if not a₂
           -- ‣ sh₁ is single-line
           -- ‣ sh₂ is single-line 
           --
@@ -225,7 +225,12 @@ instance Append ShapeA where
           --                               ⋅⋅⋅⋅␣␣␣␣CCCC
           --
           else 
-            let MultiLine (ShapeM fl mml ll nls) = sh₂
-            in MultiLine $ ShapeM fl (mml + shapeLastLength sh₁) (ll + shapeLastLength sh₁) nls
+            let MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) = sh₂
+            in MultiLine $ ShapeM fl₂ (shapeLastLength sh₁ + mml₂) (shapeLastLength sh₁ + ll₂) nls₂
     in ShapeA (a₁ ⩔ shape singleLineL sh₁ ⩓ a₂) $ sh₁ ⧺ sh₂'
 instance Monoid ShapeA
+
+alignShapeA ∷ ShapeA → ShapeA
+alignShapeA (ShapeA a sh)
+  | shape multiLineL sh = ShapeA True sh
+  | otherwise = ShapeA a sh

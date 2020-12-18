@@ -127,8 +127,8 @@ alignDocAM xM = do
 
 alignDocA ∷ DocA → DocA
 alignDocA = \case
-  StaticDocA s → StaticDocA $ update summaryIAlignedL True s
-  DynamicDocA s r → DynamicDocA (update summaryIAlignedL True s) $ alignDocAM r
+  StaticDocA s → StaticDocA $ alignSummary s
+  DynamicDocA s r → DynamicDocA (alignSummary s) $ alignDocAM r
 
 execDocAWith ∷ (DocAM () → DocAM ()) → DocA → TreeI
 execDocAWith f d = evalRWS docAEnv₀ docAState₀ $ retOut $ f $ case d of

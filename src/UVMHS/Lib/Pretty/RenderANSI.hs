@@ -221,3 +221,9 @@ pptraceM a = let _ = pptrace a in skip
 
 ioError ∷ (Pretty e) ⇒ e ∨ a → IO a
 ioError = elimChoice (\ e → pprint e ≫ abortIO) return
+
+debugShape ∷ Doc → IO ()
+debugShape d = do
+  pprint d
+  pprint $ ppString $ show𝕊 $ docShape d
+

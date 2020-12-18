@@ -12,3 +12,16 @@ main = cleanExit $ do
   pprint $ ppHeader "COLOR TEST"
   pprint colorsDemo
   pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"
+  pprint $ ppHeader "ALIGN TEST"
+  -- debugShape $ ppVertical
+  --   [ ppString "AA" 
+  --   , ppString "BBBBBBBB" 
+  --   , concat
+  --       [ ppString "CCCC"
+  --       , ppAlign $ ppVertical
+  --           [ ppString "DD"
+  --           , ppString "EEEE"
+  --           , ppString "FFF"
+  --           ]
+  --       ]
+  --   ]

@@ -85,6 +85,9 @@ instance Null Doc where null = Doc skip
 instance Append Doc where (⧺) = onDoc2 (≫)
 instance Monoid Doc
 
+docShape ∷ Doc → ShapeA
+docShape = summaryIShape ∘ summaryDocA ∘ execDoc
+
 -----------------
 -- COMBINATORS --
 -----------------

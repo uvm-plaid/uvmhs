@@ -41,7 +41,7 @@ shapeIChunk = \case
 extendNewlinesIChunk ∷ ℕ64 → ChunkI → ChunkI
 extendNewlinesIChunk n = \case
   RawChunkI l s → RawChunkI l s
-  NewlineChunkI l → NewlineChunkI $ n + l
+  NewlineChunkI l → NewlineChunkI $ l + n
 
 ------------------
 -- Output Chunk --
@@ -99,14 +99,14 @@ data SummaryI = SummaryI
   }
 makeLenses ''SummaryI
 
-summaryIAlignedL ∷ SummaryI ⟢ 𝔹
-summaryIAlignedL = shapeIAlignedL ⊚ summaryIShapeL
+alignSummary ∷ SummaryI → SummaryI
+alignSummary (SummaryI sh c) = SummaryI (alignShapeA sh) c
 
 instance Null SummaryI where null = SummaryI null null
 instance Append SummaryI where
   SummaryI sh₁ cs₁ ⧺ SummaryI sh₂ cs₂ = 
     let cs₂' =
-          if shape singleLineL (shapeIShape sh₂) ⩔ not (shapeIAligned sh₂)
+          if not $ shapeIAligned sh₂
           then cs₂
           else mappOn cs₂ $ extendNewlinesIChunk $ shapeLastLength $ shapeIShape sh₁
     in SummaryI (sh₁ ⧺ sh₂) $ cs₁ ⧺ cs₂'
