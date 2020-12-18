@@ -36,4 +36,23 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span></span><span>
-</span><span id="line-15"></span></pre></body></html>
+</span><span id="line-15"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+forall a. Pretty a =&gt; a -&gt; IO ()
+</span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppHeader"><span class="hs-identifier hs-var">ppHeader</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;ALIGN TEST&quot;</span></span><span>
+</span><span id="line-16"></span><span>  </span><span class="hs-comment">-- debugShape $ ppVertical</span><span>
+</span><span id="line-17"></span><span>  </span><span class="hs-comment">--   [ ppString &quot;AA&quot; </span><span>
+</span><span id="line-18"></span><span>  </span><span class="hs-comment">--   , ppString &quot;BBBBBBBB&quot; </span><span>
+</span><span id="line-19"></span><span>  </span><span class="hs-comment">--   , concat</span><span>
+</span><span id="line-20"></span><span>  </span><span class="hs-comment">--       [ ppString &quot;CCCC&quot;</span><span>
+</span><span id="line-21"></span><span>  </span><span class="hs-comment">--       , ppAlign $ ppVertical</span><span>
+</span><span id="line-22"></span><span>  </span><span class="hs-comment">--           [ ppString &quot;DD&quot;</span><span>
+</span><span id="line-23"></span><span>  </span><span class="hs-comment">--           , ppString &quot;EEEE&quot;</span><span>
+</span><span id="line-24"></span><span>  </span><span class="hs-comment">--           , ppString &quot;FFF&quot;</span><span>
+</span><span id="line-25"></span><span>  </span><span class="hs-comment">--           ]</span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-comment">--       ]</span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-comment">--   ]</span><span>
+</span><span id="line-28"></span></pre></body></html>
