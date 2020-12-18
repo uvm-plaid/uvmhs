@@ -90,26 +90,29 @@ annotateDocA a = \case
 
 groupDocAM ∷ SummaryI → DocAM () → DocAM ()
 groupDocAM s xM = do
-  lwO ← askL docAEnvMaxLineWidthL
-  rwO ← askL docAEnvMaxRibbonWidthL
-  nest ← askL docAEnvNestL
-  rib ← getL docAStateRibL
-  col ← getL docAStateColL
-  let ml :* mr = case shapeIShape $ summaryIShape s of
-        SingleLine l → (nest + col + l) :* (rib + l)
-        MultiLine (ShapeM fl mml ll _) → 
-          joins [ nest + col + fl , nest + mml , nest + ll ]
-          :*
-          joins [ rib + fl , mml , ll ]
-      mlb = case lwO of
-        None → True
-        Some lw → ml ≤ lw
-      mrb = case rwO of
-        None → True
-        Some rw → mr ≤ rw
-  case mlb ⩓ mrb of 
-    True → renderSummaryI s
-    False → xM
+  if summaryIForceBreak s 
+  then xM
+  else do
+    lwO ← askL docAEnvMaxLineWidthL
+    rwO ← askL docAEnvMaxRibbonWidthL
+    nest ← askL docAEnvNestL
+    rib ← getL docAStateRibL
+    col ← getL docAStateColL
+    let ml :* mr = case shapeIShape $ summaryIShape s of
+          SingleLine l → (nest + col + l) :* (rib + l)
+          MultiLine (ShapeM fl mml ll _) → 
+            joins [ nest + col + fl , nest + mml , nest + ll ]
+            :*
+            joins [ rib + fl , mml , ll ]
+        mlb = case lwO of
+          None → True
+          Some lw → ml ≤ lw
+        mrb = case rwO of
+          None → True
+          Some rw → mr ≤ rw
+    case mlb ⩓ mrb of 
+      True → renderSummaryI s
+      False → xM
 
 groupDocA ∷ DocA → DocA
 groupDocA = \case

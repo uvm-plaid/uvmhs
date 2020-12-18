@@ -94,31 +94,32 @@ treeIO = map𝑉𝐴 formatAnnotation $ concat ∘ iter ∘ mapSep (const $ sing
 --------------
 
 data SummaryI = SummaryI
-  { summaryIShape ∷ ShapeA
+  { summaryIForceBreak ∷ 𝔹
+  , summaryIShape ∷ ShapeA
   , summaryIContents ∷ TreeI
   }
 makeLenses ''SummaryI
 
 alignSummary ∷ SummaryI → SummaryI
-alignSummary (SummaryI sh c) = SummaryI (alignShapeA sh) c
+alignSummary (SummaryI b sh c) = SummaryI b (alignShapeA sh) c
 
-instance Null SummaryI where null = SummaryI null null
+instance Null SummaryI where null = SummaryI False null null
 instance Append SummaryI where
-  SummaryI sh₁ cs₁ ⧺ SummaryI sh₂ cs₂ = 
+  SummaryI b₁ sh₁ cs₁ ⧺ SummaryI b₂ sh₂ cs₂ = 
     let cs₂' =
           if not $ shapeIAligned sh₂
           then cs₂
           else mappOn cs₂ $ extendNewlinesIChunk $ shapeLastLength $ shapeIShape sh₁
-    in SummaryI (sh₁ ⧺ sh₂) $ cs₁ ⧺ cs₂'
+    in SummaryI (b₁ ⩔ b₂) (sh₁ ⧺ sh₂) $ cs₁ ⧺ cs₂'
 instance Monoid SummaryI
 
 summaryChunksI ∷ 𝐼 ChunkI → SummaryI
 summaryChunksI chunks =
   let sh = concat $ map shapeIChunk $ iter chunks
-  in SummaryI (ShapeA False sh) $ element𝑉𝐴 chunks
+  in SummaryI False (ShapeA False sh) $ element𝑉𝐴 chunks
 
 annotateSummaryI ∷ Annotation → SummaryI → SummaryI
-annotateSummaryI a (SummaryI sh cs) = SummaryI sh $ annotate𝑉𝐴 a cs
+annotateSummaryI a (SummaryI b sh cs) = SummaryI b sh $ annotate𝑉𝐴 a cs
 
 --------------
 -- SummaryO --

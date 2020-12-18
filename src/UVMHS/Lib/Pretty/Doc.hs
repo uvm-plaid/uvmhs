@@ -92,6 +92,9 @@ docShape = summaryIShape ∘ summaryDocA ∘ execDoc
 -- COMBINATORS --
 -----------------
 
+ppForceBreak ∷ Doc
+ppForceBreak = Doc $ tell $ StaticDocA $ SummaryI True null null
+
 ppAnnotate ∷ Annotation → Doc → Doc
 ppAnnotate = onDoc ∘ mapOut ∘ annotateDocA
 
@@ -341,7 +344,7 @@ ppMatrix has vas dss =
       _ :* sss' = matrixHelper has vas sss
       dss'      = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
-        in Doc $ tell $ StaticDocA $ SummaryI (ShapeA False sh) $ treeIO t
+        in Doc $ tell $ StaticDocA $ SummaryI True (ShapeA False sh) $ treeIO t
   in 
   ppVertical $ mapOn dss' $ \ ds →
     ppHorizontal $ inbetween null ds
@@ -353,7 +356,7 @@ ppMatrixCells has vas dss =
       sep        = ppFG white $ concat $ inbetween (ppString "─┼─") $ mapOn ws $ \ w → ppString $ string $ repeat w '─'
       dss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
-        in Doc $ tell $ StaticDocA $ SummaryI (ShapeA False sh) $ treeIO t
+        in Doc $ tell $ StaticDocA $ SummaryI True (ShapeA False sh) $ treeIO t
   in 
   ppVertical $ inbetween sep $ mapOn dss' $ \ ds →
     ppHorizontal $ inbetween (ppFG white $ ppString "│") ds

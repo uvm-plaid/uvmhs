@@ -25,3 +25,10 @@ main = cleanExit $ do
   --           ]
   --       ]
   --   ]
+  -- pprint $ ppGroup $ concat
+  --   [ ppString "thing1"
+  --   , ppSpaceNewlineIfBreak
+  --   , ppString "thing2"
+  --   , ppForceBreak
+  --   ]
+
