@@ -115,6 +115,16 @@ singleL = Prism single $ \case
 unconsL ∷ 𝐿 a ⌲ (a ∧ 𝐿 a)
 unconsL = Prism (curry (:&)) $ \case { x:&xs → Some (x:*xs) ; _ → None}
 
+single𝑃L ∷ (Ord a) ⇒ 𝑃 a ⌲ a
+single𝑃L = prism single𝑃 $ \ xs → case pmin xs of
+  Some (x :* xs') | isEmpty xs' → Some x
+  _ → None
+
+single𝐷L ∷ (Ord k) ⇒ (k ⇰ v) ⌲ (k ∧ v)
+single𝐷L = prism (curry (↦)) $ \ kvs → case dminView kvs of
+  Some (kv :* kvs') | isEmpty kvs' → Some kv
+  _ → None
+
 --------------------------
 -- HasPrism and HasLens --
 --------------------------
@@ -140,3 +150,4 @@ instance HasLens a a where
 {-# INLINE π #-}
 π ∷ (HasLens a b) ⇒ a → b
 π = access hasLens
+

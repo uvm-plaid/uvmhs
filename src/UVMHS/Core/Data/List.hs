@@ -112,3 +112,10 @@ zipSameLength xs ys = case (xs,ys) of
     None → None
     Some xys → Some $ (x :* y) :& xys
   _ → None
+
+split ∷ 𝐿 (a ∧ b) → 𝐿 a ∧ 𝐿 b
+split = \case
+  Nil → Nil :* Nil
+  (x :* y) :& xys →
+    let xs :* ys = split xys
+    in (x :& xs) :* (y :& ys)

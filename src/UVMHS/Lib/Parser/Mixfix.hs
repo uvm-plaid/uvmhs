@@ -54,6 +54,9 @@ instance Null (MixfixF t f a) where null = MixfixF null null
 instance (Ord t) ⇒ Append (MixfixF t f a) where MixfixF ts₁ ls₁ ⧺ MixfixF ts₂ ls₂ = MixfixF (ts₁ ⧺ ts₂) (ls₁ ⧺ ls₂)
 instance (Ord t) ⇒ Monoid (MixfixF t f a)
 
+onlyTerminalsF ∷ MixfixF t f a → MixfixF t f a
+onlyTerminalsF m = MixfixF (mixfixFTerminals m) null
+
 fmixPrefix ∷ ℕ64 → CParser t (f a → a) → MixfixF t f a
 fmixPrefix l p = null { mixfixFLevels = dict [ l ↦ null {mixesFPrefix = p} ] }
 

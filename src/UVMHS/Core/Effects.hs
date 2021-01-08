@@ -210,9 +210,19 @@ modify f = do
   s ← get
   put $ f s
 
+{-# INLINE modifyM #-}
+modifyM ∷ (Monad m,MonadState s m) ⇒ (s → m s) → m () 
+modifyM f = do
+  s ← get
+  put *$ f s
+
 {-# INLINE modifyL #-}
 modifyL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → (a → a) → m () 
 modifyL 𝓁 = modify ∘ alter 𝓁
+
+{-# INLINE modifyML #-}
+modifyML ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → (a → m a) → m () 
+modifyML 𝓁 = modifyM ∘ alterM 𝓁
 
 {-# INLINE getput #-}
 getput ∷ (Monad m,MonadState s m) ⇒ s → m s
@@ -279,6 +289,14 @@ retState ∷ ∀ s m a. (Monad m,MonadState s m) ⇒ m a → m s
 retState xM = do
   _ ← xM
   get
+
+{-# INLINE tellStateL #-}
+tellStateL ∷ (Monad m,MonadState o₁ m,Append o₂) ⇒ o₁ ⟢ o₂ → o₂ → m ()
+tellStateL 𝓁 o = modifyL 𝓁 $ (⧺) o
+
+{-# INLINE hijackStateL #-}
+hijackStateL ∷ (Monad m,MonadState o₁ m,Null o₂) ⇒ o₁ ⟢ o₂ → m a → m (o₂ ∧ a)
+hijackStateL 𝓁 aM = localizeL 𝓁 null aM
 
 -- Fail
 
@@ -387,6 +405,15 @@ modifyC f = callCC $ \ k → f *$ k ()
 
 withCOn ∷ (Monad m,MonadCont r m) ⇒ m a → (a → m r) → m r
 withCOn = flip withC
+
+delimit ∷ (Monad m,MonadCont r m) ⇒ m a → m a
+delimit xM = callCC $ \ (𝓀 ∷ a → m r) → 𝓀 *$ xM
+
+putEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → r' → m ()
+putEnvL l x = callCC $ \ 𝓀 → localL l x $ 𝓀 ()
+
+modifyEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → (r' → r') → m ()
+modifyEnvL l f = callCC $ \ 𝓀 → mapEnvL l f $ 𝓀 ()
 
 --------------
 -- DERIVING --

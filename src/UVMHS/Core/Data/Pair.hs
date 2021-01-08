@@ -74,3 +74,16 @@ mapFst f = mapPair f id
 {-# INLINE mapSnd #-}
 mapSnd ∷ (b₁ → b₂) → a ∧ b₁ → a ∧ b₂
 mapSnd f = mapPair id f
+
+mapMPair ∷ (Monad m) ⇒ (a → m a') → (b → m b') → a ∧ b → m (a' ∧ b')
+mapMPair f g (x :* y) = do
+  x' ← f x
+  y' ← g y
+  return $ x' :* y'
+
+mapMFst ∷ (Monad m) ⇒ (a → m a') → a ∧ b → m (a' ∧ b)
+mapMFst = flip mapMPair return
+
+mapMSnd ∷ (Monad m) ⇒ (b → m b') → a ∧ b → m (a ∧ b')
+mapMSnd = mapMPair return
+

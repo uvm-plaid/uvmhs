@@ -2,7 +2,7 @@ module UVMHS.Lib.Parser.CParser where
 
 import UVMHS.Core
 
-import UVMHS.Lib.Binders
+import UVMHS.Lib.Variables
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Pretty
 

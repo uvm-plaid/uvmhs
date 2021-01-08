@@ -52,3 +52,19 @@ mapInl f = mapChoice f id
 {-# INLINE mapInr #-}
 mapInr ∷ (b₁ → b₂) → a ∨ b₁ → a ∨ b₂
 mapInr f = mapChoice id f
+
+mapMChoice ∷ (Monad m) ⇒ (a → m a') → (b → m b') → a ∨ b → m (a' ∨ b')
+mapMChoice f g = \case
+  Inl x → do
+    x' ← f x
+    return $ Inl x'
+  Inr y → do
+    y' ← g y
+    return $ Inr y'
+
+mapMInl ∷ (Monad m) ⇒ (a → m a') → a ∨ b → m (a' ∨ b)
+mapMInl = flip mapMChoice return
+
+mapMInr ∷ (Monad m) ⇒ (b → m b') → a ∨ b → m (a ∨ b')
+mapMInr = mapMChoice return
+

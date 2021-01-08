@@ -12,7 +12,7 @@ main = cleanExit $ do
   pprint $ ppHeader "COLOR TEST"
   pprint colorsDemo
   pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"
-  pprint $ ppHeader "ALIGN TEST"
+  -- pprint $ ppHeader "ALIGN TEST"
   -- debugShape $ ppVertical
   --   [ ppString "AA" 
   --   , ppString "BBBBBBBB" 
@@ -25,10 +25,26 @@ main = cleanExit $ do
   --           ]
   --       ]
   --   ]
-  -- pprint $ ppGroup $ concat
-  --   [ ppString "thing1"
-  --   , ppSpaceNewlineIfBreak
-  --   , ppString "thing2"
-  --   , ppForceBreak
-  --   ]
+  -- let eachGA f = do
+  --       pprint $ f $ ppAlign ∘ ppGroup
+  --       pprint $ f $ ppGroup ∘ ppAlign
+  -- eachGA $ \ ppGA →
+  --   ppGA $ ppHorizontal
+  --     [ ppString "XXX"
+  --     , ppGA $ ppVertical
+  --         [ ppString "AAA"
+  --         , ppGA $ ppHorizontal $ 
+  --             [ ppString "BBB"
+  --             , ppGA $ ppVertical
+  --                 [ ppString "WWW"
+  --                 , ppString "VVV"
+  --                 ]
+  --             , ppGA $ ppVertical
+  --                 [ ppString "WWW"
+  --                 , ppString "VVV"
+  --                 , ppForceBreak
+  --                 ]
+  --             ]
+  --         ]
+  --     ]
 
