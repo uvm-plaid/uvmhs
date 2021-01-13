@@ -32,23 +32,33 @@ instance Pretty 𝕏 where
 data 𝔛 = 𝔛
   { 𝔵lexicals ∷ 𝑃 𝕏
   , 𝔵metas ∷ 𝑃 𝕏
-  } deriving (Eq,Ord,Show)
+  }
+  deriving 
+  (Eq,Ord,Show
+  )
 
-makePrettyRecord ''𝔛
-
-𝔵lexical ∷ 𝑃 𝕏 → 𝔛
-𝔵lexical xs = 𝔛 xs bot
-
-𝔵meta ∷ 𝑃 𝕏 → 𝔛
-𝔵meta χs = 𝔛 bot χs
+instance Pretty 𝔛 where
+  pretty (𝔛 𝓍ˡ 𝓍ᵐ) 
+    | 𝓍ˡ ≡ null , 𝓍ᵐ ≡ null = ppLit "∅"
+    | 𝓍ˡ ≡ null = ppApp (ppString "meta") $ single𝐼 $ pretty 𝓍ᵐ
+    | 𝓍ᵐ ≡ null = ppApp (ppString "lexi") $ single𝐼 $ pretty 𝓍ˡ
+    | otherwise = ppRecord  (ppPun "↦")
+        [ ppString "lexi" :* pretty 𝓍ˡ
+        , ppString "meta" :* pretty 𝓍ᵐ
+        ]
 
 instance Bot 𝔛 where bot = 𝔛 bot bot
-instance Join 𝔛 where 𝔛 xs₁ χs₁ ⊔ 𝔛 xs₂ χs₂ = 𝔛 (xs₁ ∪ xs₂) $ χs₁ ∪ χs₂
-instance Meet 𝔛 where 𝔛 xs₁ χs₁ ⊓ 𝔛 xs₂ χs₂ = 𝔛 (xs₁ ∩ xs₂) $ χs₁ ∩ χs₂
-instance Difference 𝔛 where 𝔛 xs₁ χs₁ ⊟ 𝔛 xs₂ χs₂ = 𝔛 (xs₁ ∖ xs₂) $ χs₁ ∖ χs₂
+instance Join 𝔛 where 𝔛 𝓍ˢ₁ 𝓍ᵐ₁ ⊔ 𝔛 𝓍ˢ₂ 𝓍ᵐ₂ = 𝔛 (𝓍ˢ₁ ⊔ 𝓍ˢ₂) $ 𝓍ᵐ₁ ⊔ 𝓍ᵐ₂
+instance Meet 𝔛 where 𝔛 𝓍ˢ₁ 𝓍ᵐ₁ ⊓ 𝔛 𝓍ˢ₂ 𝓍ᵐ₂ = 𝔛 (𝓍ˢ₁ ⊓ 𝓍ˢ₂) $ 𝓍ᵐ₁ ⊓ 𝓍ᵐ₂
+instance Difference 𝔛 where 𝔛 𝓍ˢ₁ 𝓍ᵐ₁ ⊟ 𝔛 𝓍ˢ₂ 𝓍ᵐ₂ = 𝔛 (𝓍ˢ₁ ⊟ 𝓍ˢ₂) $ 𝓍ᵐ₁ ⊟ 𝓍ᵐ₂
+
 instance JoinLattice 𝔛
 
-instance ToStream 𝕏 𝔛 where stream (𝔛 xs χs) = stream xs ⧺ stream χs
+𝔵lexical ∷ 𝑃 𝕏 → 𝔛
+𝔵lexical 𝓍 = 𝔛 𝓍 bot
+
+𝔵meta ∷ 𝑃 𝕏 → 𝔛
+𝔵meta 𝓍 = 𝔛 bot 𝓍
 
 -------------------
 -- SUBSTITUTIONS --
@@ -59,7 +69,15 @@ data 𝔖 a = 𝔖
   , 𝔰metas ∷ 𝕏 ⇰ a
   } deriving (Eq,Ord,Show)
 
-makePrettySum ''𝔖
+instance (Eq a,Pretty a) ⇒ Pretty (𝔖 a) where
+  pretty (𝔖 𝓈ˡ 𝓈ᵐ)
+    | 𝓈ˡ ≡ null , 𝓈ᵐ ≡ null = ppLit "∅"
+    | 𝓈ˡ ≡ null = ppApp (ppString "meta") $ single𝐼 $ pretty 𝓈ᵐ
+    | 𝓈ᵐ ≡ null = ppApp (ppString "lexi") $ single𝐼 $ pretty 𝓈ˡ
+    | otherwise = ppRecord  (ppPun "↦")
+        [ ppString "lexi" :* pretty 𝓈ˡ
+        , ppString "meta" :* pretty 𝓈ᵐ
+        ]
 
 𝔰lexical ∷ 𝕏 ⇰ a → 𝔖 a
 𝔰lexical 𝓈ˡ = 𝔖 𝓈ˡ null
@@ -73,15 +91,19 @@ instance Monoid (𝔖 a)
 
 instance ToStream (𝕏 ∧ a) (𝔖 a) where stream (𝔖 𝓈ˡ 𝓈ᵐ) = stream 𝓈ˡ ⧺ stream 𝓈ᵐ
 
+𝔰restrictForSubst ∷ 𝔛 → 𝔖 a → 𝔖 a
+𝔰restrictForSubst (𝔛 𝓍ˡ 𝓍ᵐ) (𝔖 𝓈ˡ 𝓈ᵐ) = 
+  if 𝓍ᵐ ≡ null
+  then 𝔖 (restrict 𝓍ˡ 𝓈ˡ) null
+  else 𝔖 𝓈ˡ 𝓈ᵐ
+
 𝔰restrict ∷ 𝔛 → 𝔖 a → 𝔖 a
-𝔰restrict (𝔛 xs χs) (𝔖 𝓈ᵥ 𝓈ₘ) =
-  𝔖 (restrict xs 𝓈ᵥ) $ restrict χs 𝓈ₘ
+𝔰restrict (𝔛 𝓍ˡ 𝓍ᵐ) (𝔖 𝓈ˡ 𝓈ᵐ) = 𝔖 (restrict 𝓍ˡ 𝓈ˡ) $ restrict 𝓍ᵐ 𝓈ᵐ
 
 𝔰without ∷ 𝔛 → 𝔖 a → 𝔖 a
-𝔰without (𝔛 xs χs) (𝔖 𝓈ᵥ 𝓈ₘ) =
-  𝔖 (without xs 𝓈ᵥ) $ without χs 𝓈ₘ
+𝔰without (𝔛 𝓍ˡ 𝓍ᵐ) (𝔖 𝓈ˡ 𝓈ᵐ) = 𝔖 (without 𝓍ˡ 𝓈ˡ) $ without 𝓍ᵐ 𝓈ᵐ
 
-𝔰support ∷ 𝔖 a → 𝔛
+𝔰support ∷ (Eq a) ⇒ 𝔖 a → 𝔛
 𝔰support (𝔖 𝓈ˡ 𝓈ᵐ) = 𝔛 (keys 𝓈ˡ) $ keys 𝓈ᵐ
 
 𝔰values ∷ 𝔖 a → 𝐿 a

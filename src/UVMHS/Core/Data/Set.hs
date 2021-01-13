@@ -44,6 +44,7 @@ instance (Ord a) ⇒ Join (𝑃 a) where (⊔) = (∪)
 instance (Ord a) ⇒ JoinLattice (𝑃 a)
 
 instance (Ord a) ⇒ Meet (𝑃 a) where (⊓) = (∩)
+instance (Ord a) ⇒ Difference (𝑃 a) where (⊟) = (∖)
 
 instance ToStream a (𝑃 a) where stream = stream𝑃
 instance ToIter a (𝑃 a) where iter = iter ∘ stream

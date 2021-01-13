@@ -117,12 +117,12 @@ prodsMMSPL =
         _ → None
   in prism mk vw ⊚ sumsMMSPL
 
-atomMMSPL ∷ (Ord a) ⇒ (a → 𝔛) → MMSP a ⌲ MMSPAtom a
-atomMMSPL fv =
+atomMMSPL ∷ (Ord a) ⇒ MMSP a ⌲ MMSPAtom a
+atomMMSPL =
   let mk ω =
         let 𝓍 = case ω of
               Var_MMSP x → 𝔵lexical $ single x
-              Meta_MMSP χ 𝓈 → 𝔵meta (single χ) ⊔ joins (map fv $ iter $ 𝔰values 𝓈)
+              Meta_MMSP χ _𝓈 → 𝔵meta $ single χ
         in MMSPProds 𝓍 $ ω ↦ one
       vw = \case
         MMSPProds _𝓍 δ | Some (ω :* e) ← view single𝐷L δ , e ≡ one → Some ω
@@ -168,8 +168,8 @@ sumsMMSP = construct sumsMMSPL
 prodsMMSP ∷ (Ord a) ⇒ MMSPProds a → MMSP a
 prodsMMSP = construct prodsMMSPL
 
-atomMMSP ∷ (Ord a) ⇒ (a → 𝔛) → MMSPAtom a → MMSP a
-atomMMSP = construct ∘ atomMMSPL
+atomMMSP ∷ (Ord a) ⇒ MMSPAtom a → MMSP a
+atomMMSP = construct atomMMSPL
 
 litMMSP ∷ ℕ → MMSP a
 litMMSP = construct litMMSPL
@@ -203,56 +203,56 @@ freeVarsMMSP = mmspMaxsBindingInfo  ∘ mmspMaxs
 -- SUBSTITUTION --
 ------------------
 
-substMMSP ∷ (Monad m, Ord a) ⇒ (a → 𝔛) → (a → m (MMSP a)) → 𝔖 a → MMSP a → m (MMSP a)
-substMMSP fv 𝒸 𝓈 (MMSP α̇) = substMaxs fv 𝒸 𝓈 α̇
+substMMSP ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSP a → m (MMSP a)
+substMMSP 𝒸 𝓈 (MMSP α̇) = substMaxs 𝒸 𝓈 α̇
 
-substMaxs ∷ (Monad m, Ord a) ⇒ (a → 𝔛) → (a → m (MMSP a)) → 𝔖 a → MMSPMaxs a → m (MMSP a)
-substMaxs fv 𝒸 𝓈 η@(MMSPMaxs 𝓍 a α) = do
-  let 𝓈' = 𝔰restrict 𝓍 𝓈
+substMaxs ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPMaxs a → m (MMSP a)
+substMaxs 𝒸 𝓈 η@(MMSPMaxs 𝓍 a α) = do
+  let 𝓈' = 𝔰restrictForSubst 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ maxsMMSP η
-  else (⊔) (litMMSP a) ^$ substMaxsMins fv 𝒸 𝓈' α
+  else (⊔) (litMMSP a) ^$ substMaxsMins 𝒸 𝓈' α
 
-substMaxsMins ∷ (Monad m, Ord a) ⇒ (a → 𝔛) → (a → m (MMSP a)) → 𝔖 a → 𝑃 (MMSPMins a) → m (MMSP a)
-substMaxsMins fv 𝒸 𝓈 α = joins ^$ mapM (substMins fv 𝒸 𝓈) $ iter α
+substMaxsMins ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → 𝑃 (MMSPMins a) → m (MMSP a)
+substMaxsMins 𝒸 𝓈 α = joins ^$ mapM (substMins 𝒸 𝓈) $ iter α
 
-substMins ∷ (Monad m, Ord a) ⇒ (a → 𝔛) → (a → m (MMSP a)) → 𝔖 a → MMSPMins a → m (MMSP a)
-substMins fv 𝒸 𝓈 η@(MMSPMins 𝓍 b β) = do
-  let 𝓈' = 𝔰restrict 𝓍 𝓈
+substMins ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPMins a → m (MMSP a)
+substMins 𝒸 𝓈 η@(MMSPMins 𝓍 b β) = do
+  let 𝓈' = 𝔰restrictForSubst 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ minsMMSP η
-  else (⊓) (elimAddTop top litMMSP b) ^$ substMinsSums fv 𝒸 𝓈' β
+  else (⊓) (elimAddTop top litMMSP b) ^$ substMinsSums 𝒸 𝓈' β
 
-substMinsSums ∷ (Monad m, Ord a) ⇒ (a → 𝔛) → (a → m (MMSP a)) → 𝔖 a → 𝑃 (MMSPSums a) → m (MMSP a)
-substMinsSums fv 𝒸 𝓈 β = meets ^$ mapM (substSums fv 𝒸 𝓈) $ iter β
+substMinsSums ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → 𝑃 (MMSPSums a) → m (MMSP a)
+substMinsSums 𝒸 𝓈 β = meets ^$ mapM (substSums 𝒸 𝓈) $ iter β
 
-substSums ∷ (Monad m, Ord a) ⇒ (a → 𝔛) → (a → m (MMSP a)) → 𝔖 a → MMSPSums a → m (MMSP a)
-substSums fv 𝒸 𝓈 η@(MMSPSums 𝓍 c γ) = do
-  let 𝓈' = 𝔰restrict 𝓍 𝓈
+substSums ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPSums a → m (MMSP a)
+substSums 𝒸 𝓈 η@(MMSPSums 𝓍 c γ) = do
+  let 𝓈' = 𝔰restrictForSubst 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ sumsMMSP η
-  else (+) (litMMSP c) ^$ substSumsProds fv 𝒸 𝓈' γ
+  else (+) (litMMSP c) ^$ substSumsProds 𝒸 𝓈' γ
 
-substSumsProds ∷ (Monad m, Ord a) ⇒ (a → 𝔛) → (a → m (MMSP a)) → 𝔖 a → MMSPProds a ⇰ ℕ → m (MMSP a)
-substSumsProds fv 𝒸 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → (litMMSP d ×) ^$ substProds fv 𝒸 𝓈 δ
+substSumsProds ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPProds a ⇰ ℕ → m (MMSP a)
+substSumsProds 𝒸 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → (litMMSP d ×) ^$ substProds 𝒸 𝓈 δ
 
-substProds ∷ (Monad m, Ord a) ⇒ (a → 𝔛) → (a → m (MMSP a)) → 𝔖 a → MMSPProds a → m (MMSP a)
-substProds fv 𝒸 𝓈 η@(MMSPProds 𝓍 δ) = do
-  let 𝓈' = 𝔰restrict 𝓍 𝓈
+substProds ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPProds a → m (MMSP a)
+substProds 𝒸 𝓈 η@(MMSPProds 𝓍 δ) = do
+  let 𝓈' = 𝔰restrictForSubst 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ prodsMMSP η
   else product ^$ mapMOn (iter δ) $ \ (ω :* e) → do
-    ω' ← substAtom fv 𝒸 𝓈' ω
+    ω' ← substAtom 𝒸 𝓈' ω
     return $ ω' ^^ e
 
-substAtom ∷ (Monad m, Ord a) ⇒ (a → 𝔛) → (a → m (MMSP a)) → 𝔖 a → MMSPAtom a → m (MMSP a)
-substAtom fv 𝒸 𝓈 = \case
+substAtom ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPAtom a → m (MMSP a)
+substAtom 𝒸 𝓈 = \case
   Var_MMSP x → case 𝔰lexicals 𝓈 ⋕? x of
-    None → return $ atomMMSP fv $ Var_MMSP x
+    None → return $ atomMMSP $ Var_MMSP x
     Some e → 𝒸 e
   Meta_MMSP χ 𝓈' → case 𝔰metas 𝓈 ⋕? χ of
-    None → return $ atomMMSP fv $ Meta_MMSP χ 𝓈'
-    Some e → substMMSP fv 𝒸 𝓈' *$ 𝒸 e
+    None → return $ atomMMSP $ Meta_MMSP χ 𝓈'
+    Some e → substMMSP 𝒸 𝓈' *$ 𝒸 e
 
 ----------
 -- MAXS --

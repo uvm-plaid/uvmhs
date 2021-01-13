@@ -127,6 +127,19 @@ instance (Meet a) ⇒ Meet (AddTop a) where
 instance (JoinLattice a) ⇒ JoinLattice (AddTop a)
 instance (Meet a) ⇒ MeetLattice (AddTop a)
 instance (JoinLattice a,Meet a) ⇒ Lattice (AddTop a)
+instance (Bot a,Difference a) ⇒ Difference (AddTop a) where
+  _ ⊟ Top = bot
+  Top ⊟ AddTop _ = top
+  AddTop x ⊟ AddTop y = AddTop $ x ⊟ y
+
+instance (Null a) ⇒ Null (AddTop a) where
+  null = AddTop null
+instance (Append a) ⇒ Append (AddTop a) where
+  Top ⧺ _ = Top
+  _ ⧺ Top = Top
+  AddTop x ⧺ AddTop y = AddTop $ x ⧺ y
+instance (Monoid a) ⇒ Monoid (AddTop a)
+
 instance Functor AddTop where 
   {-# INLINE map #-}
   map = mmap
