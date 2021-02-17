@@ -406,8 +406,9 @@ modifyC f = callCC $ \ k → f *$ k ()
 withCOn ∷ (Monad m,MonadCont r m) ⇒ m a → (a → m r) → m r
 withCOn = flip withC
 
-delimit ∷ (Monad m,MonadCont r m) ⇒ m a → m a
-delimit xM = callCC $ \ (𝓀 ∷ a → m r) → 𝓀 *$ xM
+-- this doesn't do anything???
+-- delimit ∷ (Monad m,MonadCont r m) ⇒ m a → m a
+-- delimit xM = callCC $ \ (𝓀 ∷ a → m r) → 𝓀 *$ xM
 
 putEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → r' → m ()
 putEnvL l x = callCC $ \ 𝓀 → localL l x $ 𝓀 ()
