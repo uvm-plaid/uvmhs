@@ -54,7 +54,7 @@ single𝕊 = Text.singleton
 
 {-# INLINE build𝕊 #-}
 build𝕊 ∷ (ToIter ℂ t) ⇒ t → 𝕊
-build𝕊 = TextLazy.toStrict ∘ TextBuilder.toLazyText ∘ foldr𝐼 HS.mempty (HS.mappend ∘ TextBuilder.singleton) ∘ iter
+build𝕊 = Text.pack ∘ lazyList𝐼 ∘ iter
 
 {-# INLINE build𝕊C #-}
 build𝕊C ∷ (ToIter 𝕊 t) ⇒ t → 𝕊

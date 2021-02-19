@@ -7,6 +7,20 @@ import qualified Examples.Lang.Arith as Arith
 import qualified Examples.Lang.ArithBlocks as ArithBlocks
 import qualified Examples.Lang.SExp as SExp
 
+-- state space
+data SS val lτ dτ = SS
+  { ssCxt ∷ ℕ
+  , ssStore ∷ ℕ
+  , ssStack ∷ ℕ
+  } deriving (Eq, Ord)
+makePrettyRecord ''SS
+
+data Thing = Thing
+  { thing ∷ ℕ
+  , think ∷ ℕ
+  }
+makePrettyRecord ''Thing
+
 main ∷ IO ()
 main = cleanExit $ do
   pprint $ ppHeader "COLOR TEST"
@@ -47,4 +61,3 @@ main = cleanExit $ do
   --             ]
   --         ]
   --     ]
-

@@ -95,10 +95,27 @@ makePrettyUnion name = do
 --   |]
 makePrettyRecordLogic ∷ TH.Cxt → TH.Name → 𝐿 TH.TyVarBndr → TH.Name → 𝐿 (TH.Name ∧ TH.Type) → TH.Q (𝐿 TH.Dec)
 makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
-  let conPrefix = string $ mapFirst toLower $ TH.nameBase con
+  let conName = string $ TH.nameBase con
+      conNameFirstLower = string $ mapFirst toLower $ iter conName
+      conNameAllLower = string $ map toLower $ iter conName
+  traceM "XX"
+  traceM conName
+  traceM conNameFirstLower
+  traceM conNameAllLower
   fieldNameTmps ← mapMOn fieldfieldtys $ \ (field :* _) → do
-    let (_prefix :* afterPrefix) = frhs $ Text.breakOnEnd conPrefix $ string $ TH.nameBase field
-        loweredAfterPrefix = string $ mapFirst toLower afterPrefix
+    let fieldName = string $ TH.nameBase field
+    let afterPrefix = ifNone fieldName $ firstSome $ list
+          [ frhs $ Text.stripPrefix conNameFirstLower fieldName
+          , frhs $ Text.stripPrefix conNameAllLower fieldName
+          , frhs $ Text.stripSuffix conName fieldName
+          ]
+        afterPrefix' = if afterPrefix ≡ null then fieldName else afterPrefix
+        loweredAfterPrefix = string $ mapFirst toLower afterPrefix'
+    traceM "YY"
+    traceM fieldName
+    traceM afterPrefix
+    traceM afterPrefix'
+    traceM loweredAfterPrefix
     tmpˣ ← TH.newName $ chars "x"
     return (field :* loweredAfterPrefix :* tmpˣ)
   let tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs

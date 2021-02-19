@@ -119,3 +119,10 @@ split = \case
   (x :* y) :& xys →
     let xs :* ys = split xys
     in (x :& xs) :* (y :& ys)
+
+firstSome ∷ 𝐿 (𝑂 a) → 𝑂 a
+firstSome = \case
+  Nil → None
+  None :& xOs → firstSome xOs
+  Some x :& _ → Some x
+
