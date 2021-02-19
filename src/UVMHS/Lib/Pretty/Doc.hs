@@ -304,7 +304,7 @@ ppCollection ∷ (ToIter Doc t) ⇒ Doc → Doc → Doc → t → Doc
 ppCollection l r i xs = ppGA $ ppSetBotLevel $ concat
   [ l
   , ppSpaceIfBreak
-  , concat $ inbetween spacer $ iter xs
+  , concat $ inbetween spacer $ map ppGA $ iter xs
   , ppNewlineIfBreak
   , r
   ]

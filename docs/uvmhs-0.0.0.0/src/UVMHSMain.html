@@ -7,25 +7,108 @@
 </span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.ArithBlocks.html"><span class="hs-identifier">Examples.Lang.ArithBlocks</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">ArithBlocks</span></span><span>
 </span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.SExp.html"><span class="hs-identifier">Examples.Lang.SExp</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">SExp</span></span><span>
 </span><span id="line-9"></span><span>
-</span><span id="line-10"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-11"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
+</span><span id="line-10"></span><span class="hs-comment">-- state space</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">data</span><span> </span><span id="SS"><span class="annot"><a href="UVMHSMain.html#SS"><span class="hs-identifier hs-var">SS</span></a></span></span><span> </span><span id="local-6989586621680077573"><span class="annot"><a href="#local-6989586621680077573"><span class="hs-identifier hs-type">val</span></a></span></span><span> </span><span id="local-6989586621680077572"><span class="annot"><a href="#local-6989586621680077572"><span class="hs-identifier hs-type">l&#964;</span></a></span></span><span> </span><span id="local-6989586621680077571"><span class="annot"><a href="#local-6989586621680077571"><span class="hs-identifier hs-type">d&#964;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SS"><span class="annot"><a href="UVMHSMain.html#SS"><span class="hs-identifier hs-var">SS</span></a></span></span><span>
+</span><span id="line-12"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="ssCxt"><span class="annot"><span class="annottext">SS val l&#964; d&#964; -&gt; &#8469;
+</span><a href="UVMHSMain.html#ssCxt"><span class="hs-identifier hs-var hs-var">ssCxt</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2115"><span class="hs-identifier hs-type">&#8469;</span></a></span><span>
+</span><span id="line-13"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="ssStore"><span class="annot"><span class="annottext">SS val l&#964; d&#964; -&gt; &#8469;
+</span><a href="UVMHSMain.html#ssStore"><span class="hs-identifier hs-var hs-var">ssStore</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2115"><span class="hs-identifier hs-type">&#8469;</span></a></span><span>
+</span><span id="line-14"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="ssStack"><span class="annot"><span class="annottext">SS val l&#964; d&#964; -&gt; &#8469;
+</span><a href="UVMHSMain.html#ssStack"><span class="hs-identifier hs-var hs-var">ssStack</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2115"><span class="hs-identifier hs-type">&#8469;</span></a></span><span>
+</span><span id="line-15"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680077563"><span id="local-6989586621680077565"><span class="annot"><span class="annottext">SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+(SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool)
+-&gt; (SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool) -&gt; Eq (SS val l&#964; d&#964;)
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+/= :: SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+$c/= :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+== :: SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+$c== :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680077547"><span id="local-6989586621680077549"><span id="local-6989586621680077551"><span id="local-6989586621680077553"><span id="local-6989586621680077555"><span id="local-6989586621680077557"><span id="local-6989586621680077559"><span class="annot"><span class="annottext">Eq (SS val l&#964; d&#964;)
+Eq (SS val l&#964; d&#964;)
+-&gt; (SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Ordering)
+-&gt; (SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool)
+-&gt; (SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool)
+-&gt; (SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool)
+-&gt; (SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool)
+-&gt; (SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964;)
+-&gt; (SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964;)
+-&gt; Ord (SS val l&#964; d&#964;)
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Ordering
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964;
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k). Eq (SS val l&#964; d&#964;)
+forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Ordering
+forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964;
+min :: SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964;
+$cmin :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964;
+max :: SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964;
+$cmax :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964;
+&gt;= :: SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+$c&gt;= :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+&gt; :: SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+$c&gt; :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+&lt;= :: SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+$c&lt;= :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+&lt; :: SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+$c&lt; :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Bool
+compare :: SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Ordering
+$ccompare :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k).
+SS val l&#964; d&#964; -&gt; SS val l&#964; d&#964; -&gt; Ordering
+$cp1Ord :: forall k (val :: k) k (l&#964; :: k) k (d&#964; :: k). Eq (SS val l&#964; d&#964;)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span id="local-6989586621680077544"><span id="local-6989586621680077571"><span id="local-6989586621680077572"><span id="local-6989586621680077573"><span class="hs-identifier">makePrettyRecord</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">SS</span></span></span></span></span><span>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span class="hs-keyword">data</span><span> </span><span id="Thing"><span class="annot"><a href="UVMHSMain.html#Thing"><span class="hs-identifier hs-var">Thing</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Thing"><span class="annot"><a href="UVMHSMain.html#Thing"><span class="hs-identifier hs-var">Thing</span></a></span></span><span>
+</span><span id="line-19"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="thing"><span class="annot"><span class="annottext">Thing -&gt; &#8469;
+</span><a href="UVMHSMain.html#thing"><span class="hs-identifier hs-var hs-var">thing</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2115"><span class="hs-identifier hs-type">&#8469;</span></a></span><span>
+</span><span id="line-20"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="think"><span class="annot"><span class="annottext">Thing -&gt; &#8469;
+</span><a href="UVMHSMain.html#think"><span class="hs-identifier hs-var hs-var">think</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2115"><span class="hs-identifier hs-type">&#8469;</span></a></span><span>
+</span><span id="line-21"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-22"></span><span id="local-6989586621680077537"><span class="hs-identifier">makePrettyRecord</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">Thing</span></span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-25"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
 </span><a href="UVMHSMain.html#main"><span class="hs-identifier hs-var hs-var">main</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO ()
 forall a. IO a -&gt; IO a
 </span><a href="UVMHS.Core.IO.html#cleanExit"><span class="hs-identifier hs-var">cleanExit</span></a></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-12"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-26"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppHeader"><span class="hs-identifier hs-var">ppHeader</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;COLOR TEST&quot;</span></span><span>
-</span><span id="line-13"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-27"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#colorsDemo"><span class="hs-identifier hs-var">colorsDemo</span></a></span><span>
-</span><span id="line-14"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-28"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -36,40 +119,39 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span></span><span>
-</span><span id="line-15"></span><span>  </span><span class="hs-comment">-- pprint $ ppHeader &quot;ALIGN TEST&quot;</span><span>
-</span><span id="line-16"></span><span>  </span><span class="hs-comment">-- debugShape $ ppVertical</span><span>
-</span><span id="line-17"></span><span>  </span><span class="hs-comment">--   [ ppString &quot;AA&quot; </span><span>
-</span><span id="line-18"></span><span>  </span><span class="hs-comment">--   , ppString &quot;BBBBBBBB&quot; </span><span>
-</span><span id="line-19"></span><span>  </span><span class="hs-comment">--   , concat</span><span>
-</span><span id="line-20"></span><span>  </span><span class="hs-comment">--       [ ppString &quot;CCCC&quot;</span><span>
-</span><span id="line-21"></span><span>  </span><span class="hs-comment">--       , ppAlign $ ppVertical</span><span>
-</span><span id="line-22"></span><span>  </span><span class="hs-comment">--           [ ppString &quot;DD&quot;</span><span>
-</span><span id="line-23"></span><span>  </span><span class="hs-comment">--           , ppString &quot;EEEE&quot;</span><span>
-</span><span id="line-24"></span><span>  </span><span class="hs-comment">--           , ppString &quot;FFF&quot;</span><span>
-</span><span id="line-25"></span><span>  </span><span class="hs-comment">--           ]</span><span>
-</span><span id="line-26"></span><span>  </span><span class="hs-comment">--       ]</span><span>
-</span><span id="line-27"></span><span>  </span><span class="hs-comment">--   ]</span><span>
-</span><span id="line-28"></span><span>  </span><span class="hs-comment">-- let eachGA f = do</span><span>
-</span><span id="line-29"></span><span>  </span><span class="hs-comment">--       pprint $ f $ ppAlign &#8728; ppGroup</span><span>
-</span><span id="line-30"></span><span>  </span><span class="hs-comment">--       pprint $ f $ ppGroup &#8728; ppAlign</span><span>
-</span><span id="line-31"></span><span>  </span><span class="hs-comment">-- eachGA $ \ ppGA &#8594;</span><span>
-</span><span id="line-32"></span><span>  </span><span class="hs-comment">--   ppGA $ ppHorizontal</span><span>
-</span><span id="line-33"></span><span>  </span><span class="hs-comment">--     [ ppString &quot;XXX&quot;</span><span>
-</span><span id="line-34"></span><span>  </span><span class="hs-comment">--     , ppGA $ ppVertical</span><span>
-</span><span id="line-35"></span><span>  </span><span class="hs-comment">--         [ ppString &quot;AAA&quot;</span><span>
-</span><span id="line-36"></span><span>  </span><span class="hs-comment">--         , ppGA $ ppHorizontal $ </span><span>
-</span><span id="line-37"></span><span>  </span><span class="hs-comment">--             [ ppString &quot;BBB&quot;</span><span>
-</span><span id="line-38"></span><span>  </span><span class="hs-comment">--             , ppGA $ ppVertical</span><span>
-</span><span id="line-39"></span><span>  </span><span class="hs-comment">--                 [ ppString &quot;WWW&quot;</span><span>
-</span><span id="line-40"></span><span>  </span><span class="hs-comment">--                 , ppString &quot;VVV&quot;</span><span>
-</span><span id="line-41"></span><span>  </span><span class="hs-comment">--                 ]</span><span>
-</span><span id="line-42"></span><span>  </span><span class="hs-comment">--             , ppGA $ ppVertical</span><span>
-</span><span id="line-43"></span><span>  </span><span class="hs-comment">--                 [ ppString &quot;WWW&quot;</span><span>
-</span><span id="line-44"></span><span>  </span><span class="hs-comment">--                 , ppString &quot;VVV&quot;</span><span>
-</span><span id="line-45"></span><span>  </span><span class="hs-comment">--                 , ppForceBreak</span><span>
-</span><span id="line-46"></span><span>  </span><span class="hs-comment">--                 ]</span><span>
-</span><span id="line-47"></span><span>  </span><span class="hs-comment">--             ]</span><span>
-</span><span id="line-48"></span><span>  </span><span class="hs-comment">--         ]</span><span>
-</span><span id="line-49"></span><span>  </span><span class="hs-comment">--     ]</span><span>
-</span><span id="line-50"></span><span>
-</span><span id="line-51"></span></pre></body></html>
+</span><span id="line-29"></span><span>  </span><span class="hs-comment">-- pprint $ ppHeader &quot;ALIGN TEST&quot;</span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-comment">-- debugShape $ ppVertical</span><span>
+</span><span id="line-31"></span><span>  </span><span class="hs-comment">--   [ ppString &quot;AA&quot; </span><span>
+</span><span id="line-32"></span><span>  </span><span class="hs-comment">--   , ppString &quot;BBBBBBBB&quot; </span><span>
+</span><span id="line-33"></span><span>  </span><span class="hs-comment">--   , concat</span><span>
+</span><span id="line-34"></span><span>  </span><span class="hs-comment">--       [ ppString &quot;CCCC&quot;</span><span>
+</span><span id="line-35"></span><span>  </span><span class="hs-comment">--       , ppAlign $ ppVertical</span><span>
+</span><span id="line-36"></span><span>  </span><span class="hs-comment">--           [ ppString &quot;DD&quot;</span><span>
+</span><span id="line-37"></span><span>  </span><span class="hs-comment">--           , ppString &quot;EEEE&quot;</span><span>
+</span><span id="line-38"></span><span>  </span><span class="hs-comment">--           , ppString &quot;FFF&quot;</span><span>
+</span><span id="line-39"></span><span>  </span><span class="hs-comment">--           ]</span><span>
+</span><span id="line-40"></span><span>  </span><span class="hs-comment">--       ]</span><span>
+</span><span id="line-41"></span><span>  </span><span class="hs-comment">--   ]</span><span>
+</span><span id="line-42"></span><span>  </span><span class="hs-comment">-- let eachGA f = do</span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-comment">--       pprint $ f $ ppAlign &#8728; ppGroup</span><span>
+</span><span id="line-44"></span><span>  </span><span class="hs-comment">--       pprint $ f $ ppGroup &#8728; ppAlign</span><span>
+</span><span id="line-45"></span><span>  </span><span class="hs-comment">-- eachGA $ \ ppGA &#8594;</span><span>
+</span><span id="line-46"></span><span>  </span><span class="hs-comment">--   ppGA $ ppHorizontal</span><span>
+</span><span id="line-47"></span><span>  </span><span class="hs-comment">--     [ ppString &quot;XXX&quot;</span><span>
+</span><span id="line-48"></span><span>  </span><span class="hs-comment">--     , ppGA $ ppVertical</span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-comment">--         [ ppString &quot;AAA&quot;</span><span>
+</span><span id="line-50"></span><span>  </span><span class="hs-comment">--         , ppGA $ ppHorizontal $ </span><span>
+</span><span id="line-51"></span><span>  </span><span class="hs-comment">--             [ ppString &quot;BBB&quot;</span><span>
+</span><span id="line-52"></span><span>  </span><span class="hs-comment">--             , ppGA $ ppVertical</span><span>
+</span><span id="line-53"></span><span>  </span><span class="hs-comment">--                 [ ppString &quot;WWW&quot;</span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-comment">--                 , ppString &quot;VVV&quot;</span><span>
+</span><span id="line-55"></span><span>  </span><span class="hs-comment">--                 ]</span><span>
+</span><span id="line-56"></span><span>  </span><span class="hs-comment">--             , ppGA $ ppVertical</span><span>
+</span><span id="line-57"></span><span>  </span><span class="hs-comment">--                 [ ppString &quot;WWW&quot;</span><span>
+</span><span id="line-58"></span><span>  </span><span class="hs-comment">--                 , ppString &quot;VVV&quot;</span><span>
+</span><span id="line-59"></span><span>  </span><span class="hs-comment">--                 , ppForceBreak</span><span>
+</span><span id="line-60"></span><span>  </span><span class="hs-comment">--                 ]</span><span>
+</span><span id="line-61"></span><span>  </span><span class="hs-comment">--             ]</span><span>
+</span><span id="line-62"></span><span>  </span><span class="hs-comment">--         ]</span><span>
+</span><span id="line-63"></span><span>  </span><span class="hs-comment">--     ]</span><span>
+</span><span id="line-64"></span></pre></body></html>

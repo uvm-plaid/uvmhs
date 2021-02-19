@@ -98,10 +98,6 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
   let conName = string $ TH.nameBase con
       conNameFirstLower = string $ mapFirst toLower $ iter conName
       conNameAllLower = string $ map toLower $ iter conName
-  traceM "XX"
-  traceM conName
-  traceM conNameFirstLower
-  traceM conNameAllLower
   fieldNameTmps ← mapMOn fieldfieldtys $ \ (field :* _) → do
     let fieldName = string $ TH.nameBase field
     let afterPrefix = ifNone fieldName $ firstSome $ list
@@ -111,11 +107,6 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
           ]
         afterPrefix' = if afterPrefix ≡ null then fieldName else afterPrefix
         loweredAfterPrefix = string $ mapFirst toLower afterPrefix'
-    traceM "YY"
-    traceM fieldName
-    traceM afterPrefix
-    traceM afterPrefix'
-    traceM loweredAfterPrefix
     tmpˣ ← TH.newName $ chars "x"
     return (field :* loweredAfterPrefix :* tmpˣ)
   let tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
