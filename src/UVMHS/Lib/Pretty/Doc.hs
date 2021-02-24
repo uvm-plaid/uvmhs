@@ -86,7 +86,7 @@ instance Append Doc where (⧺) = onDoc2 (≫)
 instance Monoid Doc
 
 docShape ∷ Doc → ShapeA
-docShape = summaryIShape ∘ summaryDocA ∘ execDoc
+docShape = summaryIShape ∘ staticDocA ∘ execDoc
 
 -----------------
 -- COMBINATORS --
@@ -122,7 +122,13 @@ ppString ∷ 𝕊 → Doc
 ppString = Doc ∘ tell ∘ stringDocA
 
 ppStringModal ∷ 𝕊 → 𝕊 → Doc
-ppStringModal sf sb = Doc $ tell $ stringDocAModal sf sb
+ppStringModal sf sb = ppModal (ppString sf) $ ppString sb
+
+ppModal ∷ Doc → Doc → Doc
+ppModal d₁ d₂ = Doc $ do
+  da₁ ← retOut $ unDoc d₁
+  da₂ ← retOut $ unDoc d₂
+  tell $ docAModal da₁ da₂
 
 ppFG ∷ Color → Doc → Doc
 ppFG c = ppFormat $ formats [FG c]
@@ -340,7 +346,7 @@ matrixHelper has vas sss =
 
 ppMatrix ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
 ppMatrix has vas dss =
-  let sss       = mapp (execRenderUT ∘ summaryIContents ∘ summaryDocA ∘ execDoc) dss
+  let sss       = mapp (execRenderUT ∘ summaryIContents ∘ staticDocA ∘ execDoc) dss
       _ :* sss' = matrixHelper has vas sss
       dss'      = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
@@ -351,7 +357,7 @@ ppMatrix has vas dss =
 
 ppMatrixCells ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
 ppMatrixCells has vas dss =
-  let sss        = mapp (execRenderUT ∘ summaryIContents ∘ summaryDocA ∘ execDoc) dss
+  let sss        = mapp (execRenderUT ∘ summaryIContents ∘ staticDocA ∘ execDoc) dss
       ws :* sss' = matrixHelper has vas sss
       sep        = ppFG white $ concat $ inbetween (ppString "─┼─") $ mapOn ws $ \ w → ppString $ string $ repeat w '─'
       dss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →

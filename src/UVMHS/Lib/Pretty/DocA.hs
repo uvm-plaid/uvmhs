@@ -46,10 +46,15 @@ data DocA =
   | DynamicDocA SummaryI (DocAM ())
 makePrisms ''DocA
 
-summaryDocA ∷ DocA → SummaryI
-summaryDocA = \case
+staticDocA ∷ DocA → SummaryI
+staticDocA = \case
   StaticDocA s → s
   DynamicDocA s _ → s
+
+dynamicDocA ∷ DocA → DocAM ()
+dynamicDocA = \case
+  StaticDocA s → renderSummaryI s
+  DynamicDocA _ d → d
 
 instance Null DocA where null = StaticDocA null
 instance Append DocA where 
@@ -83,11 +88,8 @@ renderSummaryI s =
 stringDocA ∷ 𝕊 → DocA
 stringDocA = StaticDocA ∘ summaryChunksI ∘ splitChunksI
 
-stringDocAModal ∷ 𝕊 → 𝕊 → DocA
-stringDocAModal sf sb =
-  let s₁ = summaryChunksI $ splitChunksI sf
-      s₂ = summaryChunksI $ splitChunksI sb
-  in DynamicDocA s₁ $ renderSummaryI s₂
+docAModal ∷ DocA → DocA → DocA
+docAModal d₁ d₂ = DynamicDocA (staticDocA d₁) $ dynamicDocA d₂
 
 annotateDocA ∷ Annotation → DocA → DocA
 annotateDocA a = \case
