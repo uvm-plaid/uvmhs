@@ -202,8 +202,8 @@ pprint ∷ (Pretty a) ⇒ a → IO ()
 pprint x = do
   b ← IORef.readIORef gv_PPRINT_COLOR
   if b
-     then out $ ppRender $ pretty x
-     else out $ ppRenderNofmt $ pretty x
+     then out $ ppRender $ ppGroup $ pretty x
+     else out $ ppRenderNofmt $ ppGroup $ pretty x
 
 ppColorOn ∷ IO ()
 ppColorOn = IORef.writeIORef gv_PPRINT_COLOR True

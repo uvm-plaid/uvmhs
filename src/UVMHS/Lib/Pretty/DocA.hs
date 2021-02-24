@@ -54,25 +54,31 @@ summaryDocA = \case
 instance Null DocA where null = StaticDocA null
 instance Append DocA where 
   StaticDocA s₁ ⧺ StaticDocA s₂ = StaticDocA $ s₁ ⧺ s₂
-  StaticDocA s₁ ⧺ DynamicDocA s₂ r₂ = DynamicDocA (s₁ ⧺ s₂) $ do renderSummaryI s₁ ; r₂
-  DynamicDocA s₁ r₁ ⧺ StaticDocA s₂ = DynamicDocA (s₁ ⧺ s₂) $ do r₁ ; renderSummaryI s₂
+  StaticDocA s₁ ⧺ DynamicDocA s₂ r₂ = DynamicDocA (s₁ ⧺ s₂) $ renderSummaryI s₁ ≫ r₂
+  DynamicDocA s₁ r₁ ⧺ StaticDocA s₂ = DynamicDocA (s₁ ⧺ s₂) $ r₁ ≫ renderSummaryI s₂
   DynamicDocA s₁ r₁ ⧺ DynamicDocA s₂ r₂ = DynamicDocA (s₁ ⧺ s₂) $ r₁ ≫ r₂
 instance Monoid DocA
 
 renderSummaryI ∷ SummaryI → DocAM ()
-renderSummaryI s = do
-  nest ← askL docAEnvNestL
-  tell $ mapOn (summaryIContents s) $ map $ \case
-    NewlineChunkI n → NewlineChunkI $ n + nest
-    c → c
-  case shapeIShape $ summaryIShape s of
-    SingleLine l → do
-      modifyL docAStateRibL $ (+) l
-      modifyL docAStateColL $ (+) l
-    MultiLine (ShapeM _ _ ll lines) → do
-      modifyL docAStateRowL $ (+) lines
-      putL docAStateRibL ll
-      putL docAStateColL ll
+renderSummaryI s = 
+  let f =
+        if shapeIAligned $ summaryIShape s
+        then alignDocAM
+        else id
+  in f $ do
+    nest ← askL docAEnvNestL
+    let o = mapOn (summaryIContents s) $ map $ \case
+          NewlineChunkI n → NewlineChunkI $ n + nest
+          c → c
+    tell o
+    case shapeIShape $ summaryIShape s of
+      SingleLine l → do
+        modifyL docAStateRibL $ (+) l
+        modifyL docAStateColL $ (+) l
+      MultiLine (ShapeM _ _ ll lines) → do
+        modifyL docAStateRowL $ (+) lines
+        putL docAStateRibL ll
+        putL docAStateColL ll
 
 stringDocA ∷ 𝕊 → DocA
 stringDocA = StaticDocA ∘ summaryChunksI ∘ splitChunksI

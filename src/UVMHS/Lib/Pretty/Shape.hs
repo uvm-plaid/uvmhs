@@ -118,7 +118,7 @@ instance Join Shape where
   MultiLine (ShapeM fl₁ mml₁ ll₁ nls₁) ⊔ MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) 
     | nls₁ > nls₂ = MultiLine $ ShapeM (fl₁ ⊔ fl₂) (mml₁ ⊔ mml₂ ⊔ ll₂) ll₁ nls₁
     | nls₁ < nls₂ = MultiLine $ ShapeM (fl₁ ⊔ fl₂) (mml₁ ⊔ mml₂ ⊔ ll₁) ll₂ nls₂
-    | otherwise       = MultiLine $ ShapeM (fl₁ ⊔ fl₂) (mml₁ ⊔ mml₂) (ll₁ ⊔ ll₂) $ nls₁ ⊔ nls₂
+    | otherwise   = MultiLine $ ShapeM (fl₁ ⊔ fl₂) (mml₁ ⊔ mml₂) (ll₁ ⊔ ll₂) $ nls₁ ⊔ nls₂
 
 ------------
 -- ShapeA --
@@ -142,6 +142,9 @@ instance Join Shape where
 --     non-aligned + aligned     = non-aligned
 --     aligned     + non-aligned = aligned
 --     aligned     + aligned     = aligned
+--
+-- When the shape is a single line, it is always non-aligned 
+-- (so, aligned = False)
 
 data ShapeA = ShapeA
   { shapeIAligned ∷ 𝔹

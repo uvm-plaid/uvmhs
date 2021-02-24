@@ -292,16 +292,16 @@ ppPost = ppPostLevel
 ppApp ∷ (ToIter Doc t) ⇒ Doc → t → Doc
 ppApp x xs 
   | count xs ≡ zero = ppAlign x
-  | otherwise = ppGA $ Doc $ do
+  | otherwise = Doc $ do
     l ← askL $ appLevelL ⊚ docEnvPrettyParamsL
-    unDoc $ ppLevel l $ ppGroup $ concat 
-      [ ppAlign x
+    unDoc $ ppLevel l $ concat 
+      [ ppGA x
       , ppSpaceNewlineIfBreak
-      , concat $ inbetween ppSpaceNewlineIfBreak $ map (ppAlign ∘ ppBump) $ iter xs
+      , concat $ inbetween ppSpaceNewlineIfBreak $ map (ppGA ∘ ppBump) $ iter xs
       ]
 
 ppCollection ∷ (ToIter Doc t) ⇒ Doc → Doc → Doc → t → Doc
-ppCollection l r i xs = ppGA $ ppSetBotLevel $ concat
+ppCollection l r i xs = ppSetBotLevel $ concat
   [ l
   , ppSpaceIfBreak
   , concat $ inbetween spacer $ map ppGA $ iter xs
@@ -319,14 +319,14 @@ ppCollection l r i xs = ppGA $ ppSetBotLevel $ concat
 ppRecord ∷ (ToIter (Doc ∧ Doc) t) ⇒ Doc → t → Doc
 ppRecord rel kvs = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") $ map mapping $ iter kvs
   where
-    mapping (k :* v) = ppGroup $ concat
-      [ ppAlign k
+    mapping (k :* v) = concat
+      [ ppGA k
       , ppSpaceIfBreak
       , rel
       , ppNewlineIfBreak
       , ppSpaceIfBreak
       , ppSpaceIfBreak
-      , ppAlign v
+      , ppGA v
       ]
 
 
