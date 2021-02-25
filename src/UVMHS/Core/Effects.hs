@@ -298,6 +298,16 @@ tellStateL 𝓁 o = modifyL 𝓁 $ (⧺) o
 hijackStateL ∷ (Monad m,MonadState o₁ m,Null o₂) ⇒ o₁ ⟢ o₂ → m a → m (o₂ ∧ a)
 hijackStateL 𝓁 aM = localizeL 𝓁 null aM
 
+localMapStateL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → (s₂ → s₂) → m a → m a
+localMapStateL ℓ f xM = do
+  s ← getL ℓ
+  snd ^$ localizeL ℓ (f s) xM
+
+localStateEffectsL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → m a → m a
+localStateEffectsL ℓ xM = do
+  s ← getL ℓ
+  localStateL ℓ s xM
+
 -- Fail
 
 {-# INLINE abort𝑂 #-}
