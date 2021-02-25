@@ -281,19 +281,22 @@ ppPostLevel ∷ ℕ64 → Doc → Doc → Doc
 ppPostLevel i oM xM = ppLevel i $ concat $ iter [xM,oM]
 
 ppInf ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInf i o = ppInfLevel i $ concat [ppNewlineIfBreak,o,ppSpaceIfBreak]
+ppInf i o e₁ e₂ = 
+  ppInfLevel i (concat [ppNewlineIfBreak,ppGA o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppInfl ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfl i o = ppInflLevel i $ concat [ppNewlineIfBreak,o,ppSpaceIfBreak]
+ppInfl i o e₁ e₂ = 
+  ppInflLevel i (concat [ppNewlineIfBreak,ppGA o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppInfr ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfr i o = ppInfrLevel i $ concat [ppNewlineIfBreak,o,ppSpaceIfBreak]
+ppInfr i o e₁ e₂ = 
+  ppInfrLevel i (concat [ppNewlineIfBreak,ppGA o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppPre ∷ ℕ64 → Doc → Doc → Doc
-ppPre = ppPreLevel
+ppPre i o e = ppPreLevel i (concat [ppGA o,ppNewlineIfBreak]) $ ppGA e
 
 ppPost ∷ ℕ64 → Doc → Doc → Doc
-ppPost = ppPostLevel
+ppPost i o e = ppPostLevel i (concat [ppNewlineIfBreak,ppGA o]) $ ppGA e
 
 ppApp ∷ (ToIter Doc t) ⇒ Doc → t → Doc
 ppApp x xs 
