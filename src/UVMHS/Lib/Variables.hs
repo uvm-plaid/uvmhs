@@ -91,12 +91,6 @@ instance Monoid (𝔖 a)
 
 instance ToStream (𝕏 ∧ a) (𝔖 a) where stream (𝔖 𝓈ˡ 𝓈ᵐ) = stream 𝓈ˡ ⧺ stream 𝓈ᵐ
 
-𝔰restrictForSubst ∷ 𝔛 → 𝔖 a → 𝔖 a
-𝔰restrictForSubst (𝔛 𝓍ˡ 𝓍ᵐ) (𝔖 𝓈ˡ 𝓈ᵐ) = 
-  if 𝓍ᵐ ≡ null
-  then 𝔖 (restrict 𝓍ˡ 𝓈ˡ) null
-  else 𝔖 𝓈ˡ 𝓈ᵐ
-
 𝔰restrict ∷ 𝔛 → 𝔖 a → 𝔖 a
 𝔰restrict (𝔛 𝓍ˡ 𝓍ᵐ) (𝔖 𝓈ˡ 𝓈ᵐ) = 𝔖 (restrict 𝓍ˡ 𝓈ˡ) $ restrict 𝓍ᵐ 𝓈ᵐ
 
@@ -114,12 +108,10 @@ substVarLexical mkvar 𝒸 𝓈 x = case 𝔰lexicals 𝓈 ⋕? x of
   None → return $ mkvar x
   Some e → 𝒸 e
 
-substVarMeta ∷ (Monad m,Append s) ⇒ (s → e → m e) → (s → s → m s) → (𝕏 → s → e) → (d → m e) → (s → 𝔖 d) → s → 𝕏 → s → m e
-substVarMeta subₑ subₛ mkvar 𝒸 scope 𝓈 χ 𝓈' = case 𝔰metas (scope 𝓈) ⋕? χ of
-  None → do
-    𝓈'' ← subₛ 𝓈 𝓈'
-    return $ mkvar χ $ 𝓈 ⧺ 𝓈''
-  Some e → subₑ 𝓈' *$ 𝒸 e
+substVarMeta ∷ (Monad m) ⇒ (𝕏 → b) → (a → m b) → 𝔖 a → 𝕏 → m b
+substVarMeta mkvar 𝒸 𝓈 x = case 𝔰metas 𝓈 ⋕? x of
+  None → return $ mkvar x
+  Some e → 𝒸 e
 
 instance FunctorM 𝔖 where
   mapM ∷ (Monad m) ⇒ (a → m b) → 𝔖 a → m (𝔖 b)

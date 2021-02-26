@@ -30,41 +30,41 @@ instance (Times a) ⇒ Times (AddTop a) where
 --             ⋮ 
 --             + c(xᵈ…xᵈ))
 
-newtype MMSP a = MMSP
-  { mmspMaxs ∷ MMSPMaxs a
+newtype MMSP = MMSP
+  { mmspMaxs ∷ MMSPMaxs
   } 
   deriving (Eq,Ord,Show)
 
-data MMSPMaxs a = MMSPMaxs
+data MMSPMaxs = MMSPMaxs
   { mmspMaxsBindingInfo ∷ 𝔛
   , mmspMaxsConstant    ∷ ℕ
-  , mmspMaxsMins        ∷ 𝑃 (MMSPMins a)
+  , mmspMaxsMins        ∷ 𝑃 MMSPMins
   }
   deriving (Eq,Ord,Show)
 
-data MMSPMins a = MMSPMins
+data MMSPMins = MMSPMins
   { mmspMinsBindingInfo ∷ 𝔛
-  , mmspMinsConstant    ∷ AddTop ℕ       -- non-zero
-  , mmspMinsSums        ∷ 𝑃 (MMSPSums a) -- at least one
+  , mmspMinsConstant    ∷ AddTop ℕ    -- non-zero
+  , mmspMinsSums        ∷ 𝑃 MMSPSums -- at least one
   }
   deriving (Eq,Ord,Show)
 
-data MMSPSums a = MMSPSums
+data MMSPSums = MMSPSums
   { mmspSumsBindingInfo ∷ 𝔛
   , mmspSumsConstant    ∷ ℕ
-  , mmspSumsPRods       ∷ MMSPProds a ⇰ ℕ -- at least one
+  , mmspSumsPRods       ∷ MMSPProds ⇰ ℕ -- at least one
   }
   deriving (Eq,Ord,Show)
 
-data MMSPProds a = MMSPProds
+data MMSPProds = MMSPProds
   { mmspProdsBindingInfo ∷ 𝔛
-  , mmspProdsExps        ∷ MMSPAtom a ⇰ ℕ -- at least one
+  , mmspProdsExps        ∷ MMSPAtom ⇰ ℕ -- at least one
   }
   deriving (Eq,Ord,Show)
 
-data MMSPAtom a = 
+data MMSPAtom = 
     Var_MMSP 𝕏
-  | Meta_MMSP 𝕏 (𝔖 a)
+  | Meta_MMSP 𝕏
   deriving (Eq,Ord,Show)
 
 ----------
@@ -75,25 +75,25 @@ data MMSPAtom a =
 -- OPERATIONS --
 ----------------
 
-instance Zero (MMSP a) where zero = litMMSP zero
-instance One (MMSP a) where one = litMMSP one
-instance (Ord a) ⇒ Plus (MMSP a) where (+) = plusMMSP
-instance (Ord a) ⇒ Times (MMSP a) where (×) = timesMMSP
-instance (Ord a) ⇒ Pon (MMSP a) where (^^) = ponMMSP
-instance Bot (MMSP a) where bot = litMMSP zero
-instance (Ord a) ⇒ Join (MMSP a) where (⊔) = joinMMSP
-instance (Ord a) ⇒ Top (MMSP a) where top = topMMSP
-instance (Ord a) ⇒ Meet (MMSP a) where (⊓) = meetMMSP
+instance Zero MMSP where zero = litMMSP zero
+instance One MMSP where one = litMMSP one
+instance Plus MMSP where (+) = plusMMSP
+instance Times MMSP where (×) = timesMMSP
+instance Pon MMSP where (^^) = ponMMSP
+instance Bot MMSP where bot = litMMSP zero
+instance Join MMSP where (⊔) = joinMMSP
+instance Top MMSP where top = topMMSP
+instance Meet MMSP where (⊓) = meetMMSP
 
-instance (Ord a) ⇒ Additive (MMSP a)
-instance (Ord a) ⇒ Multiplicative (MMSP a)
-instance (Ord a) ⇒ JoinLattice (MMSP a)
-instance (Ord a) ⇒ MeetLattice (MMSP a)
+instance Additive MMSP
+instance Multiplicative MMSP
+instance JoinLattice MMSP
+instance MeetLattice MMSP
 
-maxsMMSPL ∷ MMSP a ⌲ MMSPMaxs a
+maxsMMSPL ∷ MMSP ⌲ MMSPMaxs
 maxsMMSPL = prism MMSP $ Some ∘ mmspMaxs
 
-minsMMSPL ∷ (Ord a) ⇒ MMSP a ⌲ MMSPMins a
+minsMMSPL ∷ MMSP ⌲ MMSPMins
 minsMMSPL  = 
   let mk β̇ = MMSPMaxs (mmspMinsBindingInfo β̇) zero $ single β̇
       vw = \case
@@ -101,7 +101,7 @@ minsMMSPL  =
         _ → None
   in prism mk vw ⊚ maxsMMSPL
 
-sumsMMSPL ∷ (Ord a) ⇒ MMSP a ⌲ MMSPSums a
+sumsMMSPL ∷ MMSP ⌲ MMSPSums
 sumsMMSPL = 
   let mk γ̇ = MMSPMins (mmspSumsBindingInfo γ̇) Top $ single $ γ̇
       vw = \case
@@ -109,7 +109,7 @@ sumsMMSPL =
         _ → None
   in prism mk vw ⊚ minsMMSPL
 
-prodsMMSPL ∷ (Ord a) ⇒ MMSP a ⌲ MMSPProds a
+prodsMMSPL ∷ MMSP ⌲ MMSPProds
 prodsMMSPL = 
   let mk δ̇ = MMSPSums (mmspProdsBindingInfo δ̇) zero $ δ̇ ↦ one
       vw = \case
@@ -117,19 +117,19 @@ prodsMMSPL =
         _ → None
   in prism mk vw ⊚ sumsMMSPL
 
-atomMMSPL ∷ (Ord a) ⇒ MMSP a ⌲ MMSPAtom a
+atomMMSPL ∷ MMSP ⌲ MMSPAtom
 atomMMSPL =
   let mk ω =
         let 𝓍 = case ω of
               Var_MMSP x → 𝔵lexical $ single x
-              Meta_MMSP χ _𝓈 → 𝔵meta $ single χ
+              Meta_MMSP χ → 𝔵meta $ single χ
         in MMSPProds 𝓍 $ ω ↦ one
       vw = \case
         MMSPProds _𝓍 δ | Some (ω :* e) ← view single𝐷L δ , e ≡ one → Some ω
         _ → None
   in prism mk vw ⊚ prodsMMSPL
 
-litMMSPL ∷ MMSP a ⌲ ℕ
+litMMSPL ∷ MMSP ⌲ ℕ
 litMMSPL = 
   let mk n = MMSPMaxs bot n null
       vw = \case
@@ -137,7 +137,7 @@ litMMSPL =
         _ → None
   in prism mk vw ⊚ maxsMMSPL
 
-topMMSPL ∷ (Ord a) ⇒ MMSP a ⌲ ()
+topMMSPL ∷ MMSP ⌲ ()
 topMMSPL = 
   let mk () = MMSPMins bot Top null
       vw = \case
@@ -145,7 +145,7 @@ topMMSPL =
         _ → None
   in prism mk vw ⊚ minsMMSPL
 
-littMMSPL ∷ (Ord a) ⇒ MMSP a ⌲ AddTop ℕ
+littMMSPL ∷ MMSP ⌲ AddTop ℕ
 littMMSPL =
   let mk = \case
         AddTop n → litMMSP n
@@ -156,103 +156,103 @@ littMMSPL =
         | otherwise = None
   in prism mk vw
 
-maxsMMSP ∷ MMSPMaxs a → MMSP a
+maxsMMSP ∷ MMSPMaxs → MMSP
 maxsMMSP = construct maxsMMSPL
 
-minsMMSP ∷ (Ord a) ⇒ MMSPMins a → MMSP a
+minsMMSP ∷ MMSPMins → MMSP
 minsMMSP = construct minsMMSPL
 
-sumsMMSP ∷ (Ord a) ⇒ MMSPSums a → MMSP a
+sumsMMSP ∷ MMSPSums → MMSP
 sumsMMSP = construct sumsMMSPL
 
-prodsMMSP ∷ (Ord a) ⇒ MMSPProds a → MMSP a
+prodsMMSP ∷ MMSPProds → MMSP
 prodsMMSP = construct prodsMMSPL
 
-atomMMSP ∷ (Ord a) ⇒ MMSPAtom a → MMSP a
+atomMMSP ∷ MMSPAtom → MMSP
 atomMMSP = construct atomMMSPL
 
-litMMSP ∷ ℕ → MMSP a
+litMMSP ∷ ℕ → MMSP
 litMMSP = construct litMMSPL
 
-topMMSP ∷ (Ord a) ⇒ MMSP a
+topMMSP ∷ MMSP
 topMMSP = construct topMMSPL ()
 
-joinMMSP ∷ (Ord a) ⇒ MMSP a → MMSP a → MMSP a
+joinMMSP ∷ MMSP → MMSP → MMSP
 joinMMSP (MMSP α̇₁) (MMSP α̇₂) = MMSP $ joinMaxs α̇₁ α̇₂
 
-meetMMSP ∷ (Ord a) ⇒ MMSP a → MMSP a → MMSP a
+meetMMSP ∷ MMSP → MMSP → MMSP
 meetMMSP (MMSP α̇₁) (MMSP α̇₂) = MMSP $ meetMaxs α̇₁ α̇₂
 
-plusMMSP ∷ (Ord a) ⇒ MMSP a → MMSP a → MMSP a
+plusMMSP ∷ MMSP → MMSP → MMSP
 plusMMSP (MMSP α̇₁) (MMSP α̇₂) = MMSP $ plusMaxs α̇₁ α̇₂
 
-timesMMSP ∷ (Ord a) ⇒ MMSP a → MMSP a → MMSP a
+timesMMSP ∷ MMSP → MMSP → MMSP
 timesMMSP (MMSP α̇₁) (MMSP α̇₂) = MMSP $ timesMaxs α̇₁ α̇₂
 
-ponMMSP ∷ (Ord a) ⇒ MMSP a → ℕ → MMSP a
+ponMMSP ∷ MMSP → ℕ → MMSP
 ponMMSP e n = applyN n one (× e)
 
 ---------------
 -- FREE VARS --
 ---------------
 
-freeVarsMMSP ∷ MMSP a → 𝔛
+freeVarsMMSP ∷ MMSP → 𝔛
 freeVarsMMSP = mmspMaxsBindingInfo  ∘ mmspMaxs
 
 ------------------
 -- SUBSTITUTION --
 ------------------
 
-substMMSP ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSP a → m (MMSP a)
+substMMSP ∷ (Monad m, Ord a) ⇒ (a → m MMSP) → 𝔖 a → MMSP → m MMSP
 substMMSP 𝒸 𝓈 (MMSP α̇) = substMaxs 𝒸 𝓈 α̇
 
-substMaxs ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPMaxs a → m (MMSP a)
+substMaxs ∷ (Monad m, Ord a) ⇒ (a → m MMSP) → 𝔖 a → MMSPMaxs → m MMSP
 substMaxs 𝒸 𝓈 η@(MMSPMaxs 𝓍 a α) = do
-  let 𝓈' = 𝔰restrictForSubst 𝓍 𝓈
+  let 𝓈' = 𝔰restrict 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ maxsMMSP η
   else (⊔) (litMMSP a) ^$ substMaxsMins 𝒸 𝓈' α
 
-substMaxsMins ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → 𝑃 (MMSPMins a) → m (MMSP a)
+substMaxsMins ∷ (Monad m, Ord a) ⇒ (a → m MMSP) → 𝔖 a → 𝑃 MMSPMins → m MMSP
 substMaxsMins 𝒸 𝓈 α = joins ^$ mapM (substMins 𝒸 𝓈) $ iter α
 
-substMins ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPMins a → m (MMSP a)
+substMins ∷ (Monad m, Ord a) ⇒ (a → m MMSP) → 𝔖 a → MMSPMins → m MMSP
 substMins 𝒸 𝓈 η@(MMSPMins 𝓍 b β) = do
-  let 𝓈' = 𝔰restrictForSubst 𝓍 𝓈
+  let 𝓈' = 𝔰restrict 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ minsMMSP η
   else (⊓) (elimAddTop top litMMSP b) ^$ substMinsSums 𝒸 𝓈' β
 
-substMinsSums ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → 𝑃 (MMSPSums a) → m (MMSP a)
+substMinsSums ∷ (Monad m, Ord a) ⇒ (a → m MMSP) → 𝔖 a → 𝑃 MMSPSums → m MMSP
 substMinsSums 𝒸 𝓈 β = meets ^$ mapM (substSums 𝒸 𝓈) $ iter β
 
-substSums ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPSums a → m (MMSP a)
+substSums ∷ (Monad m, Ord a) ⇒ (a → m MMSP) → 𝔖 a → MMSPSums → m MMSP
 substSums 𝒸 𝓈 η@(MMSPSums 𝓍 c γ) = do
-  let 𝓈' = 𝔰restrictForSubst 𝓍 𝓈
+  let 𝓈' = 𝔰restrict 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ sumsMMSP η
   else (+) (litMMSP c) ^$ substSumsProds 𝒸 𝓈' γ
 
-substSumsProds ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPProds a ⇰ ℕ → m (MMSP a)
+substSumsProds ∷ (Monad m, Ord a) ⇒ (a → m MMSP) → 𝔖 a → MMSPProds ⇰ ℕ → m MMSP
 substSumsProds 𝒸 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → (litMMSP d ×) ^$ substProds 𝒸 𝓈 δ
 
-substProds ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPProds a → m (MMSP a)
+substProds ∷ (Monad m, Ord a) ⇒ (a → m MMSP) → 𝔖 a → MMSPProds → m MMSP
 substProds 𝒸 𝓈 η@(MMSPProds 𝓍 δ) = do
-  let 𝓈' = 𝔰restrictForSubst 𝓍 𝓈
+  let 𝓈' = 𝔰restrict 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ prodsMMSP η
   else product ^$ mapMOn (iter δ) $ \ (ω :* e) → do
     ω' ← substAtom 𝒸 𝓈' ω
     return $ ω' ^^ e
 
-substAtom ∷ (Monad m, Ord a) ⇒ (a → m (MMSP a)) → 𝔖 a → MMSPAtom a → m (MMSP a)
+substAtom ∷ (Monad m, Ord a) ⇒ (a → m MMSP) → 𝔖 a → MMSPAtom → m MMSP
 substAtom 𝒸 𝓈 = \case
   Var_MMSP x → case 𝔰lexicals 𝓈 ⋕? x of
     None → return $ atomMMSP $ Var_MMSP x
     Some e → 𝒸 e
-  Meta_MMSP χ 𝓈' → case 𝔰metas 𝓈 ⋕? χ of
-    None → return $ atomMMSP $ Meta_MMSP χ 𝓈'
-    Some e → substMMSP 𝒸 𝓈' *$ 𝒸 e
+  Meta_MMSP χ → case 𝔰metas 𝓈 ⋕? χ of
+    None → return $ atomMMSP $ Meta_MMSP χ
+    Some e → 𝒸 e
 
 ----------
 -- MAXS --
@@ -263,20 +263,20 @@ substAtom 𝒸 𝓈 = \case
 -- ┌─────┐
 -- │α ≡ 0│
 -- └─────┘
-zeroMaxsMins ∷ 𝑃 (MMSPMins a)
+zeroMaxsMins ∷ 𝑃 MMSPMins
 -- β ≡ 0 ≜ ⨆{}
 zeroMaxsMins = null
 
 -- ┌─────┐
 -- │α ∨̃ α│
 -- └─────┘
-joinMaxsMins ∷ (Ord a) ⇒ 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a)
+joinMaxsMins ∷ 𝑃 MMSPMins → 𝑃 MMSPMins → 𝑃 MMSPMins
 joinMaxsMins α₁ α₂ = α₁ ∪ α₂
 
 -- ┌─────┐
 -- │b ∧̃ α│
 -- └─────┘
-cmeetMaxsMins ∷ (Ord a) ⇒ AddTop ℕ → 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a)
+cmeetMaxsMins ∷ AddTop ℕ → 𝑃 MMSPMins → 𝑃 MMSPMins
 -- b ∧̃ α = c ⊓ ⨆{ β | β ∈ α} 
 --       ≜ ⨆ { b ∧̃ β | β ∈ α}
 cmeetMaxsMins b = pow ∘ map (cmeetMins b) ∘ iter
@@ -284,7 +284,7 @@ cmeetMaxsMins b = pow ∘ map (cmeetMins b) ∘ iter
 -- ┌─────┐
 -- │α ∧̃ α│
 -- └─────┘
-meetMaxsMins ∷ (Ord a) ⇒ 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a)
+meetMaxsMins ∷ 𝑃 MMSPMins → 𝑃 MMSPMins → 𝑃 MMSPMins
 -- α₁ ∧̃ α₂ = ⨆{ β | β ∈ α₁ } + ⨆{ β | β ∈ α₂ }
 --         ≜ ⨆{ β₁ ∧̃ β₂ | β₁ ∈ α₁ , β₂ ∈ α₂}
 meetMaxsMins α₁ α₂ = pow $ mapOn (iter α₁ ⧆ iter α₂) $ \ (β₁ :* β₂) → meetMins β₁ β₂
@@ -292,7 +292,7 @@ meetMaxsMins α₁ α₂ = pow $ mapOn (iter α₁ ⧆ iter α₂) $ \ (β₁ :*
 -- ┌─────┐
 -- │c +̃ α│
 -- └─────┘
-cplusMaxsMins ∷ (Ord a) ⇒ ℕ → 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a)
+cplusMaxsMins ∷ ℕ → 𝑃 MMSPMins → 𝑃 MMSPMins
 -- c +̃ α = c + ⨆{ β | β ∈ α} 
 --       ≜ ⨆ { c +̃ β | β ∈ α}
 cplusMaxsMins c = pow ∘ map (cplusMins c) ∘ iter
@@ -300,7 +300,7 @@ cplusMaxsMins c = pow ∘ map (cplusMins c) ∘ iter
 -- ┌─────┐
 -- │α +̃ α│
 -- └─────┘
-plusMaxsMins ∷ (Ord a) ⇒ 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a)
+plusMaxsMins ∷ 𝑃 MMSPMins → 𝑃 MMSPMins → 𝑃 MMSPMins
 -- α₁ +̃ α₂ = ⨆{ β | β ∈ α₁ } + ⨆{ β | β ∈ α₂ }
 --         ≜ ⨆{ β₁ +̃ β₂ | β₁ ∈ α₁ , β₂ ∈ α₂}
 plusMaxsMins α₁ α₂ = pow $ mapOn (iter α₁ ⧆ iter α₂) $ \ (β₁ :* β₂) → plusMins β₁ β₂
@@ -308,7 +308,7 @@ plusMaxsMins α₁ α₂ = pow $ mapOn (iter α₁ ⧆ iter α₂) $ \ (β₁ :*
 -- ┌─────┐
 -- │d ×̃ α│
 -- └─────┘
-ctimesMaxsMins ∷ (Ord a) ⇒ ℕ → 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a)
+ctimesMaxsMins ∷ ℕ → 𝑃 MMSPMins → 𝑃 MMSPMins
 -- d ×̃ α = d × ⨆{ β | β ∈ α} 
 --       ≜ ⨆ { d ×̃ β | β ∈ α}
 ctimesMaxsMins d = pow ∘ map (ctimesMins d) ∘ iter
@@ -316,7 +316,7 @@ ctimesMaxsMins d = pow ∘ map (ctimesMins d) ∘ iter
 -- ┌─────┐
 -- │α ×̃ α│
 -- └─────┘
-timesMaxsMins ∷ (Ord a) ⇒ 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a) → 𝑃 (MMSPMins a)
+timesMaxsMins ∷ 𝑃 MMSPMins → 𝑃 MMSPMins → 𝑃 MMSPMins
 -- α₁ ×̃ α₂ = ⨆{ β | β ∈ α₁ } × ⨆{ β | β ∈ α₂ }
 --         ≜ ⨆{ β₁ ×̃ β₂ | β₁ ∈ α₁ , β₂ ∈ α₂}
 timesMaxsMins α₁ α₂ = pow $ mapOn (iter α₁ ⧆ iter α₂) $ \ (β₁ :* β₂) → timesMins β₁ β₂
@@ -326,14 +326,14 @@ timesMaxsMins α₁ α₂ = pow $ mapOn (iter α₁ ⧆ iter α₂) $ \ (β₁ :
 -- ┌─────┐
 -- │α̇ ∨̃ α̇│
 -- └─────┘
-joinMaxs ∷ (Ord a) ⇒ MMSPMaxs a → MMSPMaxs a → MMSPMaxs a
+joinMaxs ∷ MMSPMaxs → MMSPMaxs → MMSPMaxs
 -- 
 joinMaxs (MMSPMaxs 𝓍₁ a₁ α₁) (MMSPMaxs 𝓍₂ a₂ α₂) = MMSPMaxs (𝓍₁ ⊔ 𝓍₂) (a₁ ⊔ a₂) $ joinMaxsMins α₁ α₂
 
 -- ┌─────┐
 -- │α̇ ∧̃ α̇│
 -- └─────┘
-meetMaxs ∷ (Ord a) ⇒ MMSPMaxs a → MMSPMaxs a → MMSPMaxs a
+meetMaxs ∷ MMSPMaxs → MMSPMaxs → MMSPMaxs
 -- (a₁ ∧̇ α₁) ∧̃ (a₂ ∧̇ α₂) ≜ (a₁ ⊓ a₂) ∨̇ ((a₁ ∧̃ α₂) ∨̃ (a₂ ∧̃ α₁) ∨̃ (α₁ ∧̃ α₂))
 meetMaxs (MMSPMaxs 𝓍₁ a₁ α₁) (MMSPMaxs 𝓍₂ a₂ α₂) = 
   MMSPMaxs (𝓍₁ ⊔ 𝓍₂) (a₁ + a₂) $ fold zeroMaxsMins joinMaxsMins
@@ -345,7 +345,7 @@ meetMaxs (MMSPMaxs 𝓍₁ a₁ α₁) (MMSPMaxs 𝓍₂ a₂ α₂) =
 -- ┌─────┐
 -- │α̇ +̃ α̇│
 -- └─────┘
-plusMaxs ∷ (Ord a) ⇒ MMSPMaxs a → MMSPMaxs a → MMSPMaxs a
+plusMaxs ∷ MMSPMaxs → MMSPMaxs → MMSPMaxs
 -- (a₁ ∧̇ α₁) +̃ (a₂ ∧̇ α₂) ≜ (a₁ + a₂) ∨̇ ((a₁ +̃ α₂) ∨̃ (a₂ +̃ α₁) ∨̃ (α₁ +̃ α₂))
 plusMaxs (MMSPMaxs 𝓍₁ a₁ α₁) (MMSPMaxs 𝓍₂ a₂ α₂) = 
   MMSPMaxs (𝓍₁ ⊔ 𝓍₂) (a₁ + a₂) $ fold zeroMaxsMins plusMaxsMins
@@ -357,7 +357,7 @@ plusMaxs (MMSPMaxs 𝓍₁ a₁ α₁) (MMSPMaxs 𝓍₂ a₂ α₂) =
 -- ┌─────┐
 -- │α̇ ×̃ α̇│
 -- └─────┘
-timesMaxs ∷ (Ord a) ⇒ MMSPMaxs a → MMSPMaxs a → MMSPMaxs a
+timesMaxs ∷ MMSPMaxs → MMSPMaxs → MMSPMaxs
 -- (a₁ ∧̇ α₁) ×̃ (a₂ ∧̇ α₂) ≜ (a₁ × a₂) ∨̇ ((a₁ ×̃ α₂) ∨̃ (a₂ ×̃ α₁) ∨̃ (α₁̇ ×̃ α₂))
 timesMaxs (MMSPMaxs 𝓍₁ a₁ α₁) (MMSPMaxs 𝓍₂ a₂ α₂) = 
   MMSPMaxs (𝓍₁ ⊔ 𝓍₂) (a₁ + a₂) $ fold zeroMaxsMins timesMaxsMins
@@ -375,14 +375,14 @@ timesMaxs (MMSPMaxs 𝓍₁ a₁ α₁) (MMSPMaxs 𝓍₂ a₂ α₂) =
 -- ┌─────┐
 -- │β ≡ ∞│
 -- └─────┘
-infMinsSums ∷ 𝑃 (MMSPSums a)
+infMinsSums ∷ 𝑃 MMSPSums
 -- β ≡ ∞ ≜ ⨅{}
 infMinsSums = null
 
 -- ┌─────┐
 -- │β ∧̃ β│
 -- └─────┘
-meetMinsSums ∷ (Ord a) ⇒ 𝑃 (MMSPSums a) → 𝑃 (MMSPSums a) → 𝑃 (MMSPSums a)
+meetMinsSums ∷ 𝑃 MMSPSums → 𝑃 MMSPSums → 𝑃 MMSPSums
 -- β₁ ∧̃ β₂ = ⨅{ γ | γ ∈ β₁ } ⊓ ⨅{ γ | γ ∈ β₂ }
 --         ≜ ⨅( { γ | γ ∈ β₁ }
 --            ∪ { γ | γ ∈ β₂ } )
@@ -391,7 +391,7 @@ meetMinsSums xs ys = xs ∪ ys
 -- ┌─────┐
 -- │c +̃ β│
 -- └─────┘
-cplusMinsSums ∷ (Ord a) ⇒ ℕ → 𝑃 (MMSPSums a) → 𝑃 (MMSPSums a)
+cplusMinsSums ∷ ℕ → 𝑃 MMSPSums → 𝑃 MMSPSums
 -- c +̃ β = c + ⨅{ γ | γ ∈ β} 
 --       ≜ ⨅ { c +̃ γ | γ ∈ β}
 cplusMinsSums c = pow ∘ map (cplusSums c) ∘ iter
@@ -399,7 +399,7 @@ cplusMinsSums c = pow ∘ map (cplusSums c) ∘ iter
 -- ┌─────┐
 -- │β +̃ β│
 -- └─────┘
-plusMinsSums ∷ (Ord a) ⇒ 𝑃 (MMSPSums a) → 𝑃 (MMSPSums a) → 𝑃 (MMSPSums a)
+plusMinsSums ∷ 𝑃 MMSPSums → 𝑃 MMSPSums → 𝑃 MMSPSums
 -- β₁ +̃ β₂ = ⨅{ γ | γ ∈ β₁ } + ⨅{ γ | γ ∈ β₂ }
 --         ≜ ⨅{ γ₁ +̃ γ₂ | γ₁ ∈ β₁ , γ₂ ∈ β₂}
 plusMinsSums β₁ β₂ = pow $ mapOn (iter β₁ ⧆ iter β₂) $ \ (γ₁ :* γ₂) → plusSums γ₁ γ₂
@@ -407,7 +407,7 @@ plusMinsSums β₁ β₂ = pow $ mapOn (iter β₁ ⧆ iter β₂) $ \ (γ₁ :*
 -- ┌─────┐
 -- │d ×̃ β│
 -- └─────┘
-ctimesMinsSums ∷ (Ord a) ⇒ ℕ → 𝑃 (MMSPSums a) → 𝑃 (MMSPSums a)
+ctimesMinsSums ∷ ℕ → 𝑃 MMSPSums → 𝑃 MMSPSums
 -- d ×̃ β = d × ⨅{ γ | γ ∈ β} 
 --       ≜ ⨅ { d ×̃ γ | γ ∈ β}
 ctimesMinsSums c = pow ∘ map (cplusSums c) ∘ iter
@@ -415,7 +415,7 @@ ctimesMinsSums c = pow ∘ map (cplusSums c) ∘ iter
 -- ┌─────┐
 -- │β ×̃ β│
 -- └─────┘
-timesMinsSums ∷ (Ord a) ⇒ 𝑃 (MMSPSums a) → 𝑃 (MMSPSums a) → 𝑃 (MMSPSums a)
+timesMinsSums ∷ 𝑃 MMSPSums → 𝑃 MMSPSums → 𝑃 MMSPSums
 -- β₁ ×̃ β₂ = ⨅{ γ | γ ∈ β₁ } × ⨅{ γ | γ ∈ β₂ }
 --         ≜ ⨅{ γ₁ ×̃ γ₂ | γ₁ ∈ β₁ , γ₂ ∈ β₂}
 timesMinsSums β₁ β₂ = pow $ mapOn (iter β₁ ⧆ iter β₂) $ \ (γ₁ :* γ₂) → timesSums γ₁ γ₂
@@ -425,28 +425,28 @@ timesMinsSums β₁ β₂ = pow $ mapOn (iter β₁ ⧆ iter β₂) $ \ (γ₁ :
 -- ┌─────┐
 -- │b ∧̃ β̇│
 -- └─────┘
-cmeetMins ∷ AddTop ℕ → MMSPMins a → MMSPMins a
+cmeetMins ∷ AddTop ℕ → MMSPMins → MMSPMins
 -- b₀ ⊓ (b ∧̇ β) ≜ (b₀ ⊓ b) ∧̇ β
 cmeetMins b₀ (MMSPMins 𝓍 b β) = MMSPMins 𝓍 (b₀ ⊓ b) β
 
 -- ┌─────┐
 -- │β̇ ∧̃ β̇│
 -- └─────┘
-meetMins ∷ (Ord a) ⇒ MMSPMins a → MMSPMins a → MMSPMins a
+meetMins ∷ MMSPMins → MMSPMins → MMSPMins
 -- (b₁ ∧̇  β₁) ⊓ (b₂ ∧̇  β₂) ≜ (b₁ ⊓ b₂) ∧̇ (β₁ ∧̃ β₂)
 meetMins (MMSPMins 𝓍₁ b₁ β₁) (MMSPMins 𝓍₂ b₂ β₂) = MMSPMins (𝓍₁ ⊔ 𝓍₂) (b₁ ⊓ b₂) $ meetMinsSums β₁ β₂
 
 -- ┌─────┐
 -- │c +̃ β̇│
 -- └─────┘
-cplusMins ∷ (Ord a) ⇒ ℕ → MMSPMins a → MMSPMins a
+cplusMins ∷ ℕ → MMSPMins → MMSPMins
 -- c +̃ (b ∧̇ β) ≜ (c + b) ∧̇ (c +̃ β)
 cplusMins c (MMSPMins 𝓍 b β) = MMSPMins 𝓍 (map (c +) b) $ cplusMinsSums c β
 
 -- ┌─────┐
 -- │β̇ +̃ β̇│
 -- └─────┘
-plusMins ∷ (Ord a) ⇒ MMSPMins a → MMSPMins a → MMSPMins a
+plusMins ∷ MMSPMins → MMSPMins → MMSPMins
 -- (b₁ ∧̇ β₁) +̃ (b₂ ∧̇ β₂) ≜ (b₁ + b₂) ∧̇ ((b₁ +̃ β₂) ∧̃ (b₂ +̃ β₁) ∧̃ (β₁̇ +̃ β₂))
 plusMins (MMSPMins 𝓍₁ b₁ β₁) (MMSPMins 𝓍₂ b₂ β₂) = 
   MMSPMins (𝓍₁ ⊔ 𝓍₂) (b₁ + b₂) $ fold infMinsSums meetMinsSums
@@ -458,14 +458,14 @@ plusMins (MMSPMins 𝓍₁ b₁ β₁) (MMSPMins 𝓍₂ b₂ β₂) =
 -- ┌─────┐
 -- │c ×̃ β̇│
 -- └─────┘
-ctimesMins ∷ (Ord a) ⇒ ℕ → MMSPMins a → MMSPMins a
+ctimesMins ∷ ℕ → MMSPMins → MMSPMins
 -- c ×̃ (b ∧̇ β) ≜ (c × b) ∧̇ (c ×̃ β)
 ctimesMins c (MMSPMins 𝓍 b β) = MMSPMins 𝓍 (AddTop c × b) $ ctimesMinsSums c β
 
 -- ┌─────┐
 -- │β̇ ×̃ β̇│
 -- └─────┘
-timesMins ∷ (Ord a) ⇒ MMSPMins a → MMSPMins a → MMSPMins a
+timesMins ∷ MMSPMins → MMSPMins → MMSPMins
 -- (b₁ ∧̇ β₁) ×̃ (b₂ ∧̇ β₂) ≜ (b₁ × b₂) ∧̇ ((b₁ ×̃ β₂) ∧̃ (b₂ ×̃ β₁) ∧̃ (β₁̇ ×̃ β₂))
 timesMins (MMSPMins 𝓍₁ b₁ β₁) (MMSPMins 𝓍₂ b₂ β₂) = 
   MMSPMins (𝓍₁ ⊔ 𝓍₂) (b₁ × b₂) $ fold infMinsSums meetMinsSums
@@ -483,14 +483,14 @@ timesMins (MMSPMins 𝓍₁ b₁ β₁) (MMSPMins 𝓍₂ b₂ β₂) =
 -- ┌─────┐
 -- │γ ≡ 0│
 -- └─────┘
-zeroSumsProds ∷ MMSPProds a ⇰ ℕ
+zeroSumsProds ∷ MMSPProds ⇰ ℕ
 -- γ ≡ 0 ≜ ∑{}
 zeroSumsProds = null
 
 -- ┌─────┐
 -- │γ +̃ γ│
 -- └─────┘
-plusSumsProds ∷ (Ord a) ⇒ MMSPProds a ⇰ ℕ → MMSPProds a ⇰ ℕ → MMSPProds a ⇰ ℕ
+plusSumsProds ∷ MMSPProds ⇰ ℕ → MMSPProds ⇰ ℕ → MMSPProds ⇰ ℕ
 -- γ₁ +̃ γ₂ = ∑{ d×̇δ | d×̇δ ∈ γ₁} + ∑{ d×̇δ | d×̇δ ∈ γ₂ }
 --         ≜ ∑( { d×̇δ | d×̇δ ∈ γ₁ , δ ∉ dom(γ₂) }
 --            ∪ { d×̇δ | d×̇δ ∈ γ₂ , δ ∉ dom(γ₁) }
@@ -500,7 +500,7 @@ plusSumsProds γ₁ γ₂ = γ₁ ⊎ γ₂
 -- ┌─────┐
 -- │d ×̃ γ│
 -- └─────┘
-ctimesSumsProds ∷ ℕ → MMSPProds a ⇰ ℕ → MMSPProds a ⇰ ℕ
+ctimesSumsProds ∷ ℕ → MMSPProds ⇰ ℕ → MMSPProds ⇰ ℕ
 -- d₀ ×̃ γ ≜ d₀ × ∑{ d×̇δ | d×̇δ ∈ γ }
 --        ≜ ∑{ d₀d×̇δ | d×̇δ ∈ γ }
 ctimesSumsProds d γ = map (× d) γ
@@ -508,7 +508,7 @@ ctimesSumsProds d γ = map (× d) γ
 -- ┌─────┐
 -- │γ ×̃ γ│
 -- └─────┘
-timesSumsProds ∷ (Ord a) ⇒ MMSPProds a ⇰ ℕ → MMSPProds a ⇰ ℕ → MMSPProds a ⇰ ℕ
+timesSumsProds ∷ MMSPProds ⇰ ℕ → MMSPProds ⇰ ℕ → MMSPProds ⇰ ℕ
 -- γ₁ ×̃ γ₂ = ∑{ d×̇δ | d×̇δ ∈ γ₁} × ∑{ d×̇δ | d×̇δ ∈ γ₂ }
 --         ≜ ∑{ d₁d₂×̇(δ₁×̃δ₂) | d₁×̇δ₁ ∈ γ₁ , d₂×̇δ₂ ∈ γ₂ }
 timesSumsProds γ₁ γ₂ = assoc $ mapOn (iter γ₁ ⧆ iter γ₂) $ \ ((δ₁ :* d₁) :* (δ₂ :* d₂)) → 
@@ -519,21 +519,21 @@ timesSumsProds γ₁ γ₂ = assoc $ mapOn (iter γ₁ ⧆ iter γ₂) $ \ ((δ�
 -- ┌─────┐
 -- │c +̃ γ̇│
 -- └─────┘
-cplusSums ∷ ℕ → MMSPSums a → MMSPSums a
+cplusSums ∷ ℕ → MMSPSums → MMSPSums
 -- c₀ +̃ (c +̇ γ) ≜ (c₀ + c) +̇ γ
 cplusSums c₀ (MMSPSums 𝓍 c γ) = MMSPSums 𝓍 (c₀ + c) γ
 
 -- ┌─────┐
 -- │γ̇ +̃ γ̇│
 -- └─────┘
-plusSums ∷ (Ord a) ⇒ MMSPSums a → MMSPSums a → MMSPSums a
+plusSums ∷ MMSPSums → MMSPSums → MMSPSums
 -- c₁ +̇ γ₁ +̃ c₂ +̇ γ₂ ≜ (c₁ + c₂) +̇ (γ₁ +̃ γ₂)
 plusSums (MMSPSums 𝓍₁ c₁ γ₁) (MMSPSums 𝓍₂ c₂ γ₂) = MMSPSums (𝓍₁ ⊔ 𝓍₂) (c₁ + c₂) $ plusSumsProds γ₁ γ₂
 
 -- ┌─────┐
 -- │γ̇ ×̃ γ̇│
 -- └─────┘
-timesSums ∷ (Ord a) ⇒ MMSPSums a → MMSPSums a → MMSPSums a
+timesSums ∷ MMSPSums → MMSPSums → MMSPSums
 -- (c₁ +̇ γ₁) ×̃ (c₂ +̇ γ₂) ≜ (c₁ × c₂) +̇ ((c₁ ×̃ γ₂) +̃ (c₂ ×̃ γ₁) +̃ (γ₁ ×̃ γ₂))
 timesSums (MMSPSums 𝓍₁ c₁ γ₁) (MMSPSums 𝓍₂ c₂ γ₂) =
   MMSPSums (𝓍₁ ⊔ 𝓍₂) (c₁ × c₂) $ fold zeroSumsProds plusSumsProds
@@ -549,7 +549,7 @@ timesSums (MMSPSums 𝓍₁ c₁ γ₁) (MMSPSums 𝓍₂ c₂ γ₂) =
 -- ┌─────┐
 -- │δ ×̃ δ│
 -- └─────┘
-timesProds ∷ (Ord a) ⇒ MMSPProds a → MMSPProds a → MMSPProds a
+timesProds ∷ MMSPProds → MMSPProds → MMSPProds
 -- δ₁ +̃ δ₂ = ∏{ ω^̇e | ω^̇e ∈ δ₁} × ∏{ ω^̇e | ω^̇e ∈ δ₂ }
 --         ≜ ∏( { ω^̇e | ω^̇e ∈ δ₁ , ω ∉ dom(δ₂) }
 --            ∪ { ω^̇e | ω^̇e ∈ δ₂ , ω ∉ dom(δ₁) }
