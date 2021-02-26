@@ -1,7 +1,6 @@
 module UVMHS.Core.Classes.Lattice where
 
 import UVMHS.Core.Init
--- import Core.Classes.Constraints
 import UVMHS.Core.Classes.Order
 
 infix  4 ∇,⊑,⊒,⪤
@@ -35,23 +34,3 @@ x ∇ y = case (x ⊑ y,y ⊑ x) of
 
 (⪤) ∷ (POrd a) ⇒ a → a → 𝔹
 x ⪤ y = ((x ⊑ y) ≡ True) ⩓ ((y ⊑ x) ≡ False)
-
--- The supplied function should be monotonic
-lfp ∷ (POrd a) ⇒ a → (a → a) → a
-lfp i f = loop i 
-  where
-   loop x =
-     let x' = f x
-     in case x' ⊑ x of
-       True → x 
-       False → loop x'
-
--- The supplied function should be antitonic
-gfp ∷ (POrd a) ⇒ a → (a → a) → a
-gfp i f = loop i 
-  where
-    loop x = 
-      let x' = f x
-      in case x ⊑ x' of
-        True → x
-        False → loop x'

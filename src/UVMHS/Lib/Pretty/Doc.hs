@@ -214,6 +214,12 @@ ppErrFmt = ppFormatParam errorFormatL
 ppErr ∷ 𝕊 → Doc
 ppErr = ppErrFmt ∘ ppString
 
+ppLineNumFmt ∷ Doc → Doc
+ppLineNumFmt = ppFormatParam lineNumberFormatL
+
+ppLineNum ∷ 𝕊 → Doc
+ppLineNum = ppLineNumFmt ∘ ppString
+
 ppSpace ∷ ℕ64 → Doc
 ppSpace n = ppString $ string $ repeat n ' '
 
@@ -222,6 +228,9 @@ ppNewline = ppString "\n"
 
 ppSpaceIfBreak ∷ Doc
 ppSpaceIfBreak = ppStringModal "" " "
+
+ppSpaceIfNoBreak ∷ Doc
+ppSpaceIfNoBreak = ppStringModal " " ""
 
 ppNewlineIfBreak ∷ Doc
 ppNewlineIfBreak = ppStringModal "" "\n"
@@ -282,21 +291,36 @@ ppPostLevel i oM xM = ppLevel i $ concat $ iter [xM,oM]
 
 ppInf ∷ ℕ64 → Doc → Doc → Doc → Doc
 ppInf i o e₁ e₂ = 
-  ppInfLevel i (concat [ppNewlineIfBreak,ppGA o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
+  ppInfLevel i (concat [ppNewlineIfBreak,ppAlign o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppInfl ∷ ℕ64 → Doc → Doc → Doc → Doc
 ppInfl i o e₁ e₂ = 
-  ppInflLevel i (concat [ppNewlineIfBreak,ppGA o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
+  ppInflLevel i (concat [ppNewlineIfBreak,ppAlign o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppInfr ∷ ℕ64 → Doc → Doc → Doc → Doc
 ppInfr i o e₁ e₂ = 
-  ppInfrLevel i (concat [ppNewlineIfBreak,ppGA o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
+  ppInfrLevel i (concat [ppNewlineIfBreak,ppAlign o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppPre ∷ ℕ64 → Doc → Doc → Doc
-ppPre i o e = ppPreLevel i (concat [ppGA o,ppNewlineIfBreak]) $ ppGA e
+ppPre i o e = ppPreLevel i (concat [ppAlign o,ppNewlineIfBreak]) $ ppGA e
 
 ppPost ∷ ℕ64 → Doc → Doc → Doc
-ppPost i o e = ppPostLevel i (concat [ppNewlineIfBreak,ppGA o]) $ ppGA e
+ppPost i o e = ppPostLevel i (concat [ppNewlineIfBreak,ppAlign o]) $ ppGA e
+
+ppInfSep ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfSep i o = ppInf i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
+
+ppInflSep ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInflSep i o = ppInfl i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
+
+ppInfrSep ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfrSep i o = ppInfr i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
+
+ppPreSep ∷ ℕ64 → Doc → Doc → Doc
+ppPreSep i o = ppPre i $ o ⧺ ppSpaceIfNoBreak
+
+ppPostSep ∷ ℕ64 → Doc → Doc → Doc
+ppPostSep i o = ppPost i $ ppSpaceIfNoBreak ⧺ o
 
 ppApp ∷ (ToIter Doc t) ⇒ Doc → t → Doc
 ppApp x xs 
