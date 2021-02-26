@@ -7,62 +7,25 @@
 </span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.ArithBlocks.html"><span class="hs-identifier">Examples.Lang.ArithBlocks</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">ArithBlocks</span></span><span>
 </span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.SExp.html"><span class="hs-identifier">Examples.Lang.SExp</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">SExp</span></span><span>
 </span><span id="line-9"></span><span>
-</span><span id="line-10"></span><span class="hs-comment">-- -- state space</span><span>
-</span><span id="line-11"></span><span class="hs-comment">-- data SS val l&#964; d&#964; = SS</span><span>
-</span><span id="line-12"></span><span class="hs-comment">--   { ssCxt &#8759; &#8469;</span><span>
-</span><span id="line-13"></span><span class="hs-comment">--   , ssStore &#8759; &#8469;</span><span>
-</span><span id="line-14"></span><span class="hs-comment">--   , ssStack &#8759; &#8469;</span><span>
-</span><span id="line-15"></span><span class="hs-comment">--   } deriving (Eq, Ord)</span><span>
-</span><span id="line-16"></span><span class="hs-comment">-- makePrettyRecord ''SS</span><span>
-</span><span id="line-17"></span><span>
-</span><span id="line-18"></span><span class="hs-comment">-- data Thing = Thing</span><span>
-</span><span id="line-19"></span><span class="hs-comment">--   { thing &#8759; &#8469;</span><span>
-</span><span id="line-20"></span><span class="hs-comment">--   , think &#8759; &#8469;</span><span>
-</span><span id="line-21"></span><span class="hs-comment">--   }</span><span>
-</span><span id="line-22"></span><span class="hs-comment">-- makePrettyRecord ''Thing</span><span>
-</span><span id="line-23"></span><span>
-</span><span id="line-24"></span><span class="hs-comment">-- data Exp =</span><span>
-</span><span id="line-25"></span><span class="hs-comment">--     Var_E &#120138;</span><span>
-</span><span id="line-26"></span><span class="hs-comment">--   | Let_E &#120138; Exp Exp</span><span>
-</span><span id="line-27"></span><span class="hs-comment">-- </span><span>
-</span><span id="line-28"></span><span class="hs-comment">-- instance Pretty Exp where</span><span>
-</span><span id="line-29"></span><span class="hs-comment">--   pretty = \case</span><span>
-</span><span id="line-30"></span><span class="hs-comment">--     Var_E x &#8594; ppString x</span><span>
-</span><span id="line-31"></span><span class="hs-comment">--     Let_E x e&#8321; e&#8322; &#8594; concat</span><span>
-</span><span id="line-32"></span><span class="hs-comment">--       [ ppForceBreak</span><span>
-</span><span id="line-33"></span><span class="hs-comment">--       , ppVertical</span><span>
-</span><span id="line-34"></span><span class="hs-comment">--           [ ppKey &quot;let&quot;</span><span>
-</span><span id="line-35"></span><span class="hs-comment">--           , concat</span><span>
-</span><span id="line-36"></span><span class="hs-comment">--               [ ppSpace $ &#120159;64 2</span><span>
-</span><span id="line-37"></span><span class="hs-comment">--               , ppHorizontal</span><span>
-</span><span id="line-38"></span><span class="hs-comment">--                   [ ppString x</span><span>
-</span><span id="line-39"></span><span class="hs-comment">--                   , ppPun &quot;=&quot;</span><span>
-</span><span id="line-40"></span><span class="hs-comment">--                   , ppGA $ pretty e&#8321;</span><span>
-</span><span id="line-41"></span><span class="hs-comment">--                   ]</span><span>
-</span><span id="line-42"></span><span class="hs-comment">--               ]</span><span>
-</span><span id="line-43"></span><span class="hs-comment">--           , ppGroup $ pretty e&#8322;</span><span>
-</span><span id="line-44"></span><span class="hs-comment">--           ]</span><span>
-</span><span id="line-45"></span><span class="hs-comment">--       ]</span><span>
-</span><span id="line-46"></span><span>
-</span><span id="line-47"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-48"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
+</span><span id="line-10"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
 </span><a href="UVMHSMain.html#main"><span class="hs-identifier hs-var hs-var">main</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO ()
 forall a. IO a -&gt; IO a
 </span><a href="UVMHS.Core.IO.html#cleanExit"><span class="hs-identifier hs-var">cleanExit</span></a></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-49"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-12"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppHeader"><span class="hs-identifier hs-var">ppHeader</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;COLOR TEST&quot;</span></span><span>
-</span><span id="line-50"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-13"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#colorsDemo"><span class="hs-identifier hs-var">colorsDemo</span></a></span><span>
-</span><span id="line-51"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-14"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -73,18 +36,4 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span></span><span>
-</span><span id="line-52"></span><span>  </span><span class="hs-comment">-- let e&#8321; = Let_E &quot;x&quot; (Var_E &quot;y&quot;) $ Var_E &quot;x&quot;</span><span>
-</span><span id="line-53"></span><span>  </span><span class="hs-comment">-- -- pprint $ e&#8321; :* e&#8321;</span><span>
-</span><span id="line-54"></span><span>  </span><span class="hs-comment">-- -- pprint $ ppGroup $ concat</span><span>
-</span><span id="line-55"></span><span>  </span><span class="hs-comment">-- --   [ pretty $ ((ppForceBreak &#10746; pretty 1) :* pretty 2) :* ((ppForceBreak &#10746; pretty 3) :* pretty 4)  </span><span>
-</span><span id="line-56"></span><span>  </span><span class="hs-comment">-- --   ]</span><span>
-</span><span id="line-57"></span><span>  </span><span class="hs-comment">-- pprint $ concat</span><span>
-</span><span id="line-58"></span><span>  </span><span class="hs-comment">--   [ ppSpaceIfBreak</span><span>
-</span><span id="line-59"></span><span>  </span><span class="hs-comment">--   , ppSpaceIfBreak</span><span>
-</span><span id="line-60"></span><span>  </span><span class="hs-comment">--   , ppAlign $ pretty e&#8321;</span><span>
-</span><span id="line-61"></span><span>  </span><span class="hs-comment">--   ]</span><span>
-</span><span id="line-62"></span><span>  </span><span class="hs-comment">-- pprint $ concat</span><span>
-</span><span id="line-63"></span><span>  </span><span class="hs-comment">--   [ ppSpace $ &#120159;64 2</span><span>
-</span><span id="line-64"></span><span>  </span><span class="hs-comment">--   , ppAlign $ pretty e&#8321;</span><span>
-</span><span id="line-65"></span><span>  </span><span class="hs-comment">--   ]</span><span>
-</span><span id="line-66"></span></pre></body></html>
+</span><span id="line-15"></span></pre></body></html>
