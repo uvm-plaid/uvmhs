@@ -12,6 +12,10 @@ import UVMHS.Core.Data.String
 import qualified Data.Set as Set
 import qualified Prelude as HS
 
+infix 4 ⊆,⊇,∈,∉
+infixl 5 ∪,∖
+infixl 6 ∩
+
 instance (Ord a) ⇒ Single a (𝑃 a) where single = single𝑃
 
 instance (Ord a) ⇒ POrd (𝑃 a) where (⊑) = (⊆)

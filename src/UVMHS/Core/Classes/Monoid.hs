@@ -3,6 +3,7 @@ module UVMHS.Core.Classes.Monoid where
 import UVMHS.Core.Init
 
 infixl 5 ⧺
+infixl 6 ⨳
 
 class Null a where null ∷ a
 class Append a where (⧺) ∷ a → a → a

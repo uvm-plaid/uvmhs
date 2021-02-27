@@ -14,22 +14,25 @@
 3 :∧: [l]
 3 ⩓ [l]
 4 ∇,⊑,⊒,⪤ []
+4 ⊆,⊇,∈,∉ []
 4 ≍,≺,≼,≻,<,≤ []
 4 ≡,≢,⋚,≤,≥,<,> []
 5 +,- [l]
-5 +♮ [l]
 5 ∨ [l]
 5 ⧺ [l]
+5 ∪,∖ [l]
 5 ⊔,⊟ [l]
 5 ⊞,⎅ [l]
 5 ⟇,⊻ [l]
 5 ⨺,⨹ [l]
 6 ×,⨵,/,⌿,÷ [l]
-6 ×♮ [l]
 6 ∧ [l]
+6 ∩ [l]
 6 ⊓ [l]
 6 ⟑ [l]
 6 ⧆ [l]
+6 ⨳ [l]
+6 ⋅,✖ [l]
 7 *∘ [l]
 7 :∘: [l]
 7 ^ [l]
@@ -42,15 +45,10 @@
 7 ⋕?,⋕,⋕! [l]
 7 ⊙⋆ [l]
 8 :& [r]
-8 :&& [r]
 8 :* [l]
-9 ^⋅, ^^⋅ [l]
 
 
 src/UVMHS/Core/Static.hs:infix 4 ≍,≺,≼,≻,<,≤
-src/UVMHS/Core/Static.hs:infixr 8 :&&
-src/UVMHS/Core/Static.hs:infixl 5 +♮
-src/UVMHS/Core/Static.hs:infixl 6 ×♮
 src/UVMHS/Core/Classes/Morphism.hs:infixr 1 →⁻,→⁼,⇄,⇄⁻,⇄⁼
 src/UVMHS/Core/Classes/Morphism.hs:infixl 7 ⊚
 src/UVMHS/Core/Classes/Lattice.hs:infix  4 ∇,⊑,⊒,⪤
@@ -58,6 +56,7 @@ src/UVMHS/Core/Classes/Lattice.hs:infixl 5 ⊔,⊟
 src/UVMHS/Core/Classes/Lattice.hs:infixl 6 ⊓
 src/UVMHS/Core/Classes/Collections.hs:infixl 7 ⋕?,⋕,⋕!
 src/UVMHS/Core/Classes/Monoid.hs:infixl 5 ⧺
+src/UVMHS/Core/Classes/Monoid.hs:infixl 6 ⨳
 src/UVMHS/Core/Classes/Constraints.hs:infixr 1 :⇒:
 src/UVMHS/Core/Classes/Constraints.hs:infixl 3 :∧:
 src/UVMHS/Core/Classes/Constraints.hs:infixl 7 :∘:
@@ -78,7 +77,6 @@ src/UVMHS/Core/Classes/Monad.hs:infixl 6 ⧆
 src/UVMHS/Core/Classes/Monad.hs:infixl 7 *∘
 src/UVMHS/Core/Classes/Functor.hs:infixr 0 ^$, ^^$
 src/UVMHS/Core/Classes/Functor.hs:infixl 7 ^∘, ^^∘
-src/UVMHS/Core/Classes/Functor.hs:infixl 9 ^⋅, ^^⋅
 src/UVMHS/Core/Classes/Order.hs:infix 4 ≡,≢,⋚,≤,≥,<,>
 src/UVMHS/Core/Init.hs:infixr 1 ⇰
 src/UVMHS/Core/Init.hs:infixl 2 ⩔
@@ -89,8 +87,12 @@ src/UVMHS/Core/Init.hs:infixl 7 ∘
 src/UVMHS/Core/Init.hs:infixl 8 :*
 src/UVMHS/Core/Init.hs:infixr 8 :&
 src/UVMHS/Core/Transformers.hs:infixl 7 ⊡
+src/UVMHS/Core/Vector.hs:infixl 6 ⋅,✖
 src/UVMHS/Core/Lens.hs:infixr 1 ⟢
 src/UVMHS/Core/Lens.hs:infixr 1 ⌲
 src/UVMHS/Core/Time.hs:infixl 5 ⨺,⨹
 src/UVMHS/Core/Effects.hs:infixl 5 ⊞,⎅
+src/UVMHS/Core/Data/Set.hs:infix 4 ⊆,⊇,∈,∉
+src/UVMHS/Core/Data/Set.hs:infixl 5 ∪,∖
+src/UVMHS/Core/Data/Set.hs:infixl 6 ∩
 src/UVMHS/Core/Data/Dict.hs:infixr 1 ↦

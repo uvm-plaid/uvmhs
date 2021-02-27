@@ -565,6 +565,7 @@ class Unit a
 unit :: Unit a => a
 class Cross a
 (⨳) :: Cross a => a -> a -> a
+infixl 6 ⨳
 class (Monoid a, Unit a, Cross a) => Prodoid a
 class Eps a
 eps :: Eps a => a
@@ -1810,12 +1811,19 @@ module UVMHS.Core.Data.Set
 pø :: 𝑃 a
 single𝑃 :: Ord a => a -> 𝑃 a
 (∈) :: Ord a => a -> 𝑃 a -> 𝔹
+infix 4 ∈
 (∉) :: Ord a => a -> 𝑃 a -> 𝔹
+infix 4 ∉
 (⊆) :: Ord a => 𝑃 a -> 𝑃 a -> 𝔹
+infix 4 ⊆
 (⊇) :: Ord a => 𝑃 a -> 𝑃 a -> 𝔹
+infix 4 ⊇
 (∪) :: Ord a => 𝑃 a -> 𝑃 a -> 𝑃 a
+infixl 5 ∪
 (∩) :: Ord a => 𝑃 a -> 𝑃 a -> 𝑃 a
+infixl 6 ∩
 (∖) :: Ord a => 𝑃 a -> 𝑃 a -> 𝑃 a
+infixl 5 ∖
 psize :: 𝑃 a -> ℕ
 pmin :: 𝑃 a -> 𝑂 (a ∧ 𝑃 a)
 pmax :: 𝑃 a -> 𝑂 (a ∧ 𝑃 a)
