@@ -268,13 +268,21 @@ mcompose = foldr return (*∘)
 wcompose ∷ (Comonad w) ⇒ (ToIter (w a → a) t) ⇒ t → w a → a
 wcompose = foldr extract (%∘)
 
+{-# INLINE joinsFrom #-}
+joinsFrom ∷ (ToIter a t,Join a) ⇒ a → t → a
+joinsFrom = foldWithFrom (⊔)
+
 {-# INLINE joins #-}
 joins ∷ (JoinLattice a,ToIter a t) ⇒ t → a
-joins = fold bot (⊔)
+joins = joinsFrom bot
+
+{-# INLINE meetsFrom #-}
+meetsFrom ∷ (ToIter a t,Meet a) ⇒ a → t → a
+meetsFrom = foldWithFrom (⊓)
 
 {-# INLINE meets #-}
 meets ∷ (MeetLattice a,ToIter a t) ⇒ t → a
-meets = fold top (⊓)
+meets = meetsFrom top
 
 {-# INLINE or #-}
 or ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
