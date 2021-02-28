@@ -89,8 +89,8 @@ instance (Eq a,Pretty a) ⇒ Pretty (Sub a) where
         , ppString "fvars" :* pretty 𝓍
         ]
 
-subLexical ∷ (HasFV a) ⇒ 𝕏 ⇰ a → Sub a
-subLexical 𝓈ˡ = mkSub 𝓈ˡ null
+subLexi ∷ (HasFV a) ⇒ 𝕏 ⇰ a → Sub a
+subLexi 𝓈ˡ = mkSub 𝓈ˡ null
 
 subMeta ∷ (HasFV a) ⇒ 𝕏 ⇰ a → Sub a
 subMeta 𝓈ᵐ = mkSub null 𝓈ᵐ 
@@ -113,8 +113,8 @@ subSupport (Sub 𝓈ˡ 𝓈ᵐ _𝓍) = FV (keys 𝓈ˡ) $ keys 𝓈ᵐ
 subValues ∷ Sub a → 𝐿 a
 subValues (Sub 𝓈ˡ 𝓈ᵐ _𝓍) = list $ iter (values 𝓈ˡ) ⧺ iter (values 𝓈ᵐ)
 
-substVarLexical ∷ (Monad m) ⇒ (𝕏 → b) → (a → m b) → Sub a → 𝕏 → m b
-substVarLexical mkvar 𝒸 𝓈 x = case subLexis 𝓈 ⋕? x of
+substVarLexi ∷ (Monad m) ⇒ (𝕏 → b) → (a → m b) → Sub a → 𝕏 → m b
+substVarLexi mkvar 𝒸 𝓈 x = case subLexis 𝓈 ⋕? x of
   None → return $ mkvar x
   Some e → 𝒸 e
 

@@ -3780,13 +3780,13 @@ Sub :: (𝕏 ⇰ a) -> (𝕏 ⇰ a) -> FV -> Sub a
 [subMetas] :: Sub a -> 𝕏 ⇰ a
 [subFvars] :: Sub a -> FV
 mkSub :: HasFV a => (𝕏 ⇰ a) -> (𝕏 ⇰ a) -> Sub a
-subLexical :: HasFV a => (𝕏 ⇰ a) -> Sub a
+subLexi :: HasFV a => (𝕏 ⇰ a) -> Sub a
 subMeta :: HasFV a => (𝕏 ⇰ a) -> Sub a
 subRestrict :: HasFV a => FV -> Sub a -> Sub a
 subWithout :: HasFV a => FV -> Sub a -> Sub a
 subSupport :: Eq a => Sub a -> FV
 subValues :: Sub a -> 𝐿 a
-substVarLexical :: Monad m => (𝕏 -> b) -> (a -> m b) -> Sub a -> 𝕏 -> m b
+substVarLexi :: Monad m => (𝕏 -> b) -> (a -> m b) -> Sub a -> 𝕏 -> m b
 substVarMeta :: Monad m => (𝕏 -> b) -> (a -> m b) -> Sub a -> 𝕏 -> m b
 mapMSub :: (Monad m, HasFV b) => (a -> m b) -> Sub a -> m (Sub b)
 instance GHC.Show.Show UVMHS.Lib.Variables.FV
