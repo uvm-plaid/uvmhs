@@ -203,40 +203,40 @@ freeVarsMMSP = mmspMaxsBindingInfo  ∘ mmspMaxs
 -- SUBSTITUTION --
 ------------------
 
-substMMSP ∷ (Monad m,Ord a,HasFV a) ⇒ (a → m MMSP) → Sub a → MMSP → m MMSP
+substMMSP ∷ (Monad m,Ord a,HasFV FV a) ⇒ (a → m MMSP) → Sub FV a → MMSP → m MMSP
 substMMSP 𝒸 𝓈 (MMSP α̇) = substMaxs 𝒸 𝓈 α̇
 
-substMaxs ∷ (Monad m,Ord a,HasFV a) ⇒ (a → m MMSP) → Sub a → MMSPMaxs → m MMSP
+substMaxs ∷ (Monad m,Ord a,HasFV FV a) ⇒ (a → m MMSP) → Sub FV a → MMSPMaxs → m MMSP
 substMaxs 𝒸 𝓈 η@(MMSPMaxs 𝓍 a α) = do
   let 𝓈' = subRestrict 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ maxsMMSP η
   else (⊔) (litMMSP a) ^$ substMaxsMins 𝒸 𝓈' α
 
-substMaxsMins ∷ (Monad m,Ord a,HasFV a) ⇒ (a → m MMSP) → Sub a → 𝑃 MMSPMins → m MMSP
+substMaxsMins ∷ (Monad m,Ord a,HasFV FV a) ⇒ (a → m MMSP) → Sub FV a → 𝑃 MMSPMins → m MMSP
 substMaxsMins 𝒸 𝓈 α = joins ^$ mapM (substMins 𝒸 𝓈) $ iter α
 
-substMins ∷ (Monad m,Ord a,HasFV a) ⇒ (a → m MMSP) → Sub a → MMSPMins → m MMSP
+substMins ∷ (Monad m,Ord a,HasFV FV a) ⇒ (a → m MMSP) → Sub FV a → MMSPMins → m MMSP
 substMins 𝒸 𝓈 η@(MMSPMins 𝓍 b β) = do
   let 𝓈' = subRestrict 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ minsMMSP η
   else (⊓) (elimAddTop top litMMSP b) ^$ substMinsSums 𝒸 𝓈' β
 
-substMinsSums ∷ (Monad m,Ord a,HasFV a) ⇒ (a → m MMSP) → Sub a → 𝑃 MMSPSums → m MMSP
+substMinsSums ∷ (Monad m,Ord a,HasFV FV a) ⇒ (a → m MMSP) → Sub FV a → 𝑃 MMSPSums → m MMSP
 substMinsSums 𝒸 𝓈 β = meets ^$ mapM (substSums 𝒸 𝓈) $ iter β
 
-substSums ∷ (Monad m,Ord a,HasFV a) ⇒ (a → m MMSP) → Sub a → MMSPSums → m MMSP
+substSums ∷ (Monad m,Ord a,HasFV FV a) ⇒ (a → m MMSP) → Sub FV a → MMSPSums → m MMSP
 substSums 𝒸 𝓈 η@(MMSPSums 𝓍 c γ) = do
   let 𝓈' = subRestrict 𝓍 𝓈
   if isEmpty 𝓈'
   then return $ sumsMMSP η
   else (+) (litMMSP c) ^$ substSumsProds 𝒸 𝓈' γ
 
-substSumsProds ∷ (Monad m,Ord a,HasFV a) ⇒ (a → m MMSP) → Sub a → MMSPProds ⇰ ℕ → m MMSP
+substSumsProds ∷ (Monad m,Ord a,HasFV FV a) ⇒ (a → m MMSP) → Sub FV a → MMSPProds ⇰ ℕ → m MMSP
 substSumsProds 𝒸 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → (litMMSP d ×) ^$ substProds 𝒸 𝓈 δ
 
-substProds ∷ (Monad m,Ord a,HasFV a) ⇒ (a → m MMSP) → Sub a → MMSPProds → m MMSP
+substProds ∷ (Monad m,Ord a,HasFV FV a) ⇒ (a → m MMSP) → Sub FV a → MMSPProds → m MMSP
 substProds 𝒸 𝓈 η@(MMSPProds 𝓍 δ) = do
   let 𝓈' = subRestrict 𝓍 𝓈
   if isEmpty 𝓈'
@@ -245,7 +245,7 @@ substProds 𝒸 𝓈 η@(MMSPProds 𝓍 δ) = do
     ω' ← substAtom 𝒸 𝓈' ω
     return $ ω' ^^ e
 
-substAtom ∷ (Monad m,Ord a) ⇒ (a → m MMSP) → Sub a → MMSPAtom → m MMSP
+substAtom ∷ (Monad m,Ord a) ⇒ (a → m MMSP) → Sub FV a → MMSPAtom → m MMSP
 substAtom 𝒸 𝓈 = \case
   Var_MMSP x → case subLexis 𝓈 ⋕? x of
     None → return $ atomMMSP $ Var_MMSP x

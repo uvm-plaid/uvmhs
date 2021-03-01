@@ -60,25 +60,25 @@ fvLexi 𝓍 = FV 𝓍 bot
 fvMeta ∷ 𝑃 𝕏 → FV
 fvMeta 𝓍 = FV bot 𝓍
 
-class HasFV a where
-  fv ∷ a → FV
+class (JoinLattice fv) ⇒ HasFV fv a | a → fv where
+  fv ∷ a → fv
 
 -------------------
 -- SUBSTITUTIONS --
 -------------------
 
-data Sub a = Sub
+data Sub fv a = Sub
   { subLexis ∷ 𝕏 ⇰ a
   , subMetas ∷ 𝕏 ⇰ a
-  , subFvars ∷ FV
+  , subFvars ∷ fv
   } deriving (Eq,Ord,Show)
 
-mkSub ∷ (HasFV a) ⇒ 𝕏 ⇰ a → 𝕏 ⇰ a → Sub a
+mkSub ∷ (HasFV fv a) ⇒ 𝕏 ⇰ a → 𝕏 ⇰ a → Sub fv a
 mkSub 𝓈ˡ 𝓈ᵐ =
   let 𝓍 = joins $ map fv (values 𝓈ˡ) ⧺ map fv (values 𝓈ᵐ)
   in Sub 𝓈ˡ 𝓈ᵐ 𝓍
 
-instance (Eq a,Pretty a) ⇒ Pretty (Sub a) where
+instance (Pretty fv,Eq a,Pretty a) ⇒ Pretty (Sub fv a) where
   pretty (Sub 𝓈ˡ 𝓈ᵐ 𝓍)
     | 𝓈ˡ ≡ null , 𝓈ᵐ ≡ null = ppLit "∅"
     | 𝓈ˡ ≡ null = ppApp (ppString "meta") $ [pretty 𝓈ᵐ,pretty 𝓍]
@@ -89,41 +89,44 @@ instance (Eq a,Pretty a) ⇒ Pretty (Sub a) where
         , ppString "fvars" :* pretty 𝓍
         ]
 
-subLexi ∷ (HasFV a) ⇒ 𝕏 ⇰ a → Sub a
+subLexi ∷ (HasFV fv a) ⇒ 𝕏 ⇰ a → Sub fv a
 subLexi 𝓈ˡ = mkSub 𝓈ˡ null
 
-subMeta ∷ (HasFV a) ⇒ 𝕏 ⇰ a → Sub a
+subMeta ∷ (HasFV fv a) ⇒ 𝕏 ⇰ a → Sub fv a
 subMeta 𝓈ᵐ = mkSub null 𝓈ᵐ 
 
-instance Null (Sub a) where null = Sub null null bot
-instance Append (Sub a) where Sub 𝓈ˡ₁ 𝓈ᵐ₁ 𝓍₁ ⧺ Sub 𝓈ˡ₂ 𝓈ᵐ₂ 𝓍₂ = Sub (𝓈ˡ₁ ⩌ 𝓈ˡ₂) (𝓈ᵐ₁ ⩌ 𝓈ᵐ₂) $ 𝓍₁ ⊔ 𝓍₂
-instance Monoid (Sub a)
+instance (Bot fv) ⇒ Null (Sub fv a) 
+  where null = Sub null null bot
+instance (Join fv) ⇒ Append (Sub fv a) 
+  where Sub 𝓈ˡ₁ 𝓈ᵐ₁ 𝓍₁ ⧺ Sub 𝓈ˡ₂ 𝓈ᵐ₂ 𝓍₂ = Sub (𝓈ˡ₁ ⩌ 𝓈ˡ₂) (𝓈ᵐ₁ ⩌ 𝓈ᵐ₂) $ 𝓍₁ ⊔ 𝓍₂
+instance (JoinLattice fv) ⇒ Monoid (Sub fv a)
 
-instance ToStream (𝕏 ∧ a) (Sub a) where stream (Sub 𝓈ˡ 𝓈ᵐ _𝓍) = stream 𝓈ˡ ⧺ stream 𝓈ᵐ
+instance ToStream (𝕏 ∧ a) (Sub fv a) where 
+  stream (Sub 𝓈ˡ 𝓈ᵐ _𝓍) = stream 𝓈ˡ ⧺ stream 𝓈ᵐ
 
-subRestrict ∷ (HasFV a) ⇒ FV → Sub a → Sub a
+subRestrict ∷ (HasFV fv a) ⇒ FV → Sub fv a → Sub fv a
 subRestrict (FV 𝓍ˡ 𝓍ᵐ) (Sub 𝓈ˡ 𝓈ᵐ _𝓍) = mkSub (restrict 𝓍ˡ 𝓈ˡ) $ restrict 𝓍ᵐ 𝓈ᵐ
 
-subWithout ∷ (HasFV a) ⇒ FV → Sub a → Sub a
+subWithout ∷ (HasFV fv a) ⇒ FV → Sub fv a → Sub fv a
 subWithout (FV 𝓍ˡ 𝓍ᵐ) (Sub 𝓈ˡ 𝓈ᵐ _𝓍) = mkSub (without 𝓍ˡ 𝓈ˡ) $ without 𝓍ᵐ 𝓈ᵐ
 
-subSupport ∷ (Eq a) ⇒ Sub a → FV
+subSupport ∷ (Eq a) ⇒ Sub fv a → FV
 subSupport (Sub 𝓈ˡ 𝓈ᵐ _𝓍) = FV (keys 𝓈ˡ) $ keys 𝓈ᵐ
 
-subValues ∷ Sub a → 𝐿 a
+subValues ∷ Sub fv a → 𝐿 a
 subValues (Sub 𝓈ˡ 𝓈ᵐ _𝓍) = list $ iter (values 𝓈ˡ) ⧺ iter (values 𝓈ᵐ)
 
-substVarLexi ∷ (Monad m) ⇒ (𝕏 → b) → (a → m b) → Sub a → 𝕏 → m b
+substVarLexi ∷ (Monad m) ⇒ (𝕏 → b) → (a → m b) → Sub fv a → 𝕏 → m b
 substVarLexi mkvar 𝒸 𝓈 x = case subLexis 𝓈 ⋕? x of
   None → return $ mkvar x
   Some e → 𝒸 e
 
-substVarMeta ∷ (Monad m) ⇒ (𝕏 → b) → (a → m b) → Sub a → 𝕏 → m b
+substVarMeta ∷ (Monad m) ⇒ (𝕏 → b) → (a → m b) → Sub fv a → 𝕏 → m b
 substVarMeta mkvar 𝒸 𝓈 x = case subMetas 𝓈 ⋕? x of
   None → return $ mkvar x
   Some e → 𝒸 e
 
-mapMSub ∷ (Monad m,HasFV b) ⇒ (a → m b) → Sub a → m (Sub b)
+mapMSub ∷ (Monad m,HasFV fv b) ⇒ (a → m b) → Sub fv a → m (Sub fv b)
 mapMSub f (Sub 𝓈ˡ 𝓈ᵐ _𝓍) = do
   𝓈ˡ' ← dict ^$ mapMOn (iter 𝓈ˡ) $ \ (x :* a) → do
     b ← f a
