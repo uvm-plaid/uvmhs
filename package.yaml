@@ -42,12 +42,19 @@ default-extensions:
   - ViewPatterns
 
 ghc-options:
+  - -optP-Wno-nonportable-include-path
   - -Wall
   - -Wno-orphans
+  - -j2
+  # when we want to build fast...
+  # - -O0
+  # when we want a slow optimized build...
+  - -O2
+  - -optc-O3
   - -fspecialise-aggressively
   - -fexpose-all-unfoldings
-  - -O2
-  - -optP-Wno-nonportable-include-path
+  # crashes GHC??
+  # - -funfolding-use-threshold=120
 
 dependencies: 
   - base

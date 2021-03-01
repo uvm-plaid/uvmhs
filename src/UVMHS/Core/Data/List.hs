@@ -5,44 +5,32 @@ import UVMHS.Core.Classes
 import UVMHS.Core.Data.LazyList ()
 
 instance Null (𝐿 a) where 
-  {-# INLINE null #-}
   null = empty𝐿
 instance Append (𝐿 a) where 
-  {-# INLINE (⧺) #-}
   (⧺) = append𝐿
 instance Monoid (𝐿 a)
 instance Functor 𝐿 where 
-  {-# INLINE map #-}
   map = map𝐿
 instance Return 𝐿 where
-  {-# INLINE return #-}
   return = single𝐿
 instance Bind 𝐿 where 
-  {-# INLINE (≫=) #-}
   (≫=) = bind𝐿
 instance Monad 𝐿
 instance FunctorM 𝐿 where 
-  {-# INLINE mapM #-}
   mapM = mapM𝐿
 instance Single a (𝐿 a) where 
-  {-# INLINE single #-}
   single = single𝐿
 instance ToStream a (𝐿 a) where 
-  {-# INLINE stream #-}
   stream = stream𝐿
 instance ToIter a (𝐿 a) where 
-  {-# INLINE iter #-}
   iter = iter𝑆 ∘ stream𝐿
 
-{-# INLINE empty𝐿 #-}
 empty𝐿 ∷ 𝐿 a
 empty𝐿 = Nil
 
-{-# INLINE single𝐿 #-}
 single𝐿 ∷ a → 𝐿 a
 single𝐿 x = x :& Nil
 
-{-# INLINE cons𝐿 #-}
 cons𝐿 ∷ a → 𝐿 a → 𝐿 a
 cons𝐿 = (:&)
 

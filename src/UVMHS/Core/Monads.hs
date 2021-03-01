@@ -10,17 +10,13 @@ import UVMHS.Core.Transformers
 import qualified Prelude as HS
 
 instance MonadIO IO where 
-  {-# INLINE io #-}
   io = id
 
 instance Functor IO where 
-  {-# INLINE map #-}
   map = mmap
 instance Return IO where 
-  {-# INLINE return #-}
   return = HS.return
 instance Bind IO where 
-  {-# INLINE (≫=) #-}
   (≫=) = (HS.>>=)
 instance Monad IO
 
@@ -32,24 +28,19 @@ newtype ID a = ID { unID ∷ a }
   ,Lattice,Dual,Difference)
 
 instance Functor ID where 
-  {-# INLINE map #-}
   map = mmap
 instance Return ID where
-  {-# INLINE return #-}
   return ∷ ∀ a. a → ID a
   return = ID
 instance Bind ID where
-  {-# INLINE (≫=) #-}
   (≫=) ∷ ∀ a b. ID a → (a → ID b) → ID b
   x ≫= f = f $ unID x
 instance Monad ID
 
 instance Extract ID where
-  {-# INLINE extract #-}
   extract ∷ ∀ a. ID a → a
   extract = unID
 instance Cobind ID where
-  {-# INLINE (=≫) #-}
   (=≫) ∷ ∀ a b. ID a → (ID a → b) → ID b
   xM =≫ f = ID $ f xM
 instance Comonad ID
@@ -60,20 +51,16 @@ instance Comonad ID
 
 newtype ReaderT r m a = ReaderT { unReaderT ∷ r → m a }
 
-{-# INLINE runReaderT #-}
 runReaderT ∷ ∀ r m a. r → ReaderT r m a → m a
 runReaderT r xM = unReaderT xM r
 
 instance (Functor m) ⇒ Functor (ReaderT r m) where 
-  {-# INLINE map #-}
   map ∷ ∀ a b. (a → b) → ReaderT r m a → ReaderT r m b
   map f = ReaderT ∘ map (map f) ∘ unReaderT
 instance (Return m) ⇒ Return (ReaderT r m) where
-  {-# INLINE return #-}
   return ∷ ∀ a. a → ReaderT r m a
   return x = ReaderT $ \ _ → return x
 instance (Bind m) ⇒ Bind (ReaderT r m) where
-  {-# INLINE (≫=) #-}
   (≫=) ∷ ∀ a b. ReaderT r m a → (a → ReaderT r m b) → ReaderT r m b
   xM ≫= k = ReaderT $ \ r → do
     x ← unReaderT xM r
@@ -81,30 +68,24 @@ instance (Bind m) ⇒ Bind (ReaderT r m) where
 instance (Monad m) ⇒ Monad (ReaderT r m)
 
 instance Functor2 (ReaderT r) where
-  {-# INLINE map2 #-}
   map2 ∷ ∀ m₁ m₂. (∀ a. m₁ a → m₂ a) → (∀ a. ReaderT r m₁ a → ReaderT r m₂ a)
   map2 f = ReaderT ∘ map f ∘ unReaderT
 
 instance (Monad m) ⇒ MonadReader r (ReaderT r m) where
-  {-# INLINE ask #-}
   ask ∷ ReaderT r m r
   ask = ReaderT $ \ r → return r
 
-  {-# INLINE local #-}
   local ∷ ∀ a. r → ReaderT r m a → ReaderT r m a
   local r xM = ReaderT $ \ _ → unReaderT xM r
 
 instance (∀ a'. Null a' ⇒ Null (m a'),Null a) ⇒ Null (ReaderT r m a) where
-  {-# INLINE null #-}
   null ∷ ReaderT r m a
   null = ReaderT $ \ _ → null
 instance (∀ a'. Append a' ⇒ Append (m a'),Append a) ⇒ Append (ReaderT r m a) where
-  {-# INLINE (⧺) #-}
   (⧺) ∷ ReaderT r m a → ReaderT r m a → ReaderT r m a
   (⧺) xM₁ xM₂ = ReaderT $ \ r → unReaderT xM₁ r ⧺ unReaderT xM₂ r
 
 instance Transformer (ReaderT r) where
-  {-# INLINE lift #-}
   lift ∷ ∀ m a. (Monad m) ⇒ m a → ReaderT r m a
   lift xM = ReaderT $ \ _ → xM
 
@@ -114,21 +95,17 @@ instance Transformer (ReaderT r) where
 
 newtype WriterT o m a = WriterT { unWriterT ∷ m (o ∧ a) }
 
-{-# INLINE evalWriterT #-}
 evalWriterT ∷ ∀ o m a. (Functor m) ⇒ WriterT o m a → m a
 evalWriterT = map snd ∘ unWriterT
 
 instance (Functor m) ⇒ Functor (WriterT o m) where 
-  {-# INLINE map #-}
   map ∷ ∀ a b. (a → b) → WriterT o m a → WriterT o m b
   map f = WriterT ∘ map (map f) ∘ unWriterT
 
 instance (Return m,Null o) ⇒ Return (WriterT o m) where
-  {-# INLINE return #-}
   return ∷ ∀ a. a → WriterT o m a
   return x = WriterT $ return (null :* x)
 instance (Monad m,Append o) ⇒ Bind (WriterT o m) where
-  {-# INLINE (≫=) #-}
   (≫=) ∷ ∀ a b. WriterT o m a → (a → WriterT o m b) → WriterT o m b
   xM ≫= k = WriterT $ do
     (o₁ :* x) ← unWriterT xM
@@ -137,27 +114,22 @@ instance (Monad m,Append o) ⇒ Bind (WriterT o m) where
 instance (Monad m,Monoid o) ⇒ Monad (WriterT o m)
 
 instance (Monoid o) ⇒ Functor2 (WriterT o) where
-  {-# INLINE map2 #-}
   map2 ∷ ∀ m₁ m₂. (∀ a. m₁ a → m₂ a) → (∀ a. WriterT o m₁ a → WriterT o m₂ a)
   map2 f = WriterT ∘ f ∘ unWriterT
 
 instance (Monad m,Null o) ⇒ MonadWriter o (WriterT o m) where
-  {-# INLINE tell #-}
   tell ∷ o → WriterT o m ()
   tell o = WriterT $ return (o :* ())
 
-  {-# INLINE hijack #-}
   hijack ∷ ∀ a. WriterT o m a → WriterT o m (o ∧ a)
   hijack xM = WriterT $ do
     oa ← unWriterT xM
     return $ null :* oa
 
 instance (∀ a'. Null a' ⇒ Null (m a'),Null o,Null a) ⇒ Null (WriterT o m a) where
-  {-# INLINE null #-}
   null ∷ WriterT o m a
   null = WriterT null
 instance (∀ a'. Append a' ⇒ Append (m a'),Append o,Append a) ⇒ Append (WriterT o m a) where
-  {-# INLINE (⧺) #-}
   (⧺) ∷ WriterT o m a → WriterT o m a → WriterT o m a
   xM₁ ⧺ xM₂ = WriterT $ unWriterT xM₁ ⧺ unWriterT xM₂
 instance 
@@ -168,7 +140,6 @@ instance
   ⇒ Monoid (WriterT o m a)
 
 instance (Null o) ⇒ Transformer (WriterT o) where
-  {-# INLINE lift #-}
   lift ∷ ∀ m a. (Monad m) ⇒ m a → WriterT o m a
   lift xM = WriterT $ (null :*) ^$ xM
 
@@ -178,25 +149,20 @@ instance (Null o) ⇒ Transformer (WriterT o) where
 
 newtype StateT s m a = StateT { unStateT ∷ s → m (s ∧ a) }
 
-{-# INLINE runStateT #-}
 runStateT ∷ ∀ s m a. s → StateT s m a → m (s ∧ a)
 runStateT s xM = unStateT xM s
 
-{-# INLINE evalStateT #-}
 evalStateT ∷ ∀ s m a. (Functor m) ⇒ s → StateT s m a → m a
 evalStateT s = map snd ∘ runStateT s
 
 instance (Functor m) ⇒ Functor (StateT s m) where 
-  {-# INLINE map #-}
   map ∷ ∀ a b. (a → b) → StateT s m a → StateT s m b
   map f = StateT ∘ map (map (map f)) ∘ unStateT
 
 instance (Return m) ⇒ Return (StateT s m) where
-  {-# INLINE return #-}
   return ∷ ∀ a. a → StateT s m a
   return x = StateT $ \ s → return (s :* x)
 instance (Bind m) ⇒ Bind (StateT s m) where
-  {-# INLINE (≫=) #-}
   (≫=) ∷ ∀ a b. StateT s m a → (a → StateT s m b) → StateT s m b
   xM ≫= k = StateT $ \ s → do
     (s' :* x) ← unStateT xM s
@@ -204,25 +170,20 @@ instance (Bind m) ⇒ Bind (StateT s m) where
 instance (Monad m) ⇒ Monad (StateT s m)
 
 instance Functor2 (StateT s) where
-  {-# INLINE map2 #-}
   map2 ∷ ∀ m₁ m₂. (∀ a. m₁ a → m₂ a) → (∀ a. StateT s m₁ a → StateT s m₂ a)
   map2 f = StateT ∘ map f ∘ unStateT
 
 instance (Return m) ⇒ MonadState s (StateT s m) where
-  {-# INLINE get #-}
   get ∷ StateT s m s
   get = StateT $ \ s → return (s :* s)
   
-  {-# INLINE put #-}
   put ∷ s → StateT s m ()
   put s = StateT $ \ _ → return (s :* ())
 
 instance (∀ a'. Null a' ⇒ Null (m a'),Null s,Null a) ⇒ Null (StateT s m a) where
-  {-# INLINE null #-}
   null ∷ StateT s m a
   null = StateT $ \ _ → null
 instance (∀ a'. Append a' ⇒ Append (m a'),Append s,Append a) ⇒ Append (StateT s m a) where
-  {-# INLINE (⧺) #-}
   (⧺) ∷ StateT s m a → StateT s m a → StateT s m a
   xM₁ ⧺ xM₂ = StateT $ \ s → unStateT xM₁ s ⧺ unStateT xM₂ s
 instance 
@@ -234,16 +195,13 @@ instance
 
 type State s = StateT s ID
 
-{-# INLINE runState #-}
 runState ∷ s → State s a → (s ∧ a)
 runState s = unID ∘ runStateT s
 
-{-# INLINE evalState #-}
 evalState ∷ s → State s a → a
 evalState s = unID ∘ evalStateT s
 
 instance Transformer (StateT s) where
-  {-# INLINE lift #-}
   lift ∷ ∀ m a. (Monad m) ⇒ m a → StateT s m a
   lift xM = StateT $ \ s → (s :*) ^$ xM
 
@@ -254,16 +212,13 @@ instance Transformer (StateT s) where
 newtype FailT m a = FailT { unFailT ∷ m (𝑂 a) }
 
 instance (Functor m) ⇒ Functor (FailT m) where 
-  {-# INLINE map #-}
   map ∷ ∀ a b. (a → b) → FailT m a → FailT m b
   map f = FailT ∘ map (map f) ∘ unFailT
 
 instance (Return m) ⇒ Return (FailT m) where
-  {-# INLINE return #-}
   return ∷ ∀ a. a → FailT m a
   return x = FailT $ return $ Some x
 instance (Monad m) ⇒ Bind (FailT m) where
-  {-# INLINE (≫=) #-}
   (≫=) ∷ ∀ a b. FailT m a → (a → FailT m b) → FailT m b
   xM ≫= k = FailT $ do
     xO ← unFailT xM
@@ -273,16 +228,13 @@ instance (Monad m) ⇒ Bind (FailT m) where
 instance (Monad m) ⇒ Monad (FailT m)
 
 instance Functor2 FailT where
-  {-# INLINE map2 #-}
   map2 ∷ ∀ m₁ m₂. (∀ a. m₁ a → m₂ a) → (∀ a. FailT m₁ a → FailT m₂ a) 
   map2 f = FailT ∘ f ∘ unFailT
 
 instance (Monad m) ⇒ MonadFail (FailT m) where
-  {-# INLINE abort #-}
   abort ∷ ∀ a. FailT m a
   abort = FailT $ return None
 
-  {-# INLINE (⎅) #-}
   (⎅) ∷ ∀ a. FailT m a → FailT m a → FailT m a
   xM₁ ⎅ xM₂ = FailT $ do
     xO₁ ← unFailT xM₁
@@ -291,11 +243,9 @@ instance (Monad m) ⇒ MonadFail (FailT m) where
       Some x → return $ Some x
 
 instance (∀ a'. Null a' ⇒ Null (m a'),Null a) ⇒ Null (FailT m a) where
-  {-# INLINE null #-}
   null ∷ FailT m a
   null = FailT null
 instance (∀ a'. Append a' ⇒ Append (m a'),Append a) ⇒ Append (FailT m a) where
-  {-# INLINE (⧺) #-}
   (⧺) ∷ FailT m a → FailT m a → FailT m a
   xM₁ ⧺ xM₂ = FailT $ unFailT xM₁ ⧺ unFailT xM₂
 instance 
@@ -306,7 +256,6 @@ instance
   ⇒ Monoid (FailT m a)
 
 instance Transformer FailT where
-  {-# INLINE lift #-}
   lift ∷ ∀ m a. (Monad m) ⇒ m a → FailT m a
   lift xM = FailT $ Some ^$ xM
 
@@ -317,16 +266,13 @@ instance Transformer FailT where
 newtype ErrorT e m a = ErrorT { unErrorT ∷ m (e ∨ a) }
 
 instance (Functor m) ⇒ Functor (ErrorT e m) where
-  {-# INLINE map #-}
   map ∷ ∀ a b. (a → b) → ErrorT e m a → ErrorT e m b
   map f = ErrorT ∘ map (map f) ∘ unErrorT
 
 instance (Return m) ⇒ Return (ErrorT e m) where
-  {-# INLINE return #-}
   return ∷ ∀ a. a → ErrorT e m a
   return x = ErrorT $ return $ Inr x
 instance (Monad m) ⇒ Bind (ErrorT e m) where
-  {-# INLINE (≫=) #-}
   (≫=) ∷ ∀ a b. ErrorT e m a → (a → ErrorT e m b) → ErrorT e m b
   xM ≫= k = ErrorT $ do
     ex ← unErrorT xM
@@ -336,16 +282,13 @@ instance (Monad m) ⇒ Bind (ErrorT e m) where
 instance (Monad m) ⇒ Monad (ErrorT e m)
 
 instance Functor2 (ErrorT e) where
-  {-# INLINE map2 #-}
   map2 ∷ ∀ m₁ m₂. (∀ a. m₁ a → m₂ a) → (∀ a. ErrorT e m₁ a → ErrorT e m₂ a)
   map2 f = ErrorT ∘ f ∘ unErrorT
 
 instance (Monad m) ⇒ MonadError e (ErrorT e m) where
-  {-# INLINE throw #-}
   throw ∷ ∀ a. e → ErrorT e m a
   throw e = ErrorT $ return $ Inl e
 
-  {-# INLINE catch #-}
   catch ∷ ∀ a. ErrorT e m a → (e → ErrorT e m a) → ErrorT e m a
   catch xM k = ErrorT $ do
     ex ← unErrorT xM
@@ -354,11 +297,9 @@ instance (Monad m) ⇒ MonadError e (ErrorT e m) where
       Inr x → return $ Inr x
 
 instance (∀ a'. Null a' ⇒ Null (m a'),Null a) ⇒ Null (ErrorT e m a) where
-  {-# INLINE null #-}
   null ∷ ErrorT e m a
   null = ErrorT null
 instance (∀ a'. Append a' ⇒ Append (m a'),Append e,Append a) ⇒ Append (ErrorT e m a) where
-  {-# INLINE (⧺) #-}
   (⧺) ∷ ErrorT e m a → ErrorT e m a → ErrorT e m a
   xM₁ ⧺ xM₂ = ErrorT $ unErrorT xM₁ ⧺ unErrorT xM₂
 instance 
@@ -369,7 +310,6 @@ instance
   ⇒ Monoid (ErrorT e m a)
 
 instance Transformer (ErrorT e) where
-  {-# INLINE lift #-}
   lift ∷ ∀ m a. (Monad m) ⇒ m a → ErrorT e m a
   lift xM = ErrorT $ Inr ^$ xM
 
@@ -401,7 +341,6 @@ instance (∀ a'. Monoid a' ⇒ Monoid (m a')) ⇒ MonadNondet (NondetT m) where
   xM₁ ⊞ xM₂ = NondetT $ unNondetT xM₁ ⧺ unNondetT xM₂
 
 instance Transformer NondetT where
-  {-# INLINE lift #-}
   lift ∷ ∀ m a. (Monad m) ⇒ m a → NondetT m a
   lift xM = NondetT $ single ^$ xM
 
@@ -458,7 +397,6 @@ instance
   ⇒ Monoid (ContT r m a)
 
 instance Transformer (ContT r) where
-  {-# INLINE lift #-}
   lift ∷ ∀ m a. (Monad m) ⇒ m a → ContT r m a
   lift xM = ContT $ \ (κ ∷ a → m r) → κ *$ xM
 
@@ -471,78 +409,62 @@ instance Transformer (ContT r) where
 ------------
 
 instance LiftIO (ReaderT r) where
-  {-# INLINE liftIO #-}
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → ReaderT r m a)
   liftIO ioM xM = ReaderT $ \ _ → ioM xM
 
 instance LiftReader (ReaderT r) where
-  {-# INLINE liftAsk #-}
   liftAsk ∷ ∀ m r'. (Monad m) ⇒ m r' → ReaderT r m r'
   liftAsk askM = ReaderT $ \ _ → askM
 
-  {-# INLINE liftLocal #-}
   liftLocal ∷ ∀ m r'. (Monad m) ⇒ (∀ a. r' → m a → m a) → (∀ a. r' → ReaderT r m a → ReaderT r m a)
   liftLocal localM r' xM = ReaderT $ \ r → localM r' $ unReaderT xM r
 
 instance LiftWriter (ReaderT r) where
-  {-# INLINE liftTell #-}
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → ReaderT r m ())
   liftTell tellM o = ReaderT $ \ _ → tellM o
 
-  {-# INLINE liftHijack #-}
   liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. ReaderT r m a → ReaderT r m (o ∧ a))
   liftHijack hijackM xM = ReaderT $ \ r → hijackM $ unReaderT xM r
 
 instance LiftState (ReaderT r) where
-  {-# INLINE liftGet #-}
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → ReaderT r m s
   liftGet getM = ReaderT $ \ _ → getM
 
-  {-# INLINE liftPut #-}
   liftPut ∷ ∀ m s. (Monad m) ⇒ (s → m ()) → (s → ReaderT r m ())
   liftPut putM s = ReaderT $ \ _ → putM s
 
 instance LiftFail (ReaderT r) where
-  {-# INLINE liftAbort #-}
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ReaderT r m a)
   liftAbort abortM = ReaderT $ \ _ → abortM
 
-  {-# INLINE liftTry #-}
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. ReaderT r m a → ReaderT r m a → ReaderT r m a)
   liftTry tryM xM₁ xM₂ = ReaderT $ \ r → tryM (unReaderT xM₁ r) (unReaderT xM₂ r)
 
 instance LiftError (ReaderT r) where
-  {-# INLINE liftThrow #-}
   liftThrow ∷ ∀ m e. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → ReaderT r m a)
   liftThrow throwM e = ReaderT $ \ _ → throwM e
 
-  {-# INLINE liftCatch #-}
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. ReaderT r m a → (e → ReaderT r m a) → ReaderT r m a)
   liftCatch catchM xM k = ReaderT $ \ r → catchM (unReaderT xM r) (\ e → unReaderT (k e) r)
 
 instance LiftNondet (ReaderT r) where
-  {-# INLINE liftMzero #-}
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ReaderT r m a)
   liftMzero mzeroM = ReaderT $ \ _ → mzeroM
 
-  {-# INLINE liftMplus #-}
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. ReaderT r m a → ReaderT r m a → ReaderT r m a)
   liftMplus mplusM xM₁ xM₂ = ReaderT $ \ r → mplusM (unReaderT xM₁ r) (unReaderT xM₂ r)
     
 instance LiftTop (ReaderT r) where
-  {-# INLINE liftMtop #-}
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ReaderT r m a)
   liftMtop mtopM = ReaderT $ \ _ → mtopM
 
 instance LiftCont (ReaderT r) where
-  {-# INLINE liftCallCC #-}
   liftCallCC ∷ ∀ m r'. (Monad m) ⇒ (∀ a. ((a → m r') → m r') → m a) → (∀ a. ((a → ReaderT r m r') → ReaderT r m r') → ReaderT r m a)
   liftCallCC callCCM kk = ReaderT $ \ r → 
     callCCM $ \ (k ∷ a → m r') → 
       runReaderT r $ kk $ \ (x ∷ a) → 
         ReaderT $ \ _ → 
           k x
-  {-# INLINE liftWithC #-}
   liftWithC ∷ ∀ m r'. (Monad m) ⇒ (∀ a. (a → m r') → m a → m r') → (∀ a. (a → ReaderT r m r') → ReaderT r m a → ReaderT r m r')
   liftWithC withCM k xM = ReaderT $ \ r →
     withCM (\ x → unReaderT (k x) r) $ unReaderT xM r
@@ -552,89 +474,73 @@ instance LiftCont (ReaderT r) where
 ------------
 
 instance (Null o) ⇒ LiftIO (WriterT o) where
-  {-# INLINE liftIO #-}
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → WriterT o m a)
   liftIO ioM xM = WriterT $ do
     x ← ioM xM
     return (null :* x)
 
 instance (Null o) ⇒ LiftReader (WriterT o) where
-  {-# INLINE liftAsk #-}
   liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → WriterT o m r
   liftAsk askM = WriterT $ do
     r ← askM
     return (null :* r)
 
-  {-# INLINE liftLocal #-}
   liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → WriterT o m a → WriterT o m a)
   liftLocal localM r xM = WriterT $ localM r $ unWriterT xM
     
 instance (Null o) ⇒ LiftWriter (WriterT o) where
-  {-# INLINE liftTell #-}
   liftTell ∷ ∀ m o'. (Monad m) ⇒ (o' → m ()) → (o' → WriterT o m ())
   liftTell tellM o' = WriterT $ do
     tellM o'
     return (null :* ())
 
-  {-# INLINE liftHijack #-}
   liftHijack ∷ ∀ m o'. (Monad m) ⇒ (∀ a. m a → m (o' ∧ a)) → (∀ a. WriterT o m a → WriterT o m (o' ∧ a))
   liftHijack hijackM xM = WriterT $ do
     (o' :* (o :* a)) ← hijackM $ unWriterT xM
     return (o :* (o' :* a))
 
 instance (Null o) ⇒ LiftState (WriterT o) where
-  {-# INLINE liftGet #-}
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → WriterT o m s
   liftGet getM = WriterT $ do
     s ← getM
     return (null :* s)
 
-  {-# INLINE liftPut #-}
   liftPut ∷ ∀ m s. (Monad m) ⇒ (s → m ()) → (s → WriterT o m ())
   liftPut putM s = WriterT $ do
     putM s
     return (null :* ())
 
 instance LiftFail (WriterT o) where
-  {-# INLINE liftAbort #-}
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. WriterT o m a)
   liftAbort abortM = WriterT abortM
 
-  {-# INLINE liftTry #-}
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. WriterT o m a → WriterT o m a → WriterT o m a)
   liftTry tryM xM₁ xM₂ = WriterT $ tryM (unWriterT xM₁) (unWriterT xM₂)
 
 instance LiftError (WriterT o) where
-  {-# INLINE liftThrow #-}
   liftThrow ∷ ∀ m e. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → WriterT o m a)
   liftThrow throwM e = WriterT $ throwM e
 
-  {-# INLINE liftCatch #-}
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. WriterT o m a → (e → WriterT o m a) → WriterT o m a)
   liftCatch catchM xM k = WriterT $ catchM (unWriterT xM) $ \ e → unWriterT $ k e
 
 instance LiftNondet (WriterT o) where
-  {-# INLINE liftMzero #-}
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. WriterT o m a)
   liftMzero mzeroM = WriterT mzeroM
 
-  {-# INLINE liftMplus #-}
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. WriterT o m a → WriterT o m a → WriterT o m a)
   liftMplus mplusM xM₁ xM₂ = WriterT $ mplusM (unWriterT xM₁) (unWriterT xM₂)
 
 instance LiftTop (WriterT o) where
-  {-# INLINE liftMtop #-}
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. WriterT o m a)
   liftMtop mtopM = WriterT mtopM
 
 instance (Monoid o,Monad m,MonadCont (o ∧ r) m) ⇒ MonadCont r (WriterT o m) where
-  {-# INLINE callCC #-}
   callCC ∷ ∀ a. ((a → WriterT o m r) → WriterT o m r) → WriterT o m a
   callCC kk = WriterT $ callCC $ \ (k ∷ (o ∧ a) → m (o ∧ r)) →
     unWriterT $ kk $ \ (x ∷ a) → 
       WriterT $ k (null :* x)
 
-  {-# INLINE withC #-}
   withC ∷ ∀ a. (a → WriterT o m r) → WriterT o m a → WriterT o m r
   withC k xM = WriterT $ 
     withC 
@@ -649,83 +555,68 @@ instance (Monoid o,Monad m,MonadCont (o ∧ r) m) ⇒ MonadCont r (WriterT o m) 
 -----------
 
 instance LiftIO (StateT s) where
-  {-# INLINE liftIO #-}
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → StateT s m a)
   liftIO ioM xM = StateT $ \ s → do
     x ← ioM xM
     return (s :* x)
 
 instance LiftReader (StateT s) where
-  {-# INLINE liftAsk #-}
   liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → StateT s m r
   liftAsk askM = StateT $ \ s → do
     r ← askM
     return (s :* r)
 
-  {-# INLINE liftLocal #-}
   liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → StateT s m a → StateT s m a)
   liftLocal localM r xM = StateT $ \ s → localM r $ unStateT xM s
 
 instance LiftWriter (StateT s) where
-  {-# INLINE liftTell #-}
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → StateT s m ())
   liftTell tellM o = StateT $ \ s → do
     tellM o
     return (s :* ())
 
-  {-# INLINE liftHijack #-}
   liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. StateT s m a → StateT s m (o ∧ a))
   liftHijack hijackM xM = StateT $ \ s → do
     (o :* (s' :* x)) ← hijackM $ unStateT xM s
     return (s' :* (o :* x))
 
 instance LiftState (StateT s) where
-  {-# INLINE liftGet #-}
   liftGet ∷ ∀ m s'. (Monad m) ⇒ m s' → StateT s m s'
   liftGet getM = StateT $ \ s → do
     s' ← getM
     return (s :* s')
 
-  {-# INLINE liftPut #-}
   liftPut ∷ ∀ m s'. (Monad m) ⇒ (s' → m ()) → s' → StateT s m ()
   liftPut putM s' = StateT $ \ s → do
     putM s'
     return (s :* ())
 
 instance LiftFail (StateT s) where
-  {-# INLINE liftAbort #-}
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. StateT s m a)
   liftAbort abortM = StateT $ \ _ → abortM
 
-  {-# INLINE liftTry #-}
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. StateT s m a → StateT s m a → StateT s m a)
   liftTry tryM xM₁ xM₂ = StateT $ \ s → tryM (unStateT xM₁ s) (unStateT xM₂ s)
 
 instance LiftError (StateT s) where
-  {-# INLINE liftThrow #-}
   liftThrow ∷ ∀ m e. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → StateT s m a)
   liftThrow throwM e = StateT $ \ _ → throwM e
 
-  {-# INLINE liftCatch #-}
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. StateT s m a → (e → StateT s m a) → StateT s m a)
   liftCatch catchM xM k = StateT $ \ s → catchM (unStateT xM s) (\ e → unStateT (k e) s)
 
 instance LiftNondet (StateT s) where
-  {-# INLINE liftMzero #-}
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. StateT s m a)
   liftMzero mzeroM = StateT $ \ _ → mzeroM
 
-  {-# INLINE liftMplus #-}
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. StateT s m a → StateT s m a → StateT s m a)
   liftMplus mplusM xM₁ xM₂ = StateT $ \ s → mplusM (unStateT xM₁ s) (unStateT xM₂ s)
 
 instance LiftTop (StateT s) where
-  {-# INLINE liftMtop #-}
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. StateT s m a)
   liftMtop mtopM = StateT $ \ _ → mtopM
 
 instance (Monad m,MonadCont (s ∧ r) m) ⇒ MonadCont r (StateT s m) where
-  {-# INLINE callCC #-}
   callCC ∷ ∀ a. ((a → StateT s m r) → StateT s m r) → StateT s m a
   callCC kk = StateT $ \ s₁ → 
     callCC $ \ (k ∷ (s ∧ a) → m (s ∧ r)) →
@@ -733,7 +624,6 @@ instance (Monad m,MonadCont (s ∧ r) m) ⇒ MonadCont r (StateT s m) where
         StateT $ \ s₂ →
           k (s₂ :* x)
 
-  {-# INLINE withC #-}
   withC ∷ ∀ a. (a → StateT s m r) → StateT s m a → StateT s m r
   withC k xM = StateT $ \ s₁ →
     withC 
@@ -745,31 +635,26 @@ instance (Monad m,MonadCont (s ∧ r) m) ⇒ MonadCont r (StateT s m) where
 ----------
 
 instance LiftIO FailT where
-  {-# INLINE liftIO #-}
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → FailT m a)
   liftIO ioM xM = FailT $ do
     x ← ioM xM
     return $ Some x
 
 instance LiftReader FailT where
-  {-# INLINE liftAsk #-}
   liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → FailT m r
   liftAsk askM = FailT $ do
     r ← askM
     return $ Some r
 
-  {-# INLINE liftLocal #-}
   liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → FailT m a → FailT m a)
   liftLocal localM r xM = FailT $ localM r $ unFailT xM
 
 instance LiftWriter FailT where
-  {-# INLINE liftTell #-}
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → FailT m ())
   liftTell tellM o = FailT $ do
     tellM o
     return $ Some ()
 
-  {-# INLINE liftHijack #-}
   liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. FailT m a → FailT m (o ∧ a))
   liftHijack hijackM xM = FailT $ do
     (o :* xO) ← hijackM $ unFailT xM
@@ -778,59 +663,48 @@ instance LiftWriter FailT where
       Some x → return $ Some (o :* x)
 
 instance LiftState FailT where
-  {-# INLINE liftGet #-}
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → FailT m s
   liftGet getM = FailT $ do
     s ← getM
     return $ Some s
 
-  {-# INLINE liftPut #-}
   liftPut ∷ ∀ m s. (Monad m) ⇒ (s → m ()) → (s → FailT m ())
   liftPut putM s = FailT $ do
     putM s
     return $ Some ()
 
 instance LiftFail FailT where
-  {-# INLINE liftAbort #-}
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. FailT m a)
   liftAbort abortM = FailT $ abortM
 
-  {-# INLINE liftTry #-}
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. FailT m a → FailT m a → FailT m a)
   liftTry tryM xM₁ xM₂ = FailT $ tryM (unFailT xM₁) (unFailT xM₂)
 
 instance LiftError FailT where
-  {-# INLINE liftThrow #-}
   liftThrow ∷ ∀ e m. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → FailT m a)
   liftThrow throwM e = FailT $ throwM e
     
-  {-# INLINE liftCatch #-}
   liftCatch ∷ ∀ e m. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. FailT m a → (e → FailT m a) → FailT m a)
   liftCatch catchM xM k = FailT $ catchM (unFailT xM) $ \ e → unFailT $ k e
 
 instance LiftNondet FailT where
-  {-# INLINE liftMzero #-}
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. FailT m a)
   liftMzero mzeroM = FailT $ mzeroM
 
-  {-# INLINE liftMplus #-}
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. FailT m a → FailT m a → FailT m a)
   liftMplus mplusM xM₁ xM₂ = FailT $ mplusM (unFailT xM₁) (unFailT xM₂)
 
 instance LiftTop FailT where
-  {-# INLINE liftMtop #-}
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. FailT m a)
   liftMtop mtopM = FailT $ mtopM
 
 instance (Monad m,MonadCont (𝑂 r) m) ⇒ MonadCont r (FailT m) where
-  {-# INLINE callCC #-}
   callCC ∷ ∀ a. ((a → FailT m r) → FailT m r) → FailT m a
   callCC kk = FailT $
     callCC $ \ (k ∷ 𝑂 a → m (𝑂 r)) →
       unFailT $ kk $ \ (x ∷ a) → 
         FailT $ k (Some x)
 
-  {-# INLINE withC #-}
   withC ∷ ∀ a. (a → FailT m r) → FailT m a → FailT m r
   withC k xM = FailT $
     withC 
@@ -844,31 +718,26 @@ instance (Monad m,MonadCont (𝑂 r) m) ⇒ MonadCont r (FailT m) where
 -----------
 
 instance LiftIO (ErrorT e) where
-  {-# INLINE liftIO #-}
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → ErrorT e m a)
   liftIO ioM xM = ErrorT $ do
     x ← ioM xM
     return $ Inr x
 
 instance LiftReader (ErrorT e) where
-  {-# INLINE liftAsk #-}
   liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → ErrorT e m r
   liftAsk askM = ErrorT $ do
     r ← askM
     return $ Inr r
 
-  {-# INLINE liftLocal #-}
   liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → ErrorT e m a → ErrorT e m a)
   liftLocal localM r xM = ErrorT $ localM r $ unErrorT xM
 
 instance LiftWriter (ErrorT e) where
-  {-# INLINE liftTell #-}
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → ErrorT e m ())
   liftTell tellM o = ErrorT $ do
     tellM o
     return $ Inr ()
 
-  {-# INLINE liftHijack #-}
   liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. ErrorT e m a → ErrorT e m (o ∧ a))
   liftHijack hijackM xM = ErrorT $ do
     (o :* xE) ← hijackM $ unErrorT xM
@@ -877,59 +746,48 @@ instance LiftWriter (ErrorT e) where
       Inr x → return $ Inr (o :* x)
 
 instance LiftState (ErrorT e) where
-  {-# INLINE liftGet #-}
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → ErrorT e m s
   liftGet getM = ErrorT $ do
     s ← getM
     return $ Inr s
 
-  {-# INLINE liftPut #-}
   liftPut ∷ ∀ m s. (Monad m) ⇒ (s → m ()) → (s → ErrorT e m ())
   liftPut putM s = ErrorT $ do
     putM s
     return $ Inr ()
 
 instance LiftFail (ErrorT e) where
-  {-# INLINE liftAbort #-}
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ErrorT e m a)
   liftAbort abortM = ErrorT $ abortM
 
-  {-# INLINE liftTry #-}
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. ErrorT e m a → ErrorT e m a → ErrorT e m a)
   liftTry tryM xM₁ xM₂ = ErrorT $ tryM (unErrorT xM₁) (unErrorT xM₂)
 
 instance LiftError (ErrorT e) where
-  {-# INLINE liftThrow #-}
   liftThrow ∷ ∀ e' m. (Monad m) ⇒ (∀ a. e' → m a) → (∀ a. e' → ErrorT e m a)
   liftThrow throwM e = ErrorT $ throwM e
     
-  {-# INLINE liftCatch #-}
   liftCatch ∷ ∀ e' m. (Monad m) ⇒ (∀ a. m a → (e' → m a) → m a) → (∀ a. ErrorT e m a → (e' → ErrorT e m a) → ErrorT e m a)
   liftCatch catchM xM k = ErrorT $ catchM (unErrorT xM) $ \ e → unErrorT $ k e
 
 instance LiftNondet (ErrorT e) where
-  {-# INLINE liftMzero #-}
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ErrorT e m a)
   liftMzero mzeroM = ErrorT $ mzeroM
 
-  {-# INLINE liftMplus #-}
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. ErrorT e m a → ErrorT e m a → ErrorT e m a)
   liftMplus mplusM xM₁ xM₂ = ErrorT $ mplusM (unErrorT xM₁) (unErrorT xM₂)
 
 instance LiftTop (ErrorT e) where
-  {-# INLINE liftMtop #-}
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ErrorT e m a)
   liftMtop mtopM = ErrorT $ mtopM
 
 instance (Monad m,MonadCont (e ∨ r) m) ⇒ MonadCont r (ErrorT e m) where
-  {-# INLINE callCC #-}
   callCC ∷ ∀ a. ((a → ErrorT e m r) → ErrorT e m r) → ErrorT e m a
   callCC kk = ErrorT $
     callCC $ \ (k ∷ e ∨ a → m (e ∨ r)) →
       unErrorT $ kk $ \ (x ∷ a) → 
         ErrorT $ k (Inr x)
 
-  {-# INLINE withC #-}
   withC ∷ ∀ a. (a → ErrorT e m r) → ErrorT e m a → ErrorT e m r
   withC k xM = ErrorT $
     withC 
@@ -1104,33 +962,27 @@ newtype RWST r o s m a = RWST { unRWST ∷ ReaderT r (WriterT o (StateT s m)) a 
   ,MonadFail,MonadError e
   ,MonadNondet,MonadTop)
 
-{-# INLINE mkRWST #-}
 mkRWST ∷ ∀ r o s m a. (Monad m) ⇒ (r → s → m (s ∧ o ∧ a)) → RWST r o s m a
 mkRWST f = RWST $ ReaderT $ \ r → WriterT $ StateT $ \ s → do
   (s' :* o :* a) ← f r s
   return (s' :* (o :* a))
 
-{-# INLINE runRWST #-}
 runRWST ∷ ∀ r o s m a. (Monad m) ⇒ r → s → RWST r o s m a → m (s ∧ o ∧ a)
 runRWST r s xM = do
   (s' :* (o :* a)) ← unStateT (unWriterT (unReaderT (unRWST xM) r)) s
   return (s' :* o :* a)
 
-{-# INLINE evalRWST #-}
 evalRWST ∷ ∀ r o s m a. (Monad m) ⇒ r → s → RWST r o s m a → m a
 evalRWST r s = map snd ∘ runRWST r s
 
 instance (Monoid o) ⇒ Functor2 (RWST r o s) where
-  {-# INLINE map2 #-}
   map2 ∷ ∀ f₁ f₂. (∀ a. f₁ a → f₂ a) → (∀ a. RWST r o s f₁ a → RWST r o s f₂ a)
   map2 f = RWST ∘ map2 (map2 (map2 f)) ∘ unRWST
 
 instance (RWST r o s) ⇄⁼ (ReaderT r ⊡ WriterT o ⊡ StateT s) where
-  {-# INLINE isoto3 #-}
   isoto3 ∷ ∀ f a. RWST r o s f a → (ReaderT r ⊡ WriterT o ⊡ StateT s) f a
   isoto3 = Compose2 ∘ Compose2 ∘ unRWST
 
-  {-# INLINE isofr3 #-}
   isofr3 ∷ ∀ f a. (ReaderT r ⊡ WriterT o ⊡ StateT s) f a → RWST r o s f a
   isofr3 = RWST ∘ unCompose2 ∘ unCompose2
 
@@ -1147,15 +999,11 @@ deriving instance
 
 type RWS r o s = RWST r o s ID
 
-{-# INLINE mkRWS #-}
 mkRWS ∷ ∀ r o s a. (r → s → (s ∧ o ∧ a)) → RWS r o s a
 mkRWS f = mkRWST (\ r s → ID $ f r s)
 
-{-# INLINE runRWS #-}
 runRWS ∷ ∀ r o s a. r → s → RWS r o s a → s ∧ o ∧ a
 runRWS r s xM = unID $ runRWST r s xM
 
-{-# INLINE evalRWS #-}
 evalRWS ∷ ∀ r o s a. r → s → RWS r o s a → a
 evalRWS r s xM = unID $ evalRWST r s xM
-

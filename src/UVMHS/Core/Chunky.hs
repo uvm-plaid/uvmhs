@@ -13,23 +13,18 @@ import qualified Data.Char as HS
 -- Chunks --
 ------------
 
-{-# INLINE trℕ8 #-}
 trℕ8 ∷ ℕ64 → ℕ8
 trℕ8 = HS.fromIntegral
 
-{-# INLINE toBitsℤ64 #-}
 toBitsℤ64 ∷ ℤ64 → ℕ64
 toBitsℤ64 = coerce_UNSAFE
 
-{-# INLINE frBitsℤ64 #-}
 frBitsℤ64 ∷ ℕ64 → ℤ64
 frBitsℤ64 = coerce_UNSAFE
 
-{-# INLINE toBits𝔻 #-}
 toBits𝔻 ∷ 𝔻 → ℕ64
 toBits𝔻 = coerce_UNSAFE
 
-{-# INLINE frBits𝔻 #-}
 frBits𝔻 ∷ ℕ64 → 𝔻
 frBits𝔻 = coerce_UNSAFE
 

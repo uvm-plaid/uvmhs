@@ -29,23 +29,17 @@ class
   ,   BitSize   a
   ) ⇒ Bitty     a
 
-{-# INLINE bit #-}
 bit ∷ (BitOne a,BitShiftL a) ⇒ ℕ64 → a
 bit n = bone ⋘ n
 
-{-# INLINE bget #-}
 bget ∷ (Eq a,BitZero a,BitOne a,BitAnd a,BitShiftL a) ⇒ ℕ64 → a → Bool
 bget n x = (x ⟑ bit n) ≢ bzero
 
-{-# INLINE bset #-}
 bset ∷ (BitOne a,BitOr a,BitShiftL a) ⇒ ℕ64 → a → a
 bset n x = x ⟇ bit n
 
-{-# INLINE bflp #-}
 bflp ∷ (BitOne a,BitXor a,BitShiftL a) ⇒ ℕ64 → a → a
 bflp n x = x ⊻ bit n
 
-{-# INLINE bclr #-}
 bclr ∷ (BitOne a,BitComp a,BitAnd a,BitShiftL a) ⇒ ℕ64 → a → a
 bclr n x = x ⟑ comp (bit n)
-
