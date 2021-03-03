@@ -401,6 +401,9 @@ ppMatrixCells has vas dss =
 class Pretty a where 
   pretty ∷ a → Doc
 
+class PrettyM m a | a → m where
+  mpretty ∷ a → m Doc
+
 instance Pretty Doc where pretty = id
 instance Pretty () where pretty = ppCon ∘ show𝕊
 instance Pretty 𝔹 where pretty = ppCon ∘ show𝕊

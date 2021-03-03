@@ -28,7 +28,10 @@ class (Zero a,Plus a) ⇒ Additive a
 class (Additive a,One a,Times a) ⇒ Multiplicative a
 
 succ ∷ (One a,Plus a) ⇒ a → a
-succ x = one + x
+succ x = x + one
+
+pred ∷ (One a,Minus a) ⇒ a → a
+pred x = x - one
 
 even ∷ (Eq a,Additive a,One a,DivMod a) ⇒ a → 𝔹
 even x = x ÷ (one + one) ≡ zero

@@ -803,6 +803,7 @@ cos :: Cos a => a -> a
 class (Zero a, Plus a) => Additive a
 class (Additive a, One a, Times a) => Multiplicative a
 succ :: (One a, Plus a) => a -> a
+pred :: (One a, Minus a) => a -> a
 even :: (Eq a, Additive a, One a, DivMod a) => a -> 𝔹
 odd :: (Eq a, Additive a, One a, DivMod a) => a -> 𝔹
 neg :: (Zero a, Minus a) => a -> a
@@ -3079,6 +3080,8 @@ instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.ATree.𝑉𝐴 i a)
 instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.ATree.𝑉𝐴 i a)
 instance UVMHS.Core.Classes.Functor.Functor (UVMHS.Lib.ATree.𝑉𝐴 i)
 
+module UVMHS.Lib.MMSPBindingInfo
+
 module UVMHS.Lib.Neural
 
 module UVMHS.Lib.Options
@@ -3542,6 +3545,8 @@ ppMatrix :: (𝒩 m, 𝒩 n) => 𝕍S n HAlign -> 𝕍S m VAlign -> 𝕍S m (�
 ppMatrixCells :: (𝒩 m, 𝒩 n) => 𝕍S n HAlign -> 𝕍S m VAlign -> 𝕍S m (𝕍S n Doc) -> Doc
 class Pretty a
 pretty :: Pretty a => a -> Doc
+class PrettyM m a | a -> m
+mpretty :: PrettyM m a => a -> m Doc
 escape :: ℂ -> 𝐼 ℂ
 colorsDemo :: Doc
 instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Pretty.Doc.Doc
@@ -3698,8 +3703,8 @@ data Annotated e a
 Annotated :: e -> a -> Annotated e a
 [annotatedTag] :: Annotated e a -> e
 [annotatedElem] :: Annotated e a -> a
-annotatedElemL :: forall (e_a2Hjd :: Type) (a_a2Hje :: Type). (⟢) (Annotated e_a2Hjd a_a2Hje) a_a2Hje
-annotatedTagL :: forall (e_a2Hjd :: Type) (a_a2Hje :: Type). (⟢) (Annotated e_a2Hjd a_a2Hje) e_a2Hjd
+annotatedElemL :: forall (e_a2Hmv :: Type) (a_a2Hmw :: Type). (⟢) (Annotated e_a2Hmv a_a2Hmw) a_a2Hmw
+annotatedTagL :: forall (e_a2Hmv :: Type) (a_a2Hmw :: Type). (⟢) (Annotated e_a2Hmv a_a2Hmw) e_a2Hmv
 instance (UVMHS.Lib.Pretty.Doc.Pretty e, UVMHS.Lib.Pretty.Doc.Pretty a) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Annotated.Annotated e a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Lib.Annotated.Annotated t a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Lib.Annotated.Annotated t a)
@@ -3714,8 +3719,8 @@ data ADF a
 ADF :: a -> a -> ADF a
 [adfVal] :: ADF a -> a
 [adfDer] :: ADF a -> a
-adfDerL :: forall (a_a2I8W :: Type). (⟢) (ADF a_a2I8W) a_a2I8W
-adfValL :: forall (a_a2I8W :: Type). (⟢) (ADF a_a2I8W) a_a2I8W
+adfDerL :: forall (a_a2Ice :: Type). (⟢) (ADF a_a2Ice) a_a2Ice
+adfValL :: forall (a_a2Ice :: Type). (⟢) (ADF a_a2Ice) a_a2Ice
 constADF :: Zero a => a -> ADF a
 sensADF :: a -> a -> ADF a
 plusADF :: Plus a => ADF a -> ADF a -> ADF a
@@ -3724,8 +3729,8 @@ data ADB a
 ADB :: a -> (a -> a -> a) -> ADB a
 [adbVal] :: ADB a -> a
 [adbDer] :: ADB a -> a -> a -> a
-adbDerL :: forall (a_a2Ieg :: Type). (⟢) (ADB a_a2Ieg) (a_a2Ieg -> a_a2Ieg -> a_a2Ieg)
-adbValL :: forall (a_a2Ieg :: Type). (⟢) (ADB a_a2Ieg) a_a2Ieg
+adbDerL :: forall (a_a2Ihy :: Type). (⟢) (ADB a_a2Ihy) (a_a2Ihy -> a_a2Ihy -> a_a2Ihy)
+adbValL :: forall (a_a2Ihy :: Type). (⟢) (ADB a_a2Ihy) a_a2Ihy
 constADB :: Zero a => a -> ADB a
 sensADB :: a -> (a -> a -> a) -> ADB a
 plusADB :: Plus a => ADB a -> ADB a -> ADB a
@@ -3734,8 +3739,8 @@ data ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adffVal] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adffDer] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
-adffDerL :: forall (ns_a2Iil :: [𝐍]) (f_a2Iim :: [𝐍] -> Type -> Type) (ms_a2Iin :: [𝐍]) (a_a2Iio :: Type). (⟢) (ADFF ns_a2Iil f_a2Iim ms_a2Iin a_a2Iio) (f_a2Iim ((⧺) ns_a2Iil ms_a2Iin) a_a2Iio)
-adffValL :: forall (ns_a2Iil :: [𝐍]) (f_a2Iim :: [𝐍] -> Type -> Type) (ms_a2Iin :: [𝐍]) (a_a2Iio :: Type). (⟢) (ADFF ns_a2Iil f_a2Iim ms_a2Iin a_a2Iio) (f_a2Iim ((⧺) ns_a2Iil ms_a2Iin) a_a2Iio)
+adffDerL :: forall (ns_a2IlD :: [𝐍]) (f_a2IlE :: [𝐍] -> Type -> Type) (ms_a2IlF :: [𝐍]) (a_a2IlG :: Type). (⟢) (ADFF ns_a2IlD f_a2IlE ms_a2IlF a_a2IlG) (f_a2IlE ((⧺) ns_a2IlD ms_a2IlF) a_a2IlG)
+adffValL :: forall (ns_a2IlD :: [𝐍]) (f_a2IlE :: [𝐍] -> Type -> Type) (ms_a2IlF :: [𝐍]) (a_a2IlG :: Type). (⟢) (ADFF ns_a2IlD f_a2IlE ms_a2IlF a_a2IlG) (f_a2IlE ((⧺) ns_a2IlD ms_a2IlF) a_a2IlG)
 constADFF :: Zero (f (ns ⧺ ms) a) => f (ns ⧺ ms) a -> ADFF ns f ms a
 sensADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF ns f ms a
 plusADFF :: Plus (f (ns ⧺ ms) a) => ADFF ns f ms a -> ADFF ns f ms a -> ADFF ns f ms a
@@ -3744,8 +3749,8 @@ data ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adfbVal] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adfbDer] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a
-adfbDerL :: forall (ns_a2Io4 :: [𝐍]) (f_a2Io5 :: [𝐍] -> Type -> Type) (ms_a2Io6 :: [𝐍]) (a_a2Io7 :: Type). (⟢) (ADFB ns_a2Io4 f_a2Io5 ms_a2Io6 a_a2Io7) (f_a2Io5 ((⧺) ns_a2Io4 ms_a2Io6) a_a2Io7 -> f_a2Io5 ((⧺) ns_a2Io4 ms_a2Io6) a_a2Io7 -> f_a2Io5 ((⧺) ns_a2Io4 ms_a2Io6) a_a2Io7)
-adfbValL :: forall (ns_a2Io4 :: [𝐍]) (f_a2Io5 :: [𝐍] -> Type -> Type) (ms_a2Io6 :: [𝐍]) (a_a2Io7 :: Type). (⟢) (ADFB ns_a2Io4 f_a2Io5 ms_a2Io6 a_a2Io7) (f_a2Io5 ((⧺) ns_a2Io4 ms_a2Io6) a_a2Io7)
+adfbDerL :: forall (ns_a2Irm :: [𝐍]) (f_a2Irn :: [𝐍] -> Type -> Type) (ms_a2Iro :: [𝐍]) (a_a2Irp :: Type). (⟢) (ADFB ns_a2Irm f_a2Irn ms_a2Iro a_a2Irp) (f_a2Irn ((⧺) ns_a2Irm ms_a2Iro) a_a2Irp -> f_a2Irn ((⧺) ns_a2Irm ms_a2Iro) a_a2Irp -> f_a2Irn ((⧺) ns_a2Irm ms_a2Iro) a_a2Irp)
+adfbValL :: forall (ns_a2Irm :: [𝐍]) (f_a2Irn :: [𝐍] -> Type -> Type) (ms_a2Iro :: [𝐍]) (a_a2Irp :: Type). (⟢) (ADFB ns_a2Irm f_a2Irn ms_a2Iro a_a2Irp) (f_a2Irn ((⧺) ns_a2Irm ms_a2Iro) a_a2Irp)
 constADFB :: f (ns ⧺ ms) a -> ADFB ns f ms a
 sensADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB ns f ms a
 plusADFB :: Plus (f (ns ⧺ ms) a) => ADFB ns f ms a -> ADFB ns f ms a -> ADFB ns f ms a
@@ -3762,50 +3767,40 @@ module UVMHS.Lib.Variables
 data 𝕏
 𝕏 :: 𝕊 -> 𝑂 ℕ64 -> 𝕏
 [𝕩name] :: 𝕏 -> 𝕊
-[𝕩Gen] :: 𝕏 -> 𝑂 ℕ64
-var :: 𝕊 -> 𝕏
-𝕩GenL :: (⟢) 𝕏 (𝑂 ℕ64)
+[𝕩mark] :: 𝕏 -> 𝑂 ℕ64
+𝕩markL :: (⟢) 𝕏 (𝑂 ℕ64)
 𝕩nameL :: (⟢) 𝕏 𝕊
-data FV
-FV :: 𝑃 𝕏 -> 𝑃 𝕏 -> FV
-[fvLexis] :: FV -> 𝑃 𝕏
-[fvMetas] :: FV -> 𝑃 𝕏
-fvLexi :: 𝑃 𝕏 -> FV
-fvMeta :: 𝑃 𝕏 -> FV
-class (JoinLattice fv) => HasFV fv a | a -> fv
-fv :: HasFV fv a => a -> fv
-data Sub fv a
-Sub :: (𝕏 ⇰ a) -> (𝕏 ⇰ a) -> fv -> Sub fv a
-[subLexis] :: Sub fv a -> 𝕏 ⇰ a
-[subMetas] :: Sub fv a -> 𝕏 ⇰ a
-[subFvars] :: Sub fv a -> fv
-mkSub :: HasFV fv a => (𝕏 ⇰ a) -> (𝕏 ⇰ a) -> Sub fv a
-subLexi :: HasFV fv a => (𝕏 ⇰ a) -> Sub fv a
-subMeta :: HasFV fv a => (𝕏 ⇰ a) -> Sub fv a
-subRestrict :: HasFV fv a => FV -> Sub fv a -> Sub fv a
-subWithout :: HasFV fv a => FV -> Sub fv a -> Sub fv a
-subSupport :: Eq a => Sub fv a -> FV
-subValues :: Sub fv a -> 𝐿 a
-substVarLexi :: Monad m => (𝕏 -> b) -> (a -> m b) -> Sub fv a -> 𝕏 -> m b
-substVarMeta :: Monad m => (𝕏 -> b) -> (a -> m b) -> Sub fv a -> 𝕏 -> m b
-mapMSub :: (Monad m, HasFV fv b) => (a -> m b) -> Sub fv a -> m (Sub fv b)
-instance GHC.Show.Show UVMHS.Lib.Variables.FV
-instance GHC.Classes.Ord UVMHS.Lib.Variables.FV
-instance GHC.Classes.Eq UVMHS.Lib.Variables.FV
-instance (GHC.Show.Show a, GHC.Show.Show fv) => GHC.Show.Show (UVMHS.Lib.Variables.Sub fv a)
-instance (GHC.Classes.Ord a, GHC.Classes.Ord fv) => GHC.Classes.Ord (UVMHS.Lib.Variables.Sub fv a)
-instance (GHC.Classes.Eq a, GHC.Classes.Eq fv) => GHC.Classes.Eq (UVMHS.Lib.Variables.Sub fv a)
-instance (UVMHS.Lib.Pretty.Doc.Pretty fv, GHC.Classes.Eq a, UVMHS.Lib.Pretty.Doc.Pretty a) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Variables.Sub fv a)
-instance UVMHS.Core.Classes.Lattice.Bot fv => UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.Variables.Sub fv a)
-instance UVMHS.Core.Classes.Lattice.Join fv => UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.Variables.Sub fv a)
-instance UVMHS.Core.Classes.Lattice.JoinLattice fv => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.Variables.Sub fv a)
-instance UVMHS.Core.Classes.Collections.ToStream (UVMHS.Lib.Variables.𝕏 UVMHS.Core.Init.∧ a) (UVMHS.Lib.Variables.Sub fv a)
-instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Variables.FV
-instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Lib.Variables.FV
-instance UVMHS.Core.Classes.Lattice.Join UVMHS.Lib.Variables.FV
-instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Lib.Variables.FV
-instance UVMHS.Core.Classes.Lattice.Difference UVMHS.Lib.Variables.FV
-instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Lib.Variables.FV
+var :: 𝕊 -> 𝕏
+data 𝕐
+NamedVar :: 𝕏 -> ℕ64 -> 𝕐
+BoundVar :: ℕ64 -> 𝕐
+boundVarL :: (⌲) 𝕐 ℕ64
+namedVarL :: (⌲) 𝕐 ((∧) 𝕏 ℕ64)
+named :: 𝕊 -> 𝕐
+openVar :: 𝕏 -> ℕ64 -> 𝕐 -> 𝕐
+closeVar :: 𝕏 -> ℕ64 -> 𝕐 -> 𝕐
+bindVar :: (𝕐 -> a) -> (ℕ64 -> a -> a) -> a -> ℕ64 -> 𝕐 -> a
+substVar :: (𝕐 -> a) -> (ℕ64 -> a -> a) -> 𝕏 -> a -> ℕ64 -> 𝕐 -> a
+introVar :: ℕ64 -> ℕ64 -> 𝕐 -> 𝕐
+shiftVar :: 𝕏 -> 𝕐 -> 𝕐
+class (Ord s) => Binding s a | a -> s
+mkvar :: Binding s a => 𝕐 -> a
+gsubstMN :: (Binding s a, Monad m) => ℕ64 -> (s ⇰ (ℕ64 -> 𝕐 -> m a)) -> a -> m a
+gsubstM :: (Monad m, Binding s a) => (s ⇰ (ℕ64 -> 𝕐 -> m a)) -> a -> m a
+gsubst :: Binding s a => (s ⇰ (ℕ64 -> 𝕐 -> a)) -> a -> a
+grename :: Binding s a => (s ⇰ (ℕ64 -> 𝕐 -> 𝕐)) -> a -> a
+openTerm :: Binding s a => s -> 𝕏 -> a -> a
+closeTerm :: Binding s a => s -> 𝕏 -> a -> a
+bindTerm :: Binding s a => s -> a -> a -> a
+bindTermM :: (Monad m, Binding s a) => s -> m a -> a -> m a
+substTerm :: Binding s a => s -> 𝕏 -> a -> a -> a
+substTermM :: (Monad m, Binding s a) => s -> 𝕏 -> m a -> a -> m a
+introTerm :: Binding s a => s -> ℕ64 -> a -> a
+shiftTerm :: Binding s a => s -> 𝕏 -> a -> a
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Variables.𝕐
+instance GHC.Show.Show UVMHS.Lib.Variables.𝕐
+instance GHC.Classes.Ord UVMHS.Lib.Variables.𝕐
+instance GHC.Classes.Eq UVMHS.Lib.Variables.𝕐
 instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Variables.𝕏
 instance GHC.Show.Show UVMHS.Lib.Variables.𝕏
 instance GHC.Classes.Ord UVMHS.Lib.Variables.𝕏
@@ -3816,32 +3811,29 @@ newtype MMSP
 MMSP :: MMSPMaxs -> MMSP
 [mmspMaxs] :: MMSP -> MMSPMaxs
 data MMSPMaxs
-MMSPMaxs :: FV -> ℕ -> 𝑃 MMSPMins -> MMSPMaxs
-[mmspMaxsBindingInfo] :: MMSPMaxs -> FV
+MMSPMaxs :: ℕ -> 𝑃 MMSPMins -> MMSPMaxs
 [mmspMaxsConstant] :: MMSPMaxs -> ℕ
 [mmspMaxsMins] :: MMSPMaxs -> 𝑃 MMSPMins
 data MMSPMins
-MMSPMins :: FV -> AddTop ℕ -> 𝑃 MMSPSums -> MMSPMins
-[mmspMinsBindingInfo] :: MMSPMins -> FV
+MMSPMins :: AddTop ℕ -> 𝑃 MMSPSums -> MMSPMins
 [mmspMinsConstant] :: MMSPMins -> AddTop ℕ
 [mmspMinsSums] :: MMSPMins -> 𝑃 MMSPSums
 data MMSPSums
-MMSPSums :: FV -> ℕ -> (MMSPProds ⇰ ℕ) -> MMSPSums
-[mmspSumsBindingInfo] :: MMSPSums -> FV
+MMSPSums :: ℕ -> (MMSPProds ⇰ ℕ) -> MMSPSums
 [mmspSumsConstant] :: MMSPSums -> ℕ
 [mmspSumsPRods] :: MMSPSums -> MMSPProds ⇰ ℕ
 data MMSPProds
-MMSPProds :: FV -> (MMSPAtom ⇰ ℕ) -> MMSPProds
-[mmspProdsBindingInfo] :: MMSPProds -> FV
+MMSPProds :: (MMSPAtom ⇰ ℕ) -> MMSPProds
 [mmspProdsExps] :: MMSPProds -> MMSPAtom ⇰ ℕ
 data MMSPAtom
-Var_MMSP :: 𝕏 -> MMSPAtom
-Meta_MMSP :: 𝕏 -> MMSPAtom
+Var_MMSP :: 𝕐 -> MMSPAtom
+var_MMSPL :: (⌲) MMSPAtom 𝕐
 maxsMMSPL :: MMSP ⌲ MMSPMaxs
 minsMMSPL :: MMSP ⌲ MMSPMins
 sumsMMSPL :: MMSP ⌲ MMSPSums
 prodsMMSPL :: MMSP ⌲ MMSPProds
 atomMMSPL :: MMSP ⌲ MMSPAtom
+varMMSPL :: MMSP ⌲ 𝕐
 litMMSPL :: MMSP ⌲ ℕ
 topMMSPL :: MMSP ⌲ ()
 littMMSPL :: MMSP ⌲ AddTop ℕ
@@ -3850,6 +3842,7 @@ minsMMSP :: MMSPMins -> MMSP
 sumsMMSP :: MMSPSums -> MMSP
 prodsMMSP :: MMSPProds -> MMSP
 atomMMSP :: MMSPAtom -> MMSP
+varMMSP :: 𝕐 -> MMSP
 litMMSP :: ℕ -> MMSP
 topMMSP :: MMSP
 joinMMSP :: MMSP -> MMSP -> MMSP
@@ -3857,16 +3850,15 @@ meetMMSP :: MMSP -> MMSP -> MMSP
 plusMMSP :: MMSP -> MMSP -> MMSP
 timesMMSP :: MMSP -> MMSP -> MMSP
 ponMMSP :: MMSP -> ℕ -> MMSP
-freeVarsMMSP :: MMSP -> FV
-substMMSP :: (Monad m, Ord a, HasFV fv a) => (a -> m MMSP) -> Sub fv a -> MMSP -> m MMSP
-substMaxs :: (Monad m, Ord a, HasFV fv a) => (a -> m MMSP) -> Sub fv a -> MMSPMaxs -> m MMSP
-substMaxsMins :: (Monad m, Ord a, HasFV fv a) => (a -> m MMSP) -> Sub fv a -> 𝑃 MMSPMins -> m MMSP
-substMins :: (Monad m, Ord a, HasFV fv a) => (a -> m MMSP) -> Sub fv a -> MMSPMins -> m MMSP
-substMinsSums :: (Monad m, Ord a, HasFV fv a) => (a -> m MMSP) -> Sub fv a -> 𝑃 MMSPSums -> m MMSP
-substSums :: (Monad m, Ord a, HasFV fv a) => (a -> m MMSP) -> Sub fv a -> MMSPSums -> m MMSP
-substSumsProds :: (Monad m, Ord a, HasFV fv a) => (a -> m MMSP) -> Sub fv a -> (MMSPProds ⇰ ℕ) -> m MMSP
-substProds :: (Monad m, Ord a, HasFV fv a) => (a -> m MMSP) -> Sub fv a -> MMSPProds -> m MMSP
-substAtom :: (Monad m, Ord a) => (a -> m MMSP) -> Sub fv a -> MMSPAtom -> m MMSP
+gsubstMN_MMSP :: Monad m => (𝕐 -> m MMSP) -> MMSP -> m MMSP
+gsubstMN_Maxs :: Monad m => (𝕐 -> m MMSP) -> MMSPMaxs -> m MMSP
+gsubstMN_MaxsMins :: Monad m => (𝕐 -> m MMSP) -> 𝑃 MMSPMins -> m MMSP
+gsubstMN_Mins :: Monad m => (𝕐 -> m MMSP) -> MMSPMins -> m MMSP
+gsubstMN_MinsSums :: Monad m => (𝕐 -> m MMSP) -> 𝑃 MMSPSums -> m MMSP
+gsubstMN_Sums :: Monad m => (𝕐 -> m MMSP) -> MMSPSums -> m MMSP
+gsubstMN_SumsProds :: Monad m => (𝕐 -> m MMSP) -> (MMSPProds ⇰ ℕ) -> m MMSP
+gsubstMN_Prods :: Monad m => (𝕐 -> m MMSP) -> MMSPProds -> m MMSP
+gsubstMN_Atom :: Monad m => (𝕐 -> m MMSP) -> MMSPAtom -> m MMSP
 zeroMaxsMins :: 𝑃 MMSPMins
 joinMaxsMins :: 𝑃 MMSPMins -> 𝑃 MMSPMins -> 𝑃 MMSPMins
 cmeetMaxsMins :: AddTop ℕ -> 𝑃 MMSPMins -> 𝑃 MMSPMins
@@ -3899,6 +3891,20 @@ cplusSums :: ℕ -> MMSPSums -> MMSPSums
 plusSums :: MMSPSums -> MMSPSums -> MMSPSums
 timesSums :: MMSPSums -> MMSPSums -> MMSPSums
 timesProds :: MMSPProds -> MMSPProds -> MMSPProds
+instance UVMHS.Core.Classes.Arithmetic.Zero UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Arithmetic.One UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Arithmetic.Plus UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Arithmetic.Times UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Arithmetic.Pon UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Lattice.Join UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Lattice.Top UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Core.Classes.Lattice.MeetLattice UVMHS.Lib.MMSP.MMSP
+instance UVMHS.Lib.Variables.Binding () UVMHS.Lib.MMSP.MMSP
 instance GHC.Show.Show UVMHS.Lib.MMSP.MMSPAtom
 instance GHC.Classes.Ord UVMHS.Lib.MMSP.MMSPAtom
 instance GHC.Classes.Eq UVMHS.Lib.MMSP.MMSPAtom
@@ -3917,19 +3923,6 @@ instance GHC.Classes.Eq UVMHS.Lib.MMSP.MMSPMaxs
 instance GHC.Show.Show UVMHS.Lib.MMSP.MMSP
 instance GHC.Classes.Ord UVMHS.Lib.MMSP.MMSP
 instance GHC.Classes.Eq UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Arithmetic.Zero UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Arithmetic.One UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Arithmetic.Plus UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Arithmetic.Times UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Arithmetic.Pon UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Lattice.Bot UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Lattice.Join UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Lattice.Top UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Arithmetic.Additive UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Arithmetic.Multiplicative UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Lib.MMSP.MMSP
-instance UVMHS.Core.Classes.Lattice.MeetLattice UVMHS.Lib.MMSP.MMSP
 instance UVMHS.Core.Classes.Arithmetic.Plus a => UVMHS.Core.Classes.Arithmetic.Plus (UVMHS.Core.Pointed.AddTop a)
 instance UVMHS.Core.Classes.Arithmetic.Times a => UVMHS.Core.Classes.Arithmetic.Times (UVMHS.Core.Pointed.AddTop a)
 
@@ -4022,19 +4015,19 @@ PreParserToken :: t -> 𝔹 -> ParserContext -> PreParserToken t
 [preParserTokenValue] :: PreParserToken t -> t
 [preParserTokenSkip] :: PreParserToken t -> 𝔹
 [preParserTokenContext] :: PreParserToken t -> ParserContext
-preParserTokenContextL :: forall (t_a333t :: Type). (⟢) (PreParserToken t_a333t) ParserContext
-preParserTokenSkipL :: forall (t_a333t :: Type). (⟢) (PreParserToken t_a333t) 𝔹
-preParserTokenValueL :: forall (t_a333t :: Type). (⟢) (PreParserToken t_a333t) t_a333t
+preParserTokenContextL :: forall (t_a30yz :: Type). (⟢) (PreParserToken t_a30yz) ParserContext
+preParserTokenSkipL :: forall (t_a30yz :: Type). (⟢) (PreParserToken t_a30yz) 𝔹
+preParserTokenValueL :: forall (t_a30yz :: Type). (⟢) (PreParserToken t_a30yz) t_a30yz
 data ParserToken t
 ParserToken :: t -> 𝔹 -> ParserContext -> WindowL Doc Doc -> ParserToken t
 [parserTokenValue] :: ParserToken t -> t
 [parserTokenSkip] :: ParserToken t -> 𝔹
 [parserTokenContext] :: ParserToken t -> ParserContext
 [parserTokenSuffix] :: ParserToken t -> WindowL Doc Doc
-parserTokenSuffixL :: forall (t_a335y :: Type). (⟢) (ParserToken t_a335y) (WindowL Doc Doc)
-parserTokenContextL :: forall (t_a335y :: Type). (⟢) (ParserToken t_a335y) ParserContext
-parserTokenSkipL :: forall (t_a335y :: Type). (⟢) (ParserToken t_a335y) 𝔹
-parserTokenValueL :: forall (t_a335y :: Type). (⟢) (ParserToken t_a335y) t_a335y
+parserTokenSuffixL :: forall (t_a30AE :: Type). (⟢) (ParserToken t_a30AE) (WindowL Doc Doc)
+parserTokenContextL :: forall (t_a30AE :: Type). (⟢) (ParserToken t_a30AE) ParserContext
+parserTokenSkipL :: forall (t_a30AE :: Type). (⟢) (ParserToken t_a30AE) 𝔹
+parserTokenValueL :: forall (t_a30AE :: Type). (⟢) (ParserToken t_a30AE) t_a30AE
 renderNLDisplay :: Doc
 renderNLError :: Doc
 renderEOFDisplay :: Doc
@@ -4104,11 +4097,11 @@ RegexState :: ℕ64 -> (Regex c t o u ⇰ ℕ64) -> ((t ∨ c) ⇰ (ℕ64 ⇰ �
 [regexStateTransitions] :: RegexState c t o u -> (t ∨ c) ⇰ (ℕ64 ⇰ ℕ64)
 [regexStateResults] :: RegexState c t o u -> ℕ64 ⇰ 𝑂 (RegexResult o u)
 [regexStateDead] :: RegexState c t o u -> ℕ64 ⇰ 𝔹
-regexStateDeadL :: forall (c_a35nh :: Type) (t_a35ni :: Type) (o_a35nj :: Type) (u_a35nk :: Type). (⟢) (RegexState c_a35nh t_a35ni o_a35nj u_a35nk) ((⇰) ℕ64 𝔹)
-regexStateResultsL :: forall (c_a35nh :: Type) (t_a35ni :: Type) (o_a35nj :: Type) (u_a35nk :: Type). (⟢) (RegexState c_a35nh t_a35ni o_a35nj u_a35nk) ((⇰) ℕ64 (𝑂 (RegexResult o_a35nj u_a35nk)))
-regexStateTransitionsL :: forall (c_a35nh :: Type) (t_a35ni :: Type) (o_a35nj :: Type) (u_a35nk :: Type). (⟢) (RegexState c_a35nh t_a35ni o_a35nj u_a35nk) ((⇰) ((∨) t_a35ni c_a35nh) ((⇰) ℕ64 ℕ64))
-regexStateMapL :: forall (c_a35nh :: Type) (t_a35ni :: Type) (o_a35nj :: Type) (u_a35nk :: Type). (⟢) (RegexState c_a35nh t_a35ni o_a35nj u_a35nk) ((⇰) (Regex c_a35nh t_a35ni o_a35nj u_a35nk) ℕ64)
-regexStateNextIDL :: forall (c_a35nh :: Type) (t_a35ni :: Type) (o_a35nj :: Type) (u_a35nk :: Type). (⟢) (RegexState c_a35nh t_a35ni o_a35nj u_a35nk) ℕ64
+regexStateDeadL :: forall (c_a32Sn :: Type) (t_a32So :: Type) (o_a32Sp :: Type) (u_a32Sq :: Type). (⟢) (RegexState c_a32Sn t_a32So o_a32Sp u_a32Sq) ((⇰) ℕ64 𝔹)
+regexStateResultsL :: forall (c_a32Sn :: Type) (t_a32So :: Type) (o_a32Sp :: Type) (u_a32Sq :: Type). (⟢) (RegexState c_a32Sn t_a32So o_a32Sp u_a32Sq) ((⇰) ℕ64 (𝑂 (RegexResult o_a32Sp u_a32Sq)))
+regexStateTransitionsL :: forall (c_a32Sn :: Type) (t_a32So :: Type) (o_a32Sp :: Type) (u_a32Sq :: Type). (⟢) (RegexState c_a32Sn t_a32So o_a32Sp u_a32Sq) ((⇰) ((∨) t_a32So c_a32Sn) ((⇰) ℕ64 ℕ64))
+regexStateMapL :: forall (c_a32Sn :: Type) (t_a32So :: Type) (o_a32Sp :: Type) (u_a32Sq :: Type). (⟢) (RegexState c_a32Sn t_a32So o_a32Sp u_a32Sq) ((⇰) (Regex c_a32Sn t_a32So o_a32Sp u_a32Sq) ℕ64)
+regexStateNextIDL :: forall (c_a32Sn :: Type) (t_a32So :: Type) (o_a32Sp :: Type) (u_a32Sq :: Type). (⟢) (RegexState c_a32Sn t_a32So o_a32Sp u_a32Sq) ℕ64
 regexState₀ :: RegexState c t o u
 data DFA c t o u
 DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult o u)) -> 𝕍 𝔹 -> DFA c t o u
@@ -4340,12 +4333,12 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateEndPos] :: ParserState t -> AddBT Loc
 [parserStateInput] :: ParserState t -> 𝑆 (ParserToken t)
-parserStateInputL :: forall (t_a3zHg :: Type). (⟢) (ParserState t_a3zHg) (𝑆 (ParserToken t_a3zHg))
-parserStateEndPosL :: forall (t_a3zHg :: Type). (⟢) (ParserState t_a3zHg) (AddBT Loc)
-parserStateSuffixL :: forall (t_a3zHg :: Type). (⟢) (ParserState t_a3zHg) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a3zHg :: Type). (⟢) (ParserState t_a3zHg) ParserContext
-parserStateSkipContextL :: forall (t_a3zHg :: Type). (⟢) (ParserState t_a3zHg) ParserContext
-parserStatePrefixL :: forall (t_a3zHg :: Type). (⟢) (ParserState t_a3zHg) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a3xcm :: Type). (⟢) (ParserState t_a3xcm) (𝑆 (ParserToken t_a3xcm))
+parserStateEndPosL :: forall (t_a3xcm :: Type). (⟢) (ParserState t_a3xcm) (AddBT Loc)
+parserStateSuffixL :: forall (t_a3xcm :: Type). (⟢) (ParserState t_a3xcm) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a3xcm :: Type). (⟢) (ParserState t_a3xcm) ParserContext
+parserStateSkipContextL :: forall (t_a3xcm :: Type). (⟢) (ParserState t_a3xcm) ParserContext
+parserStatePrefixL :: forall (t_a3xcm :: Type). (⟢) (ParserState t_a3xcm) (WindowR Doc Doc)
 parserState₀ :: 𝑆 (ParserToken t) -> ParserState t
 newtype Parser t a
 Parser :: ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a

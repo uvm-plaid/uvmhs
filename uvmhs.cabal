@@ -4,7 +4,7 @@ cabal-version: 2.2
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a7d6928e50118a3ccad8bc689a3c6ca5a90e3b2625705f413d7573cce6dfe042
+-- hash: 379cd3986346ed1556c6f7182d4c99cee4c6aeba74e743bd12464e3cc0b3daaf
 
 name:           uvmhs
 version:        0.0.0.0
@@ -70,6 +70,7 @@ library
       UVMHS.Lib.Annotated
       UVMHS.Lib.ATree
       UVMHS.Lib.MMSP
+      UVMHS.Lib.MMSPBindingInfo
       UVMHS.Lib.Neural
       UVMHS.Lib.Options
       UVMHS.Lib.Parser
@@ -103,7 +104,7 @@ library
   hs-source-dirs:
       src
   default-extensions: ConstraintKinds DataKinds EmptyCase ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
-  ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -j2 -O2 -optc-O3 -fspecialise-aggressively -fexpose-all-unfoldings
+  ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -j2
   build-depends:
       base
     , bytestring
@@ -125,7 +126,7 @@ executable uvmhs
   hs-source-dirs:
       main
   default-extensions: ConstraintKinds DataKinds EmptyCase ExplicitNamespaces FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RebindableSyntax ScopedTypeVariables StandaloneDeriving Strict StrictData TemplateHaskell TypeApplications TypeFamilies TypeOperators UndecidableInstances UndecidableSuperClasses UnicodeSyntax ViewPatterns
-  ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -j2 -O2 -optc-O3 -fspecialise-aggressively -fexpose-all-unfoldings
+  ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -j2
   build-depends:
       base
     , bytestring
