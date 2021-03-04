@@ -224,9 +224,7 @@ gsubstMN_Atom 𝓈 = \case
 
 instance Binding () MMSP where
   mkvar = varMMSP
-  gsubstMN n 𝓈 = 
-    let 𝓈' = (𝓈 ⋕! ()) n
-    in gsubstMN_MMSP 𝓈'
+  gsubstMN n 𝓈 = gsubstMN_MMSP $ 𝓈 () $ n ()
 
 ----------
 -- MAXS --
