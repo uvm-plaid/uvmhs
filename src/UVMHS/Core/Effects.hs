@@ -75,6 +75,9 @@ class LiftCont t where
   liftCallCC ∷ ∀ m r. (Monad m) ⇒ (∀ a. ((a → m r) → m r) → m a) → (∀ a. ((a → t m r) → t m r) → t m a)
   liftWithC ∷ ∀ m r. (Monad m) ⇒ (∀ a. (a → m r) → m a → m r) → (∀ a. (a → t m r) → t m a → t m r)
 
+class MonadBad m where
+  bad ∷ ∀ a. m a
+
 ------------------------
 -- STANDARD INSTANCES --
 ------------------------

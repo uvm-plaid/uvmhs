@@ -400,6 +400,38 @@ instance Transformer (ContT r) where
   lift ∷ ∀ m a. (Monad m) ⇒ m a → ContT r m a
   lift xM = ContT $ \ (κ ∷ a → m r) → κ *$ xM
 
+-----------
+-- NoBad --
+-----------
+
+newtype NoBad a = NoBad { unNoBad ∷ a }
+  deriving 
+  (Null,Append,Monoid
+  ,Bot,Join,JoinLattice
+  ,Top,Meet,MeetLattice
+  ,Lattice,Dual,Difference)
+
+instance Functor NoBad where 
+  map = mmap
+instance Return NoBad where
+  return ∷ ∀ a. a → NoBad a
+  return = NoBad
+instance Bind NoBad where
+  (≫=) ∷ ∀ a b. NoBad a → (a → NoBad b) → NoBad b
+  x ≫= f = f $ unNoBad x
+instance Monad NoBad
+
+instance Extract NoBad where
+  extract ∷ ∀ a. NoBad a → a
+  extract = unNoBad
+instance Cobind NoBad where
+  (=≫) ∷ ∀ a b. NoBad a → (NoBad a → b) → NoBad b
+  xM =≫ f = NoBad $ f xM
+instance Comonad NoBad
+
+instance MonadBad NoBad where
+  bad = error "<nobad>"
+
 -- ================= --
 -- AUTOMATIC LIFTING --
 -- ================= --

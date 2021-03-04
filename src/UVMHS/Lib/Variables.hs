@@ -99,13 +99,13 @@ shiftVar x = \case
 
 class (Ord s) ⇒ Binding s a | a → s where
   mkvar ∷ 𝕐 → a
-  gsubstMN ∷ (Monad m) ⇒ (s → ℕ64) → (s → ℕ64 → 𝕐 → m a) → a → m a
+  gsubstMN ∷ (Monad m,MonadBad m) ⇒ (s → ℕ64) → (s → ℕ64 → 𝕐 → m a) → a → m a
 
-gsubstM ∷ (Monad m,Binding s a) ⇒ (s → ℕ64 → 𝕐 → m a) → a → m a
+gsubstM ∷ (Monad m,MonadBad m,Binding s a) ⇒ (s → ℕ64 → 𝕐 → m a) → a → m a
 gsubstM = gsubstMN $ const zero
 
 gsubst ∷ (Binding s a) ⇒ (s → ℕ64 → 𝕐 → a) → a → a
-gsubst 𝓈 e = unID $ gsubstM (\ s u x → ID $ 𝓈 s u x) e
+gsubst 𝓈 e = unNoBad $ gsubstM (\ s u x → NoBad $ 𝓈 s u x) e
 
 grename ∷ (Binding s a) ⇒ (s → ℕ64 → 𝕐 → 𝕐) → a → a
 grename 𝓈 = gsubst $ \ s u x → mkvar $ 𝓈 s u x
@@ -125,7 +125,7 @@ bindTerm s e = gsubst $ \ s' →
   if s ≢ s' then const mkvar
   else bindVar mkvar (introTerm s) e 
 
-bindTermM ∷ (Monad m,Binding s a) ⇒ s → m a → a → m a
+bindTermM ∷ (Monad m,MonadBad m,Binding s a) ⇒ s → m a → a → m a
 bindTermM s e = gsubstM $ \ s' → 
   if s ≢ s' then const $ return ∘ mkvar
   else bindVar (return ∘ mkvar) (map ∘ introTerm s) e
@@ -135,7 +135,7 @@ substTerm s x e = gsubst $ \ s' →
   if s ≢ s' then const mkvar
   else substVar mkvar (introTerm s) x e
 
-substTermM ∷ (Monad m,Binding s a) ⇒ s → 𝕏 → m a → a → m a
+substTermM ∷ (Monad m,MonadBad m,Binding s a) ⇒ s → 𝕏 → m a → a → m a
 substTermM s x e = gsubstM $ \ s' →
   if s ≢ s' then const $ return ∘ mkvar
   else substVar (return ∘ mkvar) (map ∘ introTerm s) x e
