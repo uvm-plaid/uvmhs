@@ -32,8 +32,8 @@ data 𝕐 =
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
 
-named ∷ 𝕊 → 𝕐
-named x = NamedVar (var x) zero
+named ∷ 𝕏 → 𝕐
+named x = NamedVar x zero
 
 instance Pretty 𝕐 where
   pretty = \case
@@ -63,18 +63,18 @@ closeVar x u = \case
     | n < u → BoundVar n
     | otherwise → BoundVar $ n + one
 
-bindVar ∷ (𝕐 → a) → (ℕ64 → a → a) → a → ℕ64 → 𝕐 → a
-bindVar mkvar' intro' e u = \case
+bindVar ∷ (𝕐 → a) → a → ℕ64 → 𝕐 → a
+bindVar mkvar' e u = \case
   NamedVar x n → mkvar' $ NamedVar x n
   BoundVar n
     | n < u → mkvar' $ BoundVar n
-    | n ≡ zero → intro' u e
+    | n ≡ u → e
     | otherwise → mkvar' $ BoundVar $ pred n
 
-substVar ∷ (𝕐 → a) → (ℕ64 → a → a) → 𝕏 → a → ℕ64 → 𝕐 → a
-substVar mkvar' intro' x e u = \case
+substVar ∷ (𝕐 → a) → 𝕏 → a → 𝕐 → a
+substVar mkvar' x e = \case
   NamedVar y n
-    | x ≡ y,n ≡ zero → intro' u e
+    | x ≡ y,n ≡ zero → e
     | x ≡ y,n ≢ zero → mkvar' $ NamedVar y $ pred n
     | otherwise → mkvar' $ NamedVar y n
   BoundVar n → mkvar' $ BoundVar n
@@ -97,55 +97,49 @@ shiftVar x = \case
 -- SUPPORT SUBSTITUTION --
 --------------------------
 
-class (Ord s) ⇒ Binding s a | a → s where
+class (HasPrism b a) ⇒ Binding s b a | a → s,a → b where
   mkvar ∷ 𝕐 → a
-  gsubstMN ∷ (Monad m,MonadBad m) ⇒ (s → ℕ64) → (s → ℕ64 → 𝕐 → m a) → a → m a
+  gsubstMN ∷ ℕ64 → s → (ℕ64 → 𝕐 → 𝑂 b) → a → 𝑂 a
 
-gsubstM ∷ (Monad m,MonadBad m,Binding s a) ⇒ (s → ℕ64 → 𝕐 → m a) → a → m a
-gsubstM = gsubstMN $ const zero
+gsubstM ∷ (Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝑂 b) → a → 𝑂 a
+gsubstM = gsubstMN zero
 
-gsubst ∷ (Binding s a) ⇒ (s → ℕ64 → 𝕐 → a) → a → a
-gsubst 𝓈 e = unNoBad $ gsubstM (\ s u x → NoBad $ 𝓈 s u x) e
+gsubst ∷ (Binding s b a) ⇒ s → (ℕ64 → 𝕐 → a) → a → a
+gsubst s 𝓈 e = 
+  ifNone (error "gsubst: bad termL prism") 
+  $ gsubstM s (\ u x → Some $ ι $ 𝓈 u x) e
 
-grename ∷ (Binding s a) ⇒ (s → ℕ64 → 𝕐 → 𝕐) → a → a
-grename 𝓈 = gsubst $ \ s u x → mkvar $ 𝓈 s u x
+grename ∷ (Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝕐) → a → a
+grename s 𝓈 e = gsubst s (\ u x → mkvar $ 𝓈 u x) e
 
-openTerm ∷ (Binding s a) ⇒ s → 𝕏 → a → a
-openTerm s x = grename $ \ s' → 
-  if s ≢ s' then const id
-  else openVar x 
+openTerm ∷ (Binding s b a) ⇒ s → 𝕏 → a → a
+openTerm s x = grename s $ openVar x 
 
-closeTerm ∷ (Binding s a) ⇒ s → 𝕏 → a → a
-closeTerm s x = grename $ \ s' → 
-  if s ≢ s' then const id
-  else closeVar x 
+closeTerm ∷ (Binding s b a) ⇒ s → 𝕏 → a → a
+closeTerm s x = grename s $ closeVar x 
 
-bindTerm ∷ (Binding s a) ⇒ s → a → a → a
-bindTerm s e = gsubst $ \ s' → 
-  if s ≢ s' then const mkvar
-  else bindVar mkvar (introTerm s) e 
+bindTermM ∷ ∀ s b a. (Binding s b a) ⇒ s → b → a → 𝑂 a
+bindTermM s e = gsubstM s $ \ u x → do
+  let e' = bindVar ((ι ∷ a → b) ∘ mkvar) e u x
+  e'' ← (ιview ∷ b → 𝑂 a) e'
+  let e''' = introTerm s u e''
+  return $ ι e'''
 
-bindTermM ∷ (Monad m,MonadBad m,Binding s a) ⇒ s → m a → a → m a
-bindTermM s e = gsubstM $ \ s' → 
-  if s ≢ s' then const $ return ∘ mkvar
-  else bindVar (return ∘ mkvar) (map ∘ introTerm s) e
+bindTerm ∷ (Binding s b a) ⇒ s → a → a → a
+bindTerm s e = gsubst s $ \ u x → introTerm s u $ bindVar mkvar e u x
 
-substTerm ∷ (Binding s a) ⇒ s → 𝕏 → a → a → a
-substTerm s x e = gsubst $ \ s' →
-  if s ≢ s' then const mkvar
-  else substVar mkvar (introTerm s) x e
+substTermM ∷ ∀ s b a. (Binding s b a) ⇒ s → 𝕏 → b → a → 𝑂 a
+substTermM s x e = gsubstM s $ \ u y → do
+  let e' = substVar ((ι ∷ a → b) ∘ mkvar) x e y
+  e'' ← (ιview ∷ b → 𝑂 a) e'
+  let e''' = introTerm s u e''
+  return $ ι e'''
 
-substTermM ∷ (Monad m,MonadBad m,Binding s a) ⇒ s → 𝕏 → m a → a → m a
-substTermM s x e = gsubstM $ \ s' →
-  if s ≢ s' then const $ return ∘ mkvar
-  else substVar (return ∘ mkvar) (map ∘ introTerm s) x e
+substTerm ∷ (Binding s b a) ⇒ s → 𝕏 → a → a → a
+substTerm s x e = gsubst s $ \ u y → introTerm s u $ substVar mkvar x e y
 
-introTerm ∷ (Binding s a) ⇒ s → ℕ64 → a → a
-introTerm s m = grename $ \ s' →
-  if s ≢ s' then const id
-  else introVar m
+introTerm ∷ (Binding s b a) ⇒ s → ℕ64 → a → a
+introTerm s m = grename s $ introVar m
 
-shiftTerm ∷ (Binding s a) ⇒ s → 𝕏 → a → a
-shiftTerm s x = grename $ \ s' →
-  if s ≢ s' then const id
-  else const $ shiftVar x
+shiftTerm ∷ (Binding s b a) ⇒ s → 𝕏 → a → a
+shiftTerm s x = grename s $ const $ shiftVar x

@@ -222,9 +222,9 @@ gsubstMN_Atom ∷ (Monad m) ⇒ (𝕐 → m MMSP) → MMSPAtom → m MMSP
 gsubstMN_Atom 𝓈 = \case
   Var_MMSP x → 𝓈 x
 
-instance Binding () MMSP where
+instance Binding () MMSP MMSP where
   mkvar = varMMSP
-  gsubstMN n 𝓈 = gsubstMN_MMSP $ 𝓈 () $ n ()
+  gsubstMN u () 𝓈 = gsubstMN_MMSP $ 𝓈 u
 
 ----------
 -- MAXS --
