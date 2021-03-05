@@ -194,37 +194,40 @@ ponMMSP e n = applyN n one (× e)
 -- SUBSTITUTION --
 ------------------
 
-gsubstMN_MMSP ∷ (Monad m) ⇒ (𝕐 → m MMSP) → MMSP → m MMSP
-gsubstMN_MMSP 𝓈 (MMSP α̇) = gsubstMN_Maxs 𝓈 α̇
+gsubstMN_MMSP ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → MMSP → 𝑂 MMSP
+gsubstMN_MMSP u 𝓈 (MMSP α̇) = gsubstMN_Maxs u 𝓈 α̇
 
-gsubstMN_Maxs ∷ (Monad m) ⇒ (𝕐 → m MMSP) → MMSPMaxs → m MMSP
-gsubstMN_Maxs 𝓈 (MMSPMaxs a α) = (⊔ litMMSP a) ^$ gsubstMN_MaxsMins 𝓈 α
+gsubstMN_Maxs ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → MMSPMaxs → 𝑂 MMSP
+gsubstMN_Maxs u 𝓈 (MMSPMaxs a α) = (⊔ litMMSP a) ^$ gsubstMN_MaxsMins u 𝓈 α
 
-gsubstMN_MaxsMins ∷ (Monad m) ⇒ (𝕐 → m MMSP) → 𝑃 MMSPMins → m MMSP
-gsubstMN_MaxsMins 𝓈 α = joins ^$ mapM (gsubstMN_Mins 𝓈) $ iter α
+gsubstMN_MaxsMins ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → 𝑃 MMSPMins → 𝑂 MMSP
+gsubstMN_MaxsMins u 𝓈 α = joins ^$ mapM (gsubstMN_Mins u 𝓈) $ iter α
 
-gsubstMN_Mins ∷ (Monad m) ⇒ (𝕐 → m MMSP) → MMSPMins → m MMSP
-gsubstMN_Mins 𝓈 (MMSPMins b β) = (⊓ elimAddTop top litMMSP b) ^$ gsubstMN_MinsSums 𝓈 β
+gsubstMN_Mins ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → MMSPMins → 𝑂 MMSP
+gsubstMN_Mins u 𝓈 (MMSPMins b β) = (⊓ elimAddTop top litMMSP b) ^$ gsubstMN_MinsSums u 𝓈 β
 
-gsubstMN_MinsSums ∷ (Monad m) ⇒ (𝕐 → m MMSP) → 𝑃 MMSPSums → m MMSP
-gsubstMN_MinsSums 𝓈 β = meets ^$ mapM (gsubstMN_Sums 𝓈) $ iter β
+gsubstMN_MinsSums ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → 𝑃 MMSPSums → 𝑂 MMSP
+gsubstMN_MinsSums u 𝓈 β = meets ^$ mapM (gsubstMN_Sums u 𝓈) $ iter β
 
-gsubstMN_Sums ∷ (Monad m) ⇒ (𝕐 → m MMSP) → MMSPSums → m MMSP
-gsubstMN_Sums 𝓈 (MMSPSums c γ) = (+ litMMSP c) ^$ gsubstMN_SumsProds 𝓈 γ
+gsubstMN_Sums ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → MMSPSums → 𝑂 MMSP
+gsubstMN_Sums u 𝓈 (MMSPSums c γ) = (+ litMMSP c) ^$ gsubstMN_SumsProds u 𝓈 γ
 
-gsubstMN_SumsProds ∷ (Monad m) ⇒ (𝕐 → m MMSP) → MMSPProds ⇰ ℕ → m MMSP
-gsubstMN_SumsProds 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → (litMMSP d ×) ^$ gsubstMN_Prods 𝓈 δ
+gsubstMN_SumsProds ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → MMSPProds ⇰ ℕ → 𝑂 MMSP
+gsubstMN_SumsProds u 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → 
+  (litMMSP d ×) ^$ gsubstMN_Prods u 𝓈 δ
 
-gsubstMN_Prods ∷ (Monad m) ⇒ (𝕐 → m MMSP) → MMSPProds → m MMSP
-gsubstMN_Prods 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → (^^ e) ^$ gsubstMN_Atom 𝓈 ω
+gsubstMN_Prods ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → MMSPProds → 𝑂 MMSP
+gsubstMN_Prods u 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
+  (^^ e) ^$ gsubstMN_Atom u 𝓈 ω
 
-gsubstMN_Atom ∷ (Monad m) ⇒ (𝕐 → m MMSP) → MMSPAtom → m MMSP
-gsubstMN_Atom 𝓈 = \case
-  Var_MMSP x → 𝓈 x
+gsubstMN_Atom ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → MMSPAtom → 𝑂 MMSP
+gsubstMN_Atom u 𝓈 = \case
+  Var_MMSP x → applySubst () u 𝓈 x
 
+instance FromVar MMSP where
+  frvar = varMMSP
 instance Binding () MMSP MMSP where
-  mkvar = varMMSP
-  gsubstMN u () 𝓈 = gsubstMN_MMSP $ 𝓈 u
+  gsubstMN () = gsubstMN_MMSP
 
 ----------
 -- MAXS --
