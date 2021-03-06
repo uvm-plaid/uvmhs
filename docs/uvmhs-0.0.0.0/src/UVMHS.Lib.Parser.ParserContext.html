@@ -18,10 +18,10 @@
 </span><a href="UVMHS.Lib.Parser.ParserContext.html#parserContextError"><span class="hs-identifier hs-var hs-var">parserContextError</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span>
 </span><span id="line-15"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-16"></span><span id="parserContextErrorL"><span id="parserContextDisplayRL"><span id="parserContextDisplayLL"><span id="parserContextLocRangeL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserContext</span></span></span></span></span><span>
-</span><span id="line-17"></span><span id="local-6989586621680005177"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserContext</span></span><span>
+</span><span id="line-17"></span><span id="local-6989586621680006007"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserContext</span></span><span>
 </span><span id="line-18"></span><span>
 </span><span id="line-19"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span>
-</span><span id="line-20"></span><span>  </span><span id="local-6989586621680005172"><span class="annot"><span class="annottext">null :: ParserContext
+</span><span id="line-20"></span><span>  </span><span id="local-6989586621680006002"><span class="annot"><span class="annottext">null :: ParserContext
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LocRange
 -&gt; WindowL Doc Doc
 -&gt; WindowR Doc Doc
@@ -37,77 +37,77 @@ forall a. Null a =&gt; a
 forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
 </span><span id="line-21"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span>
-</span><span id="line-22"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span> </span><span id="local-6989586621680005167"><span class="annot"><span class="annottext">LocRange
-</span><a href="#local-6989586621680005167"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span id="local-6989586621680005166"><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005166"><span class="hs-identifier hs-var">dL&#8321;</span></a></span></span><span> </span><span id="local-6989586621680005165"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005165"><span class="hs-identifier hs-var">dR&#8321;</span></a></span></span><span> </span><span id="local-6989586621680005164"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005164"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span id="local-6989586621680005163"><span class="annot"><span class="annottext">&#10746; :: ParserContext -&gt; ParserContext -&gt; ParserContext
-</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span> </span><span id="local-6989586621680005161"><span class="annot"><span class="annottext">LocRange
-</span><a href="#local-6989586621680005161"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span id="local-6989586621680005160"><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005160"><span class="hs-identifier hs-var">dL&#8322;</span></a></span></span><span> </span><span id="local-6989586621680005159"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005159"><span class="hs-identifier hs-var">dR&#8322;</span></a></span></span><span> </span><span id="local-6989586621680005158"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005158"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LocRange
+</span><span id="line-22"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span> </span><span id="local-6989586621680005997"><span class="annot"><span class="annottext">LocRange
+</span><a href="#local-6989586621680005997"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span id="local-6989586621680005996"><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680005996"><span class="hs-identifier hs-var">dL&#8321;</span></a></span></span><span> </span><span id="local-6989586621680005995"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005995"><span class="hs-identifier hs-var">dR&#8321;</span></a></span></span><span> </span><span id="local-6989586621680005994"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005994"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span id="local-6989586621680005993"><span class="annot"><span class="annottext">&#10746; :: ParserContext -&gt; ParserContext -&gt; ParserContext
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span> </span><span id="local-6989586621680005991"><span class="annot"><span class="annottext">LocRange
+</span><a href="#local-6989586621680005991"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span id="local-6989586621680005990"><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680005990"><span class="hs-identifier hs-var">dL&#8322;</span></a></span></span><span> </span><span id="local-6989586621680005989"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005989"><span class="hs-identifier hs-var">dR&#8322;</span></a></span></span><span> </span><span id="local-6989586621680005988"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005988"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LocRange
 -&gt; WindowL Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; ParserContext
 </span><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-var">ParserContext</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">LocRange
-</span><a href="#local-6989586621680005167"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">LocRange -&gt; LocRange -&gt; LocRange
+</span><a href="#local-6989586621680005997"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">LocRange -&gt; LocRange -&gt; LocRange
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">LocRange
-</span><a href="#local-6989586621680005161"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005166"><span class="hs-identifier hs-var">dL&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; WindowL Doc Doc -&gt; WindowL Doc Doc
+</span><a href="#local-6989586621680005991"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680005996"><span class="hs-identifier hs-var">dL&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; WindowL Doc Doc -&gt; WindowL Doc Doc
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005160"><span class="hs-identifier hs-var">dL&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005165"><span class="hs-identifier hs-var">dR&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; WindowR Doc Doc -&gt; WindowR Doc Doc
+</span><a href="#local-6989586621680005990"><span class="hs-identifier hs-var">dL&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005995"><span class="hs-identifier hs-var">dR&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; WindowR Doc Doc -&gt; WindowR Doc Doc
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005159"><span class="hs-identifier hs-var">dR&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005164"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; WindowR Doc Doc -&gt; WindowR Doc Doc
+</span><a href="#local-6989586621680005989"><span class="hs-identifier hs-var">dR&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005994"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; WindowR Doc Doc -&gt; WindowR Doc Doc
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005158"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680005988"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-23"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span>
 </span><span id="line-24"></span><span>
 </span><span id="line-25"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#formatParserContext"><span class="hs-identifier hs-type">formatParserContext</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span>
 </span><span id="line-26"></span><span id="formatParserContext"><span class="annot"><span class="annottext">formatParserContext :: Formats -&gt; ParserContext -&gt; ParserContext
-</span><a href="UVMHS.Lib.Parser.ParserContext.html#formatParserContext"><span class="hs-identifier hs-var hs-var">formatParserContext</span></a></span></span><span> </span><span id="local-6989586621680005152"><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680005152"><span class="hs-identifier hs-var">fmt</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span> </span><span id="local-6989586621680005151"><span class="annot"><span class="annottext">LocRange
-</span><a href="#local-6989586621680005151"><span class="hs-identifier hs-var">lr</span></a></span></span><span> </span><span id="local-6989586621680005150"><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005150"><span class="hs-identifier hs-var">dL</span></a></span></span><span> </span><span id="local-6989586621680005149"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005149"><span class="hs-identifier hs-var">dR</span></a></span></span><span> </span><span id="local-6989586621680005148"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005148"><span class="hs-identifier hs-var">e</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="UVMHS.Lib.Parser.ParserContext.html#formatParserContext"><span class="hs-identifier hs-var hs-var">formatParserContext</span></a></span></span><span> </span><span id="local-6989586621680005982"><span class="annot"><span class="annottext">Formats
+</span><a href="#local-6989586621680005982"><span class="hs-identifier hs-var">fmt</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span> </span><span id="local-6989586621680005981"><span class="annot"><span class="annottext">LocRange
+</span><a href="#local-6989586621680005981"><span class="hs-identifier hs-var">lr</span></a></span></span><span> </span><span id="local-6989586621680005980"><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680005980"><span class="hs-identifier hs-var">dL</span></a></span></span><span> </span><span id="local-6989586621680005979"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005979"><span class="hs-identifier hs-var">dR</span></a></span></span><span> </span><span id="local-6989586621680005978"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005978"><span class="hs-identifier hs-var">e</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-27"></span><span>  </span><span class="annot"><span class="annottext">LocRange
 -&gt; WindowL Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; ParserContext
 </span><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-var">ParserContext</span></a></span><span> </span><span class="annot"><span class="annottext">LocRange
-</span><a href="#local-6989586621680005151"><span class="hs-identifier hs-var">lr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; (Doc -&gt; Doc) -&gt; WindowL Doc Doc -&gt; WindowL Doc Doc
+</span><a href="#local-6989586621680005981"><span class="hs-identifier hs-var">lr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; (Doc -&gt; Doc) -&gt; WindowL Doc Doc -&gt; WindowL Doc Doc
 forall i j a b. (i -&gt; j) -&gt; (a -&gt; b) -&gt; WindowL i a -&gt; WindowL j b
 </span><a href="UVMHS.Lib.Window.html#mapWindowL"><span class="hs-identifier hs-var">mapWindowL</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680005152"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
+</span><a href="#local-6989586621680005982"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680005152"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005150"><span class="hs-identifier hs-var">dL</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680005982"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680005980"><span class="hs-identifier hs-var">dL</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-28"></span><span>                   </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; (Doc -&gt; Doc) -&gt; WindowR Doc Doc -&gt; WindowR Doc Doc
 forall i j a b. (i -&gt; j) -&gt; (a -&gt; b) -&gt; WindowR i a -&gt; WindowR j b
 </span><a href="UVMHS.Lib.Window.html#mapWindowR"><span class="hs-identifier hs-var">mapWindowR</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680005152"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
+</span><a href="#local-6989586621680005982"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680005152"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005149"><span class="hs-identifier hs-var">dR</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680005982"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005979"><span class="hs-identifier hs-var">dR</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-29"></span><span>                   </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; (Doc -&gt; Doc) -&gt; WindowR Doc Doc -&gt; WindowR Doc Doc
 forall i j a b. (i -&gt; j) -&gt; (a -&gt; b) -&gt; WindowR i a -&gt; WindowR j b
 </span><a href="UVMHS.Lib.Window.html#mapWindowR"><span class="hs-identifier hs-var">mapWindowR</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680005152"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
+</span><a href="#local-6989586621680005982"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680005152"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005148"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680005982"><span class="hs-identifier hs-var">fmt</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005978"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-30"></span><span>
 </span><span id="line-31"></span><span class="hs-keyword">data</span><span> </span><span id="FullContext"><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#FullContext"><span class="hs-identifier hs-var">FullContext</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="FullContext"><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#FullContext"><span class="hs-identifier hs-var">FullContext</span></a></span></span><span>
 </span><span id="line-32"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="fullContextPrefix"><span class="annot"><span class="annottext">FullContext -&gt; WindowR Doc Doc
@@ -119,11 +119,11 @@ forall i j a b. (i -&gt; j) -&gt; (a -&gt; b) -&gt; WindowR i a -&gt; WindowR j 
 </span><span id="line-35"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-36"></span><span>
 </span><span id="line-37"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#FullContext"><span class="hs-identifier hs-type">FullContext</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-38"></span><span>  </span><span id="local-6989586621680005139"><span class="annot"><span class="annottext">pretty :: FullContext -&gt; Doc
-</span><a href="#local-6989586621680005139"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#FullContext"><span class="hs-identifier hs-type">FullContext</span></a></span><span> </span><span id="local-6989586621680005138"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005138"><span class="hs-identifier hs-var">pre</span></a></span></span><span> </span><span id="local-6989586621680005137"><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005137"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span id="local-6989586621680005136"><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005136"><span class="hs-identifier hs-var">pi</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
+</span><span id="line-38"></span><span>  </span><span id="local-6989586621680005969"><span class="annot"><span class="annottext">pretty :: FullContext -&gt; Doc
+</span><a href="#local-6989586621680005969"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#FullContext"><span class="hs-identifier hs-type">FullContext</span></a></span><span> </span><span id="local-6989586621680005968"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680005968"><span class="hs-identifier hs-var">pre</span></a></span></span><span> </span><span id="local-6989586621680005967"><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680005967"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span id="local-6989586621680005966"><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680005966"><span class="hs-identifier hs-var">pi</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
 </span><span id="line-39"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
@@ -144,7 +144,7 @@ forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
 </span><span id="line-41"></span><span>        </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Window.html#renderWindowR"><span class="hs-identifier hs-var">renderWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680005138"><span class="hs-identifier hs-var">pre</span></a></span><span> </span><span>
+</span><a href="#local-6989586621680005968"><span class="hs-identifier hs-var">pre</span></a></span><span> </span><span>
 </span><span id="line-42"></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; Color -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppUT"><span class="hs-identifier hs-var">ppUT</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450;
 </span><span class="hs-char">'^'</span></span><span> </span><span class="annot"><span class="annottext">Color
@@ -152,10 +152,10 @@ forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Window.html#renderWindowL"><span class="hs-identifier hs-var">renderWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005137"><span class="hs-identifier hs-var">d</span></a></span><span>
+</span><a href="#local-6989586621680005967"><span class="hs-identifier hs-var">d</span></a></span><span>
 </span><span id="line-43"></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Window.html#renderWindowL"><span class="hs-identifier hs-var">renderWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680005136"><span class="hs-identifier hs-var">pi</span></a></span><span>
+</span><a href="#local-6989586621680005966"><span class="hs-identifier hs-var">pi</span></a></span><span>
 </span><span id="line-44"></span><span>        </span><span class="hs-special">]</span><span>
 </span><span id="line-45"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Format] -&gt; Formats
@@ -169,7 +169,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-string">&quot;&#187;&quot;</span></span><span>
 </span><span id="line-46"></span><span>    </span><span class="hs-special">]</span><span>
 </span><span id="line-47"></span><span>
-</span><span id="line-48"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680005121"><span id="local-6989586621680005124"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#FullContext"><span class="hs-identifier hs-type">FullContext</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680005119"><span class="annot"><span class="annottext">show :: FullContext -&gt; String
+</span><span id="line-48"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680005951"><span id="local-6989586621680005954"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#FullContext"><span class="hs-identifier hs-type">FullContext</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680005949"><span class="annot"><span class="annottext">show :: FullContext -&gt; String
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">show</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
 </span><a href="UVMHS.Core.Init.html#chars"><span class="hs-identifier hs-var">chars</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; String) -&gt; (FullContext -&gt; &#120138;) -&gt; FullContext -&gt; String
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c

@@ -224,7 +224,7 @@ gsubstMN_Atom ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → MMSPAtom → 𝑂
 gsubstMN_Atom u 𝓈 = \case
   Var_MMSP x → applySubst () Some u 𝓈 x
 
-instance FromVar MMSP where frvar = varMMSP
+instance FromVar () MMSP where frvar () = varMMSP
 instance Binding () MMSP MMSP where gsubstMN () = gsubstMN_MMSP
 
 ----------

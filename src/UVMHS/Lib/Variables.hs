@@ -97,8 +97,8 @@ shiftVar x = \case
 -- SUPPORT SUBSTITUTION --
 --------------------------
 
-class FromVar a where
-  frvar ∷ 𝕐 → a
+class FromVar s a | a → s where
+  frvar ∷ s → 𝕐 → a
 
 class Binding s b a | a → s,a → b where
   gsubstMN ∷ s → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → a → 𝑂 a
@@ -106,28 +106,42 @@ class Binding s b a | a → s,a → b where
 gsubstM ∷ (Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝑂 b) → a → 𝑂 a
 gsubstM s = gsubstMN s zero
 
-grename ∷ (FromVar b,Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝕐) → a → a
+grename ∷ (FromVar s b,Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝕐) → a → a
 grename s 𝓈 e = 
   ifNone (error "grename: bad handling of substitution for variables") $
-  gsubstM s ((Some ∘ frvar) ∘∘ 𝓈) e
+  gsubstM s ((Some ∘ frvar s) ∘∘ 𝓈) e
 
-openTerm ∷ (FromVar b,Binding s b a) ⇒ s → 𝕏 → a → a
+openTerm ∷ (FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → a
 openTerm s x = grename s $ openVar x 
 
-closeTerm ∷ (FromVar b,Binding s b a) ⇒ s → 𝕏 → a → a
+closeTerm ∷ (FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → a
 closeTerm s x = grename s $ closeVar x 
 
-bindTermM ∷ (FromVar b,Binding s b a) ⇒ s → b → a → 𝑂 a
-bindTermM s e = gsubstM s $ return ∘∘ bindVar frvar e
+bindTermM ∷ (FromVar s b,Binding s b a) ⇒ s → b → a → 𝑂 a
+bindTermM s e = gsubstM s $ return ∘∘ bindVar (frvar s) e
 
-substTermM ∷ ∀ s b a. (FromVar b,Binding s b a) ⇒ s → 𝕏 → b → a → 𝑂 a
-substTermM s x e = gsubstM s $ const $ return ∘ substVar frvar x e
+substTermM ∷ ∀ s b a. (FromVar s b,Binding s b a) ⇒ s → 𝕏 → b → a → 𝑂 a
+substTermM s x e = gsubstM s $ const $ return ∘ substVar (frvar s) x e
 
-introTerm ∷ (FromVar b,Binding s b a) ⇒ s → ℕ64 → a → a
+introTerm ∷ (FromVar s b,Binding s b a) ⇒ s → ℕ64 → a → a
 introTerm s m = grename s $ introVar m
 
-shiftTerm ∷ (FromVar b,Binding s b a) ⇒ s → 𝕏 → a → a
+shiftTerm ∷ (FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → a
 shiftTerm s x = grename s $ const $ shiftVar x
 
-applySubst ∷ (FromVar b,Binding s b a) ⇒ s → (b → 𝑂 a) → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → 𝕐 → 𝑂 a
+applySubst ∷ (FromVar s b,Binding s b a) ⇒ s → (b → 𝑂 a) → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → 𝕐 → 𝑂 a
 applySubst s afrb u 𝓈 x = introTerm s u ^$ afrb *$ 𝓈 u x
+
+gsubstMNS ∷ (Binding s₂ b a) ⇒ s₁ ⌲ s₂ → s₁ → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → a → 𝑂 a
+gsubstMNS ℓ s₁ u 𝓈 e =
+  case view ℓ s₁ of
+    None → return e 
+    Some s₂ → gsubstMN s₂ u 𝓈 e
+
+applySubstS 
+  ∷ (Eq s₁,FromVar s₁ a,FromVar s₁ b,Binding s₁ b a) 
+  ⇒ s₁ → s₁ → (b → 𝑂 a) → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → 𝕐 → 𝑂 a
+applySubstS s₁ s₁' afrb u 𝓈 x =
+  if s₁ ≢ s₁'
+  then return $ frvar s₁ x
+  else applySubst s₁ afrb u 𝓈 x
