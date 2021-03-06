@@ -222,12 +222,10 @@ gsubstMN_Prods u 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e)
 
 gsubstMN_Atom ∷ ℕ64 → (ℕ64 → 𝕐 → 𝑂 MMSP) → MMSPAtom → 𝑂 MMSP
 gsubstMN_Atom u 𝓈 = \case
-  Var_MMSP x → applySubst () u 𝓈 x
+  Var_MMSP x → applySubst () Some u 𝓈 x
 
-instance FromVar MMSP where
-  frvar = varMMSP
-instance Binding () MMSP MMSP where
-  gsubstMN () = gsubstMN_MMSP
+instance FromVar MMSP where frvar = varMMSP
+instance Binding () MMSP MMSP where gsubstMN () = gsubstMN_MMSP
 
 ----------
 -- MAXS --

@@ -106,40 +106,28 @@ class Binding s b a | a → s,a → b where
 gsubstM ∷ (Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝑂 b) → a → 𝑂 a
 gsubstM s = gsubstMN s zero
 
-gsubst ∷ (HasPrism b a,Binding s b a) ⇒ s → (ℕ64 → 𝕐 → a) → a → a
-gsubst s 𝓈 e = 
-  ifNone (error "gsubst: bad termL prism") 
-  $ gsubstM s ((Some ∘ ι) ∘∘ 𝓈) e
+grename ∷ (FromVar b,Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝕐) → a → a
+grename s 𝓈 e = 
+  ifNone (error "grename: bad handling of substitution for variables") $
+  gsubstM s ((Some ∘ frvar) ∘∘ 𝓈) e
 
-grename ∷ (FromVar a,HasPrism b a,Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝕐) → a → a
-grename s 𝓈 e = gsubst s (frvar ∘∘ 𝓈) e
-
-openTerm ∷ (FromVar a,HasPrism b a,Binding s b a) ⇒ s → 𝕏 → a → a
+openTerm ∷ (FromVar b,Binding s b a) ⇒ s → 𝕏 → a → a
 openTerm s x = grename s $ openVar x 
 
-closeTerm ∷ (FromVar a,HasPrism b a,Binding s b a) ⇒ s → 𝕏 → a → a
+closeTerm ∷ (FromVar b,Binding s b a) ⇒ s → 𝕏 → a → a
 closeTerm s x = grename s $ closeVar x 
 
 bindTermM ∷ (FromVar b,Binding s b a) ⇒ s → b → a → 𝑂 a
 bindTermM s e = gsubstM s $ return ∘∘ bindVar frvar e
 
-bindTerm ∷ (FromVar a,HasPrism b a,Binding s b a) ⇒ s → a → a → a
-bindTerm s e = gsubst s $ \ u x → bindVar frvar e u x
-
 substTermM ∷ ∀ s b a. (FromVar b,Binding s b a) ⇒ s → 𝕏 → b → a → 𝑂 a
 substTermM s x e = gsubstM s $ const $ return ∘ substVar frvar x e
 
-substTerm ∷ (FromVar a,HasPrism b a,Binding s b a) ⇒ s → 𝕏 → a → a → a
-substTerm s x e = gsubst s $ const $ substVar frvar x e
-
-introTerm ∷ (FromVar a,HasPrism b a,Binding s b a) ⇒ s → ℕ64 → a → a
+introTerm ∷ (FromVar b,Binding s b a) ⇒ s → ℕ64 → a → a
 introTerm s m = grename s $ introVar m
 
-shiftTerm ∷ (FromVar a,HasPrism b a,Binding s b a) ⇒ s → 𝕏 → a → a
+shiftTerm ∷ (FromVar b,Binding s b a) ⇒ s → 𝕏 → a → a
 shiftTerm s x = grename s $ const $ shiftVar x
 
-applySubst ∷ (FromVar a,HasPrism b a,Binding s b a) ⇒ s → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → 𝕐 → 𝑂 a
-applySubst s u 𝓈 x = do
-  e' ← 𝓈 u x
-  e'' ← ιview e'
-  return $ introTerm s u e''
+applySubst ∷ (FromVar b,Binding s b a) ⇒ s → (b → 𝑂 a) → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → 𝕐 → 𝑂 a
+applySubst s afrb u 𝓈 x = introTerm s u ^$ afrb *$ 𝓈 u x
