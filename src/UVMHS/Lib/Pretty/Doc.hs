@@ -324,7 +324,7 @@ ppPostSep i o = ppPost i $ ppSpaceIfNoBreak ⧺ o
 
 ppApp ∷ (ToIter Doc t) ⇒ Doc → t → Doc
 ppApp x xs 
-  | count xs ≡ zero = ppAlign x
+  | count xs ≡ 𝕟64 0 = ppAlign x
   | otherwise = Doc $ do
     l ← askL $ appLevelL ⊚ docEnvPrettyParamsL
     unDoc $ ppLevel l $ concat 

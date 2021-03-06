@@ -43,8 +43,8 @@ instance Pretty 𝕐 where
       ]
     BoundVar n → concat [ppPun "!",ppString $ show𝕊 n]
 
-openVar ∷ 𝕏 → ℕ64 → 𝕐 → 𝕐
-openVar x u = \case
+openVar ∷ ℕ64 → 𝕏 → 𝕐 → 𝕐
+openVar u x = \case
   NamedVar y n 
     | x ≡ y → NamedVar y $ succ n
     | otherwise → NamedVar y n
@@ -53,8 +53,8 @@ openVar x u = \case
     | n ≡ u → NamedVar x zero
     | otherwise → BoundVar $ pred n
 
-closeVar ∷ 𝕏 → ℕ64 → 𝕐 → 𝕐
-closeVar x u = \case
+closeVar ∷ ℕ64 → 𝕏 → 𝕐 → 𝕐
+closeVar u x = \case
   NamedVar y n
     | x ≡ y,n ≡ zero → BoundVar zero
     | x ≡ y,n ≢ zero → NamedVar y $ pred n
@@ -63,8 +63,8 @@ closeVar x u = \case
     | n < u → BoundVar n
     | otherwise → BoundVar $ n + one
 
-bindVar ∷ (𝕐 → a) → a → ℕ64 → 𝕐 → a
-bindVar mkvar' e u = \case
+bindVar ∷ (𝕐 → a) → ℕ64 → a → 𝕐 → a
+bindVar mkvar' u e = \case
   NamedVar x n → mkvar' $ NamedVar x n
   BoundVar n
     | n < u → mkvar' $ BoundVar n
@@ -80,11 +80,11 @@ substVar mkvar' x e = \case
   BoundVar n → mkvar' $ BoundVar n
 
 introVar ∷ ℕ64 → ℕ64 → 𝕐 → 𝕐
-introVar m u = \case
-  NamedVar x n → NamedVar x n
-  BoundVar n 
-    | n < u → BoundVar n
-    | otherwise → BoundVar $ m + n
+introVar u n = \case
+  NamedVar x n' → NamedVar x n'
+  BoundVar n' 
+    | n' < u → BoundVar n'
+    | otherwise → BoundVar $ n + n'
 
 shiftVar ∷ 𝕏 → 𝕐 → 𝕐
 shiftVar x = \case
@@ -100,48 +100,83 @@ shiftVar x = \case
 class FromVar s a | a → s where
   frvar ∷ s → 𝕐 → a
 
+newtype Subst s a = Subst { unSubst ∷ s → ℕ64 → 𝕐 → 𝑂 a }
+
+mapSubst ∷ (s₂ → s₁) → (a → 𝑂 b) → Subst s₁ a → Subst s₂ b
+mapSubst f g (Subst 𝓈) = Subst $ \ s u x → g *$ 𝓈 (f s) u x
+
+nullSubst ∷ (FromVar s a) ⇒ Subst s a
+nullSubst = Subst $ \ s _ x → return $ frvar s x
+
+appendSubst ∷ (Binding s a b) ⇒ Subst s a → Subst s b → Subst s b
+appendSubst 𝓈₁ (Subst 𝓈₂) = Subst $ \ s' u' y → do
+  e ← 𝓈₂ s' u' y
+  substN s' u' 𝓈₁ e
+
+instance (FromVar s a) ⇒ Null (Subst s a) where null = nullSubst
+instance (Binding s a a) ⇒ Append (Subst s a) where (⧺) = appendSubst
+instance (FromVar s a,Binding s a a) ⇒ Monoid (Subst s a) 
+
 class Binding s b a | a → s,a → b where
-  gsubstMN ∷ s → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → a → 𝑂 a
+  substN ∷ s → ℕ64 → Subst s b → a → 𝑂 a
 
-gsubstM ∷ (Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝑂 b) → a → 𝑂 a
-gsubstM s = gsubstMN s zero
+substNL ∷ (Binding s₂ b' a) ⇒ s₁ ⌲ s₂ → b ⌲ b' → s₁ → ℕ64 → Subst s₁ b → a → 𝑂 a
+substNL ℓˢ ℓᵇ s₁ u 𝓈 =
+  case view ℓˢ s₁ of
+    None → return
+    Some s₂ → substN s₂ u $ mapSubst (construct ℓˢ) (view ℓᵇ) 𝓈
 
-grename ∷ (FromVar s b,Binding s b a) ⇒ s → (ℕ64 → 𝕐 → 𝕐) → a → a
-grename s 𝓈 e = 
-  ifNone (error "grename: bad handling of substitution for variables") $
-  gsubstM s ((Some ∘ frvar s) ∘∘ 𝓈) e
+subst ∷ (Binding s b a) ⇒ s → Subst s b → a → 𝑂 a
+subst s = substN s zero
 
-openTerm ∷ (FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → a
-openTerm s x = grename s $ openVar x 
+rename ∷ (FromVar s b) ⇒ (s → ℕ64 → 𝕐 → 𝕐) → Subst s b
+rename f = Subst $ \ s u x → return $ frvar s $ f s u x
 
-closeTerm ∷ (FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → a
-closeTerm s x = grename s $ closeVar x 
+bdrOpen ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → Subst s b
+bdrOpen s x = rename $ \ s' u y →
+  if s ≡ s'
+  then openVar u x y
+  else y
 
-bindTermM ∷ (FromVar s b,Binding s b a) ⇒ s → b → a → 𝑂 a
-bindTermM s e = gsubstM s $ return ∘∘ bindVar (frvar s) e
+bdrClose ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → Subst s b
+bdrClose s x = rename $ \ s' u y → 
+  if s ≡ s'
+  then closeVar u x y
+  else y
 
-substTermM ∷ ∀ s b a. (FromVar s b,Binding s b a) ⇒ s → 𝕏 → b → a → 𝑂 a
-substTermM s x e = gsubstM s $ const $ return ∘ substVar (frvar s) x e
+bdrBind ∷ (Eq s,FromVar s b) ⇒ s → b → Subst s b
+bdrBind s e = Subst $ \ s' u y →
+  return $
+    if s ≡ s'
+    then bindVar (frvar s) u e y
+    else frvar s' y
 
-introTerm ∷ (FromVar s b,Binding s b a) ⇒ s → ℕ64 → a → a
-introTerm s m = grename s $ introVar m
+bdrSubst ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → b → Subst s b
+bdrSubst s x e = Subst $ \ s' _u y →
+  return $
+    if s ≡ s'
+    then substVar (frvar s) x e y
+    else frvar s' y
 
-shiftTerm ∷ (FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → a
-shiftTerm s x = grename s $ const $ shiftVar x
+bdrIntro ∷ (Eq s,FromVar s b) ⇒ s → ℕ64 → Subst s b
+bdrIntro s n = rename $ \ s' u y →
+  if s ≡ s'
+  then introVar u n y
+  else y
 
-applySubst ∷ (FromVar s b,Binding s b a) ⇒ s → (b → 𝑂 a) → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → 𝕐 → 𝑂 a
-applySubst s afrb u 𝓈 x = introTerm s u ^$ afrb *$ 𝓈 u x
+bdrShift ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → Subst s b
+bdrShift s x = rename $ \ s' _u y →
+  if s ≡ s'
+  then shiftVar x y
+  else y
 
-gsubstMNS ∷ (Binding s₂ b a) ⇒ s₁ ⌲ s₂ → s₁ → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → a → 𝑂 a
-gsubstMNS ℓ s₁ u 𝓈 e =
-  case view ℓ s₁ of
-    None → return e 
-    Some s₂ → gsubstMN s₂ u 𝓈 e
+applySubst ∷ (Eq s,FromVar s b,Binding s b a) ⇒ s → (b → 𝑂 a) → ℕ64 → Subst s b → 𝕐 → 𝑂 a
+applySubst s afrb u (Subst 𝓈) x = subst s (bdrIntro s u) *$ afrb *$ 𝓈 s u x
 
-applySubstS 
-  ∷ (Eq s₁,FromVar s₁ a,FromVar s₁ b,Binding s₁ b a) 
-  ⇒ s₁ → s₁ → (b → 𝑂 a) → ℕ64 → (ℕ64 → 𝕐 → 𝑂 b) → 𝕐 → 𝑂 a
-applySubstS s₁ s₁' afrb u 𝓈 x =
-  if s₁ ≢ s₁'
-  then return $ frvar s₁ x
-  else applySubst s₁ afrb u 𝓈 x
+applySubstL 
+  ∷ (Eq s₂,FromVar s₁ b,FromVar s₂ b',Binding s₂ b' a) 
+  ⇒ s₁ ⌲ s₂ → b ⌲ b' → s₁ → (b → 𝑂 a) → ℕ64 → Subst s₁ b → 𝕐 → 𝑂 a
+applySubstL ℓˢ ℓᵇ s₁ afrb u 𝓈 =
+  case view ℓˢ s₁ of
+    None → afrb ∘ frvar s₁
+    Some s₂ → applySubst s₂ (afrb ∘ construct ℓᵇ) u $ mapSubst (construct ℓˢ) (view ℓᵇ) 𝓈

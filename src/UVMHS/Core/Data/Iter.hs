@@ -227,11 +227,11 @@ andf fs x = and $ map (arg x) $ iter fs
 and ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
 and = fold True (⩓)
 
-count ∷ (ToIter a t) ⇒ t → ℕ
-count = fold 0 $ const succ
+count ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → n
+count = fold zero $ const succ
 
-countWith ∷ (ToIter a t) ⇒ (a → 𝔹) → t → ℕ
-countWith f = fold 0 $ \ x → case f x of
+countWith ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ (a → 𝔹) → t → n
+countWith f = fold zero $ \ x → case f x of
   True → succ
   False → id
 
@@ -249,7 +249,7 @@ repeatI n₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
 repeat ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → 𝐼 a
 repeat n = repeatI n ∘ const
 
-build ∷ ∀ n a. (Eq n,Zero n,One n,Additive n) ⇒ n → a → (a → a) → 𝐼 a
+build ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → (a → a) → 𝐼 a
 build n₀ x₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
   let loop ∷ n → a → b → b
       loop n x i
@@ -257,12 +257,12 @@ build n₀ x₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
         | otherwise = loop (succ n) (g x) (f x i)
   in loop zero x₀ i₀
 
-upTo ∷ (Eq n,Zero n,One n,Additive n) ⇒ n → 𝐼 n
+upTo ∷ (Eq n,Zero n,One n,Plus n) ⇒ n → 𝐼 n
 upTo n = build n zero succ
 
-withIndex ∷ (ToIter a t) ⇒ t → 𝐼 (ℕ ∧ a)
-withIndex xs = 𝐼 $ \ (f ∷ (ℕ ∧ a) → b → b) (i₀ ∷ b) →
-  snd $ foldOnFrom xs (0 :* i₀) $ \ (x ∷ a) (n :* i ∷ ℕ ∧ b) → succ n :* f (n :* x) i
+withIndex ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → 𝐼 (n ∧ a)
+withIndex xs = 𝐼 $ \ (f ∷ (n ∧ a) → b → b) (i₀ ∷ b) →
+  snd $ foldOnFrom xs (zero :* i₀) $ \ (x ∷ a) (n :* i ∷ n ∧ b) → succ n :* f (n :* x) i
 
 withFirst ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
 withFirst xs = 𝐼 $ \ (f ∷ (𝔹 ∧ a) → b → b) (i₀ ∷ b) →
@@ -303,14 +303,14 @@ inbetween xⁱ xs = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
       True → f x
       False → f x ∘ f xⁱ
 
-execN ∷ (Monad m) ⇒ ℕ → m () → m ()
-execN n = exec ∘ repeat n
+-- execN ∷ ∀ n m. (Zero n,One n,Plus n,Monad m) ⇒ n → m () → m ()
+-- execN n = exec ∘ repeat n
 
-applyN ∷ ℕ → b → (b → b) → b
-applyN n i f = fold i (const f) $ upTo n
+-- applyN ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → (a → a) → a
+-- applyN n i f = fold i (const f) $ upTo n
 
-appendN ∷ (Monoid a) ⇒ ℕ → a → a 
-appendN n x = applyN n null $ (⧺) x
+-- appendN ∷ (Monoid a) ⇒ ℕ → a → a 
+-- appendN n x = applyN n null $ (⧺) x
 
 alignLeftFill ∷ ℂ → ℕ → 𝕊 → 𝕊
 alignLeftFill c n s = build𝕊C $ concat
