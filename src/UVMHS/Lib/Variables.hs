@@ -100,68 +100,80 @@ shiftVar x = \case
 class FromVar s a | a → s where
   frvar ∷ s → 𝕐 → a
 
-newtype Subst s a = Subst { unSubst ∷ s → ℕ64 → 𝕐 → 𝑂 a }
+newtype Subst s a = Subst { unSubst ∷ s → s ⇰ ℕ64 → 𝕐 → 𝑂 a }
 
-mapSubst ∷ (s₂ → s₁) → (a → 𝑂 b) → Subst s₁ a → Subst s₂ b
-mapSubst f g (Subst 𝓈) = Subst $ \ s u x → g *$ 𝓈 (f s) u x
+mapSubst ∷ (Ord s₁) ⇒ (s₂ → s₁) → (a → 𝑂 b) → Subst s₁ a → Subst s₂ b
+mapSubst f g (Subst 𝓈) = Subst $ \ s su x → 
+  let su' = concat $ mapOn (iter su) $ \ (s' :* u) → f s' ↦ u
+  in g *$ 𝓈 (f s) su' x
 
 nullSubst ∷ (FromVar s a) ⇒ Subst s a
 nullSubst = Subst $ \ s _ x → return $ frvar s x
 
 appendSubst ∷ (Binding s a b) ⇒ Subst s a → Subst s b → Subst s b
-appendSubst 𝓈₁ (Subst 𝓈₂) = Subst $ \ s' u' y → do
-  e ← 𝓈₂ s' u' y
-  substN u' 𝓈₁ e
+appendSubst 𝓈₁ (Subst 𝓈₂) = Subst $ \ s' su' y → do
+  e ← 𝓈₂ s' su' y
+  substN su' 𝓈₁ e
 
 instance (FromVar s a) ⇒ Null (Subst s a) where null = nullSubst
 instance (Binding s a a) ⇒ Append (Subst s a) where (⧺) = appendSubst
 instance (FromVar s a,Binding s a a) ⇒ Monoid (Subst s a) 
 
-class Binding s b a | a → s,a → b where
-  substN ∷ ℕ64 → Subst s b → a → 𝑂 a
+class (Ord s) ⇒ Binding s b a | a → s,a → b where
+  substN ∷ s ⇰ ℕ64 → Subst s b → a → 𝑂 a
 
-substNL ∷ (Binding s₂ b' a) ⇒ s₁ ⌲ s₂ → b ⌲ b' → s₁ → ℕ64 → Subst s₁ b → a → 𝑂 a
-substNL ℓˢ ℓᵇ s u 𝓈 =
-  if shape ℓˢ s
-  then substN u $ mapSubst (construct ℓˢ) (view ℓᵇ) 𝓈
-  else return
+substNL ∷ (Ord s₁,Binding s₂ b' a) ⇒ s₁ ⌲ s₂ → b ⌲ b' → s₁ ⇰ ℕ64 → Subst s₁ b → a → 𝑂 a
+substNL ℓˢ ℓᵇ su 𝓈 =
+  let su' = concat $ mapOn (iter su) $ \ (s :* u) →
+        case view ℓˢ s of
+          None → null
+          Some s' → s' ↦ u
+  in substN su' $ mapSubst (construct ℓˢ) (view ℓᵇ) 𝓈
 
 subst ∷ (Binding s b a) ⇒ Subst s b → a → 𝑂 a
-subst = substN zero
+subst = substN null
 
-rename ∷ (FromVar s b) ⇒ (s → ℕ64 → 𝕐 → 𝕐) → Subst s b
-rename f = Subst $ \ s u x → return $ frvar s $ f s u x
+rename ∷ (FromVar s b) ⇒ (s → s ⇰ ℕ64 → 𝕐 → 𝕐) → Subst s b
+rename f = Subst $ \ s su x → return $ frvar s $ f s su x
 
-bdrOpen ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → Subst s b
-bdrOpen s x = rename $ \ s' u y →
+bdrOpen ∷ (Ord s,FromVar s b) ⇒ s → 𝕏 → Subst s b
+bdrOpen s x = rename $ \ s' su y →
   if s ≡ s'
-  then openVar u x y
+  then 
+    let u = ifNone zero $ su ⋕? s
+    in openVar u x y
   else y
 
-bdrClose ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → Subst s b
-bdrClose s x = rename $ \ s' u y → 
+bdrClose ∷ (Ord s,FromVar s b) ⇒ s → 𝕏 → Subst s b
+bdrClose s x = rename $ \ s' su y → 
   if s ≡ s'
-  then closeVar u x y
+  then 
+    let u = ifNone zero $ su ⋕? s
+    in closeVar u x y
   else y
 
-bdrBind ∷ (Eq s,FromVar s b) ⇒ s → b → Subst s b
-bdrBind s e = Subst $ \ s' u y →
+bdrBind ∷ (Ord s,FromVar s b) ⇒ s → b → Subst s b
+bdrBind s e = Subst $ \ s' su y →
   return $
     if s ≡ s'
-    then bindVar (frvar s) u e y
+    then 
+      let u = ifNone zero $ su ⋕? s
+      in bindVar (frvar s) u e y
     else frvar s' y
 
-bdrSubst ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → b → Subst s b
-bdrSubst s x e = Subst $ \ s' _u y →
+bdrSubst ∷ (Ord s,FromVar s b) ⇒ s → 𝕏 → b → Subst s b
+bdrSubst s x e = Subst $ \ s' _su y →
   return $
     if s ≡ s'
     then substVar (frvar s) x e y
     else frvar s' y
 
-bdrIntro ∷ (Eq s,FromVar s b) ⇒ s → ℕ64 → Subst s b
-bdrIntro s n = rename $ \ s' u y →
+bdrIntro ∷ (Ord s,FromVar s b) ⇒ s → ℕ64 → Subst s b
+bdrIntro s n = rename $ \ s' su y →
   if s ≡ s'
-  then introVar u n y
+  then 
+    let u = ifNone zero $ su ⋕? s
+    in introVar u n y
   else y
 
 bdrShift ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → Subst s b
@@ -170,8 +182,10 @@ bdrShift s x = rename $ \ s' _u y →
   then shiftVar x y
   else y
 
-applySubst ∷ (Eq s,FromVar s b,Binding s b a) ⇒ s → (b → 𝑂 a) → ℕ64 → Subst s b → 𝕐 → 𝑂 a
-applySubst s afrb u (Subst 𝓈) x = subst (bdrIntro s u) *$ afrb *$ 𝓈 s u x
+applySubst ∷ (Eq s,FromVar s b,Binding s b a) ⇒ s → (b → 𝑂 a) → s ⇰ ℕ64 → Subst s b → 𝕐 → 𝑂 a
+applySubst s afrb su (Subst 𝓈) x = 
+  let u = ifNone zero $ su ⋕? s
+  in subst (bdrIntro s u) *$ afrb *$ 𝓈 s su x
 
 ---------------
 -- FREE VARS --

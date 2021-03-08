@@ -195,7 +195,7 @@ ponMMSP e n = product $ repeat n e
 ------------------
 
 instance FromVar () MMSP where frvar () = varMMSP
-instance Binding () MMSP MMSP where substN = substN_MMSP
+instance Binding () MMSP MMSP where substN su = substN_MMSP $ ifNone zero $ su ⋕? ()
 
 substN_MMSP ∷ ℕ64 → Subst () MMSP → MMSP → 𝑂 MMSP
 substN_MMSP u 𝓈 (MMSP α̇) = substN_MMSPMaxs u 𝓈 α̇
@@ -225,7 +225,7 @@ substN_MMSPProds u 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* 
 
 substN_MMSPAtom ∷ ℕ64 → Subst () MMSP → MMSPAtom → 𝑂 MMSP
 substN_MMSPAtom u 𝓈 = \case
-  Var_MMSPAtom x → applySubst () Some u 𝓈 x
+  Var_MMSPAtom x → applySubst () Some (() ↦ u) 𝓈 x
 
 ---------------
 -- FREE VARS --
