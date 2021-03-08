@@ -231,6 +231,8 @@ substN_MMSPAtom u 𝓈 = \case
 -- FREE VARS --
 ---------------
 
+instance HasFV MMSP where fv = fv_MMSP
+
 fv_MMSP ∷ MMSP → 𝑃 𝕏
 fv_MMSP (MMSP α̇) = fv_MMSPMaxs α̇
 
