@@ -194,38 +194,61 @@ ponMMSP e n = product $ repeat n e
 -- SUBSTITUTION --
 ------------------
 
-substN_MMSP ∷ ℕ64 → Subst () MMSP → MMSP → 𝑂 MMSP
-substN_MMSP u 𝓈 (MMSP α̇) = substN_Maxs u 𝓈 α̇
-
-substN_Maxs ∷ ℕ64 → Subst () MMSP → MMSPMaxs → 𝑂 MMSP
-substN_Maxs u 𝓈 (MMSPMaxs a α) = (⊔ litMMSP a) ^$ substN_MaxsMins u 𝓈 α
-
-substN_MaxsMins ∷ ℕ64 → Subst () MMSP → 𝑃 MMSPMins → 𝑂 MMSP
-substN_MaxsMins u 𝓈 α = joins ^$ mapM (substN_Mins u 𝓈) $ iter α
-
-substN_Mins ∷ ℕ64 → Subst () MMSP → MMSPMins → 𝑂 MMSP
-substN_Mins u 𝓈 (MMSPMins b β) = (⊓ elimAddTop top litMMSP b) ^$ substN_MinsSums u 𝓈 β
-
-substN_MinsSums ∷ ℕ64 → Subst () MMSP → 𝑃 MMSPSums → 𝑂 MMSP
-substN_MinsSums u 𝓈 β = meets ^$ mapM (substN_Sums u 𝓈) $ iter β
-
-substN_Sums ∷ ℕ64 → Subst () MMSP → MMSPSums → 𝑂 MMSP
-substN_Sums u 𝓈 (MMSPSums c γ) = (+ litMMSP c) ^$ substN_SumsProds u 𝓈 γ
-
-substN_SumsProds ∷ ℕ64 → Subst () MMSP → MMSPProds ⇰ ℕ → 𝑂 MMSP
-substN_SumsProds u 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → 
-  (litMMSP d ×) ^$ substN_Prods u 𝓈 δ
-
-substN_Prods ∷ ℕ64 → Subst () MMSP → MMSPProds → 𝑂 MMSP
-substN_Prods u 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
-  (^^ e) ^$ substN_Atom u 𝓈 ω
-
-substN_Atom ∷ ℕ64 → Subst () MMSP → MMSPAtom → 𝑂 MMSP
-substN_Atom u 𝓈 = \case
-  Var_MMSPAtom x → applySubst () Some u 𝓈 x
-
 instance FromVar () MMSP where frvar () = varMMSP
 instance Binding () MMSP MMSP where substN () = substN_MMSP
+
+substN_MMSP ∷ ℕ64 → Subst () MMSP → MMSP → 𝑂 MMSP
+substN_MMSP u 𝓈 (MMSP α̇) = substN_MMSPMaxs u 𝓈 α̇
+
+substN_MMSPMaxs ∷ ℕ64 → Subst () MMSP → MMSPMaxs → 𝑂 MMSP
+substN_MMSPMaxs u 𝓈 (MMSPMaxs a α) = (⊔ litMMSP a) ^$ substN_MMSPMaxsMins u 𝓈 α
+
+substN_MMSPMaxsMins ∷ ℕ64 → Subst () MMSP → 𝑃 MMSPMins → 𝑂 MMSP
+substN_MMSPMaxsMins u 𝓈 α = joins ^$ mapM (substN_MMSPMins u 𝓈) $ iter α
+
+substN_MMSPMins ∷ ℕ64 → Subst () MMSP → MMSPMins → 𝑂 MMSP
+substN_MMSPMins u 𝓈 (MMSPMins b β) = (⊓ elimAddTop top litMMSP b) ^$ substN_MMSPMinsSums u 𝓈 β
+
+substN_MMSPMinsSums ∷ ℕ64 → Subst () MMSP → 𝑃 MMSPSums → 𝑂 MMSP
+substN_MMSPMinsSums u 𝓈 β = meets ^$ mapM (substN_MMSPSums u 𝓈) $ iter β
+
+substN_MMSPSums ∷ ℕ64 → Subst () MMSP → MMSPSums → 𝑂 MMSP
+substN_MMSPSums u 𝓈 (MMSPSums c γ) = (+ litMMSP c) ^$ substN_MMSPSumsProds u 𝓈 γ
+
+substN_MMSPSumsProds ∷ ℕ64 → Subst () MMSP → MMSPProds ⇰ ℕ → 𝑂 MMSP
+substN_MMSPSumsProds u 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → 
+  (litMMSP d ×) ^$ substN_MMSPProds u 𝓈 δ
+
+substN_MMSPProds ∷ ℕ64 → Subst () MMSP → MMSPProds → 𝑂 MMSP
+substN_MMSPProds u 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
+  (^^ e) ^$ substN_MMSPAtom u 𝓈 ω
+
+substN_MMSPAtom ∷ ℕ64 → Subst () MMSP → MMSPAtom → 𝑂 MMSP
+substN_MMSPAtom u 𝓈 = \case
+  Var_MMSPAtom x → applySubst () Some u 𝓈 x
+
+---------------
+-- FREE VARS --
+---------------
+
+fv_MMSP ∷ MMSP → 𝑃 𝕏
+fv_MMSP (MMSP α̇) = fv_MMSPMaxs α̇
+
+fv_MMSPMaxs ∷ MMSPMaxs → 𝑃 𝕏
+fv_MMSPMaxs (MMSPMaxs _ α) = joins $ map fv_MMSPMins $ iter α
+
+fv_MMSPMins ∷ MMSPMins → 𝑃 𝕏
+fv_MMSPMins (MMSPMins _ β) = joins $ map fv_MMSPSums $ iter β
+
+fv_MMSPSums ∷ MMSPSums → 𝑃 𝕏
+fv_MMSPSums (MMSPSums _ γ) = joins $ map (fv_MMSPProds ∘ fst) $ iter γ
+
+fv_MMSPProds ∷ MMSPProds → 𝑃 𝕏
+fv_MMSPProds (MMSPProds δ) = joins $ map (fv_MMSPAtom ∘ fst) $ iter δ
+
+fv_MMSPAtom ∷ MMSPAtom → 𝑃 𝕏
+fv_MMSPAtom = \case
+  Var_MMSPAtom x → fvVar x
 
 ----------
 -- MAXS --

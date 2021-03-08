@@ -3825,7 +3825,9 @@ bdrSubst :: (Eq s, FromVar s b) => s -> 𝕏 -> b -> Subst s b
 bdrIntro :: (Eq s, FromVar s b) => s -> ℕ64 -> Subst s b
 bdrShift :: (Eq s, FromVar s b) => s -> 𝕏 -> Subst s b
 applySubst :: (Eq s, FromVar s b, Binding s b a) => s -> (b -> 𝑂 a) -> ℕ64 -> Subst s b -> 𝕐 -> 𝑂 a
-applySubstL :: (Eq s₂, FromVar s₁ b, FromVar s₂ b', Binding s₂ b' a) => (s₁ ⌲ s₂) -> (b ⌲ b') -> s₁ -> (b -> 𝑂 a) -> ℕ64 -> Subst s₁ b -> 𝕐 -> 𝑂 a
+class HasFV a
+fv :: HasFV a => a -> 𝑃 𝕏
+fvVar :: 𝕐 -> 𝑃 𝕏
 instance UVMHS.Lib.Variables.Binding s a a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.Variables.Subst s a)
 instance (UVMHS.Lib.Variables.FromVar s a, UVMHS.Lib.Variables.Binding s a a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.Variables.Subst s a)
 instance UVMHS.Lib.Variables.FromVar s a => UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.Variables.Subst s a)
@@ -3883,14 +3885,20 @@ plusMMSP :: MMSP -> MMSP -> MMSP
 timesMMSP :: MMSP -> MMSP -> MMSP
 ponMMSP :: MMSP -> ℕ -> MMSP
 substN_MMSP :: ℕ64 -> Subst () MMSP -> MMSP -> 𝑂 MMSP
-substN_Maxs :: ℕ64 -> Subst () MMSP -> MMSPMaxs -> 𝑂 MMSP
-substN_MaxsMins :: ℕ64 -> Subst () MMSP -> 𝑃 MMSPMins -> 𝑂 MMSP
-substN_Mins :: ℕ64 -> Subst () MMSP -> MMSPMins -> 𝑂 MMSP
-substN_MinsSums :: ℕ64 -> Subst () MMSP -> 𝑃 MMSPSums -> 𝑂 MMSP
-substN_Sums :: ℕ64 -> Subst () MMSP -> MMSPSums -> 𝑂 MMSP
-substN_SumsProds :: ℕ64 -> Subst () MMSP -> (MMSPProds ⇰ ℕ) -> 𝑂 MMSP
-substN_Prods :: ℕ64 -> Subst () MMSP -> MMSPProds -> 𝑂 MMSP
-substN_Atom :: ℕ64 -> Subst () MMSP -> MMSPAtom -> 𝑂 MMSP
+substN_MMSPMaxs :: ℕ64 -> Subst () MMSP -> MMSPMaxs -> 𝑂 MMSP
+substN_MMSPMaxsMins :: ℕ64 -> Subst () MMSP -> 𝑃 MMSPMins -> 𝑂 MMSP
+substN_MMSPMins :: ℕ64 -> Subst () MMSP -> MMSPMins -> 𝑂 MMSP
+substN_MMSPMinsSums :: ℕ64 -> Subst () MMSP -> 𝑃 MMSPSums -> 𝑂 MMSP
+substN_MMSPSums :: ℕ64 -> Subst () MMSP -> MMSPSums -> 𝑂 MMSP
+substN_MMSPSumsProds :: ℕ64 -> Subst () MMSP -> (MMSPProds ⇰ ℕ) -> 𝑂 MMSP
+substN_MMSPProds :: ℕ64 -> Subst () MMSP -> MMSPProds -> 𝑂 MMSP
+substN_MMSPAtom :: ℕ64 -> Subst () MMSP -> MMSPAtom -> 𝑂 MMSP
+fv_MMSP :: MMSP -> 𝑃 𝕏
+fv_MMSPMaxs :: MMSPMaxs -> 𝑃 𝕏
+fv_MMSPMins :: MMSPMins -> 𝑃 𝕏
+fv_MMSPSums :: MMSPSums -> 𝑃 𝕏
+fv_MMSPProds :: MMSPProds -> 𝑃 𝕏
+fv_MMSPAtom :: MMSPAtom -> 𝑃 𝕏
 zeroMaxsMins :: 𝑃 MMSPMins
 joinMaxsMins :: 𝑃 MMSPMins -> 𝑃 MMSPMins -> 𝑃 MMSPMins
 cmeetMaxsMins :: AddTop ℕ -> 𝑃 MMSPMins -> 𝑃 MMSPMins
@@ -4048,19 +4056,19 @@ PreParserToken :: t -> 𝔹 -> ParserContext -> PreParserToken t
 [preParserTokenValue] :: PreParserToken t -> t
 [preParserTokenSkip] :: PreParserToken t -> 𝔹
 [preParserTokenContext] :: PreParserToken t -> ParserContext
-preParserTokenContextL :: forall (t_a31li :: Type). (⟢) (PreParserToken t_a31li) ParserContext
-preParserTokenSkipL :: forall (t_a31li :: Type). (⟢) (PreParserToken t_a31li) 𝔹
-preParserTokenValueL :: forall (t_a31li :: Type). (⟢) (PreParserToken t_a31li) t_a31li
+preParserTokenContextL :: forall (t_a31xu :: Type). (⟢) (PreParserToken t_a31xu) ParserContext
+preParserTokenSkipL :: forall (t_a31xu :: Type). (⟢) (PreParserToken t_a31xu) 𝔹
+preParserTokenValueL :: forall (t_a31xu :: Type). (⟢) (PreParserToken t_a31xu) t_a31xu
 data ParserToken t
 ParserToken :: t -> 𝔹 -> ParserContext -> WindowL Doc Doc -> ParserToken t
 [parserTokenValue] :: ParserToken t -> t
 [parserTokenSkip] :: ParserToken t -> 𝔹
 [parserTokenContext] :: ParserToken t -> ParserContext
 [parserTokenSuffix] :: ParserToken t -> WindowL Doc Doc
-parserTokenSuffixL :: forall (t_a31nn :: Type). (⟢) (ParserToken t_a31nn) (WindowL Doc Doc)
-parserTokenContextL :: forall (t_a31nn :: Type). (⟢) (ParserToken t_a31nn) ParserContext
-parserTokenSkipL :: forall (t_a31nn :: Type). (⟢) (ParserToken t_a31nn) 𝔹
-parserTokenValueL :: forall (t_a31nn :: Type). (⟢) (ParserToken t_a31nn) t_a31nn
+parserTokenSuffixL :: forall (t_a31zz :: Type). (⟢) (ParserToken t_a31zz) (WindowL Doc Doc)
+parserTokenContextL :: forall (t_a31zz :: Type). (⟢) (ParserToken t_a31zz) ParserContext
+parserTokenSkipL :: forall (t_a31zz :: Type). (⟢) (ParserToken t_a31zz) 𝔹
+parserTokenValueL :: forall (t_a31zz :: Type). (⟢) (ParserToken t_a31zz) t_a31zz
 renderNLDisplay :: Doc
 renderNLError :: Doc
 renderEOFDisplay :: Doc
@@ -4130,11 +4138,11 @@ RegexState :: ℕ64 -> (Regex c t o u ⇰ ℕ64) -> ((t ∨ c) ⇰ (ℕ64 ⇰ �
 [regexStateTransitions] :: RegexState c t o u -> (t ∨ c) ⇰ (ℕ64 ⇰ ℕ64)
 [regexStateResults] :: RegexState c t o u -> ℕ64 ⇰ 𝑂 (RegexResult o u)
 [regexStateDead] :: RegexState c t o u -> ℕ64 ⇰ 𝔹
-regexStateDeadL :: forall (c_a33F6 :: Type) (t_a33F7 :: Type) (o_a33F8 :: Type) (u_a33F9 :: Type). (⟢) (RegexState c_a33F6 t_a33F7 o_a33F8 u_a33F9) ((⇰) ℕ64 𝔹)
-regexStateResultsL :: forall (c_a33F6 :: Type) (t_a33F7 :: Type) (o_a33F8 :: Type) (u_a33F9 :: Type). (⟢) (RegexState c_a33F6 t_a33F7 o_a33F8 u_a33F9) ((⇰) ℕ64 (𝑂 (RegexResult o_a33F8 u_a33F9)))
-regexStateTransitionsL :: forall (c_a33F6 :: Type) (t_a33F7 :: Type) (o_a33F8 :: Type) (u_a33F9 :: Type). (⟢) (RegexState c_a33F6 t_a33F7 o_a33F8 u_a33F9) ((⇰) ((∨) t_a33F7 c_a33F6) ((⇰) ℕ64 ℕ64))
-regexStateMapL :: forall (c_a33F6 :: Type) (t_a33F7 :: Type) (o_a33F8 :: Type) (u_a33F9 :: Type). (⟢) (RegexState c_a33F6 t_a33F7 o_a33F8 u_a33F9) ((⇰) (Regex c_a33F6 t_a33F7 o_a33F8 u_a33F9) ℕ64)
-regexStateNextIDL :: forall (c_a33F6 :: Type) (t_a33F7 :: Type) (o_a33F8 :: Type) (u_a33F9 :: Type). (⟢) (RegexState c_a33F6 t_a33F7 o_a33F8 u_a33F9) ℕ64
+regexStateDeadL :: forall (c_a33Ri :: Type) (t_a33Rj :: Type) (o_a33Rk :: Type) (u_a33Rl :: Type). (⟢) (RegexState c_a33Ri t_a33Rj o_a33Rk u_a33Rl) ((⇰) ℕ64 𝔹)
+regexStateResultsL :: forall (c_a33Ri :: Type) (t_a33Rj :: Type) (o_a33Rk :: Type) (u_a33Rl :: Type). (⟢) (RegexState c_a33Ri t_a33Rj o_a33Rk u_a33Rl) ((⇰) ℕ64 (𝑂 (RegexResult o_a33Rk u_a33Rl)))
+regexStateTransitionsL :: forall (c_a33Ri :: Type) (t_a33Rj :: Type) (o_a33Rk :: Type) (u_a33Rl :: Type). (⟢) (RegexState c_a33Ri t_a33Rj o_a33Rk u_a33Rl) ((⇰) ((∨) t_a33Rj c_a33Ri) ((⇰) ℕ64 ℕ64))
+regexStateMapL :: forall (c_a33Ri :: Type) (t_a33Rj :: Type) (o_a33Rk :: Type) (u_a33Rl :: Type). (⟢) (RegexState c_a33Ri t_a33Rj o_a33Rk u_a33Rl) ((⇰) (Regex c_a33Ri t_a33Rj o_a33Rk u_a33Rl) ℕ64)
+regexStateNextIDL :: forall (c_a33Ri :: Type) (t_a33Rj :: Type) (o_a33Rk :: Type) (u_a33Rl :: Type). (⟢) (RegexState c_a33Ri t_a33Rj o_a33Rk u_a33Rl) ℕ64
 regexState₀ :: RegexState c t o u
 data DFA c t o u
 DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult o u)) -> 𝕍 𝔹 -> DFA c t o u
@@ -4366,12 +4374,12 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateEndPos] :: ParserState t -> AddBT Loc
 [parserStateInput] :: ParserState t -> 𝑆 (ParserToken t)
-parserStateInputL :: forall (t_a3xZ5 :: Type). (⟢) (ParserState t_a3xZ5) (𝑆 (ParserToken t_a3xZ5))
-parserStateEndPosL :: forall (t_a3xZ5 :: Type). (⟢) (ParserState t_a3xZ5) (AddBT Loc)
-parserStateSuffixL :: forall (t_a3xZ5 :: Type). (⟢) (ParserState t_a3xZ5) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a3xZ5 :: Type). (⟢) (ParserState t_a3xZ5) ParserContext
-parserStateSkipContextL :: forall (t_a3xZ5 :: Type). (⟢) (ParserState t_a3xZ5) ParserContext
-parserStatePrefixL :: forall (t_a3xZ5 :: Type). (⟢) (ParserState t_a3xZ5) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a3ybh :: Type). (⟢) (ParserState t_a3ybh) (𝑆 (ParserToken t_a3ybh))
+parserStateEndPosL :: forall (t_a3ybh :: Type). (⟢) (ParserState t_a3ybh) (AddBT Loc)
+parserStateSuffixL :: forall (t_a3ybh :: Type). (⟢) (ParserState t_a3ybh) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a3ybh :: Type). (⟢) (ParserState t_a3ybh) ParserContext
+parserStateSkipContextL :: forall (t_a3ybh :: Type). (⟢) (ParserState t_a3ybh) ParserContext
+parserStatePrefixL :: forall (t_a3ybh :: Type). (⟢) (ParserState t_a3ybh) (WindowR Doc Doc)
 parserState₀ :: 𝑆 (ParserToken t) -> ParserState t
 newtype Parser t a
 Parser :: ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a

@@ -173,10 +173,14 @@ bdrShift s x = rename $ \ s' _u y →
 applySubst ∷ (Eq s,FromVar s b,Binding s b a) ⇒ s → (b → 𝑂 a) → ℕ64 → Subst s b → 𝕐 → 𝑂 a
 applySubst s afrb u (Subst 𝓈) x = subst s (bdrIntro s u) *$ afrb *$ 𝓈 s u x
 
-applySubstL 
-  ∷ (Eq s₂,FromVar s₁ b,FromVar s₂ b',Binding s₂ b' a) 
-  ⇒ s₁ ⌲ s₂ → b ⌲ b' → s₁ → (b → 𝑂 a) → ℕ64 → Subst s₁ b → 𝕐 → 𝑂 a
-applySubstL ℓˢ ℓᵇ s₁ afrb u 𝓈 =
-  case view ℓˢ s₁ of
-    None → afrb ∘ frvar s₁
-    Some s₂ → applySubst s₂ (afrb ∘ construct ℓᵇ) u $ mapSubst (construct ℓˢ) (view ℓᵇ) 𝓈
+---------------
+-- FREE VARS --
+---------------
+
+class HasFV a where
+  fv ∷ a → 𝑃 𝕏
+
+fvVar ∷ 𝕐 → 𝑃 𝕏
+fvVar = \case
+  NamedVar x n | n ≡ zero → single x
+  _ → null
