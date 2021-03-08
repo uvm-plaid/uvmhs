@@ -195,7 +195,7 @@ ponMMSP e n = product $ repeat n e
 ------------------
 
 instance FromVar () MMSP where frvar () = varMMSP
-instance Binding () MMSP MMSP where substN () = substN_MMSP
+instance Binding () MMSP MMSP where substN = substN_MMSP
 
 substN_MMSP ∷ ℕ64 → Subst () MMSP → MMSP → 𝑂 MMSP
 substN_MMSP u 𝓈 (MMSP α̇) = substN_MMSPMaxs u 𝓈 α̇

@@ -111,23 +111,23 @@ nullSubst = Subst $ \ s _ x → return $ frvar s x
 appendSubst ∷ (Binding s a b) ⇒ Subst s a → Subst s b → Subst s b
 appendSubst 𝓈₁ (Subst 𝓈₂) = Subst $ \ s' u' y → do
   e ← 𝓈₂ s' u' y
-  substN s' u' 𝓈₁ e
+  substN u' 𝓈₁ e
 
 instance (FromVar s a) ⇒ Null (Subst s a) where null = nullSubst
 instance (Binding s a a) ⇒ Append (Subst s a) where (⧺) = appendSubst
 instance (FromVar s a,Binding s a a) ⇒ Monoid (Subst s a) 
 
 class Binding s b a | a → s,a → b where
-  substN ∷ s → ℕ64 → Subst s b → a → 𝑂 a
+  substN ∷ ℕ64 → Subst s b → a → 𝑂 a
 
 substNL ∷ (Binding s₂ b' a) ⇒ s₁ ⌲ s₂ → b ⌲ b' → s₁ → ℕ64 → Subst s₁ b → a → 𝑂 a
-substNL ℓˢ ℓᵇ s₁ u 𝓈 =
-  case view ℓˢ s₁ of
-    None → return
-    Some s₂ → substN s₂ u $ mapSubst (construct ℓˢ) (view ℓᵇ) 𝓈
+substNL ℓˢ ℓᵇ s u 𝓈 =
+  if shape ℓˢ s
+  then substN u $ mapSubst (construct ℓˢ) (view ℓᵇ) 𝓈
+  else return
 
-subst ∷ (Binding s b a) ⇒ s → Subst s b → a → 𝑂 a
-subst s = substN s zero
+subst ∷ (Binding s b a) ⇒ Subst s b → a → 𝑂 a
+subst = substN zero
 
 rename ∷ (FromVar s b) ⇒ (s → ℕ64 → 𝕐 → 𝕐) → Subst s b
 rename f = Subst $ \ s u x → return $ frvar s $ f s u x
@@ -171,7 +171,7 @@ bdrShift s x = rename $ \ s' _u y →
   else y
 
 applySubst ∷ (Eq s,FromVar s b,Binding s b a) ⇒ s → (b → 𝑂 a) → ℕ64 → Subst s b → 𝕐 → 𝑂 a
-applySubst s afrb u (Subst 𝓈) x = subst s (bdrIntro s u) *$ afrb *$ 𝓈 s u x
+applySubst s afrb u (Subst 𝓈) x = subst (bdrIntro s u) *$ afrb *$ 𝓈 s u x
 
 ---------------
 -- FREE VARS --
@@ -184,3 +184,5 @@ fvVar ∷ 𝕐 → 𝑃 𝕏
 fvVar = \case
   NamedVar x n | n ≡ zero → single x
   _ → null
+
+instance HasFV 𝕐 where fv = fvVar
