@@ -32,8 +32,13 @@ data 𝕐 =
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
 
-named ∷ 𝕏 → 𝕐
-named x = NamedVar x zero
+free ∷ 𝕏 → 𝕐
+free x = NamedVar x zero
+
+freeL ∷ 𝕐 ⌲ 𝕏
+freeL = prism free $ \case
+  NamedVar x n | n ≡ zero → return x
+  _ → abort
 
 instance Pretty 𝕐 where
   pretty = \case
@@ -188,11 +193,9 @@ applySubst s afrb su (Subst 𝓈) x = subst (bdrIntro su) *$ afrb *$ 𝓈 s su x
 ---------------
 
 class HasFV a where
-  fv ∷ a → 𝑃 𝕐
+  fv ∷ a → 𝑃 𝕏
 
-fvVar ∷ 𝕐 → 𝑃 𝕐
-fvVar = \case
-  NamedVar x n → single $ NamedVar x n
-  _ → null
+fvVar ∷ 𝕐 → 𝑃 𝕏
+fvVar = elim𝑂 null single ∘ view freeL
 
 instance HasFV 𝕐 where fv = fvVar

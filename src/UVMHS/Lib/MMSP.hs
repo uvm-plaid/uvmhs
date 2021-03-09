@@ -233,22 +233,22 @@ substN_MMSPAtom u 𝓈 = \case
 
 instance HasFV MMSP where fv = fv_MMSP
 
-fv_MMSP ∷ MMSP → 𝑃 𝕐
+fv_MMSP ∷ MMSP → 𝑃 𝕏
 fv_MMSP (MMSP α̇) = fv_MMSPMaxs α̇
 
-fv_MMSPMaxs ∷ MMSPMaxs → 𝑃 𝕐
+fv_MMSPMaxs ∷ MMSPMaxs → 𝑃 𝕏
 fv_MMSPMaxs (MMSPMaxs _ α) = joins $ map fv_MMSPMins $ iter α
 
-fv_MMSPMins ∷ MMSPMins → 𝑃 𝕐
+fv_MMSPMins ∷ MMSPMins → 𝑃 𝕏
 fv_MMSPMins (MMSPMins _ β) = joins $ map fv_MMSPSums $ iter β
 
-fv_MMSPSums ∷ MMSPSums → 𝑃 𝕐
+fv_MMSPSums ∷ MMSPSums → 𝑃 𝕏
 fv_MMSPSums (MMSPSums _ γ) = joins $ map (fv_MMSPProds ∘ fst) $ iter γ
 
-fv_MMSPProds ∷ MMSPProds → 𝑃 𝕐
+fv_MMSPProds ∷ MMSPProds → 𝑃 𝕏
 fv_MMSPProds (MMSPProds δ) = joins $ map (fv_MMSPAtom ∘ fst) $ iter δ
 
-fv_MMSPAtom ∷ MMSPAtom → 𝑃 𝕐
+fv_MMSPAtom ∷ MMSPAtom → 𝑃 𝕏
 fv_MMSPAtom = \case
   Var_MMSPAtom x → fv x
 
