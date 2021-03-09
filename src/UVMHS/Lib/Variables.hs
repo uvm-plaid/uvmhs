@@ -188,11 +188,11 @@ applySubst s afrb su (Subst 𝓈) x = subst (bdrIntro su) *$ afrb *$ 𝓈 s su x
 ---------------
 
 class HasFV a where
-  fv ∷ a → 𝑃 𝕏
+  fv ∷ a → 𝑃 𝕐
 
-fvVar ∷ 𝕐 → 𝑃 𝕏
+fvVar ∷ 𝕐 → 𝑃 𝕐
 fvVar = \case
-  NamedVar x n | n ≡ zero → single x
+  NamedVar x n → single $ NamedVar x n
   _ → null
 
 instance HasFV 𝕐 where fv = fvVar
