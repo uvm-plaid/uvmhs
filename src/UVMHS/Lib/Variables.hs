@@ -168,13 +168,11 @@ bdrSubst s x e = Subst $ \ s' _su y →
     then substVar (frvar s) x e y
     else frvar s' y
 
-bdrIntro ∷ (Ord s,FromVar s b) ⇒ s → ℕ64 → Subst s b
-bdrIntro s n = rename $ \ s' su y →
-  if s ≡ s'
-  then 
-    let u = ifNone zero $ su ⋕? s
-    in introVar u n y
-  else y
+bdrIntro ∷ (Ord s,FromVar s b) ⇒ s ⇰ ℕ64 → Subst s b
+bdrIntro su = rename $ \ s su' y →
+  let u = ifNone zero $ su' ⋕? s
+      n = ifNone zero $ su ⋕? s
+  in introVar u n y
 
 bdrShift ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → Subst s b
 bdrShift s x = rename $ \ s' _u y →
@@ -183,9 +181,7 @@ bdrShift s x = rename $ \ s' _u y →
   else y
 
 applySubst ∷ (Eq s,FromVar s b,Binding s b a) ⇒ s → (b → 𝑂 a) → s ⇰ ℕ64 → Subst s b → 𝕐 → 𝑂 a
-applySubst s afrb su (Subst 𝓈) x = 
-  let u = ifNone zero $ su ⋕? s
-  in subst (bdrIntro s u) *$ afrb *$ 𝓈 s su x
+applySubst s afrb su (Subst 𝓈) x = subst (bdrIntro su) *$ afrb *$ 𝓈 s su x
 
 ---------------
 -- FREE VARS --
