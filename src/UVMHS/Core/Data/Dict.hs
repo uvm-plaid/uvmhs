@@ -51,6 +51,8 @@ instance Top (k ⇰ v) where top = dø
 instance (Ord k,Meet v) ⇒ Meet (k ⇰ v) where (⊓) = unionWith (⊓)
 instance (Ord k,Meet v) ⇒ MeetLattice (k ⇰ v)
 
+instance (Ord k,Difference v) ⇒ Difference (k ⇰ v) where (⊟) = diffWith (⊟)
+
 instance Functor ((⇰) k) where map = map𝐷
 
 instance ToStream (k ∧ v) (k ⇰ v) where stream = stream𝐷
@@ -103,8 +105,8 @@ unionsWith = fold dø ∘ unionWith
 interWith ∷ (Ord k) ⇒ (v₁ → v₂ → v₃) → k ⇰ v₁ → k ⇰ v₂ → k ⇰ v₃
 interWith f kvs₁ kvs₂ = 𝐷 $ Map.intersectionWith f (un𝐷 kvs₁) (un𝐷 kvs₂)
 
--- diffWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
--- diffWith f kvs₁ kvs₂ = 𝐷 $ Map.differenceWith (\ x y → HS.Just (f x y)) (un𝐷 kvs₁) (un𝐷 kvs₂)
+diffWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
+diffWith f kvs₁ kvs₂ = 𝐷 $ Map.differenceWith (\ x y → HS.Just $ f x y) (un𝐷 kvs₁) $ un𝐷 kvs₂
 
 dminView ∷ k ⇰ v → 𝑂 (k ∧ v ∧ (k ⇰ v))
 dminView = map (mapSnd 𝐷) ∘ frhs ∘ Map.minViewWithKey ∘ un𝐷
