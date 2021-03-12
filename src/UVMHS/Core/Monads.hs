@@ -353,6 +353,9 @@ newtype ContT r m a = ContT { unContT ∷ (a → m r) → m r }
 runContT ∷ (a → m r) → ContT r m a → m r
 runContT = flip unContT
 
+evalContT ∷ (Return m) ⇒ ContT r m r → m r
+evalContT = runContT return
+
 instance Functor (ContT r m) where
   map ∷ ∀ a b. (a → b) → ContT r m a → ContT r m b
   map f xM = ContT $ \ (k ∷ b → m r) → unContT xM $ \ x → k $ f x

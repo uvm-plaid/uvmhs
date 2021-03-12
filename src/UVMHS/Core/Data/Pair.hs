@@ -63,6 +63,9 @@ mapMPair f g (x :* y) = do
   y' ← g y
   return $ x' :* y'
 
+mapMBoth ∷ (Monad m) ⇒ (a → m a) → a ∧ a → m (a ∧ a)
+mapMBoth f = mapMPair f f
+
 mapMFst ∷ (Monad m) ⇒ (a → m a') → a ∧ b → m (a' ∧ b)
 mapMFst = flip mapMPair return
 
