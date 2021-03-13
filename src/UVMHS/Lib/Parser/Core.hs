@@ -100,7 +100,7 @@ pGetContext = do
 pGetContextRendered ∷ Parser t FullContext
 pGetContextRendered = do
   pp :* pc :* ps ← pGetContext
-  return $ FullContext pp (parserContextDisplayL pc) ps
+  return $ FullContext (parserContextLocRange pc) pp (parserContextDisplayL pc) ps
 
 pWithContext ∷ Parser t a → Parser t (WindowR Doc Doc ∧ ParserContext ∧ WindowL Doc Doc ∧ a)
 pWithContext aM = do

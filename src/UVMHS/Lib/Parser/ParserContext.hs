@@ -29,20 +29,38 @@ formatParserContext fmt (ParserContext lr dL dR e) =
                    (mapWindowR (ppFormat fmt) (ppFormat fmt) e)
 
 data FullContext = FullContext
-  { fullContextPrefix ∷ WindowR Doc Doc
+  { fullContextLocRange ∷ LocRange
+  , fullContextPrefix ∷ WindowR Doc Doc
   , fullContextContext ∷ WindowL Doc Doc
   , fullContextSuffix ∷ WindowL Doc Doc
   }
 
 instance Pretty FullContext where
-  pretty (FullContext pre d pi) = concat
-    [ ppFormat (formats [BG grayLight]) $ ppString "«"
-    , ppAlign $ concat
-        [ renderWindowR pre 
-        , ppUT '^' green $ renderWindowL d
-        , renderWindowL pi
+  pretty (FullContext (LocRange b e) pre d pi) = ppVertical
+    [ concat
+        [ ppLoc b
+        , ppPun "–"
+        , ppLoc e
         ]
-    , ppFormat (formats [BG grayLight]) $ ppString "»"
+    , concat
+        [ ppFormat (formats [BG grayLight]) $ ppString "«"
+        , ppAlign $ concat
+            [ renderWindowR pre 
+            , ppUT '^' green $ renderWindowL d
+            , renderWindowL pi
+            ]
+        , ppFormat (formats [BG grayLight]) $ ppString "»"
+        ]
     ]
+    where
+      ppLoc = \case
+        BotBT → ppBG grayLight $ ppString "BOF"
+        TopBT → ppBG grayLight $ ppString "EOF"
+        AddBT (Loc _ r c) → concat
+          [ pretty r
+          , ppPun ":"
+          , pretty c
+          ]
+ 
 
 instance Show FullContext where show = chars ∘ ppshow
