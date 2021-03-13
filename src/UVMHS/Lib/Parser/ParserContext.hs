@@ -57,9 +57,9 @@ instance Pretty FullContext where
         BotBT → ppBG grayLight $ ppString "BOF"
         TopBT → ppBG grayLight $ ppString "EOF"
         AddBT (Loc _ r c) → concat
-          [ pretty r
+          [ pretty $ succ r
           , ppPun ":"
-          , pretty c
+          , pretty $ succ c
           ]
  
 
