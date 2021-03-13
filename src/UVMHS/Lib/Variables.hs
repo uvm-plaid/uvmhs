@@ -138,10 +138,10 @@ substNL ℓˢ ℓᵇ su 𝓈 =
 subst ∷ (Binding s b a) ⇒ Subst s b → a → 𝑂 a
 subst = substN null
 
-rename ∷ (FromVar s b) ⇒ (s → s ⇰ ℕ64 → 𝕐 → 𝕐) → Subst s b
+rename ∷ (FromVar s a) ⇒ (s → s ⇰ ℕ64 → 𝕐 → 𝕐) → Subst s a
 rename f = Subst $ \ s su x → return $ frvar s $ f s su x
 
-bdrOpen ∷ (Ord s,FromVar s b) ⇒ s → 𝕏 → Subst s b
+bdrOpen ∷ (Ord s,FromVar s a) ⇒ s → 𝕏 → Subst s a
 bdrOpen s x = rename $ \ s' su y →
   if s ≡ s'
   then 
@@ -149,7 +149,7 @@ bdrOpen s x = rename $ \ s' su y →
     in openVar u x y
   else y
 
-bdrClose ∷ (Ord s,FromVar s b) ⇒ s → 𝕏 → Subst s b
+bdrClose ∷ (Ord s,FromVar s a) ⇒ s → 𝕏 → Subst s a
 bdrClose s x = rename $ \ s' su y → 
   if s ≡ s'
   then 
@@ -157,36 +157,34 @@ bdrClose s x = rename $ \ s' su y →
     in closeVar u x y
   else y
 
-bdrBind ∷ (Ord s,FromVar s b) ⇒ s → b → Subst s b
+bdrBind ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s → a → Subst s a
 bdrBind s e = Subst $ \ s' su y →
-  return $
-    if s ≡ s'
-    then 
-      let u = ifNone zero $ su ⋕? s
-      in bindVar (frvar s) u e y
-    else frvar s' y
+  if s ≡ s'
+  then 
+    let u = ifNone zero $ su ⋕? s
+    in subst (bdrIntro su) $ bindVar (frvar s) u e y
+  else return $ frvar s' y
 
-bdrSubst ∷ (Ord s,FromVar s b) ⇒ s → 𝕏 → b → Subst s b
-bdrSubst s x e = Subst $ \ s' _su y →
-  return $
-    if s ≡ s'
-    then substVar (frvar s) x e y
-    else frvar s' y
+bdrSubst ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → Subst s a
+bdrSubst s x e = Subst $ \ s' su y →
+  if s ≡ s'
+  then subst (bdrIntro su) $ substVar (frvar s) x e y
+  else return $ frvar s' y
 
-bdrIntro ∷ (Ord s,FromVar s b) ⇒ s ⇰ ℕ64 → Subst s b
+bdrIntro ∷ (Ord s,FromVar s a) ⇒ s ⇰ ℕ64 → Subst s a
 bdrIntro su = rename $ \ s su' y →
   let u = ifNone zero $ su' ⋕? s
       n = ifNone zero $ su ⋕? s
   in introVar u n y
 
-bdrShift ∷ (Eq s,FromVar s b) ⇒ s → 𝕏 → Subst s b
+bdrShift ∷ (Eq s,FromVar s a) ⇒ s → 𝕏 → Subst s a
 bdrShift s x = rename $ \ s' _u y →
   if s ≡ s'
   then shiftVar x y
   else y
 
-applySubst ∷ (Eq s,FromVar s b,Binding s b a) ⇒ s → (b → 𝑂 a) → s ⇰ ℕ64 → Subst s b → 𝕐 → 𝑂 a
-applySubst s afrb su (Subst 𝓈) x = subst (bdrIntro su) *$ afrb *$ 𝓈 s su x
+applySubst ∷ s → (b → 𝑂 a) → s ⇰ ℕ64 → Subst s b → 𝕐 → 𝑂 a
+applySubst s afrb su (Subst 𝓈) x = afrb *$ 𝓈 s su x
 
 ---------------
 -- FREE VARS --
