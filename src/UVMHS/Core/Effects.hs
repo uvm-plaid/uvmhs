@@ -272,6 +272,15 @@ localStateEffectsL ℓ xM = do
 
 -- Fail
 
+failEff ∷ (Monad m,MonadFail m) ⇒ 𝑂 a → m a
+failEff = elim𝑂 abort return
+
+failObs ∷ (Monad m,MonadFail m) ⇒ m a → m (𝑂 a)
+failObs xM = tries
+  [ Some ^$ xM
+  , return None
+  ]
+
 abort𝑂 ∷ (Monad m,MonadFail m) ⇒ 𝑂 a → m a
 abort𝑂 = elim𝑂 abort return
 

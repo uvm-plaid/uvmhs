@@ -11,10 +11,11 @@ import UVMHS.Lib.Parser.CParser
 -- STATIC LEVELS --
 -------------------
 
-pLET,pSEP,pARR,pOR,pAND,pCMP,pPLUS,pTIMES,pNEG,pPOW,pFAC,pAPP ∷ ℕ64
+pLET,pSEP,pASC,pARR,pOR,pAND,pCMP,pPLUS,pTIMES,pNEG,pPOW,pFAC,pAPP ∷ ℕ64
 
 pLET   = 𝕟64 05 --  let fun
 pSEP   = 𝕟64 06 --  , ;
+pASC   = 𝕟64 07 --  e : τ
 pARR   = 𝕟64 10 --  ->
 pOR    = 𝕟64 20 --  \/
 pAND   = 𝕟64 30 --  /\
@@ -157,7 +158,7 @@ fmixfix new bracket cxt (MixfixF terms levels₀) = loop levels₀
       x ← bracket $ cxt $ levelInfr mixes nextLevel
       return $ f x
 
-fmixfixWithContext ∷ ∀ t a. (Ord t) ⇒ 𝕊 → MixfixF t (Annotated FullContext) a → CParser t (Annotated FullContext a)
+fmixfixWithContext ∷ ∀ t a. (Ord t) ⇒ 𝕊 → MixfixF t (𝐴 SrcCxt) a → CParser t (𝐴 SrcCxt a)
 fmixfixWithContext s = fmixfix (cpNewContext s) cpNewExpressionContext cpWithContextRendered
 
 ---------------
@@ -220,5 +221,5 @@ mixfixPure (Mixfix terminals levels) = MixfixF terminals $ map mixesPure levels
 mixfix ∷ (Ord t) ⇒ Mixfix t a → CParser t a
 mixfix mix = unID ^$ fmixfix id id (map ID) (mixfixPure mix) 
 
-mixfixWithContext ∷ (Ord t) ⇒ 𝕊 → Mixfix t a → CParser t (Annotated FullContext a)
+mixfixWithContext ∷ (Ord t) ⇒ 𝕊 → Mixfix t a → CParser t (𝐴 SrcCxt a)
 mixfixWithContext s = cpNewContext s ∘ cpWithContextRendered ∘ mixfix

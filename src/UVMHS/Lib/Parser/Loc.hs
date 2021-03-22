@@ -8,7 +8,7 @@ data Loc = Loc
   { locPos ∷ ℕ64 ∧ ℕ64
   , locRow ∷ ℕ64
   , locCol ∷ ℕ64
-  }
+  } deriving (Show)
 makeLenses ''Loc
 makePrettyRecord ''Loc
 
@@ -34,7 +34,7 @@ bumpCol₂ (Loc (pos₁ :* pos₂) row col) = Loc (pos₁ :* (pos₂ + one)) row
 data LocRange = LocRange
   { locRangeBegin ∷ AddBT Loc
   , locRangeEnd ∷ AddBT Loc
-  } deriving (Eq, Ord)
+  } deriving (Eq,Ord,Show)
 makeLenses ''LocRange
 makePrettyUnion ''LocRange
 

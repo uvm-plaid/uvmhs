@@ -2,7 +2,6 @@ module UVMHS.Lib.Parser.CParser where
 
 import UVMHS.Core
 
-import UVMHS.Lib.Variables
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Pretty
 
@@ -127,9 +126,6 @@ cpOneOrMoreSepBy sepM xM = do
 cpSyntax ∷ 𝕊 → CParser TokenBasic TokenBasic
 cpSyntax = cpToken ∘ SyntaxTBasic
 
-cpName ∷ CParser TokenBasic 𝕏
-cpName = var ^$ cpShaped $ view nameTBasicL
-
 cpNatural ∷ CParser TokenBasic ℕ
 cpNatural = cpShaped $ view naturalTBasicL
 
@@ -144,9 +140,6 @@ cpString = cpShaped $ view stringTBasicL
 
 cpSyntaxWS ∷ 𝕊 → CParser TokenWSBasic TokenWSBasic
 cpSyntaxWS = cpToken ∘ SyntaxTWSBasic
-
-cpNameWS ∷ CParser TokenWSBasic 𝕏
-cpNameWS = var ^$ cpShaped $ view nameTWSBasicL
 
 cpNaturalWS ∷ CParser TokenWSBasic ℕ
 cpNaturalWS = cpShaped $ view naturalTWSBasicL
@@ -181,16 +174,16 @@ cpNewErrContext msg = toCParser ∘ pNewErrContext msg ∘ frCParser
 cpNewContext ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t a
 cpNewContext s = toCParser ∘ pNewContext s ∘ frCParser
 
-cpWithContextRendered ∷ (Ord t) ⇒ CParser t a → CParser t (Annotated FullContext a)
+cpWithContextRendered ∷ (Ord t) ⇒ CParser t a → CParser t (𝐴 SrcCxt a)
 cpWithContextRendered = toCParser ∘ pWithContextRendered ∘ frCParser
 
-cpNewWithContextRendered ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t (Annotated FullContext a)
+cpNewWithContextRendered ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t (𝐴 SrcCxt a)
 cpNewWithContextRendered s = cpNewContext s ∘ cpWithContextRendered
 
-cpGetContextRendered ∷ CParser t FullContext
+cpGetContextRendered ∷ CParser t SrcCxt
 cpGetContextRendered = toCParser pGetContextRendered
 
-cpNewGetContextRendered ∷ (Ord t) ⇒ CParser t FullContext
+cpNewGetContextRendered ∷ (Ord t) ⇒ CParser t SrcCxt
 cpNewGetContextRendered = cpNewExpressionContext cpGetContextRendered
 
 cpManyContext ∷ (Ord t,Comonad f) ⇒ (∀ b. CParser t b → CParser t (f b)) → CParser t a → CParser t (𝐿 (f a))

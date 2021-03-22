@@ -227,3 +227,5 @@ debugShape d = do
   pprint d
   pprint $ ppString $ show𝕊 $ docShape d
 
+instance Eq Doc where (==) = (≡) `on` ppRender
+instance Ord Doc where compare = compare `on` ppRender

@@ -72,7 +72,7 @@ instance (Ord u,Additive u) ⇒ Seqoid (RegexInfo o u)
 -- Regex --
 -----------
 
-type Regex c t o u = Annotated (RegexInfo o u) (RegexU c t o u)
+type Regex c t o u = 𝐴 (RegexInfo o u) (RegexU c t o u)
 data RegexU c t o u =
     NullR
   | ResR (RegexResult o u)
@@ -102,10 +102,10 @@ instance (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Seqoid (Regex c t o u)
 instance (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Kleene (Regex c t o u)
 
 nullRegex ∷ (Zero u) ⇒ Regex c t o u
-nullRegex = Annotated null NullR
+nullRegex = 𝐴 null NullR
 
 resRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ RegexResult o u → Regex c t o u
-resRegex r = Annotated (RegexInfo $ Some r) $ ResR r
+resRegex r = 𝐴 (RegexInfo $ Some r) $ ResR r
 
 epsRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ Regex c t o u
 epsRegex = resRegex null
@@ -129,7 +129,7 @@ uepsRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ u → Regex c t o u
 uepsRegex u = retRegex zero null None u
 
 atomRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ RegexAtom c t o u → Regex c t o u
-atomRegex = Annotated null ∘ AtomR eps
+atomRegex = 𝐴 null ∘ AtomR eps
 
 tokRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ t → Regex c t o u
 tokRegex t = atomRegex $ TokRA t
@@ -141,7 +141,7 @@ classRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ c → Regex c t o u
 classRegex c = atomRegex $ ClassRA c
 
 consEpsRegex ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ RegexResult o u → Regex c t o u → Regex c t o u
-consEpsRegex r (Annotated i e) = Annotated (RegexInfo (Some r) ▷ i) $ consEpsRegexU r e
+consEpsRegex r (𝐴 i e) = 𝐴 (RegexInfo (Some r) ▷ i) $ consEpsRegexU r e
 
 consEpsRegexU ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ RegexResult o u → RegexU c t o u → RegexU c t o u
 consEpsRegexU r = \case
@@ -154,7 +154,7 @@ consEpsRegexU r = \case
   StarR r' e → StarR (r ▷ r') e
 
 snocEpsRegex ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ RegexResult o u → Regex c t o u → Regex c t o u
-snocEpsRegex r (Annotated i e) = Annotated (i ▷ RegexInfo (Some r)) $ snocEpsRegexU r e
+snocEpsRegex r (𝐴 i e) = 𝐴 (i ▷ RegexInfo (Some r)) $ snocEpsRegexU r e
 
 snocEpsRegexU ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ RegexResult o u → RegexU c t o u → RegexU c t o u
 snocEpsRegexU r = \case
@@ -171,7 +171,7 @@ snocEpsRegexU r = \case
   StarR r' e → StarR (r' ▷ r) e
 
 sumRegex ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ Regex c t o u → Regex c t o u → Regex c t o u
-sumRegex e₁@(Annotated i₁ e₁') e₂@(Annotated i₂ e₂') = Annotated (i₁ ⧺ i₂) $ case (e₁',e₂') of
+sumRegex e₁@(𝐴 i₁ e₁') e₂@(𝐴 i₂ e₂') = 𝐴 (i₁ ⧺ i₂) $ case (e₁',e₂') of
   (NullR,_) → e₂'
   (_,NullR) → e₁'
   (ResR r₁,ResR r₂) → ResR $ r₁ ⧺ r₂
@@ -181,7 +181,7 @@ sumRegex e₁@(Annotated i₁ e₁') e₂@(Annotated i₂ e₂') = Annotated (i�
   _ → SumsR $ pow [e₁,e₂]
   
 seqRegex ∷ (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Regex c t o u → Regex c t o u → Regex c t o u
-seqRegex e₁@(Annotated i₁ e₁') e₂@(Annotated i₂ e₂') = Annotated (i₁ ▷ i₂) $ case (e₁',e₂') of
+seqRegex e₁@(𝐴 i₁ e₁') e₂@(𝐴 i₂ e₂') = 𝐴 (i₁ ▷ i₂) $ case (e₁',e₂') of
   (NullR,_) → NullR
   (_,NullR) → NullR
   (ResR r₁,_) → consEpsRegexU r₁ e₂'
@@ -194,11 +194,11 @@ seqRegex e₁@(Annotated i₁ e₁') e₂@(Annotated i₂ e₂') = Annotated (i�
   _ → SeqsR $ list [e₁,e₂]
 
 starRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ Regex c t o u → Regex c t o u
-starRegex e@(Annotated i e') = case e' of
+starRegex e@(𝐴 i e') = case e' of
   NullR → nullRegex
   ResR r → resRegex r
   StarR _ _ → e
-  _ → Annotated (eps ⧺ i) $ StarR eps e
+  _ → 𝐴 (eps ⧺ i) $ StarR eps e
 
 -- Derivative --
 
@@ -233,7 +233,7 @@ derRegexAtom xc = \case
 
 derRegexSequence ∷ (Ord t,Ord c,Classified c t,Ord o,Ord u,Additive u) ⇒ t ∨ c → 𝐿 (Regex c t o u) → Regex c t o u
 derRegexSequence _ Nil = null
-derRegexSequence xc (e@(Annotated i _) :& es) = case regexInfoResult i of
+derRegexSequence xc (e@(𝐴 i _) :& es) = case regexInfoResult i of
   None → derRegex xc e ▷ sequence es
   Some r → concat
     [ derRegex xc e ▷ sequence es
@@ -298,7 +298,7 @@ compileRegex e₀ =
         Some n → return n
         None → do
           n ← newRegexEntry e
-          modifyL regexStateResultsL $ (⩌) $ n ↦ regexInfoResult (annotatedTag e)
+          modifyL regexStateResultsL $ (⩌) $ n ↦ regexInfoResult (atag e)
           modifyL regexStateDeadL $ (⩌) $ n ↦ (extract e ≡ NullR)
           eachOn codes $ \ xc → do
             n' ← loop $ derRegex xc e

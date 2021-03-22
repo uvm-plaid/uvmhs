@@ -19,7 +19,7 @@ makePrettySum ''ParserContext
 instance Null ParserContext where 
   null = ParserContext bot null null null
 instance Append ParserContext where 
-  ParserContext l₁ dL₁ dR₁ e₁ ⧺ ParserContext l₂ dL₂ dR₂ e₂ = ParserContext (l₁ ⊔ l₂) (dL₁ ⧺ dL₂) (dR₁ ⧺ dR₂) (e₁ ⧺ e₂)
+  ParserContext l₁ dL₁ dR₁ e₁ ⧺ ParserContext l₂ dL₂ dR₂ e₂ = ParserContext (l₁ ⊔ l₂) (dL₁ ⧺ dL₂) (dR₁ ⧺ dR₂) $ e₁ ⧺ e₂
 instance Monoid ParserContext
 
 formatParserContext ∷ Formats → ParserContext → ParserContext
@@ -28,15 +28,15 @@ formatParserContext fmt (ParserContext lr dL dR e) =
                    (mapWindowR (ppFormat fmt) (ppFormat fmt) dR)
                    (mapWindowR (ppFormat fmt) (ppFormat fmt) e)
 
-data FullContext = FullContext
+data SrcCxt = SrcCxt
   { fullContextLocRange ∷ LocRange
   , fullContextPrefix ∷ WindowR Doc Doc
   , fullContextContext ∷ WindowL Doc Doc
   , fullContextSuffix ∷ WindowL Doc Doc
-  }
+  } deriving (Eq,Ord)
 
-instance Pretty FullContext where
-  pretty (FullContext (LocRange b e) pre d pi) = ppVertical
+instance Pretty SrcCxt where
+  pretty (SrcCxt (LocRange b e) pre d pi) = ppVertical
     [ concat
         [ ppLoc b
         , ppPun "–"
@@ -62,5 +62,4 @@ instance Pretty FullContext where
           , pretty $ succ c
           ]
  
-
-instance Show FullContext where show = chars ∘ ppshow
+instance Show SrcCxt where show = chars ∘ ppshow

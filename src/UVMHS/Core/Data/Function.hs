@@ -19,3 +19,6 @@ instance (Monoid a) ⇒ Monoid (r → a)
 
 arg ∷ a → (a → b) → b
 arg x f = f x
+
+pipe ∷ (a → b) → (b → c) → a → c
+pipe = flip (∘)

@@ -3,6 +3,7 @@ module UVMHS.Core.Data
   ,module UVMHS.Core.Data.Choice
   ,module UVMHS.Core.Data.Bitty
   ,module UVMHS.Core.Data.Dict
+  ,module UVMHS.Core.Data.Function
   ,module UVMHS.Core.Data.Iter
   ,module UVMHS.Core.Data.LazyList
   ,module UVMHS.Core.Data.List
@@ -20,7 +21,7 @@ import UVMHS.Core.Data.Bitty
 import UVMHS.Core.Data.Choice
 import UVMHS.Core.Data.Bool ()
 import UVMHS.Core.Data.Dict
-import UVMHS.Core.Data.Function ()
+import UVMHS.Core.Data.Function
 import UVMHS.Core.Data.Iter
 import UVMHS.Core.Data.LazyList
 import UVMHS.Core.Data.List

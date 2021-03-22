@@ -97,10 +97,10 @@ pGetContext = do
   ps ← getL parserStateSuffixL
   return $ (pp ⧺ parserContextDisplayR pk) :* pc :* ps
   
-pGetContextRendered ∷ Parser t FullContext
+pGetContextRendered ∷ Parser t SrcCxt
 pGetContextRendered = do
   pp :* pc :* ps ← pGetContext
-  return $ FullContext (parserContextLocRange pc) pp (parserContextDisplayL pc) ps
+  return $ SrcCxt (parserContextLocRange pc) pp (parserContextDisplayL pc) ps
 
 pWithContext ∷ Parser t a → Parser t (WindowR Doc Doc ∧ ParserContext ∧ WindowL Doc Doc ∧ a)
 pWithContext aM = do
@@ -127,11 +127,11 @@ pNewErrContext msg = mapEnv $ update parserEnvErrorStackL $ msg :* null
 pNewContext ∷ 𝕊 → Parser t a → Parser t a
 pNewContext msg = pNewExpressionContext ∘ pNewErrContext msg
 
-pWithContextRendered ∷ Parser t a → Parser t (Annotated FullContext a)
+pWithContextRendered ∷ Parser t a → Parser t (𝐴 SrcCxt a)
 pWithContextRendered aM = do
   x ← aM
   fc ← pGetContextRendered
-  return $ Annotated fc x
+  return $ 𝐴 fc x
 
 pRender ∷ Formats → Parser t a → Parser t a
 pRender fmt = mapEnv $ alter parserEnvRenderFormatL $ (⧺) fmt

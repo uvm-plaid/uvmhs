@@ -20,7 +20,7 @@ data Atom =
   | NameA 𝕊
 makePrettySum ''Atom
 
-type Exp = Annotated FullContext ExpPre
+type Exp = 𝐴 SrcCxt ExpPre
 data ExpPre =
     AtomE Atom
   | PlusE Exp Exp

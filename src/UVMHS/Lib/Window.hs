@@ -11,6 +11,7 @@ import UVMHS.Lib.Pretty
 data WindowL i a =
     ZerWindowL a
   | OneWindowL 𝔹 a i a
+  deriving (Eq,Ord,Show)
 
 eWindowL ∷ a → WindowL i a
 eWindowL = ZerWindowL
@@ -47,6 +48,7 @@ mapWindowL g f (OneWindowL o x i y) = OneWindowL o (f x) (g i) $ f y
 data WindowR i a =
     ZerWindowR a
   | OneWindowR 𝔹 a i a
+  deriving (Eq,Ord,Show)
 
 eWindowR ∷ a → WindowR i a
 eWindowR = ZerWindowR

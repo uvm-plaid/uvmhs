@@ -2,6 +2,7 @@ module UVMHS.Lib.Variables where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty
+import UVMHS.Lib.Parser
 
 ---------------
 -- VARIABLES --
@@ -21,6 +22,12 @@ instance Pretty 𝕏 where
     [ ppString x
     , elim𝑂 null (\ n → concat [ppPun "#",ppPun $ show𝕊 n]) nO
     ]
+
+cpName ∷ CParser TokenBasic 𝕏
+cpName = var ^$ cpShaped $ view nameTBasicL
+
+cpNameWS ∷ CParser TokenWSBasic 𝕏
+cpNameWS = var ^$ cpShaped $ view nameTWSBasicL
 
 -----------------------------------------
 -- LOCALLY NAMELESS WITH SHIFTED NAMES --
@@ -61,28 +68,28 @@ openVar u x = \case
 closeVar ∷ ℕ64 → 𝕏 → 𝕐 → 𝕐
 closeVar u x = \case
   NamedVar y n
-    | x ≡ y,n ≡ zero → BoundVar zero
+    | x ≡ y,n ≡ zero → BoundVar u
     | x ≡ y,n ≢ zero → NamedVar y $ pred n
     | otherwise      → NamedVar y n
   BoundVar n 
     | n < u → BoundVar n
     | otherwise → BoundVar $ n + one
 
-bindVar ∷ (𝕐 → a) → ℕ64 → a → 𝕐 → a
-bindVar mkvar' u e = \case
-  NamedVar x n → mkvar' $ NamedVar x n
+bindVar ∷ ℕ64 → a → 𝕐 → 𝕐 ∨ a
+bindVar u e = \case
+  NamedVar x n → Inl $ NamedVar x n
   BoundVar n
-    | n < u → mkvar' $ BoundVar n
-    | n ≡ u → e
-    | otherwise → mkvar' $ BoundVar $ pred n
+    | n < u → Inl $ BoundVar n
+    | n ≡ u → Inr e
+    | otherwise → Inl $ BoundVar $ pred n
 
-substVar ∷ (𝕐 → a) → 𝕏 → a → 𝕐 → a
-substVar mkvar' x e = \case
+substVar ∷ 𝕏 → a → 𝕐 → 𝕐 ∨ a
+substVar x e = \case
   NamedVar y n
-    | x ≡ y,n ≡ zero → e
-    | x ≡ y,n ≢ zero → mkvar' $ NamedVar y $ pred n
-    | otherwise → mkvar' $ NamedVar y n
-  BoundVar n → mkvar' $ BoundVar n
+    | x ≡ y,n ≡ zero → Inr e
+    | x ≡ y,n ≢ zero → Inl $ NamedVar y $ pred n
+    | otherwise → Inl $ NamedVar y n
+  BoundVar n → Inl $ BoundVar n
 
 introVar ∷ ℕ64 → ℕ64 → 𝕐 → 𝕐
 introVar u n = \case
@@ -103,46 +110,46 @@ shiftVar x = \case
 --------------------------
 
 class FromVar s a | a → s where
-  frvar ∷ s → 𝕐 → a
+  frvar ∷ 𝑃 SrcCxt → s → 𝕐 → 𝑂 a
 
-newtype Subst s a = Subst { unSubst ∷ s → s ⇰ ℕ64 → 𝕐 → 𝑂 a }
+newtype Subst s a = Subst { unSubst ∷ s ⇰ ℕ64 → 𝑃 SrcCxt → s → 𝕐 → 𝑂 a }
 
 mapSubst ∷ (Ord s₁) ⇒ (s₂ → s₁) → (a → 𝑂 b) → Subst s₁ a → Subst s₂ b
-mapSubst f g (Subst 𝓈) = Subst $ \ s su x → 
+mapSubst f g (Subst 𝓈) = Subst $ \ su cxt s x → 
   let su' = concat $ mapOn (iter su) $ \ (s' :* u) → f s' ↦ u
-  in g *$ 𝓈 (f s) su' x
+  in g *$ 𝓈 su' cxt (f s) x
 
 nullSubst ∷ (FromVar s a) ⇒ Subst s a
-nullSubst = Subst $ \ s _ x → return $ frvar s x
+nullSubst = Subst $ \ _ cxt s x → frvar cxt s x
 
 appendSubst ∷ (Binding s a b) ⇒ Subst s a → Subst s b → Subst s b
-appendSubst 𝓈₁ (Subst 𝓈₂) = Subst $ \ s' su' y → do
-  e ← 𝓈₂ s' su' y
-  substN su' 𝓈₁ e
+appendSubst 𝓈₁ (Subst 𝓈₂) = Subst $ \ su cxt s x → do
+  e ← 𝓈₂ su cxt s x
+  substScope su 𝓈₁ e
 
 instance (FromVar s a) ⇒ Null (Subst s a) where null = nullSubst
 instance (Binding s a a) ⇒ Append (Subst s a) where (⧺) = appendSubst
 instance (FromVar s a,Binding s a a) ⇒ Monoid (Subst s a) 
 
 class (Ord s) ⇒ Binding s b a | a → s,a → b where
-  substN ∷ s ⇰ ℕ64 → Subst s b → a → 𝑂 a
+  substScope ∷ s ⇰ ℕ64 → Subst s b → a → 𝑂 a
 
-substNL ∷ (Ord s₁,Binding s₂ b' a) ⇒ s₁ ⌲ s₂ → b ⌲ b' → s₁ ⇰ ℕ64 → Subst s₁ b → a → 𝑂 a
-substNL ℓˢ ℓᵇ su 𝓈 =
+substScopeRestrict ∷ (Ord s₁,Binding s₂ b' a) ⇒ s₁ ⌲ s₂ → (b → 𝑂 b') → s₁ ⇰ ℕ64 → Subst s₁ b → a → 𝑂 a
+substScopeRestrict ℓˢ mkb su 𝓈 =
   let su' = concat $ mapOn (iter su) $ \ (s :* u) →
         case view ℓˢ s of
           None → null
           Some s' → s' ↦ u
-  in substN su' $ mapSubst (construct ℓˢ) (view ℓᵇ) 𝓈
+  in substScope su' $ mapSubst (construct ℓˢ) mkb 𝓈
 
 subst ∷ (Binding s b a) ⇒ Subst s b → a → 𝑂 a
-subst = substN null
+subst = substScope null
 
-rename ∷ (FromVar s a) ⇒ (s → s ⇰ ℕ64 → 𝕐 → 𝕐) → Subst s a
-rename f = Subst $ \ s su x → return $ frvar s $ f s su x
+rename ∷ (FromVar s a) ⇒ (s ⇰ ℕ64 → s → 𝕐 → 𝕐) → Subst s a
+rename f = Subst $ \ su cxt s x → frvar cxt s $ f su s x
 
 bdrOpen ∷ (Ord s,FromVar s a) ⇒ s → 𝕏 → Subst s a
-bdrOpen s x = rename $ \ s' su y →
+bdrOpen s x = rename $ \ su s' y →
   if s ≡ s'
   then 
     let u = ifNone zero $ su ⋕? s
@@ -150,41 +157,62 @@ bdrOpen s x = rename $ \ s' su y →
   else y
 
 bdrClose ∷ (Ord s,FromVar s a) ⇒ s → 𝕏 → Subst s a
-bdrClose s x = rename $ \ s' su y → 
+bdrClose s x = rename $ \ su s' y → 
   if s ≡ s'
   then 
     let u = ifNone zero $ su ⋕? s
     in closeVar u x y
   else y
 
-bdrBind ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s → a → Subst s a
-bdrBind s e = Subst $ \ s' su y →
+bdrBindWith 
+  ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) 
+  ⇒ (s ⇰ ℕ64 → a → 𝑂 a) → s → a → Subst s a
+bdrBindWith f s e = Subst $ \ su cxt s' y →
   if s ≡ s'
-  then 
+  then do
     let u = ifNone zero $ su ⋕? s
-    in subst (bdrIntro su) $ bindVar (frvar s) u e y
-  else return $ frvar s' y
+    case bindVar u e y of
+      Inl y' → frvar cxt s y'
+      Inr e' → f su e'
+  else frvar cxt s' y
+
+bdrBind ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s → a → Subst s a
+bdrBind = bdrBindWith $ \ su e → subst (bdrIntro su) e
+
+bdrBindNoIntro ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s → a → Subst s a
+bdrBindNoIntro = bdrBindWith $ const return
+
+bdrSubstWith 
+  ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) 
+  ⇒ (s ⇰ ℕ64 → a → 𝑂 a) → s → 𝕏 → a → Subst s a
+bdrSubstWith f s x e = Subst $ \ su cxt s' y →
+  if s ≡ s'
+  then do
+    case substVar x e y of
+      Inl y' → frvar cxt s y'
+      Inr e' → f su e'
+  else frvar cxt s' y
 
 bdrSubst ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → Subst s a
-bdrSubst s x e = Subst $ \ s' su y →
-  if s ≡ s'
-  then subst (bdrIntro su) $ substVar (frvar s) x e y
-  else return $ frvar s' y
+bdrSubst = bdrSubstWith $ \ su e → subst (bdrIntro su) e
+
+bdrSubstNoIntro ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → Subst s a
+bdrSubstNoIntro = bdrSubstWith $ const return
 
 bdrIntro ∷ (Ord s,FromVar s a) ⇒ s ⇰ ℕ64 → Subst s a
-bdrIntro su = rename $ \ s su' y →
+bdrIntro su = rename $ \ su' s y →
   let u = ifNone zero $ su' ⋕? s
       n = ifNone zero $ su ⋕? s
   in introVar u n y
 
 bdrShift ∷ (Eq s,FromVar s a) ⇒ s → 𝕏 → Subst s a
-bdrShift s x = rename $ \ s' _u y →
+bdrShift s x = rename $ \ _su s' y →
   if s ≡ s'
   then shiftVar x y
   else y
 
-applySubst ∷ s → (b → 𝑂 a) → s ⇰ ℕ64 → Subst s b → 𝕐 → 𝑂 a
-applySubst s afrb su (Subst 𝓈) x = afrb *$ 𝓈 s su x
+vsubst ∷ (b → 𝑂 a) → Subst s b → s ⇰ ℕ64 → 𝑃 SrcCxt → s → 𝕐 → 𝑂 a
+vsubst afrb (Subst 𝓈) su cxt s x = afrb *$ 𝓈 su cxt s x
 
 ---------------
 -- FREE VARS --
