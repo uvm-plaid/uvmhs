@@ -219,10 +219,10 @@ or ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
 or = fold False (⩔)
 
 orf ∷ (ToIter (a → 𝔹) t) ⇒ t → a → 𝔹
-orf fs x = or $ map (arg x) $ iter fs
+orf fs x = or $ map (appto x) $ iter fs
 
 andf ∷ (ToIter (a → 𝔹) t) ⇒ t → a → 𝔹
-andf fs x = and $ map (arg x) $ iter fs
+andf fs x = and $ map (appto x) $ iter fs
 
 and ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
 and = fold True (⩓)

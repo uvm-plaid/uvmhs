@@ -17,8 +17,8 @@ instance (Append a) ⇒ Append (r → a) where
   f ⧺ g = \ r → f r ⧺ g r
 instance (Monoid a) ⇒ Monoid (r → a)
 
-arg ∷ a → (a → b) → b
-arg x f = f x
+appto ∷ a → (a → b) → b
+appto x f = f x
 
 pipe ∷ (a → b) → (b → c) → a → c
 pipe = flip (∘)
