@@ -4025,6 +4025,8 @@ NameCBasic :: TokenClassBasic
 NaturalCBasic :: TokenClassBasic
 IntegerCBasic :: TokenClassBasic
 DoubleCBasic :: TokenClassBasic
+CharCBasic :: TokenClassBasic
+charCBasicL :: (⌲) TokenClassBasic ()
 doubleCBasicL :: (⌲) TokenClassBasic ()
 integerCBasicL :: (⌲) TokenClassBasic ()
 naturalCBasicL :: (⌲) TokenClassBasic ()
@@ -4042,6 +4044,8 @@ NameTBasic :: 𝕊 -> TokenBasic
 NaturalTBasic :: ℕ -> TokenBasic
 IntegerTBasic :: ℤ -> TokenBasic
 DoubleTBasic :: 𝔻 -> TokenBasic
+CharTBasic :: ℂ -> TokenBasic
+charTBasicL :: (⌲) TokenBasic ℂ
 doubleTBasicL :: (⌲) TokenBasic 𝔻
 integerTBasicL :: (⌲) TokenBasic ℤ
 naturalTBasicL :: (⌲) TokenBasic ℕ
@@ -4127,7 +4131,7 @@ instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Parser.Regex.TokenClassWSBasic
 instance GHC.Show.Show UVMHS.Lib.Parser.Regex.TokenClassWSBasic
 instance GHC.Classes.Ord UVMHS.Lib.Parser.Regex.TokenClassWSBasic
 instance GHC.Classes.Eq UVMHS.Lib.Parser.Regex.TokenClassWSBasic
-instance (UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.𝕊, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.ℕ, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.ℤ, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.𝔻) => UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Parser.Regex.TokenBasic
+instance (UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.𝕊, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.ℕ, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.ℤ, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.𝔻, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.ℂ) => UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Parser.Regex.TokenBasic
 instance GHC.Show.Show UVMHS.Lib.Parser.Regex.TokenBasic
 instance GHC.Classes.Ord UVMHS.Lib.Parser.Regex.TokenBasic
 instance GHC.Classes.Eq UVMHS.Lib.Parser.Regex.TokenBasic
@@ -4199,12 +4203,12 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateEndPos] :: ParserState t -> AddBT Loc
 [parserStateInput] :: ParserState t -> 𝑆 (ParserToken t)
-parserStateInputL :: forall (t_a3ogB :: Type). (⟢) (ParserState t_a3ogB) (𝑆 (ParserToken t_a3ogB))
-parserStateEndPosL :: forall (t_a3ogB :: Type). (⟢) (ParserState t_a3ogB) (AddBT Loc)
-parserStateSuffixL :: forall (t_a3ogB :: Type). (⟢) (ParserState t_a3ogB) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a3ogB :: Type). (⟢) (ParserState t_a3ogB) ParserContext
-parserStateSkipContextL :: forall (t_a3ogB :: Type). (⟢) (ParserState t_a3ogB) ParserContext
-parserStatePrefixL :: forall (t_a3ogB :: Type). (⟢) (ParserState t_a3ogB) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a3ojc :: Type). (⟢) (ParserState t_a3ojc) (𝑆 (ParserToken t_a3ojc))
+parserStateEndPosL :: forall (t_a3ojc :: Type). (⟢) (ParserState t_a3ojc) (AddBT Loc)
+parserStateSuffixL :: forall (t_a3ojc :: Type). (⟢) (ParserState t_a3ojc) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a3ojc :: Type). (⟢) (ParserState t_a3ojc) ParserContext
+parserStateSkipContextL :: forall (t_a3ojc :: Type). (⟢) (ParserState t_a3ojc) ParserContext
+parserStatePrefixL :: forall (t_a3ojc :: Type). (⟢) (ParserState t_a3ojc) (WindowR Doc Doc)
 parserState₀ :: 𝑆 (ParserToken t) -> ParserState t
 newtype Parser t a
 Parser :: ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a
@@ -4273,6 +4277,7 @@ cpNatural :: CParser TokenBasic ℕ
 cpInteger :: CParser TokenBasic ℤ
 cpDouble :: CParser TokenBasic 𝔻
 cpString :: CParser TokenBasic 𝕊
+cpChar :: CParser TokenBasic ℂ
 cpSyntaxWS :: 𝕊 -> CParser TokenWSBasic TokenWSBasic
 cpNaturalWS :: CParser TokenWSBasic ℕ
 cpIntegerWS :: CParser TokenWSBasic ℤ

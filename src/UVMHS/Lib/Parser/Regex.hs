@@ -587,6 +587,7 @@ data TokenClassBasic =
   | NaturalCBasic
   | IntegerCBasic
   | DoubleCBasic
+  | CharCBasic
   deriving (Eq,Ord,Show)
 makePrisms ''TokenClassBasic
 makePrettySum ''TokenClassBasic
@@ -600,6 +601,7 @@ data TokenBasic =
   | NaturalTBasic ℕ
   | IntegerTBasic ℤ
   | DoubleTBasic 𝔻
+  | CharTBasic ℂ
   deriving (Eq,Ord,Show)
 makePrisms ''TokenBasic
 makePrettySum ''TokenBasic
@@ -615,6 +617,7 @@ mkTokenBasic cs = \case
   Some NaturalCBasic → (:*) False $ NaturalTBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow ['_','n']) cs
   Some IntegerCBasic → (:*) False $ IntegerTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some DoubleCBasic → (:*) False $ DoubleTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
+  Some CharCBasic → (:*) False $ CharTBasic $ read𝕊 $ stringS cs
 
 lSyntaxBasic ∷ (Ord u,Additive u) ⇒ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassBasic u
 lSyntaxBasic puns kws prims ops = concat

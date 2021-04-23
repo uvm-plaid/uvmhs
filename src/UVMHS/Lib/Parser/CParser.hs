@@ -138,6 +138,9 @@ cpDouble = cpShaped $ view doubleTBasicL
 cpString ∷ CParser TokenBasic 𝕊
 cpString = cpShaped $ view stringTBasicL
 
+cpChar ∷ CParser TokenBasic ℂ
+cpChar = cpShaped $ view charTBasicL
+
 cpSyntaxWS ∷ 𝕊 → CParser TokenWSBasic TokenWSBasic
 cpSyntaxWS = cpToken ∘ SyntaxTWSBasic
 
