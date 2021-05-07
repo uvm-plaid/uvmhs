@@ -6,6 +6,7 @@ import UVMHS.Core.Data
 
 import UVMHS.Core.Effects
 import UVMHS.Core.Transformers
+import UVMHS.Core.Lens
 
 import qualified Prelude as HS
 
@@ -925,9 +926,7 @@ instance (Monad m,MonadReader r' m) ⇒ MonadReader r' (ContT r m) where
   ask = ContT $ \ (k ∷ r' → m r) → k *$ ask
 
   local ∷ ∀ a. r' → ContT r m a → ContT r m a
-  local r xM = ContT $ \ (k ∷ a → m r) → do
-    r' ← ask
-    local r $ unContT xM $ \ x → local r' $ k x
+  local r xM = ContT $ \ (k ∷ a → m r) → local r $ unContT xM k
 
 -- instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT r m) where
 --   tell ∷ o → ContT r m ()
@@ -980,6 +979,23 @@ instance (Monad m,MonadNondet m) ⇒ MonadNondet (ContT r m) where
 instance (Monad m,MonadTop m) ⇒ MonadTop (ContT r m) where
   mtop ∷ ∀ a. ContT r m a
   mtop = ContT $ \ (_ ∷ a → m r) → mtop
+
+putEnvL ∷ (Monad m,MonadReader r m) ⇒ r ⟢ r' → r' → ContT kr m ()
+putEnvL ℓ r = ContT $ \ 𝓀 → localL ℓ r $ 𝓀 ()
+
+modifyEnvL ∷ (Monad m,MonadReader r m) ⇒ r ⟢ r' → (r' → r') → ContT kr m ()
+modifyEnvL ℓ f = ContT $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
+
+protectL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → m a → m a
+protectL ℓ xM = callCC $ \ 𝓀 → do
+  r' ← askL ℓ
+  withCOn xM $ localL ℓ r' ∘ 𝓀
+
+protectLocalL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → r' → m a → m a
+protectLocalL ℓ r = protectL ℓ ∘ localL ℓ r
+
+protectMapEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → (r' → r') → m a → m a
+protectMapEnvL ℓ f = protectL ℓ ∘ mapEnvL ℓ f
 
 -- ======= --
 -- DERIVED --
