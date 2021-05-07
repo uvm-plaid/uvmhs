@@ -6,7 +6,6 @@ import UVMHS.Core.Data
 
 import UVMHS.Core.Effects
 import UVMHS.Core.Transformers
-import UVMHS.Core.Lens
 
 import qualified Prelude as HS
 
