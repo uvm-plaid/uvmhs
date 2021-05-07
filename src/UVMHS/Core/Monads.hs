@@ -980,23 +980,6 @@ instance (Monad m,MonadTop m) ⇒ MonadTop (ContT r m) where
   mtop ∷ ∀ a. ContT r m a
   mtop = ContT $ \ (_ ∷ a → m r) → mtop
 
-putEnvL ∷ (Monad m,MonadReader r m) ⇒ r ⟢ r' → r' → ContT kr m ()
-putEnvL ℓ r = ContT $ \ 𝓀 → localL ℓ r $ 𝓀 ()
-
-modifyEnvL ∷ (Monad m,MonadReader r m) ⇒ r ⟢ r' → (r' → r') → ContT kr m ()
-modifyEnvL ℓ f = ContT $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
-
-protectL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → m a → m a
-protectL ℓ xM = callCC $ \ 𝓀 → do
-  r' ← askL ℓ
-  withCOn xM $ localL ℓ r' ∘ 𝓀
-
-protectLocalL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → r' → m a → m a
-protectLocalL ℓ r = protectL ℓ ∘ localL ℓ r
-
-protectMapEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → (r' → r') → m a → m a
-protectMapEnvL ℓ f = protectL ℓ ∘ mapEnvL ℓ f
-
 -- ======= --
 -- DERIVED --
 -- ======= --
