@@ -72,18 +72,16 @@ cpList = cpNewContext "list" $ do
 
 testSExpParserSuccess ∷ IO ()
 testSExpParserSuccess = do
-  tokenizeIOMain lexer "" input
-  toks ← tokenizeIO lexer "" input
-  parseIOMain cpExp "" $ stream toks
+  toks ← tokenizeIO lexer "<raw input>" input
+  parseIOMain cpExp "<tokens input>" $ stream toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
     input = tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12  )  "
 
 testSExpParserFailure1 ∷ IO ()
 testSExpParserFailure1 = do
-  tokenizeIOMain lexer "" input
-  toks ← tokenizeIO lexer "" input
-  parseIOMain cpExp "" $ stream toks
+  toks ← tokenizeIO lexer "<raw input>" input
+  parseIOMain cpExp "<tokens input>" $ stream toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
     input = tokens " (( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )  "

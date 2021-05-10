@@ -12,3 +12,4 @@ main = cleanExit $ do
   pprint $ ppHeader "COLOR TEST"
   pprint colorsDemo
   pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"
+  SExp.testSExpParserSuccess

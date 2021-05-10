@@ -29,15 +29,17 @@ formatParserContext fmt (ParserContext lr dL dR e) =
                    (mapWindowR (ppFormat fmt) (ppFormat fmt) e)
 
 data SrcCxt = SrcCxt
-  { fullContextLocRange ∷ LocRange
-  , fullContextPrefix ∷ WindowR Doc Doc
-  , fullContextContext ∷ WindowL Doc Doc
-  , fullContextSuffix ∷ WindowL Doc Doc
+  { srcCxtSourceName ∷ 𝕊
+  , srcCxtLocRange ∷ LocRange
+  , srcCxtPrefix ∷ WindowR Doc Doc
+  , srcCxtContext ∷ WindowL Doc Doc
+  , srcCxtSuffix ∷ WindowL Doc Doc
   } deriving (Eq,Ord)
 
 instance Pretty SrcCxt where
-  pretty (SrcCxt (LocRange b e) pre d pi) = ppVertical
-    [ concat
+  pretty (SrcCxt s (LocRange b e) pre d pi) = ppVertical
+    [ ppBD $ ppString s
+    , concat
         [ ppLoc b
         , ppPun "–"
         , ppLoc e

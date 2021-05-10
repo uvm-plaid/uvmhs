@@ -19,11 +19,12 @@ data ParserEnv = ParserEnv
   { parserEnvReportErrors ∷ 𝔹
   , parserEnvRenderFormat ∷ Formats
   , parserEnvErrorStack ∷ 𝕊 ∧ 𝐼 𝕊
+  , parserEnvSourceName ∷ 𝕊
   }
 makeLenses ''ParserEnv
 makePrettyRecord ''ParserEnv
 
-parserEnv₀ ∷ ParserEnv
+parserEnv₀ ∷ 𝕊 → ParserEnv
 parserEnv₀ = ParserEnv True null $ "<top level>" :* null
 
 ---------------
@@ -100,7 +101,8 @@ pGetContext = do
 pGetContextRendered ∷ Parser t SrcCxt
 pGetContextRendered = do
   pp :* pc :* ps ← pGetContext
-  return $ SrcCxt (parserContextLocRange pc) pp (parserContextDisplayL pc) ps
+  n ← askL parserEnvSourceNameL
+  return $ SrcCxt n (parserContextLocRange pc) pp (parserContextDisplayL pc) ps
 
 pWithContext ∷ Parser t a → Parser t (WindowR Doc Doc ∧ ParserContext ∧ WindowL Doc Doc ∧ a)
 pWithContext aM = do
