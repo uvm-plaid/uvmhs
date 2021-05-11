@@ -83,12 +83,13 @@ bindVar u e = \case
     | n ≡ u → Inr e
     | otherwise → Inl $ BoundVar $ pred n
 
-substVar ∷ 𝕏 → a → 𝕐 → 𝕐 ∨ a
-substVar x e = \case
-  NamedVar y n
-    | x ≡ y,n ≡ zero → Inr e
-    | x ≡ y,n ≢ zero → Inl $ NamedVar y $ pred n
-    | otherwise → Inl $ NamedVar y n
+substVar ∷ 𝕏 ⇰ a → 𝕐 → 𝕐 ∨ a
+substVar xes = \case
+  NamedVar y n → case xes ⋕? y of
+    None → Inl $ NamedVar y n
+    Some e 
+      | n ≡ zero  → Inr e
+      | otherwise → Inl $ NamedVar y $ pred n
   BoundVar n → Inl $ BoundVar n
 
 introVar ∷ ℕ64 → ℕ64 → 𝕐 → 𝕐
@@ -184,19 +185,19 @@ bdrBindNoIntro = bdrBindWith $ const return
 
 bdrSubstWith 
   ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) 
-  ⇒ (s ⇰ ℕ64 → a → 𝑂 a) → s → 𝕏 → a → Subst s a
-bdrSubstWith f s x e = Subst $ \ su cxt s' y →
-  if s ≡ s'
-  then do
-    case substVar x e y of
-      Inl y' → frvar cxt s y'
-      Inr e' → f su e'
-  else frvar cxt s' y
+  ⇒ (s ⇰ ℕ64 → a → 𝑂 a) → s ⇰ 𝕏 ⇰ a → Subst s a
+bdrSubstWith f sxes = Subst $ \ su cxt s' y →
+  case sxes ⋕? s' of
+    None → frvar cxt s' y
+    Some xes →
+      case substVar xes y of
+        Inl y' → frvar cxt s' y'
+        Inr e' → f su e'
 
-bdrSubst ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → Subst s a
+bdrSubst ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s ⇰ 𝕏 ⇰ a → Subst s a
 bdrSubst = bdrSubstWith $ \ su e → subst (bdrIntro su) e
 
-bdrSubstNoIntro ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s → 𝕏 → a → Subst s a
+bdrSubstNoIntro ∷ (Ord s,FromVar s a,FromVar s b,Binding s b a) ⇒ s ⇰ 𝕏 ⇰ a → Subst s a
 bdrSubstNoIntro = bdrSubstWith $ const return
 
 bdrIntro ∷ (Ord s,FromVar s a) ⇒ s ⇰ ℕ64 → Subst s a

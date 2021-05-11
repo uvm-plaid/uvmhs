@@ -51,6 +51,9 @@ snd (_ :* y) = y
 mapPair ∷ (a₁ → a₂) → (b₁ → b₂) → a₁ ∧ b₁ → a₂ ∧ b₂
 mapPair f g (x :* y) = f x :* g y
 
+mapBoth ∷ (a → a') → a ∧ a → a' ∧ a'
+mapBoth f = mapPair f f
+
 mapFst ∷ (a₁ → a₂) → a₁ ∧ b → a₂ ∧ b
 mapFst f = mapPair f id
 

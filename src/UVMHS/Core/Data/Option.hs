@@ -40,6 +40,11 @@ elim𝑂 n s = \case
   None → n
   Some x → s x
 
+elim𝑂Z ∷ b → (a → b) → 𝑂 a → b
+elim𝑂Z ~n ~s = \case
+  None → n
+  Some x → s x
+
 isNone ∷ 𝑂 a → 𝔹
 isNone = \case
   None → True
@@ -55,8 +60,18 @@ ifNone i = \case
   None → i
   Some x → x
 
+ifNoneZ ∷ a → 𝑂 a → a
+ifNoneZ ~i = \case
+  None → i
+  Some x → x
+
 ifNoneM ∷ (Return m) ⇒ m a → 𝑂 a → m a
-ifNoneM ~xM = \case
+ifNoneM xM = \case
+  None → xM
+  Some x → return $ x
+
+ifNoneMZ ∷ (Return m) ⇒ m a → 𝑂 a → m a
+ifNoneMZ ~xM = \case
   None → xM
   Some x → return $ x
 

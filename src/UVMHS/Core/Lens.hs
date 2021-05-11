@@ -3,6 +3,7 @@ module UVMHS.Core.Lens where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
+import UVMHS.Core.Pointed
 
 infixr 1 ⟢
 infixr 1 ⌲
@@ -93,8 +94,8 @@ singleL = Prism single $ \case
   x :& Nil → Some x
   _ → None
 
-unconsL ∷ 𝐿 a ⌲ (a ∧ 𝐿 a)
-unconsL = Prism (curry (:&)) $ \case { x:&xs → Some (x:*xs) ; _ → None}
+consL ∷ 𝐿 a ⌲ (a ∧ 𝐿 a)
+consL = Prism (curry (:&)) $ \case { x:&xs → Some (x:*xs) ; _ → None}
 
 single𝑃L ∷ (Ord a) ⇒ 𝑃 a ⌲ a
 single𝑃L = prism single𝑃 $ \ xs → case pmin xs of
@@ -104,6 +105,21 @@ single𝑃L = prism single𝑃 $ \ xs → case pmin xs of
 single𝐷L ∷ (Ord k) ⇒ (k ⇰ v) ⌲ (k ∧ v)
 single𝐷L = prism (curry (↦)) $ \ kvs → case dminView kvs of
   Some (kv :* kvs') | isEmpty kvs' → Some kv
+  _ → None
+
+nullZOML ∷ ZOM a ⌲ ()
+nullZOML = prism (const NullZOM) $ \case
+  NullZOM → Some ()
+  _ → None
+
+oneZOML ∷ ZOM a ⌲ a
+oneZOML = prism OneZOM $ \case
+  OneZOM x → Some x
+  _ → None
+
+moreZOML ∷ ZOM a ⌲ ()
+moreZOML = prism (const MoreZOM) $ \case
+  MoreZOM → Some ()
   _ → None
 
 --------------------------

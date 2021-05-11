@@ -32,6 +32,36 @@ instance Monad AddNull
 instance FunctorM AddNull where 
   mapM f xM = case xM of {Null → return Null;AddNull x → map AddNull $ f x}
 
+-- === --
+-- ZOM --
+-- === --
+
+data ZOM a = NullZOM | OneZOM a | MoreZOM
+  deriving (Eq,Ord,Show)
+
+elimZom ∷ b → (a → b) → b → ZOM a → b
+elimZom i₁ f i₂= \case
+  NullZOM → i₁
+  OneZOM x → f x
+  MoreZOM → i₂
+
+instance Null (ZOM a) where 
+  null = NullZOM
+instance Append (ZOM a) where
+  NullZOM ⧺ x = x
+  x ⧺ NullZOM = x
+  _ ⧺ _ = MoreZOM
+instance Monoid (ZOM a)
+instance Functor ZOM where 
+  map = mmap
+instance Return ZOM where 
+  return = OneZOM
+instance Bind ZOM where 
+  xM ≫= f = case xM of {NullZOM → NullZOM;OneZOM x → f x;MoreZOM → MoreZOM}
+instance Monad ZOM
+instance FunctorM ZOM where 
+  mapM f xM = case xM of {NullZOM → return NullZOM;OneZOM x → map OneZOM $ f x;MoreZOM → return MoreZOM}
+
 -- ====== --
 -- AddBot --
 -- ====== --
