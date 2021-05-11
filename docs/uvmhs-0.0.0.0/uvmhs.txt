@@ -903,10 +903,13 @@ instance UVMHS.Core.Classes.Arithmetic.Additive ()
 
 module UVMHS.Core.Data.Option
 elim𝑂 :: b -> (a -> b) -> 𝑂 a -> b
+elim𝑂Z :: b -> (a -> b) -> 𝑂 a -> b
 isNone :: 𝑂 a -> 𝔹
 isSome :: 𝑂 a -> 𝔹
 ifNone :: a -> 𝑂 a -> a
+ifNoneZ :: a -> 𝑂 a -> a
 ifNoneM :: Return m => m a -> 𝑂 a -> m a
+ifNoneMZ :: Return m => m a -> 𝑂 a -> m a
 first :: 𝑂 a -> 𝑂 a -> 𝑂 a
 last :: 𝑂 a -> 𝑂 a -> 𝑂 a
 instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Init.𝑂
@@ -1583,6 +1586,7 @@ module UVMHS.Core.Data.Pair
 fst :: (a ∧ b) -> a
 snd :: (a ∧ b) -> b
 mapPair :: (a₁ -> a₂) -> (b₁ -> b₂) -> (a₁ ∧ b₁) -> a₂ ∧ b₂
+mapBoth :: (a -> a') -> (a ∧ a) -> a' ∧ a'
 mapFst :: (a₁ -> a₂) -> (a₁ ∧ b) -> a₂ ∧ b
 mapSnd :: (b₁ -> b₂) -> (a ∧ b₁) -> a ∧ b₂
 mapMPair :: Monad m => (a -> m a') -> (b -> m b') -> (a ∧ b) -> m (a' ∧ b')
@@ -2064,6 +2068,102 @@ instance UVMHS.Core.Chunky.Chunky UVMHS.Core.Init.𝔻
 instance (UVMHS.Core.Chunky.Chunky a, UVMHS.Core.Chunky.Chunky b) => UVMHS.Core.Chunky.Chunky (a UVMHS.Core.Init.∧ b)
 instance (UVMHS.Core.Chunky.Chunky a, UVMHS.Core.Chunky.Chunky b) => UVMHS.Core.Chunky.Chunky (a UVMHS.Core.Init.∨ b)
 
+module UVMHS.Core.LensDerivedInstances
+
+module UVMHS.Core.Pointed
+data AddNull a
+Null :: AddNull a
+AddNull :: a -> AddNull a
+elimAddNull :: b -> (a -> b) -> AddNull a -> b
+data ZOM a
+NullZOM :: ZOM a
+OneZOM :: a -> ZOM a
+MoreZOM :: ZOM a
+elimZom :: b -> (a -> b) -> b -> ZOM a -> b
+data AddBot a
+Bot :: AddBot a
+AddBot :: a -> AddBot a
+elimAddBot :: b -> (a -> b) -> AddBot a -> b
+data AddTop a
+Top :: AddTop a
+AddTop :: a -> AddTop a
+elimAddTop :: b -> (a -> b) -> AddTop a -> b
+data AddBT a
+BotBT :: AddBT a
+TopBT :: AddBT a
+AddBT :: a -> AddBT a
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Pointed.AddNull a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Pointed.AddNull a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Pointed.AddNull a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Pointed.ZOM a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Pointed.ZOM a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Pointed.ZOM a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Pointed.AddBot a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Pointed.AddBot a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Pointed.AddBot a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Pointed.AddTop a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Pointed.AddTop a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Pointed.AddTop a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Pointed.AddBT a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Pointed.AddBT a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Pointed.AddBT a)
+instance UVMHS.Core.Classes.Lattice.Bot (UVMHS.Core.Pointed.AddBT a)
+instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.Pointed.AddBT a)
+instance UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.Pointed.AddBT a)
+instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.Pointed.AddBT a)
+instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.JoinLattice (UVMHS.Core.Pointed.AddBT a)
+instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.MeetLattice (UVMHS.Core.Pointed.AddBT a)
+instance (UVMHS.Core.Classes.Lattice.Join a, UVMHS.Core.Classes.Lattice.Meet a) => UVMHS.Core.Classes.Lattice.Lattice (UVMHS.Core.Pointed.AddBT a)
+instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Pointed.AddBT
+instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddBT
+instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddBT
+instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddBT
+instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddBT
+instance UVMHS.Core.Classes.Lattice.Bot a => UVMHS.Core.Classes.Lattice.Bot (UVMHS.Core.Pointed.AddTop a)
+instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.Pointed.AddTop a)
+instance UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.Pointed.AddTop a)
+instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.Pointed.AddTop a)
+instance UVMHS.Core.Classes.Lattice.JoinLattice a => UVMHS.Core.Classes.Lattice.JoinLattice (UVMHS.Core.Pointed.AddTop a)
+instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.MeetLattice (UVMHS.Core.Pointed.AddTop a)
+instance (UVMHS.Core.Classes.Lattice.JoinLattice a, UVMHS.Core.Classes.Lattice.Meet a) => UVMHS.Core.Classes.Lattice.Lattice (UVMHS.Core.Pointed.AddTop a)
+instance (UVMHS.Core.Classes.Lattice.Bot a, UVMHS.Core.Classes.Lattice.Difference a) => UVMHS.Core.Classes.Lattice.Difference (UVMHS.Core.Pointed.AddTop a)
+instance UVMHS.Core.Classes.Monoid.Null a => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Pointed.AddTop a)
+instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Pointed.AddTop a)
+instance UVMHS.Core.Classes.Monoid.Monoid a => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Pointed.AddTop a)
+instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Pointed.AddTop
+instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddTop
+instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddTop
+instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddTop
+instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddTop
+instance UVMHS.Core.Classes.Lattice.Bot (UVMHS.Core.Pointed.AddBot a)
+instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.Pointed.AddBot a)
+instance UVMHS.Core.Classes.Lattice.Top a => UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.Pointed.AddBot a)
+instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.Pointed.AddBot a)
+instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.JoinLattice (UVMHS.Core.Pointed.AddBot a)
+instance UVMHS.Core.Classes.Lattice.MeetLattice a => UVMHS.Core.Classes.Lattice.MeetLattice (UVMHS.Core.Pointed.AddBot a)
+instance (UVMHS.Core.Classes.Lattice.Join a, UVMHS.Core.Classes.Lattice.MeetLattice a) => UVMHS.Core.Classes.Lattice.Lattice (UVMHS.Core.Pointed.AddBot a)
+instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Pointed.AddBot
+instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddBot
+instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddBot
+instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddBot
+instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddBot
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Pointed.ZOM a)
+instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Pointed.ZOM a)
+instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Pointed.ZOM a)
+instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Pointed.ZOM
+instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.ZOM
+instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.ZOM
+instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.ZOM
+instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.ZOM
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Pointed.AddNull a)
+instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Pointed.AddNull a)
+instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Pointed.AddNull a)
+instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Pointed.AddNull
+instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddNull
+instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddNull
+instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddNull
+instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddNull
+
 module UVMHS.Core.Lens
 newtype a ⟢ b
 Lens :: (a -> b ∧ (b -> a)) -> (⟢) a b
@@ -2094,9 +2194,12 @@ sndL :: (a ∧ b) ⟢ b
 nothingL :: 𝑂 a ⌲ ()
 justL :: 𝑂 a ⌲ a
 singleL :: 𝐿 a ⌲ a
-unconsL :: 𝐿 a ⌲ (a ∧ 𝐿 a)
+consL :: 𝐿 a ⌲ (a ∧ 𝐿 a)
 single𝑃L :: Ord a => 𝑃 a ⌲ a
 single𝐷L :: Ord k => (k ⇰ v) ⌲ (k ∧ v)
+nullZOML :: ZOM a ⌲ ()
+oneZOML :: ZOM a ⌲ a
+moreZOML :: ZOM a ⌲ ()
 class HasPrism a b
 hasPrism :: HasPrism a b => a ⌲ b
 class HasLens a b
@@ -2249,86 +2352,6 @@ instance UVMHS.Core.Effects.MonadError e ((UVMHS.Core.Init.∨) e)
 instance UVMHS.Core.Effects.MonadFail UVMHS.Core.Init.𝑂
 instance UVMHS.Core.Classes.Monoid.Null o => UVMHS.Core.Effects.MonadWriter o ((UVMHS.Core.Init.∧) o)
 instance UVMHS.Core.Effects.MonadReader r ((->) r)
-
-module UVMHS.Core.LensDerivedInstances
-
-module UVMHS.Core.Pointed
-data AddNull a
-Null :: AddNull a
-AddNull :: a -> AddNull a
-elimAddNull :: b -> (a -> b) -> AddNull a -> b
-data AddBot a
-Bot :: AddBot a
-AddBot :: a -> AddBot a
-elimAddBot :: b -> (a -> b) -> AddBot a -> b
-data AddTop a
-Top :: AddTop a
-AddTop :: a -> AddTop a
-elimAddTop :: b -> (a -> b) -> AddTop a -> b
-data AddBT a
-BotBT :: AddBT a
-TopBT :: AddBT a
-AddBT :: a -> AddBT a
-instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Pointed.AddNull a)
-instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Pointed.AddNull a)
-instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Pointed.AddNull a)
-instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Pointed.AddBot a)
-instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Pointed.AddBot a)
-instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Pointed.AddBot a)
-instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Pointed.AddTop a)
-instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Pointed.AddTop a)
-instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Pointed.AddTop a)
-instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Pointed.AddBT a)
-instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Pointed.AddBT a)
-instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Pointed.AddBT a)
-instance UVMHS.Core.Classes.Lattice.Bot (UVMHS.Core.Pointed.AddBT a)
-instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.Pointed.AddBT a)
-instance UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.Pointed.AddBT a)
-instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.Pointed.AddBT a)
-instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.JoinLattice (UVMHS.Core.Pointed.AddBT a)
-instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.MeetLattice (UVMHS.Core.Pointed.AddBT a)
-instance (UVMHS.Core.Classes.Lattice.Join a, UVMHS.Core.Classes.Lattice.Meet a) => UVMHS.Core.Classes.Lattice.Lattice (UVMHS.Core.Pointed.AddBT a)
-instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Pointed.AddBT
-instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddBT
-instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddBT
-instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddBT
-instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddBT
-instance UVMHS.Core.Classes.Lattice.Bot a => UVMHS.Core.Classes.Lattice.Bot (UVMHS.Core.Pointed.AddTop a)
-instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.Pointed.AddTop a)
-instance UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.Pointed.AddTop a)
-instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.Pointed.AddTop a)
-instance UVMHS.Core.Classes.Lattice.JoinLattice a => UVMHS.Core.Classes.Lattice.JoinLattice (UVMHS.Core.Pointed.AddTop a)
-instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.MeetLattice (UVMHS.Core.Pointed.AddTop a)
-instance (UVMHS.Core.Classes.Lattice.JoinLattice a, UVMHS.Core.Classes.Lattice.Meet a) => UVMHS.Core.Classes.Lattice.Lattice (UVMHS.Core.Pointed.AddTop a)
-instance (UVMHS.Core.Classes.Lattice.Bot a, UVMHS.Core.Classes.Lattice.Difference a) => UVMHS.Core.Classes.Lattice.Difference (UVMHS.Core.Pointed.AddTop a)
-instance UVMHS.Core.Classes.Monoid.Null a => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Pointed.AddTop a)
-instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Pointed.AddTop a)
-instance UVMHS.Core.Classes.Monoid.Monoid a => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Pointed.AddTop a)
-instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Pointed.AddTop
-instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddTop
-instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddTop
-instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddTop
-instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddTop
-instance UVMHS.Core.Classes.Lattice.Bot (UVMHS.Core.Pointed.AddBot a)
-instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.Pointed.AddBot a)
-instance UVMHS.Core.Classes.Lattice.Top a => UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.Pointed.AddBot a)
-instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.Pointed.AddBot a)
-instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.JoinLattice (UVMHS.Core.Pointed.AddBot a)
-instance UVMHS.Core.Classes.Lattice.MeetLattice a => UVMHS.Core.Classes.Lattice.MeetLattice (UVMHS.Core.Pointed.AddBot a)
-instance (UVMHS.Core.Classes.Lattice.Join a, UVMHS.Core.Classes.Lattice.MeetLattice a) => UVMHS.Core.Classes.Lattice.Lattice (UVMHS.Core.Pointed.AddBot a)
-instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Pointed.AddBot
-instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddBot
-instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddBot
-instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddBot
-instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddBot
-instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Pointed.AddNull a)
-instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Pointed.AddNull a)
-instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Pointed.AddNull a)
-instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Pointed.AddNull
-instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddNull
-instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddNull
-instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddNull
-instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddNull
 
 module UVMHS.Core.Static
 type family (a :: k) ≡ (b :: k)
@@ -3725,8 +3748,8 @@ data 𝐴 e a
 𝐴 :: e -> a -> 𝐴 e a
 [atag] :: 𝐴 e a -> e
 [aval] :: 𝐴 e a -> a
-avalL :: forall (e_a2GZE :: Type) (a_a2GZF :: Type). (⟢) (𝐴 e_a2GZE a_a2GZF) a_a2GZF
-atagL :: forall (e_a2GZE :: Type) (a_a2GZF :: Type). (⟢) (𝐴 e_a2GZE a_a2GZF) e_a2GZE
+avalL :: forall (e_a2IbL :: Type) (a_a2IbM :: Type). (⟢) (𝐴 e_a2IbL a_a2IbM) a_a2IbM
+atagL :: forall (e_a2IbL :: Type) (a_a2IbM :: Type). (⟢) (𝐴 e_a2IbL a_a2IbM) e_a2IbL
 instance (UVMHS.Lib.Pretty.Doc.Pretty e, UVMHS.Lib.Pretty.Doc.Pretty a) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Annotated.𝐴 e a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Lib.Annotated.𝐴 t a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Lib.Annotated.𝐴 t a)
@@ -3742,8 +3765,8 @@ data ADF a
 ADF :: a -> a -> ADF a
 [adfVal] :: ADF a -> a
 [adfDer] :: ADF a -> a
-adfDerL :: forall (a_a2HUS :: Type). (⟢) (ADF a_a2HUS) a_a2HUS
-adfValL :: forall (a_a2HUS :: Type). (⟢) (ADF a_a2HUS) a_a2HUS
+adfDerL :: forall (a_a2J6Z :: Type). (⟢) (ADF a_a2J6Z) a_a2J6Z
+adfValL :: forall (a_a2J6Z :: Type). (⟢) (ADF a_a2J6Z) a_a2J6Z
 constADF :: Zero a => a -> ADF a
 sensADF :: a -> a -> ADF a
 plusADF :: Plus a => ADF a -> ADF a -> ADF a
@@ -3752,8 +3775,8 @@ data ADB a
 ADB :: a -> (a -> a -> a) -> ADB a
 [adbVal] :: ADB a -> a
 [adbDer] :: ADB a -> a -> a -> a
-adbDerL :: forall (a_a2I0c :: Type). (⟢) (ADB a_a2I0c) (a_a2I0c -> a_a2I0c -> a_a2I0c)
-adbValL :: forall (a_a2I0c :: Type). (⟢) (ADB a_a2I0c) a_a2I0c
+adbDerL :: forall (a_a2Jcj :: Type). (⟢) (ADB a_a2Jcj) (a_a2Jcj -> a_a2Jcj -> a_a2Jcj)
+adbValL :: forall (a_a2Jcj :: Type). (⟢) (ADB a_a2Jcj) a_a2Jcj
 constADB :: Zero a => a -> ADB a
 sensADB :: a -> (a -> a -> a) -> ADB a
 plusADB :: Plus a => ADB a -> ADB a -> ADB a
@@ -3762,8 +3785,8 @@ data ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adffVal] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adffDer] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
-adffDerL :: forall (ns_a2I4h :: [𝐍]) (f_a2I4i :: [𝐍] -> Type -> Type) (ms_a2I4j :: [𝐍]) (a_a2I4k :: Type). (⟢) (ADFF ns_a2I4h f_a2I4i ms_a2I4j a_a2I4k) (f_a2I4i ((⧺) ns_a2I4h ms_a2I4j) a_a2I4k)
-adffValL :: forall (ns_a2I4h :: [𝐍]) (f_a2I4i :: [𝐍] -> Type -> Type) (ms_a2I4j :: [𝐍]) (a_a2I4k :: Type). (⟢) (ADFF ns_a2I4h f_a2I4i ms_a2I4j a_a2I4k) (f_a2I4i ((⧺) ns_a2I4h ms_a2I4j) a_a2I4k)
+adffDerL :: forall (ns_a2Jgo :: [𝐍]) (f_a2Jgp :: [𝐍] -> Type -> Type) (ms_a2Jgq :: [𝐍]) (a_a2Jgr :: Type). (⟢) (ADFF ns_a2Jgo f_a2Jgp ms_a2Jgq a_a2Jgr) (f_a2Jgp ((⧺) ns_a2Jgo ms_a2Jgq) a_a2Jgr)
+adffValL :: forall (ns_a2Jgo :: [𝐍]) (f_a2Jgp :: [𝐍] -> Type -> Type) (ms_a2Jgq :: [𝐍]) (a_a2Jgr :: Type). (⟢) (ADFF ns_a2Jgo f_a2Jgp ms_a2Jgq a_a2Jgr) (f_a2Jgp ((⧺) ns_a2Jgo ms_a2Jgq) a_a2Jgr)
 constADFF :: Zero (f (ns ⧺ ms) a) => f (ns ⧺ ms) a -> ADFF ns f ms a
 sensADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF ns f ms a
 plusADFF :: Plus (f (ns ⧺ ms) a) => ADFF ns f ms a -> ADFF ns f ms a -> ADFF ns f ms a
@@ -3772,8 +3795,8 @@ data ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adfbVal] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adfbDer] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a
-adfbDerL :: forall (ns_a2Ia0 :: [𝐍]) (f_a2Ia1 :: [𝐍] -> Type -> Type) (ms_a2Ia2 :: [𝐍]) (a_a2Ia3 :: Type). (⟢) (ADFB ns_a2Ia0 f_a2Ia1 ms_a2Ia2 a_a2Ia3) (f_a2Ia1 ((⧺) ns_a2Ia0 ms_a2Ia2) a_a2Ia3 -> f_a2Ia1 ((⧺) ns_a2Ia0 ms_a2Ia2) a_a2Ia3 -> f_a2Ia1 ((⧺) ns_a2Ia0 ms_a2Ia2) a_a2Ia3)
-adfbValL :: forall (ns_a2Ia0 :: [𝐍]) (f_a2Ia1 :: [𝐍] -> Type -> Type) (ms_a2Ia2 :: [𝐍]) (a_a2Ia3 :: Type). (⟢) (ADFB ns_a2Ia0 f_a2Ia1 ms_a2Ia2 a_a2Ia3) (f_a2Ia1 ((⧺) ns_a2Ia0 ms_a2Ia2) a_a2Ia3)
+adfbDerL :: forall (ns_a2Jm7 :: [𝐍]) (f_a2Jm8 :: [𝐍] -> Type -> Type) (ms_a2Jm9 :: [𝐍]) (a_a2Jma :: Type). (⟢) (ADFB ns_a2Jm7 f_a2Jm8 ms_a2Jm9 a_a2Jma) (f_a2Jm8 ((⧺) ns_a2Jm7 ms_a2Jm9) a_a2Jma -> f_a2Jm8 ((⧺) ns_a2Jm7 ms_a2Jm9) a_a2Jma -> f_a2Jm8 ((⧺) ns_a2Jm7 ms_a2Jm9) a_a2Jma)
+adfbValL :: forall (ns_a2Jm7 :: [𝐍]) (f_a2Jm8 :: [𝐍] -> Type -> Type) (ms_a2Jm9 :: [𝐍]) (a_a2Jma :: Type). (⟢) (ADFB ns_a2Jm7 f_a2Jm8 ms_a2Jm9 a_a2Jma) (f_a2Jm8 ((⧺) ns_a2Jm7 ms_a2Jm9) a_a2Jma)
 constADFB :: f (ns ⧺ ms) a -> ADFB ns f ms a
 sensADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB ns f ms a
 plusADFB :: Plus (f (ns ⧺ ms) a) => ADFB ns f ms a -> ADFB ns f ms a -> ADFB ns f ms a
@@ -3885,19 +3908,19 @@ PreParserToken :: t -> 𝔹 -> ParserContext -> PreParserToken t
 [preParserTokenValue] :: PreParserToken t -> t
 [preParserTokenSkip] :: PreParserToken t -> 𝔹
 [preParserTokenContext] :: PreParserToken t -> ParserContext
-preParserTokenContextL :: forall (t_a2RXh :: Type). (⟢) (PreParserToken t_a2RXh) ParserContext
-preParserTokenSkipL :: forall (t_a2RXh :: Type). (⟢) (PreParserToken t_a2RXh) 𝔹
-preParserTokenValueL :: forall (t_a2RXh :: Type). (⟢) (PreParserToken t_a2RXh) t_a2RXh
+preParserTokenContextL :: forall (t_a2T9o :: Type). (⟢) (PreParserToken t_a2T9o) ParserContext
+preParserTokenSkipL :: forall (t_a2T9o :: Type). (⟢) (PreParserToken t_a2T9o) 𝔹
+preParserTokenValueL :: forall (t_a2T9o :: Type). (⟢) (PreParserToken t_a2T9o) t_a2T9o
 data ParserToken t
 ParserToken :: t -> 𝔹 -> ParserContext -> WindowL Doc Doc -> ParserToken t
 [parserTokenValue] :: ParserToken t -> t
 [parserTokenSkip] :: ParserToken t -> 𝔹
 [parserTokenContext] :: ParserToken t -> ParserContext
 [parserTokenSuffix] :: ParserToken t -> WindowL Doc Doc
-parserTokenSuffixL :: forall (t_a2RZm :: Type). (⟢) (ParserToken t_a2RZm) (WindowL Doc Doc)
-parserTokenContextL :: forall (t_a2RZm :: Type). (⟢) (ParserToken t_a2RZm) ParserContext
-parserTokenSkipL :: forall (t_a2RZm :: Type). (⟢) (ParserToken t_a2RZm) 𝔹
-parserTokenValueL :: forall (t_a2RZm :: Type). (⟢) (ParserToken t_a2RZm) t_a2RZm
+parserTokenSuffixL :: forall (t_a2Tbt :: Type). (⟢) (ParserToken t_a2Tbt) (WindowL Doc Doc)
+parserTokenContextL :: forall (t_a2Tbt :: Type). (⟢) (ParserToken t_a2Tbt) ParserContext
+parserTokenSkipL :: forall (t_a2Tbt :: Type). (⟢) (ParserToken t_a2Tbt) 𝔹
+parserTokenValueL :: forall (t_a2Tbt :: Type). (⟢) (ParserToken t_a2Tbt) t_a2Tbt
 renderNLDisplay :: Doc
 renderNLError :: Doc
 renderEOFDisplay :: Doc
@@ -3967,11 +3990,11 @@ RegexState :: ℕ64 -> (Regex c t o u ⇰ ℕ64) -> ((t ∨ c) ⇰ (ℕ64 ⇰ �
 [regexStateTransitions] :: RegexState c t o u -> (t ∨ c) ⇰ (ℕ64 ⇰ ℕ64)
 [regexStateResults] :: RegexState c t o u -> ℕ64 ⇰ 𝑂 (RegexResult o u)
 [regexStateDead] :: RegexState c t o u -> ℕ64 ⇰ 𝔹
-regexStateDeadL :: forall (c_a2Uh5 :: Type) (t_a2Uh6 :: Type) (o_a2Uh7 :: Type) (u_a2Uh8 :: Type). (⟢) (RegexState c_a2Uh5 t_a2Uh6 o_a2Uh7 u_a2Uh8) ((⇰) ℕ64 𝔹)
-regexStateResultsL :: forall (c_a2Uh5 :: Type) (t_a2Uh6 :: Type) (o_a2Uh7 :: Type) (u_a2Uh8 :: Type). (⟢) (RegexState c_a2Uh5 t_a2Uh6 o_a2Uh7 u_a2Uh8) ((⇰) ℕ64 (𝑂 (RegexResult o_a2Uh7 u_a2Uh8)))
-regexStateTransitionsL :: forall (c_a2Uh5 :: Type) (t_a2Uh6 :: Type) (o_a2Uh7 :: Type) (u_a2Uh8 :: Type). (⟢) (RegexState c_a2Uh5 t_a2Uh6 o_a2Uh7 u_a2Uh8) ((⇰) ((∨) t_a2Uh6 c_a2Uh5) ((⇰) ℕ64 ℕ64))
-regexStateMapL :: forall (c_a2Uh5 :: Type) (t_a2Uh6 :: Type) (o_a2Uh7 :: Type) (u_a2Uh8 :: Type). (⟢) (RegexState c_a2Uh5 t_a2Uh6 o_a2Uh7 u_a2Uh8) ((⇰) (Regex c_a2Uh5 t_a2Uh6 o_a2Uh7 u_a2Uh8) ℕ64)
-regexStateNextIDL :: forall (c_a2Uh5 :: Type) (t_a2Uh6 :: Type) (o_a2Uh7 :: Type) (u_a2Uh8 :: Type). (⟢) (RegexState c_a2Uh5 t_a2Uh6 o_a2Uh7 u_a2Uh8) ℕ64
+regexStateDeadL :: forall (c_a2Vtc :: Type) (t_a2Vtd :: Type) (o_a2Vte :: Type) (u_a2Vtf :: Type). (⟢) (RegexState c_a2Vtc t_a2Vtd o_a2Vte u_a2Vtf) ((⇰) ℕ64 𝔹)
+regexStateResultsL :: forall (c_a2Vtc :: Type) (t_a2Vtd :: Type) (o_a2Vte :: Type) (u_a2Vtf :: Type). (⟢) (RegexState c_a2Vtc t_a2Vtd o_a2Vte u_a2Vtf) ((⇰) ℕ64 (𝑂 (RegexResult o_a2Vte u_a2Vtf)))
+regexStateTransitionsL :: forall (c_a2Vtc :: Type) (t_a2Vtd :: Type) (o_a2Vte :: Type) (u_a2Vtf :: Type). (⟢) (RegexState c_a2Vtc t_a2Vtd o_a2Vte u_a2Vtf) ((⇰) ((∨) t_a2Vtd c_a2Vtc) ((⇰) ℕ64 ℕ64))
+regexStateMapL :: forall (c_a2Vtc :: Type) (t_a2Vtd :: Type) (o_a2Vte :: Type) (u_a2Vtf :: Type). (⟢) (RegexState c_a2Vtc t_a2Vtd o_a2Vte u_a2Vtf) ((⇰) (Regex c_a2Vtc t_a2Vtd o_a2Vte u_a2Vtf) ℕ64)
+regexStateNextIDL :: forall (c_a2Vtc :: Type) (t_a2Vtd :: Type) (o_a2Vte :: Type) (u_a2Vtf :: Type). (⟢) (RegexState c_a2Vtc t_a2Vtd o_a2Vte u_a2Vtf) ℕ64
 regexState₀ :: RegexState c t o u
 data DFA c t o u
 DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult o u)) -> 𝕍 𝔹 -> DFA c t o u
@@ -4209,12 +4232,12 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateEndPos] :: ParserState t -> AddBT Loc
 [parserStateInput] :: ParserState t -> 𝑆 (ParserToken t)
-parserStateInputL :: forall (t_a3oE2 :: Type). (⟢) (ParserState t_a3oE2) (𝑆 (ParserToken t_a3oE2))
-parserStateEndPosL :: forall (t_a3oE2 :: Type). (⟢) (ParserState t_a3oE2) (AddBT Loc)
-parserStateSuffixL :: forall (t_a3oE2 :: Type). (⟢) (ParserState t_a3oE2) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a3oE2 :: Type). (⟢) (ParserState t_a3oE2) ParserContext
-parserStateSkipContextL :: forall (t_a3oE2 :: Type). (⟢) (ParserState t_a3oE2) ParserContext
-parserStatePrefixL :: forall (t_a3oE2 :: Type). (⟢) (ParserState t_a3oE2) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a3pQ9 :: Type). (⟢) (ParserState t_a3pQ9) (𝑆 (ParserToken t_a3pQ9))
+parserStateEndPosL :: forall (t_a3pQ9 :: Type). (⟢) (ParserState t_a3pQ9) (AddBT Loc)
+parserStateSuffixL :: forall (t_a3pQ9 :: Type). (⟢) (ParserState t_a3pQ9) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a3pQ9 :: Type). (⟢) (ParserState t_a3pQ9) ParserContext
+parserStateSkipContextL :: forall (t_a3pQ9 :: Type). (⟢) (ParserState t_a3pQ9) ParserContext
+parserStatePrefixL :: forall (t_a3pQ9 :: Type). (⟢) (ParserState t_a3pQ9) (WindowR Doc Doc)
 parserState₀ :: 𝑆 (ParserToken t) -> ParserState t
 newtype Parser t a
 Parser :: ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a
@@ -4424,7 +4447,7 @@ freeL :: 𝕐 ⌲ 𝕏
 openVar :: ℕ64 -> 𝕏 -> 𝕐 -> 𝕐
 closeVar :: ℕ64 -> 𝕏 -> 𝕐 -> 𝕐
 bindVar :: ℕ64 -> a -> 𝕐 -> 𝕐 ∨ a
-substVar :: 𝕏 -> a -> 𝕐 -> 𝕐 ∨ a
+substVar :: (𝕏 ⇰ a) -> 𝕐 -> 𝕐 ∨ a
 introVar :: ℕ64 -> ℕ64 -> 𝕐 -> 𝕐
 shiftVar :: 𝕏 -> 𝕐 -> 𝕐
 class FromVar s a | a -> s
@@ -4445,9 +4468,9 @@ bdrClose :: (Ord s, FromVar s a) => s -> 𝕏 -> Subst s a
 bdrBindWith :: (Ord s, FromVar s a, FromVar s b, Binding s b a) => ((s ⇰ ℕ64) -> a -> 𝑂 a) -> s -> a -> Subst s a
 bdrBind :: (Ord s, FromVar s a, FromVar s b, Binding s b a) => s -> a -> Subst s a
 bdrBindNoIntro :: (Ord s, FromVar s a, FromVar s b, Binding s b a) => s -> a -> Subst s a
-bdrSubstWith :: (Ord s, FromVar s a, FromVar s b, Binding s b a) => ((s ⇰ ℕ64) -> a -> 𝑂 a) -> s -> 𝕏 -> a -> Subst s a
-bdrSubst :: (Ord s, FromVar s a, FromVar s b, Binding s b a) => s -> 𝕏 -> a -> Subst s a
-bdrSubstNoIntro :: (Ord s, FromVar s a, FromVar s b, Binding s b a) => s -> 𝕏 -> a -> Subst s a
+bdrSubstWith :: (Ord s, FromVar s a, FromVar s b, Binding s b a) => ((s ⇰ ℕ64) -> a -> 𝑂 a) -> (s ⇰ (𝕏 ⇰ a)) -> Subst s a
+bdrSubst :: (Ord s, FromVar s a, FromVar s b, Binding s b a) => (s ⇰ (𝕏 ⇰ a)) -> Subst s a
+bdrSubstNoIntro :: (Ord s, FromVar s a, FromVar s b, Binding s b a) => (s ⇰ (𝕏 ⇰ a)) -> Subst s a
 bdrIntro :: (Ord s, FromVar s a) => (s ⇰ ℕ64) -> Subst s a
 bdrShift :: (Eq s, FromVar s a) => s -> 𝕏 -> Subst s a
 vsubst :: (b -> 𝑂 a) -> Subst s b -> (s ⇰ ℕ64) -> 𝑃 SrcCxt -> s -> 𝕐 -> 𝑂 a
