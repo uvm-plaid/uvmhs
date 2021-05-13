@@ -35,7 +35,7 @@ extend ∷ (Bind m) ⇒ (a → m b) → (m a → m b)
 extend f xM = xM ≫= f
 
 (≫) ∷ (Bind m) ⇒ m a → m b → m b
-xM ≫ ~yM = xM ≫= \ _ → yM
+xM ≫ ~yM = xM ≫= \ _ → let yM' = yM in yM'
 
 void ∷ (Functor m) ⇒ m a → m ()
 void = map $ const ()
@@ -56,12 +56,20 @@ skip ∷ (Return m) ⇒ m ()
 skip = return ()
 
 when ∷ (Return m) ⇒ 𝔹 → m () → m ()
-when b ~xM
+when b xM
+  | b = xM
+  | otherwise = skip
+
+whenZ ∷ (Return m) ⇒ 𝔹 → m () → m ()
+whenZ b ~xM
   | b = xM
   | otherwise = skip
 
 whenM ∷ (Monad m) ⇒ m 𝔹 → m () → m ()
-whenM bM ~xM = do b ← bM ; when b xM
+whenM bM xM = do b ← bM ; when b xM
+
+whenMZ ∷ (Monad m) ⇒ m 𝔹 → m () → m ()
+whenMZ bM ~xM = do b ← bM ; whenZ b xM
 
 when𝑂 ∷ (Return m) ⇒ 𝑂 a → (a → m ()) → m ()
 when𝑂 aO f = case aO of {None → skip;Some x → f x}

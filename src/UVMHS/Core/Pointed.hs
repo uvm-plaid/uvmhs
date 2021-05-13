@@ -39,8 +39,8 @@ instance FunctorM AddNull where
 data ZOM a = NullZOM | OneZOM a | MoreZOM
   deriving (Eq,Ord,Show)
 
-elimZom ∷ b → (a → b) → b → ZOM a → b
-elimZom i₁ f i₂= \case
+elimZOM ∷ b → (a → b) → b → ZOM a → b
+elimZOM i₁ f i₂= \case
   NullZOM → i₁
   OneZOM x → f x
   MoreZOM → i₂
@@ -61,6 +61,8 @@ instance Bind ZOM where
 instance Monad ZOM
 instance FunctorM ZOM where 
   mapM f xM = case xM of {NullZOM → return NullZOM;OneZOM x → map OneZOM $ f x;MoreZOM → return MoreZOM}
+
+instance Single a (ZOM a) where single = OneZOM
 
 -- ====== --
 -- AddBot --

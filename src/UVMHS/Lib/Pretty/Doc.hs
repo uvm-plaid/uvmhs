@@ -495,6 +495,11 @@ instance (Pretty a) ⇒ Pretty (AddNull a) where
   pretty Null = ppCon "•"
   pretty (AddNull x) = pretty x
 
+instance (Pretty a) ⇒ Pretty (ZOM a) where
+  pretty NullZOM = ppCon "⊥"
+  pretty (OneZOM x) = pretty x
+  pretty MoreZOM = ppCon "⊤"
+
 instance (Pretty a) ⇒ Pretty (AddBot a) where
   pretty Bot = ppCon "⊥"
   pretty (AddBot x) = pretty x

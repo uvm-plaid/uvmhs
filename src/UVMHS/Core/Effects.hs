@@ -381,23 +381,27 @@ modifyC f = callCC $ \ k → f *$ k ()
 withCOn ∷ (Monad m,MonadCont r m) ⇒ m a → (a → m r) → m r
 withCOn = flip withC
 
+putEnv ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r → m ()
+putEnv r = callCC $ \ 𝓀 → local r $ 𝓀 ()
+
 putEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → r' → m ()
 putEnvL ℓ r = callCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
+
+modifyEnv ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ (r → r) → m ()
+modifyEnv f = callCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
 
 modifyEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → (r' → r') → m ()
 modifyEnvL ℓ f = callCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
 
-protectL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → m a → m a
-protectL ℓ xM = callCC $ \ 𝓀 → do
-  r' ← askL ℓ
-  withCOn xM $ localL ℓ r' ∘ 𝓀
+delimitEnv ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ m a → m a
+delimitEnv xM = callCC $ \ 𝓀 → do
+  r ← ask
+  withCOn xM $ local r ∘ 𝓀
 
-protectLocalL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → r' → m a → m a
-protectLocalL ℓ r = protectL ℓ ∘ localL ℓ r
-
-protectMapEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → (r' → r') → m a → m a
-protectMapEnvL ℓ f = protectL ℓ ∘ mapEnvL ℓ f
-
+delimitEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → m a → m a
+delimitEnvL ℓ xM = callCC $ \ 𝓀 → do
+  r ← askL ℓ
+  withCOn xM $ localL ℓ r ∘ 𝓀
 
 --------------
 -- DERIVING --
