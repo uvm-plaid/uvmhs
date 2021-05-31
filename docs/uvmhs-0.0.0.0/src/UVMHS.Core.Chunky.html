@@ -43,65 +43,65 @@ forall a b. a -&gt; b
 forall a b. a -&gt; b
 </span><a href="UVMHS.Core.Init.html#coerce_UNSAFE"><span class="hs-identifier hs-var">coerce_UNSAFE</span></a></span><span>
 </span><span id="line-30"></span><span>
-</span><span id="line-31"></span><span id="local-6989586621680012469"><span class="annot"><a href="UVMHS.Core.Chunky.html#skipChunk"><span class="hs-identifier hs-type">skipChunk</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monad.html#Monad"><span class="hs-identifier hs-type">Monad</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012469"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680012469"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680012469"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
+</span><span id="line-31"></span><span id="local-6989586621680016864"><span class="annot"><a href="UVMHS.Core.Chunky.html#skipChunk"><span class="hs-identifier hs-type">skipChunk</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monad.html#Monad"><span class="hs-identifier hs-type">Monad</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016864"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680016864"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680016864"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
 </span><span id="line-32"></span><span id="skipChunk"><span class="annot"><span class="annottext">skipChunk :: m &#8469;8 -&gt; &#8469;64 -&gt; m ()
-</span><a href="UVMHS.Core.Chunky.html#skipChunk"><span class="hs-identifier hs-var hs-var">skipChunk</span></a></span></span><span> </span><span id="local-6989586621680012457"><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012457"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621680012456"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012456"><span class="hs-identifier hs-var">n&#8320;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; m ()
-</span><a href="#local-6989586621680012455"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
+</span><a href="UVMHS.Core.Chunky.html#skipChunk"><span class="hs-identifier hs-var hs-var">skipChunk</span></a></span></span><span> </span><span id="local-6989586621680016852"><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016852"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621680016851"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680016851"><span class="hs-identifier hs-var">n&#8320;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; m ()
+</span><a href="#local-6989586621680016850"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span>
 </span><span id="line-33"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-34"></span><span>    </span><span id="local-6989586621680012455"><span class="annot"><span class="annottext">loop :: &#8469;64 -&gt; m ()
-</span><a href="#local-6989586621680012455"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span id="local-6989586621680012453"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012453"><span class="hs-identifier hs-var">n</span></a></span></span><span>
+</span><span id="line-34"></span><span>    </span><span id="local-6989586621680016850"><span class="annot"><span class="annottext">loop :: &#8469;64 -&gt; m ()
+</span><a href="#local-6989586621680016850"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span id="local-6989586621680016848"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680016848"><span class="hs-identifier hs-var">n</span></a></span></span><span>
 </span><span id="line-35"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012453"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#120121;
+</span><a href="#local-6989586621680016848"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#120121;
 forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
 </span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012456"><span class="hs-identifier hs-var">n&#8320;</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">() -&gt; m ()
+</span><a href="#local-6989586621680016851"><span class="hs-identifier hs-var">n&#8320;</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">() -&gt; m ()
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-36"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-37"></span><span>          </span><span class="annot"><span class="annottext">&#8469;8
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012457"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><a href="#local-6989586621680016852"><span class="hs-identifier hs-var">g</span></a></span><span>
 </span><span id="line-38"></span><span>          </span><span class="annot"><span class="annottext">&#8469;64 -&gt; m ()
-</span><a href="#local-6989586621680012455"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; m ()) -&gt; &#8469;64 -&gt; m ()
+</span><a href="#local-6989586621680016850"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; m ()) -&gt; &#8469;64 -&gt; m ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64
 forall a. (One a, Plus a) =&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#succ"><span class="hs-identifier hs-var">succ</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012453"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621680016848"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-39"></span><span>
 </span><span id="line-40"></span><span class="annot"><a href="UVMHS.Core.Chunky.html#emptyChunk"><span class="hs-identifier hs-type">emptyChunk</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span>
 </span><span id="line-41"></span><span id="emptyChunk"><span class="annot"><span class="annottext">emptyChunk :: &#8469;64 -&gt; &#119868; &#8469;8
-</span><a href="UVMHS.Core.Chunky.html#emptyChunk"><span class="hs-identifier hs-var hs-var">emptyChunk</span></a></span></span><span> </span><span id="local-6989586621680012448"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012448"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8 -&gt; &#119868; &#8469;8
+</span><a href="UVMHS.Core.Chunky.html#emptyChunk"><span class="hs-identifier hs-var hs-var">emptyChunk</span></a></span></span><span> </span><span id="local-6989586621680016843"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680016843"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8 -&gt; &#119868; &#8469;8
 forall n a. (Eq n, Zero n, One n, Plus n) =&gt; n -&gt; a -&gt; &#119868; a
 </span><a href="UVMHS.Core.Data.Iter.html#repeat"><span class="hs-identifier hs-var">repeat</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;
 forall a. ToNat a =&gt; a -&gt; &#8469;
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat"><span class="hs-identifier hs-var">nat</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012448"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
+</span><a href="#local-6989586621680016843"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
 </span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span>
 </span><span id="line-42"></span><span>
 </span><span id="line-43"></span><span class="annot"><a href="UVMHS.Core.Chunky.html#joinBytes"><span class="hs-identifier hs-type">joinBytes</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
 </span><span id="line-44"></span><span id="joinBytes"><span class="annot"><span class="annottext">joinBytes :: (&#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8) -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#joinBytes"><span class="hs-identifier hs-var hs-var">joinBytes</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680012443"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012443"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012442"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012442"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012441"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012441"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012440"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012440"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012439"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012439"><span class="hs-identifier hs-var">b&#8325;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012438"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012438"><span class="hs-identifier hs-var">b&#8326;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012437"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012437"><span class="hs-identifier hs-var">b&#8327;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012436"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012436"><span class="hs-identifier hs-var">b&#8328;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="UVMHS.Core.Chunky.html#joinBytes"><span class="hs-identifier hs-var hs-var">joinBytes</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680016838"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016838"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016837"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016837"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016836"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016836"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016835"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016835"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016834"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016834"><span class="hs-identifier hs-var">b&#8325;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016833"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016833"><span class="hs-identifier hs-var">b&#8326;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016832"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016832"><span class="hs-identifier hs-var">b&#8327;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016831"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016831"><span class="hs-identifier hs-var">b&#8328;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-45"></span><span>    </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;64
 forall a. ToNat64 a =&gt; a -&gt; &#8469;64
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat64"><span class="hs-identifier hs-var">nat64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012443"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016838"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftL a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D8"><span class="hs-operator hs-var">&#8920;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span>  </span><span class="annot"><span class="annottext">&#8469;
@@ -111,7 +111,7 @@ forall a. BitOr a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%27C7"><span class="hs-operator hs-var">&#10183;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;64
 forall a. ToNat64 a =&gt; a -&gt; &#8469;64
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat64"><span class="hs-identifier hs-var">nat64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012442"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016837"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftL a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D8"><span class="hs-operator hs-var">&#8920;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span>  </span><span class="annot"><span class="annottext">&#8469;
@@ -121,7 +121,7 @@ forall a. BitOr a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%27C7"><span class="hs-operator hs-var">&#10183;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;64
 forall a. ToNat64 a =&gt; a -&gt; &#8469;64
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat64"><span class="hs-identifier hs-var">nat64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012441"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016836"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftL a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D8"><span class="hs-operator hs-var">&#8920;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -131,7 +131,7 @@ forall a. BitOr a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%27C7"><span class="hs-operator hs-var">&#10183;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;64
 forall a. ToNat64 a =&gt; a -&gt; &#8469;64
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat64"><span class="hs-identifier hs-var">nat64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012440"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016835"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftL a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D8"><span class="hs-operator hs-var">&#8920;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -141,7 +141,7 @@ forall a. BitOr a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%27C7"><span class="hs-operator hs-var">&#10183;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;64
 forall a. ToNat64 a =&gt; a -&gt; &#8469;64
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat64"><span class="hs-identifier hs-var">nat64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012439"><span class="hs-identifier hs-var">b&#8325;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016834"><span class="hs-identifier hs-var">b&#8325;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftL a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D8"><span class="hs-operator hs-var">&#8920;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -151,7 +151,7 @@ forall a. BitOr a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%27C7"><span class="hs-operator hs-var">&#10183;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;64
 forall a. ToNat64 a =&gt; a -&gt; &#8469;64
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat64"><span class="hs-identifier hs-var">nat64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012438"><span class="hs-identifier hs-var">b&#8326;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016833"><span class="hs-identifier hs-var">b&#8326;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftL a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D8"><span class="hs-operator hs-var">&#8920;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -161,7 +161,7 @@ forall a. BitOr a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%27C7"><span class="hs-operator hs-var">&#10183;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;64
 forall a. ToNat64 a =&gt; a -&gt; &#8469;64
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat64"><span class="hs-identifier hs-var">nat64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012437"><span class="hs-identifier hs-var">b&#8327;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016832"><span class="hs-identifier hs-var">b&#8327;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftL a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D8"><span class="hs-operator hs-var">&#8920;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -171,7 +171,7 @@ forall a. BitOr a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%27C7"><span class="hs-operator hs-var">&#10183;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;64
 forall a. ToNat64 a =&gt; a -&gt; &#8469;64
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat64"><span class="hs-identifier hs-var">nat64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012436"><span class="hs-identifier hs-var">b&#8328;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016831"><span class="hs-identifier hs-var">b&#8328;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftL a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D8"><span class="hs-operator hs-var">&#8920;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -179,13 +179,13 @@ forall a. BitShiftL a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><span id="line-53"></span><span>
 </span><span id="line-54"></span><span class="annot"><a href="UVMHS.Core.Chunky.html#splitBytes"><span class="hs-identifier hs-type">splitBytes</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-55"></span><span id="splitBytes"><span class="annot"><span class="annottext">splitBytes :: &#8469;64 -&gt; (&#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8)
-</span><a href="UVMHS.Core.Chunky.html#splitBytes"><span class="hs-identifier hs-var hs-var">splitBytes</span></a></span></span><span> </span><span id="local-6989586621680012431"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012431"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="UVMHS.Core.Chunky.html#splitBytes"><span class="hs-identifier hs-var hs-var">splitBytes</span></a></span></span><span> </span><span id="local-6989586621680016826"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680016826"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-56"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#tr%21158"><span class="hs-identifier hs-var">tr&#8469;8</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8469;8) -&gt; &#8469;64 -&gt; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012431"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016826"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D9"><span class="hs-operator hs-var">&#8921;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span>  </span><span class="annot"><span class="annottext">&#8469;
@@ -194,7 +194,7 @@ forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Chunky.html#tr%21158"><span class="hs-identifier hs-var">tr&#8469;8</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8469;8) -&gt; &#8469;64 -&gt; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012431"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016826"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D9"><span class="hs-operator hs-var">&#8921;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span>  </span><span class="annot"><span class="annottext">&#8469;
@@ -203,7 +203,7 @@ forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Chunky.html#tr%21158"><span class="hs-identifier hs-var">tr&#8469;8</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8469;8) -&gt; &#8469;64 -&gt; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012431"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016826"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D9"><span class="hs-operator hs-var">&#8921;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -212,7 +212,7 @@ forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Chunky.html#tr%21158"><span class="hs-identifier hs-var">tr&#8469;8</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8469;8) -&gt; &#8469;64 -&gt; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012431"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016826"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D9"><span class="hs-operator hs-var">&#8921;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -221,7 +221,7 @@ forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Chunky.html#tr%21158"><span class="hs-identifier hs-var">tr&#8469;8</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8469;8) -&gt; &#8469;64 -&gt; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012431"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016826"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D9"><span class="hs-operator hs-var">&#8921;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -230,7 +230,7 @@ forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Chunky.html#tr%21158"><span class="hs-identifier hs-var">tr&#8469;8</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8469;8) -&gt; &#8469;64 -&gt; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012431"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016826"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D9"><span class="hs-operator hs-var">&#8921;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -239,7 +239,7 @@ forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Chunky.html#tr%21158"><span class="hs-identifier hs-var">tr&#8469;8</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8469;8) -&gt; &#8469;64 -&gt; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012431"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016826"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D9"><span class="hs-operator hs-var">&#8921;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -248,28 +248,28 @@ forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Chunky.html#tr%21158"><span class="hs-identifier hs-var">tr&#8469;8</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8469;8) -&gt; &#8469;64 -&gt; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012431"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016826"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. BitShiftR a =&gt; a -&gt; &#8469;64 -&gt; a
 </span><a href="UVMHS.Core.Classes.Bitty.html#%22D9"><span class="hs-operator hs-var">&#8921;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">56</span></span><span>
 </span><span id="line-64"></span><span>  </span><span class="hs-special">)</span><span>
 </span><span id="line-65"></span><span>
-</span><span id="line-66"></span><span class="hs-keyword">class</span><span> </span><span id="Chunky"><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-var">Chunky</span></a></span></span><span> </span><span id="local-6989586621680012518"><span class="annot"><a href="#local-6989586621680012518"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-67"></span><span>  </span><span id="chunkSize"><span class="annot"><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-type">chunkSize</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-type">P</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012518"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
-</span><span id="line-68"></span><span>  </span><span id="fromChunk"><span class="annot"><a href="UVMHS.Core.Chunky.html#fromChunk"><span class="hs-identifier hs-type">fromChunk</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-keyword">&#8704;</span><span> </span><span id="local-6989586621680012521"><span class="annot"><a href="#local-6989586621680012521"><span class="hs-identifier hs-type">m</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monad.html#Monad"><span class="hs-identifier hs-type">Monad</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012521"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680012521"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680012521"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012518"><span class="hs-identifier hs-type">a</span></a></span><span>
-</span><span id="line-69"></span><span>  </span><span id="toChunk"><span class="annot"><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-type">toChunk</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680012518"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span>
+</span><span id="line-66"></span><span class="hs-keyword">class</span><span> </span><span id="Chunky"><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-var">Chunky</span></a></span></span><span> </span><span id="local-6989586621680016913"><span class="annot"><a href="#local-6989586621680016913"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-67"></span><span>  </span><span id="chunkSize"><span class="annot"><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-type">chunkSize</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-type">P</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016913"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
+</span><span id="line-68"></span><span>  </span><span id="fromChunk"><span class="annot"><a href="UVMHS.Core.Chunky.html#fromChunk"><span class="hs-identifier hs-type">fromChunk</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-keyword">&#8704;</span><span> </span><span id="local-6989586621680016916"><span class="annot"><a href="#local-6989586621680016916"><span class="hs-identifier hs-type">m</span></a></span></span><span class="hs-operator">.</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monad.html#Monad"><span class="hs-identifier hs-type">Monad</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016916"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680016916"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680016916"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016913"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-69"></span><span>  </span><span id="toChunk"><span class="annot"><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-type">toChunk</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680016913"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span>
 </span><span id="line-70"></span><span>
-</span><span id="line-71"></span><span id="local-6989586621680012425"><span id="local-6989586621680012426"><span class="hs-keyword">instance</span><span> </span><span class="hs-pragma">{-# OVERLAPPABLE</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012426"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">,</span><span class="annot"><a href="#local-6989586621680012425"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Morphism.html#%21C4"><span class="hs-operator hs-type">&#8644;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012426"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012425"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-72"></span><span>  </span><span id="local-6989586621680012420"><span class="annot"><span class="annottext">chunkSize :: P a -&gt; &#8469;64
-</span><a href="#local-6989586621680012420"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P a
+</span><span id="line-71"></span><span id="local-6989586621680016820"><span id="local-6989586621680016821"><span class="hs-keyword">instance</span><span> </span><span class="hs-pragma">{-# OVERLAPPABLE</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016821"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">,</span><span class="annot"><a href="#local-6989586621680016820"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Morphism.html#%21C4"><span class="hs-operator hs-type">&#8644;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016821"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016820"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-72"></span><span>  </span><span id="local-6989586621680016815"><span class="annot"><span class="annottext">chunkSize :: P a -&gt; &#8469;64
+</span><a href="#local-6989586621680016815"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">P b -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012426"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016821"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span>
-</span><span id="line-73"></span><span>  </span><span id="local-6989586621680012418"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m a
-</span><a href="#local-6989586621680012418"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(b -&gt; a) -&gt; m b -&gt; m a
+</span><span id="line-73"></span><span>  </span><span id="local-6989586621680016813"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m a
+</span><a href="#local-6989586621680016813"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(b -&gt; a) -&gt; m b -&gt; m a
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">b -&gt; a
 forall a b. (a &#8644; b) =&gt; b -&gt; a
@@ -278,8 +278,8 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m b
 forall a (m :: * -&gt; *). (Chunky a, Monad m) =&gt; m &#8469;8 -&gt; m a
 </span><a href="UVMHS.Core.Chunky.html#fromChunk"><span class="hs-identifier hs-var">fromChunk</span></a></span><span>
-</span><span id="line-74"></span><span>  </span><span id="local-6989586621680012414"><span class="annot"><span class="annottext">toChunk :: a -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012414"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; &#119868; &#8469;8
+</span><span id="line-74"></span><span>  </span><span id="local-6989586621680016809"><span class="annot"><span class="annottext">toChunk :: a -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016809"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; &#119868; &#8469;8
 forall a. Chunky a =&gt; a -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-var">toChunk</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; &#119868; &#8469;8) -&gt; (a -&gt; b) -&gt; a -&gt; &#119868; &#8469;8
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -288,54 +288,54 @@ forall a b. (a &#8644; b) =&gt; a -&gt; b
 </span><a href="UVMHS.Core.Classes.Morphism.html#isoto"><span class="hs-identifier hs-var">isoto</span></a></span></span></span><span>
 </span><span id="line-75"></span><span>
 </span><span id="line-76"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-77"></span><span>  </span><span id="local-6989586621680012409"><span class="annot"><span class="annottext">chunkSize :: P () -&gt; &#8469;64
-</span><a href="#local-6989586621680012409"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P ()
+</span><span id="line-77"></span><span>  </span><span id="local-6989586621680016804"><span class="annot"><span class="annottext">chunkSize :: P () -&gt; &#8469;64
+</span><a href="#local-6989586621680016804"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P ()
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">0</span></span><span>
-</span><span id="line-78"></span><span>  </span><span id="local-6989586621680012408"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m ()
-</span><a href="#local-6989586621680012408"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><span id="line-78"></span><span>  </span><span id="local-6989586621680016803"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m ()
+</span><a href="#local-6989586621680016803"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span class="annot"><span class="annottext">m &#8469;8
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">() -&gt; m ()
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-79"></span><span>  </span><span id="local-6989586621680012407"><span class="annot"><span class="annottext">toChunk :: () -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012407"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; &#8469;8
+</span><span id="line-79"></span><span>  </span><span id="local-6989586621680016802"><span class="annot"><span class="annottext">toChunk :: () -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016802"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; &#8469;8
 forall a. &#119868; a
 </span><a href="UVMHS.Core.Data.Iter.html#empty%1D43C"><span class="hs-identifier hs-var">empty&#119868;</span></a></span><span>
 </span><span id="line-80"></span><span>
 </span><span id="line-81"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-82"></span><span>  </span><span id="local-6989586621680012402"><span class="annot"><span class="annottext">chunkSize :: P &#8469;8 -&gt; &#8469;64
-</span><a href="#local-6989586621680012402"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#8469;8
+</span><span id="line-82"></span><span>  </span><span id="local-6989586621680016797"><span class="annot"><span class="annottext">chunkSize :: P &#8469;8 -&gt; &#8469;64
+</span><a href="#local-6989586621680016797"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#8469;8
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">1</span></span><span>
-</span><span id="line-83"></span><span>  </span><span id="local-6989586621680012401"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#8469;8
-</span><a href="#local-6989586621680012401"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m &#8469;8
+</span><span id="line-83"></span><span>  </span><span id="local-6989586621680016796"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#8469;8
+</span><a href="#local-6989586621680016796"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m &#8469;8
 forall a. a -&gt; a
 </span><a href="UVMHS.Core.Init.html#id"><span class="hs-identifier hs-var">id</span></a></span><span>
-</span><span id="line-84"></span><span>  </span><span id="local-6989586621680012399"><span class="annot"><span class="annottext">toChunk :: &#8469;8 -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012399"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#119868; &#8469;8
+</span><span id="line-84"></span><span>  </span><span id="local-6989586621680016794"><span class="annot"><span class="annottext">toChunk :: &#8469;8 -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016794"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#119868; &#8469;8
 forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span>
 </span><span id="line-85"></span><span>
 </span><span id="line-86"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-87"></span><span>  </span><span id="local-6989586621680012394"><span class="annot"><span class="annottext">chunkSize :: P &#120121; -&gt; &#8469;64
-</span><a href="#local-6989586621680012394"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#120121;
+</span><span id="line-87"></span><span>  </span><span id="local-6989586621680016789"><span class="annot"><span class="annottext">chunkSize :: P &#120121; -&gt; &#8469;64
+</span><a href="#local-6989586621680016789"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#120121;
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">1</span></span><span>
-</span><span id="line-88"></span><span>  </span><span id="local-6989586621680012393"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#120121;
-</span><a href="#local-6989586621680012393"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680012392"><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012392"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-89"></span><span>    </span><span id="local-6989586621680012391"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012391"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012392"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-88"></span><span>  </span><span id="local-6989586621680016788"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#120121;
+</span><a href="#local-6989586621680016788"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680016787"><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016787"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-89"></span><span>    </span><span id="local-6989586621680016786"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016786"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016787"><span class="hs-identifier hs-var">g</span></a></span><span>
 </span><span id="line-90"></span><span>    </span><span class="annot"><span class="annottext">&#120121; -&gt; m &#120121;
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120121; -&gt; m &#120121;) -&gt; &#120121; -&gt; m &#120121;
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012391"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;8 -&gt; &#120121;
+</span><a href="#local-6989586621680016786"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;8 -&gt; &#120121;
 forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
 </span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
 </span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -346,14 +346,14 @@ forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
 </span><span id="line-92"></span><span>      </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">True</span></span><span>
-</span><span id="line-93"></span><span>  </span><span id="local-6989586621680012390"><span class="annot"><span class="annottext">toChunk :: &#120121; -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012390"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span id="local-6989586621680012389"><span class="annot"><span class="annottext">&#120121;
-</span><a href="#local-6989586621680012389"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#119868; &#8469;8
+</span><span id="line-93"></span><span>  </span><span id="local-6989586621680016785"><span class="annot"><span class="annottext">toChunk :: &#120121; -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016785"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span id="local-6989586621680016784"><span class="annot"><span class="annottext">&#120121;
+</span><a href="#local-6989586621680016784"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#119868; &#8469;8
 forall a. Chunky a =&gt; a -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-var">toChunk</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;8 -&gt; &#119868; &#8469;8) -&gt; &#8469;8 -&gt; &#119868; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#120121;
-</span><a href="#local-6989586621680012389"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621680016784"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-94"></span><span>    </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
 </span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -364,23 +364,23 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-number">1</span></span><span>
 </span><span id="line-96"></span><span>
 </span><span id="line-97"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2102"><span class="hs-identifier hs-type">&#8450;</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-98"></span><span>  </span><span id="local-6989586621680012385"><span class="annot"><span class="annottext">chunkSize :: P &#8450; -&gt; &#8469;64
-</span><a href="#local-6989586621680012385"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#8450;
+</span><span id="line-98"></span><span>  </span><span id="local-6989586621680016780"><span class="annot"><span class="annottext">chunkSize :: P &#8450; -&gt; &#8469;64
+</span><a href="#local-6989586621680016780"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#8450;
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">4</span></span><span>
-</span><span id="line-99"></span><span>  </span><span id="local-6989586621680012384"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#8450;
-</span><a href="#local-6989586621680012384"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680012383"><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012383"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-100"></span><span>    </span><span id="local-6989586621680012382"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012382"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012383"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680012381"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012381"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012383"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680012380"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012380"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012383"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680012379"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012379"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012383"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-99"></span><span>  </span><span id="local-6989586621680016779"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#8450;
+</span><a href="#local-6989586621680016779"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680016778"><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016778"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-100"></span><span>    </span><span id="local-6989586621680016777"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016777"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016778"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680016776"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016776"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016778"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680016775"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016775"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016778"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680016774"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016774"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016778"><span class="hs-identifier hs-var">g</span></a></span><span>
 </span><span id="line-101"></span><span>    </span><span class="annot"><span class="annottext">&#8450; -&gt; m &#8450;
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8450; -&gt; m &#8450;) -&gt; &#8450; -&gt; m &#8450;
@@ -397,10 +397,10 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8) -&gt; &#8469;64
 </span><a href="UVMHS.Core.Chunky.html#joinBytes"><span class="hs-identifier hs-var">joinBytes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012382"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012381"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012380"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012379"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
+</span><a href="#local-6989586621680016777"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016776"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016775"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016774"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
 </span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">0</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
 </span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -409,19 +409,19 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-number">0</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
 </span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span>
-</span><span id="line-102"></span><span>  </span><span id="local-6989586621680012376"><span class="annot"><span class="annottext">toChunk :: &#8450; -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012376"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span id="local-6989586621680012375"><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680012375"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall b. (&#8469;8 -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; &#8469;8
+</span><span id="line-102"></span><span>  </span><span id="local-6989586621680016771"><span class="annot"><span class="annottext">toChunk :: &#8450; -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016771"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span id="local-6989586621680016770"><span class="annot"><span class="annottext">&#8450;
+</span><a href="#local-6989586621680016770"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall b. (&#8469;8 -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; &#8469;8
 forall a. (forall b. (a -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; a
 </span><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-var">&#119868;</span></a></span><span> </span><span class="annot"><span class="annottext">((forall b. (&#8469;8 -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; &#8469;8)
 -&gt; (forall b. (&#8469;8 -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680012373"><span id="local-6989586621680012372"><span class="annot"><a href="#local-6989586621680012372"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680012373"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680012373"><span class="hs-identifier hs-type">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
-</span><span id="line-103"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680012371"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012371"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012370"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012370"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012369"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012369"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012368"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012368"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680016768"><span id="local-6989586621680016767"><span class="annot"><a href="#local-6989586621680016767"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680016768"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680016768"><span class="hs-identifier hs-type">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
+</span><span id="line-103"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680016766"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016766"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016765"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016765"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016764"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016764"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016763"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016763"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
 </span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
 </span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
 </span><span class="hs-identifier">_</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
@@ -438,123 +438,123 @@ forall a b. CHS a b =&gt; b -&gt; a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; Int
 </span><span class="hs-identifier hs-var">HS.ord</span></span><span> </span><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680012375"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><a href="#local-6989586621680016770"><span class="hs-identifier hs-var">c</span></a></span><span>
 </span><span id="line-104"></span><span>    </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012372"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012368"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016767"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016763"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012372"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012369"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016767"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016764"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012372"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012370"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016767"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016765"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012372"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012371"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span>
+</span><a href="#local-6989586621680016767"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016766"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span>
 </span><span id="line-105"></span><span>
 </span><span id="line-106"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-107"></span><span>  </span><span id="local-6989586621680012362"><span class="annot"><span class="annottext">chunkSize :: P &#8469;64 -&gt; &#8469;64
-</span><a href="#local-6989586621680012362"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#8469;64
+</span><span id="line-107"></span><span>  </span><span id="local-6989586621680016757"><span class="annot"><span class="annottext">chunkSize :: P &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016757"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#8469;64
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">8</span></span><span>
-</span><span id="line-108"></span><span>  </span><span id="local-6989586621680012361"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#8469;64
-</span><a href="#local-6989586621680012361"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680012360"><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012360"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-109"></span><span>    </span><span id="local-6989586621680012359"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012359"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012360"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680012358"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012358"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012360"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680012357"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012357"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012360"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680012356"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012356"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012360"><span class="hs-identifier hs-var">g</span></a></span><span>
-</span><span id="line-110"></span><span>    </span><span id="local-6989586621680012355"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012355"><span class="hs-identifier hs-var">b&#8325;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012360"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680012354"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012354"><span class="hs-identifier hs-var">b&#8326;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012360"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680012353"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012353"><span class="hs-identifier hs-var">b&#8327;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012360"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680012352"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012352"><span class="hs-identifier hs-var">b&#8328;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012360"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-108"></span><span>  </span><span id="local-6989586621680016756"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#8469;64
+</span><a href="#local-6989586621680016756"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680016755"><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016755"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-109"></span><span>    </span><span id="local-6989586621680016754"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016754"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016755"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680016753"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016753"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016755"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680016752"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016752"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016755"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680016751"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016751"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016755"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-110"></span><span>    </span><span id="local-6989586621680016750"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016750"><span class="hs-identifier hs-var">b&#8325;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016755"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680016749"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016749"><span class="hs-identifier hs-var">b&#8326;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016755"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680016748"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016748"><span class="hs-identifier hs-var">b&#8327;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016755"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span id="local-6989586621680016747"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016747"><span class="hs-identifier hs-var">b&#8328;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016755"><span class="hs-identifier hs-var">g</span></a></span><span>
 </span><span id="line-111"></span><span>    </span><span class="annot"><span class="annottext">&#8469;64 -&gt; m &#8469;64
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; m &#8469;64) -&gt; &#8469;64 -&gt; m &#8469;64
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">(&#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8) -&gt; &#8469;64
 </span><a href="UVMHS.Core.Chunky.html#joinBytes"><span class="hs-identifier hs-var">joinBytes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012359"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012358"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012357"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012356"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012355"><span class="hs-identifier hs-var">b&#8325;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012354"><span class="hs-identifier hs-var">b&#8326;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012353"><span class="hs-identifier hs-var">b&#8327;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012352"><span class="hs-identifier hs-var">b&#8328;</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-112"></span><span>  </span><span id="local-6989586621680012351"><span class="annot"><span class="annottext">toChunk :: &#8469;64 -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012351"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span id="local-6989586621680012350"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012350"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall b. (&#8469;8 -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016754"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016753"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016752"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016751"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016750"><span class="hs-identifier hs-var">b&#8325;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016749"><span class="hs-identifier hs-var">b&#8326;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016748"><span class="hs-identifier hs-var">b&#8327;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016747"><span class="hs-identifier hs-var">b&#8328;</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-112"></span><span>  </span><span id="local-6989586621680016746"><span class="annot"><span class="annottext">toChunk :: &#8469;64 -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016746"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span id="local-6989586621680016745"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680016745"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall b. (&#8469;8 -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; &#8469;8
 forall a. (forall b. (a -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; a
 </span><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-var">&#119868;</span></a></span><span> </span><span class="annot"><span class="annottext">((forall b. (&#8469;8 -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; &#8469;8)
 -&gt; (forall b. (&#8469;8 -&gt; b -&gt; b) -&gt; b -&gt; b) -&gt; &#119868; &#8469;8
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680012349"><span id="local-6989586621680012348"><span class="annot"><a href="#local-6989586621680012348"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680012349"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680012349"><span class="hs-identifier hs-type">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
-</span><span id="line-113"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680012347"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012347"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012346"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012346"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012345"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012345"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012344"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012344"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012343"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012343"><span class="hs-identifier hs-var">b&#8325;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012342"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012342"><span class="hs-identifier hs-var">b&#8326;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012341"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012341"><span class="hs-identifier hs-var">b&#8327;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680012340"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012340"><span class="hs-identifier hs-var">b&#8328;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; (&#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8)
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680016744"><span id="local-6989586621680016743"><span class="annot"><a href="#local-6989586621680016743"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21158"><span class="hs-identifier hs-type">&#8469;8</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680016744"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680016744"><span class="hs-identifier hs-type">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
+</span><span id="line-113"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680016742"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016742"><span class="hs-identifier hs-var">b&#8321;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016741"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016741"><span class="hs-identifier hs-var">b&#8322;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016740"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016740"><span class="hs-identifier hs-var">b&#8323;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016739"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016739"><span class="hs-identifier hs-var">b&#8324;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016738"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016738"><span class="hs-identifier hs-var">b&#8325;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016737"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016737"><span class="hs-identifier hs-var">b&#8326;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016736"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016736"><span class="hs-identifier hs-var">b&#8327;</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680016735"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016735"><span class="hs-identifier hs-var">b&#8328;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; (&#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8, &#8469;8)
 </span><a href="UVMHS.Core.Chunky.html#splitBytes"><span class="hs-identifier hs-var">splitBytes</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680012350"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621680016745"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-114"></span><span>    </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012348"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012340"><span class="hs-identifier hs-var">b&#8328;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016743"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016735"><span class="hs-identifier hs-var">b&#8328;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012348"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012341"><span class="hs-identifier hs-var">b&#8327;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016743"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016736"><span class="hs-identifier hs-var">b&#8327;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012348"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012342"><span class="hs-identifier hs-var">b&#8326;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016743"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016737"><span class="hs-identifier hs-var">b&#8326;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012348"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012343"><span class="hs-identifier hs-var">b&#8325;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016743"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016738"><span class="hs-identifier hs-var">b&#8325;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012348"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012344"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016743"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016739"><span class="hs-identifier hs-var">b&#8324;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012348"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012345"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016743"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016740"><span class="hs-identifier hs-var">b&#8323;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012348"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012346"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
+</span><a href="#local-6989586621680016743"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016741"><span class="hs-identifier hs-var">b&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; (b -&gt; b) -&gt; b -&gt; b
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; b -&gt; b
-</span><a href="#local-6989586621680012348"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012347"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span>
+</span><a href="#local-6989586621680016743"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016742"><span class="hs-identifier hs-var">b&#8321;</span></a></span><span>
 </span><span id="line-115"></span><span>
 </span><span id="line-116"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%212464"><span class="hs-identifier hs-type">&#8484;64</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-117"></span><span>  </span><span id="local-6989586621680012336"><span class="annot"><span class="annottext">chunkSize :: P &#8484;64 -&gt; &#8469;64
-</span><a href="#local-6989586621680012336"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#8484;64
+</span><span id="line-117"></span><span>  </span><span id="local-6989586621680016731"><span class="annot"><span class="annottext">chunkSize :: P &#8484;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680016731"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#8484;64
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">8</span></span><span>
-</span><span id="line-118"></span><span>  </span><span id="local-6989586621680012335"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#8484;64
-</span><a href="#local-6989586621680012335"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8484;64) -&gt; m &#8469;64 -&gt; m &#8484;64
+</span><span id="line-118"></span><span>  </span><span id="local-6989586621680016730"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#8484;64
+</span><a href="#local-6989586621680016730"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#8484;64) -&gt; m &#8469;64 -&gt; m &#8484;64
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8484;64
 forall a b. a -&gt; b
@@ -563,8 +563,8 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m &#8469;64
 forall a (m :: * -&gt; *). (Chunky a, Monad m) =&gt; m &#8469;8 -&gt; m a
 </span><a href="UVMHS.Core.Chunky.html#fromChunk"><span class="hs-identifier hs-var">fromChunk</span></a></span><span>
-</span><span id="line-119"></span><span>  </span><span id="local-6989586621680012334"><span class="annot"><span class="annottext">toChunk :: &#8484;64 -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012334"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#119868; &#8469;8
+</span><span id="line-119"></span><span>  </span><span id="local-6989586621680016729"><span class="annot"><span class="annottext">toChunk :: &#8484;64 -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016729"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#119868; &#8469;8
 forall a. Chunky a =&gt; a -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-var">toChunk</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#119868; &#8469;8) -&gt; (&#8484;64 -&gt; &#8469;64) -&gt; &#8484;64 -&gt; &#119868; &#8469;8
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -573,13 +573,13 @@ forall a b. a -&gt; b
 </span><a href="UVMHS.Core.Init.html#coerce_UNSAFE"><span class="hs-identifier hs-var">coerce_UNSAFE</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%212464"><span class="hs-identifier hs-type">&#8484;64</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-120"></span><span>
 </span><span id="line-121"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D53B"><span class="hs-identifier hs-type">&#120123;</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-122"></span><span>  </span><span id="local-6989586621680012330"><span class="annot"><span class="annottext">chunkSize :: P &#120123; -&gt; &#8469;64
-</span><a href="#local-6989586621680012330"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#120123;
+</span><span id="line-122"></span><span>  </span><span id="local-6989586621680016725"><span class="annot"><span class="annottext">chunkSize :: P &#120123; -&gt; &#8469;64
+</span><a href="#local-6989586621680016725"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P &#120123;
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">8</span></span><span>
-</span><span id="line-123"></span><span>  </span><span id="local-6989586621680012329"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#120123;
-</span><a href="#local-6989586621680012329"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#120123;) -&gt; m &#8469;64 -&gt; m &#120123;
+</span><span id="line-123"></span><span>  </span><span id="local-6989586621680016724"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m &#120123;
+</span><a href="#local-6989586621680016724"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#120123;) -&gt; m &#8469;64 -&gt; m &#120123;
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#120123;
 forall a b. a -&gt; b
@@ -588,8 +588,8 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m &#8469;64
 forall a (m :: * -&gt; *). (Chunky a, Monad m) =&gt; m &#8469;8 -&gt; m a
 </span><a href="UVMHS.Core.Chunky.html#fromChunk"><span class="hs-identifier hs-var">fromChunk</span></a></span><span>
-</span><span id="line-124"></span><span>  </span><span id="local-6989586621680012328"><span class="annot"><span class="annottext">toChunk :: &#120123; -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012328"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#119868; &#8469;8
+</span><span id="line-124"></span><span>  </span><span id="local-6989586621680016723"><span class="annot"><span class="annottext">toChunk :: &#120123; -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016723"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#119868; &#8469;8
 forall a. Chunky a =&gt; a -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-var">toChunk</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; &#119868; &#8469;8) -&gt; (&#120123; -&gt; &#8469;64) -&gt; &#120123; -&gt; &#119868; &#8469;8
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
@@ -597,112 +597,112 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 forall a b. a -&gt; b
 </span><a href="UVMHS.Core.Init.html#coerce_UNSAFE"><span class="hs-identifier hs-var">coerce_UNSAFE</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D53B"><span class="hs-identifier hs-type">&#120123;</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-125"></span><span>
-</span><span id="line-126"></span><span id="local-6989586621680012326"><span id="local-6989586621680012327"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012327"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012326"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680012327"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2227"><span class="hs-operator hs-type">&#8743;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012326"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-127"></span><span>  </span><span id="local-6989586621680012322"><span class="annot"><span class="annottext">chunkSize :: P (a &#8743; b) -&gt; &#8469;64
-</span><a href="#local-6989586621680012322"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P (a &#8743; b)
+</span><span id="line-126"></span><span id="local-6989586621680016721"><span id="local-6989586621680016722"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016722"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016721"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680016722"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2227"><span class="hs-operator hs-type">&#8743;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016721"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-127"></span><span>  </span><span id="local-6989586621680016717"><span class="annot"><span class="annottext">chunkSize :: P (a &#8743; b) -&gt; &#8469;64
+</span><a href="#local-6989586621680016717"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P (a &#8743; b)
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">P a -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012327"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016722"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">P b -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012326"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016721"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span>
-</span><span id="line-128"></span><span>  </span><span id="local-6989586621680012320"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m (a &#8743; b)
-</span><a href="#local-6989586621680012320"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680012319"><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012319"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-129"></span><span>    </span><span id="local-6989586621680012318"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680012318"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m a
+</span><span id="line-128"></span><span>  </span><span id="local-6989586621680016715"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m (a &#8743; b)
+</span><a href="#local-6989586621680016715"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680016714"><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016714"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-129"></span><span>    </span><span id="local-6989586621680016713"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680016713"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m a
 forall a (m :: * -&gt; *). (Chunky a, Monad m) =&gt; m &#8469;8 -&gt; m a
 </span><a href="UVMHS.Core.Chunky.html#fromChunk"><span class="hs-identifier hs-var">fromChunk</span></a></span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012319"><span class="hs-identifier hs-var">g</span></a></span><span>
-</span><span id="line-130"></span><span>    </span><span id="local-6989586621680012317"><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621680012317"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m b
+</span><a href="#local-6989586621680016714"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-130"></span><span>    </span><span id="local-6989586621680016712"><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621680016712"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m b
 forall a (m :: * -&gt; *). (Chunky a, Monad m) =&gt; m &#8469;8 -&gt; m a
 </span><a href="UVMHS.Core.Chunky.html#fromChunk"><span class="hs-identifier hs-var">fromChunk</span></a></span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012319"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><a href="#local-6989586621680016714"><span class="hs-identifier hs-var">g</span></a></span><span>
 </span><span id="line-131"></span><span>    </span><span class="annot"><span class="annottext">(a &#8743; b) -&gt; m (a &#8743; b)
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">((a &#8743; b) -&gt; m (a &#8743; b)) -&gt; (a &#8743; b) -&gt; m (a &#8743; b)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680012318"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b -&gt; a &#8743; b
+</span><a href="#local-6989586621680016713"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b -&gt; a &#8743; b
 forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621680012317"><span class="hs-identifier hs-var">y</span></a></span><span>
-</span><span id="line-132"></span><span>  </span><span id="local-6989586621680012315"><span class="annot"><span class="annottext">toChunk :: (a &#8743; b) -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012315"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680012314"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680012314"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680012313"><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621680012313"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016712"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><span id="line-132"></span><span>  </span><span id="local-6989586621680016710"><span class="annot"><span class="annottext">toChunk :: (a &#8743; b) -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016710"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680016709"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680016709"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680016708"><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621680016708"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; &#119868; &#8469;8
 forall a. Chunky a =&gt; a -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-var">toChunk</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680012314"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; &#8469;8 -&gt; &#119868; &#8469;8 -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016709"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; &#8469;8 -&gt; &#119868; &#8469;8 -&gt; &#119868; &#8469;8
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">b -&gt; &#119868; &#8469;8
 forall a. Chunky a =&gt; a -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-var">toChunk</span></a></span><span> </span><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621680012313"><span class="hs-identifier hs-var">y</span></a></span></span></span><span>
+</span><a href="#local-6989586621680016708"><span class="hs-identifier hs-var">y</span></a></span></span></span><span>
 </span><span id="line-133"></span><span>
-</span><span id="line-134"></span><span id="local-6989586621680012310"><span id="local-6989586621680012311"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012311"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012310"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680012311"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2228"><span class="hs-operator hs-type">&#8744;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680012310"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-135"></span><span>  </span><span id="local-6989586621680012306"><span class="annot"><span class="annottext">chunkSize :: P (a &#8744; b) -&gt; &#8469;64
-</span><a href="#local-6989586621680012306"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P (a &#8744; b)
+</span><span id="line-134"></span><span id="local-6989586621680016705"><span id="local-6989586621680016706"><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016706"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016705"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Chunky.html#Chunky"><span class="hs-identifier hs-type">Chunky</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680016706"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2228"><span class="hs-operator hs-type">&#8744;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680016705"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-135"></span><span>  </span><span id="local-6989586621680016701"><span class="annot"><span class="annottext">chunkSize :: P (a &#8744; b) -&gt; &#8469;64
+</span><a href="#local-6989586621680016701"><span class="hs-identifier hs-var hs-var hs-var hs-var">chunkSize</span></a></span></span><span> </span><span class="annot"><span class="annottext">P (a &#8744; b)
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;64
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">1</span></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">P a -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012311"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016706"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Ord a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Order.html#%2A4F"><span class="hs-operator hs-var">&#10831;</span></a></span><span> </span><span class="annot"><span class="annottext">P b -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012310"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016705"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-136"></span><span>  </span><span id="local-6989586621680012304"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m (a &#8744; b)
-</span><a href="#local-6989586621680012304"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680012303"><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012303"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-137"></span><span>    </span><span id="local-6989586621680012302"><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012302"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012303"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><span id="line-136"></span><span>  </span><span id="local-6989586621680016699"><span class="annot"><span class="annottext">fromChunk :: m &#8469;8 -&gt; m (a &#8744; b)
+</span><a href="#local-6989586621680016699"><span class="hs-identifier hs-var hs-var hs-var hs-var">fromChunk</span></a></span></span><span> </span><span id="local-6989586621680016698"><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016698"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-137"></span><span>    </span><span id="local-6989586621680016697"><span class="annot"><span class="annottext">&#8469;8
+</span><a href="#local-6989586621680016697"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8
+</span><a href="#local-6989586621680016698"><span class="hs-identifier hs-var">g</span></a></span><span>
 </span><span id="line-138"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#8469;8
-</span><a href="#local-6989586621680012302"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;8 -&gt; &#120121;
+</span><a href="#local-6989586621680016697"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#8469;8 -&gt; &#120121;
 forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
 </span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
 </span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-139"></span><span>      </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-140"></span><span>        </span><span id="local-6989586621680012301"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680012301"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m a
+</span><span id="line-140"></span><span>        </span><span id="local-6989586621680016696"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680016696"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m a
 forall a (m :: * -&gt; *). (Chunky a, Monad m) =&gt; m &#8469;8 -&gt; m a
 </span><a href="UVMHS.Core.Chunky.html#fromChunk"><span class="hs-identifier hs-var">fromChunk</span></a></span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012303"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><a href="#local-6989586621680016698"><span class="hs-identifier hs-var">g</span></a></span><span>
 </span><span id="line-141"></span><span>        </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; &#8469;64 -&gt; m ()
 forall (m :: * -&gt; *). Monad m =&gt; m &#8469;8 -&gt; &#8469;64 -&gt; m ()
 </span><a href="UVMHS.Core.Chunky.html#skipChunk"><span class="hs-identifier hs-var">skipChunk</span></a></span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012303"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; m ()) -&gt; &#8469;64 -&gt; m ()
+</span><a href="#local-6989586621680016698"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; m ()) -&gt; &#8469;64 -&gt; m ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">P a -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012311"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016706"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Ord a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Order.html#%2A4F"><span class="hs-operator hs-var">&#10831;</span></a></span><span> </span><span class="annot"><span class="annottext">P b -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012310"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016705"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Minus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#-"><span class="hs-glyph hs-var">-</span></a></span><span> </span><span class="annot"><span class="annottext">P a -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012311"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016706"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span>
 </span><span id="line-142"></span><span>        </span><span class="annot"><span class="annottext">(a &#8744; b) -&gt; m (a &#8744; b)
@@ -712,34 +712,34 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; a &#8744; b
 forall a b. a -&gt; a &#8744; b
 </span><a href="UVMHS.Core.Init.html#Inl"><span class="hs-identifier hs-var">Inl</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680012301"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><a href="#local-6989586621680016696"><span class="hs-identifier hs-var">x</span></a></span><span>
 </span><span id="line-143"></span><span>      </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-144"></span><span>        </span><span id="local-6989586621680012298"><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621680012298"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m b
+</span><span id="line-144"></span><span>        </span><span id="local-6989586621680016693"><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621680016693"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; m b
 forall a (m :: * -&gt; *). (Chunky a, Monad m) =&gt; m &#8469;8 -&gt; m a
 </span><a href="UVMHS.Core.Chunky.html#fromChunk"><span class="hs-identifier hs-var">fromChunk</span></a></span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012303"><span class="hs-identifier hs-var">g</span></a></span><span>
+</span><a href="#local-6989586621680016698"><span class="hs-identifier hs-var">g</span></a></span><span>
 </span><span id="line-145"></span><span>        </span><span class="annot"><span class="annottext">m &#8469;8 -&gt; &#8469;64 -&gt; m ()
 forall (m :: * -&gt; *). Monad m =&gt; m &#8469;8 -&gt; &#8469;64 -&gt; m ()
 </span><a href="UVMHS.Core.Chunky.html#skipChunk"><span class="hs-identifier hs-var">skipChunk</span></a></span><span> </span><span class="annot"><span class="annottext">m &#8469;8
-</span><a href="#local-6989586621680012303"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; m ()) -&gt; &#8469;64 -&gt; m ()
+</span><a href="#local-6989586621680016698"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; m ()) -&gt; &#8469;64 -&gt; m ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">P a -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012311"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016706"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Ord a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Order.html#%2A4F"><span class="hs-operator hs-var">&#10831;</span></a></span><span> </span><span class="annot"><span class="annottext">P b -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012310"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016705"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Minus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#-"><span class="hs-glyph hs-var">-</span></a></span><span> </span><span class="annot"><span class="annottext">P b -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012310"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016705"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span>
 </span><span id="line-146"></span><span>        </span><span class="annot"><span class="annottext">(a &#8744; b) -&gt; m (a &#8744; b)
@@ -749,11 +749,11 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">b -&gt; a &#8744; b
 forall a b. b -&gt; a &#8744; b
 </span><a href="UVMHS.Core.Init.html#Inr"><span class="hs-identifier hs-var">Inr</span></a></span><span> </span><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621680012298"><span class="hs-identifier hs-var">y</span></a></span><span>
-</span><span id="line-147"></span><span>  </span><span id="local-6989586621680012296"><span class="annot"><span class="annottext">toChunk :: (a &#8744; b) -&gt; &#119868; &#8469;8
-</span><a href="#local-6989586621680012296"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-148"></span><span>    </span><span class="annot"><a href="UVMHS.Core.Init.html#Inl"><span class="hs-identifier hs-type">Inl</span></a></span><span> </span><span id="local-6989586621680012295"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680012295"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016693"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><span id="line-147"></span><span>  </span><span id="local-6989586621680016691"><span class="annot"><span class="annottext">toChunk :: (a &#8744; b) -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016691"><span class="hs-identifier hs-var hs-var hs-var hs-var">toChunk</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-148"></span><span>    </span><span class="annot"><a href="UVMHS.Core.Init.html#Inl"><span class="hs-identifier hs-type">Inl</span></a></span><span> </span><span id="local-6989586621680016690"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680016690"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#119868; &#8469;8
 forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
 </span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -762,28 +762,28 @@ forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; &#119868; &#8469;8
 forall a. Chunky a =&gt; a -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-var">toChunk</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680012295"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; &#8469;8 -&gt; &#119868; &#8469;8 -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016690"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; &#8469;8 -&gt; &#119868; &#8469;8 -&gt; &#119868; &#8469;8
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#emptyChunk"><span class="hs-identifier hs-var">emptyChunk</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">P a -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012311"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016706"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Ord a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Order.html#%2A4F"><span class="hs-operator hs-var">&#10831;</span></a></span><span> </span><span class="annot"><span class="annottext">P b -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012310"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016705"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Minus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#-"><span class="hs-glyph hs-var">-</span></a></span><span> </span><span class="annot"><span class="annottext">P a -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012311"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016706"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-149"></span><span>    </span><span class="annot"><a href="UVMHS.Core.Init.html#Inr"><span class="hs-identifier hs-type">Inr</span></a></span><span> </span><span id="local-6989586621680012294"><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621680012294"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#119868; &#8469;8
+</span><span id="line-149"></span><span>    </span><span class="annot"><a href="UVMHS.Core.Init.html#Inr"><span class="hs-identifier hs-type">Inr</span></a></span><span> </span><span id="local-6989586621680016689"><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621680016689"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;8 -&gt; &#119868; &#8469;8
 forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469;8
 </span><a href="UVMHS.Core.Init.html#%1D55F8"><span class="hs-identifier hs-var">&#120159;8</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
@@ -792,24 +792,24 @@ forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">b -&gt; &#119868; &#8469;8
 forall a. Chunky a =&gt; a -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#toChunk"><span class="hs-identifier hs-var">toChunk</span></a></span><span> </span><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621680012294"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; &#8469;8 -&gt; &#119868; &#8469;8 -&gt; &#119868; &#8469;8
+</span><a href="#local-6989586621680016689"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; &#8469;8 -&gt; &#119868; &#8469;8 -&gt; &#119868; &#8469;8
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#119868; &#8469;8
 </span><a href="UVMHS.Core.Chunky.html#emptyChunk"><span class="hs-identifier hs-var">emptyChunk</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="annot"><span class="annottext">P a -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012311"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016706"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><span class="annottext">P a
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Ord a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Order.html#%2A4F"><span class="hs-operator hs-var">&#10831;</span></a></span><span> </span><span class="annot"><span class="annottext">P b -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012310"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016705"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Minus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#-"><span class="hs-glyph hs-var">-</span></a></span><span> </span><span class="annot"><span class="annottext">P b -&gt; &#8469;64
 forall a. Chunky a =&gt; P a -&gt; &#8469;64
-</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680012310"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
+</span><a href="UVMHS.Core.Chunky.html#chunkSize"><span class="hs-identifier hs-var">chunkSize</span></a></span><span> </span><span class="hs-glyph">@</span><span> </span><span class="annot"><a href="#local-6989586621680016705"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><span class="annottext">P b
 forall k (a :: k). P a
 </span><a href="UVMHS.Core.Init.html#P"><span class="hs-identifier hs-var">P</span></a></span><span class="hs-special">)</span></span></span><span>
 </span><span id="line-150"></span><span>

@@ -54,6 +54,7 @@ instance (Ord k,Meet v) ⇒ MeetLattice (k ⇰ v)
 instance (Ord k,Difference v) ⇒ Difference (k ⇰ v) where (⊟) = diffWith (⊟)
 
 instance Functor ((⇰) k) where map = map𝐷
+instance FunctorM ((⇰) k) where mapM = mapM𝐷
 
 instance ToStream (k ∧ v) (k ⇰ v) where stream = stream𝐷
 instance ToIter (k ∧ v) (k ⇰ v) where iter = iter ∘ stream
@@ -139,6 +140,10 @@ values = iter ∘ Map.elems ∘ un𝐷
 
 map𝐷 ∷ (v₁ → v₂) → k ⇰ v₁ → k ⇰ v₂
 map𝐷 f = 𝐷 ∘ Map.map f ∘ un𝐷
+
+mapM𝐷 ∷ ∀ m k v₁ v₂. (Monad m) ⇒ (v₁ → m v₂) → k ⇰ v₁ → m (k ⇰ v₂)
+mapM𝐷 f kvs = with (tohsMonad @ m) $
+  𝐷 ^$ HS.mapM f $ un𝐷 kvs
 
 mapK𝐷 ∷ (Ord k) ⇒ (k → v₁ → v₂) → k ⇰ v₁ → k ⇰ v₂
 mapK𝐷 f kvs = dict $ mapOn (iter kvs) $ \ (k :* v) → k ↦ f k v

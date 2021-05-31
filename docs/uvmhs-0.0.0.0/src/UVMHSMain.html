@@ -7,25 +7,27 @@
 </span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.ArithBlocks.html"><span class="hs-identifier">Examples.Lang.ArithBlocks</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">ArithBlocks</span></span><span>
 </span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.SExp.html"><span class="hs-identifier">Examples.Lang.SExp</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">SExp</span></span><span>
 </span><span id="line-9"></span><span>
-</span><span id="line-10"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-11"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">HS</span></span><span>
+</span><span id="line-11"></span><span>
+</span><span id="line-12"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
 </span><a href="UVMHSMain.html#main"><span class="hs-identifier hs-var hs-var">main</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO ()
 forall a. IO a -&gt; IO a
 </span><a href="UVMHS.Core.IO.html#cleanExit"><span class="hs-identifier hs-var">cleanExit</span></a></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-12"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-14"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppHeader"><span class="hs-identifier hs-var">ppHeader</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;COLOR TEST&quot;</span></span><span>
-</span><span id="line-13"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-15"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#colorsDemo"><span class="hs-identifier hs-var">colorsDemo</span></a></span><span>
-</span><span id="line-14"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-16"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -36,4 +38,4 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span></span><span>
-</span><span id="line-15"></span></pre></body></html>
+</span><span id="line-17"></span></pre></body></html>

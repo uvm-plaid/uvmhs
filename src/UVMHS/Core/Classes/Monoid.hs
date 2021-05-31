@@ -2,6 +2,8 @@ module UVMHS.Core.Classes.Monoid where
 
 import UVMHS.Core.Init
 
+import UVMHS.Core.Classes.Monad
+
 infixl 5 ⧺
 infixl 6 ⨳
 
@@ -31,3 +33,16 @@ class (Seqoid a,Star a) ⇒ Kleene a
 
 oom ∷ (Kleene a) ⇒ a → a
 oom x = x ▷ star x
+
+
+newtype Compose a = Compose { unCompose ∷ a → a }
+
+instance Null (Compose a) where null = Compose id
+instance Append (Compose a) where g ⧺ f = Compose $ unCompose g ∘ unCompose f
+instance Monoid (Compose a)
+
+newtype MCompose m a = MCompose { unMCompose ∷ a → m a }
+
+instance (Return m) ⇒ Null (MCompose m a) where null = MCompose return
+instance (Bind m) ⇒ Append (MCompose m a) where g ⧺ f = MCompose $ unMCompose g *∘ unMCompose f
+instance (Monad m) ⇒ Monoid (MCompose m a)
