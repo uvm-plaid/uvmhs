@@ -434,24 +434,24 @@ umodifyC f = ucallCC $ \ k → f *$ k ()
 uwithCOn ∷ (Monad m,MonadUCont m) ⇒ m a → (a → m u) → m u
 uwithCOn = flip uwithC
 
-uputEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r → m ()
-uputEnv r = ucallCC $ \ 𝓀 → local r $ 𝓀 ()
+putEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r → m ()
+putEnv r = ucallCC $ \ 𝓀 → local r $ 𝓀 ()
 
-uputEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m ()
-uputEnvL ℓ r = ucallCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
+putEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m ()
+putEnvL ℓ r = ucallCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
 
-umodifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
-umodifyEnv f = ucallCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
+modifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
+modifyEnv f = ucallCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
 
-umodifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
-umodifyEnvL ℓ f = ucallCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
+modifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
+modifyEnvL ℓ f = ucallCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
 
 ulocalL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m a → m a
 ulocalL ℓ r xM = do
   r' ← askL ℓ
-  uputEnvL ℓ r 
+  putEnvL ℓ r 
   x ← xM
-  uputEnvL ℓ r'
+  putEnvL ℓ r'
   return x
 
 umapEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m a → m a
