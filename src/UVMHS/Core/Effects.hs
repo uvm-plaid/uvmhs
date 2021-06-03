@@ -72,8 +72,28 @@ class MonadCont r m | m → r where
   withC ∷ ∀ a. (a → m r) → m a → m r 
 
 class LiftCont t where
-  liftCallCC ∷ ∀ m r. (Monad m) ⇒ (∀ a. ((a → m r) → m r) → m a) → (∀ a. ((a → t m r) → t m r) → t m a)
-  liftWithC ∷ ∀ m r. (Monad m) ⇒ (∀ a. (a → m r) → m a → m r) → (∀ a. (a → t m r) → t m a → t m r)
+  liftCallCC ∷ 
+    ∀ m r. (Monad m) 
+    ⇒ (∀ a. ((a → m r) → m r) → m a) 
+    → (∀ a. ((a → t m r) → t m r) → t m a)
+  liftWithC ∷ 
+    ∀ m r. (Monad m) 
+    ⇒ (∀ a. (a → m r) → m a → m r) 
+    → (∀ a. (a → t m r) → t m a → t m r)
+
+class MonadUCont m where
+  ucallCC ∷ ∀ a. (∀ u. (a → m u) → m u) → m a 
+  uwithC ∷ ∀ a u. (a → m u) → m a → m u 
+
+class LiftUCont t where
+  liftUCallCC ∷ 
+    ∀ m. (Monad m) 
+    ⇒ (∀ a. (∀ u. (a → m u) → m u) → m a) 
+    → (∀ a. (∀ u. (a → t m u) → t m u) → t m a)
+  liftUWithC ∷ 
+    ∀ m. (Monad m) 
+    ⇒ (∀ a u. (a → m u) → m a → m u) 
+    → (∀ a u. (a → t m u) → t m a → t m u)
 
 class MonadBad m where
   bad ∷ ∀ a. m a
@@ -158,11 +178,11 @@ mapEnvL 𝓁 f = mapEnv $ alter 𝓁 f
 tellL ∷ (Monoid o₁,Monad m,MonadWriter o₁ m) ⇒ o₁ ⟢ o₂ → o₂ → m ()
 tellL l o = tell $ update l o null
 
-hijackL ∷ (Monad m,MonadWriter o₁ m,Monoid o₂) ⇒ o₁ ⟢ o₂ → m a → m (o₂ ∧ a)
-hijackL l aM = do
-  (o₁ :* a) ← hijack aM
-  tell $ update l null o₁
-  return (access l o₁ :* a)
+hijackL ∷ (Monad m,MonadWriter o₁ m,Null o₂) ⇒ o₁ ⟢ o₂ → m a → m (o₂ ∧ a)
+hijackL ℓ xM = do
+  o₁ :* a ← hijack xM
+  tell $ update ℓ null o₁
+  return $ access ℓ o₁ :* a
 
 mapOut ∷ (Monad m,MonadWriter o m) ⇒ (o → o) → m a → m a
 mapOut f aM = do
@@ -309,12 +329,12 @@ many aM = tries
   , return null
   ]
 
--- Error
+-- Error --
 
 throw𝑂 ∷ (Monad m,MonadError e m) ⇒ e → 𝑂 a → m a 
 throw𝑂 e = elim𝑂 (throw e) return
 
--- # Nondet
+-- Nondet --
 
 mconcat ∷ (MonadNondet m,ToIter (m a) t) ⇒ t → m a
 mconcat = foldr mzero (⊞)
@@ -370,38 +390,74 @@ mzero𝑂 = elim𝑂 mzero return
 return𝑃 ∷ ∀ m a. (Monad m,MonadNondet m) ⇒ 𝑃 a → m a
 return𝑃 = fold mzero (\ x xM → xM ⊞ return x)
 
--- Cont
+-- Cont --
 
-reset ∷ (Monad m,MonadCont r m) ⇒ m r → m r 
+reset ∷ (Monad m,MonadCont u m) ⇒ m u → m u 
 reset aM = callCC $ \ k → k *$ withC return aM
 
-modifyC ∷ (Monad m,MonadCont r m) ⇒ (r → m r) → m ()
+modifyC ∷ (Monad m,MonadCont u m) ⇒ (u → m u) → m ()
 modifyC f = callCC $ \ k → f *$ k ()
 
-withCOn ∷ (Monad m,MonadCont r m) ⇒ m a → (a → m r) → m r
+withCOn ∷ (Monad m,MonadCont u m) ⇒ m a → (a → m u) → m u
 withCOn = flip withC
 
-putEnv ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r → m ()
-putEnv r = callCC $ \ 𝓀 → local r $ 𝓀 ()
+-- putEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r → m ()
+-- putEnv r = callCC $ \ 𝓀 → local r $ 𝓀 ()
+-- 
+-- putEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → r' → m ()
+-- putEnvL ℓ r = callCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
+-- 
+-- modifyEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ (r → r) → m ()
+-- modifyEnv f = callCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
+-- 
+-- modifyEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → (r' → r') → m ()
+-- modifyEnvL ℓ f = callCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
+-- 
+-- delimitEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ m a → m a
+-- delimitEnv xM = callCC $ \ 𝓀 → do
+--   r ← ask
+--   withCOn xM $ local r ∘ 𝓀
+-- 
+-- delimitEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → m a → m a
+-- delimitEnvL ℓ xM = callCC $ \ 𝓀 → do
+--   r ← askL ℓ
+--   withCOn xM $ localL ℓ r ∘ 𝓀
 
-putEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → r' → m ()
-putEnvL ℓ r = callCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
+-- UCont --
 
-modifyEnv ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ (r → r) → m ()
-modifyEnv f = callCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
+ureset ∷ (Monad m,MonadUCont m) ⇒ m a → m a 
+ureset aM = ucallCC $ \ k → k *$ uwithC return aM
 
-modifyEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → (r' → r') → m ()
-modifyEnvL ℓ f = callCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
+umodifyC ∷ (Monad m,MonadUCont m) ⇒ (∀ u. u → m u) → m ()
+umodifyC f = ucallCC $ \ k → f *$ k ()
 
-delimitEnv ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ m a → m a
-delimitEnv xM = callCC $ \ 𝓀 → do
-  r ← ask
-  withCOn xM $ local r ∘ 𝓀
+uwithCOn ∷ (Monad m,MonadUCont m) ⇒ m a → (a → m u) → m u
+uwithCOn = flip uwithC
 
-delimitEnvL ∷ (Monad m,MonadReader r m,MonadCont kr m) ⇒ r ⟢ r' → m a → m a
-delimitEnvL ℓ xM = callCC $ \ 𝓀 → do
+uputEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r → m ()
+uputEnv r = ucallCC $ \ 𝓀 → local r $ 𝓀 ()
+
+uputEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m ()
+uputEnvL ℓ r = ucallCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
+
+umodifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
+umodifyEnv f = ucallCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
+
+umodifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
+umodifyEnvL ℓ f = ucallCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
+
+ulocalL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m a → m a
+ulocalL ℓ r xM = do
+  r' ← askL ℓ
+  uputEnvL ℓ r 
+  x ← xM
+  uputEnvL ℓ r'
+  return x
+
+umapEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m a → m a
+umapEnvL ℓ f xM = do
   r ← askL ℓ
-  withCOn xM $ localL ℓ r ∘ 𝓀
+  ulocalL ℓ (f r) xM
 
 --------------
 -- DERIVING --

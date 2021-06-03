@@ -404,6 +404,64 @@ instance Transformer (ContT r) where
   lift xM = ContT $ \ (κ ∷ a → m r) → κ *$ xM
 
 -----------
+-- UCont --
+-----------
+
+newtype UContT m a = UContT { unUContT ∷ ∀ u. (a → m u) → m u }
+
+runUContT ∷ ∀ u m a. (a → m u) → UContT m a → m u
+runUContT = flip unUContT
+
+evalUContT ∷ (Return m) ⇒ UContT m a → m a
+evalUContT = runUContT return
+
+instance Functor (UContT m) where
+  map ∷ ∀ a b. (a → b) → UContT m a → UContT m b
+  map f xM = UContT $ \ (k ∷ b → m u) → unUContT xM $ \ x → k $ f x
+
+instance Return (UContT m) where
+  return ∷ ∀ a. a → UContT m a
+  return x = UContT $ \ (k ∷ a → m u) → k x
+instance Bind (UContT m) where
+  (≫=) ∷ ∀ a b. UContT m a → (a → UContT m b) → UContT m b
+  xM ≫= kk = UContT $ \ (k ∷ b → m u) → unUContT xM $ \ (x ∷ a) → unUContT (kk x) k
+instance Monad (UContT m)
+
+instance Functor2Iso UContT where
+  map2iso ∷ ∀ m₁ m₂. Iso2 m₁ m₂ → ∀ a. UContT m₁ a → UContT m₂ a
+  map2iso i xM = UContT $ \ (k ∷ a → m₂ u) → 
+    ito2 i $ unUContT xM $ \ (x ∷ a) → 
+      ifr2 i $ k x
+
+instance (Monad m) ⇒ MonadUCont (UContT m) where
+  ucallCC ∷ ∀ a. (∀ u. (a → UContT m u) → UContT m u) → UContT m a
+  ucallCC ff = UContT $ \ (𝓀 ∷ a → m u₁) → 
+    evalUContT $ ff $ \ (x ∷ a) → 
+      UContT $ \ (𝓀' ∷ u₁ → m u₂) → 
+        𝓀' *$ 𝓀 x
+
+  uwithC ∷ ∀ a u. (a → UContT m u) → UContT m a → UContT m u
+  uwithC f xM = UContT $ \ (𝓀 ∷ u → m u₁) →
+    𝓀 *$ unUContT xM $ \ (x ∷ a) → 
+      evalUContT $ f x
+
+instance (∀ a'. Null (m a')) ⇒ Null (UContT m a) where
+  null ∷ UContT m a
+  null = UContT $ \ (_ ∷ a → m u) → null
+instance (∀ a'. Append (m a')) ⇒ Append (UContT m a) where
+  (⧺) ∷ UContT m a → UContT m a → UContT m a
+  xM₁ ⧺ xM₂ = UContT $ \ (𝓀 ∷ a → m u) → unUContT xM₁ 𝓀 ⧺ unUContT xM₂ 𝓀
+instance 
+  ( ∀ a'. Null (m a')
+  , ∀ a'. Append (m a')
+  , ∀ a'. Monoid (m a')
+  ) ⇒ Monoid (UContT m a)
+
+instance Transformer UContT where
+  lift ∷ ∀ m a. (Monad m) ⇒ m a → UContT m a
+  lift xM = UContT $ \ (𝓀 ∷ a → m u) → 𝓀 *$ xM
+
+-----------
 -- NoBad --
 -----------
 
@@ -502,7 +560,7 @@ instance LiftCont (ReaderT r) where
           k x
   liftWithC ∷ ∀ m r'. (Monad m) ⇒ (∀ a. (a → m r') → m a → m r') → (∀ a. (a → ReaderT r m r') → ReaderT r m a → ReaderT r m r')
   liftWithC withCM k xM = ReaderT $ \ r →
-    withCM (\ x → unReaderT (k x) r) $ unReaderT xM r
+    flip withCM (unReaderT xM r) $ \ x → runReaderT r $ k x
 
 ------------
 -- WRITER --
@@ -574,16 +632,13 @@ instance (Monoid o,Monad m,MonadCont (o ∧ r) m) ⇒ MonadCont r (WriterT o m) 
   callCC ∷ ∀ a. ((a → WriterT o m r) → WriterT o m r) → WriterT o m a
   callCC kk = WriterT $ callCC $ \ (k ∷ (o ∧ a) → m (o ∧ r)) →
     unWriterT $ kk $ \ (x ∷ a) → 
-      WriterT $ k (null :* x)
+      WriterT $ k $ null :* x
 
   withC ∷ ∀ a. (a → WriterT o m r) → WriterT o m a → WriterT o m r
   withC k xM = WriterT $ 
-    withC 
-    (\ (o₁ :* x ∷ o ∧ a) → do 
-         (o₂ :* r) ← unWriterT (k x) 
-         return ((o₁ ⧺ o₂) :* r)
-    )
-    (unWriterT xM)
+    withCOn (unWriterT xM) $ \ (o₁ :* x ∷ o ∧ a) → do 
+      o₂ :* r ← unWriterT $ k x
+      return $ (o₁ ⧺ o₂) :* r
 
 -----------
 -- STATE --
@@ -651,19 +706,18 @@ instance LiftTop (StateT s) where
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. StateT s m a)
   liftMtop mtopM = StateT $ \ _ → mtopM
 
-instance (Monad m,MonadCont (s ∧ r) m) ⇒ MonadCont r (StateT s m) where
-  callCC ∷ ∀ a. ((a → StateT s m r) → StateT s m r) → StateT s m a
-  callCC kk = StateT $ \ s₁ → 
-    callCC $ \ (k ∷ (s ∧ a) → m (s ∧ r)) →
-      runStateT s₁ $ kk $ \ (x ∷ a) → 
+instance (Monad m,MonadCont (s ∧ u) m) ⇒ MonadCont u (StateT s m) where
+  callCC ∷ ∀ a. ((a → StateT s m u) → StateT s m u) → StateT s m a
+  callCC ff = StateT $ \ s₁ → 
+    callCC $ \ (𝓀 ∷ (s ∧ a) → m (s ∧ u)) →
+      runStateT s₁ $ ff $ \ (x ∷ a) → 
         StateT $ \ s₂ →
-          k (s₂ :* x)
+          𝓀 $ s₂ :* x
 
-  withC ∷ ∀ a. (a → StateT s m r) → StateT s m a → StateT s m r
-  withC k xM = StateT $ \ s₁ →
-    withC 
-    (\ (s₂ :* x ∷ s ∧ a) → runStateT s₂ (k x))
-    (runStateT s₁ xM)
+  withC ∷ ∀ a. (a → StateT s m u) → StateT s m a → StateT s m u
+  withC f xM = StateT $ \ s₁ →
+    withCOn (runStateT s₁ xM) $ \ (s₂ :* x ∷ s ∧ a) → 
+      runStateT s₂ $ f x
 
 ----------
 -- FAIL --
@@ -738,15 +792,13 @@ instance (Monad m,MonadCont (𝑂 r) m) ⇒ MonadCont r (FailT m) where
   callCC kk = FailT $
     callCC $ \ (k ∷ 𝑂 a → m (𝑂 r)) →
       unFailT $ kk $ \ (x ∷ a) → 
-        FailT $ k (Some x)
+        FailT $ k $ Some x
 
   withC ∷ ∀ a. (a → FailT m r) → FailT m a → FailT m r
   withC k xM = FailT $
-    withC 
-    (\ (xO ∷ 𝑂 a) → case xO of
-         None → return None
-         Some x → unFailT $ k x)
-    (unFailT xM)
+    withCOn (unFailT xM) $ \ (xO ∷ 𝑂 a) → case xO of
+      None → return None
+      Some x → unFailT $ k x
 
 -----------
 -- Error --
@@ -920,12 +972,12 @@ instance LiftIO (ContT r) where
     x ← ioM xM
     k x
 
-instance (Monad m,MonadReader r' m) ⇒ MonadReader r' (ContT r m) where
-  ask ∷ ContT r m r'
-  ask = ContT $ \ (k ∷ r' → m r) → k *$ ask
-
-  local ∷ ∀ a. r' → ContT r m a → ContT r m a
-  local r xM = ContT $ \ (k ∷ a → m r) → local r $ unContT xM k
+-- instance (Monad m,MonadReader r' m) ⇒ MonadReader r' (ContT r m) where
+--   ask ∷ ContT r m r'
+--   ask = ContT $ \ (k ∷ r' → m r) → k *$ ask
+-- 
+--   local ∷ ∀ a. r' → ContT r m a → ContT r m a
+--   local r xM = ContT $ \ (k ∷ a → m r) → local r $ unContT xM k
 
 -- instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT r m) where
 --   tell ∷ o → ContT r m ()
@@ -979,6 +1031,64 @@ instance (Monad m,MonadTop m) ⇒ MonadTop (ContT r m) where
   mtop ∷ ∀ a. ContT r m a
   mtop = ContT $ \ (_ ∷ a → m r) → mtop
 
+-----------
+-- UCont --
+-----------
+
+instance LiftIO UContT where
+  liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → UContT m a)
+  liftIO ioM xM = UContT $ \ (𝓀 ∷ a → m u) → 𝓀 *$ ioM xM
+
+instance (Monad m,MonadReader r m) ⇒ MonadReader r (UContT m) where
+  ask ∷ UContT m r
+  ask = UContT $ \ (𝓀 ∷ r → m u) → 𝓀 *$ ask
+
+  local ∷ ∀ a. r → UContT m a → UContT m a
+  local r xM = UContT $ \ (𝓀 ∷ a → m u) → 𝓀 *$ local r $ evalUContT xM
+
+instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (UContT m) where
+  tell ∷ o → UContT m ()
+  tell o = UContT $ \ (𝓀 ∷ () → m u) → 𝓀 *$ tell o
+
+  hijack ∷ ∀ a. UContT m a → UContT m (o ∧ a)
+  hijack xM = UContT $ \ (𝓀 ∷ (o ∧ a) → m u) → 𝓀 *$ hijack $ evalUContT xM
+
+instance (Monad m,MonadState s m) ⇒ MonadState s (UContT m) where
+  get ∷ UContT m s
+  get = UContT $ \ (𝓀 ∷ s → m u) → 𝓀 *$ get
+
+  put ∷ s → UContT m ()
+  put s = UContT $ \ (𝓀 ∷ () → m u) → 𝓀 *$ put s
+
+instance (Monad m,MonadFail m) ⇒ MonadFail (UContT m) where
+  abort ∷ ∀ a. UContT m a
+  abort = UContT $ \ (_ ∷ a → m u) → abort
+
+  (⎅) ∷ ∀ a. UContT m a → UContT m a → UContT m a
+  xM₁ ⎅ xM₂ = UContT $ \ (k ∷ a → m u) → do
+    runUContT k xM₁ ⎅ runUContT k xM₂
+
+instance (Monad m,MonadError e m) ⇒ MonadError e (UContT m) where
+  throw ∷ ∀ a. e → UContT m a
+  throw e = UContT $ \ (_ ∷ a → m u) → throw e
+
+  catch ∷ ∀ a. UContT m a → (e → UContT m a) → UContT m a
+  catch xM₁ kk = UContT $ \ (k ∷ a → m u) → do
+    catch (runUContT k xM₁) $ \ e →
+      runUContT k $ kk e
+
+instance (Monad m,MonadNondet m) ⇒ MonadNondet (UContT m) where
+  mzero ∷ ∀ a. UContT m a
+  mzero = UContT $ \ (_ ∷ a → m u) → mzero
+
+  (⊞) ∷ ∀ a. UContT m a → UContT m a → UContT m a
+  xM₁ ⊞ xM₂ = UContT $ \ (k ∷ a → m u) → do
+    runUContT k xM₁ ⊞ runUContT k xM₂
+
+instance (Monad m,MonadTop m) ⇒ MonadTop (UContT m) where
+  mtop ∷ ∀ a. UContT m a
+  mtop = UContT $ \ (_ ∷ a → m u) → mtop
+
 -- ======= --
 -- DERIVED --
 -- ======= --
@@ -1019,7 +1129,7 @@ instance (RWST r o s) ⇄⁼ (ReaderT r ⊡ WriterT o ⊡ StateT s) where
   isofr3 ∷ ∀ f a. (ReaderT r ⊡ WriterT o ⊡ StateT s) f a → RWST r o s f a
   isofr3 = RWST ∘ unCompose2 ∘ unCompose2
 
-deriving instance (Monoid o,Monad m,MonadCont (s ∧ (o ∧ r')) m) ⇒ MonadCont r' (RWST r o s m)
+-- deriving instance (Monoid o,Monad m,MonadCont (s ∧ (o ∧ r')) m) ⇒ MonadCont r' (RWST r o s m)
 
 deriving instance (∀ a'. Null a' ⇒ Null (m a'),Null o,Null s,Null a) ⇒ Null (RWST r o s m a)
 deriving instance (∀ a'. Append a' ⇒ Append (m a'),Append o,Append s,Append a) ⇒ Append (RWST r o s m a)

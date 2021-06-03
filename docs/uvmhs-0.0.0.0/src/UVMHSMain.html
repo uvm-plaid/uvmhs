@@ -38,4 +38,21 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span></span><span>
-</span><span id="line-17"></span></pre></body></html>
+</span><span id="line-17"></span><span>
+</span><span id="line-18"></span><span>  </span><span class="hs-comment">-- pprint $ unID $ runReaderT 1 $ evalUContT $ do</span><span>
+</span><span id="line-19"></span><span>  </span><span class="hs-comment">--   r&#8321; &#8592; ask</span><span>
+</span><span id="line-20"></span><span>  </span><span class="hs-comment">--   r&#8322; &#8592; local 10 $ do</span><span>
+</span><span id="line-21"></span><span>  </span><span class="hs-comment">--     ask</span><span>
+</span><span id="line-22"></span><span>  </span><span class="hs-comment">--   r&#8323; &#8592; uwithC return $ do</span><span>
+</span><span id="line-23"></span><span>  </span><span class="hs-comment">--     ucallCC $ \ (&#120000; &#8759; () &#8594; u) &#8594; local 100 $ &#120000; ()</span><span>
+</span><span id="line-24"></span><span>  </span><span class="hs-comment">--     ask</span><span>
+</span><span id="line-25"></span><span>  </span><span class="hs-comment">--   r&#8324; &#8592; ask</span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-comment">--   return $ r&#8321; + r&#8322; + r&#8323; + r&#8324;</span><span>
+</span><span id="line-27"></span><span>
+</span><span id="line-28"></span><span>  </span><span class="hs-comment">-- pprint $ unID $ unWriterT $ evalUContT $ do</span><span>
+</span><span id="line-29"></span><span>  </span><span class="hs-comment">--   tell 1</span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-comment">--   o :* () &#8592; hijack $ do</span><span>
+</span><span id="line-31"></span><span>  </span><span class="hs-comment">--     tell 10</span><span>
+</span><span id="line-32"></span><span>  </span><span class="hs-comment">--   return o</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span></pre></body></html>
