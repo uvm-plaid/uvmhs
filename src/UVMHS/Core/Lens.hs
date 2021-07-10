@@ -102,6 +102,11 @@ single𝑃L = prism single𝑃 $ \ xs → case pmin xs of
   Some (x :* xs') | isEmpty xs' → Some x
   _ → None
 
+single𝑄L ∷ (Ord a) ⇒ 𝑄 a ⌲ a
+single𝑄L = prism single𝑄 $ \ xs → case uncons𝑄 xs of
+  Some (x :* xs') | isEmpty xs' → Some x
+  _ → None
+
 single𝐷L ∷ (Ord k) ⇒ (k ⇰ v) ⌲ (k ∧ v)
 single𝐷L = prism (curry (↦)) $ \ kvs → case dminView kvs of
   Some (kv :* kvs') | isEmpty kvs' → Some kv
@@ -134,12 +139,12 @@ instance HasPrism a a where
 instance HasLens a a where 
   hasLens = refl
 
-ι ∷ (HasPrism a b) ⇒ b → a
-ι = construct hasPrism
+𝛊 ∷ (HasPrism a b) ⇒ b → a
+𝛊 = construct hasPrism
 
-ιview ∷ ∀ b a. (HasPrism a b) ⇒ a → 𝑂 b
-ιview = view hasPrism
+𝛎 ∷ ∀ b a. (HasPrism a b) ⇒ a → 𝑂 b
+𝛎 = view hasPrism
 
-π ∷ (HasLens a b) ⇒ a → b
-π = access hasLens
+𝛑 ∷ (HasLens a b) ⇒ a → b
+𝛑 = access hasLens
 

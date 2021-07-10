@@ -105,7 +105,7 @@ instance FunctorM AddBot where
 -- AddTop --
 -- ====== --
 
-data AddTop a = Top | AddTop a
+data AddTop a = AddTop a | Top
   deriving (Eq,Ord,Show)
 
 elimAddTop ∷ b → (a → b) → AddTop a → b
@@ -163,7 +163,7 @@ instance FunctorM AddTop where
 -- AddBT --
 -- ===== --
 
-data AddBT a = BotBT | TopBT | AddBT a
+data AddBT a = BotBT | AddBT a | TopBT
   deriving (Eq,Ord,Show)
 
 instance Bot (AddBT a) where 
