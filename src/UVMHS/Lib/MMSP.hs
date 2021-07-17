@@ -190,7 +190,7 @@ timesMMSP ∷ MMSP → MMSP → MMSP
 timesMMSP (MMSP α̇₁) (MMSP α̇₂) = MMSP $ timesMaxs α̇₁ α̇₂
 
 ponMMSP ∷ MMSP → ℕ → MMSP
-ponMMSP e n = product $ repeat n e
+ponMMSP e n = product $ replicate n e
 
 ------------------
 -- SUBSTITUTION --

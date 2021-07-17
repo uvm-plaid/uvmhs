@@ -221,7 +221,7 @@ ppLineNum ∷ 𝕊 → Doc
 ppLineNum = ppLineNumFmt ∘ ppString
 
 ppSpace ∷ ℕ64 → Doc
-ppSpace n = ppString $ string $ repeat n ' '
+ppSpace n = ppString $ string $ replicate n ' '
 
 ppNewline ∷ Doc
 ppNewline = ppString "\n"
@@ -386,7 +386,7 @@ ppMatrixCells ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍
 ppMatrixCells has vas dss =
   let sss        = mapp (execRenderUT ∘ summaryIContents ∘ staticDocA ∘ execDoc) dss
       ws :* sss' = matrixHelper has vas sss
-      sep        = ppFG white $ concat $ inbetween (ppString "─┼─") $ mapOn ws $ \ w → ppString $ string $ repeat w '─'
+      sep        = ppFG white $ concat $ inbetween (ppString "─┼─") $ mapOn ws $ \ w → ppString $ string $ replicate w '─'
       dss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
         in Doc $ tell $ StaticDocA $ SummaryI True (ShapeA False sh) $ treeIO t

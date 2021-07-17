@@ -238,16 +238,16 @@ countWith f = fold zero $ \ x → case f x of
 reverse ∷ (ToIter a t) ⇒ t → 𝐼 a
 reverse xs = 𝐼 $ \ (f ∷ a → b → b) (i ∷ b) → foldr i f xs
 
-repeatI ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → (n → a) → 𝐼 a
-repeatI n₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
+replicateI ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → (n → a) → 𝐼 a
+replicateI n₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
   let loop ∷ n → b → b
       loop n i
         | n ≡ n₀ = i
         | otherwise = loop (succ n) (f (g n) i)
   in loop zero i₀
 
-repeat ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → 𝐼 a
-repeat n = repeatI n ∘ const
+replicate ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → 𝐼 a
+replicate n = replicateI n ∘ const
 
 build ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → (a → a) → 𝐼 a
 build n₀ x₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
@@ -304,7 +304,7 @@ inbetween xⁱ xs = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
       False → f x ∘ f xⁱ
 
 -- execN ∷ ∀ n m. (Zero n,One n,Plus n,Monad m) ⇒ n → m () → m ()
--- execN n = exec ∘ repeat n
+-- execN n = exec ∘ replicate n
 
 -- applyN ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → (a → a) → a
 -- applyN n i f = fold i (const f) $ upTo n
@@ -315,7 +315,7 @@ inbetween xⁱ xs = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
 alignLeftFill ∷ ℂ → ℕ → 𝕊 → 𝕊
 alignLeftFill c n s = build𝕊C $ concat
   [ single𝐼 s
-  , single𝐼 $ string $ repeat (n - length𝕊 s ⊓ n) c
+  , single𝐼 $ string $ replicate (n - length𝕊 s ⊓ n) c
   ]
 
 alignLeft ∷ ℕ → 𝕊 → 𝕊
@@ -323,7 +323,7 @@ alignLeft = alignLeftFill ' '
 
 alignRightFill ∷ ℂ → ℕ → 𝕊 → 𝕊
 alignRightFill c n s = build𝕊C $ concat
-  [ single𝐼 $ string $ repeat (n - length𝕊 s ⊓ n) c
+  [ single𝐼 $ string $ replicate (n - length𝕊 s ⊓ n) c
   , single𝐼 s
   ]
 
@@ -376,13 +376,6 @@ foldbp i₀ j₀ f xs =
 
 foldbpOnFrom ∷ (ToIter a t) ⇒ t → b → c → (a → b → b ∧ (c → c)) → b ∧ c
 foldbpOnFrom xs i j f = foldbp i j f xs
-
-instance All 𝔹 where 
-  all = iter [True,False]
-instance (All a,All b) ⇒ All (a ∨ b) where 
-  all = map Inl (iter all) ⧺ map Inr (iter all)
-instance (All a,All b) ⇒ All (a ∧ b) where 
-  all = do x ← iter all ; y ← iter all ; return $ x :* y
 
 sortWith ∷ (ToIter a t) ⇒ (a → a → Ordering) → t → 𝐿 a
 sortWith f = list ∘ HS.sortBy f ∘ lazyList
@@ -457,3 +450,24 @@ instance (Sized a) ⇒ Single a (𝐼CA a) where single s = 𝐼CA one (size s) 
 
 iterCA ∷ (ToIter a t,Sized a,Sized t) ⇒ t → 𝐼CA a
 iterCA xs = 𝐼CA (size xs) (sum $ map size $ iter xs) $ iter xs
+
+
+---------
+-- All --
+---------
+
+instance All () where
+  all = single ()
+
+instance All 𝔹 where 
+  all = iter [True,False]
+
+instance (All a) ⇒ All (𝑂 a) where
+  all = single None ⧺ map Some all
+
+instance (All a,All b) ⇒ All (a ∨ b) where
+  all = map Inl all ⧺ map Inr all
+
+instance (All a,All b) ⇒ All (a ∧ b) where 
+  all = do x ← all ; y ← all ; return $ x :* y
+

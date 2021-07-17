@@ -53,6 +53,12 @@ instance (Ord a) ⇒ Difference (𝑃 a) where (⊟) = (∖)
 instance ToStream a (𝑃 a) where stream = stream𝑃
 instance ToIter a (𝑃 a) where iter = iter ∘ stream
 
+instance (Ord a,All a) ⇒ All (𝑃 a) where
+  all ∷ 𝐼 (𝑃 a)
+  all = foldrOnFrom all (single pø) $ \ x xssᵢ → do
+    xs ← xssᵢ
+    iter $ [ xs , single x ∪ xs ]
+
 instance (Show a) ⇒ Show (𝑃 a) where show = chars ∘ showCollection "{" "}" "," show𝕊
 
 pø ∷ 𝑃 a

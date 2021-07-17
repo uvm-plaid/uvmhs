@@ -16,7 +16,7 @@ testParsingSmall = parseIOMain parser "<small example>" input
 testParsingMultiline ∷ IO ()
 testParsingMultiline = parseIOMain parser "<multiline example>" input
   where
-    parser = exec $ inbetween (void $ cpWord "\n") $ list $ repeatI 7 $ \ n → cpNewContext "line" $ void $ cpWord ("xyz" ⧺ show𝕊 n)
+    parser = exec $ inbetween (void $ cpWord "\n") $ list $ replicateI 7 $ \ n → cpNewContext "line" $ void $ cpWord ("xyz" ⧺ show𝕊 n)
     input = tokens "xyz0\nxyz1\nxyz2\nxyc3\nxyz4\nxyz5\nxyz6\n"
 
 testParsingBranching ∷ IO ()
@@ -90,7 +90,7 @@ testParsingErrorNewline ∷ IO ()
 testParsingErrorNewline = parseIOMain (string ^$ cpMany $ toCParser $ pToken 'x') "<error newline example>" $ tokens "xxx\nx"
 
 testParsingErrorEof ∷ IO ()
-testParsingErrorEof = parseIOMain (exec $ repeat 3 $ void $ cpToken 'x') "<error eof example>" $ tokens "xx"
+testParsingErrorEof = parseIOMain (exec $ replicate 3 $ void $ cpToken 'x') "<error eof example>" $ tokens "xx"
 
 testTokenizeSimple ∷ IO ()
 testTokenizeSimple = 

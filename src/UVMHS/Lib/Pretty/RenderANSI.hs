@@ -124,7 +124,7 @@ localFormat f aM = do
 renderChunkANSI ∷ ChunkO → 𝐼A 𝕊
 renderChunkANSI = \case
   RawChunkO     n s → 𝐼A n $ single s
-  PaddingChunkO n   → 𝐼A n $ single $ string $ repeat (nat n) ' '
+  PaddingChunkO n   → 𝐼A n $ single $ string $ replicate (nat n) ' '
   
 formatRenderANSI ∷ Formats → RenderANSIM () → RenderANSIM ()
 formatRenderANSI fm xM = do

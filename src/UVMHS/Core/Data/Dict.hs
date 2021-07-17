@@ -53,11 +53,19 @@ instance (Ord k,Meet v) ⇒ MeetLattice (k ⇰ v)
 
 instance (Ord k,Difference v) ⇒ Difference (k ⇰ v) where (⊟) = diffWith (⊟)
 
+
 instance Functor ((⇰) k) where map = map𝐷
 instance FunctorM ((⇰) k) where mapM = mapM𝐷
 
 instance ToStream (k ∧ v) (k ⇰ v) where stream = stream𝐷
 instance ToIter (k ∧ v) (k ⇰ v) where iter = iter ∘ stream
+
+instance (Ord k,All k,All v) ⇒ All (k ⇰ v) where
+  all ∷ 𝐼 (k ⇰ v)
+  all = foldrOnFrom all (return dø) $ \ k kvssᵢ → do
+    kvs ← map (k ↦) all
+    kvsᵢ ← kvssᵢ
+    return $ kvs ⩌ kvsᵢ
 
 instance (Show k,Show v) ⇒ Show (k ⇰ v) where show = chars ∘ showCollection "{" "}" "," (\ (k :* v) → show𝕊 k ⧺ "⇒" ⧺ show𝕊 v)
 
@@ -93,6 +101,14 @@ dsize = HS.fromIntegral ∘ Map.size ∘ un𝐷
 
 subDictBy ∷ (Ord k) ⇒ (v → v → 𝔹) → k ⇰ v → k ⇰ v → 𝔹
 subDictBy f kvs₁ kvs₂ = Map.isSubmapOfBy f (un𝐷 kvs₁) (un𝐷 kvs₂)
+
+unionWithG ∷ (Ord k) ⇒ (a → c) → (b → c) → (a → b → c) → k ⇰ a → k ⇰ b → k ⇰ c
+unionWithG f₁ f₂ f₃ kvs₁ kvs₂ = assoc $ mapOn (iter $ keys kvs₁ ∪ keys kvs₂) $ \ k → (:*) k $
+  case (kvs₁ ⋕? k,kvs₂ ⋕? k) of
+    (Some v₁,None) → f₁ v₁
+    (None,Some v₂) → f₂ v₂
+    (Some v₁,Some v₂) → f₃ v₁ v₂
+    _ → error "impossible"
 
 unionWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
 unionWith f kvs₁ kvs₂ = 𝐷 $ Map.unionWith f (un𝐷 kvs₁) (un𝐷 kvs₂)

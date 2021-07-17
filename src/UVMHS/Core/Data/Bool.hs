@@ -19,3 +19,4 @@ instance Top 𝔹 where top = True
 instance Meet 𝔹 where (⊓) = (⩓)
 instance MeetLattice 𝔹
 instance Lattice 𝔹
+instance Dual 𝔹 where dual = not

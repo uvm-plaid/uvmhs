@@ -83,7 +83,7 @@ renderUndertags = do
       eachOn us $ \ (colf :* l :* c :* fm) → do
         col ← getL t2StateColL
         renderPadding $ colf - col
-        mapOut (annotateSummaryO fm) $ renderRaw l $ string $ repeat (nat l) c
+        mapOut (annotateSummaryO fm) $ renderRaw l $ string $ replicate (nat l) c
 
 renderChunkUndertags ∷ ChunkI → RenderUTM ()
 renderChunkUndertags = \case

@@ -84,7 +84,7 @@ type TreeO = 𝑉𝐴 Formats (Sep () (𝐼A ChunkO))
 chunkIO ∷ ChunkO → ChunkI
 chunkIO = \case
   RawChunkO n s → RawChunkI n s
-  PaddingChunkO n → RawChunkI n $ string $ repeat n ' '
+  PaddingChunkO n → RawChunkI n $ string $ replicate n ' '
 
 treeIO ∷ TreeO → TreeI
 treeIO = map𝑉𝐴 formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @ _ @ (𝐼 _) $ NewlineChunkI zero) (map chunkIO ∘ iter)
@@ -200,7 +200,7 @@ hvalign ha va m n (SummaryO sh cs) =
         ]
     vwrap i j xs =
       concat
-      [ concat $ repeat i $ sepI ()
+      [ concat $ replicate i $ sepI ()
       , xs
-      , concat $ repeat j $ sepI ()
+      , concat $ replicate j $ sepI ()
       ]

@@ -38,7 +38,7 @@ skipChunk g n₀ = loop (𝕟64 0)
           loop $ succ n
 
 emptyChunk ∷ ℕ64 → 𝐼 ℕ8
-emptyChunk n = repeat (nat n) (𝕟8 0)
+emptyChunk n = replicate (nat n) (𝕟8 0)
 
 joinBytes ∷ (ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8) → ℕ64
 joinBytes (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈) =

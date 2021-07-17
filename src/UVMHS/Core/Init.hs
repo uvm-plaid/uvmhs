@@ -272,6 +272,11 @@ curry f (x :* y) = f x y
 uncurry ∷ (a ∧ b → c) → a → b → c
 uncurry f x y = f (x :* y)
 
+-- Void --
+
+contradiction ∷ Void → a
+contradiction = \case
+
 -- Bools --
 
 not ∷ 𝔹 → 𝔹

@@ -284,15 +284,15 @@ makePrettySum ''DFA
 
 compileRegex ∷ ∀ c t o u. (Pretty c,Pretty t,Pretty o,Pretty u,Ord c,Ord t,Classified c t,All c,Ord o,Ord u,Additive u) ⇒ Regex c t o u → DFA c t o u
 compileRegex e₀ =
-  let RegexState _ _ tr re de :* n = runState regexState₀ $ loop e₀
+  let RegexState _ _ tr re de :* n = runState regexState₀ $ compile e₀
   in DFA lits n (map vecD tr) (vecD re) $ vecD de
   where 
     lits ∷ 𝑃 t
     lits = regexLits e₀
     codes ∷ 𝑃 (t ∨ c)
     codes = pow $ map Inl (iter lits) ⧺ map Inr all
-    loop ∷ Regex c t o u → State (RegexState c t o u) ℕ64
-    loop e = do
+    compile ∷ Regex c t o u → State (RegexState c t o u) ℕ64
+    compile e = do
       m ← getL regexStateMapL
       case m ⋕? e of
         Some n → return n
@@ -301,7 +301,7 @@ compileRegex e₀ =
           modifyL regexStateResultsL $ (⩌) $ n ↦ regexInfoResult (atag e)
           modifyL regexStateDeadL $ (⩌) $ n ↦ (extract e ≡ NullR)
           eachOn codes $ \ xc → do
-            n' ← loop $ derRegex xc e
+            n' ← compile $ derRegex xc e
             modifyL regexStateTransitionsL $ unionWith (⩌) $ xc ↦ (n ↦ n')
           return n
     newRegexEntry ∷ Regex c t o u → State (RegexState c t o u) ℕ64

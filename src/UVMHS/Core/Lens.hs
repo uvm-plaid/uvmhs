@@ -148,3 +148,5 @@ instance HasLens a a where
 𝛑 ∷ (HasLens a b) ⇒ a → b
 𝛑 = access hasLens
 
+𝛏 ∷ (HasLens a b) ⇒ b → a → a
+𝛏 y x = snd (runLens hasLens x) y

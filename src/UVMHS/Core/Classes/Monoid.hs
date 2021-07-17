@@ -23,7 +23,7 @@ class (Monoid a,Unit a,Cross a) ⇒ Prodoid a
 
 class Eps a where eps ∷ a
 class Seq a where (▷) ∷ a → a → a
-class (Monoid a,Eps a,Seq a) ⇒ Seqoid a
+class (Eps a,Seq a) ⇒ Seqoid a
 
 opt ∷ (Append a,Eps a) ⇒ a → a
 opt x = x ⧺ eps
@@ -33,7 +33,6 @@ class (Seqoid a,Star a) ⇒ Kleene a
 
 oom ∷ (Kleene a) ⇒ a → a
 oom x = x ▷ star x
-
 
 newtype Compose a = Compose { unCompose ∷ a → a }
 
