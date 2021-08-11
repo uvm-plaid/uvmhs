@@ -96,7 +96,7 @@ sgrIt True = "3"
 sgrIt False = "23"
 
 sgrFormat ∷ Formats → 𝐼A 𝕊
-sgrFormat (Formats fg bg ul bd it) = single $ stringC $ iter
+sgrFormat (Formats fg bg ul bd it) = single $ stringS $ iter
   [ sgrLeader 
   , concat $ inbetween ";" $ mconcat $ map (mzero𝑂 @ 𝑄) $ iter
       [ sgrFg ^$ fg
@@ -152,7 +152,7 @@ ppRenderWith ∷ (RenderANSIM () → RenderANSIM ())
              → (DocM () → DocM ())
              → Doc → 𝕊
 ppRenderWith f₁ f₃ f₄ =
-  stringCS
+  stringSS
   ∘ execRenderANSIWith f₁
   ∘ summaryOContents
   ∘ execRenderUT

@@ -32,10 +32,10 @@ instance ToIter a (Sep a a) where
 
 instance Functor (Sep i) where map = mapSep id
 
-instance Sized (Sep i a) where
-  size = \case
+instance CSized (Sep i a) where
+  csize = \case
     SepE _ → zero
-    SepN _ _ xis _ → one + size xis
+    SepN _ _ xis _ → one + csize xis
 
 mapSep ∷ (i → j) → (a → b) → Sep i a → Sep j b
 mapSep f g = \case

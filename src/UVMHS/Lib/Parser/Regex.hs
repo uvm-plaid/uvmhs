@@ -285,7 +285,7 @@ makePrettySum ''DFA
 compileRegex ∷ ∀ c t o u. (Pretty c,Pretty t,Pretty o,Pretty u,Ord c,Ord t,Classified c t,All c,Ord o,Ord u,Additive u) ⇒ Regex c t o u → DFA c t o u
 compileRegex e₀ =
   let RegexState _ _ tr re de :* n = runState regexState₀ $ compile e₀
-  in DFA lits n (map vecD tr) (vecD re) $ vecD de
+  in DFA lits n (map vecDΩ tr) (vecDΩ re) $ vecDΩ de
   where 
     lits ∷ 𝑃 t
     lits = regexLits e₀
@@ -328,7 +328,7 @@ data Lexer c t o u w = Lexer
 tokenize ∷ 
   ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
   ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (PreParserToken w)
-tokenize (Lexer dfas f u₀) so ts₀ = vecS ^$ oloop u₀ (dfas u₀) null $ stream ts₀
+tokenize (Lexer dfas f u₀) so ts₀ = vecC ^$ oloop u₀ (dfas u₀) null $ stream ts₀
   where
   oloop ∷ u → DFA c t o u → WindowR Doc Doc → 𝑆 (ParserToken t) → Doc ∨ 𝐼C (PreParserToken w)
   oloop u (DFA lits n₀ δt δs δd) pp₀ pi₀' = iloop n₀ (LexDFAState pp₀ null pi₀' null) None None
@@ -609,15 +609,15 @@ makePrettySum ''TokenBasic
 mkTokenBasic ∷ 𝐼C ℂ → 𝑂 TokenClassBasic → 𝔹 ∧ TokenBasic
 mkTokenBasic cs = \case
   None → error "no token class"
-  Some SpaceCBasic → (:*) True $ SpaceTBasic $ stringS cs
-  Some CommentCBasic → (:*) True $ CommentTBasic $ stringS cs
-  Some SyntaxCBasic → (:*) False $ SyntaxTBasic $ stringS cs
-  Some StringCBasic → (:*) False $ StringTBasic $ read𝕊 $ stringS cs
-  Some NameCBasic → (:*) False $ NameTBasic $ stringS cs
+  Some SpaceCBasic → (:*) True $ SpaceTBasic $ stringCS cs
+  Some CommentCBasic → (:*) True $ CommentTBasic $ stringCS cs
+  Some SyntaxCBasic → (:*) False $ SyntaxTBasic $ stringCS cs
+  Some StringCBasic → (:*) False $ StringTBasic $ read𝕊 $ stringCS cs
+  Some NameCBasic → (:*) False $ NameTBasic $ stringCS cs
   Some NaturalCBasic → (:*) False $ NaturalTBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow ['_','n']) cs
   Some IntegerCBasic → (:*) False $ IntegerTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some DoubleCBasic → (:*) False $ DoubleTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
-  Some CharCBasic → (:*) False $ CharTBasic $ read𝕊 $ stringS cs
+  Some CharCBasic → (:*) False $ CharTBasic $ read𝕊 $ stringCS cs
 
 lSyntaxBasic ∷ (Ord u,Additive u) ⇒ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassBasic u
 lSyntaxBasic puns kws prims ops = concat
@@ -682,7 +682,7 @@ data IndentCommand = OpenIC | CloseIC | NewlineIC
 --                  blah
 --                  ^^^^
 blockifyTokens ∷ ∀ t. 𝐿 (AddBT Loc) → (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
-blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecS $ loop null bot False False anchors₀ $ stream ts₀
+blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop null bot False False anchors₀ $ stream ts₀
   where
     syntheticToken ∷ AddBT Loc → IndentCommand → PreParserToken t
     syntheticToken loc x =
@@ -912,13 +912,13 @@ makePrettySum ''TokenWSBasic
 mkTokenWSBasic ∷ 𝐼C ℂ → 𝑂 TokenClassWSBasic → 𝔹 ∧ TokenWSBasic
 mkTokenWSBasic cs = \case
   None → error "no token class"
-  Some SpaceCWSBasic → (:*) True $ SpaceTWSBasic $ stringS cs
+  Some SpaceCWSBasic → (:*) True $ SpaceTWSBasic $ stringCS cs
   Some NewlineCWSBasic → (:*) True $ NewlineTWSBasic $ string cs
-  Some CommentCWSBasic → (:*) True $ CommentTWSBasic $ stringS cs
-  Some SyntaxCWSBasic → (:*) False $ SyntaxTWSBasic $ stringS cs
-  Some BlockCWSBasic → (:*) False $ BlockTWSBasic $ stringS cs
-  Some StringCWSBasic → (:*) False $ StringTWSBasic $ read𝕊 $ stringS cs
-  Some NameCWSBasic → (:*) False $ NameTWSBasic $ stringS cs
+  Some CommentCWSBasic → (:*) True $ CommentTWSBasic $ stringCS cs
+  Some SyntaxCWSBasic → (:*) False $ SyntaxTWSBasic $ stringCS cs
+  Some BlockCWSBasic → (:*) False $ BlockTWSBasic $ stringCS cs
+  Some StringCWSBasic → (:*) False $ StringTWSBasic $ read𝕊 $ stringCS cs
+  Some NameCWSBasic → (:*) False $ NameTWSBasic $ stringCS cs
   Some NaturalCWSBasic → (:*) False $ NaturalTWSBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow ['_','n']) cs
   Some IntegerCWSBasic → (:*) False $ IntegerTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some DoubleCWSBasic → (:*) False $ DoubleTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs

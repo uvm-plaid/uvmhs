@@ -40,8 +40,6 @@ instance (Monoid a) ⇒ Monad ((∧) a)
 instance FunctorM ((∧) a) where 
   mapM f (x :* y) = map ((:*) x) $ f y
 
-instance (Sized a,Sized b) ⇒ Sized (a ∧ b) where size (x :* y)  = size x + size y
-
 fst ∷ a ∧ b → a
 fst (x :* _) = x
 

@@ -58,9 +58,9 @@ data ChunkO =
   --              padding length
   deriving (Eq,Ord,Show)
 
-instance Sized ChunkO where
-  size (RawChunkO n _) = n
-  size (PaddingChunkO n) = n
+instance ASized ChunkO where
+  asize (RawChunkO n _) = n
+  asize (PaddingChunkO n) = n
 
 shapeOChunk ∷ ChunkO → Shape
 shapeOChunk = \case
@@ -190,7 +190,7 @@ hvalign ha va m n (SummaryO sh cs) =
   in SummaryO (boxShape m n) $ map (map f ∘ g) cs
   where
     hwrap fi fj xs =
-      let s = size xs
+      let s = asize xs
           i = fi s
           j = fj s
       in concat

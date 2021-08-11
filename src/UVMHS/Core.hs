@@ -8,12 +8,14 @@ module UVMHS.Core
   , module UVMHS.Core.LensDeriving
   , module UVMHS.Core.Monads
   , module UVMHS.Core.Pointed
+  , module UVMHS.Core.Sized
   , module UVMHS.Core.Static
   , module UVMHS.Core.TH
   , module UVMHS.Core.Time
   , module UVMHS.Core.Transformers
   , module UVMHS.Core.Vector
   , module UVMHS.Core.VectorSparse
+  , module UVMHS.Core.VectorStatic
   ) where
 
 import UVMHS.Core.Classes
@@ -26,9 +28,11 @@ import UVMHS.Core.LensDerivedInstances ()
 import UVMHS.Core.LensDeriving
 import UVMHS.Core.Monads
 import UVMHS.Core.Pointed
+import UVMHS.Core.Sized
 import UVMHS.Core.Static
 import UVMHS.Core.TH
 import UVMHS.Core.Time
 import UVMHS.Core.Transformers
 import UVMHS.Core.Vector
 import UVMHS.Core.VectorSparse
+import UVMHS.Core.VectorStatic

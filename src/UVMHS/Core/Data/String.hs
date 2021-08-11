@@ -37,25 +37,23 @@ instance Lookup ℕ ℂ 𝕊 where
     | (n > 0) ⩓ (n ≤ length𝕊 s) = Some $ Text.index s $ HS.fromIntegral $ n - 1
     | otherwise = None
 
-instance Sized 𝕊 where size = length64𝕊
-
 empty𝕊 ∷ 𝕊 → 𝔹
 empty𝕊 = Text.null
 
 single𝕊 ∷ ℂ → 𝕊
 single𝕊 = Text.singleton
 
-build𝕊 ∷ (ToIter ℂ t) ⇒ t → 𝕊
-build𝕊 = Text.pack ∘ lazyList𝐼 ∘ iter
+build𝕊C ∷ (ToIter ℂ t) ⇒ t → 𝕊
+build𝕊C = Text.pack ∘ lazyList𝐼 ∘ iter
 
-build𝕊C ∷ (ToIter 𝕊 t) ⇒ t → 𝕊
-build𝕊C = TextLazy.toStrict ∘ TextBuilder.toLazyText ∘ foldr𝐼 HS.mempty (HS.mappend ∘ TextBuilder.fromText) ∘ iter
+build𝕊S ∷ (ToIter 𝕊 t) ⇒ t → 𝕊
+build𝕊S = TextLazy.toStrict ∘ TextBuilder.toLazyText ∘ foldr𝐼 HS.mempty (HS.mappend ∘ TextBuilder.fromText) ∘ iter
 
-build𝕊N ∷ (ToIter ℂ t) ⇒ ℕ64 → t → 𝕊
-build𝕊N n = TextLazy.toStrict ∘ TextBuilder.toLazyTextWith (HS.fromIntegral n) ∘ foldr𝐼 HS.mempty (HS.mappend ∘ TextBuilder.singleton) ∘ iter
+build𝕊CN ∷ (ToIter ℂ t) ⇒ ℕ64 → t → 𝕊
+build𝕊CN n = TextLazy.toStrict ∘ TextBuilder.toLazyTextWith (HS.fromIntegral n) ∘ foldr𝐼 HS.mempty (HS.mappend ∘ TextBuilder.singleton) ∘ iter
 
-build𝕊CN ∷ (ToIter 𝕊 t) ⇒ ℕ64 → t → 𝕊
-build𝕊CN n = TextLazy.toStrict ∘ TextBuilder.toLazyTextWith (HS.fromIntegral n) ∘ foldr𝐼 HS.mempty (HS.mappend ∘ TextBuilder.fromText) ∘ iter
+build𝕊SN ∷ (ToIter 𝕊 t) ⇒ ℕ64 → t → 𝕊
+build𝕊SN n = TextLazy.toStrict ∘ TextBuilder.toLazyTextWith (HS.fromIntegral n) ∘ foldr𝐼 HS.mempty (HS.mappend ∘ TextBuilder.fromText) ∘ iter
 
 show𝕊 ∷ (Show a) ⇒ a → 𝕊
 show𝕊 = fromChars ∘ HS.show
