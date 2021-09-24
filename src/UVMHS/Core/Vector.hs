@@ -15,7 +15,6 @@ import Foreign.Storable (Storable(..))
 import qualified Data.Vector                  as VB
 import qualified Data.Vector.Mutable          as VBM
 import qualified Data.Vector.Storable         as VU
-import qualified Data.Vector.Storable.Mutable as VUM
 
 -------
 -- 𝕍 --
@@ -75,14 +74,19 @@ null𝕍 n = vecF n $ const null
 --- 𝕍M ---
 ----------
 
-newtype 𝕍Mut a = 𝕍Mut { un𝕍M ∷ VBM.IOVector a }
+newtype 𝕍Mut a = 𝕍Mut { un𝕍Mut ∷ VBM.IOVector a }
 
-vecMut ∷ (ToIter a t) ⇒ t → IO (𝕍Mut a)
-vecMut xs = do
+vec𝕍Mut ∷ (ToIter a t) ⇒ t → IO (𝕍Mut a)
+vec𝕍Mut xs = do
   v ← VBM.new $ tohs n
   eachOn (withIndex xs) $ \ (i :* x) → VBM.write v (tohs i) x
   return $ 𝕍Mut v
   where n = count xs
+
+idx𝕍Mut ∷ ℕ64 → 𝕍Mut a → a
+idx𝕍Mut i v = do
+  x ← VBM.read (un𝕍Mut v) (tohs i)
+  return $ frhs x
 
 {-
 
