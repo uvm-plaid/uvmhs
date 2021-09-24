@@ -76,17 +76,36 @@ null𝕍 n = vecF n $ const null
 
 newtype 𝕍Mut a = 𝕍Mut { un𝕍Mut ∷ VBM.IOVector a }
 
-vec𝕍Mut ∷ (ToIter a t) ⇒ t → IO (𝕍Mut a)
-vec𝕍Mut xs = do
+vecIMut ∷ (ToIter a t) ⇒ t → IO (𝕍Mut a)
+vecIMut xs = do
+  let n = count xs
   v ← VBM.new $ tohs n
   eachOn (withIndex xs) $ \ (i :* x) → VBM.write v (tohs i) x
   return $ 𝕍Mut v
-  where n = count xs
 
-idx𝕍Mut ∷ ℕ64 → 𝕍Mut a → a
+vecVMut ∷ 𝕍 a → IO (𝕍Mut a)
+vecVMut v = 𝕍Mut ^$ VB.thaw $ un𝕍 v
+
+idx𝕍Mut ∷ ℕ64 → 𝕍Mut a → IO a
 idx𝕍Mut i v = do
-  x ← VBM.read (un𝕍Mut v) (tohs i)
+  x ← VBM.read (un𝕍Mut v) $ tohs $ intΩ64 i
   return $ frhs x
+
+set𝕍Mut ∷ ℕ64 → a → 𝕍Mut a → IO ()
+set𝕍Mut i x v = do
+  VBM.write (un𝕍Mut v) (tohs $ intΩ64 i) x
+
+eachI𝕍Mut ∷ (ℕ64 → a → IO ()) → 𝕍Mut a → IO ()
+eachI𝕍Mut f = VBM.imapM_ (\ i → f $ natΩ64 $ frhs i) ∘ un𝕍Mut
+
+each𝕍Mut ∷ (a → IO ()) → 𝕍Mut a → IO ()
+each𝕍Mut = eachI𝕍Mut ∘ const
+
+values𝕍Mut ∷ 𝕍Mut a → IO (𝕍 a)
+values𝕍Mut v = 𝕍 ^$ VB.freeze $ un𝕍Mut v
+
+grow𝕍Mut ∷ ℕ64 → 𝕍Mut a → IO (𝕍Mut a)
+grow𝕍Mut i v = 𝕍Mut ^$ VBM.grow (un𝕍Mut v) $ tohs $ intΩ64 i
 
 {-
 
