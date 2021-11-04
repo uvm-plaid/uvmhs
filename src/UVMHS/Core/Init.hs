@@ -6,7 +6,7 @@ module UVMHS.Core.Init
   ,module Data.Coerce
   ) where
 
-import Prelude(Bool(..),($),undefined,otherwise,IO,Eq((==)),Ord(compare),Show(show),Ordering(..))
+import Prelude(Bool(..),($),($!),undefined,otherwise,IO,Eq((==)),Ord(compare),Show(show),Ordering(..))
 import Data.Coerce (coerce)
 import GHC.Exts (type Constraint)
 import GHC.Stack (type CallStack,callStack,withFrozenCallStack)
