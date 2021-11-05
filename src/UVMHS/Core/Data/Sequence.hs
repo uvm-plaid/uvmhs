@@ -27,10 +27,8 @@ instance Bind 𝑄 where
   (≫=) = bind𝑄
 instance Monad 𝑄
 
-instance ToStream a (𝑄 a) where 
-  stream = stream𝑄
 instance ToIter a (𝑄 a) where 
-  iter = iter ∘ stream
+  iter = iter𝑄
 
 instance (Show a) ⇒ Show (𝑄 a) where 
   show = chars ∘ showCollection "[" "]" "," show𝕊
@@ -66,8 +64,8 @@ map𝑄 f = 𝑄 ∘ HS.fmap f ∘ un𝑄
 bind𝑄 ∷ 𝑄 a → (a → 𝑄 b) → 𝑄 b
 bind𝑄 xs f = 𝑄 $ un𝑄 xs HS.>>= (un𝑄 ∘ f)
 
-stream𝑄 ∷ 𝑄 a → 𝑆 a
-stream𝑄 = stream ∘ HS.toList ∘ un𝑄
+iter𝑄 ∷ 𝑄 a → 𝐼 a
+iter𝑄 = iterLL ∘ HS.toList ∘ un𝑄
 
 seq𝐼 ∷ 𝐼 a → 𝑄 a
 seq𝐼 = 𝑄 ∘ Sequence.fromList ∘ lazyList

@@ -50,8 +50,7 @@ instance (Ord a) ⇒ JoinLattice (𝑃 a)
 instance (Ord a) ⇒ Meet (𝑃 a) where (⊓) = (∩)
 instance (Ord a) ⇒ Difference (𝑃 a) where (⊟) = (∖)
 
-instance ToStream a (𝑃 a) where stream = stream𝑃
-instance ToIter a (𝑃 a) where iter = iter ∘ stream
+instance ToIter a (𝑃 a) where iter = iter𝑃
 
 instance (Ord a,All a) ⇒ All (𝑃 a) where
   all ∷ 𝐼 (𝑃 a)
@@ -100,8 +99,8 @@ pmax = map (mapSnd 𝑃) ∘ frhs ∘ Set.maxView ∘ un𝑃
 pmap ∷ (Ord b) ⇒ (a → b) → 𝑃 a → 𝑃 b
 pmap f = 𝑃 ∘ Set.map f ∘ un𝑃
 
-stream𝑃 ∷ 𝑃 a → 𝑆 a
-stream𝑃 = stream ∘ Set.toList ∘ un𝑃
+iter𝑃 ∷ 𝑃 a → 𝐼 a
+iter𝑃 = iterLL ∘ Set.toList ∘ un𝑃
 
 pow𝐼 ∷ (Ord a) ⇒ 𝐼 a → 𝑃 a
 pow𝐼 = 𝑃 ∘ Set.fromList ∘ lazyList
@@ -110,10 +109,10 @@ pow ∷ (Ord a,ToIter a t) ⇒ t → 𝑃 a
 pow = pow𝐼 ∘ iter
 
 uniques ∷ (Ord a,ToIter a t) ⇒ t → 𝐼 a
-uniques xs = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
-  snd $ foldOnFrom xs (bot :* i₀) $ \ (x ∷ a) (seen :* i ∷ 𝑃 a ∧ b) → case x ∈ seen of
-    True → seen :* i
-    False → (single x ∪ seen) :* f x i
+uniques xs = filterMap id $ reiter (iter xs) pø $ \ x seen →
+  if x ∈ seen
+  then seen :* None
+  else (single x ∪ seen) :* Some x
 
 unions ∷ (Ord a,ToIter (𝑃 a) t) ⇒ t → 𝑃 a
 unions = fold pø (∪)

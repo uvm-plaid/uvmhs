@@ -57,8 +57,7 @@ instance (Ord k,Difference v) ⇒ Difference (k ⇰ v) where (⊟) = diffWith (�
 instance Functor ((⇰) k) where map = map𝐷
 instance FunctorM ((⇰) k) where mapM = mapM𝐷
 
-instance ToStream (k ∧ v) (k ⇰ v) where stream = stream𝐷
-instance ToIter (k ∧ v) (k ⇰ v) where iter = iter ∘ stream
+instance ToIter (k ∧ v) (k ⇰ v) where iter = iter𝐷
 
 instance (Ord k,All k,All v) ⇒ All (k ⇰ v) where
   all ∷ 𝐼 (k ⇰ v)
@@ -164,8 +163,8 @@ mapM𝐷 f kvs = with (tohsMonad @ m) $
 mapK𝐷 ∷ (Ord k) ⇒ (k → v₁ → v₂) → k ⇰ v₁ → k ⇰ v₂
 mapK𝐷 f kvs = dict $ mapOn (iter kvs) $ \ (k :* v) → k ↦ f k v
 
-stream𝐷 ∷ k ⇰ v → 𝑆 (k ∧ v)
-stream𝐷 = map frhs ∘ stream ∘ Map.toList ∘ un𝐷
+iter𝐷 ∷ k ⇰ v → 𝐼 (k ∧ v)
+iter𝐷 = map frhs ∘ iterLL ∘ Map.toList ∘ un𝐷
 
 dict𝐼 ∷ (Ord k) ⇒ 𝐼 (k ∧ v) → k ⇰ v
 dict𝐼 = 𝐷 ∘ Map.fromList ∘ lazyList ∘ map tohs

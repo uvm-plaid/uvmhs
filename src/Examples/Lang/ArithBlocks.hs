@@ -91,7 +91,7 @@ cpExpList = cpManySepBy cpDelimWS cpExp
 
 testParserSuccess ∷ IO ()
 testParserSuccess = do
-  parseIOMain cpExpList "" ∘ stream 
+  parseIOMain cpExpList ""
     *$ tokenizeFIO lexer ""  blockifyTokensWSBasic
      $ tokens 
      $ concat 
@@ -104,7 +104,7 @@ testParserSuccess = do
 
 testParserFailure ∷ IO ()
 testParserFailure = 
-  parseIOMain cpExpList "" ∘ stream 
+  parseIOMain cpExpList ""
     *$ tokenizeFIO lexer "" blockifyTokensWSBasic
      $ tokens 
      $ concat 

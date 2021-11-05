@@ -20,17 +20,17 @@ instance Monoid 𝕊
 instance Single ℂ 𝕊 where 
   single = Text.singleton
 
-instance ToStream ℂ 𝕊 where 
-  stream cs = 
-    case TextI.stream cs of
-      TextI.Stream f s₀ _ →
-        let loop s = case f s of
-              TextI.Done → None
-              TextI.Skip s' → loop s'
-              TextI.Yield x s' → Some (x :* s')
-        in 𝑆 s₀ loop
 instance ToIter ℂ 𝕊 where 
-  iter = iter𝑆 ∘ stream
+  iter cs = 𝐼 $ \ f → flip $ \ 𝓀 →
+    case TextI.stream cs of
+      TextI.Stream g s₀ _ →
+        let loop s i = case g s of
+              TextI.Done → 𝓀 i
+              TextI.Skip s' → loop s' i
+              TextI.Yield c s' →
+                f c i $ \ i' →
+                loop s' i'
+        in loop s₀
 
 instance Lookup ℕ ℂ 𝕊 where 
   s ⋕? n 
@@ -76,5 +76,5 @@ length𝕊 = natΩ ∘ frhs ∘ Text.length
 length64𝕊 ∷ 𝕊 → ℕ64
 length64𝕊 = natΩ64 ∘ frhs ∘ Text.length
 
-splitOn𝕊 ∷ 𝕊 → 𝕊 → 𝑆 𝕊
-splitOn𝕊 i s = streamLL $ Text.splitOn i s
+splitOn𝕊 ∷ 𝕊 → 𝕊 → 𝐼 𝕊
+splitOn𝕊 i s = iterLL $ Text.splitOn i s

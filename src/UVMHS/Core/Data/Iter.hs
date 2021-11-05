@@ -42,19 +42,54 @@ instance 𝕊 ⇄ 𝐼 ℂ where
   isofr = string
 
 empty𝐼 ∷ 𝐼 a
-empty𝐼 = 𝐼 $ \ _ → id
-
-single𝐼 ∷ a → 𝐼 a
-single𝐼 x = 𝐼 $ \ f → f x
+empty𝐼 = null𝐼
 
 cons𝐼 ∷ a → 𝐼 a → 𝐼 a
-cons𝐼 x (𝐼 g) = 𝐼 $ \ f → g f ∘ f x
+cons𝐼 x xs = 𝐼 $ \ f i 𝓀 → 
+  f x i $! \ i' →
+  un𝐼 xs f i' 𝓀
+
+newtype DelayList a = DelayList { unDelayList ∷ () → 𝑂 (a ∧ DelayList a) }
+
+delayList𝐼 ∷ ∀ a. 𝐼 a → DelayList a
+delayList𝐼 xs = 
+  un𝐼 xs 
+      (\ (x ∷ a) (i ∷ DelayList a) (𝓀 ∷ DelayList a → DelayList a) → 
+            DelayList $ \ () → Some (x :* 𝓀 i))
+      (DelayList $ \ () → None)
+      id
+
+iterDL ∷ DelayList a → 𝐼 a
+iterDL xs₀ = 𝐼 $ \ f → flip $ \ 𝓀 →
+  let loop xs i = case unDelayList xs () of
+        None → 𝓀 i
+        Some (x :* xs') → 
+          f x i $ \ i' →
+          loop xs' i'
+  in loop xs₀
+
+zipWith ∷ (ToIter a t₁,ToIter b t₂) ⇒ (a → b → c) → t₁ → t₂ → 𝐼 c
+zipWith f xs₀ ys₀ =
+  let loop xs ys = DelayList $ \ () → case (unDelayList xs (),unDelayList ys ()) of
+        (Some (x :* xs'),Some (y :* ys')) → Some (f x y :* loop xs' ys')
+  in iterDL $ loop (delayList𝐼 $ iter xs₀) $ delayList𝐼 $ iter ys₀
+          
 
 snoc𝐼 ∷ 𝐼 a → a → 𝐼 a
-snoc𝐼 (𝐼 g) x = 𝐼 $ \ f → f x ∘ g f
+snoc𝐼 xs x = 𝐼 $ \ f i 𝓀 → 
+  un𝐼 xs f i $! \ i' →
+  f x i' 𝓀
+
+isEmpty ∷ (ToIter a t) ⇒ t → 𝔹
+isEmpty xs = un𝐼 (iter xs) (\ _ _ _ → True) False id
+
+firstElem ∷ (ToIter a t) ⇒ t → 𝑂 a
+firstElem xs = un𝐼 (iter xs) (\ x _ _ → Some x) None id
 
 append𝐼 ∷ 𝐼 a → 𝐼 a → 𝐼 a
-append𝐼 (𝐼 g₁) (𝐼 g₂) = 𝐼 $ \ f → g₂ f ∘ g₁ f
+append𝐼 xs ys = 𝐼 $ \ f i 𝓀 →
+  un𝐼 xs f i $! \ i' →
+  un𝐼 ys f i' 𝓀
 
 mjoin𝐼 ∷ 𝐼 (𝐼 a) → 𝐼 a
 mjoin𝐼 = fold𝐼 empty𝐼 $ flip append𝐼
@@ -89,25 +124,25 @@ foldWithOn = rotateL fold
 foldWithFrom ∷ (ToIter a t) ⇒ (a → b → b) → b → t → b
 foldWithFrom = flip fold
 
-foldk ∷ (ToIter a t) ⇒ b → (a → (b → b) → (b → b)) → t → b
+foldk ∷ (ToIter a t) ⇒ b → (a → b → (b → b) → b) → t → b
 foldk i f = foldk𝐼 i f ∘ iter
 
-foldkFromWith ∷ (ToIter a t) ⇒ b → (a → (b → b) → (b → b)) → t → b
+foldkFromWith ∷ (ToIter a t) ⇒ b → (a → b → (b → b) → b) → t → b
 foldkFromWith = foldk
 
-foldkFromOn ∷ (ToIter a t) ⇒ b → t → (a → (b → b) → (b → b)) → b
+foldkFromOn ∷ (ToIter a t) ⇒ b → t → (a → b → (b → b) → b) → b
 foldkFromOn = flip ∘ foldk
 
-foldkOnFrom ∷ (ToIter a t) ⇒ t → b → (a → (b → b) → (b → b)) → b
+foldkOnFrom ∷ (ToIter a t) ⇒ t → b → (a → b → (b → b) → b) → b
 foldkOnFrom = rotateR foldk
 
-foldkOnWith ∷ (ToIter a t) ⇒ t → (a → (b → b) → (b → b)) → b → b
+foldkOnWith ∷ (ToIter a t) ⇒ t → (a → b → (b → b) → b) → b → b
 foldkOnWith = mirror foldk
 
-foldkWithOn ∷ (ToIter a t) ⇒ (a → (b → b) → (b → b)) → t → b → b
+foldkWithOn ∷ (ToIter a t) ⇒ (a → b → (b → b) → b) → t → b → b
 foldkWithOn = rotateL foldk
 
-foldkWithFrom ∷ (ToIter a t) ⇒ (a → (b → b) → (b → b)) → b → t → b
+foldkWithFrom ∷ (ToIter a t) ⇒ (a → b → (b → b) → b) → b → t → b
 foldkWithFrom = flip foldk
 
 foldr ∷ (ToIter a t) ⇒ b → (a → b → b) → t → b
@@ -236,43 +271,57 @@ countWith f = fold zero $ \ x → case f x of
   False → id
 
 reverse ∷ (ToIter a t) ⇒ t → 𝐼 a
-reverse xs = 𝐼 $ \ (f ∷ a → b → b) (i ∷ b) → foldr i f xs
+reverse xs = 𝐼 $ \ f i₀ 𝓀₀ → 
+  un𝐼 (iter xs) (\ x 𝓀 m𝓀 → m𝓀 $ \ i → f x i 𝓀) 𝓀₀ id i₀
 
 replicateI ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → (n → a) → 𝐼 a
-replicateI n₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
-  let loop ∷ n → b → b
-      loop n i
-        | n ≡ n₀ = i
-        | otherwise = loop (succ n) (f (g n) i)
-  in loop zero i₀
+replicateI n₀ g = 𝐼 $ \ f → flip $ \ 𝓀 → 
+  let loop n i
+        | n ≡ n₀ = 𝓀 i
+        | otherwise = 
+            f (g n) i $ \ i' →
+            loop (succ n) i'
+  in loop zero
 
 replicate ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → 𝐼 a
 replicate n = replicateI n ∘ const
 
 build ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → (a → a) → 𝐼 a
-build n₀ x₀ g = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
-  let loop ∷ n → a → b → b
-      loop n x i
-        | n ≡ n₀ = i
-        | otherwise = loop (succ n) (g x) (f x i)
-  in loop zero x₀ i₀
+build n₀ x₀ g = 𝐼 $ \ f → flip $ \ 𝓀 → 
+  let loop n x i
+        | n ≡ n₀ = 𝓀 i
+        | otherwise = 
+            f x i $ \ i' →
+            loop (succ n) (g x) i'
+  in loop zero x₀
 
 upTo ∷ (Eq n,Zero n,One n,Plus n) ⇒ n → 𝐼 n
 upTo n = build n zero succ
 
+reiter ∷ ∀ a b s. 𝐼 a → s → (a → s → (s ∧ b)) → 𝐼 b
+reiter xs s₀ f = 
+  𝐼 $ \ (g ∷ b → c → (c → c) → c) (i₀ ∷ c) (𝓀₀ ∷ c → c) → 
+    snd $ un𝐼 xs (\ (x ∷ a) ((s :* i) ∷ (s ∧ c)) (𝓀 ∷ (s ∧ c) → (s ∧ c)) → 
+        let s' :* y = f x s
+        in s' :* (g y i $ \ i' → snd $ 𝓀 $ s' :* i'))
+      (s₀ :* i₀) 
+      (\ (s :* i) → s :* 𝓀₀ i)
+
 withIndex ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → 𝐼 (n ∧ a)
-withIndex xs = 𝐼 $ \ (f ∷ (n ∧ a) → b → b) (i₀ ∷ b) →
-  snd $ foldOnFrom xs (zero :* i₀) $ \ (x ∷ a) (n :* i ∷ n ∧ b) → succ n :* f (n :* x) i
+withIndex xs = reiter (iter xs) zero $ \ x i → (i + one) :* (i :* x)
 
 withFirst ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
-withFirst xs = 𝐼 $ \ (f ∷ (𝔹 ∧ a) → b → b) (i₀ ∷ b) →
-  snd $ foldOnFrom xs (True :* i₀) $ \ (x ∷ a) (b :* i ∷ 𝔹 ∧ b) → False :* f (b :* x) i
+withFirst xs = reiter (iter xs) True $ \ x b → False :* (b :* x)
 
 mapFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapFirst f = map (\ (b :* x) → case b of {True → f x;False → x}) ∘ withFirst
+mapFirst f xs = reiter (iter xs) True $ \ x b →
+  let x' = if b then f x else x
+  in False :* x'
 
 mapAfterFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapAfterFirst f = map (\ (b :* x) → case b of {True → x;False → f x}) ∘ withFirst
+mapAfterFirst f xs = reiter (iter xs) True $ \ x b →
+  let x' = if b then x else f x
+   in False :* x'
 
 withLast ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
 withLast = reverse ∘ withFirst ∘ reverse
@@ -284,11 +333,11 @@ mapBeforeLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
 mapBeforeLast f = map (\ (b :* x) → case b of {True → x;False → f x}) ∘ withLast
 
 filterMap ∷ (ToIter a t) ⇒ (a → 𝑂 b) → t → 𝐼 b
-filterMap g xs = 𝐼 $ \ (f ∷ b → c → c) (i₀ ∷ c) →
-  foldOnFrom xs i₀ $ \ (x ∷ a) →
-    case g x of
-      None → id
-      Some y → f y
+filterMap f xs = 𝐼 $ \ (g ∷ b → c → (c → c) → c) →
+  un𝐼 (iter xs) $ \ (x ∷ a) (i ∷ c) (𝓀 ∷ c → c) → 
+    case f x of
+      None → 𝓀 i
+      Some y → g y i 𝓀
 
 filter ∷ (ToIter a t) ⇒ (a → 𝔹) → t → 𝐼 a
 filter f = filterMap $ \ x → case f x of {True → Some x;False → None}
@@ -297,20 +346,13 @@ filterOn ∷ (ToIter a t) ⇒ t → (a → 𝔹) → 𝐼 a
 filterOn = flip filter
 
 inbetween ∷ (ToIter a t) ⇒ a → t → 𝐼 a
-inbetween xⁱ xs = 𝐼 $ \ (f ∷ a → b → b) (i₀ ∷ b) →
-  foldOnFrom (withFirst xs) i₀ $ \ (b :* x ∷ 𝔹 ∧ a) →
-    case b of
-      True → f x
-      False → f x ∘ f xⁱ
-
--- execN ∷ ∀ n m. (Zero n,One n,Plus n,Monad m) ⇒ n → m () → m ()
--- execN n = exec ∘ replicate n
-
--- applyN ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → (a → a) → a
--- applyN n i f = fold i (const f) $ upTo n
-
--- appendN ∷ (Monoid a) ⇒ ℕ → a → a 
--- appendN n x = applyN n null $ (⧺) x
+inbetween xⁱ xs = 𝐼 $ \ (f ∷ a → b → (b → b) → b) →
+  un𝐼 (withFirst $ iter xs) $ \ ((b :* x) ∷ 𝔹 ∧ a) (i ∷ b) (𝓀 ∷ b → b) →
+    if b 
+    then f x i 𝓀
+    else 
+      f xⁱ i $ \ i' →
+      f x i' 𝓀
 
 alignLeftFill ∷ ℂ → ℕ → 𝕊 → 𝕊
 alignLeftFill c n s = build𝕊S $ concat

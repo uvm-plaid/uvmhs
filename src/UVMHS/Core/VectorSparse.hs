@@ -51,8 +51,7 @@ instance (Meet a) ⇒ MeetLattice (𝑉 a)
 
 instance Functor 𝑉 where map = map𝑉
 
-instance ToStream (ℤ64 ∧ a) (𝑉 a) where stream = stream𝑉
-instance ToIter (ℤ64 ∧ a) (𝑉 a) where iter = iter ∘ stream
+instance ToIter (ℤ64 ∧ a) (𝑉 a) where iter = iter𝑉
 
 instance (Show a) ⇒ Show (𝑉 a) where show = chars ∘ showCollection "{" "}" "," (\ (i :* x) → show𝕊 i ⧺ "⇒" ⧺ show𝕊 x)
 
@@ -139,8 +138,8 @@ map𝑉 f = 𝑉 ∘ IntMap.map f ∘ un𝑉
 mapK𝑉 ∷ (ℤ64 → a → b) → 𝑉 a → 𝑉 b
 mapK𝑉 f ixs = spvec $ mapOn (iter ixs) $ \ (i :* x) → i ↦♮ f i x
 
-stream𝑉 ∷ 𝑉 a → 𝑆 (ℤ64 ∧ a)
-stream𝑉 = map frhs ∘ stream ∘ IntMap.toList ∘ un𝑉
+iter𝑉 ∷ 𝑉 a → 𝐼 (ℤ64 ∧ a)
+iter𝑉 = map frhs ∘ iterLL ∘ IntMap.toList ∘ un𝑉
 
 spvec𝐼 ∷ 𝐼 (ℤ64 ∧ a) → 𝑉 a
 spvec𝐼 = 𝑉 ∘ IntMap.fromList ∘ lazyList ∘ map tohs

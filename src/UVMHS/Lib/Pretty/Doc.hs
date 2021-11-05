@@ -468,8 +468,6 @@ instance (Pretty a) ⇒ Pretty (𝐿 a) where
   pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
 instance (Pretty a) ⇒ Pretty [a] where 
   pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
-instance (Pretty a) ⇒ Pretty (𝑆 a) where 
-  pretty xs = ppApp (ppString "𝑆") $ list [pretty $ list xs]
 instance (Pretty a) ⇒ Pretty (𝐼 a) where 
   pretty xs = ppApp (ppString "𝐼") $ list [pretty $ list xs]
 instance (Pretty a) ⇒ Pretty (𝐼C a) where 

@@ -144,7 +144,7 @@ dfilesAll = sort ∘ list ∘ map string ^$ Dir.listDirectory $ chars "."
 dfiles ∷ IO (𝐿 𝕊)
 dfiles = do
   files ← dfilesAll
-  return $ list $ filterOn files $ \ f → case fst ^$ uncons f of
+  return $ list $ filterOn files $ \ f → case firstElem f of
     None → False
     Some c → c ≢ '.'
 

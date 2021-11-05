@@ -99,9 +99,13 @@ instance Chunky ℂ where
   fromChunk g = do
     b₁ ← g ; b₂ ← g ; b₃ ← g ; b₄ ← g
     return $ HS.chr $ tohs $ frBitsℤ64 $ joinBytes (b₁,b₂,b₃,b₄,𝕟8 0,𝕟8 0,𝕟8 0,𝕟8 0)
-  toChunk c = 𝐼 $ \ (f ∷ ℕ8 → b → b) →
+  toChunk c = 𝐼 $ \ (f ∷ ℕ8 → b → (b → b) → b) i 𝓀 →
     let (b₁,b₂,b₃,b₄,_,_,_,_) = splitBytes $ toBitsℤ64 $ frhs $ HS.ord c
-    in f b₄ ∘ f b₃ ∘ f b₂ ∘ f b₁
+    in 
+      f b₁ i $ \ i' →
+      f b₂ i' $ \ i'' → 
+      f b₃ i'' $ \ i''' → 
+      f b₄ i''' 𝓀
 
 instance Chunky ℕ64 where
   chunkSize P = 𝕟64 8
@@ -109,9 +113,17 @@ instance Chunky ℕ64 where
     b₁ ← g ; b₂ ← g ; b₃ ← g ; b₄ ← g
     b₅ ← g ; b₆ ← g ; b₇ ← g ; b₈ ← g
     return $ joinBytes (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈)
-  toChunk n = 𝐼 $ \ (f ∷ ℕ8 → b → b) →
+  toChunk n = 𝐼 $ \ (f ∷ ℕ8 → b → (b → b) → b) i 𝓀 →
     let (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈) = splitBytes n
-    in f b₈ ∘ f b₇ ∘ f b₆ ∘ f b₅ ∘ f b₄ ∘ f b₃ ∘ f b₂ ∘ f b₁
+    in 
+      f b₁ i $ \ i' →
+      f b₂ i' $ \ i'' →
+      f b₃ i'' $ \ i''' →
+      f b₄ i''' $ \ i'''' →
+      f b₅ i'''' $ \ i''''' →
+      f b₆ i''''' $ \ i'''''' →
+      f b₇ i'''''' $ \ i''''''' →
+      f b₈ i''''''' 𝓀
 
 instance Chunky ℤ64 where
   chunkSize P = 𝕟64 8

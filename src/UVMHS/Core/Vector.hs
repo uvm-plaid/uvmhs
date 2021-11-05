@@ -23,8 +23,7 @@ import qualified Data.Vector.Storable         as VU
 newtype 𝕍 a = 𝕍 { un𝕍 ∷ VB.Vector a }
   deriving (Eq,Ord)
 
-instance ToStream a (𝕍 a)      where stream = stream𝕍
-instance ToIter a (𝕍 a)        where iter   = iter ∘ stream
+instance ToIter a (𝕍 a)        where iter   = iter𝕍
 instance (Show a) ⇒ Show (𝕍 a) where show   = chars ∘ show𝕍
 instance Lookup ℕ64 a (𝕍 a)    where (⋕?)   = flip idx𝕍
 instance Functor 𝕍             where map    = map𝕍
@@ -46,8 +45,8 @@ vecDΩ d = case dmaxKey d of
   None → vec empty𝐼
   Some k → vecF (k + one) $ \ n → d ⋕! n
 
-stream𝕍 ∷ 𝕍 a → 𝑆 a
-stream𝕍 xs = stream $ VB.toList $ un𝕍 xs
+iter𝕍 ∷ 𝕍 a → 𝐼 a
+iter𝕍 xs = iterLL $ VB.toList $ un𝕍 xs
 
 show𝕍 ∷ (Show a) ⇒ 𝕍 a → 𝕊
 show𝕍 = showCollection "𝕍[" "]" "," show𝕊 ∘ iter
@@ -164,8 +163,7 @@ null𝕍 n = vecF n $ const null
 newtype 𝕌 a = 𝕌 { un𝕌 ∷ VU.Vector a }
   deriving (Eq,Ord)
 
-instance (Storable a) ⇒ ToStream a (𝕌 a)   where stream = stream𝕌
-instance (Storable a) ⇒ ToIter a (𝕌 a)     where iter   = iter ∘ stream
+instance (Storable a) ⇒ ToIter a (𝕌 a)     where iter   = iter𝕌
 instance (Storable a,Show a) ⇒ Show (𝕌 a)  where show   = chars ∘ show𝕌
 instance (Storable a) ⇒ Lookup ℕ64 a (𝕌 a) where (⋕?)   = flip idx𝕌
 
@@ -185,8 +183,8 @@ uvecDΩ d = case dmaxKey d of
   None → uvec empty𝐼
   Some k → uvecF (k + one) $ \ n → d ⋕! n
 
-stream𝕌 ∷ (Storable a) ⇒ 𝕌 a → 𝑆 a
-stream𝕌 xs = stream $ VU.toList $ un𝕌 xs
+iter𝕌 ∷ (Storable a) ⇒ 𝕌 a → 𝐼 a
+iter𝕌 xs = iterLL $ VU.toList $ un𝕌 xs
 
 show𝕌 ∷ (Storable a,Show a) ⇒ 𝕌 a → 𝕊
 show𝕌 = showCollection "𝕌[" "]" "," show𝕊 ∘ iter

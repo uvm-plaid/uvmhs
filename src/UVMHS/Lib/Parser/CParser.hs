@@ -223,20 +223,20 @@ cpOneOrMoreSepByContext f sepM xM = do
 -- Running Parsers --
 ---------------------
              
-runParser₀ ∷ (ToStream (ParserToken t) ts,Ord t) ⇒ 𝕊 → ts → CParser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
-runParser₀ so = (∘ frCParser) ∘ runParser (parserEnv₀ so) ∘ parserState₀ ∘ stream
+runParser₀ ∷ (ToIter (ParserToken t) ts,Ord t) ⇒ 𝕊 → ts → CParser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
+runParser₀ so = (∘ frCParser) ∘ runParser (parserEnv₀ so) ∘ parserState₀ ∘ delayList𝐼 ∘ iter
 
-parse ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → Doc ∨ a
+parse ∷ (Pretty a,ToIter (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → Doc ∨ a
 parse p so ts = case runParser₀ so ts $ cpFinal p of
   (pe :* None) → Inl $ displaySourceError so pe
   (_ :* Some (_ :* x)) → Inr x
 
-parseIO ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → IO a
+parseIO ∷ (Pretty a,ToIter (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → IO a
 parseIO p s ts = case parse p s ts of
   Inl d → pprint d ≫ abortIO
   Inr a → return a
 
-parseIOMain ∷ (Pretty a,ToStream (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → IO ()
+parseIOMain ∷ (Pretty a,ToIter (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → IO ()
 parseIOMain p s ts = do
   x ← parseIO p s ts
   pprint $ ppVertical 

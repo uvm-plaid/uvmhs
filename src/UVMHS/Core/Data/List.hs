@@ -20,10 +20,8 @@ instance FunctorM 𝐿 where
   mapM = mapM𝐿
 instance Single a (𝐿 a) where 
   single = single𝐿
-instance ToStream a (𝐿 a) where 
-  stream = stream𝐿
 instance ToIter a (𝐿 a) where 
-  iter = iter𝑆 ∘ stream𝐿
+  iter = iter𝐿
 
 empty𝐿 ∷ 𝐿 a
 empty𝐿 = Nil

@@ -73,7 +73,7 @@ cpList = cpNewContext "list" $ do
 testSExpParserSuccess ∷ IO ()
 testSExpParserSuccess = do
   toks ← tokenizeIO lexer "<raw input>" input
-  parseIOMain cpExp "<tokens input>" $ stream toks
+  parseIOMain cpExp "<tokens input>" toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
     input = tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12  )  "
@@ -81,7 +81,7 @@ testSExpParserSuccess = do
 testSExpParserFailure1 ∷ IO ()
 testSExpParserFailure1 = do
   toks ← tokenizeIO lexer "<raw input>" input
-  parseIOMain cpExp "<tokens input>" $ stream toks
+  parseIOMain cpExp "<tokens input>" toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
     input = tokens " (( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )  "
@@ -90,7 +90,7 @@ testSExpParserFailure2 ∷ IO ()
 testSExpParserFailure2 = do
   tokenizeIOMain lexer "" input
   toks ← tokenizeIO lexer "" input
-  parseIOMain cpExp "" $ stream toks
+  parseIOMain cpExp "" toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
     input = tokens " )( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )  "
@@ -99,7 +99,7 @@ testSExpParserFailure3 ∷ IO ()
 testSExpParserFailure3 = do
   tokenizeIOMain lexer "" input
   toks ← tokenizeIO lexer "" input
-  parseIOMain cpExp "" $ stream toks
+  parseIOMain cpExp "" toks
   where
     input ∷ 𝕍 (ParserToken ℂ)
     input = tokens " ( PRIM KEY x + y  {- yo -} ( -1-2)  0.0 \n x   y   z \n abc -12 )(  "

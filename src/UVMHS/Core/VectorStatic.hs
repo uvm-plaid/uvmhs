@@ -31,8 +31,7 @@ instance Access (𝕀64 n) a (𝕍SV n a) where (⋕) = un𝕍SV
 newtype 𝕍S n a = 𝕍S_UNSAFE { un𝕍S ∷ VB.Vector a }
   deriving (Eq,Ord)
 
-instance ToStream a (𝕍S n a)           where stream = stream𝕍S
-instance ToIter a (𝕍S n a)             where iter   = iter ∘ stream
+instance ToIter a (𝕍S n a)             where iter   = iter𝕍S
 instance (Show a) ⇒ Show (𝕍S n a)      where show   = chars ∘ show𝕍S
 instance Access (𝕀64 n) a (𝕍S n a)     where (⋕)    = flip idx𝕍S
 instance Lookup ℕ64 a (𝕍S n a)         where (⋕?)   = flip idxChecked𝕍S
@@ -58,11 +57,11 @@ idx𝕍S i xs = VB.unsafeIndex (un𝕍S xs) $ tohs $ intΩ64 $ un𝕀64 i
 idxChecked𝕍S ∷ ℕ64 → 𝕍S n a → 𝑂 a
 idxChecked𝕍S i xs = frhs $ un𝕍S xs VB.!? tohs (intΩ64 i)
 
-iter𝕍S ∷ 𝕍S n a → 𝐼S n a
-iter𝕍S xs = 𝐼S_UNSAFE $ iter $ stream𝕍S xs
+iter𝕍SS ∷ 𝕍S n a → 𝐼S n a
+iter𝕍SS xs = 𝐼S_UNSAFE $ iter𝕍S xs
 
-stream𝕍S ∷ 𝕍S n a → 𝑆 a
-stream𝕍S xs = stream $ VB.toList $ un𝕍S xs
+iter𝕍S ∷ 𝕍S n a → 𝐼 a
+iter𝕍S xs = iterLL $ VB.toList $ un𝕍S xs
 
 show𝕍S ∷ (Show a) ⇒ 𝕍S n a → 𝕊
 show𝕍S = showCollection "𝕍S[" "]" "," show𝕊 ∘ iter
@@ -71,7 +70,7 @@ null𝕍S ∷ (𝒩 n,Null a) ⇒ ℕ64S n → 𝕍S n a
 null𝕍S n = svecF n $ const null
 
 map𝕍S ∷ (𝒩 n) ⇒ (a → b) → 𝕍S n a → 𝕍S n b
-map𝕍S f = svec ∘ map f ∘ iter𝕍S
+map𝕍S f = svec ∘ map f ∘ iter𝕍SS
 
 const𝕍S ∷ (𝒩 n) ⇒ ℕ64S n → a → 𝕍S n a
 const𝕍S n x = svecF n $ const x
@@ -107,8 +106,7 @@ d𝕍 xs f = 𝕟64d (natΩ64 $ frhs $ VB.length $ un𝕍 xs) $ \ (_ ∷ ℕ64S 
 newtype 𝕌S n a = 𝕌S_UNSAFE { un𝕌S ∷ VU.Vector a }
   deriving (Eq,Ord)
 
-instance (Storable a) ⇒ ToStream a (𝕌S n a)       where stream = stream𝕌S
-instance (Storable a) ⇒ ToIter a (𝕌S n a)         where iter   = iter ∘ stream
+instance (Storable a) ⇒ ToIter a (𝕌S n a)         where iter   = iter𝕌S
 instance (Storable a,Show a) ⇒ Show (𝕌S n a)      where show   = chars ∘ show𝕌S
 instance (Storable a) ⇒ Access (𝕀64 n) a (𝕌S n a) where (⋕)    = flip idx𝕌S
 instance (Storable a) ⇒ Lookup ℕ64 a (𝕌S n a)     where (⋕?)   = flip idxChecked𝕌S
@@ -126,11 +124,11 @@ idx𝕌S i xs = VU.unsafeIndex (un𝕌S xs) $ tohs $ intΩ64 $ un𝕀64 i
 idxChecked𝕌S ∷ (Storable a) ⇒ ℕ64 → 𝕌S n a → 𝑂 a
 idxChecked𝕌S i xs = frhs $ un𝕌S xs VU.!? tohs (intΩ64 i)
 
-iter𝕌S ∷ (Storable a) ⇒ 𝕌S n a → 𝐼S n a
-iter𝕌S xs = 𝐼S_UNSAFE $ iter $ stream𝕌S xs
+iter𝕌SS ∷ (Storable a) ⇒ 𝕌S n a → 𝐼S n a
+iter𝕌SS xs = 𝐼S_UNSAFE $ iter $ iter𝕌S xs
 
-stream𝕌S ∷ (Storable a) ⇒ 𝕌S n a → 𝑆 a
-stream𝕌S xs = stream $ VU.toList $ un𝕌S xs
+iter𝕌S ∷ (Storable a) ⇒ 𝕌S n a → 𝐼 a
+iter𝕌S xs = iterLL $ VU.toList $ un𝕌S xs
 
 show𝕌S ∷ (Storable a,Show a) ⇒ 𝕌S n a → 𝕊
 show𝕌S = showCollection "𝕌S[" "]" "," show𝕊 ∘ iter
@@ -139,7 +137,7 @@ null𝕌S ∷ (𝒩 n,Storable a,Null a) ⇒ ℕ64S n → 𝕌S n a
 null𝕌S n = suvecF n $ const null
 
 map𝕌S ∷ (𝒩 n,Storable a,Storable b) ⇒ (a → b) → 𝕌S n a → 𝕌S n b
-map𝕌S f = suvec ∘ map f ∘ iter𝕌S
+map𝕌S f = suvec ∘ map f ∘ iter𝕌SS
 
 d𝕌 ∷ (Storable a) ⇒ 𝕌 a → (∀ n. (𝒩64 n) ⇒ 𝕌S n a → b) → b
 d𝕌 xs f = 𝕟64d (natΩ64 $ frhs $ VU.length $ un𝕌 xs) $ \ (_ ∷ ℕ64S n) → f @ n $ 𝕌S_UNSAFE $ un𝕌 xs

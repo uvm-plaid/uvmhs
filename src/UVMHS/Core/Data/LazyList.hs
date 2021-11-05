@@ -13,8 +13,7 @@ instance Bind [] where (≫=) = bindLL
 instance Monad []
 instance FunctorM [] where mapM = mapMLL
 instance Single a [a] where single = singleLL
-instance ToStream a [a] where stream = streamLL
-instance ToIter a [a] where iter = iter𝑆 ∘ streamLL
+instance ToIter a [a] where iter = iterLL
 
 emptyLL ∷ [a]
 emptyLL = []
