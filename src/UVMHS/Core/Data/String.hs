@@ -56,10 +56,10 @@ build𝕊SN ∷ (ToIter 𝕊 t) ⇒ ℕ64 → t → 𝕊
 build𝕊SN n = TextLazy.toStrict ∘ TextBuilder.toLazyTextWith (HS.fromIntegral n) ∘ foldr𝐼 HS.mempty (HS.mappend ∘ TextBuilder.fromText) ∘ iter
 
 show𝕊 ∷ (Show a) ⇒ a → 𝕊
-show𝕊 = fromChars ∘ HS.show
+show𝕊 = frhsChars ∘ HS.show
 
 read𝕊 ∷ (HS.Read a) ⇒ 𝕊 → a
-read𝕊 = HS.read ∘ chars
+read𝕊 = HS.read ∘ tohsChars
 
 lower𝕊 ∷ 𝕊 → 𝕊
 lower𝕊 = Text.toLower

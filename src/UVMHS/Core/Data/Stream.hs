@@ -1,5 +1,51 @@
 module UVMHS.Core.Data.Stream where
 
+import UVMHS.Core.Init
+import UVMHS.Core.Classes
+
+instance (Eq a) ⇒ Eq (𝑆 a) where (==) = eq𝑆
+instance (Ord a) ⇒ Ord (𝑆 a) where compare = compare𝑆
+
+instance ToIter a (𝑆 a) where iter = iter𝑆
+
+eq𝑆 ∷ (Eq a) ⇒ 𝑆 a → 𝑆 a → 𝔹
+eq𝑆 xs ys = case (un𝑆 xs (),un𝑆 ys ()) of
+  (None,None) → True
+  (None,Some _) → False
+  (Some _,None) → False
+  (Some (x :* xs'),Some (y :* ys')) 
+    | x ≡ y → eq𝑆 xs' ys'
+    | otherwise → False
+
+compare𝑆 ∷ (Ord a) ⇒ 𝑆 a → 𝑆 a → Ordering
+compare𝑆 xs ys = case (un𝑆 xs (),un𝑆 ys ()) of
+  (None,None) → EQ
+  (None,Some _) → LT
+  (Some _,None) → GT
+  (Some (x :* xs'),Some (y :* ys')) → case x ⋚ y of
+    LT → LT
+    EQ → compare𝑆 xs' ys'
+    GT → GT
+
+stream𝐼 ∷ ∀ a. 𝐼 a → 𝑆 a
+stream𝐼 xs = un𝐼 xs (\ x i 𝓀 → 𝑆 $ \ () → Some $ x :* 𝓀 i) (𝑆 $ \ () → None) id
+
+iter𝑆 ∷ 𝑆 a → 𝐼 a
+iter𝑆 xs₀ = 𝐼 $ \ f → flip $ \ 𝓀 →
+  let loop xs i = case un𝑆 xs () of
+        None → 𝓀 i
+        Some (x :* xs') → 
+          f x i $ \ i' →
+          loop xs' i'
+  in loop xs₀
+
+zipWith𝑆 ∷ (a → b → c) → 𝑆 a → 𝑆 b → 𝑆 c
+zipWith𝑆 f = loop
+  where
+    loop xs ys = 𝑆 $ \ () → case (un𝑆 xs (),un𝑆 ys ()) of
+        (Some (x :* xs'),Some (y :* ys')) → Some (f x y :* loop xs' ys')
+        _ → None
+          
 -- import UVMHS.Core.Init
 -- import UVMHS.Core.Classes
 -- 

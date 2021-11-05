@@ -5,7 +5,6 @@ import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.Iter
 import UVMHS.Core.Data.Pair
-import UVMHS.Core.Data.Stream
 import UVMHS.Core.Data.String
 import UVMHS.Core.Data.Set
 
@@ -66,7 +65,8 @@ instance (Ord k,All k,All v) ⇒ All (k ⇰ v) where
     kvsᵢ ← kvssᵢ
     return $ kvs ⩌ kvsᵢ
 
-instance (Show k,Show v) ⇒ Show (k ⇰ v) where show = chars ∘ showCollection "{" "}" "," (\ (k :* v) → show𝕊 k ⧺ "⇒" ⧺ show𝕊 v)
+instance (Show k,Show v) ⇒ Show (k ⇰ v) where 
+  show = tohsChars ∘ showCollection "{" "}" "," (\ (k :* v) → show𝕊 k ⧺ "⇒" ⧺ show𝕊 v)
 
 lookup𝐷 ∷ (Ord k) ⇒ k ⇰ v → k → 𝑂 v
 lookup𝐷 kvs k = frhs $ un𝐷 kvs Map.!? k

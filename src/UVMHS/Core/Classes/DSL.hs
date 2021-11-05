@@ -8,6 +8,7 @@ infixr 1 ⇨
 infixl 7 ⊙
 infixl 7 ⊙⋆
 
+
 class Arrow a where (⇨) ∷ a → a → a
 class Apply a where (⊙) ∷ a → a → a
 class Tup a where tup ∷ (ToIter a t) ⇒ t → a

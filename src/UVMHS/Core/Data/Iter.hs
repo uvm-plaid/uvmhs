@@ -7,38 +7,30 @@ import UVMHS.Core.Data.Arithmetic ()
 import UVMHS.Core.Data.List ()
 import UVMHS.Core.Data.String
 import UVMHS.Core.Data.Pair
+import UVMHS.Core.Data.Stream
 import UVMHS.Core.Data.Function
 
 import qualified Data.List as HS
 
-instance (Show a) ⇒ Show (𝐼 a) where 
-  show = chars ∘ showWith𝐼 show𝕊
 
-instance Null (𝐼 a) where 
-  null = empty𝐼
-instance Append (𝐼 a) where 
-  (⧺) = append𝐼
+instance Null (𝐼 a) where null = empty𝐼
+instance Append (𝐼 a) where (⧺) = append𝐼
 instance Monoid (𝐼 a)
 
-instance Functor 𝐼 where 
-  map = map𝐼
-instance Return 𝐼 where 
-  return = single𝐼
-instance Bind 𝐼 where 
-  (≫=) = bind𝐼
+instance Functor 𝐼 where map = map𝐼
+instance Return 𝐼 where return = single𝐼
+instance Bind 𝐼 where (≫=) = bind𝐼
 instance Monad 𝐼
-instance FunctorM 𝐼 where 
-  mapM = mapM𝐼
-instance Single a (𝐼 a) where 
-  single = single𝐼
-instance ToIter a (𝐼 a) where 
-  iter = id
+instance FunctorM 𝐼 where mapM = mapM𝐼
+instance Single a (𝐼 a) where single = single𝐼
+instance ToIter a (𝐼 a) where iter = id
 
-instance (Show a) ⇒ Show (𝐿 a) where 
-  show = chars ∘ showCollection "[" "]" "," show𝕊
+instance (Show a) ⇒ Show (𝑆 a) where show = tohsChars ∘ showCollection "𝑆[" "]" "," show𝕊
+instance (Show a) ⇒ Show (𝐼 a) where show = tohsChars ∘ showCollection "𝐼[" "]" "," show𝕊
+instance (Show a) ⇒ Show (𝐿 a) where show = tohsChars ∘ showCollection "[" "]" "," show𝕊
 
 instance 𝕊 ⇄ 𝐼 ℂ where
-  isoto = iter ∘ chars
+  isoto = iter ∘ tohsChars
   isofr = string
 
 empty𝐼 ∷ 𝐼 a
@@ -49,31 +41,11 @@ cons𝐼 x xs = 𝐼 $ \ f i 𝓀 →
   f x i $! \ i' →
   un𝐼 xs f i' 𝓀
 
-newtype DelayList a = DelayList { unDelayList ∷ () → 𝑂 (a ∧ DelayList a) }
-
-delayList𝐼 ∷ ∀ a. 𝐼 a → DelayList a
-delayList𝐼 xs = 
-  un𝐼 xs 
-      (\ (x ∷ a) (i ∷ DelayList a) (𝓀 ∷ DelayList a → DelayList a) → 
-            DelayList $ \ () → Some (x :* 𝓀 i))
-      (DelayList $ \ () → None)
-      id
-
-iterDL ∷ DelayList a → 𝐼 a
-iterDL xs₀ = 𝐼 $ \ f → flip $ \ 𝓀 →
-  let loop xs i = case unDelayList xs () of
-        None → 𝓀 i
-        Some (x :* xs') → 
-          f x i $ \ i' →
-          loop xs' i'
-  in loop xs₀
+stream ∷ (ToIter a t) ⇒ t → 𝑆 a
+stream = stream𝐼 ∘ iter
 
 zipWith ∷ (ToIter a t₁,ToIter b t₂) ⇒ (a → b → c) → t₁ → t₂ → 𝐼 c
-zipWith f xs₀ ys₀ =
-  let loop xs ys = DelayList $ \ () → case (unDelayList xs (),unDelayList ys ()) of
-        (Some (x :* xs'),Some (y :* ys')) → Some (f x y :* loop xs' ys')
-  in iterDL $ loop (delayList𝐼 $ iter xs₀) $ delayList𝐼 $ iter ys₀
-          
+zipWith f xs ys = iter $ zipWith𝑆 f (stream xs) $ stream ys
 
 snoc𝐼 ∷ 𝐼 a → a → 𝐼 a
 snoc𝐼 xs x = 𝐼 $ \ f i 𝓀 → 
@@ -81,10 +53,10 @@ snoc𝐼 xs x = 𝐼 $ \ f i 𝓀 →
   f x i' 𝓀
 
 isEmpty ∷ (ToIter a t) ⇒ t → 𝔹
-isEmpty xs = un𝐼 (iter xs) (\ _ _ _ → True) False id
+isEmpty xs = run𝐼On (iter xs) id False $ \ _ _ _ → True
 
 firstElem ∷ (ToIter a t) ⇒ t → 𝑂 a
-firstElem xs = un𝐼 (iter xs) (\ x _ _ → Some x) None id
+firstElem xs = run𝐼On (iter xs) id None $ \ x _ _ → Some x
 
 append𝐼 ∷ 𝐼 a → 𝐼 a → 𝐼 a
 append𝐼 xs ys = 𝐼 $ \ f i 𝓀 →
@@ -167,7 +139,7 @@ foldrWithFrom ∷ (ToIter a t) ⇒ (a → b → b) → b → t → b
 foldrWithFrom = flip foldr
 
 mfold ∷ (Monad m,ToIter a t) ⇒ b → (a → b → m b) → t → m b
-mfold i f = fold (return i) (extend ∘ f)
+mfold i₀ f = foldkFromWith (return i₀) $ \ x iM 𝓀 → do i ← iM ; 𝓀 $! f x i
 
 mfoldFromWith ∷ (Monad m,ToIter a t) ⇒ b → (a → b → m b) → t → m b
 mfoldFromWith = mfold
@@ -188,7 +160,7 @@ mfoldWithFrom ∷ (Monad m,ToIter a t) ⇒ (a → b → m b) → b → t → m b
 mfoldWithFrom = flip mfold
 
 mfoldr ∷ (Monad m,ToIter a t) ⇒ b → (a → b → m b) → t → m b
-mfoldr i f = foldr (return i) (extend ∘ f)
+mfoldr i₀ f = foldkFromWith (return i₀) $ \ x iM 𝓀 → do i ← 𝓀 iM ; f x i
 
 mfoldrFromWith ∷ (Monad m,ToIter a t) ⇒ b → (a → b → m b) → t → m b
 mfoldrFromWith = mfoldr
@@ -209,7 +181,7 @@ mfoldrWithFrom ∷ (Monad m,ToIter a t) ⇒ (a → b → m b) → b → t → m 
 mfoldrWithFrom = flip mfoldr
 
 eachWith ∷ (Monad m,ToIter a t) ⇒ (a → m ()) → t → m ()
-eachWith f = fold skip $ \ x yM → yM ≫ f x
+eachWith f = mfoldFromWith () $ const ∘ f
 
 eachOn ∷ (Monad m,ToIter a t) ⇒ t → (a → m ()) → m () 
 eachOn = flip eachWith
@@ -251,7 +223,7 @@ meets ∷ (MeetLattice a,ToIter a t) ⇒ t → a
 meets = meetsFrom top
 
 or ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
-or = fold False (⩔)
+or = foldk False $ \ b₁ b₂ 𝓀 → if b₁ then True else 𝓀 b₂
 
 orf ∷ (ToIter (a → 𝔹) t) ⇒ t → a → 𝔹
 orf fs x = or $ map (appto x) $ iter fs
@@ -260,7 +232,7 @@ andf ∷ (ToIter (a → 𝔹) t) ⇒ t → a → 𝔹
 andf fs x = and $ map (appto x) $ iter fs
 
 and ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
-and = fold True (⩓)
+and = foldk True $ \ b₁ b₂ 𝓀 → if b₁ then 𝓀 b₂ else False
 
 count ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → n
 count = fold zero $ const succ
@@ -271,8 +243,7 @@ countWith f = fold zero $ \ x → case f x of
   False → id
 
 reverse ∷ (ToIter a t) ⇒ t → 𝐼 a
-reverse xs = 𝐼 $ \ f i₀ 𝓀₀ → 
-  un𝐼 (iter xs) (\ x 𝓀 m𝓀 → m𝓀 $ \ i → f x i 𝓀) 𝓀₀ id i₀
+reverse xs = 𝐼 $ \ f i₀ 𝓀₀ → un𝐼 (iter xs) (\ x 𝓀 m𝓀 → m𝓀 $ \ i → f x i 𝓀) 𝓀₀ id i₀
 
 replicateI ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → (n → a) → 𝐼 a
 replicateI n₀ g = 𝐼 $ \ f → flip $ \ 𝓀 → 
@@ -298,30 +269,29 @@ build n₀ x₀ g = 𝐼 $ \ f → flip $ \ 𝓀 →
 upTo ∷ (Eq n,Zero n,One n,Plus n) ⇒ n → 𝐼 n
 upTo n = build n zero succ
 
-reiter ∷ ∀ a b s. 𝐼 a → s → (a → s → (s ∧ b)) → 𝐼 b
-reiter xs s₀ f = 
-  𝐼 $ \ (g ∷ b → c → (c → c) → c) (i₀ ∷ c) (𝓀₀ ∷ c → c) → 
-    snd $ un𝐼 xs (\ (x ∷ a) ((s :* i) ∷ (s ∧ c)) (𝓀 ∷ (s ∧ c) → (s ∧ c)) → 
+reiter ∷ ∀ a b s. s → (a → s → (s ∧ b)) → 𝐼 a → 𝐼 b
+reiter s₀ f xs = 
+  𝐼 $ \ g i₀ 𝓀₀ → 
+    snd $ run𝐼On xs (\ (s :* i) → s :* 𝓀₀ i) (s₀ :* i₀) $ \ x (s :* i) 𝓀 → 
         let s' :* y = f x s
-        in s' :* (g y i $ \ i' → snd $ 𝓀 $ s' :* i'))
-      (s₀ :* i₀) 
-      (\ (s :* i) → s :* 𝓀₀ i)
+        in (s' :*) $ g y i $ \ i' → 
+          snd $ 𝓀 $ s' :* i'
 
 withIndex ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → 𝐼 (n ∧ a)
-withIndex xs = reiter (iter xs) zero $ \ x i → (i + one) :* (i :* x)
+withIndex = pipe iter $ reiter zero $ \ x i → (i + one) :* (i :* x)
 
 withFirst ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
-withFirst xs = reiter (iter xs) True $ \ x b → False :* (b :* x)
+withFirst = pipe iter $ reiter True $ \ x b → False :* (b :* x)
 
 mapFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapFirst f xs = reiter (iter xs) True $ \ x b →
-  let x' = if b then f x else x
+mapFirst f = pipe iter $ reiter True $ \ x b → 
+  let x' = if b then f x else x 
   in False :* x'
 
 mapAfterFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapAfterFirst f xs = reiter (iter xs) True $ \ x b →
-  let x' = if b then x else f x
-   in False :* x'
+mapAfterFirst f = pipe iter $ reiter True $ \ x b → 
+  let x' = if b then x else f x 
+  in False :* x'
 
 withLast ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
 withLast = reverse ∘ withFirst ∘ reverse
@@ -333,8 +303,8 @@ mapBeforeLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
 mapBeforeLast f = map (\ (b :* x) → case b of {True → x;False → f x}) ∘ withLast
 
 filterMap ∷ (ToIter a t) ⇒ (a → 𝑂 b) → t → 𝐼 b
-filterMap f xs = 𝐼 $ \ (g ∷ b → c → (c → c) → c) →
-  un𝐼 (iter xs) $ \ (x ∷ a) (i ∷ c) (𝓀 ∷ c → c) → 
+filterMap f xs = 𝐼 $ \ g →
+  un𝐼 (iter xs) $ \ x i 𝓀 → 
     case f x of
       None → 𝓀 i
       Some y → g y i 𝓀
@@ -346,8 +316,8 @@ filterOn ∷ (ToIter a t) ⇒ t → (a → 𝔹) → 𝐼 a
 filterOn = flip filter
 
 inbetween ∷ (ToIter a t) ⇒ a → t → 𝐼 a
-inbetween xⁱ xs = 𝐼 $ \ (f ∷ a → b → (b → b) → b) →
-  un𝐼 (withFirst $ iter xs) $ \ ((b :* x) ∷ 𝔹 ∧ a) (i ∷ b) (𝓀 ∷ b → b) →
+inbetween xⁱ xs = 𝐼 $ \ f →
+  un𝐼 (withFirst $ iter xs) $ \ (b :* x) i 𝓀 →
     if b 
     then f x i 𝓀
     else 
@@ -374,7 +344,6 @@ alignRight = alignRightFill ' '
 
 list ∷ (ToIter a t) ⇒ t → 𝐿 a
 list = list𝐼 ∘ iter
-
 
 lazyList ∷ (ToIter a t) ⇒ t → [a]
 lazyList = lazyList𝐼 ∘ iter
@@ -403,15 +372,15 @@ firstMaxByLT f = fold None $ \ x xM →
       True → Some x
       False → Some x'
 
-foldbp ∷ (ToIter a t) ⇒ b → c → (a → b → b ∧ (c → c)) → t → b ∧ c
-foldbp i₀ j₀ f xs = 
-  let i :* k = foldFromOn (i₀ :* id) xs $ \ x ((i' ∷ b) :* (k' ∷ c → c)) →
-        let i'' :* k'' = f x i'
-        in i'' :* (k' ∘ k'')
-  in i :* k j₀
-
-foldbpOnFrom ∷ (ToIter a t) ⇒ t → b → c → (a → b → b ∧ (c → c)) → b ∧ c
-foldbpOnFrom xs i j f = foldbp i j f xs
+-- foldbp ∷ (ToIter a t) ⇒ b → c → (a → b → b ∧ (c → c)) → t → b ∧ c
+-- foldbp i₀ j₀ f xs = 
+--   let i :* k = foldFromOn (i₀ :* id) xs $ \ x ((i' ∷ b) :* (k' ∷ c → c)) →
+--         let i'' :* k'' = f x i'
+--         in i'' :* (k' ∘ k'')
+--   in i :* k j₀
+-- 
+-- foldbpOnFrom ∷ (ToIter a t) ⇒ t → b → c → (a → b → b ∧ (c → c)) → b ∧ c
+-- foldbpOnFrom xs i j f = foldbp i j f xs
 
 sortWith ∷ (ToIter a t) ⇒ (a → a → Ordering) → t → 𝐿 a
 sortWith f = list ∘ HS.sortBy f ∘ lazyList
@@ -444,3 +413,5 @@ instance (All a,All b) ⇒ All (a ∨ b) where
 instance (All a,All b) ⇒ All (a ∧ b) where 
   all = do x ← all ; y ← all ; return $ x :* y
 
+
+----

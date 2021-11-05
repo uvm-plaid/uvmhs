@@ -20,7 +20,7 @@ import qualified Data.Text as Text
 makePrettySumLogic ∷ TH.Cxt → TH.Name → 𝐿 TH.TyVarBndr → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → TH.Q (𝐿 TH.Dec)
 makePrettySumLogic cx ty tyargs concontys = do
   conxs ∷ 𝐿 (TH.Name ∧ 𝐿 TH.Name) ← mapMOn concontys $ \ (con :* contys) → do
-    tmpˣˢ ← mapMOn contys $ const $ TH.newName $ chars "x"
+    tmpˣˢ ← mapMOn contys $ const $ TH.newName $ tohsChars "x"
     return (con :* tmpˣˢ)
   let tyargVars ∷ 𝐿 TH.Type
       tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
@@ -57,7 +57,7 @@ makePrettySum name = do
 makePrettyUnionLogic ∷ TH.Cxt → TH.Name → 𝐿 TH.TyVarBndr → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → TH.Q (𝐿 TH.Dec)
 makePrettyUnionLogic cx ty tyargs concontys = do
   conxs ∷ 𝐿 (TH.Name ∧ 𝐿 TH.Name) ← mapMOn concontys $ \ (con :* fieldtys) → do
-    tmpˣˢ ← mapMOn fieldtys $ const $ TH.newName $ chars "x"
+    tmpˣˢ ← mapMOn fieldtys $ const $ TH.newName $ tohsChars "x"
     return (con :* tmpˣˢ)
   let tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
       instanceCx ∷ 𝐿 TH.Pred
@@ -107,7 +107,7 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
           ]
         afterPrefix' = if afterPrefix ≡ null then fieldName else afterPrefix
         loweredAfterPrefix = string $ mapFirst toLower afterPrefix'
-    tmpˣ ← TH.newName $ chars "x"
+    tmpˣ ← TH.newName $ tohsChars "x"
     return (field :* loweredAfterPrefix :* tmpˣ)
   let tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
       instanceCx ∷ 𝐿 TH.Pred

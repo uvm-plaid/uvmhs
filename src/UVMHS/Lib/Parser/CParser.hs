@@ -224,7 +224,7 @@ cpOneOrMoreSepByContext f sepM xM = do
 ---------------------
              
 runParser₀ ∷ (ToIter (ParserToken t) ts,Ord t) ⇒ 𝕊 → ts → CParser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
-runParser₀ so = (∘ frCParser) ∘ runParser (parserEnv₀ so) ∘ parserState₀ ∘ delayList𝐼 ∘ iter
+runParser₀ so = (∘ frCParser) ∘ runParser (parserEnv₀ so) ∘ parserState₀ ∘ stream
 
 parse ∷ (Pretty a,ToIter (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → Doc ∨ a
 parse p so ts = case runParser₀ so ts $ cpFinal p of

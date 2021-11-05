@@ -32,7 +32,7 @@ newtype 𝕍S n a = 𝕍S_UNSAFE { un𝕍S ∷ VB.Vector a }
   deriving (Eq,Ord)
 
 instance ToIter a (𝕍S n a)             where iter   = iter𝕍S
-instance (Show a) ⇒ Show (𝕍S n a)      where show   = chars ∘ show𝕍S
+instance (Show a) ⇒ Show (𝕍S n a)      where show   = tohsChars ∘ show𝕍S
 instance Access (𝕀64 n) a (𝕍S n a)     where (⋕)    = flip idx𝕍S
 instance Lookup ℕ64 a (𝕍S n a)         where (⋕?)   = flip idxChecked𝕍S
 instance (𝒩 n,Null a) ⇒ Null (𝕍S n a)  where null   = null𝕍S 𝕟64s
@@ -107,7 +107,7 @@ newtype 𝕌S n a = 𝕌S_UNSAFE { un𝕌S ∷ VU.Vector a }
   deriving (Eq,Ord)
 
 instance (Storable a) ⇒ ToIter a (𝕌S n a)         where iter   = iter𝕌S
-instance (Storable a,Show a) ⇒ Show (𝕌S n a)      where show   = chars ∘ show𝕌S
+instance (Storable a,Show a) ⇒ Show (𝕌S n a)      where show   = tohsChars ∘ show𝕌S
 instance (Storable a) ⇒ Access (𝕀64 n) a (𝕌S n a) where (⋕)    = flip idx𝕌S
 instance (Storable a) ⇒ Lookup ℕ64 a (𝕌S n a)     where (⋕?)   = flip idxChecked𝕌S
 instance (𝒩 n,Storable a,Null a) ⇒ Null (𝕌S n a)  where null   = null𝕌S 𝕟64s

@@ -24,7 +24,7 @@ newtype 𝕍 a = 𝕍 { un𝕍 ∷ VB.Vector a }
   deriving (Eq,Ord)
 
 instance ToIter a (𝕍 a)        where iter   = iter𝕍
-instance (Show a) ⇒ Show (𝕍 a) where show   = chars ∘ show𝕍
+instance (Show a) ⇒ Show (𝕍 a) where show   = tohsChars ∘ show𝕍
 instance Lookup ℕ64 a (𝕍 a)    where (⋕?)   = flip idx𝕍
 instance Functor 𝕍             where map    = map𝕍
 instance FunctorM 𝕍            where mapM   = mapM𝕍
@@ -110,7 +110,7 @@ grow𝕍Mut i v = 𝕍Mut ^$ VBM.grow (un𝕍Mut v) $ tohs $ intΩ64 i
 
 instance ToStream a (𝕍 a)      where stream = stream𝕍
 instance ToIter a (𝕍 a)        where iter   = iter ∘ stream
-instance (Show a) ⇒ Show (𝕍 a) where show   = chars ∘ show𝕍
+instance (Show a) ⇒ Show (𝕍 a) where show   = tohsChars ∘ show𝕍
 instance Lookup ℕ64 a (𝕍 a)    where (⋕?)   = flip idx𝕍
 instance Functor 𝕍             where map    = map𝕍
 instance FunctorM 𝕍            where mapM   = mapM𝕍
@@ -164,7 +164,7 @@ newtype 𝕌 a = 𝕌 { un𝕌 ∷ VU.Vector a }
   deriving (Eq,Ord)
 
 instance (Storable a) ⇒ ToIter a (𝕌 a)     where iter   = iter𝕌
-instance (Storable a,Show a) ⇒ Show (𝕌 a)  where show   = chars ∘ show𝕌
+instance (Storable a,Show a) ⇒ Show (𝕌 a)  where show   = tohsChars ∘ show𝕌
 instance (Storable a) ⇒ Lookup ℕ64 a (𝕌 a) where (⋕?)   = flip idx𝕌
 
 uvec ∷ (Storable a,ToIter a t) ⇒ t → 𝕌 a

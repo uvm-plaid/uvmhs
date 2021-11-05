@@ -143,7 +143,7 @@ compare𝐍 = case HS.sameNat (HS.Proxy @ a) (HS.Proxy @ b) of
 𝕤s = 𝕊S_UNSAFE $ reify𝕊 @ s P
 
 𝕤sd ∷ 𝕊 → (∀ s. (𝒮 s) ⇒ 𝕊S s → a) → a
-𝕤sd s f = case HS.someSymbolVal $ chars s of
+𝕤sd s f = case HS.someSymbolVal $ tohsChars s of
   HS.SomeSymbol (HS.Proxy ∷ HS.Proxy s) → f $ 𝕊S_UNSAFE @ s s
 
 -- heterogeneous lists --

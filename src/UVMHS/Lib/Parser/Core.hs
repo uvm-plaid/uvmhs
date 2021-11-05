@@ -43,12 +43,12 @@ data ParserState t = ParserState
   , parserStateContext ∷ ParserContext
   , parserStateSuffix ∷ WindowL Doc Doc
   , parserStateEndPos ∷ AddBT Loc
-  , parserStateInput ∷ DelayList (ParserToken t)
+  , parserStateInput ∷ 𝑆 (ParserToken t)
   }
 makeLenses ''ParserState
 makePrettyRecord ''ParserState
 
-parserState₀ ∷ DelayList (ParserToken t) → ParserState t
+parserState₀ ∷ 𝑆 (ParserToken t) → ParserState t
 parserState₀ = ParserState null null null null $ AddBT bot
 
 -- # Parser
@@ -142,7 +142,7 @@ pAdvance ∷ Parser t (AddBT Loc ∨ ParserToken t)
 pAdvance = do
   pi ← getL parserStateInputL
   ep ← getL parserStateEndPosL
-  case unDelayList pi () of
+  case un𝑆 pi () of
     None → return $ Inl ep
     Some (ParserToken x sk tc ts :* pi') → do
       let ep' = bumpCol₁ ^$ locRangeEnd $ parserContextLocRange tc

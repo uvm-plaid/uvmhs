@@ -23,12 +23,12 @@ appto x f = f x
 pipe ∷ (a → b) → (b → c) → a → c
 pipe = flip (∘)
 
-iterate ∷ (a → 𝑂 a) → a → a
-iterate f = 
+iterateWith ∷ (a → 𝑂 a) → a → a
+iterateWith f = 
   let loop' x = case f x of
         None → x
         Some x' → loop' x'
   in loop'
 
 iterateFrom ∷ a → (a → 𝑂 a) → a
-iterateFrom = flip iterate
+iterateFrom = flip iterateWith

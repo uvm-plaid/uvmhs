@@ -17,10 +17,10 @@ import qualified Language.Haskell.TH as TH
 --   |]
 makeLensLogic ∷ TH.Cxt → TH.Name → 𝐿 TH.TyVarBndr → TH.Name → TH.Type → TH.Q (𝐿 TH.Dec)
 makeLensLogic cx ty tyargs field fieldty = do
-  let lensName = TH.mkName $ chars $ string (TH.nameBase field) ⧺ "L"
+  let lensName = TH.mkName $ tohsChars $ string (TH.nameBase field) ⧺ "L"
       tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
-  tmpˣ ← TH.newName $ chars "x"
-  tmpˢ ← TH.newName $ chars "s"
+  tmpˣ ← TH.newName $ tohsChars "x"
+  tmpˢ ← TH.newName $ tohsChars "s"
   return $ list
     [ TH.PragmaD $ TH.InlineP lensName TH.Inline TH.FunLike TH.AllPhases
     , TH.SigD lensName $ 
@@ -47,10 +47,10 @@ makeLenses name = do
 --   |]
 makePrismLogic ∷ TH.Cxt → TH.Name → 𝐿 TH.TyVarBndr → TH.Name → 𝐿 TH.Type → ℕ → TH.Q (𝐿 TH.Dec)
 makePrismLogic cx ty tyargs con fieldtys numcons = do
-  let prismName = TH.mkName $ chars $ (string $ mapFirst toLower $ TH.nameBase con) ⧺ "L"
+  let prismName = TH.mkName $ tohsChars $ (string $ mapFirst toLower $ TH.nameBase con) ⧺ "L"
       tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
-  tmpˣ ← TH.newName $ chars "x"
-  tmpˣˢ ← mapMOn fieldtys $ const $ TH.newName $ chars "x"
+  tmpˣ ← TH.newName $ tohsChars "x"
+  tmpˣˢ ← mapMOn fieldtys $ const $ TH.newName $ tohsChars "x"
   return $
     list
     [ TH.PragmaD $ TH.InlineP prismName TH.Inline TH.FunLike TH.AllPhases

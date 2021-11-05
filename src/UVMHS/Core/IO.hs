@@ -97,7 +97,7 @@ iargs ∷ IO (𝐿 𝕊)
 iargs = map (list ∘ map string) Env.getArgs
 
 ilocalArgs ∷ 𝐿 𝕊 → IO a → IO a
-ilocalArgs args = Env.withArgs $ lazyList $ map chars $ iter args
+ilocalArgs args = Env.withArgs $ lazyList $ map tohsChars $ iter args
 
 ------------
 -- Errors --
@@ -113,7 +113,7 @@ exitIO ∷ IO a
 exitIO = exitWith $ ExitSuccess
 
 failIO ∷ 𝕊 → IO a
-failIO = HS.fail ∘ chars
+failIO = HS.fail ∘ tohsChars
 
 cleanExit ∷ IO a → IO a
 cleanExit xM = HS.catch xM (\ (c ∷ ExitCode) → shout c ≫ exitIO)
@@ -123,23 +123,23 @@ cleanExit xM = HS.catch xM (\ (c ∷ ExitCode) → shout c ≫ exitIO)
 -----------
 
 fread ∷ 𝕊 → IO 𝕊
-fread = Text.decodeUtf8 ^∘ BS.readFile ∘ chars
+fread = Text.decodeUtf8 ^∘ BS.readFile ∘ tohsChars
 
 fwrite ∷ 𝕊 → 𝕊 → IO ()
-fwrite file = BS.writeFile (chars file) ∘ Text.encodeUtf8
+fwrite file = BS.writeFile (tohsChars file) ∘ Text.encodeUtf8
 
 fappend ∷ 𝕊 → 𝕊 → IO ()
-fappend fn = BS.appendFile (chars fn) ∘ Text.encodeUtf8
+fappend fn = BS.appendFile (tohsChars fn) ∘ Text.encodeUtf8
 
 fcopy ∷ 𝕊 → 𝕊 → IO ()
-fcopy fr to = Dir.copyFile (chars fr) $ chars to
+fcopy fr to = Dir.copyFile (tohsChars fr) $ tohsChars to
 
 -----------------
 -- Directories --
 -----------------
 
 dfilesAll ∷ IO (𝐿 𝕊)
-dfilesAll = sort ∘ list ∘ map string ^$ Dir.listDirectory $ chars "."
+dfilesAll = sort ∘ list ∘ map string ^$ Dir.listDirectory $ tohsChars "."
 
 dfiles ∷ IO (𝐿 𝕊)
 dfiles = do
@@ -149,32 +149,32 @@ dfiles = do
     Some c → c ≢ '.'
 
 din ∷ 𝕊 → IO a → IO a
-din = Dir.withCurrentDirectory ∘ chars
+din = Dir.withCurrentDirectory ∘ tohsChars
 
 dtouch ∷ 𝕊 → IO ()
-dtouch = Dir.createDirectoryIfMissing True ∘ chars
+dtouch = Dir.createDirectoryIfMissing True ∘ tohsChars
 
 drremove ∷ 𝕊 → IO ()
-drremove = Dir.removeDirectoryRecursive ∘ chars
+drremove = Dir.removeDirectoryRecursive ∘ tohsChars
 
 -----------
 -- Paths --
 -----------
 
 pexists ∷ 𝕊 → IO 𝔹
-pexists = Dir.doesPathExist ∘ chars
+pexists = Dir.doesPathExist ∘ tohsChars
 
 pfilename ∷ 𝕊 → 𝕊
-pfilename = string ∘ FP.takeFileName ∘ chars
+pfilename = string ∘ FP.takeFileName ∘ tohsChars
 
 pbasename ∷ 𝕊 → 𝕊
-pbasename = string ∘ FP.takeBaseName ∘ chars
+pbasename = string ∘ FP.takeBaseName ∘ tohsChars
 
 pdirectory ∷ 𝕊 → 𝕊
-pdirectory = string ∘ FP.takeDirectory ∘ chars
+pdirectory = string ∘ FP.takeDirectory ∘ tohsChars
 
 pextension ∷ 𝕊 → 𝕊
-pextension = string ∘ FP.takeExtension ∘ chars
+pextension = string ∘ FP.takeExtension ∘ tohsChars
 
 -----------
 -- Shell --
@@ -182,7 +182,7 @@ pextension = string ∘ FP.takeExtension ∘ chars
 
 shell ∷ 𝕊 → IO (𝔹 ∧ 𝕊 ∧ 𝕊)
 shell c = do
-  (e,o,r) ← Proc.readCreateProcessWithExitCode (Proc.shell $ chars c) []
+  (e,o,r) ← Proc.readCreateProcessWithExitCode (Proc.shell $ tohsChars c) []
   return $ (e ≡ Exit.ExitSuccess) :* string o :* string r
 
 shellOK ∷ 𝕊 → IO 𝕊

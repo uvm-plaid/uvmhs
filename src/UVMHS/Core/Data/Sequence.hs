@@ -31,7 +31,7 @@ instance ToIter a (𝑄 a) where
   iter = iter𝑄
 
 instance (Show a) ⇒ Show (𝑄 a) where 
-  show = chars ∘ showCollection "[" "]" "," show𝕊
+  show = tohsChars ∘ showCollection "[" "]" "," show𝕊
 
 qø ∷ 𝑄 a
 qø = 𝑄 Sequence.empty

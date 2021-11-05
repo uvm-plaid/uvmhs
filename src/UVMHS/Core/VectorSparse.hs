@@ -53,7 +53,8 @@ instance Functor 𝑉 where map = map𝑉
 
 instance ToIter (ℤ64 ∧ a) (𝑉 a) where iter = iter𝑉
 
-instance (Show a) ⇒ Show (𝑉 a) where show = chars ∘ showCollection "{" "}" "," (\ (i :* x) → show𝕊 i ⧺ "⇒" ⧺ show𝕊 x)
+instance (Show a) ⇒ Show (𝑉 a) where 
+  show = tohsChars ∘ showCollection "{" "}" "," (\ (i :* x) → show𝕊 i ⧺ "⇒" ⧺ show𝕊 x)
 
 lookup𝑉 ∷ 𝑉 a → ℤ64 → 𝑂 a
 lookup𝑉 ixs i = frhs $ un𝑉 ixs IntMap.!? tohs i

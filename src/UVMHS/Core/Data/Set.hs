@@ -6,6 +6,7 @@ import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.Iter
 import UVMHS.Core.Data.Pair
+import UVMHS.Core.Data.Function
 import UVMHS.Core.Data.Stream ()
 import UVMHS.Core.Data.String
 
@@ -58,7 +59,7 @@ instance (Ord a,All a) ⇒ All (𝑃 a) where
     xs ← xssᵢ
     iter $ [ xs , single x ∪ xs ]
 
-instance (Show a) ⇒ Show (𝑃 a) where show = chars ∘ showCollection "{" "}" "," show𝕊
+instance (Show a) ⇒ Show (𝑃 a) where show = tohsChars ∘ showCollection "{" "}" "," show𝕊
 
 pø ∷ 𝑃 a
 pø = 𝑃 Set.empty
@@ -109,9 +110,9 @@ pow ∷ (Ord a,ToIter a t) ⇒ t → 𝑃 a
 pow = pow𝐼 ∘ iter
 
 uniques ∷ (Ord a,ToIter a t) ⇒ t → 𝐼 a
-uniques xs = filterMap id $ reiter (iter xs) pø $ \ x seen →
-  if x ∈ seen
-  then seen :* None
+uniques xs = filterMap id $ appto (iter xs) $ reiter pø $ \ x seen →
+  if x ∈ seen 
+  then seen :* None 
   else (single x ∪ seen) :* Some x
 
 unions ∷ (Ord a,ToIter (𝑃 a) t) ⇒ t → 𝑃 a

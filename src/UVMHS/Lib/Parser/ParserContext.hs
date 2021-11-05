@@ -64,4 +64,4 @@ instance Pretty SrcCxt where
           , pretty $ succ c
           ]
  
-instance Show SrcCxt where show = chars ∘ ppshow
+instance Show SrcCxt where show = tohsChars ∘ ppshow

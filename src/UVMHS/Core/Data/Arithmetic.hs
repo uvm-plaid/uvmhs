@@ -5,6 +5,43 @@ import UVMHS.Core.Classes
 import UVMHS.Core.Data.Option ()
 
 import qualified Prelude as HS
+import qualified Data.Ratio as HS
+
+zabs ∷ ℤ → ℕ
+zabs = HS.fromIntegral ∘ HS.abs
+
+qabs ∷ ℚ → ℚᴾ
+qabs = HS.fromRational ∘ HS.abs
+
+numer ∷ ℚ → ℤ
+numer = HS.numerator
+
+denom ∷ ℚ → ℕ
+denom = HS.fromIntegral ∘ HS.denominator
+
+numerᴾ ∷ ℚᴾ → ℕ
+numerᴾ = HS.numerator
+
+denomᴾ ∷ ℚᴾ → ℕ
+denomᴾ = HS.denominator
+
+truncate ∷ 𝔻 → ℤ
+truncate = HS.truncate
+
+ceiling ∷ 𝔻 → ℤ
+ceiling = HS.ceiling
+
+floor ∷ 𝔻 → ℤ
+floor = HS.floor
+
+truncateᴾ ∷ 𝔻ᴾ → ℕ
+truncateᴾ = HS.truncate ∘ un𝔻ᴾ
+
+ceilingᴾ ∷ 𝔻ᴾ → ℕ
+ceilingᴾ = HS.ceiling ∘ un𝔻ᴾ
+
+floorᴾ ∷ 𝔻ᴾ → ℕ
+floorᴾ = HS.floor ∘ un𝔻ᴾ
 
 -- ℕ --
 

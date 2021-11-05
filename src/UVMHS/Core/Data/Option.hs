@@ -22,10 +22,12 @@ instance (Append a) ⇒ Append (𝑂 a) where
   Some x ⧺ Some y = Some $ x ⧺ y
 instance (Monoid a) ⇒ Monoid (𝑂 a)
 
-instance ToIter a (𝑂 a) where 
-  iter = \case
-    None → null𝐼
-    Some x → single𝐼 x
+instance ToIter a (𝑂 a) where iter = iter𝑂
+
+iter𝑂 ∷ 𝑂 a → 𝐼 a
+iter𝑂 xO = 𝐼 $ \ f i 𝓀 → case xO of
+    None → 𝓀 i
+    Some x → f x i 𝓀
 
 instance 𝑂 a ⇄ (() ∨ a) where
   isoto = \case

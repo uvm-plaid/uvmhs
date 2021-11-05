@@ -314,7 +314,7 @@ compileRegex e₀ =
 data LexDFAState t = LexDFAState
   { lexDFAStatePrefix ∷ WindowR Doc Doc
   , lexDFAStateContext ∷ ParserContext
-  , lexDFAStateInput ∷ DelayList (ParserToken t)
+  , lexDFAStateInput ∷ 𝑆 (ParserToken t)
   , lexDFAStateTokens ∷ 𝐼C t
   }
 makePrettySum ''LexDFAState
@@ -328,9 +328,9 @@ data Lexer c t o u w = Lexer
 tokenize ∷ 
   ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
   ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (PreParserToken w)
-tokenize (Lexer dfas f u₀) so ts₀ = vecC ^$ oloop u₀ (dfas u₀) null $ delayList𝐼 $ iter ts₀
+tokenize (Lexer dfas f u₀) so ts₀ = vecC ^$ oloop u₀ (dfas u₀) null $ stream ts₀
   where
-  oloop ∷ u → DFA c t o u → WindowR Doc Doc → DelayList (ParserToken t) → Doc ∨ 𝐼C (PreParserToken w)
+  oloop ∷ u → DFA c t o u → WindowR Doc Doc → 𝑆 (ParserToken t) → Doc ∨ 𝐼C (PreParserToken w)
   oloop u (DFA lits n₀ δt δs δd) pp₀ pi₀' = iloop n₀ (LexDFAState pp₀ null pi₀' null) None None
     where
       success ∷ RegexResult o u → LexDFAState t → Doc ∨ 𝐼C (PreParserToken w)
@@ -347,7 +347,7 @@ tokenize (Lexer dfas f u₀) so ts₀ = vecC ^$ oloop u₀ (dfas u₀) null $ de
             d = parserContextError tc
         in displaySourceError so $ AddNull $ ParserError le d s $ single $ ParserErrorInfo pp (parserContextDisplayR pc) "<token>" null
       iloop ∷ ℕ64 → LexDFAState t → 𝑂 (ParserToken t ∧ LexDFAState t) → 𝑂 (RegexResult o u ∧ LexDFAState t) → Doc ∨ 𝐼C (PreParserToken w)
-      iloop n σ@(LexDFAState pp pc pi ts) tO rO = case unDelayList pi () of
+      iloop n σ@(LexDFAState pp pc pi ts) tO rO = case un𝑆 pi () of
         -- end of stream
         None → case rO of
           -- end of stream
@@ -682,7 +682,7 @@ data IndentCommand = OpenIC | CloseIC | NewlineIC
 --                  blah
 --                  ^^^^
 blockifyTokens ∷ ∀ t. 𝐿 (AddBT Loc) → (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
-blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop null bot False False anchors₀ $ delayList𝐼 $ iter ts₀
+blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop null bot False False anchors₀ $ stream ts₀
   where
     syntheticToken ∷ AddBT Loc → IndentCommand → PreParserToken t
     syntheticToken loc x =
@@ -693,12 +693,12 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
           pc = ParserContext (LocRange loc loc) (eWindowL pcS) (eWindowR pcS) $ eWindowR pcS
       in
       PreParserToken (mkIndentToken x) False pc
-    loop ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → 𝐿 (AddBT Loc) → DelayList (PreParserToken t) → 𝐼C (PreParserToken t)
+    loop ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
     loop prefix prefixLocRangeBumped isFreshBlock isAfterNewline = \case
       Nil → loopUnanchored prefix prefixLocRangeBumped isFreshBlock
       anchor :& anchors → loopAnchored prefix prefixLocRangeBumped isFreshBlock isAfterNewline anchor anchors
-    loopUnanchored ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → DelayList (PreParserToken t) → 𝐼C (PreParserToken t)
-    loopUnanchored prefix prefixLocRangeBumped isFreshBlock ts = case unDelayList ts () of
+    loopUnanchored ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
+    loopUnanchored prefix prefixLocRangeBumped isFreshBlock ts = case un𝑆 ts () of
       None → prefix
       Some (t :* ts') →
         let locₜ = locRangeBegin $ parserContextLocRange $ preParserTokenContext t
@@ -738,8 +738,8 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
                            (isBlock $ preParserTokenValue t) 
                            ts'
           ]
-    loopAnchored ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → AddBT Loc → 𝐿 (AddBT Loc) → DelayList (PreParserToken t) → 𝐼C (PreParserToken t)
-    loopAnchored prefix prefixLocRangeBumped isFreshBlock isAfterNewline anchor anchors ts = case unDelayList ts () of
+    loopAnchored ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → AddBT Loc → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
+    loopAnchored prefix prefixLocRangeBumped isFreshBlock isAfterNewline anchor anchors ts = case un𝑆 ts () of
       None → 
         let loop' ∷ 𝐿 (AddBT Loc) → 𝐼C (PreParserToken t)
             loop' anchors' =

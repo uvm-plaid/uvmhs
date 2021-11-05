@@ -1,12 +1,15 @@
 module UVMHS.Core.Init
-  (module UVMHS.Core.Init
-  ,module GHC.Exts
-  ,module Prelude
-  ,module GHC.Stack
-  ,module Data.Coerce
+  ( module UVMHS.Core.Init
+  , module GHC.Exts
+  , module Prelude
+  , module GHC.Stack
+  , module Data.Coerce
   ) where
 
-import Prelude(Bool(..),($),($!),undefined,otherwise,IO,Eq((==)),Ord(compare),Show(show),Ordering(..))
+import Prelude
+  ( ($),($!),undefined,otherwise
+  , Bool(..),Eq((==)),Ord(compare),Show(show),Ordering(..),IO
+  )
 import Data.Coerce (coerce)
 import GHC.Exts (type Constraint)
 import GHC.Stack (type CallStack,callStack,withFrozenCallStack)
@@ -15,7 +18,6 @@ import qualified Prelude as HS
 import qualified GHC.Types as HS
 import qualified GHC.Stack as HS
 
-import qualified Control.Exception as HS
 import qualified Data.Int as HS
 import qualified Data.Ratio as HS
 import qualified Data.Word as HS
@@ -87,6 +89,14 @@ data 𝑂 a = None | Some a
 data 𝐿 a = Nil | a :& 𝐿 a
   deriving (Eq,Ord)
 newtype 𝐼 a = 𝐼 { un𝐼 ∷ ∀ b. (a → b → (b → b) → b) → b → (b → b) → b }
+
+run𝐼 ∷ (b → b) → b → (a → b → (b → b) → b) → 𝐼 a → b
+run𝐼 𝓀 i f xs = un𝐼 xs f i 𝓀
+
+run𝐼On ∷ 𝐼 a → (b → b) → b → (a → b → (b → b) → b) → b
+run𝐼On xs 𝓀 i f = un𝐼 xs f i 𝓀
+
+newtype 𝑆 a = 𝑆 { un𝑆 ∷ () → 𝑂 (a ∧ 𝑆 a) }
 newtype 𝑄 a = 𝑄 { un𝑄 ∷ Sequence.Seq a }
   deriving (Eq,Ord)
 newtype 𝑃 a = 𝑃 { un𝑃 ∷ Set.Set a }
@@ -139,42 +149,6 @@ deriving instance (∀ a. c a ⇒ Show (t a)) ⇒ Show (Ex_C c t)
 unpack_C ∷ ∀ (k ∷ ★) (c ∷ k → Constraint) (t ∷ k → ★) (b ∷ ★). Ex_C c t → (∀ (a ∷ k). (c a) ⇒ t a → b) → b
 unpack_C (Ex_C x) f = f x
 
-zabs ∷ ℤ → ℕ
-zabs = HS.fromIntegral ∘ HS.abs
-
-qabs ∷ ℚ → ℚᴾ
-qabs = HS.fromRational ∘ HS.abs
-
-numer ∷ ℚ → ℤ
-numer = HS.numerator
-
-denom ∷ ℚ → ℕ
-denom = HS.fromIntegral ∘ HS.denominator
-
-numerᴾ ∷ ℚᴾ → ℕ
-numerᴾ = HS.numerator
-
-denomᴾ ∷ ℚᴾ → ℕ
-denomᴾ = HS.denominator
-
-truncate ∷ 𝔻 → ℤ
-truncate = HS.truncate
-
-ceiling ∷ 𝔻 → ℤ
-ceiling = HS.ceiling
-
-floor ∷ 𝔻 → ℤ
-floor = HS.floor
-
-truncateᴾ ∷ 𝔻ᴾ → ℕ
-truncateᴾ = HS.truncate ∘ un𝔻ᴾ
-
-ceilingᴾ ∷ 𝔻ᴾ → ℕ
-ceilingᴾ = HS.ceiling ∘ un𝔻ᴾ
-
-floorᴾ ∷ 𝔻ᴾ → ℕ
-floorᴾ = HS.floor ∘ un𝔻ᴾ
-
 -- Syntax --
 
 fromString ∷ [ℂ] → 𝕊
@@ -224,17 +198,14 @@ ifThenElse b ~x ~y = case b of { True → let x' = x in x' ; False → let y' = 
 𝕫8 ∷ ℕ → ℤ8
 𝕫8 = HS.fromIntegral
 
-chars ∷ 𝕊 → [ℂ]
-chars = Text.unpack
+tohsChars ∷ 𝕊 → [ℂ]
+tohsChars = Text.unpack
 
-fromChars ∷ [ℂ] → 𝕊
-fromChars = Text.pack
+frhsChars ∷ [ℂ] → 𝕊
+frhsChars = Text.pack
 
 error ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r). (STACK) ⇒ 𝕊 → a
-error s = HS.error (chars s)
-
-assert ∷ 𝔹 → a → a
-assert = HS.assert
+error s = HS.error (tohsChars s)
 
 -- Functions --
 
@@ -295,44 +266,16 @@ True ⩔ True = True
 cond ∷ 𝔹 → a → a → a
 cond = \case { True → \ x _ → x ; False → \ _ y → y }
 
--- Lists --
-
-iter𝐿 ∷ 𝐿 a → 𝐼 a
-iter𝐿 xs₀ = 𝐼 $ \ f → flip $! \ 𝓀 →
-  let loop xs i = case xs of
-        Nil → 𝓀 i
-        x :& xs' →
-          f x i $! \ i' →
-          loop xs' i'
-  in loop xs₀
-
-list𝐼 ∷ 𝐼 a → 𝐿 a
-list𝐼 = foldr𝐼 Nil (:&)
-
--- LazyLists --
-
-iterLL ∷ [a] → 𝐼 a
-iterLL xs₀ = 𝐼 $ \ f → flip $! \ 𝓀 →
-  let loop xs i = case xs of
-        [] → 𝓀 i
-        x:xs' → 
-          f x i $! \ i' →
-          loop xs' i'
-  in loop xs₀
-
-lazyList𝐼 ∷ 𝐼 a → [a]
-lazyList𝐼 = foldr𝐼 [] (:)
-
 -- Iterators --
 
 foldk𝐼 ∷ b → (a → b → (b → b) → b) → 𝐼 a → b
-foldk𝐼 i f xs = un𝐼 xs f i id
+foldk𝐼 = run𝐼 id
 
 fold𝐼 ∷ b → (a → b → b) → 𝐼 a → b
-fold𝐼 i₀ f xs = un𝐼 xs (\ x i 𝓀 → 𝓀 $! f x i) i₀ id
+fold𝐼 i₀ f = run𝐼 id i₀ $ \ x i 𝓀 → 𝓀 $! f x i
 
 foldr𝐼 ∷ b → (a → b → b) → 𝐼 a → b
-foldr𝐼 i₀ f xs = un𝐼 xs (\ x i 𝓀 → f x $! 𝓀 i) i₀ id
+foldr𝐼 i₀ f = run𝐼 id i₀ $ \ x i 𝓀 → f x $! 𝓀 i
 
 map𝐼 ∷ (a → b) → 𝐼 a → 𝐼 b
 map𝐼 f xs = 𝐼 $ \ g → un𝐼 xs $! g ∘ f
@@ -343,7 +286,31 @@ null𝐼 = 𝐼 $ const $ \ i 𝓀 → 𝓀 i
 single𝐼 ∷ a → 𝐼 a
 single𝐼 x = 𝐼 $ \ f i 𝓀 → f x i 𝓀
 
--- Compat --
+list𝐼 ∷ 𝐼 a → 𝐿 a
+list𝐼 = foldr𝐼 Nil (:&)
+
+iter𝐿 ∷ 𝐿 a → 𝐼 a
+iter𝐿 xs₀ = 𝐼 $ \ f → flip $! \ 𝓀 →
+  let loop xs i = case xs of
+        Nil → 𝓀 i
+        x :& xs' →
+          f x i $! \ i' →
+          loop xs' i'
+  in loop xs₀
+
+lazyList𝐼 ∷ 𝐼 a → [a]
+lazyList𝐼 = foldr𝐼 [] (:)
+
+iterLL ∷ [a] → 𝐼 a
+iterLL xs₀ = 𝐼 $ \ f → flip $! \ 𝓀 →
+  let loop xs i = case xs of
+        [] → 𝓀 i
+        x:xs' → 
+          f x i $! \ i' →
+          loop xs' i'
+  in loop xs₀
+
+-- compat --
 
 class CHS a b | b → a where
   tohs ∷ a → b
@@ -381,3 +348,46 @@ instance {-# OVERLAPPING #-} (CHS a b) ⇒ CHS (𝑂 a) (HS.Maybe b) where
   frhs = \case
     HS.Nothing → None
     HS.Just x → Some $! frhs x
+
+  {- 
+class ToHS a b | a → b where tohs ∷ a → b
+class FrHS a b | a → b,b → a where frhs ∷ b → a
+
+instance {-# OVERLAPPABLE #-} (a ~ b) ⇒ ToHS a b where tohs = id
+instance {-# OVERLAPPABLE #-} (a ~ b) ⇒ FrHS a b where frhs = id
+
+instance {-# OVERLAPPING #-} ToHS ℤ64 HS.Int where tohs = HS.fromIntegral
+instance {-# OVERLAPPING #-} FrHS ℤ64 HS.Int where frhs = HS.fromIntegral
+
+instance {-# OVERLAPPING #-} ToHS 𝕊 [ℂ] where tohs = undefined
+instance {-# OVERLAPPING #-} FrHS 𝕊 [ℂ] where frhs = undefined
+
+instance {-# OVERLAPPING #-} (ToHS a b) ⇒ ToHS (𝐿 a) [b] where tohs = lazyList𝐼 ∘ map𝐼 tohs ∘ iter𝐿
+instance {-# OVERLAPPING #-} (FrHS a b) ⇒ FrHS (𝐿 a) [b] where frhs = list𝐼 ∘ map𝐼 frhs ∘ iterLL
+
+-- instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂) ⇒ CHS (a₁ ∧ a₂) (b₁,b₂) where
+--   tohs (x :* y) = (tohs x,tohs y)
+--   frhs (x,y) = frhs x :* frhs y
+-- instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃) ⇒ CHS (a₁ ∧ a₂ ∧ a₃) (b₁,b₂,b₃) where
+--   tohs (x :* y :* z) = (tohs x,tohs y,tohs z)
+--   frhs (x,y,z) = frhs x :* frhs y :* frhs z
+-- instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃,CHS a₄ b₄) ⇒ CHS (a₁ ∧ a₂ ∧ a₃ ∧ a₄) (b₁,b₂,b₃,b₄) where
+--   tohs (w :* x :* y :* z) = (tohs w,tohs x,tohs y,tohs z)
+--   frhs (w,x,y,z) = frhs w :* frhs x :* frhs y :* frhs z
+instance {-# OVERLAPPING #-} (ToHS a₁ b₁,ToHS a₂ b₂) ⇒ ToHS (a₁ ∨ a₂) (HS.Either b₁ b₂) where
+  tohs = \case
+    Inl x → HS.Left $! tohs x
+    Inr y → HS.Right $! tohs y
+instance {-# OVERLAPPING #-} (FrHS a₁ b₁,FrHS a₂ b₂) ⇒ FrHS (a₁ ∨ a₂) (HS.Either b₁ b₂) where
+  frhs = \case
+    HS.Left x → Inl $! frhs x
+    HS.Right y → Inr $! frhs y
+instance {-# OVERLAPPING #-} (ToHS a b) ⇒ ToHS (𝑂 a) (HS.Maybe b) where
+  tohs = \case
+    None → HS.Nothing
+    Some x → HS.Just $! tohs x
+instance {-# OVERLAPPING #-} (FrHS a b) ⇒ FrHS (𝑂 a) (HS.Maybe b) where
+  frhs = \case
+    HS.Nothing → None
+    HS.Just x → Some $! frhs x
+    -}
