@@ -21,7 +21,7 @@ instance Single ℂ 𝕊 where
   single = Text.singleton
 
 instance ToIter ℂ 𝕊 where 
-  iter cs = 𝐼 $ \ f → flip $ \ 𝓀 →
+  iter cs = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
     case TextI.stream cs of
       TextI.Stream g s₀ _ →
         let loop s i = case g s of

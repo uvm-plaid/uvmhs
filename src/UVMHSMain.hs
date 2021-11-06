@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
 module UVMHSMain where
 

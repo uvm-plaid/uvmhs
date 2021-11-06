@@ -5,6 +5,8 @@ import UVMHS.Core.Classes
 
 import UVMHS.Core.Effects
 
+import qualified Prelude as HS
+
 -------------
 -- COMPOSE --
 -------------
@@ -38,14 +40,14 @@ instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftReader t₁,LiftReader t₂) 
   liftAsk askM = Compose2 $ liftAsk $ liftAsk askM
 
   liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m a)
-  liftLocal localM r = Compose2 ∘ (liftLocal $ liftLocal localM) r ∘ unCompose2
+  liftLocal localM r = Compose2 ∘ (liftLocal HS.$ liftLocal localM) r ∘ unCompose2
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftWriter t₁,LiftWriter t₂) ⇒ LiftWriter (t₁ ⊡ t₂) where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → (t₁ ⊡ t₂) m ())
   liftTell tellM = Compose2 ∘ (liftTell $ liftTell tellM)
 
   liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m (o ∧ a))
-  liftHijack hijackM = Compose2 ∘ (liftHijack $ liftHijack hijackM) ∘ unCompose2
+  liftHijack hijackM = Compose2 ∘ (liftHijack HS.$ liftHijack hijackM) ∘ unCompose2
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftState t₁,LiftState t₂) ⇒ LiftState (t₁ ⊡ t₂) where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → (t₁ ⊡ t₂) m s
@@ -56,35 +58,35 @@ instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftState t₁,LiftState t₂) �
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftFail t₁,LiftFail t₂) ⇒ LiftFail (t₁ ⊡ t₂) where
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. (t₁ ⊡ t₂) m a)
-  liftAbort abortM = Compose2 $ liftAbort $ liftAbort abortM
+  liftAbort abortM = Compose2 $ liftAbort HS.$ liftAbort abortM
 
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m a)
-  liftTry tryM xM₁ xM₂ = Compose2 $ (liftTry $ liftTry tryM) (unCompose2 xM₁) (unCompose2 xM₂)
+  liftTry tryM xM₁ xM₂ = Compose2 $ (liftTry HS.$ liftTry tryM) (unCompose2 xM₁) (unCompose2 xM₂)
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftError t₁,LiftError t₂) ⇒ LiftError (t₁ ⊡ t₂) where
   liftThrow ∷ ∀ m e. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → (t₁ ⊡ t₂) m a)
-  liftThrow throwM = Compose2 ∘ (liftThrow $ liftThrow throwM)
+  liftThrow throwM = Compose2 ∘ (liftThrow HS.$ liftThrow throwM)
 
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. (t₁ ⊡ t₂) m a → (e → (t₁ ⊡ t₂) m a) → (t₁ ⊡ t₂) m a)
-  liftCatch catchM xM k = Compose2 $ (liftCatch $ liftCatch catchM) (unCompose2 xM) (unCompose2 ∘ k)
+  liftCatch catchM xM k = Compose2 $ (liftCatch HS.$ liftCatch catchM) (unCompose2 xM) (unCompose2 ∘ k)
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftNondet t₁,LiftNondet t₂) ⇒ LiftNondet (t₁ ⊡ t₂) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. (t₁ ⊡ t₂) m a)
-  liftMzero mzeroM = Compose2 $ liftMzero $ liftMzero mzeroM
+  liftMzero mzeroM = Compose2 $ liftMzero HS.$ liftMzero mzeroM
 
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m a)
-  liftMplus mplusM xM₁ xM₂ = Compose2 $ (liftMplus $ liftMplus mplusM) (unCompose2 xM₁) (unCompose2 xM₂)
+  liftMplus mplusM xM₁ xM₂ = Compose2 $ (liftMplus HS.$ liftMplus mplusM) (unCompose2 xM₁) (unCompose2 xM₂)
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftTop t₁,LiftTop t₂) ⇒ LiftTop (t₁ ⊡ t₂) where
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. (t₁ ⊡ t₂) m a)
-  liftMtop mtopM = Compose2 $ liftMtop $ liftMtop mtopM
+  liftMtop mtopM = Compose2 $ liftMtop HS.$ liftMtop mtopM
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftCont t₁,LiftCont t₂) ⇒ LiftCont (t₁ ⊡ t₂) where
   liftCallCC ∷ ∀ m r. (Monad m) ⇒ (∀ a. ((a → m r) → m r) → m a) → (∀ a. ((a → (t₁ ⊡ t₂) m r) → (t₁ ⊡ t₂) m r) → (t₁ ⊡ t₂) m a)
-  liftCallCC callCCM kk = Compose2 $ (liftCallCC $ liftCallCC callCCM) $ \ (k ∷ a → t₁ (t₂ m) r) → unCompose2 $ kk (Compose2 ∘ k)
+  liftCallCC callCCM kk = Compose2 $ (liftCallCC HS.$ liftCallCC callCCM) $ \ (k ∷ a → t₁ (t₂ m) r) → unCompose2 $ kk (Compose2 ∘ k)
 
   liftWithC ∷ ∀ m r. (Monad m) ⇒ (∀ a. (a → m r) → m a → m r) →  (∀ a. (a → (t₁ ⊡ t₂) m r) → (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m r)
-  liftWithC withCM k xM = Compose2 $ (liftWithC $ liftWithC withCM) (unCompose2 ∘ k) (unCompose2 xM)
+  liftWithC withCM k xM = Compose2 $ (liftWithC HS.$ liftWithC withCM) (unCompose2 ∘ k) (unCompose2 xM)
 
 -------------
 -- LIFTING --

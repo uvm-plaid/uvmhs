@@ -231,7 +231,7 @@ newtype 𝕀64 (n ∷ 𝐍) = 𝕀64_UNSAFE { un𝕀64 ∷ ℕ64 }
   else None
 
 𝕟64di ∷ ∀ n a. 𝕀64 n → (∀ m. (m ≺ n) ⇒ ℕ64S m → a) → a
-𝕟64di i f = 𝕟64d (un𝕀64 i) $ \ (m ∷ ℕ64S m) → with (wnlt_UNSAFE @ m @ n P P) $ f m
+𝕟64di i f = 𝕟64d (un𝕀64 i) HS.$ \ (m ∷ ℕ64S m) → with (wnlt_UNSAFE @ m @ n P P) HS.$ f m
 
 upTo𝕀64 ∷ ∀ n. (𝒩64 n) ⇒ ℕ64S n → 𝐼S n (𝕀64 n)
 upTo𝕀64 n = 𝐼S_UNSAFE $ map 𝕀64_UNSAFE $ upTo $ unℕ64S n

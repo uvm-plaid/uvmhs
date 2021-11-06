@@ -99,7 +99,7 @@ instance Chunky ℂ where
   fromChunk g = do
     b₁ ← g ; b₂ ← g ; b₃ ← g ; b₄ ← g
     return $ HS.chr $ tohs $ frBitsℤ64 $ joinBytes (b₁,b₂,b₃,b₄,𝕟8 0,𝕟8 0,𝕟8 0,𝕟8 0)
-  toChunk c = 𝐼 $ \ (f ∷ ℕ8 → b → (b → b) → b) i 𝓀 →
+  toChunk c = 𝐼 HS.$ \ (f ∷ ℕ8 → b → (b → b) → b) i 𝓀 →
     let (b₁,b₂,b₃,b₄,_,_,_,_) = splitBytes $ toBitsℤ64 $ frhs $ HS.ord c
     in 
       f b₁ i $ \ i' →
@@ -113,7 +113,7 @@ instance Chunky ℕ64 where
     b₁ ← g ; b₂ ← g ; b₃ ← g ; b₄ ← g
     b₅ ← g ; b₆ ← g ; b₇ ← g ; b₈ ← g
     return $ joinBytes (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈)
-  toChunk n = 𝐼 $ \ (f ∷ ℕ8 → b → (b → b) → b) i 𝓀 →
+  toChunk n = 𝐼 HS.$ \ (f ∷ ℕ8 → b → (b → b) → b) i 𝓀 →
     let (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈) = splitBytes n
     in 
       f b₁ i $ \ i' →

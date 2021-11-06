@@ -10,6 +10,7 @@ import UVMHS.Core.Data.Pair
 import UVMHS.Core.Data.Stream
 import UVMHS.Core.Data.Function
 
+import qualified Prelude as HS
 import qualified Data.List as HS
 
 
@@ -37,8 +38,8 @@ empty𝐼 ∷ 𝐼 a
 empty𝐼 = null𝐼
 
 cons𝐼 ∷ a → 𝐼 a → 𝐼 a
-cons𝐼 x xs = 𝐼 $ \ f i 𝓀 → 
-  f x i $! \ i' →
+cons𝐼 x xs = 𝐼 HS.$ \ f i 𝓀 → 
+  f x i $ \ i' →
   un𝐼 xs f i' 𝓀
 
 stream ∷ (ToIter a t) ⇒ t → 𝑆 a
@@ -48,8 +49,8 @@ zipWith ∷ (ToIter a t₁,ToIter b t₂) ⇒ (a → b → c) → t₁ → t₂ 
 zipWith f xs ys = iter $ zipWith𝑆 f (stream xs) $ stream ys
 
 snoc𝐼 ∷ 𝐼 a → a → 𝐼 a
-snoc𝐼 xs x = 𝐼 $ \ f i 𝓀 → 
-  un𝐼 xs f i $! \ i' →
+snoc𝐼 xs x = 𝐼 HS.$ \ f i 𝓀 → 
+  un𝐼 xs f i $ \ i' →
   f x i' 𝓀
 
 isEmpty ∷ (ToIter a t) ⇒ t → 𝔹
@@ -59,8 +60,8 @@ firstElem ∷ (ToIter a t) ⇒ t → 𝑂 a
 firstElem xs = run𝐼On (iter xs) id None $ \ x _ _ → Some x
 
 append𝐼 ∷ 𝐼 a → 𝐼 a → 𝐼 a
-append𝐼 xs ys = 𝐼 $ \ f i 𝓀 →
-  un𝐼 xs f i $! \ i' →
+append𝐼 xs ys = 𝐼 HS.$ \ f i 𝓀 →
+  un𝐼 xs f i $ \ i' →
   un𝐼 ys f i' 𝓀
 
 mjoin𝐼 ∷ 𝐼 (𝐼 a) → 𝐼 a
@@ -139,7 +140,7 @@ foldrWithFrom ∷ (ToIter a t) ⇒ (a → b → b) → b → t → b
 foldrWithFrom = flip foldr
 
 mfold ∷ (Monad m,ToIter a t) ⇒ b → (a → b → m b) → t → m b
-mfold i₀ f = foldkFromWith (return i₀) $ \ x iM 𝓀 → do i ← iM ; 𝓀 $! f x i
+mfold i₀ f = foldkFromWith (return i₀) $ \ x iM 𝓀 → do i ← iM ; 𝓀 $ f x i
 
 mfoldFromWith ∷ (Monad m,ToIter a t) ⇒ b → (a → b → m b) → t → m b
 mfoldFromWith = mfold
@@ -243,10 +244,10 @@ countWith f = fold zero $ \ x → case f x of
   False → id
 
 reverse ∷ (ToIter a t) ⇒ t → 𝐼 a
-reverse xs = 𝐼 $ \ f i₀ 𝓀₀ → un𝐼 (iter xs) (\ x 𝓀 m𝓀 → m𝓀 $ \ i → f x i 𝓀) 𝓀₀ id i₀
+reverse xs = 𝐼 HS.$ \ f i₀ 𝓀₀ → un𝐼 (iter xs) (\ x 𝓀 m𝓀 → m𝓀 $ \ i → f x i 𝓀) 𝓀₀ id i₀
 
 replicateI ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → (n → a) → 𝐼 a
-replicateI n₀ g = 𝐼 $ \ f → flip $ \ 𝓀 → 
+replicateI n₀ g = 𝐼 HS.$ \ f → flip $ \ 𝓀 → 
   let loop n i
         | n ≡ n₀ = 𝓀 i
         | otherwise = 
@@ -258,7 +259,7 @@ replicate ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → 𝐼 a
 replicate n = replicateI n ∘ const
 
 build ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → (a → a) → 𝐼 a
-build n₀ x₀ g = 𝐼 $ \ f → flip $ \ 𝓀 → 
+build n₀ x₀ g = 𝐼 HS.$ \ f → flip $ \ 𝓀 → 
   let loop n x i
         | n ≡ n₀ = 𝓀 i
         | otherwise = 
@@ -271,7 +272,7 @@ upTo n = build n zero succ
 
 reiter ∷ ∀ a b s. s → (a → s → (s ∧ b)) → 𝐼 a → 𝐼 b
 reiter s₀ f xs = 
-  𝐼 $ \ g i₀ 𝓀₀ → 
+  𝐼 HS.$ \ g i₀ 𝓀₀ → 
     snd $ run𝐼On xs (\ (s :* i) → s :* 𝓀₀ i) (s₀ :* i₀) $ \ x (s :* i) 𝓀 → 
         let s' :* y = f x s
         in (s' :*) $ g y i $ \ i' → 
@@ -303,7 +304,7 @@ mapBeforeLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
 mapBeforeLast f = map (\ (b :* x) → case b of {True → x;False → f x}) ∘ withLast
 
 filterMap ∷ (ToIter a t) ⇒ (a → 𝑂 b) → t → 𝐼 b
-filterMap f xs = 𝐼 $ \ g →
+filterMap f xs = 𝐼 HS.$ \ g →
   un𝐼 (iter xs) $ \ x i 𝓀 → 
     case f x of
       None → 𝓀 i
@@ -316,7 +317,7 @@ filterOn ∷ (ToIter a t) ⇒ t → (a → 𝔹) → 𝐼 a
 filterOn = flip filter
 
 inbetween ∷ (ToIter a t) ⇒ a → t → 𝐼 a
-inbetween xⁱ xs = 𝐼 $ \ f →
+inbetween xⁱ xs = 𝐼 HS.$ \ f →
   un𝐼 (withFirst $ iter xs) $ \ (b :* x) i 𝓀 →
     if b 
     then f x i 𝓀

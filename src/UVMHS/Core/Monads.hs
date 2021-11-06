@@ -417,40 +417,40 @@ evalUContT = runUContT return
 
 instance Functor (UContT m) where
   map ∷ ∀ a b. (a → b) → UContT m a → UContT m b
-  map f xM = UContT $ \ (k ∷ b → m u) → unUContT xM $ \ x → k $ f x
+  map f xM = UContT HS.$ \ (k ∷ b → m u) → unUContT xM $ \ x → k $ f x
 
 instance Return (UContT m) where
   return ∷ ∀ a. a → UContT m a
-  return x = UContT $ \ (k ∷ a → m u) → k x
+  return x = UContT HS.$ \ (k ∷ a → m u) → k x
 instance Bind (UContT m) where
   (≫=) ∷ ∀ a b. UContT m a → (a → UContT m b) → UContT m b
-  xM ≫= kk = UContT $ \ (k ∷ b → m u) → unUContT xM $ \ (x ∷ a) → unUContT (kk x) k
+  xM ≫= kk = UContT HS.$ \ (k ∷ b → m u) → unUContT xM $ \ (x ∷ a) → unUContT (kk x) k
 instance Monad (UContT m)
 
 instance Functor2Iso UContT where
   map2iso ∷ ∀ m₁ m₂. Iso2 m₁ m₂ → ∀ a. UContT m₁ a → UContT m₂ a
-  map2iso i xM = UContT $ \ (k ∷ a → m₂ u) → 
+  map2iso i xM = UContT HS.$ \ (k ∷ a → m₂ u) → 
     ito2 i $ unUContT xM $ \ (x ∷ a) → 
       ifr2 i $ k x
 
 instance (Monad m) ⇒ MonadUCont (UContT m) where
   ucallCC ∷ ∀ a. (∀ u. (a → UContT m u) → UContT m u) → UContT m a
-  ucallCC ff = UContT $ \ (𝓀 ∷ a → m u₁) → 
+  ucallCC ff = UContT HS.$ \ (𝓀 ∷ a → m u₁) → 
     evalUContT $ ff $ \ (x ∷ a) → 
-      UContT $ \ (𝓀' ∷ u₁ → m u₂) → 
+      UContT HS.$ \ (𝓀' ∷ u₁ → m u₂) → 
         𝓀' *$ 𝓀 x
 
   uwithC ∷ ∀ a u. (a → UContT m u) → UContT m a → UContT m u
-  uwithC f xM = UContT $ \ (𝓀 ∷ u → m u₁) →
+  uwithC f xM = UContT HS.$ \ (𝓀 ∷ u → m u₁) →
     𝓀 *$ unUContT xM $ \ (x ∷ a) → 
       evalUContT $ f x
 
 instance (∀ a'. Null (m a')) ⇒ Null (UContT m a) where
   null ∷ UContT m a
-  null = UContT $ \ (_ ∷ a → m u) → null
+  null = UContT HS.$ \ (_ ∷ a → m u) → null
 instance (∀ a'. Append (m a')) ⇒ Append (UContT m a) where
   (⧺) ∷ UContT m a → UContT m a → UContT m a
-  xM₁ ⧺ xM₂ = UContT $ \ (𝓀 ∷ a → m u) → unUContT xM₁ 𝓀 ⧺ unUContT xM₂ 𝓀
+  xM₁ ⧺ xM₂ = UContT HS.$ \ (𝓀 ∷ a → m u) → unUContT xM₁ 𝓀 ⧺ unUContT xM₂ 𝓀
 instance 
   ( ∀ a'. Null (m a')
   , ∀ a'. Append (m a')
@@ -459,7 +459,7 @@ instance
 
 instance Transformer UContT where
   lift ∷ ∀ m a. (Monad m) ⇒ m a → UContT m a
-  lift xM = UContT $ \ (𝓀 ∷ a → m u) → 𝓀 *$ xM
+  lift xM = UContT HS.$ \ (𝓀 ∷ a → m u) → 𝓀 *$ xM
 
 -----------
 -- NoBad --
@@ -1037,57 +1037,57 @@ instance (Monad m,MonadTop m) ⇒ MonadTop (ContT r m) where
 
 instance LiftIO UContT where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → UContT m a)
-  liftIO ioM xM = UContT $ \ (𝓀 ∷ a → m u) → 𝓀 *$ ioM xM
+  liftIO ioM xM = UContT HS.$ \ (𝓀 ∷ a → m u) → 𝓀 *$ ioM xM
 
 instance (Monad m,MonadReader r m) ⇒ MonadReader r (UContT m) where
   ask ∷ UContT m r
-  ask = UContT $ \ (𝓀 ∷ r → m u) → 𝓀 *$ ask
+  ask = UContT HS.$ \ (𝓀 ∷ r → m u) → 𝓀 *$ ask
 
   local ∷ ∀ a. r → UContT m a → UContT m a
-  local r xM = UContT $ \ (𝓀 ∷ a → m u) → 𝓀 *$ local r $ evalUContT xM
+  local r xM = UContT HS.$ \ (𝓀 ∷ a → m u) → 𝓀 *$ local r $ evalUContT xM
 
 instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (UContT m) where
   tell ∷ o → UContT m ()
-  tell o = UContT $ \ (𝓀 ∷ () → m u) → 𝓀 *$ tell o
+  tell o = UContT HS.$ \ (𝓀 ∷ () → m u) → 𝓀 *$ tell o
 
   hijack ∷ ∀ a. UContT m a → UContT m (o ∧ a)
-  hijack xM = UContT $ \ (𝓀 ∷ (o ∧ a) → m u) → 𝓀 *$ hijack $ evalUContT xM
+  hijack xM = UContT HS.$ \ (𝓀 ∷ (o ∧ a) → m u) → 𝓀 *$ hijack $ evalUContT xM
 
 instance (Monad m,MonadState s m) ⇒ MonadState s (UContT m) where
   get ∷ UContT m s
-  get = UContT $ \ (𝓀 ∷ s → m u) → 𝓀 *$ get
+  get = UContT HS.$ \ (𝓀 ∷ s → m u) → 𝓀 *$ get
 
   put ∷ s → UContT m ()
-  put s = UContT $ \ (𝓀 ∷ () → m u) → 𝓀 *$ put s
+  put s = UContT HS.$ \ (𝓀 ∷ () → m u) → 𝓀 *$ put s
 
 instance (Monad m,MonadFail m) ⇒ MonadFail (UContT m) where
   abort ∷ ∀ a. UContT m a
-  abort = UContT $ \ (_ ∷ a → m u) → abort
+  abort = UContT HS.$ \ (_ ∷ a → m u) → abort
 
   (⎅) ∷ ∀ a. UContT m a → UContT m a → UContT m a
-  xM₁ ⎅ xM₂ = UContT $ \ (k ∷ a → m u) → do
+  xM₁ ⎅ xM₂ = UContT HS.$ \ (k ∷ a → m u) → do
     runUContT k xM₁ ⎅ runUContT k xM₂
 
 instance (Monad m,MonadError e m) ⇒ MonadError e (UContT m) where
   throw ∷ ∀ a. e → UContT m a
-  throw e = UContT $ \ (_ ∷ a → m u) → throw e
+  throw e = UContT HS.$ \ (_ ∷ a → m u) → throw e
 
   catch ∷ ∀ a. UContT m a → (e → UContT m a) → UContT m a
-  catch xM₁ kk = UContT $ \ (k ∷ a → m u) → do
+  catch xM₁ kk = UContT HS.$ \ (k ∷ a → m u) → do
     catch (runUContT k xM₁) $ \ e →
       runUContT k $ kk e
 
 instance (Monad m,MonadNondet m) ⇒ MonadNondet (UContT m) where
   mzero ∷ ∀ a. UContT m a
-  mzero = UContT $ \ (_ ∷ a → m u) → mzero
+  mzero = UContT HS.$ \ (_ ∷ a → m u) → mzero
 
   (⊞) ∷ ∀ a. UContT m a → UContT m a → UContT m a
-  xM₁ ⊞ xM₂ = UContT $ \ (k ∷ a → m u) → do
+  xM₁ ⊞ xM₂ = UContT HS.$ \ (k ∷ a → m u) → do
     runUContT k xM₁ ⊞ runUContT k xM₂
 
 instance (Monad m,MonadTop m) ⇒ MonadTop (UContT m) where
   mtop ∷ ∀ a. UContT m a
-  mtop = UContT $ \ (_ ∷ a → m u) → mtop
+  mtop = UContT HS.$ \ (_ ∷ a → m u) → mtop
 
 -- ======= --
 -- DERIVED --

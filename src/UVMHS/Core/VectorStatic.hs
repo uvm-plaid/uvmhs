@@ -14,7 +14,8 @@ import UVMHS.Core.Vector
 
 import Foreign.Storable (Storable(..))
 
-import qualified Data.Vector           as VB
+import qualified Prelude as HS
+import qualified Data.Vector as VB
 import qualified Data.Vector.Storable  as VU
 
 infixl 6 ⋅,✖
@@ -97,7 +98,7 @@ xs ⋅ ys = sum $ map (\ i → xs ⋕ i × ys ⋕ i) $ upTo𝕀64 $ 𝕟64s
 xs ✖ ys = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j → xs ⋕ i ⋅ ys ⋕ j
 
 d𝕍 ∷ 𝕍 a → (∀ n. (𝒩64 n) ⇒ 𝕍S n a → b) → b
-d𝕍 xs f = 𝕟64d (natΩ64 $ frhs $ VB.length $ un𝕍 xs) $ \ (_ ∷ ℕ64S n) → f @ n $ 𝕍S_UNSAFE $ un𝕍 xs
+d𝕍 xs f = 𝕟64d (natΩ64 $ frhs $ VB.length $ un𝕍 xs) HS.$ \ (_ ∷ ℕ64S n) → f @ n $ 𝕍S_UNSAFE $ un𝕍 xs
 
 --------
 -- 𝕌S --
@@ -140,7 +141,7 @@ map𝕌S ∷ (𝒩 n,Storable a,Storable b) ⇒ (a → b) → 𝕌S n a → 𝕌
 map𝕌S f = suvec ∘ map f ∘ iter𝕌SS
 
 d𝕌 ∷ (Storable a) ⇒ 𝕌 a → (∀ n. (𝒩64 n) ⇒ 𝕌S n a → b) → b
-d𝕌 xs f = 𝕟64d (natΩ64 $ frhs $ VU.length $ un𝕌 xs) $ \ (_ ∷ ℕ64S n) → f @ n $ 𝕌S_UNSAFE $ un𝕌 xs
+d𝕌 xs f = 𝕟64d (natΩ64 $ frhs $ VU.length $ un𝕌 xs) HS.$ \ (_ ∷ ℕ64S n) → f @ n $ 𝕌S_UNSAFE $ un𝕌 xs
 
 --------
 -- 𝕄S --

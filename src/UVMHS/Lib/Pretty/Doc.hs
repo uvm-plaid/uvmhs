@@ -10,6 +10,7 @@ import UVMHS.Lib.Pretty.Shape
 import UVMHS.Lib.Pretty.RenderUndertags
 
 import qualified GHC.Stack as Stack
+import qualified Prelude as HS
 
 -- Doc renders local configuration options such as colors and
 -- formatting
@@ -515,7 +516,7 @@ instance Pretty Stack.CallStack where pretty = ppString ∘ string ∘ Stack.pre
 
 colorsDemo ∷ Doc
 colorsDemo = 
-  d𝕍 (vec $ iter allColors) $ \ allColorsS → 
+  d𝕍 (vec $ iter allColors) HS.$ \ allColorsS → 
     ppMatrix (const𝕍S 𝕟64s LH) (const𝕍S 𝕟64s TV) $ mapOn allColorsS $ \ (n :* c) → 
       svec $ 𝔢 (ppString n)
           ⧺♮ 𝔢 (ppFG c $ ppString "XXXXX")

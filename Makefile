@@ -54,5 +54,7 @@ ALL_HS_FILES := $(shell find src -name '*.hs')
 
 fixity-levels.txt: Makefile $(ALL_HS_FILES)
 	grep -hE '^infix' $(ALL_HS_FILES) | sed -E "s/^infix([rl]?)[ ]*(.*)$$/\\2 [\\1]/g" | sort > $@
-	echo "\n" >> $@
+	echo "" >> $@
+	echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> $@
+	echo "" >> $@
 	grep -E '^infix' $(ALL_HS_FILES) >> $@

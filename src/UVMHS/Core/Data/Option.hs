@@ -3,6 +3,8 @@ module UVMHS.Core.Data.Option where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
+import qualified Prelude as HS
+
 instance Functor 𝑂 where 
   map = mmap
 instance Return 𝑂 where 
@@ -25,7 +27,7 @@ instance (Monoid a) ⇒ Monoid (𝑂 a)
 instance ToIter a (𝑂 a) where iter = iter𝑂
 
 iter𝑂 ∷ 𝑂 a → 𝐼 a
-iter𝑂 xO = 𝐼 $ \ f i 𝓀 → case xO of
+iter𝑂 xO = 𝐼 HS.$ \ f i 𝓀 → case xO of
     None → 𝓀 i
     Some x → f x i 𝓀
 

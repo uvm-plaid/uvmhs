@@ -3,6 +3,8 @@ module UVMHS.Core.Data.Stream where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
+import qualified Prelude as HS
+
 instance (Eq a) ⇒ Eq (𝑆 a) where (==) = eq𝑆
 instance (Ord a) ⇒ Ord (𝑆 a) where compare = compare𝑆
 
@@ -31,7 +33,7 @@ stream𝐼 ∷ ∀ a. 𝐼 a → 𝑆 a
 stream𝐼 xs = un𝐼 xs (\ x i 𝓀 → 𝑆 $ \ () → Some $ x :* 𝓀 i) (𝑆 $ \ () → None) id
 
 iter𝑆 ∷ 𝑆 a → 𝐼 a
-iter𝑆 xs₀ = 𝐼 $ \ f → flip $ \ 𝓀 →
+iter𝑆 xs₀ = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
   let loop xs i = case un𝑆 xs () of
         None → 𝓀 i
         Some (x :* xs') → 

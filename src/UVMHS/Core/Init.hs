@@ -7,7 +7,7 @@ module UVMHS.Core.Init
   ) where
 
 import Prelude
-  ( ($),($!),undefined,otherwise
+  ( undefined,otherwise
   , Bool(..),Eq((==)),Ord(compare),Show(show),Ordering(..),IO
   )
 import Data.Coerce (coerce)
@@ -30,16 +30,7 @@ import qualified Data.Set as Set
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Sequence
 
--- 0[R]: $ $!
--- 1[R]: ≫= →
--- 2[L]: ⩔
--- 3[L]: ⩓
--- 4[I]: ≡
--- 5[L]: +,∨
--- 6[L]: ×,∧
--- 7[L]: ∘,#,^
--- 8[*]: :*,:&
--- 9[L]: ⋅
+infixr 0 $
 
 infixr 1 ⇰
 infixl 2 ⩔
@@ -50,7 +41,9 @@ infixl 7 ∘
 infixl 8 :*
 infixr 8 :&
 
-type STACK = HS.HasCallStack
+------------------------------------
+-- Numeric and Boolean Base Types --
+------------------------------------
 
 type ℕ = HS.Natural
 type ℕ64 = HS.Word64
@@ -65,30 +58,72 @@ type ℤ8  = HS.Int8
 type ℚ = HS.Rational
 type ℚᴾ = HS.Ratio ℕ
 type 𝔻 = HS.Double
+
 -- non-negative double
 newtype 𝔻ᴾ = 𝔻ᴾ { un𝔻ᴾ ∷ 𝔻 }
   deriving (Eq,Ord,Show,HS.Num,HS.Fractional,HS.Floating,HS.Real)
 
+-- union of integer, rational and double
 data ℝ = Integer ℤ | Rational ℚ | Double 𝔻
   deriving (Eq,Ord,Show)
+
+-- non-negative variant of ^^
 data ℝᴾ = Natural ℕ | Rationalᴾ ℚᴾ | Doubleᴾ 𝔻ᴾ
   deriving (Eq,Ord,Show)
+
+-- bools
+type 𝔹 = HS.Bool
+
+not ∷ 𝔹 → 𝔹
+not True = False
+not False = True
+
+(⩔) ∷ 𝔹 → 𝔹 → 𝔹
+b₁ ⩔ ~b₂ = if b₁ then True else b₂
+
+(⩓) ∷ 𝔹 → 𝔹 → 𝔹
+b₁ ⩓ ~b₂ = if b₁ then b₂ else False
+
+cond ∷ 𝔹 → a → a → a
+cond b ~x ~y = case b of { True → x ; False → y }
+
+---------------------------
+-- Char and String Types --
+---------------------------
 
 type ℂ = HS.Char
 type 𝕊 = Text.Text
 
+-----------------------
+-- "Algebraic" Types --
+-----------------------
+
 data Void
 
-type 𝔹 = HS.Bool
+contradiction ∷ Void → a
+contradiction = \case
+
 data a ∨ b = Inl a | Inr b
   deriving (Eq,Ord,Show)
 data a ∧ b = a :* b
   deriving (Eq,Ord,Show)
+
+----------------------
+-- Collection Types --
+----------------------
+
 data 𝑂 a = None | Some a
   deriving (Eq,Ord,Show)
 data 𝐿 a = Nil | a :& 𝐿 a
   deriving (Eq,Ord)
+
+-- iterator type             
+--                           fold function               continuation
+--                           ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓       ↓↓↓↓↓↓↓
 newtype 𝐼 a = 𝐼 { un𝐼 ∷ ∀ b. (a → b → (b → b) → b) → b → (b → b) → b }
+--                                ↑   ↑↑↑↑↑↑↑        ↑
+--                      accumulator   continuation   accumulator
+
 
 run𝐼 ∷ (b → b) → b → (a → b → (b → b) → b) → 𝐼 a → b
 run𝐼 𝓀 i f xs = un𝐼 xs f i 𝓀
@@ -96,15 +131,74 @@ run𝐼 𝓀 i f xs = un𝐼 xs f i 𝓀
 run𝐼On ∷ 𝐼 a → (b → b) → b → (a → b → (b → b) → b) → b
 run𝐼On xs 𝓀 i f = un𝐼 xs f i 𝓀
 
+foldk𝐼 ∷ b → (a → b → (b → b) → b) → 𝐼 a → b
+foldk𝐼 = run𝐼 id
+
+-- accumulate values in natural order
+-- (i.e., from "left to right")
+-- constant space overhead
+fold𝐼 ∷ b → (a → b → b) → 𝐼 a → b
+fold𝐼 i₀ f = run𝐼 id i₀ $ \ x i 𝓀 → 𝓀 $ f x i
+
+-- accumulate values in reverse order
+-- (i.e., from "right to left")
+-- linear space overhead
+foldr𝐼 ∷ b → (a → b → b) → 𝐼 a → b
+foldr𝐼 i₀ f = run𝐼 id i₀ $ \ x i 𝓀 → f x $ 𝓀 i
+
+map𝐼 ∷ (a → b) → 𝐼 a → 𝐼 b
+map𝐼 f xs = 𝐼 HS.$ \ g → un𝐼 xs $ g ∘ f
+
+null𝐼 ∷ 𝐼 a
+null𝐼 = 𝐼 HS.$ const $ \ i 𝓀 → 𝓀 i
+
+single𝐼 ∷ a → 𝐼 a
+single𝐼 x = 𝐼 HS.$ \ f i 𝓀 → f x i 𝓀
+
+list𝐼 ∷ 𝐼 a → 𝐿 a
+list𝐼 = foldr𝐼 Nil (:&)
+
+iter𝐿 ∷ 𝐿 a → 𝐼 a
+iter𝐿 xs₀ = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
+  let loop xs i = case xs of
+        Nil → 𝓀 i
+        x :& xs' →
+          f x i $ \ i' →
+          loop xs' i'
+  in loop xs₀
+
+lazyList𝐼 ∷ 𝐼 a → [a]
+lazyList𝐼 = foldr𝐼 [] (:)
+
+iterLL ∷ [a] → 𝐼 a
+iterLL xs₀ = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
+  let loop xs i = case xs of
+        [] → 𝓀 i
+        x:xs' → 
+          f x i $ \ i' →
+          loop xs' i'
+  in loop xs₀
+
+-- stream
 newtype 𝑆 a = 𝑆 { un𝑆 ∷ () → 𝑂 (a ∧ 𝑆 a) }
+-- sequence (finger trees)
 newtype 𝑄 a = 𝑄 { un𝑄 ∷ Sequence.Seq a }
   deriving (Eq,Ord)
+-- set (BB-ω trees)
 newtype 𝑃 a = 𝑃 { un𝑃 ∷ Set.Set a }
   deriving (Eq,Ord)
+-- dictionary (BB-ω trees)
 newtype k ⇰ v = 𝐷 { un𝐷 ∷ Map.Map k v }
   deriving (Eq,Ord)
 
+------------------------
+-- Other Useful Types --
+------------------------
+
 data Lazy a = Lazy { unLazy ∷ ~a }
+
+data Nat = Z | S Nat
+  deriving (Eq,Ord,Show)
 
 data (≟) (a ∷ k) (b ∷ k) ∷ ★ where
   Refl ∷ ∀ (k ∷ ★) (a ∷ k). a ≟ a
@@ -112,16 +206,14 @@ data (≟) (a ∷ k) (b ∷ k) ∷ ★ where
 data P (a ∷ k) = P
   deriving (Eq,Ord,Show)
 
-data Nat = Z | S Nat
-  deriving (Eq,Ord,Show)
-
+-- Wrap a constraint in a value
 data W (c ∷ Constraint) where W ∷ (c) ⇒ W c
 
 coerce_UNSAFE ∷ a → b
 coerce_UNSAFE = HS.unsafeCoerce
 
 weq_UNSAFE ∷ P a → P b → W (a ~ b)
-weq_UNSAFE P P = coerce_UNSAFE $! W @ (() ~ ())
+weq_UNSAFE P P = coerce_UNSAFE $ W @ (() ~ ())
 
 void_UNSAFE ∷ Void
 void_UNSAFE = coerce_UNSAFE ()
@@ -133,6 +225,7 @@ deriving instance Show (W c)
 with ∷ W c → ((c) ⇒ a) → a
 with W x = x
 
+-- Existentially quantified type
 data Ex (t ∷ k → ★) ∷ ★ where
   Ex ∷ ∀ (k ∷ ★) (t ∷ k → ★) (a ∷ k). t a → Ex t
 
@@ -141,6 +234,7 @@ deriving instance (∀ a. Show (t a)) ⇒ Show (Ex t)
 unpack ∷ ∀ (k ∷ ★) (t ∷ k → ★) (b ∷ ★). Ex t → (∀ (a ∷ k). t a → b) → b
 unpack (Ex x) f = f x
 
+-- Constrained existentially quantified type with
 data Ex_C (c ∷ k → Constraint) (t ∷ k → ★) ∷ ★ where
   Ex_C ∷ ∀ (k ∷ ★) (c ∷ k → Constraint) (t ∷ k → ★) (a ∷ k). (c a) ⇒ t a → Ex_C c t
 
@@ -149,7 +243,9 @@ deriving instance (∀ a. c a ⇒ Show (t a)) ⇒ Show (Ex_C c t)
 unpack_C ∷ ∀ (k ∷ ★) (c ∷ k → Constraint) (t ∷ k → ★) (b ∷ ★). Ex_C c t → (∀ (a ∷ k). (c a) ⇒ t a → b) → b
 unpack_C (Ex_C x) f = f x
 
--- Syntax --
+--------------------
+-- Haskell Syntax --
+--------------------
 
 fromString ∷ [ℂ] → 𝕊
 fromString = Text.pack
@@ -167,9 +263,11 @@ fail ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r) m. (STACK) ⇒ [ℂ] → m 
 fail = HS.error
 
 ifThenElse ∷ 𝔹 → a → a → a
-ifThenElse b ~x ~y = case b of { True → let x' = x in x' ; False → let y' = y in y' }
+ifThenElse = cond
 
--- Conversion --
+-----------------------
+-- Basic Conversions --
+-----------------------
 
 𝕟64 ∷ ℕ → ℕ64
 𝕟64 = HS.fromIntegral
@@ -204,10 +302,21 @@ tohsChars = Text.unpack
 frhsChars ∷ [ℂ] → 𝕊
 frhsChars = Text.pack
 
+---------------------
+-- Call Stack Type --
+---------------------
+
+type STACK = HS.HasCallStack
+
 error ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r). (STACK) ⇒ 𝕊 → a
 error s = HS.error (tohsChars s)
 
--- Functions --
+------------------------------
+-- Basic Function Functions --
+------------------------------
+
+($) ∷ ∀ r a (b ∷ HS.TYPE r). (a → b) → a → b
+f $ x = f x
 
 id ∷ a → a
 id = \ x → x
@@ -242,73 +351,6 @@ curry f (x :* y) = f x y
 uncurry ∷ (a ∧ b → c) → a → b → c
 uncurry f x y = f (x :* y)
 
--- Void --
-
-contradiction ∷ Void → a
-contradiction = \case
-
--- Bools --
-
-not ∷ 𝔹 → 𝔹
-not True = False
-not False = True
-
-(⩓) ∷ 𝔹 → 𝔹 → 𝔹
-True ⩓ x = x
-x ⩓ True = x
-False ⩓ False = False
-
-(⩔) ∷ 𝔹 → 𝔹 → 𝔹
-False ⩔ x = x
-x ⩔ False = x
-True ⩔ True = True
-
-cond ∷ 𝔹 → a → a → a
-cond = \case { True → \ x _ → x ; False → \ _ y → y }
-
--- Iterators --
-
-foldk𝐼 ∷ b → (a → b → (b → b) → b) → 𝐼 a → b
-foldk𝐼 = run𝐼 id
-
-fold𝐼 ∷ b → (a → b → b) → 𝐼 a → b
-fold𝐼 i₀ f = run𝐼 id i₀ $ \ x i 𝓀 → 𝓀 $! f x i
-
-foldr𝐼 ∷ b → (a → b → b) → 𝐼 a → b
-foldr𝐼 i₀ f = run𝐼 id i₀ $ \ x i 𝓀 → f x $! 𝓀 i
-
-map𝐼 ∷ (a → b) → 𝐼 a → 𝐼 b
-map𝐼 f xs = 𝐼 $ \ g → un𝐼 xs $! g ∘ f
-
-null𝐼 ∷ 𝐼 a
-null𝐼 = 𝐼 $ const $ \ i 𝓀 → 𝓀 i
-
-single𝐼 ∷ a → 𝐼 a
-single𝐼 x = 𝐼 $ \ f i 𝓀 → f x i 𝓀
-
-list𝐼 ∷ 𝐼 a → 𝐿 a
-list𝐼 = foldr𝐼 Nil (:&)
-
-iter𝐿 ∷ 𝐿 a → 𝐼 a
-iter𝐿 xs₀ = 𝐼 $ \ f → flip $! \ 𝓀 →
-  let loop xs i = case xs of
-        Nil → 𝓀 i
-        x :& xs' →
-          f x i $! \ i' →
-          loop xs' i'
-  in loop xs₀
-
-lazyList𝐼 ∷ 𝐼 a → [a]
-lazyList𝐼 = foldr𝐼 [] (:)
-
-iterLL ∷ [a] → 𝐼 a
-iterLL xs₀ = 𝐼 $ \ f → flip $! \ 𝓀 →
-  let loop xs i = case xs of
-        [] → 𝓀 i
-        x:xs' → 
-          f x i $! \ i' →
-          loop xs' i'
-  in loop xs₀
 
 -- compat --
 
@@ -336,18 +378,18 @@ instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃,CHS a₄
   frhs (w,x,y,z) = frhs w :* frhs x :* frhs y :* frhs z
 instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂) ⇒ CHS (a₁ ∨ a₂) (HS.Either b₁ b₂) where
   tohs = \case
-    Inl x → HS.Left $! tohs x
-    Inr y → HS.Right $! tohs y
+    Inl x → HS.Left $ tohs x
+    Inr y → HS.Right $ tohs y
   frhs = \case
-    HS.Left x → Inl $! frhs x
-    HS.Right y → Inr $! frhs y
+    HS.Left x → Inl $ frhs x
+    HS.Right y → Inr $ frhs y
 instance {-# OVERLAPPING #-} (CHS a b) ⇒ CHS (𝑂 a) (HS.Maybe b) where
   tohs = \case
     None → HS.Nothing
-    Some x → HS.Just $! tohs x
+    Some x → HS.Just $ tohs x
   frhs = \case
     HS.Nothing → None
-    HS.Just x → Some $! frhs x
+    HS.Just x → Some $ frhs x
 
   {- 
 class ToHS a b | a → b where tohs ∷ a → b

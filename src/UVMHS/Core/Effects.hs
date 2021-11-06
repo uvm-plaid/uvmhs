@@ -6,6 +6,8 @@ import UVMHS.Core.Data
 
 import UVMHS.Core.Lens
 
+import qualified Prelude as HS
+
 infixl 5 ⊞,⎅
 
 class MonadIO (m ∷ ★ → ★) where io ∷ IO a → m a
@@ -426,25 +428,25 @@ withCOn = flip withC
 -- UCont --
 
 ureset ∷ (Monad m,MonadUCont m) ⇒ m a → m a 
-ureset aM = ucallCC $ \ k → k *$ uwithC return aM
+ureset aM = ucallCC HS.$ \ k → k *$ uwithC return aM
 
 umodifyC ∷ (Monad m,MonadUCont m) ⇒ (∀ u. u → m u) → m ()
-umodifyC f = ucallCC $ \ k → f *$ k ()
+umodifyC f = ucallCC HS.$ \ k → f *$ k ()
 
 uwithCOn ∷ (Monad m,MonadUCont m) ⇒ m a → (a → m u) → m u
 uwithCOn = flip uwithC
 
 putEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r → m ()
-putEnv r = ucallCC $ \ 𝓀 → local r $ 𝓀 ()
+putEnv r = ucallCC HS.$ \ 𝓀 → local r $ 𝓀 ()
 
 putEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m ()
-putEnvL ℓ r = ucallCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
+putEnvL ℓ r = ucallCC HS.$ \ 𝓀 → localL ℓ r $ 𝓀 ()
 
 modifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
-modifyEnv f = ucallCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
+modifyEnv f = ucallCC HS.$ \ 𝓀 → mapEnv f $ 𝓀 ()
 
 modifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
-modifyEnvL ℓ f = ucallCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
+modifyEnvL ℓ f = ucallCC HS.$ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
 
 ulocalL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m a → m a
 ulocalL ℓ r xM = do
