@@ -8,10 +8,7 @@ lexer = lexerWSBasic (list ["(",")"]) null null (list ["==","+","*","-","^","!"]
 testTokenizerSuccess ∷ IO ()
 testTokenizerSuccess = 
   tokenizeFIOMain lexer "" blockifyTokensWSBasic $ tokens $ concat $ inbetween "\n"
-    [ ""
-    , "-- hi"
-    , ""
-    , "1 {- blah -}"
+    [ "1 -- blah"
     , "2"
     , "3 4"
     , "  5"
@@ -24,8 +21,6 @@ testTokenizerSuccess =
     , "local local "
     , "      local"
     ]
-  -- where
-  --   nospace = not ∘ orf [shape spaceTWSBasicL,shape newlineTWSBasicL] ∘ parserTokenValue
 
 data Lit =
     IntegerL ℤ

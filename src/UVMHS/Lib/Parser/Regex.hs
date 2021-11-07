@@ -538,7 +538,7 @@ lComment ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lComment = sequence
   [ lWord "--"
   , star $ ntokRegex $ single '\n'
-  , opt $ tokRegex '\n'
+  -- , opt $ tokRegex '\n'
   , fepsRegex $ formats [IT,FG grayLight]
   , lepsRegex $ 𝕟64 100
   ]
