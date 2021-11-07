@@ -8,7 +8,10 @@ lexer = lexerWSBasic (list ["(",")"]) null null (list ["==","+","*","-","^","!"]
 testTokenizerSuccess ∷ IO ()
 testTokenizerSuccess = 
   tokenizeFIOMain lexer "" blockifyTokensWSBasic $ tokens $ concat $ inbetween "\n"
-    [ "1"
+    [ ""
+    , "-- hi"
+    , ""
+    , "1 {- blah -}"
     , "2"
     , "3 4"
     , "  5"

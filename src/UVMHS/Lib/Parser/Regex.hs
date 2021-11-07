@@ -282,7 +282,7 @@ data DFA c t o u = DFA
   }
 makePrettySum ''DFA
 
-compileRegex ∷ ∀ c t o u. (Pretty c,Pretty t,Pretty o,Pretty u,Ord c,Ord t,Classified c t,All c,Ord o,Ord u,Additive u) ⇒ Regex c t o u → DFA c t o u
+compileRegex ∷ ∀ c t o u. (Pretty t,Pretty o,Pretty u,Ord c,Ord t,Classified c t,All c,Ord o,Ord u,Additive u) ⇒ Regex c t o u → DFA c t o u
 compileRegex e₀ =
   let RegexState _ _ tr re de :* n = runState regexState₀ $ compile e₀
   in DFA lits n (map vecDΩ tr) (vecDΩ re) $ vecDΩ de
@@ -430,7 +430,7 @@ data CharClass = LetterClass | NumberClass | SpaceClass | NewlineClass | OtherCl
   deriving (Eq,Ord,Show)
 makePrettySum ''CharClass
 
-instance All CharClass where all = iter [LetterClass,NumberClass,SpaceClass,OtherClass]
+instance All CharClass where all = iter [LetterClass,NumberClass,SpaceClass,NewlineClass,OtherClass]
 
 instance Classified CharClass ℂ where
   classify c

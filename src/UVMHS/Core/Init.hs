@@ -352,7 +352,9 @@ uncurry ∷ (a ∧ b → c) → a → b → c
 uncurry f x y = f (x :* y)
 
 
--- compat --
+-----------------------------------
+-- Conversion to Vanilla Haskell --
+-----------------------------------
 
 class CHS a b | b → a where
   tohs ∷ a → b
@@ -390,46 +392,3 @@ instance {-# OVERLAPPING #-} (CHS a b) ⇒ CHS (𝑂 a) (HS.Maybe b) where
   frhs = \case
     HS.Nothing → None
     HS.Just x → Some $ frhs x
-
-  {- 
-class ToHS a b | a → b where tohs ∷ a → b
-class FrHS a b | a → b,b → a where frhs ∷ b → a
-
-instance {-# OVERLAPPABLE #-} (a ~ b) ⇒ ToHS a b where tohs = id
-instance {-# OVERLAPPABLE #-} (a ~ b) ⇒ FrHS a b where frhs = id
-
-instance {-# OVERLAPPING #-} ToHS ℤ64 HS.Int where tohs = HS.fromIntegral
-instance {-# OVERLAPPING #-} FrHS ℤ64 HS.Int where frhs = HS.fromIntegral
-
-instance {-# OVERLAPPING #-} ToHS 𝕊 [ℂ] where tohs = undefined
-instance {-# OVERLAPPING #-} FrHS 𝕊 [ℂ] where frhs = undefined
-
-instance {-# OVERLAPPING #-} (ToHS a b) ⇒ ToHS (𝐿 a) [b] where tohs = lazyList𝐼 ∘ map𝐼 tohs ∘ iter𝐿
-instance {-# OVERLAPPING #-} (FrHS a b) ⇒ FrHS (𝐿 a) [b] where frhs = list𝐼 ∘ map𝐼 frhs ∘ iterLL
-
--- instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂) ⇒ CHS (a₁ ∧ a₂) (b₁,b₂) where
---   tohs (x :* y) = (tohs x,tohs y)
---   frhs (x,y) = frhs x :* frhs y
--- instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃) ⇒ CHS (a₁ ∧ a₂ ∧ a₃) (b₁,b₂,b₃) where
---   tohs (x :* y :* z) = (tohs x,tohs y,tohs z)
---   frhs (x,y,z) = frhs x :* frhs y :* frhs z
--- instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂,CHS a₃ b₃,CHS a₄ b₄) ⇒ CHS (a₁ ∧ a₂ ∧ a₃ ∧ a₄) (b₁,b₂,b₃,b₄) where
---   tohs (w :* x :* y :* z) = (tohs w,tohs x,tohs y,tohs z)
---   frhs (w,x,y,z) = frhs w :* frhs x :* frhs y :* frhs z
-instance {-# OVERLAPPING #-} (ToHS a₁ b₁,ToHS a₂ b₂) ⇒ ToHS (a₁ ∨ a₂) (HS.Either b₁ b₂) where
-  tohs = \case
-    Inl x → HS.Left $! tohs x
-    Inr y → HS.Right $! tohs y
-instance {-# OVERLAPPING #-} (FrHS a₁ b₁,FrHS a₂ b₂) ⇒ FrHS (a₁ ∨ a₂) (HS.Either b₁ b₂) where
-  frhs = \case
-    HS.Left x → Inl $! frhs x
-    HS.Right y → Inr $! frhs y
-instance {-# OVERLAPPING #-} (ToHS a b) ⇒ ToHS (𝑂 a) (HS.Maybe b) where
-  tohs = \case
-    None → HS.Nothing
-    Some x → HS.Just $! tohs x
-instance {-# OVERLAPPING #-} (FrHS a b) ⇒ FrHS (𝑂 a) (HS.Maybe b) where
-  frhs = \case
-    HS.Nothing → None
-    HS.Just x → Some $! frhs x
-    -}
