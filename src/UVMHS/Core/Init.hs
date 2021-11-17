@@ -30,6 +30,8 @@ import qualified Data.Set as Set
 import qualified Data.Map.Strict as Map
 import qualified Data.Sequence as Sequence
 
+import qualified Language.Haskell.TH.Syntax as TH
+
 infixr 0 $
 
 infixr 1 ⇰
@@ -115,7 +117,7 @@ data a ∧ b = a :* b
 data 𝑂 a = None | Some a
   deriving (Eq,Ord,Show)
 data 𝐿 a = Nil | a :& 𝐿 a
-  deriving (Eq,Ord)
+  deriving (Eq,Ord,TH.Lift)
 
 -- iterator type             
 --                           fold function               continuation
@@ -356,6 +358,22 @@ uncurry f x y = f (x :* y)
 -- Conversion to Vanilla Haskell --
 -----------------------------------
 
+tohs𝑂F ∷ (a → b) → 𝑂 a → HS.Maybe b
+tohs𝑂F f = \case
+  None → HS.Nothing
+  Some x → HS.Just $ f x
+
+tohs𝑂 ∷ 𝑂 a → HS.Maybe a
+tohs𝑂 = tohs𝑂F id
+
+frhs𝑂F ∷ (a → b) → HS.Maybe a → 𝑂 b
+frhs𝑂F f = \case
+  HS.Nothing → None
+  HS.Just x → Some $ f x
+
+frhs𝑂 ∷ HS.Maybe a → 𝑂 a
+frhs𝑂 = frhs𝑂F id
+
 class CHS a b | b → a where
   tohs ∷ a → b
   frhs ∷ b → a
@@ -386,9 +404,5 @@ instance {-# OVERLAPPING #-} (CHS a₁ b₁,CHS a₂ b₂) ⇒ CHS (a₁ ∨ a�
     HS.Left x → Inl $ frhs x
     HS.Right y → Inr $ frhs y
 instance {-# OVERLAPPING #-} (CHS a b) ⇒ CHS (𝑂 a) (HS.Maybe b) where
-  tohs = \case
-    None → HS.Nothing
-    Some x → HS.Just $ tohs x
-  frhs = \case
-    HS.Nothing → None
-    HS.Just x → Some $ frhs x
+  tohs = tohs𝑂F tohs
+  frhs = frhs𝑂F frhs

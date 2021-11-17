@@ -120,3 +120,23 @@ thRecCL = Prism
   , construct = \ (n :* fs) → TH.RecC n (tohs fs)
   }
 
+thLoc𝕊 ∷ TH.Q 𝕊
+thLoc𝕊 = do
+  l ← TH.location
+  return $ concat
+    [ frhsChars $ TH.loc_module l 
+    , "@" 
+    , show𝕊 $ TH.loc_start l 
+    , ":" 
+    , show𝕊 $ TH.loc_end l
+    ]
+
+thLoc ∷ TH.Q (TH.TExp ((𝕊 → c) → c))
+thLoc = do
+  lS ← thLoc𝕊
+  [|| \ f → f lS ||]
+
+thExp ∷ TH.Q (TH.TExp a) → TH.Q (TH.TExp ((𝕊 → a → c) → c))
+thExp xQ = do
+  xS ← show𝕊 ∘ TH.unType ^$ xQ
+  [|| \ f → f xS $$xQ ||]

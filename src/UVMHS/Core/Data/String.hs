@@ -78,3 +78,6 @@ length64𝕊 = natΩ64 ∘ frhs ∘ Text.length
 
 splitOn𝕊 ∷ 𝕊 → 𝕊 → 𝐼 𝕊
 splitOn𝕊 i s = iterLL $ Text.splitOn i s
+
+replace𝕊 ∷ 𝕊 → 𝕊 → 𝕊 → 𝕊
+replace𝕊 = Text.replace

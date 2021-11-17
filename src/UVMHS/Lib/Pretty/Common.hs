@@ -71,13 +71,13 @@ shapeOChunk = \case
 -- Document Trees --
 --------------------
 
-type TreeI = 𝑉𝐴 Annotation (𝐼 ChunkI)
+type TreeI = 𝑇V Annotation (𝐼 ChunkI)
 
 --                              stuff 
 --                              between 
 --                              newlines
 --                              ⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄
-type TreeO = 𝑉𝐴 Formats (Sep () (𝐼A ChunkO))
+type TreeO = 𝑇V Formats (Sep () (𝐼A ChunkO))
 --                           ^^
 --                           newline indicator
 
@@ -87,7 +87,7 @@ chunkIO = \case
   PaddingChunkO n → RawChunkI n $ string $ replicate n ' '
 
 treeIO ∷ TreeO → TreeI
-treeIO = map𝑉𝐴 formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @ _ @ (𝐼 _) $ NewlineChunkI zero) (map chunkIO ∘ iter)
+treeIO = map𝑇V formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @ _ @ (𝐼 _) $ NewlineChunkI zero) (map chunkIO ∘ iter)
 
 --------------
 -- SummaryI --
@@ -116,10 +116,10 @@ instance Monoid SummaryI
 summaryChunksI ∷ 𝐼 ChunkI → SummaryI
 summaryChunksI chunks =
   let sh = concat $ map shapeIChunk $ iter chunks
-  in SummaryI False (ShapeA False sh) $ element𝑉𝐴 chunks
+  in SummaryI False (ShapeA False sh) $ single chunks
 
 annotateSummaryI ∷ Annotation → SummaryI → SummaryI
-annotateSummaryI a (SummaryI b sh cs) = SummaryI b sh $ annotate𝑉𝐴 a cs
+annotateSummaryI a (SummaryI b sh cs) = SummaryI b sh $ annot a cs
 
 --------------
 -- SummaryO --
@@ -138,10 +138,10 @@ instance Monoid SummaryO
 summaryChunksO ∷ Sep () (𝐼A ChunkO) → SummaryO
 summaryChunksO chunks =
   let sh = concat $ mapSep (const newlineShape) (concat ∘ map shapeOChunk ∘ iter) chunks
-  in SummaryO sh $ element𝑉𝐴 chunks
+  in SummaryO sh $ single chunks
 
 annotateSummaryO ∷ Formats → SummaryO → SummaryO
-annotateSummaryO fm (SummaryO sh cs) = SummaryO sh $ annotate𝑉𝐴 fm cs
+annotateSummaryO fm (SummaryO sh cs) = SummaryO sh $ annot fm cs
 
 ---------------
 -- Alignment --

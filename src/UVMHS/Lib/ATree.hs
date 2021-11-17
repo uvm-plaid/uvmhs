@@ -4,34 +4,42 @@ import UVMHS.Core
 
 import qualified Prelude as HS
 
-data 𝑉𝐴 i a = 𝑉𝐴 
-  { un𝑉𝐴 ∷ ∀ b. (Monoid b) 
+data 𝑇V i a = 𝑇V 
+  { un𝑇V ∷ ∀ b. (Monoid b) 
               ⇒ (a → b) 
               → (i → b → b) 
               → b 
   }
 
-element𝑉𝐴 ∷ a → 𝑉𝐴 i a
-element𝑉𝐴 e = 𝑉𝐴 HS.$ \ fₑ _fₐ → fₑ e
+fold𝑇VOnLeafNode ∷ (Monoid b) ⇒ 𝑇V i a → (a → b) → (i → b → b) → b
+fold𝑇VOnLeafNode = un𝑇V
 
-annotate𝑉𝐴 ∷ i → 𝑉𝐴 i a → 𝑉𝐴 i a
-annotate𝑉𝐴 i (𝑉𝐴 g) = 𝑉𝐴 HS.$ \ fₑ fₐ → fₐ i $ g fₑ fₐ
+fold𝑇VLeafNodeOn ∷ (Monoid b) ⇒ (a → b) → (i → b → b) → 𝑇V i a → b
+fold𝑇VLeafNodeOn fₗ fₙ xs = un𝑇V xs fₗ fₙ
 
-null𝑉𝐴 ∷ 𝑉𝐴 i a
-null𝑉𝐴 = 𝑉𝐴 HS.$ \ _fₑ _fₐ → null
+null𝑇V ∷ 𝑇V i a
+null𝑇V = 𝑇V HS.$ \ _fₑ _fₐ → null
 
-append𝑉𝐴 ∷ 𝑉𝐴 i a → 𝑉𝐴 i a → 𝑉𝐴 i a
-append𝑉𝐴 (𝑉𝐴 g₁) (𝑉𝐴 g₂) = 𝑉𝐴 HS.$ \ fₑ fₐ →
+append𝑇V ∷ 𝑇V i a → 𝑇V i a → 𝑇V i a
+append𝑇V (𝑇V g₁) (𝑇V g₂) = 𝑇V HS.$ \ fₑ fₐ →
   g₁ fₑ fₐ ⧺ g₂ fₑ fₐ
 
-instance Null (𝑉𝐴 i a) where null = null𝑉𝐴
-instance Append (𝑉𝐴 i a) where (⧺) = append𝑉𝐴
-instance Monoid (𝑉𝐴 i a)
+single𝑇V ∷ a → 𝑇V i a
+single𝑇V e = 𝑇V HS.$ \ fₑ _fₐ → fₑ e
 
-map𝑉𝐴 ∷ (i → j) → (a → b) → 𝑉𝐴 i a → 𝑉𝐴 j b
-map𝑉𝐴 f g (𝑉𝐴 h) = 𝑉𝐴 HS.$ \ fₑ fₐ → h (fₑ ∘ g) $ fₐ ∘ f
+annot ∷ i → 𝑇V i a → 𝑇V i a
+annot i (𝑇V g) = 𝑇V HS.$ \ fₑ fₐ → fₐ i $ g fₑ fₐ
 
-instance Functor (𝑉𝐴 i) where map = map𝑉𝐴 id
+
+instance Null (𝑇V i a) where null = null𝑇V
+instance Append (𝑇V i a) where (⧺) = append𝑇V
+instance Monoid (𝑇V i a)
+instance Single a (𝑇V i a) where single = single𝑇V
+
+map𝑇V ∷ (i → j) → (a → b) → 𝑇V i a → 𝑇V j b
+map𝑇V f g (𝑇V h) = 𝑇V HS.$ \ fₑ fₐ → h (fₑ ∘ g) $ fₐ ∘ f
+
+instance Functor (𝑇V i) where map = map𝑇V id
 
 -- -------
 -- -- 𝐴 --

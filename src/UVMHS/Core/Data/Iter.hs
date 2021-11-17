@@ -54,7 +54,7 @@ snoc𝐼 xs x = 𝐼 HS.$ \ f i 𝓀 →
   f x i' 𝓀
 
 isEmpty ∷ (ToIter a t) ⇒ t → 𝔹
-isEmpty xs = run𝐼On (iter xs) id False $ \ _ _ _ → True
+isEmpty xs = run𝐼On (iter xs) id True $ \ _ _ _ → False
 
 firstElem ∷ (ToIter a t) ⇒ t → 𝑂 a
 firstElem xs = run𝐼On (iter xs) id None $ \ x _ _ → Some x
@@ -299,6 +299,9 @@ withLast = reverse ∘ withFirst ∘ reverse
 
 mapLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
 mapLast f = map (\ (b :* x) → case b of {True → f x;False → x}) ∘ withLast
+
+mapLastOn ∷ (ToIter a t) ⇒ t → (a → a) → 𝐼 a
+mapLastOn = flip mapLast
 
 mapBeforeLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
 mapBeforeLast f = map (\ (b :* x) → case b of {True → x;False → f x}) ∘ withLast

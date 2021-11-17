@@ -94,7 +94,7 @@ annotateRenderUT ∷ Annotation → RenderUTM () → RenderUTM ()
 annotateRenderUT (Annotation fm ut) = mapOut (annotateSummaryO fm) ∘ mapEnvL renderUTEnvUnderFormatL (first ut)
 
 compileRenderUT ∷ TreeI → RenderUT
-compileRenderUT rd = onRenderUT (\ xM → xM ≫ renderUndertags) $ un𝑉𝐴 rd fₑ fₐ
+compileRenderUT rd = onRenderUT (\ xM → xM ≫ renderUndertags) $ un𝑇V rd fₑ fₐ
   where 
     fₑ = RenderUT ∘ eachWith renderChunkUndertags
     fₐ = onRenderUT ∘ annotateRenderUT

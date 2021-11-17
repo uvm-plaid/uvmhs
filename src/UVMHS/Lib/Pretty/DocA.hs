@@ -94,7 +94,7 @@ docAModal d₁ d₂ = DynamicDocA (staticDocA d₁) $ dynamicDocA d₂
 annotateDocA ∷ Annotation → DocA → DocA
 annotateDocA a = \case
   StaticDocA s → StaticDocA $ annotateSummaryI a s
-  DynamicDocA s xM → DynamicDocA (annotateSummaryI a s) $ mapOut (annotate𝑉𝐴 a) xM
+  DynamicDocA s xM → DynamicDocA (annotateSummaryI a s) $ mapOut (annot a) xM
 
 groupDocAM ∷ SummaryI → DocAM () → DocAM ()
 groupDocAM s xM = do
