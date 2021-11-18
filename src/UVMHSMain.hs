@@ -23,8 +23,12 @@ buildTests
 
 main ∷ IO ()
 main = cleanExit $ do
+  pprint $ ppHeader "COLOR TEST"
+  pprint colorsDemo
   $(testModules False
     [ "UVMHSMain"
     , "V:UVMHS.Lib.VariablesNew"
     ])
+  pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"
+
 
