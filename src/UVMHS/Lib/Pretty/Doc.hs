@@ -459,27 +459,27 @@ instance Pretty Time where pretty = ppLit ∘ show𝕊
 
 escape ∷ ℂ → 𝐼 ℂ
 escape = \case
-  '"' → iter "\\\""
-  '\\' → iter "\\\\"
-  '\n' → iter "\\n"
-  '\t' → iter "\\t"
-  '\r' → iter "\\r"
-  '\b' → iter "\\b"
-  '\f' → iter "\\f"
+  '"' → iter $ 𝕤 "\\\""
+  '\\' → iter $ 𝕤 "\\\\"
+  '\n' → iter $ 𝕤 "\\n"
+  '\t' → iter $ 𝕤 "\\t"
+  '\r' → iter $ 𝕤 "\\r"
+  '\b' → iter $ 𝕤 "\\b"
+  '\f' → iter $ 𝕤 "\\f"
   c' → single c'
 
 instance Pretty ℂ where 
   pretty c = ppLit $ string $ concat
-    [ iter "'"
+    [ iter $ 𝕤 "'"
     , escape c
-    , iter "'"
+    , iter $ 𝕤 "'"
     ]
 
 instance Pretty 𝕊 where 
   pretty s = ppLit $ string $ concat
-    [ iter "\""
+    [ iter $ 𝕤 "\""
     , escape *$ iter s
-    , iter "\""
+    , iter $ 𝕤 "\""
     ]
 
 instance (Pretty a,Pretty b) ⇒ Pretty (a,b) where

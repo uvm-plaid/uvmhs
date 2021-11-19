@@ -4,8 +4,8 @@ import UVMHS.Core
 import UVMHS.Lib.Pretty
 
 data GTree a = GTree 
-  { dtreeValues ∷ 𝐼 a
-  , dtreeNested ∷ 𝕊 ⇰ GTree a
+  { gtreeValues ∷ 𝐼 a
+  , gtreeNested ∷ 𝕊 ⇰ GTree a
   } deriving (Show)
 
 instance Null (GTree a) where 

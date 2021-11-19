@@ -211,6 +211,12 @@ mcompose = foldr return (*∘)
 wcompose ∷ (Comonad w) ⇒ (ToIter (w a → a) t) ⇒ t → w a → a
 wcompose = foldr extract (%∘)
 
+minsFrom ∷ (ToIter a t,Ord a) ⇒ a → t → a
+minsFrom = foldWithFrom (⩎)
+
+maxsFrom ∷ (ToIter a t,Ord a) ⇒ a → t → a
+maxsFrom = foldWithFrom (⩏)
+
 joinsFrom ∷ (ToIter a t,Join a) ⇒ a → t → a
 joinsFrom = foldWithFrom (⊔)
 

@@ -1,17 +1,14 @@
 module UVMHS.Lib.Testing 
   ( module UVMHS.Lib.Testing
-  , module Data.String
   ) where
 
-import UVMHS.Core hiding (fromString)
+import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.GTree
 import UVMHS.Lib.DTree
 
 import qualified Language.Haskell.TH as TH
 import qualified Language.Haskell.TH.Syntax as TH
-
-import Data.String (fromString)
 
 data Test = Test
   { testSourceLoc ∷ Doc

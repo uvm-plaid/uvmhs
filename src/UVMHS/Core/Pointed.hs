@@ -121,6 +121,11 @@ elimAddTop i f = \case
 --   AddTop x ⧺ AddTop y = AddTop (x ⧺ y)
 -- instance (Monoid a) ⇒ Monoid (AddTop a)
 
+instance (POrd a) ⇒ POrd (AddTop a) where
+  xT ⊑ yT = case (xT,yT) of
+    (Top,_) → False
+    (_,Top) → True
+    (AddTop x,AddTop y) → x ⊑ y
 instance (Bot a) ⇒ Bot (AddTop a) where 
   bot = AddTop bot
 instance (Join a) ⇒ Join (AddTop a) where

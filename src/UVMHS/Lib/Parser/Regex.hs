@@ -456,7 +456,7 @@ lName ∷ (Zero u,Ord u,Ord o,Additive u) ⇒ Regex CharClass ℂ o u
 lName = 
   let begTok = concat
         [ classRegex LetterClass
-        , concat $ map tokRegex $ iter "_'′″‴"
+        , concat $ map tokRegex $ iter $ 𝕤 "_'′″‴"
         ]
       endTok = concat
         [ begTok

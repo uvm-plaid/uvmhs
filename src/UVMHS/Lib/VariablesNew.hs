@@ -1,6 +1,6 @@
 module UVMHS.Lib.VariablesNew where
 
-import UVMHS.Core hiding (fromString)
+import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Testing

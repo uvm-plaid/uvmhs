@@ -137,7 +137,7 @@ compileOTree ∷ TreeO → RenderANSIM ()
 compileOTree sd = un𝑇V sd fₑ fₐ
   where
     fₑ ∷ Sep () (𝐼A ChunkO) → RenderANSIM ()
-    fₑ chs = eachWith tell $ iter $ mapSep (const $ single @ _ @ (𝐼A _) "\n") (concat ∘ map renderChunkANSI ∘ iter) chs
+    fₑ chs = eachWith tell $ iter $ mapSep (const $ single @ _ @ (𝐼A _) $ 𝕤 "\n") (concat ∘ map renderChunkANSI ∘ iter) chs
     fₐ ∷ Formats → RenderANSIM () → RenderANSIM ()
     fₐ fm = formatRenderANSI fm
 

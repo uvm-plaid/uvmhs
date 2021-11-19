@@ -10,13 +10,13 @@ import UVMHS.Lib.Parser.CParser
 testParsingSmall ∷ IO ()
 testParsingSmall = parseIOMain parser "<small example>" input
   where
-    parser = cpWord "xyzxyz"
+    parser = cpWord $ 𝕤 "xyzxyz"
     input = tokens "xyzxycxyz"
 
 testParsingMultiline ∷ IO ()
 testParsingMultiline = parseIOMain parser "<multiline example>" input
   where
-    parser = exec $ inbetween (void $ cpWord "\n") $ list $ replicateI 7 $ \ n → cpNewContext "line" $ void $ cpWord ("xyz" ⧺ show𝕊 n)
+    parser = exec $ inbetween (void $ cpWord $ 𝕤 "\n") $ list $ replicateI 7 $ \ n → cpNewContext "line" $ void $ cpWord ("xyz" ⧺ show𝕊 n)
     input = tokens "xyz0\nxyz1\nxyz2\nxyc3\nxyz4\nxyz5\nxyz6\n"
 
 testParsingBranching ∷ IO ()
@@ -81,8 +81,8 @@ testParsingSuccess ∷ IO ()
 testParsingSuccess = parseIOMain parser "<success example>" input
   where
     parser = concat ^$ cpOneOrMore $ tries 
-      [ cpRender (formats [FG green]) $ cpWord "xx"
-      , cpRender (formats [FG blue]) $ cpWord "yy"
+      [ cpRender (formats [FG green]) $ cpWord $ 𝕤 "xx"
+      , cpRender (formats [FG blue]) $ cpWord $ 𝕤 "yy"
       ]
     input = tokens "xxxxyyxxyy"
 

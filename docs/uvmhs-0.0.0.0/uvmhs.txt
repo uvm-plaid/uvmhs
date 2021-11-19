@@ -9,19 +9,20 @@ module UVMHS.Core.Init
 class CHS a b | b -> a
 tohs :: CHS a b => a -> b
 frhs :: CHS a b => b -> a
+type STACK = HasCallStack
 data Ex_C (c :: k -> Constraint) (t :: k -> ★) :: ★
 [Ex_C] :: forall (k :: ★) (c :: k -> Constraint) (t :: k -> ★) (a :: k). c a => t a -> Ex_C c t
 data Ex (t :: k -> ★) :: ★
 [Ex] :: forall (k :: ★) (t :: k -> ★) (a :: k). t a -> Ex t
 data W (c :: Constraint)
 [W] :: c => W c
-data Nat
-Z :: Nat
-S :: Nat -> Nat
 data P (a :: k)
 P :: P (a :: k)
 data (≟) (a :: k) (b :: k) :: ★
 [Refl] :: forall (k :: ★) (a :: k). a ≟ a
+data Nat
+Z :: Nat
+S :: Nat -> Nat
 data Lazy a
 Lazy :: ~a -> Lazy a
 [unLazy] :: Lazy a -> ~a
@@ -35,11 +36,12 @@ newtype 𝑃 a
 newtype 𝑄 a
 𝑄 :: Seq a -> 𝑄 a
 [un𝑄] :: 𝑄 a -> Seq a
-data 𝑆 a
-[𝑆] :: forall s a. s -> (s -> 𝑂 (a ∧ s)) -> 𝑆 a
+newtype 𝑆 a
+𝑆 :: (() -> 𝑂 (a ∧ 𝑆 a)) -> 𝑆 a
+[un𝑆] :: 𝑆 a -> () -> 𝑂 (a ∧ 𝑆 a)
 newtype 𝐼 a
-𝐼 :: (forall b. (a -> b -> b) -> b -> b) -> 𝐼 a
-[un𝐼] :: 𝐼 a -> forall b. (a -> b -> b) -> b -> b
+𝐼 :: (forall b. (a -> b -> (b -> b) -> b) -> b -> (b -> b) -> b) -> 𝐼 a
+[un𝐼] :: 𝐼 a -> forall b. (a -> b -> (b -> b) -> b) -> b -> (b -> b) -> b
 data 𝐿 a
 Nil :: 𝐿 a
 (:&) :: a -> 𝐿 a -> 𝐿 a
@@ -55,10 +57,10 @@ data a ∨ b
 Inl :: a -> (∨) a b
 Inr :: b -> (∨) a b
 infixl 5 ∨
-type 𝔹 = Bool
 data Void
 type 𝕊 = Text
 type ℂ = Char
+type 𝔹 = Bool
 data ℝᴾ
 Natural :: ℕ -> ℝᴾ
 Rationalᴾ :: ℚᴾ -> ℝᴾ
@@ -83,31 +85,37 @@ type ℕ16 = Word16
 type ℕ32 = Word32
 type ℕ64 = Word64
 type ℕ = Natural
-type STACK = HasCallStack
+not :: 𝔹 -> 𝔹
+(⩔) :: 𝔹 -> 𝔹 -> 𝔹
+infixl 2 ⩔
+(⩓) :: 𝔹 -> 𝔹 -> 𝔹
+infixl 3 ⩓
+cond :: 𝔹 -> a -> a -> a
+contradiction :: Void -> a
+run𝐼 :: (b -> b) -> b -> (a -> b -> (b -> b) -> b) -> 𝐼 a -> b
+run𝐼On :: 𝐼 a -> (b -> b) -> b -> (a -> b -> (b -> b) -> b) -> b
+foldk𝐼 :: b -> (a -> b -> (b -> b) -> b) -> 𝐼 a -> b
+fold𝐼 :: b -> (a -> b -> b) -> 𝐼 a -> b
+foldr𝐼 :: b -> (a -> b -> b) -> 𝐼 a -> b
+map𝐼 :: (a -> b) -> 𝐼 a -> 𝐼 b
+null𝐼 :: 𝐼 a
+single𝐼 :: a -> 𝐼 a
+list𝐼 :: 𝐼 a -> 𝐿 a
+iter𝐿 :: 𝐿 a -> 𝐼 a
+lazyList𝐼 :: 𝐼 a -> [a]
+iterLL :: [a] -> 𝐼 a
 coerce_UNSAFE :: a -> b
 weq_UNSAFE :: P a -> P b -> W (a ~ b)
 void_UNSAFE :: Void
 with :: W c -> (c => a) -> a
 unpack :: forall (k :: ★) (t :: k -> ★) (b :: ★). Ex t -> (forall (a :: k). t a -> b) -> b
 unpack_C :: forall (k :: ★) (c :: k -> Constraint) (t :: k -> ★) (b :: ★). Ex_C c t -> (forall (a :: k). c a => t a -> b) -> b
-zabs :: ℤ -> ℕ
-qabs :: ℚ -> ℚᴾ
-numer :: ℚ -> ℤ
-denom :: ℚ -> ℕ
-numerᴾ :: ℚᴾ -> ℕ
-denomᴾ :: ℚᴾ -> ℕ
-truncate :: 𝔻 -> ℤ
-ceiling :: 𝔻 -> ℤ
-floor :: 𝔻 -> ℤ
-truncateᴾ :: 𝔻ᴾ -> ℕ
-ceilingᴾ :: 𝔻ᴾ -> ℕ
-floorᴾ :: 𝔻ᴾ -> ℕ
-fromString :: [ℂ] -> 𝕊
 fromInteger :: ℤ -> ℕ
 negate :: ℕ -> ℤ
 fromRational :: Rational -> 𝔻
 fail :: forall (r :: RuntimeRep) (a :: TYPE r) m. STACK => [ℂ] -> m a
 ifThenElse :: 𝔹 -> a -> a -> a
+𝕤 :: [ℂ] -> 𝕊
 𝕟64 :: ℕ -> ℕ64
 𝕟32 :: ℕ -> ℕ32
 𝕟16 :: ℕ -> ℕ16
@@ -117,10 +125,11 @@ ifThenElse :: 𝔹 -> a -> a -> a
 𝕫32 :: ℕ -> ℤ32
 𝕫16 :: ℕ -> ℤ16
 𝕫8 :: ℕ -> ℤ8
-chars :: 𝕊 -> [ℂ]
-fromChars :: [ℂ] -> 𝕊
+tohsChars :: 𝕊 -> [ℂ]
+frhsChars :: [ℂ] -> 𝕊
 error :: forall (r :: RuntimeRep) (a :: TYPE r). STACK => 𝕊 -> a
-assert :: 𝔹 -> a -> a
+($) :: forall r a (b :: TYPE r). (a -> b) -> a -> b
+infixr 0 $
 id :: a -> a
 const :: a -> b -> a
 (∘) :: (b -> c) -> (a -> b) -> a -> c
@@ -133,25 +142,114 @@ mirror :: (a -> b -> c -> d) -> c -> b -> a -> d
 on :: (b -> b -> c) -> (a -> b) -> a -> a -> c
 curry :: (a -> b -> c) -> (a ∧ b) -> c
 uncurry :: ((a ∧ b) -> c) -> a -> b -> c
-contradiction :: Void -> a
-not :: 𝔹 -> 𝔹
-(⩓) :: 𝔹 -> 𝔹 -> 𝔹
-infixl 3 ⩓
-(⩔) :: 𝔹 -> 𝔹 -> 𝔹
-infixl 2 ⩔
-cond :: 𝔹 -> a -> a -> a
-stream𝐿 :: 𝐿 a -> 𝑆 a
-list𝐼 :: 𝐼 a -> 𝐿 a
-streamLL :: [a] -> 𝑆 a
-lazyList𝐼 :: 𝐼 a -> [a]
-fold𝐼 :: b -> (a -> b -> b) -> 𝐼 a -> b
-foldk𝐼 :: b -> (a -> (b -> b) -> b -> b) -> 𝐼 a -> b
-foldr𝐼 :: b -> (a -> b -> b) -> 𝐼 a -> b
-map𝐼 :: (a -> b) -> 𝐼 a -> 𝐼 b
-iter𝑆 :: 𝑆 a -> 𝐼 a
+tohs𝑂F :: (a -> b) -> 𝑂 a -> Maybe b
+tohs𝑂 :: 𝑂 a -> Maybe a
+frhs𝑂F :: (a -> b) -> Maybe a -> 𝑂 b
+frhs𝑂 :: Maybe a -> 𝑂 a
+
+-- | If the first argument evaluates to <a>True</a>, then the result is the
+--   second argument. Otherwise an <a>AssertionFailed</a> exception is
+--   raised, containing a <a>String</a> with the source file and line
+--   number of the call to <a>assert</a>.
+--   
+--   Assertions can normally be turned on or off with a compiler flag (for
+--   GHC, assertions are normally on unless optimisation is turned on with
+--   <tt>-O</tt> or the <tt>-fignore-asserts</tt> option is given). When
+--   assertions are turned off, the first argument to <a>assert</a> is
+--   ignored, and the second argument is returned as the result.
+assert :: Bool -> a -> a
+
+-- | The function <tt>coerce</tt> allows you to safely convert between
+--   values of types that have the same representation with no run-time
+--   overhead. In the simplest case you can use it instead of a newtype
+--   constructor, to go from the newtype's concrete type to the abstract
+--   type. But it also works in more complicated settings, e.g. converting
+--   a list of newtypes to a list of concrete types.
+--   
+--   This function is runtime-representation polymorphic, but the
+--   <tt>RuntimeRep</tt> type argument is marked as <tt>Inferred</tt>,
+--   meaning that it is not available for visible type application. This
+--   means the typechecker will accept <tt>coerce @Int @Age 42</tt>.
+coerce :: forall (k :: RuntimeRep) (a :: TYPE k) (b :: TYPE k). Coercible a b => a -> b
 
 -- | The kind of constraints, like <tt>Show a</tt>
 data Constraint
+
+-- | <a>CallStack</a>s are a lightweight method of obtaining a partial
+--   call-stack at any point in the program.
+--   
+--   A function can request its call-site with the <a>HasCallStack</a>
+--   constraint. For example, we can define
+--   
+--   <pre>
+--   putStrLnWithCallStack :: HasCallStack =&gt; String -&gt; IO ()
+--   </pre>
+--   
+--   as a variant of <tt>putStrLn</tt> that will get its call-site and
+--   print it, along with the string given as argument. We can access the
+--   call-stack inside <tt>putStrLnWithCallStack</tt> with
+--   <a>callStack</a>.
+--   
+--   <pre>
+--   putStrLnWithCallStack :: HasCallStack =&gt; String -&gt; IO ()
+--   putStrLnWithCallStack msg = do
+--     putStrLn msg
+--     putStrLn (prettyCallStack callStack)
+--   </pre>
+--   
+--   Thus, if we call <tt>putStrLnWithCallStack</tt> we will get a
+--   formatted call-stack alongside our string.
+--   
+--   <pre>
+--   &gt;&gt;&gt; putStrLnWithCallStack "hello"
+--   hello
+--   CallStack (from HasCallStack):
+--     putStrLnWithCallStack, called at &lt;interactive&gt;:2:1 in interactive:Ghci1
+--   </pre>
+--   
+--   GHC solves <a>HasCallStack</a> constraints in three steps:
+--   
+--   <ol>
+--   <li>If there is a <a>CallStack</a> in scope -- i.e. the enclosing
+--   function has a <a>HasCallStack</a> constraint -- GHC will append the
+--   new call-site to the existing <a>CallStack</a>.</li>
+--   <li>If there is no <a>CallStack</a> in scope -- e.g. in the GHCi
+--   session above -- and the enclosing definition does not have an
+--   explicit type signature, GHC will infer a <a>HasCallStack</a>
+--   constraint for the enclosing definition (subject to the monomorphism
+--   restriction).</li>
+--   <li>If there is no <a>CallStack</a> in scope and the enclosing
+--   definition has an explicit type signature, GHC will solve the
+--   <a>HasCallStack</a> constraint for the singleton <a>CallStack</a>
+--   containing just the current call-site.</li>
+--   </ol>
+--   
+--   <a>CallStack</a>s do not interact with the RTS and do not require
+--   compilation with <tt>-prof</tt>. On the other hand, as they are built
+--   up explicitly via the <a>HasCallStack</a> constraints, they will
+--   generally not contain as much information as the simulated call-stacks
+--   maintained by the RTS.
+--   
+--   A <a>CallStack</a> is a <tt>[(String, SrcLoc)]</tt>. The
+--   <tt>String</tt> is the name of function that was called, the
+--   <a>SrcLoc</a> is the call-site. The list is ordered with the most
+--   recently called function at the head.
+--   
+--   NOTE: The intrepid user may notice that <a>HasCallStack</a> is just an
+--   alias for an implicit parameter <tt>?callStack :: CallStack</tt>. This
+--   is an implementation detail and <b>should not</b> be considered part
+--   of the <a>CallStack</a> API, we may decide to change the
+--   implementation in the future.
+data CallStack
+
+-- | Perform some computation without adding new entries to the
+--   <a>CallStack</a>.
+withFrozenCallStack :: HasCallStack => (HasCallStack => a) -> a
+
+-- | Return the current <a>CallStack</a>.
+--   
+--   Does *not* include the call-site of <a>callStack</a>.
+callStack :: HasCallStack => CallStack
 
 -- | <a>otherwise</a> is defined as the value <a>True</a>. It helps to make
 --   guards more readable. eg.
@@ -161,24 +259,6 @@ data Constraint
 --       | otherwise = ...
 --   </pre>
 otherwise :: Bool
-
--- | Application operator. This operator is redundant, since ordinary
---   application <tt>(f x)</tt> means the same as <tt>(f <a>$</a> x)</tt>.
---   However, <a>$</a> has low, right-associative binding precedence, so it
---   sometimes allows parentheses to be omitted; for example:
---   
---   <pre>
---   f $ g $ h x  =  f (g (h x))
---   </pre>
---   
---   It is also useful in higher-order situations, such as <tt><a>map</a>
---   (<a>$</a> 0) xs</tt>, or <tt><a>zipWith</a> (<a>$</a>) fs xs</tt>.
---   
---   Note that <tt>(<a>$</a>)</tt> is levity-polymorphic in its result
---   type, so that <tt>foo <a>$</a> True</tt> where <tt>foo :: Bool -&gt;
---   Int#</tt> is well-typed.
-($) :: forall (r :: RuntimeRep) a (b :: TYPE r). (a -> b) -> a -> b
-infixr 0 $
 
 -- | The <a>Eq</a> class defines equality (<a>==</a>) and inequality
 --   (<a>/=</a>). All the basic datatypes exported by the <a>Prelude</a>
@@ -340,94 +420,10 @@ data IO a
 --   the context in which <a>undefined</a> appears.
 undefined :: forall (r :: RuntimeRep) (a :: TYPE r). HasCallStack => a
 
--- | <a>CallStack</a>s are a lightweight method of obtaining a partial
---   call-stack at any point in the program.
---   
---   A function can request its call-site with the <a>HasCallStack</a>
---   constraint. For example, we can define
---   
---   <pre>
---   putStrLnWithCallStack :: HasCallStack =&gt; String -&gt; IO ()
---   </pre>
---   
---   as a variant of <tt>putStrLn</tt> that will get its call-site and
---   print it, along with the string given as argument. We can access the
---   call-stack inside <tt>putStrLnWithCallStack</tt> with
---   <a>callStack</a>.
---   
---   <pre>
---   putStrLnWithCallStack :: HasCallStack =&gt; String -&gt; IO ()
---   putStrLnWithCallStack msg = do
---     putStrLn msg
---     putStrLn (prettyCallStack callStack)
---   </pre>
---   
---   Thus, if we call <tt>putStrLnWithCallStack</tt> we will get a
---   formatted call-stack alongside our string.
---   
---   <pre>
---   &gt;&gt;&gt; putStrLnWithCallStack "hello"
---   hello
---   CallStack (from HasCallStack):
---     putStrLnWithCallStack, called at &lt;interactive&gt;:2:1 in interactive:Ghci1
---   </pre>
---   
---   GHC solves <a>HasCallStack</a> constraints in three steps:
---   
---   <ol>
---   <li>If there is a <a>CallStack</a> in scope -- i.e. the enclosing
---   function has a <a>HasCallStack</a> constraint -- GHC will append the
---   new call-site to the existing <a>CallStack</a>.</li>
---   <li>If there is no <a>CallStack</a> in scope -- e.g. in the GHCi
---   session above -- and the enclosing definition does not have an
---   explicit type signature, GHC will infer a <a>HasCallStack</a>
---   constraint for the enclosing definition (subject to the monomorphism
---   restriction).</li>
---   <li>If there is no <a>CallStack</a> in scope and the enclosing
---   definition has an explicit type signature, GHC will solve the
---   <a>HasCallStack</a> constraint for the singleton <a>CallStack</a>
---   containing just the current call-site.</li>
---   </ol>
---   
---   <a>CallStack</a>s do not interact with the RTS and do not require
---   compilation with <tt>-prof</tt>. On the other hand, as they are built
---   up explicitly via the <a>HasCallStack</a> constraints, they will
---   generally not contain as much information as the simulated call-stacks
---   maintained by the RTS.
---   
---   A <a>CallStack</a> is a <tt>[(String, SrcLoc)]</tt>. The
---   <tt>String</tt> is the name of function that was called, the
---   <a>SrcLoc</a> is the call-site. The list is ordered with the most
---   recently called function at the head.
---   
---   NOTE: The intrepid user may notice that <a>HasCallStack</a> is just an
---   alias for an implicit parameter <tt>?callStack :: CallStack</tt>. This
---   is an implementation detail and <b>should not</b> be considered part
---   of the <a>CallStack</a> API, we may decide to change the
---   implementation in the future.
-data CallStack
-
--- | Perform some computation without adding new entries to the
---   <a>CallStack</a>.
-withFrozenCallStack :: HasCallStack => (HasCallStack => a) -> a
-
--- | Return the current <a>CallStack</a>.
---   
---   Does *not* include the call-site of <a>callStack</a>.
-callStack :: HasCallStack => CallStack
-
--- | The function <tt>coerce</tt> allows you to safely convert between
---   values of types that have the same representation with no run-time
---   overhead. In the simplest case you can use it instead of a newtype
---   constructor, to go from the newtype's concrete type to the abstract
---   type. But it also works in more complicated settings, e.g. converting
---   a list of newtypes to a list of concrete types.
---   
---   This function is runtime-representation polymorphic, but the
---   <tt>RuntimeRep</tt> type argument is marked as <tt>Inferred</tt>,
---   meaning that it is not available for visible type application. This
---   means the typechecker will accept <tt>coerce @Int @Age 42</tt>.
-coerce :: forall (k :: RuntimeRep) (a :: TYPE k) (b :: TYPE k). Coercible a b => a -> b
+-- | Class for string-like datastructures; used by the overloaded string
+--   extension (-XOverloadedStrings in GHC).
+class IsString a
+fromString :: IsString a => String -> a
 instance GHC.Real.Real UVMHS.Core.Init.𝔻ᴾ
 instance GHC.Float.Floating UVMHS.Core.Init.𝔻ᴾ
 instance GHC.Real.Fractional UVMHS.Core.Init.𝔻ᴾ
@@ -450,6 +446,7 @@ instance (GHC.Classes.Eq a, GHC.Classes.Eq b) => GHC.Classes.Eq (a UVMHS.Core.In
 instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Init.𝑂 a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Init.𝑂 a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Init.𝑂 a)
+instance Language.Haskell.TH.Syntax.Lift a => Language.Haskell.TH.Syntax.Lift (UVMHS.Core.Init.𝐿 a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Init.𝐿 a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Init.𝐿 a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Init.𝑄 a)
@@ -458,12 +455,12 @@ instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Init.𝑃 a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Init.𝑃 a)
 instance (GHC.Classes.Ord k, GHC.Classes.Ord v) => GHC.Classes.Ord (k UVMHS.Core.Init.⇰ v)
 instance (GHC.Classes.Eq k, GHC.Classes.Eq v) => GHC.Classes.Eq (k UVMHS.Core.Init.⇰ v)
-instance forall k (a :: k). GHC.Show.Show (UVMHS.Core.Init.P a)
-instance forall k (a :: k). GHC.Classes.Ord (UVMHS.Core.Init.P a)
-instance forall k (a :: k). GHC.Classes.Eq (UVMHS.Core.Init.P a)
 instance GHC.Show.Show UVMHS.Core.Init.Nat
 instance GHC.Classes.Ord UVMHS.Core.Init.Nat
 instance GHC.Classes.Eq UVMHS.Core.Init.Nat
+instance forall k (a :: k). GHC.Show.Show (UVMHS.Core.Init.P a)
+instance forall k (a :: k). GHC.Classes.Ord (UVMHS.Core.Init.P a)
+instance forall k (a :: k). GHC.Classes.Eq (UVMHS.Core.Init.P a)
 instance GHC.Classes.Eq (UVMHS.Core.Init.W c)
 instance GHC.Classes.Ord (UVMHS.Core.Init.W c)
 instance GHC.Show.Show (UVMHS.Core.Init.W c)
@@ -754,8 +751,6 @@ infixl 7 ⋕?
 class Access k v t | t -> k, t -> v
 (⋕) :: Access k v t => t -> k -> v
 infixl 7 ⋕
-class ToStream a t | t -> a
-stream :: ToStream a t => t -> 𝑆 a
 class ToIter a t | t -> a
 iter :: ToIter a t => t -> 𝐼 a
 (⋕!) :: (Lookup k v t, STACK) => t -> k -> v
@@ -940,7 +935,18 @@ instance UVMHS.Core.Classes.Arithmetic.Zero ()
 instance UVMHS.Core.Classes.Arithmetic.Plus ()
 instance UVMHS.Core.Classes.Arithmetic.Additive ()
 
+module UVMHS.Core.Data.Stream
+eq𝑆 :: Eq a => 𝑆 a -> 𝑆 a -> 𝔹
+compare𝑆 :: Ord a => 𝑆 a -> 𝑆 a -> Ordering
+stream𝐼 :: forall a. 𝐼 a -> 𝑆 a
+iter𝑆 :: 𝑆 a -> 𝐼 a
+zipWith𝑆 :: (a -> b -> c) -> 𝑆 a -> 𝑆 b -> 𝑆 c
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Init.𝑆 a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Init.𝑆 a)
+instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Init.𝑆 a)
+
 module UVMHS.Core.Data.Option
+iter𝑂 :: 𝑂 a -> 𝐼 a
 elim𝑂 :: b -> (a -> b) -> 𝑂 a -> b
 elim𝑂Z :: b -> (a -> b) -> 𝑂 a -> b
 isNone :: 𝑂 a -> 𝔹
@@ -959,7 +965,6 @@ instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Init.𝑂
 instance UVMHS.Core.Classes.Monoid.Null a => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Init.𝑂 a)
 instance UVMHS.Core.Classes.Monoid.Append a => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Init.𝑂 a)
 instance UVMHS.Core.Classes.Monoid.Monoid a => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Init.𝑂 a)
-instance UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Init.𝑂 a)
 instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Init.𝑂 a)
 instance UVMHS.Core.Init.𝑂 a UVMHS.Core.Classes.Morphism.⇄ (() UVMHS.Core.Init.∨ a)
 
@@ -981,7 +986,6 @@ instance UVMHS.Core.Classes.Monad.Bind []
 instance UVMHS.Core.Classes.Monad.Monad []
 instance UVMHS.Core.Classes.FunctorM.FunctorM []
 instance UVMHS.Core.Classes.Collections.Single a [a]
-instance UVMHS.Core.Classes.Collections.ToStream a [a]
 instance UVMHS.Core.Classes.Collections.ToIter a [a]
 
 module UVMHS.Core.Data.List
@@ -1010,13 +1014,12 @@ instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Init.𝐿
 instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Init.𝐿
 instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Init.𝐿
 instance UVMHS.Core.Classes.Collections.Single a (UVMHS.Core.Init.𝐿 a)
-instance UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Init.𝐿 a)
 instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Init.𝐿 a)
 
 module UVMHS.Core.Data.Function
 appto :: a -> (a -> b) -> b
 pipe :: (a -> b) -> (b -> c) -> a -> c
-iterate :: (a -> 𝑂 a) -> a -> a
+iterateWith :: (a -> 𝑂 a) -> a -> a
 iterateFrom :: a -> (a -> 𝑂 a) -> a
 instance UVMHS.Core.Classes.Functor.Functor ((->) r)
 instance UVMHS.Core.Classes.Monad.Return ((->) r)
@@ -1058,6 +1061,18 @@ instance UVMHS.Core.Classes.Lattice.Lattice UVMHS.Core.Init.𝔹
 instance UVMHS.Core.Classes.Lattice.Dual UVMHS.Core.Init.𝔹
 
 module UVMHS.Core.Data.Arithmetic
+zabs :: ℤ -> ℕ
+qabs :: ℚ -> ℚᴾ
+numer :: ℚ -> ℤ
+denom :: ℚ -> ℕ
+numerᴾ :: ℚᴾ -> ℕ
+denomᴾ :: ℚᴾ -> ℕ
+truncate :: 𝔻 -> ℤ
+ceiling :: 𝔻 -> ℤ
+floor :: 𝔻 -> ℤ
+truncateᴾ :: 𝔻ᴾ -> ℕ
+ceilingᴾ :: 𝔻ᴾ -> ℕ
+floorᴾ :: 𝔻ᴾ -> ℕ
 minus𝔻ᴾ :: 𝔻ᴾ -> 𝔻ᴾ -> 𝔻ᴾ
 numberBOp :: (ℤ -> ℤ -> ℝ) -> (ℚ -> ℚ -> ℝ) -> (𝔻 -> 𝔻 -> ℝ) -> ℝ -> ℝ -> ℝ
 numberBOpᴾ :: (ℕ -> ℕ -> ℝᴾ) -> (ℚᴾ -> ℚᴾ -> ℝᴾ) -> (𝔻ᴾ -> 𝔻ᴾ -> ℝᴾ) -> ℝᴾ -> ℝᴾ -> ℝᴾ
@@ -1614,12 +1629,12 @@ upper𝕊 :: 𝕊 -> 𝕊
 isEmpty𝕊 :: 𝕊 -> 𝔹
 length𝕊 :: 𝕊 -> ℕ
 length64𝕊 :: 𝕊 -> ℕ64
-splitOn𝕊 :: 𝕊 -> 𝕊 -> 𝑆 𝕊
+splitOn𝕊 :: 𝕊 -> 𝕊 -> 𝐼 𝕊
+replace𝕊 :: 𝕊 -> 𝕊 -> 𝕊 -> 𝕊
 instance UVMHS.Core.Classes.Monoid.Null UVMHS.Core.Init.𝕊
 instance UVMHS.Core.Classes.Monoid.Append UVMHS.Core.Init.𝕊
 instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Core.Init.𝕊
 instance UVMHS.Core.Classes.Collections.Single UVMHS.Core.Init.ℂ UVMHS.Core.Init.𝕊
-instance UVMHS.Core.Classes.Collections.ToStream UVMHS.Core.Init.ℂ UVMHS.Core.Init.𝕊
 instance UVMHS.Core.Classes.Collections.ToIter UVMHS.Core.Init.ℂ UVMHS.Core.Init.𝕊
 instance UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ UVMHS.Core.Init.ℂ UVMHS.Core.Init.𝕊
 
@@ -1661,9 +1676,12 @@ gfpN :: POrd a => ℕ -> a -> (a -> a) -> a
 
 module UVMHS.Core.Data.Iter
 empty𝐼 :: 𝐼 a
-single𝐼 :: a -> 𝐼 a
 cons𝐼 :: a -> 𝐼 a -> 𝐼 a
+stream :: ToIter a t => t -> 𝑆 a
+zipWith :: (ToIter a t₁, ToIter b t₂) => (a -> b -> c) -> t₁ -> t₂ -> 𝐼 c
 snoc𝐼 :: 𝐼 a -> a -> 𝐼 a
+isEmpty :: ToIter a t => t -> 𝔹
+firstElem :: ToIter a t => t -> 𝑂 a
 append𝐼 :: 𝐼 a -> 𝐼 a -> 𝐼 a
 mjoin𝐼 :: 𝐼 (𝐼 a) -> 𝐼 a
 bind𝐼 :: 𝐼 a -> (a -> 𝐼 b) -> 𝐼 b
@@ -1675,13 +1693,13 @@ foldOnFrom :: ToIter a t => t -> b -> (a -> b -> b) -> b
 foldOnWith :: ToIter a t => t -> (a -> b -> b) -> b -> b
 foldWithOn :: ToIter a t => (a -> b -> b) -> t -> b -> b
 foldWithFrom :: ToIter a t => (a -> b -> b) -> b -> t -> b
-foldk :: ToIter a t => b -> (a -> (b -> b) -> b -> b) -> t -> b
-foldkFromWith :: ToIter a t => b -> (a -> (b -> b) -> b -> b) -> t -> b
-foldkFromOn :: ToIter a t => b -> t -> (a -> (b -> b) -> b -> b) -> b
-foldkOnFrom :: ToIter a t => t -> b -> (a -> (b -> b) -> b -> b) -> b
-foldkOnWith :: ToIter a t => t -> (a -> (b -> b) -> b -> b) -> b -> b
-foldkWithOn :: ToIter a t => (a -> (b -> b) -> b -> b) -> t -> b -> b
-foldkWithFrom :: ToIter a t => (a -> (b -> b) -> b -> b) -> b -> t -> b
+foldk :: ToIter a t => b -> (a -> b -> (b -> b) -> b) -> t -> b
+foldkFromWith :: ToIter a t => b -> (a -> b -> (b -> b) -> b) -> t -> b
+foldkFromOn :: ToIter a t => b -> t -> (a -> b -> (b -> b) -> b) -> b
+foldkOnFrom :: ToIter a t => t -> b -> (a -> b -> (b -> b) -> b) -> b
+foldkOnWith :: ToIter a t => t -> (a -> b -> (b -> b) -> b) -> b -> b
+foldkWithOn :: ToIter a t => (a -> b -> (b -> b) -> b) -> t -> b -> b
+foldkWithFrom :: ToIter a t => (a -> b -> (b -> b) -> b) -> b -> t -> b
 foldr :: ToIter a t => b -> (a -> b -> b) -> t -> b
 foldrFromWith :: ToIter a t => b -> (a -> b -> b) -> t -> b
 foldrFromOn :: ToIter a t => b -> t -> (a -> b -> b) -> b
@@ -1713,6 +1731,8 @@ sequence :: (Seqoid a, ToIter a t) => t -> a
 compose :: ToIter (a -> a) t => t -> a -> a
 mcompose :: Monad m => ToIter (a -> m a) t => t -> a -> m a
 wcompose :: Comonad w => ToIter (w a -> a) t => t -> w a -> a
+minsFrom :: (ToIter a t, Ord a) => a -> t -> a
+maxsFrom :: (ToIter a t, Ord a) => a -> t -> a
 joinsFrom :: (ToIter a t, Join a) => a -> t -> a
 joins :: (JoinLattice a, ToIter a t) => t -> a
 meetsFrom :: (ToIter a t, Meet a) => a -> t -> a
@@ -1728,12 +1748,14 @@ replicateI :: forall n a. (Eq n, Zero n, One n, Plus n) => n -> (n -> a) -> 𝐼
 replicate :: forall n a. (Eq n, Zero n, One n, Plus n) => n -> a -> 𝐼 a
 build :: forall n a. (Eq n, Zero n, One n, Plus n) => n -> a -> (a -> a) -> 𝐼 a
 upTo :: (Eq n, Zero n, One n, Plus n) => n -> 𝐼 n
+reiter :: forall a b s. s -> (a -> s -> s ∧ b) -> 𝐼 a -> 𝐼 b
 withIndex :: forall n t a. (Zero n, One n, Plus n, ToIter a t) => t -> 𝐼 (n ∧ a)
 withFirst :: ToIter a t => t -> 𝐼 (𝔹 ∧ a)
 mapFirst :: ToIter a t => (a -> a) -> t -> 𝐼 a
 mapAfterFirst :: ToIter a t => (a -> a) -> t -> 𝐼 a
 withLast :: ToIter a t => t -> 𝐼 (𝔹 ∧ a)
 mapLast :: ToIter a t => (a -> a) -> t -> 𝐼 a
+mapLastOn :: ToIter a t => t -> (a -> a) -> 𝐼 a
 mapBeforeLast :: ToIter a t => (a -> a) -> t -> 𝐼 a
 filterMap :: ToIter a t => (a -> 𝑂 b) -> t -> 𝐼 b
 filter :: ToIter a t => (a -> 𝔹) -> t -> 𝐼 a
@@ -1750,13 +1772,10 @@ stringS :: ToIter 𝕊 t => t -> 𝕊
 showCollection :: ToIter a t => 𝕊 -> 𝕊 -> 𝕊 -> (a -> 𝕊) -> t -> 𝕊
 showWith𝐼 :: (a -> 𝕊) -> 𝐼 a -> 𝕊
 firstMaxByLT :: ToIter a t => (a -> a -> 𝔹) -> t -> 𝑂 a
-foldbp :: ToIter a t => b -> c -> (a -> b -> b ∧ (c -> c)) -> t -> b ∧ c
-foldbpOnFrom :: ToIter a t => t -> b -> c -> (a -> b -> b ∧ (c -> c)) -> b ∧ c
 sortWith :: ToIter a t => (a -> a -> Ordering) -> t -> 𝐿 a
 sortOn :: (ToIter a t, Ord b) => (a -> b) -> t -> 𝐿 a
 sort :: (ToIter a t, Ord a) => t -> 𝐿 a
 materialize :: ToIter a t => t -> 𝐼 a
-instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Init.𝐼 a)
 instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Init.𝐼 a)
 instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Init.𝐼 a)
 instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Init.𝐼 a)
@@ -1767,6 +1786,8 @@ instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Init.𝐼
 instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Init.𝐼
 instance UVMHS.Core.Classes.Collections.Single a (UVMHS.Core.Init.𝐼 a)
 instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Init.𝐼 a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Init.𝑆 a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Init.𝐼 a)
 instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Init.𝐿 a)
 instance UVMHS.Core.Init.𝕊 UVMHS.Core.Classes.Morphism.⇄ UVMHS.Core.Init.𝐼 UVMHS.Core.Init.ℂ
 instance UVMHS.Core.Classes.Collections.All ()
@@ -1774,47 +1795,6 @@ instance UVMHS.Core.Classes.Collections.All UVMHS.Core.Init.𝔹
 instance UVMHS.Core.Classes.Collections.All a => UVMHS.Core.Classes.Collections.All (UVMHS.Core.Init.𝑂 a)
 instance (UVMHS.Core.Classes.Collections.All a, UVMHS.Core.Classes.Collections.All b) => UVMHS.Core.Classes.Collections.All (a UVMHS.Core.Init.∨ b)
 instance (UVMHS.Core.Classes.Collections.All a, UVMHS.Core.Classes.Collections.All b) => UVMHS.Core.Classes.Collections.All (a UVMHS.Core.Init.∧ b)
-
-module UVMHS.Core.Data.Stream
-empty𝑆 :: 𝑆 a
-single𝑆 :: a -> 𝑆 a
-append𝑆 :: 𝑆 a -> 𝑆 a -> 𝑆 a
-map𝑆 :: (a -> b) -> 𝑆 a -> 𝑆 b
-mjoin𝑆 :: forall a. 𝑆 (𝑆 a) -> 𝑆 a
-bind𝑆 :: 𝑆 a -> (a -> 𝑆 b) -> 𝑆 b
-uncons𝑆 :: 𝑆 a -> 𝑂 (a ∧ 𝑆 a)
-uncons :: ToStream a t => t -> 𝑂 (a ∧ 𝑆 a)
-eqBy𝑆 :: (a -> a -> 𝔹) -> 𝑆 a -> 𝑆 a -> 𝔹
-compareBy𝑆 :: (a -> a -> Ordering) -> 𝑆 a -> 𝑆 a -> Ordering
-showWith𝑆 :: (a -> 𝕊) -> 𝑆 a -> 𝕊
-isEmpty :: ToStream a t => t -> 𝔹
-naturals :: 𝑆 ℕ
-zipWith :: (ToStream a t₁, ToStream b t₂) => (a -> b -> c) -> t₁ -> t₂ -> 𝑆 c
-zip :: (ToStream a t₁, ToStream b t₂) => t₁ -> t₂ -> 𝑆 (a ∧ b)
-zip3With :: (ToStream a t₁, ToStream b t₂, ToStream c t₃) => (a -> b -> c -> d) -> t₁ -> t₂ -> t₃ -> 𝑆 d
-zip3 :: (ToStream a t₁, ToStream b t₂, ToStream c t₃) => t₁ -> t₂ -> t₃ -> 𝑆 ((a ∧ b) ∧ c)
-firstN :: ToStream a t => ℕ -> t -> 𝑆 a
-lastN :: ToStream a t => ℕ -> t -> 𝐼 a
-skipN :: ToStream a t => ℕ -> t -> 𝑆 a
-stripPrefix𝑆 :: (Eq a, ToStream a t₁, ToStream a t₂) => t₁ -> t₂ -> 𝑂 (𝑆 a)
-prefixBefore𝑆 :: ToStream a t => (a -> 𝔹) -> t -> 𝑆 a
-prefixBeforeN𝑆 :: ToStream a t => ℕ -> (a -> ℕ) -> t -> 𝑆 a
-postfixAfter𝑆 :: ToStream a t => (a -> 𝔹) -> t -> 𝑆 a
-inbetween𝑆 :: ToStream a t => a -> t -> 𝑆 a
-coredata_stream_e1 :: 𝑆 ℕ
-filter𝑆 :: ToStream a t => (a -> 𝔹) -> t -> 𝑆 a
-instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Init.𝑆 a)
-instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Init.𝑆 a)
-instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Init.𝑆 a)
-instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Init.𝑆
-instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Init.𝑆 a)
-instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Init.𝑆 a)
-instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Init.𝑆 a)
-instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Init.𝑆
-instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Init.𝑆
-instance UVMHS.Core.Classes.Collections.Single a (UVMHS.Core.Init.𝑆 a)
-instance UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Init.𝑆 a)
-instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Init.𝑆 a)
 
 module UVMHS.Core.Data.Set
 pø :: 𝑃 a
@@ -1837,7 +1817,7 @@ psize :: 𝑃 a -> ℕ
 pmin :: 𝑃 a -> 𝑂 (a ∧ 𝑃 a)
 pmax :: 𝑃 a -> 𝑂 (a ∧ 𝑃 a)
 pmap :: Ord b => (a -> b) -> 𝑃 a -> 𝑃 b
-stream𝑃 :: 𝑃 a -> 𝑆 a
+iter𝑃 :: 𝑃 a -> 𝐼 a
 pow𝐼 :: Ord a => 𝐼 a -> 𝑃 a
 pow :: (Ord a, ToIter a t) => t -> 𝑃 a
 uniques :: (Ord a, ToIter a t) => t -> 𝐼 a
@@ -1860,7 +1840,6 @@ instance GHC.Classes.Ord a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.Init.�
 instance GHC.Classes.Ord a => UVMHS.Core.Classes.Lattice.JoinLattice (UVMHS.Core.Init.𝑃 a)
 instance GHC.Classes.Ord a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.Init.𝑃 a)
 instance GHC.Classes.Ord a => UVMHS.Core.Classes.Lattice.Difference (UVMHS.Core.Init.𝑃 a)
-instance UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Init.𝑃 a)
 instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Init.𝑃 a)
 instance (GHC.Classes.Ord a, UVMHS.Core.Classes.Collections.All a) => UVMHS.Core.Classes.Collections.All (UVMHS.Core.Init.𝑃 a)
 instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Init.𝑃 a)
@@ -1875,7 +1854,7 @@ single𝑄 :: a -> 𝑄 a
 append𝑄 :: 𝑄 a -> 𝑄 a -> 𝑄 a
 map𝑄 :: (a -> b) -> 𝑄 a -> 𝑄 b
 bind𝑄 :: 𝑄 a -> (a -> 𝑄 b) -> 𝑄 b
-stream𝑄 :: 𝑄 a -> 𝑆 a
+iter𝑄 :: 𝑄 a -> 𝐼 a
 seq𝐼 :: 𝐼 a -> 𝑄 a
 seq :: ToIter a t => t -> 𝑄 a
 instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Init.𝑄 a)
@@ -1886,7 +1865,6 @@ instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Init.𝑄
 instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Init.𝑄
 instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Init.𝑄
 instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Init.𝑄
-instance UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Init.𝑄 a)
 instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Init.𝑄 a)
 instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Init.𝑄 a)
 
@@ -1920,7 +1898,7 @@ values :: (k ⇰ v) -> 𝐼 v
 map𝐷 :: (v₁ -> v₂) -> (k ⇰ v₁) -> k ⇰ v₂
 mapM𝐷 :: forall m k v₁ v₂. Monad m => (v₁ -> m v₂) -> (k ⇰ v₁) -> m (k ⇰ v₂)
 mapK𝐷 :: Ord k => (k -> v₁ -> v₂) -> (k ⇰ v₁) -> k ⇰ v₂
-stream𝐷 :: (k ⇰ v) -> 𝑆 (k ∧ v)
+iter𝐷 :: (k ⇰ v) -> 𝐼 (k ∧ v)
 dict𝐼 :: Ord k => 𝐼 (k ∧ v) -> k ⇰ v
 dict :: (Ord k, ToIter (k ⇰ v) t) => t -> k ⇰ v
 assoc :: (Ord k, ToIter (k ∧ v) t) => t -> k ⇰ v
@@ -1949,7 +1927,6 @@ instance (GHC.Classes.Ord k, UVMHS.Core.Classes.Lattice.Meet v) => UVMHS.Core.Cl
 instance (GHC.Classes.Ord k, UVMHS.Core.Classes.Lattice.Difference v) => UVMHS.Core.Classes.Lattice.Difference (k UVMHS.Core.Init.⇰ v)
 instance UVMHS.Core.Classes.Functor.Functor ((UVMHS.Core.Init.⇰) k)
 instance UVMHS.Core.Classes.FunctorM.FunctorM ((UVMHS.Core.Init.⇰) k)
-instance UVMHS.Core.Classes.Collections.ToStream (k UVMHS.Core.Init.∧ v) (k UVMHS.Core.Init.⇰ v)
 instance UVMHS.Core.Classes.Collections.ToIter (k UVMHS.Core.Init.∧ v) (k UVMHS.Core.Init.⇰ v)
 instance (GHC.Classes.Ord k, UVMHS.Core.Classes.Collections.All k, UVMHS.Core.Classes.Collections.All v) => UVMHS.Core.Classes.Collections.All (k UVMHS.Core.Init.⇰ v)
 instance (GHC.Show.Show k, GHC.Show.Show v) => GHC.Show.Show (k UVMHS.Core.Init.⇰ v)
@@ -2127,6 +2104,7 @@ instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Pointed.AddBT
 instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Pointed.AddBT
 instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Pointed.AddBT
 instance UVMHS.Core.Classes.FunctorM.FunctorM UVMHS.Core.Pointed.AddBT
+instance UVMHS.Core.Classes.Lattice.POrd a => UVMHS.Core.Classes.Lattice.POrd (UVMHS.Core.Pointed.AddTop a)
 instance UVMHS.Core.Classes.Lattice.Bot a => UVMHS.Core.Classes.Lattice.Bot (UVMHS.Core.Pointed.AddTop a)
 instance UVMHS.Core.Classes.Lattice.Join a => UVMHS.Core.Classes.Lattice.Join (UVMHS.Core.Pointed.AddTop a)
 instance UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.Pointed.AddTop a)
@@ -2556,6 +2534,9 @@ thNewtypeDL :: Dec ⌲ (((((Cxt ∧ Name) ∧ 𝐿 TyVarBndr) ∧ 𝑂 Kind) ∧
 thViewADT :: Dec -> 𝑂 (((((Cxt ∧ Name) ∧ 𝐿 TyVarBndr) ∧ 𝑂 Kind) ∧ 𝐿 Con) ∧ 𝐿 DerivClause)
 thViewSingleConADT :: Dec -> 𝑂 (((((Cxt ∧ Name) ∧ 𝐿 TyVarBndr) ∧ 𝑂 Kind) ∧ Con) ∧ 𝐿 DerivClause)
 thRecCL :: Con ⌲ (Name ∧ 𝐿 VarStrictType)
+thLoc𝕊 :: Q 𝕊
+thLoc :: Q (TExp ((𝕊 -> c) -> c))
+thExp :: Q (TExp a) -> Q (TExp ((𝕊 -> a -> c) -> c))
 instance UVMHS.Core.TH.MonadQ Language.Haskell.TH.Syntax.Q
 instance UVMHS.Core.Classes.Functor.Functor Language.Haskell.TH.Syntax.Q
 instance UVMHS.Core.Classes.Monad.Return Language.Haskell.TH.Syntax.Q
@@ -2640,6 +2621,9 @@ instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftT
 instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftCont t₂) => UVMHS.Core.Effects.LiftCont t₁
 
 module UVMHS.Core.Monads
+newtype MU m
+MU :: m () -> MU m
+[unMU] :: MU m -> m ()
 newtype ID a
 ID :: a -> ID a
 [unID] :: ID a -> a
@@ -2890,6 +2874,9 @@ instance UVMHS.Core.Classes.Monad.Monad UVMHS.Core.Monads.ID
 instance UVMHS.Core.Classes.Comonad.Extract UVMHS.Core.Monads.ID
 instance UVMHS.Core.Classes.Comonad.Cobind UVMHS.Core.Monads.ID
 instance UVMHS.Core.Classes.Comonad.Comonad UVMHS.Core.Monads.ID
+instance UVMHS.Core.Classes.Monad.Return m => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Monads.MU m)
+instance UVMHS.Core.Classes.Monad.Bind m => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Monads.MU m)
+instance UVMHS.Core.Classes.Monad.Monad m => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.MU m)
 instance UVMHS.Core.Effects.MonadIO GHC.Types.IO
 instance UVMHS.Core.Classes.Functor.Functor GHC.Types.IO
 instance UVMHS.Core.Classes.Monad.Return GHC.Types.IO
@@ -2953,6 +2940,9 @@ module UVMHS.Core.Vector
 newtype 𝕌 a
 𝕌 :: Vector a -> 𝕌 a
 [un𝕌] :: 𝕌 a -> Vector a
+newtype 𝕍Mut a
+𝕍Mut :: IOVector a -> 𝕍Mut a
+[un𝕍Mut] :: 𝕍Mut a -> IOVector a
 newtype 𝕍 a
 𝕍 :: Vector a -> 𝕍 a
 [un𝕍] :: 𝕍 a -> Vector a
@@ -2960,7 +2950,7 @@ vec :: ToIter a t => t -> 𝕍 a
 vecC :: ToIterC a t => t -> 𝕍 a
 vecF :: ℕ64 -> (ℕ64 -> a) -> 𝕍 a
 vecDΩ :: (ℕ64 ⇰ a) -> 𝕍 a
-stream𝕍 :: 𝕍 a -> 𝑆 a
+iter𝕍 :: 𝕍 a -> 𝐼 a
 show𝕍 :: Show a => 𝕍 a -> 𝕊
 idx𝕍 :: ℕ64 -> 𝕍 a -> 𝑂 a
 idx𝕍Ω :: ℕ64 -> 𝕍 a -> a
@@ -2968,11 +2958,19 @@ idx𝕍Ω_UNSAFE :: ℕ64 -> 𝕍 a -> a
 map𝕍 :: (a -> b) -> 𝕍 a -> 𝕍 b
 mapM𝕍 :: forall m a b. Monad m => (a -> m b) -> 𝕍 a -> m (𝕍 b)
 null𝕍 :: Null a => ℕ64 -> 𝕍 a
+vecIMut :: ToIter a t => t -> IO (𝕍Mut a)
+vecVMut :: 𝕍 a -> IO (𝕍Mut a)
+idx𝕍Mut :: ℕ64 -> 𝕍Mut a -> IO a
+set𝕍Mut :: ℕ64 -> a -> 𝕍Mut a -> IO ()
+eachI𝕍Mut :: (ℕ64 -> a -> IO ()) -> 𝕍Mut a -> IO ()
+each𝕍Mut :: (a -> IO ()) -> 𝕍Mut a -> IO ()
+values𝕍Mut :: 𝕍Mut a -> IO (𝕍 a)
+grow𝕍Mut :: ℕ64 -> 𝕍Mut a -> IO (𝕍Mut a)
 uvec :: (Storable a, ToIter a t) => t -> 𝕌 a
 uvecC :: (Storable a, ToIterC a t) => t -> 𝕌 a
 uvecF :: Storable a => ℕ64 -> (ℕ64 -> a) -> 𝕌 a
 uvecDΩ :: Storable a => (ℕ64 ⇰ a) -> 𝕌 a
-stream𝕌 :: Storable a => 𝕌 a -> 𝑆 a
+iter𝕌 :: Storable a => 𝕌 a -> 𝐼 a
 show𝕌 :: (Storable a, Show a) => 𝕌 a -> 𝕊
 idx𝕌 :: Storable a => ℕ64 -> 𝕌 a -> 𝑂 a
 idx𝕌Ω :: Storable a => ℕ64 -> 𝕌 a -> a
@@ -3072,11 +3070,9 @@ instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Core.Vector.𝕍 a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Core.Vector.𝕍 a)
 instance (Foreign.Storable.Storable a, GHC.Classes.Ord a) => GHC.Classes.Ord (UVMHS.Core.Vector.𝕌 a)
 instance (Foreign.Storable.Storable a, GHC.Classes.Eq a) => GHC.Classes.Eq (UVMHS.Core.Vector.𝕌 a)
-instance Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Vector.𝕌 a)
 instance Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Vector.𝕌 a)
 instance (Foreign.Storable.Storable a, GHC.Show.Show a) => GHC.Show.Show (UVMHS.Core.Vector.𝕌 a)
 instance Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ64 a (UVMHS.Core.Vector.𝕌 a)
-instance UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.Vector.𝕍 a)
 instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.Vector.𝕍 a)
 instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.Vector.𝕍 a)
 instance UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ64 a (UVMHS.Core.Vector.𝕍 a)
@@ -3112,7 +3108,7 @@ keys𝑉 :: 𝑉 a -> 𝐼 ℤ64
 values𝑉 :: 𝑉 a -> 𝐼 a
 map𝑉 :: (a -> b) -> 𝑉 a -> 𝑉 b
 mapK𝑉 :: (ℤ64 -> a -> b) -> 𝑉 a -> 𝑉 b
-stream𝑉 :: 𝑉 a -> 𝑆 (ℤ64 ∧ a)
+iter𝑉 :: 𝑉 a -> 𝐼 (ℤ64 ∧ a)
 spvec𝐼 :: 𝐼 (ℤ64 ∧ a) -> 𝑉 a
 spvec :: ToIter (𝑉 a) t => t -> 𝑉 a
 assoc𝑉 :: ToIter (ℤ64 ∧ a) t => t -> 𝑉 a
@@ -3141,7 +3137,6 @@ instance UVMHS.Core.Classes.Lattice.Top (UVMHS.Core.VectorSparse.𝑉 a)
 instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.Meet (UVMHS.Core.VectorSparse.𝑉 a)
 instance UVMHS.Core.Classes.Lattice.Meet a => UVMHS.Core.Classes.Lattice.MeetLattice (UVMHS.Core.VectorSparse.𝑉 a)
 instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.VectorSparse.𝑉
-instance UVMHS.Core.Classes.Collections.ToStream (UVMHS.Core.Init.ℤ64 UVMHS.Core.Init.∧ a) (UVMHS.Core.VectorSparse.𝑉 a)
 instance UVMHS.Core.Classes.Collections.ToIter (UVMHS.Core.Init.ℤ64 UVMHS.Core.Init.∧ a) (UVMHS.Core.VectorSparse.𝑉 a)
 instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.VectorSparse.𝑉 a)
 
@@ -3162,8 +3157,8 @@ svec :: forall n a. 𝒩 n => 𝐼S n a -> 𝕍S n a
 svecF :: forall n a. 𝒩 n => ℕ64S n -> (𝕀64 n -> a) -> 𝕍S n a
 idx𝕍S :: 𝕀64 n -> 𝕍S n a -> a
 idxChecked𝕍S :: ℕ64 -> 𝕍S n a -> 𝑂 a
-iter𝕍S :: 𝕍S n a -> 𝐼S n a
-stream𝕍S :: 𝕍S n a -> 𝑆 a
+iter𝕍SS :: 𝕍S n a -> 𝐼S n a
+iter𝕍S :: 𝕍S n a -> 𝐼 a
 show𝕍S :: Show a => 𝕍S n a -> 𝕊
 null𝕍S :: (𝒩 n, Null a) => ℕ64S n -> 𝕍S n a
 map𝕍S :: 𝒩 n => (a -> b) -> 𝕍S n a -> 𝕍S n b
@@ -3182,8 +3177,8 @@ suvec :: forall n a. (𝒩 n, Storable a) => 𝐼S n a -> 𝕌S n a
 suvecF :: forall n a. (𝒩 n, Storable a) => ℕ64S n -> (𝕀64 n -> a) -> 𝕌S n a
 idx𝕌S :: Storable a => 𝕀64 n -> 𝕌S n a -> a
 idxChecked𝕌S :: Storable a => ℕ64 -> 𝕌S n a -> 𝑂 a
-iter𝕌S :: Storable a => 𝕌S n a -> 𝐼S n a
-stream𝕌S :: Storable a => 𝕌S n a -> 𝑆 a
+iter𝕌SS :: Storable a => 𝕌S n a -> 𝐼S n a
+iter𝕌S :: Storable a => 𝕌S n a -> 𝐼 a
 show𝕌S :: (Storable a, Show a) => 𝕌S n a -> 𝕊
 null𝕌S :: (𝒩 n, Storable a, Null a) => ℕ64S n -> 𝕌S n a
 map𝕌S :: (𝒩 n, Storable a, Storable b) => (a -> b) -> 𝕌S n a -> 𝕌S n b
@@ -3285,13 +3280,11 @@ instance forall k (n :: k) a. (Foreign.Storable.Storable a, GHC.Classes.Eq a) =>
 instance (UVMHS.Core.Static.HasSpine ns, UVMHS.Core.Static.AllC UVMHS.Core.Static.𝒩 ns, UVMHS.Core.Classes.Arithmetic.Zero a) => UVMHS.Core.Classes.Arithmetic.Zero (UVMHS.Core.VectorStatic.𝕄S ns a)
 instance (UVMHS.Core.Static.AllC UVMHS.Core.Static.𝒩 ns, UVMHS.Core.Classes.Arithmetic.Plus a) => UVMHS.Core.Classes.Arithmetic.Plus (UVMHS.Core.VectorStatic.𝕄S ns a)
 instance (UVMHS.Core.Static.AllC UVMHS.Core.Static.𝒩 ns, UVMHS.Core.Classes.Arithmetic.Times a) => UVMHS.Core.Classes.Arithmetic.Times (UVMHS.Core.VectorStatic.𝕄S ns a)
-instance forall k a (n :: k). Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.VectorStatic.𝕌S n a)
 instance forall k a (n :: k). Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.VectorStatic.𝕌S n a)
 instance forall k a (n :: k). (Foreign.Storable.Storable a, GHC.Show.Show a) => GHC.Show.Show (UVMHS.Core.VectorStatic.𝕌S n a)
 instance Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.Access (UVMHS.Core.Static.𝕀64 n) a (UVMHS.Core.VectorStatic.𝕌S n a)
 instance forall k a (n :: k). Foreign.Storable.Storable a => UVMHS.Core.Classes.Collections.Lookup UVMHS.Core.Init.ℕ64 a (UVMHS.Core.VectorStatic.𝕌S n a)
 instance (UVMHS.Core.Static.𝒩 n, Foreign.Storable.Storable a, UVMHS.Core.Classes.Monoid.Null a) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.VectorStatic.𝕌S n a)
-instance forall k a (n :: k). UVMHS.Core.Classes.Collections.ToStream a (UVMHS.Core.VectorStatic.𝕍S n a)
 instance forall k a (n :: k). UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Core.VectorStatic.𝕍S n a)
 instance forall k a (n :: k). GHC.Show.Show a => GHC.Show.Show (UVMHS.Core.VectorStatic.𝕍S n a)
 instance UVMHS.Core.Classes.Collections.Access (UVMHS.Core.Static.𝕀64 n) a (UVMHS.Core.VectorStatic.𝕍S n a)
@@ -3308,18 +3301,21 @@ instance UVMHS.Core.Classes.Collections.Access (UVMHS.Core.Static.𝕀64 n) a (U
 module UVMHS.Core
 
 module UVMHS.Lib.ATree
-data 𝑉𝐴 i a
-𝑉𝐴 :: (forall b. Monoid b => (a -> b) -> (i -> b -> b) -> b) -> 𝑉𝐴 i a
-[un𝑉𝐴] :: 𝑉𝐴 i a -> forall b. Monoid b => (a -> b) -> (i -> b -> b) -> b
-element𝑉𝐴 :: a -> 𝑉𝐴 i a
-annotate𝑉𝐴 :: i -> 𝑉𝐴 i a -> 𝑉𝐴 i a
-null𝑉𝐴 :: 𝑉𝐴 i a
-append𝑉𝐴 :: 𝑉𝐴 i a -> 𝑉𝐴 i a -> 𝑉𝐴 i a
-map𝑉𝐴 :: (i -> j) -> (a -> b) -> 𝑉𝐴 i a -> 𝑉𝐴 j b
-instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.ATree.𝑉𝐴 i a)
-instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.ATree.𝑉𝐴 i a)
-instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.ATree.𝑉𝐴 i a)
-instance UVMHS.Core.Classes.Functor.Functor (UVMHS.Lib.ATree.𝑉𝐴 i)
+data 𝑇V i a
+𝑇V :: (forall b. Monoid b => (a -> b) -> (i -> b -> b) -> b) -> 𝑇V i a
+[un𝑇V] :: 𝑇V i a -> forall b. Monoid b => (a -> b) -> (i -> b -> b) -> b
+fold𝑇VOnLeafNode :: Monoid b => 𝑇V i a -> (a -> b) -> (i -> b -> b) -> b
+fold𝑇VLeafNodeOn :: Monoid b => (a -> b) -> (i -> b -> b) -> 𝑇V i a -> b
+null𝑇V :: 𝑇V i a
+append𝑇V :: 𝑇V i a -> 𝑇V i a -> 𝑇V i a
+single𝑇V :: a -> 𝑇V i a
+annot :: i -> 𝑇V i a -> 𝑇V i a
+map𝑇V :: (i -> j) -> (a -> b) -> 𝑇V i a -> 𝑇V j b
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.ATree.𝑇V i a)
+instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.ATree.𝑇V i a)
+instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.ATree.𝑇V i a)
+instance UVMHS.Core.Classes.Collections.Single a (UVMHS.Lib.ATree.𝑇V i a)
+instance UVMHS.Core.Classes.Functor.Functor (UVMHS.Lib.ATree.𝑇V i)
 
 module UVMHS.Lib.MMSPBindingInfo
 
@@ -3534,8 +3530,8 @@ data ChunkO
 RawChunkO :: ℕ64 -> 𝕊 -> ChunkO
 PaddingChunkO :: ℕ64 -> ChunkO
 shapeOChunk :: ChunkO -> Shape
-type TreeI = 𝑉𝐴 Annotation (𝐼 ChunkI)
-type TreeO = 𝑉𝐴 Formats (Sep () (𝐼A ChunkO))
+type TreeI = 𝑇V Annotation (𝐼 ChunkI)
+type TreeO = 𝑇V Formats (Sep () (𝐼A ChunkO))
 chunkIO :: ChunkO -> ChunkI
 treeIO :: TreeO -> TreeI
 data SummaryI
@@ -3778,6 +3774,12 @@ ppInflSep :: ℕ64 -> Doc -> Doc -> Doc -> Doc
 ppInfrSep :: ℕ64 -> Doc -> Doc -> Doc -> Doc
 ppPreSep :: ℕ64 -> Doc -> Doc -> Doc
 ppPostSep :: ℕ64 -> Doc -> Doc -> Doc
+ppInf' :: ℕ64 -> Doc -> Doc -> Doc -> Doc
+ppInfl' :: ℕ64 -> Doc -> Doc -> Doc -> Doc
+ppInfr' :: ℕ64 -> Doc -> Doc -> Doc -> Doc
+ppInfSep' :: ℕ64 -> Doc -> Doc -> Doc -> Doc
+ppInflSep' :: ℕ64 -> Doc -> Doc -> Doc -> Doc
+ppInfrSep' :: ℕ64 -> Doc -> Doc -> Doc -> Doc
 ppApp :: ToIter Doc t => Doc -> t -> Doc
 ppCollection :: ToIter Doc t => Doc -> Doc -> Doc -> t -> Doc
 ppRecord :: ToIter (Doc ∧ Doc) t => Doc -> t -> Doc
@@ -3816,7 +3818,6 @@ instance (UVMHS.Lib.Pretty.Doc.Pretty a, UVMHS.Lib.Pretty.Doc.Pretty b) => UVMHS
 instance (UVMHS.Lib.Pretty.Doc.Pretty a, UVMHS.Lib.Pretty.Doc.Pretty b) => UVMHS.Lib.Pretty.Doc.Pretty (a UVMHS.Core.Init.∧ b)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝐿 a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty [a]
-instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑆 a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝐼 a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Sized.𝐼C a)
 instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.𝑄 a)
@@ -3944,13 +3945,49 @@ instance UVMHS.Core.Classes.Lattice.JoinLattice UVMHS.Lib.Parser.Loc.Loc
 instance UVMHS.Core.Classes.Lattice.Meet UVMHS.Lib.Parser.Loc.Loc
 instance GHC.Show.Show UVMHS.Lib.Parser.Loc.Loc
 
+module UVMHS.Lib.GTree
+data GTree a
+GTree :: 𝐼 a -> (𝕊 ⇰ GTree a) -> GTree a
+[gtreeValues] :: GTree a -> 𝐼 a
+[gtreeNested] :: GTree a -> 𝕊 ⇰ GTree a
+foldGTreeWith :: Monoid b => (𝐼 a -> b) -> (𝕊 -> b -> b) -> GTree a -> b
+foldGTreeOn :: Monoid b => GTree a -> (𝐼 a -> b) -> (𝕊 -> b -> b) -> b
+gtk :: 𝕊 -> GTree a -> GTree a
+gtks :: 𝐿 𝕊 -> GTree a -> GTree a
+gtv :: a -> GTree a
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Lib.GTree.GTree a)
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.GTree.GTree a)
+instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.GTree.GTree a)
+instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.GTree.GTree a)
+instance UVMHS.Core.Classes.Monoid.Eps (UVMHS.Lib.GTree.GTree a)
+instance UVMHS.Core.Classes.Monoid.Seq (UVMHS.Lib.GTree.GTree a)
+instance UVMHS.Core.Classes.Monoid.Seqoid (UVMHS.Lib.GTree.GTree a)
+instance UVMHS.Core.Classes.Collections.Single a (UVMHS.Lib.GTree.GTree a)
+instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.GTree.GTree a)
+
+module UVMHS.Lib.DTree
+data DTree a
+DTree :: 𝐼 a -> 𝐼 (𝕊 ∧ DTree a) -> DTree a
+[dtreeValues] :: DTree a -> 𝐼 a
+[dtreeNested] :: DTree a -> 𝐼 (𝕊 ∧ DTree a)
+dtk :: 𝕊 -> DTree a -> DTree a
+dtv :: a -> DTree a
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Lib.DTree.DTree a)
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.DTree.DTree a)
+instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.DTree.DTree a)
+instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.DTree.DTree a)
+instance UVMHS.Core.Classes.Monoid.Eps (UVMHS.Lib.DTree.DTree a)
+instance UVMHS.Core.Classes.Monoid.Seq (UVMHS.Lib.DTree.DTree a)
+instance UVMHS.Core.Classes.Monoid.Seqoid (UVMHS.Lib.DTree.DTree a)
+instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.DTree.DTree a)
+
 module UVMHS.Lib.Annotated
 data 𝐴 e a
 𝐴 :: e -> a -> 𝐴 e a
 [atag] :: 𝐴 e a -> e
 [aval] :: 𝐴 e a -> a
-avalL :: forall (e_a2Naq :: Type) (a_a2Nar :: Type). (⟢) (𝐴 e_a2Naq a_a2Nar) a_a2Nar
-atagL :: forall (e_a2Naq :: Type) (a_a2Nar :: Type). (⟢) (𝐴 e_a2Naq a_a2Nar) e_a2Naq
+avalL :: forall (e_a2Qlv :: Type) (a_a2Qlw :: Type). (⟢) (𝐴 e_a2Qlv a_a2Qlw) a_a2Qlw
+atagL :: forall (e_a2Qlv :: Type) (a_a2Qlw :: Type). (⟢) (𝐴 e_a2Qlv a_a2Qlw) e_a2Qlv
 instance (UVMHS.Lib.Pretty.Doc.Pretty e, UVMHS.Lib.Pretty.Doc.Pretty a) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Annotated.𝐴 e a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Lib.Annotated.𝐴 t a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Lib.Annotated.𝐴 t a)
@@ -3966,8 +4003,8 @@ data ADF a
 ADF :: a -> a -> ADF a
 [adfVal] :: ADF a -> a
 [adfDer] :: ADF a -> a
-adfDerL :: forall (a_a2O5E :: Type). (⟢) (ADF a_a2O5E) a_a2O5E
-adfValL :: forall (a_a2O5E :: Type). (⟢) (ADF a_a2O5E) a_a2O5E
+adfDerL :: forall (a_a2Rf4 :: Type). (⟢) (ADF a_a2Rf4) a_a2Rf4
+adfValL :: forall (a_a2Rf4 :: Type). (⟢) (ADF a_a2Rf4) a_a2Rf4
 constADF :: Zero a => a -> ADF a
 sensADF :: a -> a -> ADF a
 plusADF :: Plus a => ADF a -> ADF a -> ADF a
@@ -3976,8 +4013,8 @@ data ADB a
 ADB :: a -> (a -> a -> a) -> ADB a
 [adbVal] :: ADB a -> a
 [adbDer] :: ADB a -> a -> a -> a
-adbDerL :: forall (a_a2OaY :: Type). (⟢) (ADB a_a2OaY) (a_a2OaY -> a_a2OaY -> a_a2OaY)
-adbValL :: forall (a_a2OaY :: Type). (⟢) (ADB a_a2OaY) a_a2OaY
+adbDerL :: forall (a_a2Rko :: Type). (⟢) (ADB a_a2Rko) (a_a2Rko -> a_a2Rko -> a_a2Rko)
+adbValL :: forall (a_a2Rko :: Type). (⟢) (ADB a_a2Rko) a_a2Rko
 constADB :: Zero a => a -> ADB a
 sensADB :: a -> (a -> a -> a) -> ADB a
 plusADB :: Plus a => ADB a -> ADB a -> ADB a
@@ -3986,8 +4023,8 @@ data ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adffVal] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adffDer] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
-adffDerL :: forall (ns_a2Of3 :: [𝐍]) (f_a2Of4 :: [𝐍] -> Type -> Type) (ms_a2Of5 :: [𝐍]) (a_a2Of6 :: Type). (⟢) (ADFF ns_a2Of3 f_a2Of4 ms_a2Of5 a_a2Of6) (f_a2Of4 ((⧺) ns_a2Of3 ms_a2Of5) a_a2Of6)
-adffValL :: forall (ns_a2Of3 :: [𝐍]) (f_a2Of4 :: [𝐍] -> Type -> Type) (ms_a2Of5 :: [𝐍]) (a_a2Of6 :: Type). (⟢) (ADFF ns_a2Of3 f_a2Of4 ms_a2Of5 a_a2Of6) (f_a2Of4 ((⧺) ns_a2Of3 ms_a2Of5) a_a2Of6)
+adffDerL :: forall (ns_a2Rox :: [𝐍]) (f_a2Roy :: [𝐍] -> Type -> Type) (ms_a2Roz :: [𝐍]) (a_a2RoA :: Type). (⟢) (ADFF ns_a2Rox f_a2Roy ms_a2Roz a_a2RoA) (f_a2Roy ((⧺) ns_a2Rox ms_a2Roz) a_a2RoA)
+adffValL :: forall (ns_a2Rox :: [𝐍]) (f_a2Roy :: [𝐍] -> Type -> Type) (ms_a2Roz :: [𝐍]) (a_a2RoA :: Type). (⟢) (ADFF ns_a2Rox f_a2Roy ms_a2Roz a_a2RoA) (f_a2Roy ((⧺) ns_a2Rox ms_a2Roz) a_a2RoA)
 constADFF :: Zero (f (ns ⧺ ms) a) => f (ns ⧺ ms) a -> ADFF ns f ms a
 sensADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF ns f ms a
 plusADFF :: Plus (f (ns ⧺ ms) a) => ADFF ns f ms a -> ADFF ns f ms a -> ADFF ns f ms a
@@ -3996,8 +4033,8 @@ data ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adfbVal] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adfbDer] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a
-adfbDerL :: forall (ns_a2OkM :: [𝐍]) (f_a2OkN :: [𝐍] -> Type -> Type) (ms_a2OkO :: [𝐍]) (a_a2OkP :: Type). (⟢) (ADFB ns_a2OkM f_a2OkN ms_a2OkO a_a2OkP) (f_a2OkN ((⧺) ns_a2OkM ms_a2OkO) a_a2OkP -> f_a2OkN ((⧺) ns_a2OkM ms_a2OkO) a_a2OkP -> f_a2OkN ((⧺) ns_a2OkM ms_a2OkO) a_a2OkP)
-adfbValL :: forall (ns_a2OkM :: [𝐍]) (f_a2OkN :: [𝐍] -> Type -> Type) (ms_a2OkO :: [𝐍]) (a_a2OkP :: Type). (⟢) (ADFB ns_a2OkM f_a2OkN ms_a2OkO a_a2OkP) (f_a2OkN ((⧺) ns_a2OkM ms_a2OkO) a_a2OkP)
+adfbDerL :: forall (ns_a2Rul :: [𝐍]) (f_a2Rum :: [𝐍] -> Type -> Type) (ms_a2Run :: [𝐍]) (a_a2Ruo :: Type). (⟢) (ADFB ns_a2Rul f_a2Rum ms_a2Run a_a2Ruo) (f_a2Rum ((⧺) ns_a2Rul ms_a2Run) a_a2Ruo -> f_a2Rum ((⧺) ns_a2Rul ms_a2Run) a_a2Ruo -> f_a2Rum ((⧺) ns_a2Rul ms_a2Run) a_a2Ruo)
+adfbValL :: forall (ns_a2Rul :: [𝐍]) (f_a2Rum :: [𝐍] -> Type -> Type) (ms_a2Run :: [𝐍]) (a_a2Ruo :: Type). (⟢) (ADFB ns_a2Rul f_a2Rum ms_a2Run a_a2Ruo) (f_a2Rum ((⧺) ns_a2Rul ms_a2Run) a_a2Ruo)
 constADFB :: f (ns ⧺ ms) a -> ADFB ns f ms a
 sensADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB ns f ms a
 plusADFB :: Plus (f (ns ⧺ ms) a) => ADFB ns f ms a -> ADFB ns f ms a -> ADFB ns f ms a
@@ -4009,6 +4046,34 @@ instance UVMHS.Lib.Pretty.Doc.Pretty a => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib
 instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Lib.AD.ADF a)
 instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Lib.AD.ADF a)
 instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Lib.AD.ADF a)
+
+module UVMHS.Lib.Testing
+data EqTest
+EqTest :: 𝐿 𝕊 -> 𝕊 -> 𝕊 -> 𝕊 -> Exp -> Exp -> EqTest
+[eqTestGroup] :: EqTest -> 𝐿 𝕊
+[eqTestLoc] :: EqTest -> 𝕊
+[eqTestLHSShow] :: EqTest -> 𝕊
+[eqTestRHSShow] :: EqTest -> 𝕊
+[eqTestLHS] :: EqTest -> Exp
+[eqTestRHS] :: EqTest -> Exp
+data TestsOut
+TestsOut :: (𝐿 𝕊 ⇰ 𝐼 ((Doc ∧ Doc) ∧ Doc)) -> (𝐿 𝕊 ⇰ (ℕ ∧ ℕ)) -> TestsOut
+[testsOutFailures] :: TestsOut -> 𝐿 𝕊 ⇰ 𝐼 ((Doc ∧ Doc) ∧ Doc)
+[testsOutMetrics] :: TestsOut -> 𝐿 𝕊 ⇰ (ℕ ∧ ℕ)
+data Test
+Test :: Doc -> Doc -> Doc -> (() -> IO 𝔹) -> Test
+[testSourceLoc] :: Test -> Doc
+[testSourceShow] :: Test -> Doc
+[testComparison] :: Test -> Doc
+[testResult] :: Test -> () -> IO 𝔹
+eqTest :: (Eq a, Pretty a) => 𝐿 𝕊 -> 𝕊 -> 𝕊 -> 𝕊 -> a -> a -> GTree Test
+runTests :: 𝔹 -> GTree Test -> IO ()
+𝔱 :: 𝕊 -> Q Exp -> Q Exp -> Q [Dec]
+buildTests :: Q [Dec]
+testModules :: 𝔹 -> [𝕊] -> Q Exp
+instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Testing.TestsOut
+instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Testing.TestsOut
+instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Testing.TestsOut
 
 module UVMHS.Lib.Window
 data WindowL i a
@@ -4109,19 +4174,19 @@ PreParserToken :: t -> 𝔹 -> ParserContext -> PreParserToken t
 [preParserTokenValue] :: PreParserToken t -> t
 [preParserTokenSkip] :: PreParserToken t -> 𝔹
 [preParserTokenContext] :: PreParserToken t -> ParserContext
-preParserTokenContextL :: forall (t_a2Y83 :: Type). (⟢) (PreParserToken t_a2Y83) ParserContext
-preParserTokenSkipL :: forall (t_a2Y83 :: Type). (⟢) (PreParserToken t_a2Y83) 𝔹
-preParserTokenValueL :: forall (t_a2Y83 :: Type). (⟢) (PreParserToken t_a2Y83) t_a2Y83
+preParserTokenContextL :: forall (t_a363v :: Type). (⟢) (PreParserToken t_a363v) ParserContext
+preParserTokenSkipL :: forall (t_a363v :: Type). (⟢) (PreParserToken t_a363v) 𝔹
+preParserTokenValueL :: forall (t_a363v :: Type). (⟢) (PreParserToken t_a363v) t_a363v
 data ParserToken t
 ParserToken :: t -> 𝔹 -> ParserContext -> WindowL Doc Doc -> ParserToken t
 [parserTokenValue] :: ParserToken t -> t
 [parserTokenSkip] :: ParserToken t -> 𝔹
 [parserTokenContext] :: ParserToken t -> ParserContext
 [parserTokenSuffix] :: ParserToken t -> WindowL Doc Doc
-parserTokenSuffixL :: forall (t_a2Ya8 :: Type). (⟢) (ParserToken t_a2Ya8) (WindowL Doc Doc)
-parserTokenContextL :: forall (t_a2Ya8 :: Type). (⟢) (ParserToken t_a2Ya8) ParserContext
-parserTokenSkipL :: forall (t_a2Ya8 :: Type). (⟢) (ParserToken t_a2Ya8) 𝔹
-parserTokenValueL :: forall (t_a2Ya8 :: Type). (⟢) (ParserToken t_a2Ya8) t_a2Ya8
+parserTokenSuffixL :: forall (t_a365A :: Type). (⟢) (ParserToken t_a365A) (WindowL Doc Doc)
+parserTokenContextL :: forall (t_a365A :: Type). (⟢) (ParserToken t_a365A) ParserContext
+parserTokenSkipL :: forall (t_a365A :: Type). (⟢) (ParserToken t_a365A) 𝔹
+parserTokenValueL :: forall (t_a365A :: Type). (⟢) (ParserToken t_a365A) t_a365A
 renderNLDisplay :: Doc
 renderNLError :: Doc
 renderEOFDisplay :: Doc
@@ -4191,11 +4256,11 @@ RegexState :: ℕ64 -> (Regex c t o u ⇰ ℕ64) -> ((t ∨ c) ⇰ (ℕ64 ⇰ �
 [regexStateTransitions] :: RegexState c t o u -> (t ∨ c) ⇰ (ℕ64 ⇰ ℕ64)
 [regexStateResults] :: RegexState c t o u -> ℕ64 ⇰ 𝑂 (RegexResult o u)
 [regexStateDead] :: RegexState c t o u -> ℕ64 ⇰ 𝔹
-regexStateDeadL :: forall (c_a30sH :: Type) (t_a30sI :: Type) (o_a30sJ :: Type) (u_a30sK :: Type). (⟢) (RegexState c_a30sH t_a30sI o_a30sJ u_a30sK) ((⇰) ℕ64 𝔹)
-regexStateResultsL :: forall (c_a30sH :: Type) (t_a30sI :: Type) (o_a30sJ :: Type) (u_a30sK :: Type). (⟢) (RegexState c_a30sH t_a30sI o_a30sJ u_a30sK) ((⇰) ℕ64 (𝑂 (RegexResult o_a30sJ u_a30sK)))
-regexStateTransitionsL :: forall (c_a30sH :: Type) (t_a30sI :: Type) (o_a30sJ :: Type) (u_a30sK :: Type). (⟢) (RegexState c_a30sH t_a30sI o_a30sJ u_a30sK) ((⇰) ((∨) t_a30sI c_a30sH) ((⇰) ℕ64 ℕ64))
-regexStateMapL :: forall (c_a30sH :: Type) (t_a30sI :: Type) (o_a30sJ :: Type) (u_a30sK :: Type). (⟢) (RegexState c_a30sH t_a30sI o_a30sJ u_a30sK) ((⇰) (Regex c_a30sH t_a30sI o_a30sJ u_a30sK) ℕ64)
-regexStateNextIDL :: forall (c_a30sH :: Type) (t_a30sI :: Type) (o_a30sJ :: Type) (u_a30sK :: Type). (⟢) (RegexState c_a30sH t_a30sI o_a30sJ u_a30sK) ℕ64
+regexStateDeadL :: forall (c_a38p2 :: Type) (t_a38p3 :: Type) (o_a38p4 :: Type) (u_a38p5 :: Type). (⟢) (RegexState c_a38p2 t_a38p3 o_a38p4 u_a38p5) ((⇰) ℕ64 𝔹)
+regexStateResultsL :: forall (c_a38p2 :: Type) (t_a38p3 :: Type) (o_a38p4 :: Type) (u_a38p5 :: Type). (⟢) (RegexState c_a38p2 t_a38p3 o_a38p4 u_a38p5) ((⇰) ℕ64 (𝑂 (RegexResult o_a38p4 u_a38p5)))
+regexStateTransitionsL :: forall (c_a38p2 :: Type) (t_a38p3 :: Type) (o_a38p4 :: Type) (u_a38p5 :: Type). (⟢) (RegexState c_a38p2 t_a38p3 o_a38p4 u_a38p5) ((⇰) ((∨) t_a38p3 c_a38p2) ((⇰) ℕ64 ℕ64))
+regexStateMapL :: forall (c_a38p2 :: Type) (t_a38p3 :: Type) (o_a38p4 :: Type) (u_a38p5 :: Type). (⟢) (RegexState c_a38p2 t_a38p3 o_a38p4 u_a38p5) ((⇰) (Regex c_a38p2 t_a38p3 o_a38p4 u_a38p5) ℕ64)
+regexStateNextIDL :: forall (c_a38p2 :: Type) (t_a38p3 :: Type) (o_a38p4 :: Type) (u_a38p5 :: Type). (⟢) (RegexState c_a38p2 t_a38p3 o_a38p4 u_a38p5) ℕ64
 regexState₀ :: RegexState c t o u
 data DFA c t o u
 DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult o u)) -> 𝕍 𝔹 -> DFA c t o u
@@ -4204,7 +4269,7 @@ DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult 
 [dfaTransitions] :: DFA c t o u -> (t ∨ c) ⇰ 𝕍 ℕ64
 [dfaSuccess] :: DFA c t o u -> 𝕍 (𝑂 (RegexResult o u))
 [dfaDead] :: DFA c t o u -> 𝕍 𝔹
-compileRegex :: forall c t o u. (Pretty c, Pretty t, Pretty o, Pretty u, Ord c, Ord t, Classified c t, All c, Ord o, Ord u, Additive u) => Regex c t o u -> DFA c t o u
+compileRegex :: forall c t o u. (Pretty t, Pretty o, Pretty u, Ord c, Ord t, Classified c t, All c, Ord o, Ord u, Additive u) => Regex c t o u -> DFA c t o u
 data LexDFAState t
 LexDFAState :: WindowR Doc Doc -> ParserContext -> 𝑆 (ParserToken t) -> 𝐼C t -> LexDFAState t
 [lexDFAStatePrefix] :: LexDFAState t -> WindowR Doc Doc
@@ -4433,12 +4498,12 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateEndPos] :: ParserState t -> AddBT Loc
 [parserStateInput] :: ParserState t -> 𝑆 (ParserToken t)
-parserStateInputL :: forall (t_a3uNw :: Type). (⟢) (ParserState t_a3uNw) (𝑆 (ParserToken t_a3uNw))
-parserStateEndPosL :: forall (t_a3uNw :: Type). (⟢) (ParserState t_a3uNw) (AddBT Loc)
-parserStateSuffixL :: forall (t_a3uNw :: Type). (⟢) (ParserState t_a3uNw) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a3uNw :: Type). (⟢) (ParserState t_a3uNw) ParserContext
-parserStateSkipContextL :: forall (t_a3uNw :: Type). (⟢) (ParserState t_a3uNw) ParserContext
-parserStatePrefixL :: forall (t_a3uNw :: Type). (⟢) (ParserState t_a3uNw) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a3CIW :: Type). (⟢) (ParserState t_a3CIW) (𝑆 (ParserToken t_a3CIW))
+parserStateEndPosL :: forall (t_a3CIW :: Type). (⟢) (ParserState t_a3CIW) (AddBT Loc)
+parserStateSuffixL :: forall (t_a3CIW :: Type). (⟢) (ParserState t_a3CIW) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a3CIW :: Type). (⟢) (ParserState t_a3CIW) ParserContext
+parserStateSkipContextL :: forall (t_a3CIW :: Type). (⟢) (ParserState t_a3CIW) ParserContext
+parserStatePrefixL :: forall (t_a3CIW :: Type). (⟢) (ParserState t_a3CIW) (WindowR Doc Doc)
 parserState₀ :: 𝑆 (ParserToken t) -> ParserState t
 newtype Parser t a
 Parser :: ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a
@@ -4528,10 +4593,10 @@ cpManyContext :: (Ord t, Comonad f) => (forall b. CParser t b -> CParser t (f b)
 cpOneOrMoreContext :: (Ord t, Comonad f) => (forall b. CParser t b -> CParser t (f b)) -> CParser t a -> CParser t (𝐿 (f a))
 cpManySepByContext :: (Ord t, Comonad f) => (forall b. CParser t b -> CParser t (f b)) -> CParser t () -> CParser t a -> CParser t (𝐿 (f a))
 cpOneOrMoreSepByContext :: (Ord t, Comonad f) => (forall b. CParser t b -> CParser t (f b)) -> CParser t () -> CParser t a -> CParser t (𝐿 (f a))
-runParser₀ :: (ToStream (ParserToken t) ts, Ord t) => 𝕊 -> ts -> CParser t a -> ParserOut t ∧ 𝑂 (ParserState t ∧ a)
-parse :: (Pretty a, ToStream (ParserToken t) ts, Ord t) => CParser t a -> 𝕊 -> ts -> Doc ∨ a
-parseIO :: (Pretty a, ToStream (ParserToken t) ts, Ord t) => CParser t a -> 𝕊 -> ts -> IO a
-parseIOMain :: (Pretty a, ToStream (ParserToken t) ts, Ord t) => CParser t a -> 𝕊 -> ts -> IO ()
+runParser₀ :: (ToIter (ParserToken t) ts, Ord t) => 𝕊 -> ts -> CParser t a -> ParserOut t ∧ 𝑂 (ParserState t ∧ a)
+parse :: (Pretty a, ToIter (ParserToken t) ts, Ord t) => CParser t a -> 𝕊 -> ts -> Doc ∨ a
+parseIO :: (Pretty a, ToIter (ParserToken t) ts, Ord t) => CParser t a -> 𝕊 -> ts -> IO a
+parseIOMain :: (Pretty a, ToIter (ParserToken t) ts, Ord t) => CParser t a -> 𝕊 -> ts -> IO ()
 instance UVMHS.Core.Classes.Monad.Return (UVMHS.Lib.Parser.CParser.CParser t)
 instance GHC.Classes.Ord t => UVMHS.Core.Classes.Monad.Bind (UVMHS.Lib.Parser.CParser.CParser t)
 instance GHC.Classes.Ord t => UVMHS.Core.Classes.Functor.Functor (UVMHS.Lib.Parser.CParser.CParser t)
@@ -4629,44 +4694,41 @@ testTokenizeFailure2 :: IO ()
 module UVMHS.Lib.Parser
 
 module UVMHS.Lib.VariablesNew
-data 𝕏
-𝕏 :: 𝕊 -> 𝑂 ℕ64 -> 𝕏
-[𝕩name] :: 𝕏 -> 𝕊
-[𝕩mark] :: 𝕏 -> 𝑂 ℕ64
-𝕩markL :: (⟢) 𝕏 (𝑂 ℕ64)
-𝕩nameL :: (⟢) 𝕏 𝕊
-var :: 𝕊 -> 𝕏
-cpName :: CParser TokenBasic 𝕏
-cpNameWS :: CParser TokenWSBasic 𝕏
-data 𝕐
-GlobalVar :: 𝕏 -> 𝕐
-NamedVar :: 𝕏 -> ℕ64 -> 𝕐
-NamelessVar :: ℕ64 -> 𝕐
-namelessVarL :: (⌲) 𝕐 ℕ64
-namedVarL :: (⌲) 𝕐 ((∧) 𝕏 ℕ64)
-globalVarL :: (⌲) 𝕐 𝕏
-gvar :: 𝕏 -> 𝕐
-nvar :: 𝕏 -> 𝕐
-gvarL :: 𝕐 ⌲ 𝕏
-nvarL :: 𝕐 ⌲ 𝕏
 data Subst a
-Subst :: (𝕏 ⇰ a) -> (𝕏 ⇰ (ℕ64 ∧ (ℕ64 ⇰ a))) -> (ℕ64 ⇰ a) -> (𝔹 ∧ ℕ64) -> Subst a
-[globalSubs] :: Subst a -> 𝕏 ⇰ a
-[namedSubs] :: Subst a -> 𝕏 ⇰ (ℕ64 ∧ (ℕ64 ⇰ a))
-[namelessSubs] :: Subst a -> ℕ64 ⇰ a
-[namelessShift] :: Subst a -> 𝔹 ∧ ℕ64
-class FromVar s a | a -> s
-frvar :: FromVar s a => 𝑃 SrcCxt -> s -> 𝕐 -> 𝑂 a
-nullSubst :: Subst a
-applySubstVar :: (𝕐 -> 𝑂 a) -> Subst a -> 𝕐 -> 𝑂 a
-instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.VariablesNew.𝕐
-instance GHC.Show.Show UVMHS.Lib.VariablesNew.𝕐
-instance GHC.Classes.Ord UVMHS.Lib.VariablesNew.𝕐
-instance GHC.Classes.Eq UVMHS.Lib.VariablesNew.𝕐
-instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.VariablesNew.𝕏
-instance GHC.Show.Show UVMHS.Lib.VariablesNew.𝕏
-instance GHC.Classes.Ord UVMHS.Lib.VariablesNew.𝕏
-instance GHC.Classes.Eq UVMHS.Lib.VariablesNew.𝕏
+Subst :: ℕ64 -> ℕ64 -> ℤ64 -> (ℕ64 ⇰ a) -> Subst a
+[substLB] :: Subst a -> ℕ64
+[substUB] :: Subst a -> ℕ64
+[substIncr] :: Subst a -> ℤ64
+[substVals] :: Subst a -> ℕ64 ⇰ a
+data ULCalc
+Var :: ℕ64 -> ULCalc
+Lam :: 𝕊 -> ULCalc -> ULCalc
+App :: ULCalc -> ULCalc -> ULCalc
+infixl 5 `App`
+var :: ℕ -> ULCalc
+te₁ :: ULCalc
+te₂ :: ULCalc
+prettyNamed :: ℕ64 -> (ℕ64 ⇰ 𝕊) -> ULCalc -> Doc
+newtype Named
+Named :: ULCalc -> Named
+[unNamed] :: Named -> ULCalc
+wkSubst :: Subst a -> Subst a
+substVarN :: ℕ64 -> Subst ℕ64 -> ℕ64 -> ℕ64
+substN :: ℕ64 -> Subst ℕ64 -> ULCalc -> ULCalc
+subst :: Subst ℕ64 -> ULCalc -> ULCalc
+idSubst :: Subst a
+introSubst :: Subst a
+bindSubst :: a -> Subst a
+range :: (Ord n, Plus n, One n) => n -> n -> 𝐼 n
+(⎊) :: Subst ℕ64 -> Subst ℕ64 -> Subst ℕ64
+𝓈bb :: Subst ℕ64
+g__TESTS__UVMHS__Lib__VariablesNew :: GTree Test
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.VariablesNew.Named
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.VariablesNew.ULCalc
+instance (UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.ℕ64, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Core.Init.ℤ64, UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Core.Init.ℕ64 UVMHS.Core.Init.⇰ a)) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.VariablesNew.Subst a)
+instance GHC.Show.Show a => GHC.Show.Show (UVMHS.Lib.VariablesNew.Subst a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (UVMHS.Lib.VariablesNew.Subst a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (UVMHS.Lib.VariablesNew.Subst a)
 
 module UVMHS.Lib.Variables
 data 𝕏
@@ -5052,4 +5114,5 @@ instance (UVMHS.Core.Classes.Arithmetic.Log a, UVMHS.Core.Classes.Lattice.Top a,
 instance (UVMHS.Core.Classes.Arithmetic.Efn a, UVMHS.Core.Classes.Arithmetic.One a) => UVMHS.Core.Classes.Arithmetic.Efn (UVMHS.Lib.ZerInf.AddZer a)
 
 module UVMHSMain
+g__TESTS__UVMHSMain :: GTree Test
 main :: IO ()

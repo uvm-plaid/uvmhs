@@ -1,18 +1,34 @@
 module UVMHS.Core.Init
   ( module UVMHS.Core.Init
-  , module GHC.Exts
-  , module Prelude
-  , module GHC.Stack
+  , module Control.Exception
   , module Data.Coerce
+  , module GHC.Exts
+  , module GHC.Stack
+  , module Prelude
+  , module Data.String
   ) where
 
 import Prelude
   ( undefined,otherwise
   , Bool(..),Eq((==)),Ord(compare),Show(show),Ordering(..),IO
   )
-import Data.Coerce (coerce)
-import GHC.Exts (type Constraint)
-import GHC.Stack (type CallStack,callStack,withFrozenCallStack)
+import Data.Coerce 
+  ( coerce
+  )
+import GHC.Exts 
+  ( type Constraint
+  )
+import GHC.Stack 
+  ( type CallStack,callStack,withFrozenCallStack
+  )
+
+import Control.Exception
+  ( assert
+  )
+
+import Data.String
+  ( IsString(..)
+  )
 
 import qualified Prelude as HS
 import qualified GHC.Types as HS
@@ -47,19 +63,19 @@ infixr 8 :&
 -- Numeric and Boolean Base Types --
 ------------------------------------
 
-type ℕ = HS.Natural
+type ℕ   = HS.Natural
 type ℕ64 = HS.Word64
 type ℕ32 = HS.Word32
 type ℕ16 = HS.Word16
 type ℕ8  = HS.Word8
-type ℤ = HS.Integer
+type ℤ   = HS.Integer
 type ℤ64 = HS.Int64
 type ℤ32 = HS.Int32
 type ℤ16 = HS.Int16
 type ℤ8  = HS.Int8
-type ℚ = HS.Rational
-type ℚᴾ = HS.Ratio ℕ
-type 𝔻 = HS.Double
+type ℚ   = HS.Rational
+type ℚᴾ  = HS.Ratio ℕ
+type 𝔻   = HS.Double
 
 -- non-negative double
 newtype 𝔻ᴾ = 𝔻ᴾ { un𝔻ᴾ ∷ 𝔻 }
@@ -249,8 +265,8 @@ unpack_C (Ex_C x) f = f x
 -- Haskell Syntax --
 --------------------
 
-fromString ∷ [ℂ] → 𝕊
-fromString = Text.pack
+-- fromString ∷ [ℂ] → 𝕊
+-- fromString = Text.pack
 
 fromInteger ∷ ℤ → ℕ
 fromInteger = HS.fromIntegral
@@ -270,6 +286,9 @@ ifThenElse = cond
 -----------------------
 -- Basic Conversions --
 -----------------------
+
+𝕤 ∷ [ℂ] → 𝕊
+𝕤 = Text.pack
 
 𝕟64 ∷ ℕ → ℕ64
 𝕟64 = HS.fromIntegral
