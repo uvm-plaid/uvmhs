@@ -200,6 +200,9 @@ instance
 
 type State s = StateT s ID
 
+mkState ∷ (s → s ∧ a) → State s a
+mkState f = StateT $ ID ∘ f
+
 runState ∷ s → State s a → (s ∧ a)
 runState s = unID ∘ runStateT s
 
@@ -1108,7 +1111,8 @@ newtype RWST r o s m a = RWST { unRWST ∷ ReaderT r (WriterT o (StateT s m)) a 
   ,MonadIO
   ,MonadReader r,MonadWriter o,MonadState s
   ,MonadFail,MonadError e
-  ,MonadNondet,MonadTop)
+  ,MonadNondet,MonadTop
+  )
 
 mkRWST ∷ ∀ r o s m a. (Monad m) ⇒ (r → s → m (s ∧ o ∧ a)) → RWST r o s m a
 mkRWST f = RWST $ ReaderT $ \ r → WriterT $ StateT $ \ s → do
@@ -1133,6 +1137,9 @@ instance (RWST r o s) ⇄⁼ (ReaderT r ⊡ WriterT o ⊡ StateT s) where
 
   isofr3 ∷ ∀ f a. (ReaderT r ⊡ WriterT o ⊡ StateT s) f a → RWST r o s f a
   isofr3 = RWST ∘ unCompose2 ∘ unCompose2
+
+instance (Monoid o) ⇒ Transformer (RWST r o s) where
+  lift = RWST ∘ lift ∘ lift ∘ lift
 
 -- deriving instance (Monoid o,Monad m,MonadCont (s ∧ (o ∧ r')) m) ⇒ MonadCont r' (RWST r o s m)
 

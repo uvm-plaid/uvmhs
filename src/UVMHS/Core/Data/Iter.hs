@@ -273,32 +273,43 @@ build n₀ x₀ g = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
             loop (succ n) (g x) i'
   in loop zero x₀
 
+range ∷ (Eq n,Zero n,One n,Plus n,Minus n) ⇒ n → n → 𝐼 n
+range lb ub = build (ub - lb) lb succ
+
 upTo ∷ (Eq n,Zero n,One n,Plus n) ⇒ n → 𝐼 n
 upTo n = build n zero succ
 
-reiter ∷ ∀ a b s. s → (a → s → (s ∧ b)) → 𝐼 a → 𝐼 b
+reiter ∷ (ToIter a t) ⇒ s → (a → s → (s ∧ b)) → t → 𝐼 b
 reiter s₀ f xs = 
   𝐼 HS.$ \ g i₀ 𝓀₀ → 
-    snd $ run𝐼On xs (\ (s :* i) → s :* 𝓀₀ i) (s₀ :* i₀) $ \ x (s :* i) 𝓀 → 
+    snd $ run𝐼On (iter xs) (\ (s :* i) → s :* 𝓀₀ i) (s₀ :* i₀) $ \ x (s :* i) 𝓀 → 
         let s' :* y = f x s
         in (s' :*) $ g y i $ \ i' → 
           snd $ 𝓀 $ s' :* i'
 
 withIndex ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → 𝐼 (n ∧ a)
-withIndex = pipe iter $ reiter zero $ \ x i → (i + one) :* (i :* x)
+withIndex = reiter zero $ \ x i → (i + one) :* (i :* x)
 
 withFirst ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
-withFirst = pipe iter $ reiter True $ \ x b → False :* (b :* x)
+withFirst = reiter True $ \ x b → False :* (b :* x)
 
 mapFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapFirst f = pipe iter $ reiter True $ \ x b → 
+mapFirst f = reiter True $ \ x b → 
   let x' = if b then f x else x 
   in False :* x'
 
 mapAfterFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapAfterFirst f = pipe iter $ reiter True $ \ x b → 
+mapAfterFirst f = reiter True $ \ x b → 
   let x' = if b then x else f x 
   in False :* x'
+
+keepN ∷ (ToIter a t,Eq n,Zero n,One n,Plus n) ⇒ n → t → 𝐼 a
+keepN n₀ xs = 𝐼 HS.$ \ f i₀ 𝓀₀ → 
+  let g x (n :* i) 𝓀 = (succ n :*) $
+        if n ≡ n₀
+        then 𝓀₀ i
+        else f x i $ snd ∘ 𝓀 ∘ (succ n :*)
+  in snd $ un𝐼 (iter xs) g (zero :* i₀) $ mapSnd 𝓀₀
 
 withLast ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
 withLast = reverse ∘ withFirst ∘ reverse
@@ -364,6 +375,12 @@ string = build𝕊C
 stringS ∷ (ToIter 𝕊 t) ⇒ t → 𝕊
 stringS = build𝕊S
 
+truncate𝕊 ∷ ℕ64 → 𝕊 → 𝕊 → 𝕊
+truncate𝕊 n t s =
+  if natΩ64 (length𝕊 s) ≤ n
+  then s
+  else string $ keepN n s ⧺ iter t
+
 showCollection ∷ (ToIter a t) ⇒ 𝕊 → 𝕊 → 𝕊 → (a → 𝕊) → t → 𝕊
 showCollection l r i showA xs = concat
   [ l
@@ -381,16 +398,6 @@ firstMaxByLT f = fold None $ \ x xM →
     Some x' → case f x' x of
       True → Some x
       False → Some x'
-
--- foldbp ∷ (ToIter a t) ⇒ b → c → (a → b → b ∧ (c → c)) → t → b ∧ c
--- foldbp i₀ j₀ f xs = 
---   let i :* k = foldFromOn (i₀ :* id) xs $ \ x ((i' ∷ b) :* (k' ∷ c → c)) →
---         let i'' :* k'' = f x i'
---         in i'' :* (k' ∘ k'')
---   in i :* k j₀
--- 
--- foldbpOnFrom ∷ (ToIter a t) ⇒ t → b → c → (a → b → b ∧ (c → c)) → b ∧ c
--- foldbpOnFrom xs i j f = foldbp i j f xs
 
 sortWith ∷ (ToIter a t) ⇒ (a → a → Ordering) → t → 𝐿 a
 sortWith f = list ∘ HS.sortBy f ∘ lazyList

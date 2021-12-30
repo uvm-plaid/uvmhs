@@ -14,9 +14,9 @@ type TimeD = Time.NominalDiffTime
 secondsTimeD ∷ TimeD → 𝔻
 secondsTimeD = HS.realToFrac
 
-instance Zero TimeD where {zero = HS.fromIntegral 0}
+instance Zero TimeD where {zero = HS.fromIntegral $ 𝕟 0}
 instance Plus TimeD where {(+) = (HS.+)}
-instance One TimeD where {one = HS.fromIntegral 1}
+instance One TimeD where {one = HS.fromIntegral $ 𝕟 1}
 instance Times TimeD where {(×) = (HS.*)}
 
 instance Additive TimeD

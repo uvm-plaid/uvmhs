@@ -6,7 +6,7 @@ build:
 
 .PHONY: dev
 dev: .stack-work
-	ghcid --test=$E --warnings
+	ghcid --test=$E --warnings --command="stack ghci --ghc-options -fobject-code"
 
 .stack-work:
 	stack setup
@@ -58,3 +58,7 @@ fixity-levels.txt: Makefile $(ALL_HS_FILES)
 	echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> $@
 	echo "" >> $@
 	grep -E '^infix' $(ALL_HS_FILES) >> $@
+
+.PHONY: count-lines
+count-lines:
+	find src -name "*.hs" | xargs wc -l

@@ -46,6 +46,9 @@ fst (x :* _) = x
 snd ∷ a ∧ b → b
 snd (_ :* y) = y
 
+swap ∷ a ∧ b → b ∧ a
+swap (x :* y) = y :* x
+
 mapPair ∷ (a₁ → a₂) → (b₁ → b₂) → a₁ ∧ b₁ → a₂ ∧ b₂
 mapPair f g (x :* y) = f x :* g y
 

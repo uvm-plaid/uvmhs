@@ -2,7 +2,7 @@ module UVMHS.Lib.Pretty.Common where
 
 import UVMHS.Core
 
-import UVMHS.Lib.ATree
+import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.Sep
 
 import UVMHS.Lib.Pretty.Annotation
@@ -119,7 +119,7 @@ summaryChunksI chunks =
   in SummaryI False (ShapeA False sh) $ single chunks
 
 annotateSummaryI ∷ Annotation → SummaryI → SummaryI
-annotateSummaryI a (SummaryI b sh cs) = SummaryI b sh $ annot a cs
+annotateSummaryI a (SummaryI b sh cs) = SummaryI b sh $ annote a cs
 
 --------------
 -- SummaryO --
@@ -141,7 +141,7 @@ summaryChunksO chunks =
   in SummaryO sh $ single chunks
 
 annotateSummaryO ∷ Formats → SummaryO → SummaryO
-annotateSummaryO fm (SummaryO sh cs) = SummaryO sh $ annot fm cs
+annotateSummaryO fm (SummaryO sh cs) = SummaryO sh $ annote fm cs
 
 ---------------
 -- Alignment --

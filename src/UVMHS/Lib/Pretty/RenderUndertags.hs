@@ -2,7 +2,7 @@ module UVMHS.Lib.Pretty.RenderUndertags where
 
 import UVMHS.Core
 
-import UVMHS.Lib.ATree
+import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.Sep
 
 import UVMHS.Lib.Pretty.Annotation

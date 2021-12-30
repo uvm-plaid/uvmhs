@@ -4,8 +4,13 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 
+-- aggregate size = sum of sizes of each element
 class ASized a where asize ∷ a → ℕ64
+
+-- count size = number of elements
 class CSized a where csize ∷ a → ℕ64
+
+instance CSized 𝕊 where csize = natΩ64 ∘ length𝕊
 
 ---------
 -- 𝐼A --

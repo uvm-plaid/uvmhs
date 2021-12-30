@@ -11,6 +11,7 @@ module UVMHS.Core.Init
 import Prelude
   ( undefined,otherwise
   , Bool(..),Eq((==)),Ord(compare),Show(show),Ordering(..),IO
+  , fromInteger
   )
 import Data.Coerce 
   ( coerce
@@ -27,7 +28,7 @@ import Control.Exception
   )
 
 import Data.String
-  ( IsString(..)
+  ( fromString
   )
 
 import qualified Prelude as HS
@@ -268,8 +269,8 @@ unpack_C (Ex_C x) f = f x
 -- fromString ∷ [ℂ] → 𝕊
 -- fromString = Text.pack
 
-fromInteger ∷ ℤ → ℕ
-fromInteger = HS.fromIntegral
+-- fromInteger ∷ ℤ → ℕ
+-- fromInteger = HS.fromIntegral
 
 negate ∷ ℕ → ℤ
 negate n = HS.negate (HS.fromIntegral n)
@@ -289,6 +290,9 @@ ifThenElse = cond
 
 𝕤 ∷ [ℂ] → 𝕊
 𝕤 = Text.pack
+
+𝕟 ∷ ℕ → ℕ
+𝕟 = id
 
 𝕟64 ∷ ℕ → ℕ64
 𝕟64 = HS.fromIntegral
@@ -316,6 +320,15 @@ ifThenElse = cond
 
 𝕫8 ∷ ℕ → ℤ8
 𝕫8 = HS.fromIntegral
+
+𝕢 ∷ ℕ → ℚ
+𝕢 = HS.fromIntegral
+
+𝕢ᴾ ∷ ℕ → ℚᴾ
+𝕢ᴾ = HS.fromIntegral
+
+𝕕ᴾ ∷ 𝔻 → 𝔻ᴾ
+𝕕ᴾ = 𝔻ᴾ
 
 tohsChars ∷ 𝕊 → [ℂ]
 tohsChars = Text.unpack

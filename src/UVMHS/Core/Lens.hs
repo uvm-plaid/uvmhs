@@ -83,11 +83,11 @@ fstL = lens fst $ \ (_ :* b) → ( :* b)
 sndL ∷ a ∧ b ⟢ b
 sndL = lens snd $ \ (a :* _) → (a :* )
 
-nothingL ∷ 𝑂 a ⌲ ()
-nothingL = prism (const None) $ elim𝑂 (Some ()) $ const None
+noneL ∷ 𝑂 a ⌲ ()
+noneL = prism (const None) $ elim𝑂 (Some ()) $ const None
 
-justL ∷ 𝑂 a ⌲ a
-justL = Prism Some id
+someL ∷ 𝑂 a ⌲ a
+someL = Prism Some id
 
 singleL ∷ 𝐿 a ⌲ a
 singleL = Prism single $ \case

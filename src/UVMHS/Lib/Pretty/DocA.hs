@@ -2,7 +2,7 @@ module UVMHS.Lib.Pretty.DocA where
 
 import UVMHS.Core
 
-import UVMHS.Lib.ATree
+import UVMHS.Lib.TreeAnnote
 
 import UVMHS.Lib.Pretty.Annotation
 import UVMHS.Lib.Pretty.Common
@@ -94,7 +94,7 @@ docAModal d₁ d₂ = DynamicDocA (staticDocA d₁) $ dynamicDocA d₂
 annotateDocA ∷ Annotation → DocA → DocA
 annotateDocA a = \case
   StaticDocA s → StaticDocA $ annotateSummaryI a s
-  DynamicDocA s xM → DynamicDocA (annotateSummaryI a s) $ mapOut (annot a) xM
+  DynamicDocA s xM → DynamicDocA (annotateSummaryI a s) $ mapOut (annote a) xM
 
 groupDocAM ∷ SummaryI → DocAM () → DocAM ()
 groupDocAM s xM = do

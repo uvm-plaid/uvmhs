@@ -65,10 +65,9 @@ library
       UVMHS.Core.Vector
       UVMHS.Core.VectorSparse
       UVMHS.Core.VectorStatic
+      UVMHS.Lang.ULCD
       UVMHS.Lib.AD
       UVMHS.Lib.Annotated
-      UVMHS.Lib.ATree
-      UVMHS.Lib.DTree
       UVMHS.Lib.GTree
       UVMHS.Lib.MMSP
       UVMHS.Lib.MMSPBindingInfo
@@ -95,8 +94,11 @@ library
       UVMHS.Lib.Pretty.RenderANSI
       UVMHS.Lib.Pretty.RenderUndertags
       UVMHS.Lib.Pretty.Shape
+      UVMHS.Lib.Rand
       UVMHS.Lib.Sep
       UVMHS.Lib.Testing
+      UVMHS.Lib.TreeAnnote
+      UVMHS.Lib.TreeNested
       UVMHS.Lib.Variables
       UVMHS.Lib.VariablesNew
       UVMHS.Lib.Window
@@ -129,6 +131,7 @@ library
       PatternSynonyms
       PolyKinds
       QuantifiedConstraints
+      QuasiQuotes
       RankNTypes
       RebindableSyntax
       ScopedTypeVariables
@@ -152,6 +155,7 @@ library
     , filepath
     , ghc-prim
     , process
+    , random
     , template-haskell
     , text
     , time
@@ -187,6 +191,7 @@ executable uvmhs
       PatternSynonyms
       PolyKinds
       QuantifiedConstraints
+      QuasiQuotes
       RankNTypes
       RebindableSyntax
       ScopedTypeVariables
@@ -210,6 +215,7 @@ executable uvmhs
     , filepath
     , ghc-prim
     , process
+    , random
     , template-haskell
     , text
     , time

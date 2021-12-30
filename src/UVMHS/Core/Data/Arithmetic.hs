@@ -110,10 +110,10 @@ instance ToNumberᴾ   ℕ where numᴾ = Natural
 
 -- ℕ64 --
 
-instance Zero   ℕ64 where zero = HS.fromIntegral 0
+instance Zero   ℕ64 where zero = 𝕟64 0
 instance Plus   ℕ64 where (+)  = (HS.+)
 instance Minus  ℕ64 where (-)  = (HS.-)
-instance One    ℕ64 where one  = HS.fromIntegral 1
+instance One    ℕ64 where one  = 𝕟64 1
 instance Times  ℕ64 where (×)  = (HS.*)
 instance DivMod ℕ64 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℕ64 where (^^) = (HS.^)
@@ -172,16 +172,16 @@ instance ToNumberᴾ   ℕ64 where numᴾ = Natural ∘ nat
 
 -- ℕ32 --
 
-instance Zero   ℕ32 where zero = HS.fromIntegral 0
+instance Zero   ℕ32 where zero = 𝕟32 0
 instance Plus   ℕ32 where (+)  = (HS.+)
 instance Minus  ℕ32 where (-)  = (HS.-)
-instance One    ℕ32 where one  = HS.fromIntegral 1
+instance One    ℕ32 where one  = 𝕟32 1
 instance Times  ℕ32 where (×)  = (HS.*)
 instance DivMod ℕ32 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℕ32 where (^^) = (HS.^)
 instance Pow    ℕ32 where (^)  = (HS.^)
 
-instance Bot    ℕ32 where bot  = HS.fromIntegral 0
+instance Bot    ℕ32 where bot  = 𝕟32 0
 instance Join   ℕ32 where (⊔)  = (⩏)
 instance Meet   ℕ32 where (⊓)  = (⩎)
 instance Null   ℕ32 where null = zero
@@ -228,16 +228,16 @@ instance ToNumberᴾ   ℕ32 where numᴾ = Natural ∘ nat
 
 -- ℕ16 --
 
-instance Zero   ℕ16 where zero = HS.fromIntegral 0
+instance Zero   ℕ16 where zero = 𝕟16 0
 instance Plus   ℕ16 where (+)  = (HS.+)
 instance Minus  ℕ16 where (-)  = (HS.-)
-instance One    ℕ16 where one  = HS.fromIntegral 1
+instance One    ℕ16 where one  = 𝕟16 1
 instance Times  ℕ16 where (×)  = (HS.*)
 instance DivMod ℕ16 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℕ16 where (^^) = (HS.^)
 instance Pow    ℕ16 where (^)  = (HS.^)
 
-instance Bot    ℕ16 where bot  = HS.fromIntegral 0
+instance Bot    ℕ16 where bot  = 𝕟16 0
 instance Join   ℕ16 where (⊔)  = (⩏)
 instance Meet   ℕ16 where (⊓)  = (⩎)
 instance Null   ℕ16 where null = zero
@@ -278,16 +278,16 @@ instance ToNumberᴾ   ℕ16 where numᴾ = Natural ∘ nat
 
 -- ℕ8 --
 
-instance Zero   ℕ8 where zero = HS.fromIntegral 0
+instance Zero   ℕ8 where zero = 𝕟8 0
 instance Plus   ℕ8 where (+)  = (HS.+)
 instance Minus  ℕ8 where (-)  = (HS.-)
-instance One    ℕ8 where one  = HS.fromIntegral 1
+instance One    ℕ8 where one  = 𝕟8 1
 instance Times  ℕ8 where (×)  = (HS.*)
 instance DivMod ℕ8 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℕ8 where (^^) = (HS.^)
 instance Pow    ℕ8 where (^)  = (HS.^)
 
-instance Bot    ℕ8 where bot  = HS.fromIntegral 0
+instance Bot    ℕ8 where bot  = 𝕟8 0
 instance Join   ℕ8 where (⊔)  = (⩏)
 instance Meet   ℕ8 where (⊓)  = (⩎)
 instance Null   ℕ8 where null = zero
@@ -322,15 +322,15 @@ instance ToNumberᴾ   ℕ8 where numᴾ = Natural ∘ nat
 
 -- ℤ --
 
-instance Zero   ℤ where zero = HS.fromIntegral 0
+instance Zero   ℤ where zero = 𝕫 0
 instance Plus   ℤ where (+)  = (HS.+)
 instance Minus  ℤ where (-)  = (HS.-)
-instance One    ℤ where one  = HS.fromIntegral 1
+instance One    ℤ where one  = 𝕫 1
 instance Times  ℤ where (×)  = (HS.*)
 instance DivMod ℤ where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ where (^^) = (HS.^)
 
-instance Bot    ℤ where bot  = HS.fromIntegral 0
+instance Bot    ℤ where bot  = 𝕫 0
 instance Join   ℤ where (⊔)  = (⩏)
 instance Meet   ℤ where (⊓)  = (⩎)
 instance Null   ℤ where null = zero
@@ -343,26 +343,26 @@ instance Monoid         ℤ
 
 instance ToNatO ℤ where 
   natO i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO64 ℤ where 
   natO64 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ64) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO32 ℤ where 
   natO32 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ32) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO16 ℤ where 
   natO16 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ16) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO8 ℤ where 
   natO8 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
@@ -391,13 +391,13 @@ instance ToIntO8 ℤ where
 instance ToRational ℤ where rat = HS.fromIntegral
 instance ToRationalᴾO ℤ where 
   ratᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫 0 = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToDouble ℤ where dbl = HS.fromIntegral
 instance ToDoubleᴾO ℤ where
   dblᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫 0 = None
     | otherwise = Some $ 𝔻ᴾ $ HS.fromIntegral i
 
 instance ToNumber ℤ where num = Integer
@@ -408,15 +408,15 @@ instance ToNumberᴾO ℤ where
 
 -- ℤ64 --
 
-instance Zero   ℤ64 where zero = HS.fromIntegral 0
+instance Zero   ℤ64 where zero = 𝕫64 0
 instance Plus   ℤ64 where (+)  = (HS.+)
 instance Minus  ℤ64 where (-)  = (HS.-)
-instance One    ℤ64 where one  = HS.fromIntegral 1
+instance One    ℤ64 where one  = 𝕫64 1
 instance Times  ℤ64 where (×)  = (HS.*)
 instance DivMod ℤ64 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ64 where (^^) = (HS.^)
 
-instance Bot    ℤ64 where bot  = HS.fromIntegral 0
+instance Bot    ℤ64 where bot  = 𝕫64 0
 instance Join   ℤ64 where (⊔)  = (⩏)
 instance Meet   ℤ64 where (⊓)  = (⩎)
 instance Null   ℤ64 where null = zero
@@ -429,25 +429,25 @@ instance Monoid         ℤ64
 
 instance ToNatO ℤ64 where 
   natO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫64 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO64 ℤ64 where 
   natO64 i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫64 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO32 ℤ64 where 
   natO32 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫64 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ32) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO16 ℤ64 where 
   natO16 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫64 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ16) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO8 ℤ64 where 
   natO8 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫64 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
@@ -472,13 +472,13 @@ instance ToIntO8 ℤ64 where
 instance ToRational ℤ64 where rat = HS.fromIntegral
 instance ToRationalᴾO ℤ64 where 
   ratᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫64 0 = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToDouble ℤ64 where dbl = HS.fromIntegral
 instance ToDoubleᴾO ℤ64 where
   dblᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫64 0 = None
     | otherwise = Some $ 𝔻ᴾ $ HS.fromIntegral i
 
 instance ToNumber ℤ64 where num = Integer ∘ int
@@ -489,15 +489,15 @@ instance ToNumberᴾO ℤ64 where
 
 -- ℤ32 --
 
-instance Zero   ℤ32 where zero = HS.fromIntegral 0
+instance Zero   ℤ32 where zero = 𝕫32 0
 instance Plus   ℤ32 where (+)  = (HS.+)
 instance Minus  ℤ32 where (-)  = (HS.-)
-instance One    ℤ32 where one  = HS.fromIntegral 1
+instance One    ℤ32 where one  = 𝕫32 1
 instance Times  ℤ32 where (×)  = (HS.*)
 instance DivMod ℤ32 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ32 where (^^) = (HS.^)
 
-instance Bot    ℤ32 where bot  = HS.fromIntegral 0
+instance Bot    ℤ32 where bot  = 𝕫32 0
 instance Join   ℤ32 where (⊔)  = (⩏)
 instance Meet   ℤ32 where (⊓)  = (⩎)
 instance Null   ℤ32 where null = zero
@@ -510,24 +510,24 @@ instance Monoid         ℤ32
 
 instance ToNatO ℤ32 where
   natO i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫32 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO64 ℤ32 where
   natO64 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫32 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO32 ℤ32 where
   natO32 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫32 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO16 ℤ32 where 
   natO16 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫32 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ16) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO8 ℤ32 where 
   natO8 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫32 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
@@ -548,13 +548,13 @@ instance ToIntO8 ℤ32 where
 instance ToRational ℤ32 where rat = HS.fromIntegral
 instance ToRationalᴾO ℤ32 where 
   ratᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫32 0 = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToDouble ℤ32 where dbl = HS.fromIntegral
 instance ToDoubleᴾO ℤ32 where
   dblᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫32 0 = None
     | otherwise = Some $ 𝔻ᴾ $ HS.fromIntegral i
 
 instance ToNumber ℤ32 where num = Integer ∘ int
@@ -565,15 +565,15 @@ instance ToNumberᴾO ℤ32 where
 
 -- ℤ16 --
 
-instance Zero   ℤ16 where zero = HS.fromIntegral 0
+instance Zero   ℤ16 where zero = 𝕫16 0
 instance Plus   ℤ16 where (+)  = (HS.+)
 instance Minus  ℤ16 where (-)  = (HS.-)
-instance One    ℤ16 where one  = HS.fromIntegral 1
+instance One    ℤ16 where one  = 𝕫16 1
 instance Times  ℤ16 where (×)  = (HS.*)
 instance DivMod ℤ16 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ16 where (^^) = (HS.^)
 
-instance Bot    ℤ16 where bot  = HS.fromIntegral 0
+instance Bot    ℤ16 where bot  = 𝕫16 0
 instance Join   ℤ16 where (⊔)  = (⩏)
 instance Meet   ℤ16 where (⊓)  = (⩎)
 instance Null   ℤ16 where null = zero
@@ -586,23 +586,23 @@ instance Monoid         ℤ16
 
 instance ToNatO ℤ16 where 
   natO i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO64 ℤ16 where 
   natO64 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO32 ℤ16 where 
   natO32 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO16 ℤ16 where 
   natO16 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO8 ℤ16 where 
   natO8 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫16 0 = None
     | i > HS.fromIntegral (HS.maxBound @ ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
@@ -619,13 +619,13 @@ instance ToIntO8 ℤ16 where
 instance ToRational ℤ16 where rat = HS.fromIntegral
 instance ToRationalᴾO ℤ16 where 
   ratᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToDouble ℤ16 where dbl = HS.fromIntegral
 instance ToDoubleᴾO ℤ16 where
   dblᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫16 0 = None
     | otherwise = Some $ 𝔻ᴾ $ HS.fromIntegral i
 
 instance ToNumber ℤ16 where num = Integer ∘ int
@@ -636,15 +636,15 @@ instance ToNumberᴾO ℤ16 where
 
 -- ℤ8 --
 
-instance Zero   ℤ8 where zero = HS.fromIntegral 0
+instance Zero   ℤ8 where zero = 𝕫8 0
 instance Plus   ℤ8 where (+)  = (HS.+)
 instance Minus  ℤ8 where (-)  = (HS.-)
-instance One    ℤ8 where one  = HS.fromIntegral 1
+instance One    ℤ8 where one  = 𝕫8 1
 instance Times  ℤ8 where (×)  = (HS.*)
 instance DivMod ℤ8 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ8 where (^^) = (HS.^)
 
-instance Bot    ℤ8 where bot  = HS.fromIntegral 0
+instance Bot    ℤ8 where bot  = 𝕫8 0
 instance Join   ℤ8 where (⊔)  = (⩏)
 instance Meet   ℤ8 where (⊓)  = (⩎)
 instance Null   ℤ8 where null = zero
@@ -657,23 +657,23 @@ instance Monoid         ℤ8
 
 instance ToNatO ℤ8 where
   natO i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO64 ℤ8 where
   natO64 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO32 ℤ8 where
   natO32 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO16 ℤ8 where
   natO16 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO8  ℤ8 where
   natO8 i 
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToInt   ℤ8 where int   = HS.fromIntegral
@@ -685,13 +685,13 @@ instance ToInt8  ℤ8 where int8  = id
 instance ToRational ℤ8 where rat = HS.fromIntegral
 instance ToRationalᴾO ℤ8 where 
   ratᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToDouble ℤ8 where dbl = HS.fromIntegral
 instance ToDoubleᴾO ℤ8 where
   dblᴾO i
-    | i < HS.fromIntegral 0 = None
+    | i < 𝕫8 0 = None
     | otherwise = Some $ 𝔻ᴾ $ HS.fromIntegral i
 
 instance ToNumber ℤ8 where num = Integer ∘ int
@@ -702,15 +702,15 @@ instance ToNumberᴾO ℤ8 where
 
 -- ℚ --
 
-instance Zero   ℚ where zero = HS.fromIntegral 0
+instance Zero   ℚ where zero = 𝕢 0
 instance Plus   ℚ where (+)  = (HS.+)
 instance Minus  ℚ where (-)  = (HS.-)
-instance One    ℚ where one  = HS.fromIntegral 1
+instance One    ℚ where one  = 𝕢 1
 instance Times  ℚ where (×)  = (HS.*)
 instance Divide ℚ where (/)  = (HS./)
 instance Pon    ℚ where (^^) = (HS.^)
 
-instance Bot    ℚ where bot  = HS.fromIntegral 0
+instance Bot    ℚ where bot  = 𝕢 0
 instance Join   ℚ where (⊔)  = (⩏)
 instance Meet   ℚ where (⊓)  = (⩎)
 instance Null   ℚ where null = zero
@@ -723,55 +723,55 @@ instance Monoid         ℚ
 
 instance ToNatO ℚ where
   natO q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = natO $ numer q
 instance ToNatO64 ℚ where
   natO64 q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = natO64 $ numer q
 instance ToNatO32 ℚ where
   natO32 q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = natO32 $ numer q
 instance ToNatO16 ℚ where
   natO16 q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = natO16 $ numer q
 instance ToNatO8 ℚ where
   natO8 q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = natO8 $ numer q
 instance ToIntO ℚ where
   intO q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = Some $ numer q
 instance ToIntO64 ℚ where
   intO64 q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = intO64 $ numer q
 instance ToIntO32 ℚ where
   intO32 q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = intO32 $ numer q
 instance ToIntO16 ℚ where
   intO16 q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = intO16 $ numer q
 instance ToIntO8 ℚ where
   intO8 q
-    | denom q ≢ 1 = None
+    | denom q ≢ 𝕟 1 = None
     | otherwise = intO8 $ numer q
 
 instance ToRational ℚ where rat = id
 instance ToRationalᴾO ℚ where 
   ratᴾO q
-    | numer q < HS.fromIntegral 0 = None
+    | numer q < 𝕫 0 = None
     | otherwise = Some $ HS.fromRational q 
 
 instance ToDouble ℚ where dbl = HS.fromRational
 instance ToDoubleᴾO ℚ where
   dblᴾO q
-    | numer q < HS.fromIntegral 0 = None
+    | numer q < 𝕫 0 = None
     | otherwise = Some $ 𝔻ᴾ $ HS.fromRational q
 
 instance ToNumber ℚ where num = Rational
@@ -782,15 +782,15 @@ instance ToNumberᴾO ℚ where
 
 -- ℚᴾ --
 
-instance Zero   ℚᴾ where zero = HS.fromIntegral 0
+instance Zero   ℚᴾ where zero = 𝕢ᴾ 0
 instance Plus   ℚᴾ where (+)  = (HS.+)
 instance Minus  ℚᴾ where (-)  = (HS.-)
-instance One    ℚᴾ where one  = HS.fromIntegral 1
+instance One    ℚᴾ where one  = 𝕢ᴾ 1
 instance Times  ℚᴾ where (×)  = (HS.*)
 instance Divide ℚᴾ where (/)  = (HS./)
 instance Pon    ℚᴾ where (^^) = (HS.^)
                                                
-instance Bot    ℚᴾ where bot  = HS.fromIntegral 0
+instance Bot    ℚᴾ where bot  = 𝕢ᴾ 0
 instance Join   ℚᴾ where (⊔)  = (⩏)
 instance Meet   ℚᴾ where (⊓)  = (⩎)
 instance Null   ℚᴾ where null = zero
@@ -803,43 +803,43 @@ instance Monoid         ℚᴾ
 
 instance ToNatO ℚᴾ where
   natO q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = Some $ numerᴾ q
 instance ToNatO64 ℚᴾ where
   natO64 q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = natO64 $ numerᴾ q
 instance ToNatO32 ℚᴾ where
   natO32 q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = natO32 $ numerᴾ q
 instance ToNatO16 ℚᴾ where
   natO16 q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = natO16 $ numerᴾ q
 instance ToNatO8 ℚᴾ where
   natO8 q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = natO8 $ numerᴾ q
 instance ToIntO ℚᴾ where
   intO q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = Some $ int $ numerᴾ q
 instance ToIntO64 ℚᴾ where
   intO64 q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = intO64 $ numerᴾ q
 instance ToIntO32 ℚᴾ where
   intO32 q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = intO32 $ numerᴾ q
 instance ToIntO16 ℚᴾ where
   intO16 q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = intO16 $ numerᴾ q
 instance ToIntO8 ℚᴾ where
   intO8 q
-    | denomᴾ q ≢ HS.fromIntegral 1 = None
+    | denomᴾ q ≢ 𝕟 1 = None
     | otherwise = intO8 $ numerᴾ q
 
 instance ToRational  ℚᴾ where rat  = HS.toRational
@@ -942,13 +942,13 @@ instance ToIntO8 𝔻 where
 instance ToRational 𝔻 where rat = HS.realToFrac
 instance ToRationalᴾO 𝔻 where 
   ratᴾO d
-    | d < HS.fromIntegral 0 = None
+    | d < 0.0 = None
     | otherwise = Some $ HS.realToFrac d
 
 instance ToDouble 𝔻 where dbl = id
 instance ToDoubleᴾO 𝔻 where 
   dblᴾO d 
-    | d < HS.fromIntegral 0 = None
+    | d < 0.0 = None
     | otherwise = Some $ 𝔻ᴾ d
 
 instance ToNumber 𝔻 where num = Double
@@ -964,10 +964,10 @@ minus𝔻ᴾ p₁ p₂
   | p₁ < p₂ = error "𝔻ᴾ: subtraction: LHS is smaller than RHS"
   | otherwise = p₁ HS.- p₂
 
-instance Zero   𝔻ᴾ where zero = HS.fromIntegral 0
+instance Zero   𝔻ᴾ where zero = 𝕕ᴾ 0.0
 instance Plus   𝔻ᴾ where (+)  = (HS.+)
 instance Minus  𝔻ᴾ where (-)  = minus𝔻ᴾ
-instance One    𝔻ᴾ where one  = HS.fromIntegral 1
+instance One    𝔻ᴾ where one  = 𝕕ᴾ 1.0
 instance Times  𝔻ᴾ where (×)  = (HS.*)
 instance Divide 𝔻ᴾ where (/)  = (HS./)
 instance Pon    𝔻ᴾ where (^^) = (HS.^)
@@ -978,9 +978,9 @@ instance Efn    𝔻ᴾ where efn  = HS.exp
 instance Sin    𝔻ᴾ where sin  = HS.sin
 instance Cos    𝔻ᴾ where cos  = HS.cos
                                                
-instance Bot    𝔻ᴾ where bot  = HS.fromIntegral 0
+instance Bot    𝔻ᴾ where bot  = 𝕕ᴾ 0.0
 instance Join   𝔻ᴾ where (⊔)  = (⩏)
-instance Top    𝔻ᴾ where top  = HS.realToFrac $ 1.0 / 0.0
+instance Top    𝔻ᴾ where top  = 𝕕ᴾ 1.0 / 𝕕ᴾ 0.0
 instance Meet   𝔻ᴾ where (⊓)  = (⩎)
 instance Null   𝔻ᴾ where null = zero
 instance Append 𝔻ᴾ where (⧺)  = (+)
@@ -1055,7 +1055,7 @@ instance ToIntO8 𝔻ᴾ where
 instance ToRational 𝔻ᴾ where rat = HS.toRational
 instance ToRationalᴾO 𝔻ᴾ where 
   ratᴾO d
-    | d < HS.fromIntegral 0 = None
+    | d < 𝕕ᴾ 0.0 = None
     | otherwise = Some $ HS.fromRational $ HS.toRational d
 
 instance ToDouble  𝔻ᴾ where dbl  = un𝔻ᴾ

@@ -30,6 +30,8 @@ instance Lookup ℕ64 a (𝕍 a)    where (⋕?)   = flip idx𝕍
 instance Functor 𝕍             where map    = map𝕍
 instance FunctorM 𝕍            where mapM   = mapM𝕍
 
+instance CSized (𝕍 a)          where csize = csize𝕍
+
 vec ∷ (ToIter a t) ⇒ t → 𝕍 a
 vec = 𝕍 ∘ VB.fromList ∘ lazyList
 
@@ -69,6 +71,9 @@ mapM𝕍 f = with (tohsMonad @ m) HS.$ 𝕍 ^∘ VB.mapM f ∘ un𝕍
 
 null𝕍 ∷ (Null a) ⇒ ℕ64 → 𝕍 a
 null𝕍 n = vecF n $ const null
+
+csize𝕍 ∷ 𝕍 a → ℕ64
+csize𝕍 = natΩ64 ∘ frhs ∘ VB.length ∘ un𝕍
 
 ----------
 --- 𝕍M ---

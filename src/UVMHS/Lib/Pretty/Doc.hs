@@ -8,6 +8,7 @@ import UVMHS.Lib.Pretty.Common
 import UVMHS.Lib.Pretty.DocA
 import UVMHS.Lib.Pretty.Shape
 import UVMHS.Lib.Pretty.RenderUndertags
+import UVMHS.Lib.TreeAnnote
 
 import qualified GHC.Stack as Stack
 import qualified Prelude as HS
@@ -385,6 +386,13 @@ ppRecord rel kvs = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") $ map mappin
       , ppGA v
       ]
 
+ppBake ∷ Doc → TreeI
+ppBake = execDocA ∘ execDoc
+
+ppEmbed ∷ TreeI → Doc
+ppEmbed is =
+  let s = fold𝑇VOn is summaryChunksI annotateSummaryI
+  in Doc $ tell $ StaticDocA s
 
 matrixHelper ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n SummaryO) → 𝕍S n ℕ64 ∧ 𝕍S m (𝕍S n SummaryO)
 matrixHelper has vas sss =

@@ -271,10 +271,16 @@ localState s = map snd ∘ localize s
 localStateL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → s₂ → m a → m a
 localStateL 𝓁 s = map snd ∘ localizeL 𝓁 s
 
-retState ∷ ∀ s m a. (Monad m,MonadState s m) ⇒ m a → m s
+retState ∷ (Monad m,MonadState s m) ⇒ m a → m s
 retState xM = do
   _ ← xM
   get
+
+retStateOut ∷ (Monad m,MonadState s m,MonadWriter o m) ⇒ m a → m (s ∧ o)
+retStateOut xM = do
+  o :* _ ← hijack xM
+  s ← get
+  return $ s :* o
 
 tellStateL ∷ (Monad m,MonadState o₁ m,Append o₂) ⇒ o₁ ⟢ o₂ → o₂ → m ()
 tellStateL 𝓁 o = modifyL 𝓁 $ (⧺) o
