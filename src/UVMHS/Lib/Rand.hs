@@ -71,8 +71,8 @@ prchoose = prwchoose ∘ map (one :*) ∘ iter
 prwchoose ∷ (ToIter (ℕ64 ∧ (() → a)) t) ⇒ t → State RG a
 prwchoose wxs = do
   let ixs = vec $ do
-      w :* x ← iter wxs
-      replicate w x
+        w :* x ← iter wxs
+        replicate w x
   n ← prandr zero $ csize ixs - one
   return $ (ixs ⋕! n) ()
 

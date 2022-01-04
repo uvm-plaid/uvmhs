@@ -48,6 +48,7 @@ ghc-options:
   - -Wall
   - -Wno-orphans
   - -j2
+  - -fno-prof-auto
   # when we want to build fast...
   # - -O0
   # when we want a slow optimized build...
@@ -55,9 +56,6 @@ ghc-options:
   - -optc-O3
   - -fspecialise-aggressively
   - -fexpose-all-unfoldings
-  # crashes GHC??
-  # - -funfolding-use-threshold=120
-  - -fno-prof-auto
 
 dependencies: 
   - base

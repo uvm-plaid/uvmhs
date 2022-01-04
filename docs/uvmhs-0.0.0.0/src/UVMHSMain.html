@@ -1,50 +1,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# OPTIONS_GHC -Wno-unused-imports #-}</span><span>
 </span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHSMain</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-3"></span><span>
-</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.html"><span class="hs-identifier">UVMHS</span></a></span><span> </span><span class="hs-keyword">hiding</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">fromString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.html"><span class="hs-identifier">UVMHS</span></a></span><span>
 </span><span id="line-5"></span><span>
-</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.String</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">fromString</span></span><span class="hs-special">)</span><span>
-</span><span id="line-7"></span><span>
-</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html"><span class="hs-identifier">Examples.Lang.Arith</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Arith</span></span><span>
-</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.ArithBlocks.html"><span class="hs-identifier">Examples.Lang.ArithBlocks</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">ArithBlocks</span></span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.SExp.html"><span class="hs-identifier">Examples.Lang.SExp</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">SExp</span></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html"><span class="hs-identifier">Examples.Lang.Arith</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">Arith</span></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.ArithBlocks.html"><span class="hs-identifier">Examples.Lang.ArithBlocks</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">ArithBlocks</span></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="Examples.Lang.SExp.html"><span class="hs-identifier">Examples.Lang.SExp</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">SExp</span></span><span>
+</span><span id="line-9"></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">HS</span></span><span>
 </span><span id="line-11"></span><span>
-</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">HS</span></span><span>
-</span><span id="line-13"></span><span>
-</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Testing.html"><span class="hs-identifier">UVMHS.Lib.Testing</span></a></span><span>
-</span><span id="line-15"></span><span>
-</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><a href="UVMHS.Lib.VariablesNew.html"><span class="hs-identifier">UVMHS.Lib.VariablesNew</span></a></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">V</span></span><span>
-</span><span id="line-17"></span><span>
-</span><span id="line-18"></span><span class="hs-identifier">&#120113;</span><span> </span><span class="hs-string">&quot;core:iter&quot;</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">isEmpty</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>         </span><span class="hs-special">|]</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">True</span><span>  </span><span class="hs-special">|]</span><span>
-</span><span id="line-19"></span><span class="hs-identifier">&#120113;</span><span> </span><span class="hs-string">&quot;core:iter&quot;</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">isEmpty</span><span> </span><span class="hs-special">[</span><span class="hs-number">1</span><span class="hs-special">]</span><span>        </span><span class="hs-special">|]</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">False</span><span> </span><span class="hs-special">|]</span><span>
-</span><span id="line-20"></span><span class="hs-identifier">&#120113;</span><span> </span><span class="hs-string">&quot;core:iter&quot;</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">isEmpty</span><span> </span><span class="hs-identifier">Nil</span><span>        </span><span class="hs-special">|]</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">True</span><span>  </span><span class="hs-special">|]</span><span>
-</span><span id="line-21"></span><span class="hs-identifier">&#120113;</span><span> </span><span class="hs-string">&quot;core:iter&quot;</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">isEmpty</span><span> </span><span class="hs-special">(</span><span class="hs-number">1</span><span> </span><span class="hs-operator">:&amp;</span><span> </span><span class="hs-identifier">Nil</span><span class="hs-special">)</span><span> </span><span class="hs-special">|]</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">False</span><span> </span><span class="hs-special">|]</span><span>
-</span><span id="line-22"></span><span id="g__TESTS__UVMHSMain"><span class="annot"><span class="annottext">GTree Test
-</span><a href="UVMHSMain.html#g__TESTS__UVMHSMain"><span class="hs-identifier hs-type hs-var">buildTests</span></a></span></span><span>
-</span><span id="line-23"></span><span>
-</span><span id="line-24"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-25"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
+</span><span id="line-12"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
 </span><a href="UVMHSMain.html#main"><span class="hs-identifier hs-var hs-var">main</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO ()
 forall a. IO a -&gt; IO a
 </span><a href="UVMHS.Core.IO.html#cleanExit"><span class="hs-identifier hs-var">cleanExit</span></a></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-26"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-14"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppHeader"><span class="hs-identifier hs-var">ppHeader</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;COLOR TEST&quot;</span></span><span>
-</span><span id="line-27"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-15"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#colorsDemo"><span class="hs-identifier hs-var">colorsDemo</span></a></span><span>
-</span><span id="line-28"></span><span>  </span><span class="hs-special">$(</span><span class="hs-identifier">testModules</span><span> </span><span class="hs-identifier">False</span><span>
-</span><span id="line-29"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="hs-string">&quot;UVMHSMain&quot;</span><span>
-</span><span id="line-30"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="hs-string">&quot;V:UVMHS.Lib.VariablesNew&quot;</span><span>
-</span><span id="line-31"></span><span>    </span><span class="hs-special">]</span><span class="hs-special">)</span><span>
-</span><span id="line-32"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+</span><span id="line-16"></span><span>  </span><span class="hs-special">$$(</span><span class="annot"><a href="UVMHS.Lib.Testing.html#testModules"><span class="hs-identifier hs-type">testModules</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">False</span></span><span>
+</span><span id="line-17"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="hs-string">&quot;UVMHS.CoreTests&quot;</span></span><span>
+</span><span id="line-18"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;UVMHS.Lib.Substitution&quot;</span></span><span>
+</span><span id="line-19"></span><span>    </span><span class="hs-special">]</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
 forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -55,6 +42,4 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span></span><span>
-</span><span id="line-33"></span><span>
-</span><span id="line-34"></span><span>
-</span><span id="line-35"></span></pre></body></html>
+</span><span id="line-21"></span></pre></body></html>
