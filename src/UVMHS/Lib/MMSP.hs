@@ -5,16 +5,7 @@ import UVMHS.Core
 import UVMHS.Lib.Variables
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Annotated
-
-instance (Plus a) ⇒ Plus (AddTop a) where
-  Top + _ = Top
-  _ + Top = Top
-  AddTop x + AddTop y = AddTop $ x + y
-
-instance (Times a) ⇒ Times (AddTop a) where
-  Top × _ = Top
-  _ × Top = Top
-  AddTop x × AddTop y = AddTop $ x × y
+import UVMHS.Lib.Substitution
 
 -- MMSP ≈
 -- c ⊔ (c ⊓ (c + c(xᶜ…xᶜ) 
@@ -196,63 +187,100 @@ ponMMSP e n = product $ replicate n e
 -- SUBSTITUTION --
 ------------------
 
-instance FromVar () MMSP where frvar cxt () = return ∘ varMMSP ∘ 𝐴 cxt
-instance Binding () MMSP MMSP where substScope su = substScope_MMSP $ ifNone zero $ su ⋕? ()
+substMMSP ∷ Subst MMSP → MMSP → MMSP
+substMMSP 𝓈 (MMSP α̇) = substMMSPMaxs 𝓈 α̇
 
-substScope_MMSP ∷ ℕ64 → Subst () MMSP → MMSP → 𝑂 MMSP
-substScope_MMSP u 𝓈 (MMSP α̇) = substScope_MMSPMaxs u 𝓈 α̇
+substMMSPMaxs ∷ Subst MMSP → MMSPMaxs → MMSP
+substMMSPMaxs 𝓈 (MMSPMaxs a α) = litMMSP a ⊔ substMMSPMaxsMins 𝓈 α
 
-substScope_MMSPMaxs ∷ ℕ64 → Subst () MMSP → MMSPMaxs → 𝑂 MMSP
-substScope_MMSPMaxs u 𝓈 (MMSPMaxs a α) = (⊔ litMMSP a) ^$ substScope_MMSPMaxsMins u 𝓈 α
+substMMSPMaxsMins ∷ Subst MMSP → 𝑃 MMSPMins → MMSP
+substMMSPMaxsMins 𝓈 α = joins $ map (substMMSPMins 𝓈) $ iter α
 
-substScope_MMSPMaxsMins ∷ ℕ64 → Subst () MMSP → 𝑃 MMSPMins → 𝑂 MMSP
-substScope_MMSPMaxsMins u 𝓈 α = joins ^$ mapM (substScope_MMSPMins u 𝓈) $ iter α
+substMMSPMins ∷ Subst MMSP → MMSPMins → MMSP
+substMMSPMins 𝓈 (MMSPMins b β) = elimAddTop top litMMSP b ⊓ substMMSPMinsSums 𝓈 β
 
-substScope_MMSPMins ∷ ℕ64 → Subst () MMSP → MMSPMins → 𝑂 MMSP
-substScope_MMSPMins u 𝓈 (MMSPMins b β) = (⊓ elimAddTop top litMMSP b) ^$ substScope_MMSPMinsSums u 𝓈 β
+substMMSPMinsSums ∷ Subst MMSP → 𝑃 MMSPSums → MMSP
+substMMSPMinsSums 𝓈 β = meets $ map (substMMSPSums 𝓈) $ iter β
 
-substScope_MMSPMinsSums ∷ ℕ64 → Subst () MMSP → 𝑃 MMSPSums → 𝑂 MMSP
-substScope_MMSPMinsSums u 𝓈 β = meets ^$ mapM (substScope_MMSPSums u 𝓈) $ iter β
+substMMSPSums ∷ Subst MMSP → MMSPSums → MMSP
+substMMSPSums 𝓈 (MMSPSums c γ) = litMMSP c + substMMSPSumsProds 𝓈 γ
 
-substScope_MMSPSums ∷ ℕ64 → Subst () MMSP → MMSPSums → 𝑂 MMSP
-substScope_MMSPSums u 𝓈 (MMSPSums c γ) = (+ litMMSP c) ^$ substScope_MMSPSumsProds u 𝓈 γ
+substMMSPSumsProds ∷ Subst MMSP → MMSPProds ⇰ ℕ → MMSP
+substMMSPSumsProds 𝓈 γ = sum $ mapOn (iter γ) $ \ (δ :* d) → 
+  litMMSP d × substMMSPProds 𝓈 δ
 
-substScope_MMSPSumsProds ∷ ℕ64 → Subst () MMSP → MMSPProds ⇰ ℕ → 𝑂 MMSP
-substScope_MMSPSumsProds u 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → 
-  (litMMSP d ×) ^$ substScope_MMSPProds u 𝓈 δ
+substMMSPProds ∷ Subst MMSP → MMSPProds → MMSP
+substMMSPProds 𝓈 (MMSPProds δ) = product $ mapOn (iter δ) $ \ (ω :* e) → 
+  substMMSPAtom 𝓈 ω ^^ e
 
-substScope_MMSPProds ∷ ℕ64 → Subst () MMSP → MMSPProds → 𝑂 MMSP
-substScope_MMSPProds u 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
-  (^^ e) ^$ substScope_MMSPAtom u 𝓈 ω
+substMMSPAtom ∷ Subst MMSP → MMSPAtom → MMSP
+substMMSPAtom 𝓈 = \case
+  Var_MMSPAtom (𝐴 𝒸 𝓎) → case vsubst 𝓈 𝓎 of
+    Inl 𝓎' → varMMSP $ 𝐴 𝒸 𝓎'
+    Inr (ρₑ :* e) → substMMSP (intrSubst ρₑ) e
 
-substScope_MMSPAtom ∷ ℕ64 → Subst () MMSP → MMSPAtom → 𝑂 MMSP
-substScope_MMSPAtom u 𝓈 = \case
-  Var_MMSPAtom (𝐴 cxt x) → vsubst return 𝓈 (() ↦ u) cxt () x
+instance HasSubst MMSP where subst = substMMSP
+
+substxMMSP ∷ e ⌲ MMSP → Subst e → MMSP → 𝑂 MMSP
+substxMMSP ℓ 𝓈 (MMSP α̇) = substxMMSPMaxs ℓ 𝓈 α̇
+
+substxMMSPMaxs ∷ e ⌲ MMSP → Subst e → MMSPMaxs → 𝑂 MMSP
+substxMMSPMaxs ℓ 𝓈 (MMSPMaxs a α) = (litMMSP a ⊔) ^$ substxMMSPMaxsMins ℓ 𝓈 α
+
+substxMMSPMaxsMins ∷ e ⌲ MMSP → Subst e → 𝑃 MMSPMins → 𝑂 MMSP
+substxMMSPMaxsMins ℓ 𝓈 α = joins ^$ mapM (substxMMSPMins ℓ 𝓈) $ iter α
+
+substxMMSPMins ∷ e ⌲ MMSP → Subst e → MMSPMins → 𝑂 MMSP
+substxMMSPMins ℓ 𝓈 (MMSPMins b β) = (elimAddTop top litMMSP b ⊓) ^$ substxMMSPMinsSums ℓ 𝓈 β
+
+substxMMSPMinsSums ∷ e ⌲ MMSP → Subst e → 𝑃 MMSPSums → 𝑂 MMSP
+substxMMSPMinsSums ℓ 𝓈 β = meets ^$ mapM (substxMMSPSums ℓ 𝓈) $ iter β
+
+substxMMSPSums ∷ e ⌲ MMSP → Subst e → MMSPSums → 𝑂 MMSP
+substxMMSPSums ℓ 𝓈 (MMSPSums c γ) = (litMMSP c +) ^$ substxMMSPSumsProds ℓ 𝓈 γ
+
+substxMMSPSumsProds ∷ e ⌲ MMSP → Subst e → MMSPProds ⇰ ℕ → 𝑂 MMSP
+substxMMSPSumsProds ℓ 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → 
+  (litMMSP d ×) ^$ substxMMSPProds ℓ 𝓈 δ
+
+substxMMSPProds ∷ e ⌲ MMSP → Subst e → MMSPProds → 𝑂 MMSP
+substxMMSPProds ℓ 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
+  (^^ e) ^$ substxMMSPAtom ℓ 𝓈 ω
+
+substxMMSPAtom ∷ e ⌲ MMSP → Subst e → MMSPAtom → 𝑂 MMSP
+substxMMSPAtom ℓ 𝓈 = \case
+  Var_MMSPAtom (𝐴 𝒸 𝓎) → case vsubst 𝓈 𝓎 of
+    Inl 𝓎' → return $ varMMSP $ 𝐴 𝒸 𝓎'
+    Inr (ρₑ :* e) → do
+      e' ← view ℓ e
+      substxMMSP ℓ (intrSubst ρₑ) e'
+
+instance HasSubstX MMSP MMSP where substx = substxMMSP
 
 ---------------
 -- FREE VARS --
 ---------------
 
-instance HasFV MMSP where fv = fv_MMSP
+fvMMSP ∷ MMSP → 𝑃 𝕏
+fvMMSP (MMSP α̇) = fvMMSPMaxs α̇
 
-fv_MMSP ∷ MMSP → 𝑃 𝕏
-fv_MMSP (MMSP α̇) = fv_MMSPMaxs α̇
+fvMMSPMaxs ∷ MMSPMaxs → 𝑃 𝕏
+fvMMSPMaxs (MMSPMaxs _ α) = joins $ map fvMMSPMins $ iter α
 
-fv_MMSPMaxs ∷ MMSPMaxs → 𝑃 𝕏
-fv_MMSPMaxs (MMSPMaxs _ α) = joins $ map fv_MMSPMins $ iter α
+fvMMSPMins ∷ MMSPMins → 𝑃 𝕏
+fvMMSPMins (MMSPMins _ β) = joins $ map fvMMSPSums $ iter β
 
-fv_MMSPMins ∷ MMSPMins → 𝑃 𝕏
-fv_MMSPMins (MMSPMins _ β) = joins $ map fv_MMSPSums $ iter β
+fvMMSPSums ∷ MMSPSums → 𝑃 𝕏
+fvMMSPSums (MMSPSums _ γ) = joins $ map (fvMMSPProds ∘ fst) $ iter γ
 
-fv_MMSPSums ∷ MMSPSums → 𝑃 𝕏
-fv_MMSPSums (MMSPSums _ γ) = joins $ map (fv_MMSPProds ∘ fst) $ iter γ
+fvMMSPProds ∷ MMSPProds → 𝑃 𝕏
+fvMMSPProds (MMSPProds δ) = joins $ map (fvMMSPAtom ∘ fst) $ iter δ
 
-fv_MMSPProds ∷ MMSPProds → 𝑃 𝕏
-fv_MMSPProds (MMSPProds δ) = joins $ map (fv_MMSPAtom ∘ fst) $ iter δ
-
-fv_MMSPAtom ∷ MMSPAtom → 𝑃 𝕏
-fv_MMSPAtom = \case
+fvMMSPAtom ∷ MMSPAtom → 𝑃 𝕏
+fvMMSPAtom = \case
   Var_MMSPAtom xA → fv $ aval xA
+
+instance HasFV MMSP where fv = fvMMSP
 
 ----------
 -- MAXS --

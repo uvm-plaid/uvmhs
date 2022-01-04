@@ -1,5 +1,6 @@
 module UVMHS
   ( module UVMHS.Core
+  , module UVMHS.CoreTests
   , module UVMHS.Lang.ULCD
   , module UVMHS.Lib.Annotated
   , module UVMHS.Lib.MMSP
@@ -10,10 +11,11 @@ module UVMHS
   , module UVMHS.Lib.Testing
   , module UVMHS.Lib.TreeAnnote
   , module UVMHS.Lib.TreeNested
-  , module UVMHS.Lib.Variables
+  , module UVMHS.Lib.Substitution
   ) where
 
 import UVMHS.Core
+import UVMHS.CoreTests
 import UVMHS.Lang.ULCD
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.MMSP
@@ -24,4 +26,4 @@ import UVMHS.Lib.Rand
 import UVMHS.Lib.Testing
 import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.TreeNested
-import UVMHS.Lib.Variables
+import UVMHS.Lib.Substitution

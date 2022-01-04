@@ -111,16 +111,6 @@ runTests verb tests = do
               ]
       ]
 
-data EqTest where
-  EqTest ∷ (Eq a,Pretty a) ⇒ 
-    { eqTestGroup ∷ 𝐿 𝕊
-    , eqTestLoc ∷ 𝕊
-    , eqTestLHSShow ∷ 𝕊
-    , eqTestRHSShow ∷ 𝕊
-    , eqTestLHS ∷ TH.TExp a
-    , eqTestRHS ∷ TH.TExp a
-    } → EqTest
-
 𝔱 ∷ 𝕊 → TH.Q TH.Exp → TH.Q TH.Exp → TH.Q [TH.Dec]
 𝔱 tag xEQ yEQ = 𝔱T @ () tag (TH.TExp ^$ xEQ) (TH.TExp ^$ yEQ)
 
@@ -138,17 +128,6 @@ data EqTest where
       tests' = t :& tests
   TH.putQ @ (𝐿 (TH.Q (TH.TExp (IO (𝑇D Test))))) tests'
   [d| |]
-
-data FuzzTest where
-  FuzzTest ∷ (Pretty a) ⇒ 
-    { fuzzTestGroup ∷ 𝐿 𝕊
-    , fuzzTestLoc ∷ 𝕊
-    , fuzzTestIter ∷ ℕ64
-    , fuzzTestElemShow ∷ 𝕊
-    , fuzzTestPredShow ∷ 𝕊
-    , fuzzTestElem ∷ TH.TExp (IO a)
-    , fuzzTestPred ∷ TH.TExp (a → 𝔹)
-    } → FuzzTest
 
 𝔣 ∷ 𝕊 → ℕ64 → TH.Q TH.Exp → TH.Q TH.Exp → TH.Q [TH.Dec]
 𝔣 tag k xEQ pEQ = 𝔣T @ () tag k (TH.TExp ^$ xEQ) (TH.TExp ^$ pEQ)

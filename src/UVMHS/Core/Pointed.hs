@@ -154,6 +154,16 @@ instance (Append a) ⇒ Append (AddTop a) where
   AddTop x ⧺ AddTop y = AddTop $ x ⧺ y
 instance (Monoid a) ⇒ Monoid (AddTop a)
 
+instance (Plus a) ⇒ Plus (AddTop a) where
+  Top + _ = Top
+  _ + Top = Top
+  AddTop x + AddTop y = AddTop $ x + y
+
+instance (Times a) ⇒ Times (AddTop a) where
+  Top × _ = Top
+  _ × Top = Top
+  AddTop x × AddTop y = AddTop $ x × y
+
 instance Functor AddTop where 
   map = mmap
 instance Return AddTop where 
