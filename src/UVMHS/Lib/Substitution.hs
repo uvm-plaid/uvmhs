@@ -36,7 +36,7 @@ class HasSubst a where
   subst ∷ Subst a → a → a
 
 class HasSubstX e a | a → e where
-  substx ∷ b ⌲ e → Subst b → a → 𝑂 a
+  substx ∷ (b → 𝑂 e) → Subst b → a → 𝑂 a
 
 wfSubst ∷ Subst a → 𝔹
 wfSubst (Subst _ρ vs ι _gs) = and

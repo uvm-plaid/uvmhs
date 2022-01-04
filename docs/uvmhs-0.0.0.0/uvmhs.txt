@@ -4888,7 +4888,7 @@ Subst :: ℕ64 -> 𝕍 (ℕ64 ∨ (ℕ64 ∧ a)) -> ℤ64 -> (𝕏 ⇰ (ℕ64 �
 class HasSubst a
 subst :: HasSubst a => Subst a -> a -> a
 class HasSubstX e a | a -> e
-substx :: HasSubstX e a => (b ⌲ e) -> Subst b -> a -> 𝑂 a
+substx :: HasSubstX e a => (b -> 𝑂 e) -> Subst b -> a -> 𝑂 a
 wfSubst :: Subst a -> 𝔹
 nullSubst :: Subst a
 intrSubst :: ℕ64 -> Subst a
@@ -4967,15 +4967,15 @@ substMMSPSums :: Subst MMSP -> MMSPSums -> MMSP
 substMMSPSumsProds :: Subst MMSP -> (MMSPProds ⇰ ℕ) -> MMSP
 substMMSPProds :: Subst MMSP -> MMSPProds -> MMSP
 substMMSPAtom :: Subst MMSP -> MMSPAtom -> MMSP
-substxMMSP :: (e ⌲ MMSP) -> Subst e -> MMSP -> 𝑂 MMSP
-substxMMSPMaxs :: (e ⌲ MMSP) -> Subst e -> MMSPMaxs -> 𝑂 MMSP
-substxMMSPMaxsMins :: (e ⌲ MMSP) -> Subst e -> 𝑃 MMSPMins -> 𝑂 MMSP
-substxMMSPMins :: (e ⌲ MMSP) -> Subst e -> MMSPMins -> 𝑂 MMSP
-substxMMSPMinsSums :: (e ⌲ MMSP) -> Subst e -> 𝑃 MMSPSums -> 𝑂 MMSP
-substxMMSPSums :: (e ⌲ MMSP) -> Subst e -> MMSPSums -> 𝑂 MMSP
-substxMMSPSumsProds :: (e ⌲ MMSP) -> Subst e -> (MMSPProds ⇰ ℕ) -> 𝑂 MMSP
-substxMMSPProds :: (e ⌲ MMSP) -> Subst e -> MMSPProds -> 𝑂 MMSP
-substxMMSPAtom :: (e ⌲ MMSP) -> Subst e -> MMSPAtom -> 𝑂 MMSP
+substxMMSP :: (e -> 𝑂 MMSP) -> Subst e -> MMSP -> 𝑂 MMSP
+substxMMSPMaxs :: (e -> 𝑂 MMSP) -> Subst e -> MMSPMaxs -> 𝑂 MMSP
+substxMMSPMaxsMins :: (e -> 𝑂 MMSP) -> Subst e -> 𝑃 MMSPMins -> 𝑂 MMSP
+substxMMSPMins :: (e -> 𝑂 MMSP) -> Subst e -> MMSPMins -> 𝑂 MMSP
+substxMMSPMinsSums :: (e -> 𝑂 MMSP) -> Subst e -> 𝑃 MMSPSums -> 𝑂 MMSP
+substxMMSPSums :: (e -> 𝑂 MMSP) -> Subst e -> MMSPSums -> 𝑂 MMSP
+substxMMSPSumsProds :: (e -> 𝑂 MMSP) -> Subst e -> (MMSPProds ⇰ ℕ) -> 𝑂 MMSP
+substxMMSPProds :: (e -> 𝑂 MMSP) -> Subst e -> MMSPProds -> 𝑂 MMSP
+substxMMSPAtom :: (e -> 𝑂 MMSP) -> Subst e -> MMSPAtom -> 𝑂 MMSP
 fvMMSP :: MMSP -> 𝑃 𝕏
 fvMMSPMaxs :: MMSPMaxs -> 𝑃 𝕏
 fvMMSPMins :: MMSPMins -> 𝑃 𝕏
