@@ -12,6 +12,7 @@ module UVMHS
   , module UVMHS.Lib.TreeAnnote
   , module UVMHS.Lib.TreeNested
   , module UVMHS.Lib.Substitution
+  , module UVMHS.Lib.Variables
   ) where
 
 import UVMHS.Core
@@ -27,3 +28,4 @@ import UVMHS.Lib.Testing
 import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.TreeNested
 import UVMHS.Lib.Substitution
+import UVMHS.Lib.Variables
