@@ -221,39 +221,39 @@ substMMSPAtom 𝓈 = \case
 
 instance HasSubst MMSP where subst = substMMSP
 
-substxMMSP ∷ (e → 𝑂 MMSP) → Subst e → MMSP → 𝑂 MMSP
-substxMMSP 𝓋 𝓈 (MMSP α̇) = substxMMSPMaxs 𝓋 𝓈 α̇
+substgMMSP ∷ (e → 𝑂 MMSP) → Subst e → MMSP → 𝑂 MMSP
+substgMMSP 𝓋 𝓈 (MMSP α̇) = substgMMSPMaxs 𝓋 𝓈 α̇
 
-substxMMSPMaxs ∷ (e → 𝑂 MMSP) → Subst e → MMSPMaxs → 𝑂 MMSP
-substxMMSPMaxs 𝓋 𝓈 (MMSPMaxs a α) = (litMMSP a ⊔) ^$ substxMMSPMaxsMins 𝓋 𝓈 α
+substgMMSPMaxs ∷ (e → 𝑂 MMSP) → Subst e → MMSPMaxs → 𝑂 MMSP
+substgMMSPMaxs 𝓋 𝓈 (MMSPMaxs a α) = (litMMSP a ⊔) ^$ substgMMSPMaxsMins 𝓋 𝓈 α
 
-substxMMSPMaxsMins ∷ (e → 𝑂 MMSP) → Subst e → 𝑃 MMSPMins → 𝑂 MMSP
-substxMMSPMaxsMins 𝓋 𝓈 α = joins ^$ mapM (substxMMSPMins 𝓋 𝓈) $ iter α
+substgMMSPMaxsMins ∷ (e → 𝑂 MMSP) → Subst e → 𝑃 MMSPMins → 𝑂 MMSP
+substgMMSPMaxsMins 𝓋 𝓈 α = joins ^$ mapM (substgMMSPMins 𝓋 𝓈) $ iter α
 
-substxMMSPMins ∷ (e → 𝑂 MMSP) → Subst e → MMSPMins → 𝑂 MMSP
-substxMMSPMins 𝓋 𝓈 (MMSPMins b β) = (elimAddTop top litMMSP b ⊓) ^$ substxMMSPMinsSums 𝓋 𝓈 β
+substgMMSPMins ∷ (e → 𝑂 MMSP) → Subst e → MMSPMins → 𝑂 MMSP
+substgMMSPMins 𝓋 𝓈 (MMSPMins b β) = (elimAddTop top litMMSP b ⊓) ^$ substgMMSPMinsSums 𝓋 𝓈 β
 
-substxMMSPMinsSums ∷ (e → 𝑂 MMSP) → Subst e → 𝑃 MMSPSums → 𝑂 MMSP
-substxMMSPMinsSums 𝓋 𝓈 β = meets ^$ mapM (substxMMSPSums 𝓋 𝓈) $ iter β
+substgMMSPMinsSums ∷ (e → 𝑂 MMSP) → Subst e → 𝑃 MMSPSums → 𝑂 MMSP
+substgMMSPMinsSums 𝓋 𝓈 β = meets ^$ mapM (substgMMSPSums 𝓋 𝓈) $ iter β
 
-substxMMSPSums ∷ (e → 𝑂 MMSP) → Subst e → MMSPSums → 𝑂 MMSP
-substxMMSPSums 𝓋 𝓈 (MMSPSums c γ) = (litMMSP c +) ^$ substxMMSPSumsProds 𝓋 𝓈 γ
+substgMMSPSums ∷ (e → 𝑂 MMSP) → Subst e → MMSPSums → 𝑂 MMSP
+substgMMSPSums 𝓋 𝓈 (MMSPSums c γ) = (litMMSP c +) ^$ substgMMSPSumsProds 𝓋 𝓈 γ
 
-substxMMSPSumsProds ∷ (e → 𝑂 MMSP) → Subst e → MMSPProds ⇰ ℕ → 𝑂 MMSP
-substxMMSPSumsProds 𝓋 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → 
-  (litMMSP d ×) ^$ substxMMSPProds 𝓋 𝓈 δ
+substgMMSPSumsProds ∷ (e → 𝑂 MMSP) → Subst e → MMSPProds ⇰ ℕ → 𝑂 MMSP
+substgMMSPSumsProds 𝓋 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → 
+  (litMMSP d ×) ^$ substgMMSPProds 𝓋 𝓈 δ
 
-substxMMSPProds ∷ (e → 𝑂 MMSP) → Subst e → MMSPProds → 𝑂 MMSP
-substxMMSPProds 𝓋 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
-  (^^ e) ^$ substxMMSPAtom 𝓋 𝓈 ω
+substgMMSPProds ∷ (e → 𝑂 MMSP) → Subst e → MMSPProds → 𝑂 MMSP
+substgMMSPProds 𝓋 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
+  (^^ e) ^$ substgMMSPAtom 𝓋 𝓈 ω
 
-substxMMSPAtom ∷ (e → 𝑂 MMSP) → Subst e → MMSPAtom → 𝑂 MMSP
-substxMMSPAtom 𝓋 𝓈 = \case
+substgMMSPAtom ∷ (e → 𝑂 MMSP) → Subst e → MMSPAtom → 𝑂 MMSP
+substgMMSPAtom 𝓋 𝓈 = \case
   Var_MMSPAtom (𝐴 𝒸 𝓎) → case vsubst 𝓈 𝓎 of
     Inl 𝓎' → return $ varMMSP $ 𝐴 𝒸 𝓎'
-    Inr (ρₑ :* e) → substxMMSP 𝓋 (intrSubst ρₑ) *$ 𝓋 e
+    Inr (ρₑ :* e) → substgMMSP 𝓋 (intrSubst ρₑ) *$ 𝓋 e
 
-instance HasSubstX MMSP MMSP where substx = substxMMSP
+instance HasSubstG MMSP MMSP where substg = substgMMSP
 
 ---------------
 -- FREE VARS --

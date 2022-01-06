@@ -123,10 +123,10 @@ runTests verb tests = do
   let tags = list $ splitOn𝕊 ":" tag
       xS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint $ TH.unType xE
       yS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint $ TH.unType yE
-  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @ (𝐿 (TH.Q (TH.TExp (IO (𝑇D Test)))))
+  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test)))))
   let t = [|| return $ eqTest tags lS xS yS $$xEQ $$yEQ ||]
-      tests' = t :& tests
-  TH.putQ @ (𝐿 (TH.Q (TH.TExp (IO (𝑇D Test))))) tests'
+      tests' = tests ⧺ single t
+  TH.putQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test))))) tests'
   [d| |]
 
 𝔣 ∷ 𝕊 → ℕ64 → TH.Q TH.Exp → TH.Q TH.Exp → TH.Q [TH.Dec]
@@ -145,15 +145,15 @@ runTests verb tests = do
   let tags = list $ splitOn𝕊 ":" tag
       xS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint $ TH.unType xE
       pS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint $ TH.unType pE
-  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @ (𝐿 (TH.Q (TH.TExp (IO (𝑇D Test)))))
+  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test)))))
   let t' = [|| fuzzTest tags lS xS pS $$xEQ $$pEQ ||]
-      tests' = foldOnFrom (upTo k) tests $ const (t' :&)
-  TH.putQ @ (𝐿 (TH.Q (TH.TExp (IO (𝑇D Test))))) tests'
+      tests' = foldOnFrom (upTo k) tests $ const $ pospend $ single t'
+  TH.putQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test))))) tests'
   [d| |]
 
 buildTests ∷ TH.Q [TH.Dec]
 buildTests = do
-  testEQs ← reverse ^$ ifNone null ∘ frhs𝑂 ^$ TH.getQ @ (𝐿 (TH.Q (TH.TExp (IO (𝑇D Test)))))
+  testEQs ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test)))))
   l ← TH.location
   let modNameS = frhsChars $ TH.loc_module l 
       testsNameS = "g__TESTS__" ⧺ replace𝕊 "." "__" modNameS

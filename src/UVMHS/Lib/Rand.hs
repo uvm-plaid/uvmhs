@@ -133,6 +133,9 @@ randr lb hb = rgen $ prandr lb hb
 rand ∷ ∀ a m. (MonadRand m,Rand a) ⇒ ℕ64 → ℕ64 → m a
 rand nˢ nᵈ = rgen $ prand nˢ nᵈ
 
+randOne ∷ ∀ a m. (MonadRand m,Rand a) ⇒ m a
+randOne = rand one one
+
 randSml ∷ ∀ a m. (MonadRand m,Rand a) ⇒ m a
 randSml = rand (𝕟64 5) $ 𝕟64 5
 

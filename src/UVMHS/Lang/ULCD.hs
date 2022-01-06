@@ -1,4 +1,3 @@
-{-# LANGUAGE IncoherentInstances #-}
 module UVMHS.Lang.ULCD where
 
 import UVMHS.Core
@@ -8,6 +7,7 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Window
 import UVMHS.Lib.TreeAnnote
+import UVMHS.Lib.Variables
 
 import qualified Language.Haskell.TH.Syntax as TH
 import qualified Language.Haskell.TH.Quote  as TH
@@ -17,7 +17,7 @@ import Control.Monad.Fail as HS
 newtype ULCDExp 𝒸 = ULCDExp { unULCDExp ∷ 𝐴 𝒸 (ULCDExp_R 𝒸) }
   deriving (Eq,Ord,Show)
 data ULCDExp_R 𝒸 =
-    Var_ULCD ℕ64
+    Var_ULCD 𝕐
   | Lam_ULCD (ULCDExp 𝒸)
   | App_ULCD (ULCDExp 𝒸) (ULCDExp 𝒸)
   deriving (Eq,Ord,Show)
@@ -37,7 +37,10 @@ pULCDExp = ULCDExp ^$ fmixfixWithContext "exp" $ concat
       return $ aval $ unULCDExp e
   , fmixTerminal $ do
       i ← cpInteger
-      return $ Var_ULCD $ natΩ64 i
+      return $ Var_ULCD $ BoundVar $ natΩ64 i
+  , fmixTerminal $ do
+      x ← cpVar
+      return $ Var_ULCD $ NamedVar x
   , fmixPrefix pLET $ do
       void $ concat $ map cpSyntax ["lam","λ"]
       void $ concat $ map cpSyntax ["->","→"]
@@ -62,6 +65,8 @@ deriving instance TH.Lift LocRange
 deriving instance (TH.Lift 𝒸,TH.Lift a) ⇒ TH.Lift (𝐴 𝒸 a)
 deriving instance (TH.Lift 𝒸) ⇒ TH.Lift (ULCDExp 𝒸)
 deriving instance TH.Lift Loc
+deriving instance TH.Lift 𝕏
+deriving instance TH.Lift 𝕐
 deriving instance (TH.Lift 𝒸) ⇒ TH.Lift (ULCDExp_R 𝒸)
 deriving instance (TH.Lift a,TH.Lift b) ⇒ TH.Lift (a ∧ b)
 deriving instance TH.Lift Annotation

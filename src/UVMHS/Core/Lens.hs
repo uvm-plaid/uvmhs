@@ -71,11 +71,11 @@ unsafeView p = elim𝑂 (error "unsafeView") id ∘ view p
 shape ∷ a ⌲ b → a → 𝔹
 shape p = elim𝑂 False (const True) ∘ view p
 
-leftL ∷ a ∨ b ⌲ a
-leftL = Prism Inl $ elimChoice Some $ const None
+inlL ∷ a ∨ b ⌲ a
+inlL = Prism Inl $ elimChoice Some $ const None
 
-rightL ∷ a ∨ b ⌲ b
-rightL = Prism Inr $ elimChoice (const None) Some
+inrL ∷ a ∨ b ⌲ b
+inrL = Prism Inr $ elimChoice (const None) Some
 
 fstL ∷ a ∧ b ⟢ a
 fstL = lens fst $ \ (_ :* b) → ( :* b)
