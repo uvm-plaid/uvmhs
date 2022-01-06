@@ -119,8 +119,8 @@ type 𝕊 = Text.Text
 
 data Void
 
-contradiction ∷ Void → a
-contradiction = \case
+exfalso ∷ Void → a
+exfalso = \case
 
 data a ∨ b = Inl a | Inr b
   deriving (Eq,Ord,Show)
