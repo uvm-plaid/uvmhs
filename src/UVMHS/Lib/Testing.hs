@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 module UVMHS.Lib.Testing 
   ( module UVMHS.Lib.Testing
   ) where
@@ -112,7 +113,11 @@ runTests verb tests = do
       ]
 
 𝔱 ∷ 𝕊 → TH.Q TH.Exp → TH.Q TH.Exp → TH.Q [TH.Dec]
+#ifdef UVMHS_TESTS
 𝔱 tag xEQ yEQ = 𝔱T @ () tag (TH.TExp ^$ xEQ) (TH.TExp ^$ yEQ)
+#else
+𝔱 _ _ _ = return []
+#endif
 
 𝔱T ∷ (Eq a,Pretty a) ⇒ 𝕊 → TH.Q (TH.TExp a) → TH.Q (TH.TExp a) → TH.Q [TH.Dec]
 𝔱T tag xEQ yEQ = do
@@ -130,7 +135,11 @@ runTests verb tests = do
   [d| |]
 
 𝔣 ∷ 𝕊 → ℕ64 → TH.Q TH.Exp → TH.Q TH.Exp → TH.Q [TH.Dec]
+#ifdef UVMHS_TESTS
 𝔣 tag k xEQ pEQ = 𝔣T @ () tag k (TH.TExp ^$ xEQ) (TH.TExp ^$ pEQ)
+#else
+𝔣 _ _ _ _ = return []
+#endif
 
 𝔣T ∷ (Pretty a) ⇒ 𝕊 → ℕ64 → TH.Q (TH.TExp (IO a)) → TH.Q (TH.TExp (a → 𝔹)) → TH.Q [TH.Dec]
 𝔣T tag k xEQ pEQ = do

@@ -213,7 +213,7 @@ gsubstMMSPProds ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPProds 
 gsubstMMSPProds 𝓋 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
   (^^ e) ^$ gsubstMMSPAtom 𝓋 𝓈 ω
 
-gsubstMMSPAtom ∷ ∀ t m a. (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPAtom → m MMSP
+gsubstMMSPAtom ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPAtom → m MMSP
 gsubstMMSPAtom 𝓋 𝓈 = \case
   Var_MMSPAtom (𝐴 𝒸 𝓎) → case 𝓈var 𝓈 𝓎 of
     Inl 𝓎' → return $ varMMSP $ 𝐴 𝒸 𝓎'

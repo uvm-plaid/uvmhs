@@ -71,8 +71,17 @@ dependencies:
   - time
   - vector
 
+flags:
+  uvmhs-tests:
+    description: Disables building all tests, which increases compile times
+    default: false
+    manual: true
+
 library:
   source-dirs: src
+  when:
+  - condition: (flag(uvmhs-tests))
+    cpp-options: -DUVMHS_TESTS
 
 executable:
   source-dirs: main

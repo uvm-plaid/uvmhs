@@ -8,7 +8,7 @@ import UVMHS.Lib.Rand
 import UVMHS.Lib.Variables
 import UVMHS.Lang.ULCD
 
-class Substy t where
+class (∀ a. Null (t a)) ⇒ Substy t where
   𝓈var ∷ t a → 𝕐 → 𝕐 ∨ (𝑂 (t Void) ∧ a)
   𝓈shift ∷ ℕ64 → t a → t a
   𝓈combine ∷ (Monad m) ⇒ (t a → b → m a) → t a → t b → m (t a)
@@ -16,15 +16,32 @@ class Substy t where
 class Substable m e a | a → e where
   gsubst ∷ (Substy t,Monad m) ⇒ (b → m e) → t b → a → m a
 
+msubst ∷ (Substy t,Substable m e a,Monad m) ⇒ t e → a → m a
+msubst = gsubst return
+
+mrename ∷ (Substy t,Substable m e a,Monad m) ⇒ t Void → a → m a
+mrename = gsubst exfalso
+
 subst ∷ (Substy t,Substable ID a a) ⇒ t a → a → a
-subst = unID ∘∘ gsubst ID
+subst = unID ∘∘ msubst
+
+rename ∷ (Substy t,Substable ID e a) ⇒ t Void → a → a
+rename = unID ∘∘ mrename
 
 (⋈) ∷ (Substy t,Substable m a a,Monad m) ⇒ t a → t a → m (t a)
 (⋈) = 𝓈combine $ gsubst return
 
+mcomposeSubs ∷ (ToIter (t a) f,Substy t,Substable m a a,Monad m) ⇒ f → m (t a)
+mcomposeSubs = mfoldrFromWith null (⋈)
+
 ---------------
 -- Variables --
 ---------------
+
+𝓈shiftVar ∷ ℕ64 → 𝕐 → 𝕐
+𝓈shiftVar n = \case
+  NamedVar 𝓍 → NamedVar 𝓍
+  BoundVar 𝓃 → BoundVar $ 𝓃 + n
 
 grename ∷ (Substy t,Monad m) ⇒ (a → m 𝕐) → t a → 𝕐 → m 𝕐
 grename 𝓋 𝓈 𝓎 = case 𝓈var 𝓈 𝓎 of
@@ -44,6 +61,8 @@ prandVar nˢ nᵇ = mjoin $ prchoose
   [ \ () → NamedVar ^$ prandNVar nˢ
   , \ () → BoundVar ^$ prandBVar nˢ nᵇ
   ]
+
+instance Rand 𝕐 where prand nˢ _nᵈ = prandVar nˢ zero
 
 ---------------------------
 -- UNSCOPED SUBSTITUTION --
@@ -80,6 +99,15 @@ instance Substy USubst where
 usubst ∷ (Substable ID a a) ⇒ USubst a → a → a
 usubst = subst
 
+musubst ∷ (Substable m e a,Monad m) ⇒ USubst e → a → m a
+musubst = msubst
+
+urename ∷ (Substable ID e a) ⇒ USubst Void → a → a
+urename = rename
+
+murename ∷ (Substable m e a,Monad m) ⇒ USubst Void → a → m a
+murename = mrename
+
 instance Null (USubst a) where null = USubst dø
 instance (Substable ID a a) ⇒ Append (USubst a) where (⧺) = unID ∘∘ (⋈)
 instance (Substable ID a a) ⇒ Monoid (USubst a)
@@ -99,40 +127,40 @@ instance (Rand a) ⇒  Rand (USubst a) where prand = prandUSubst
 data SSubst a = SSubst
   { substShft ∷ ℕ64
   , substIncr ∷ ℤ64
-  --               variable    term
-  --               ↓↓↓         ↓
-  , substByvs ∷ 𝕍 (ℕ64 ∨ ℕ64 ∧ a)
-  --                     ↑↑↑↑
+  --               variable  term
+  --               ↓         ↓
+  , substBnvs ∷ 𝕍 (𝕐 ∨ ℕ64 ∧ a)
+  --                   ↑↑↑ 
+  --                   shifted
+  --                 variable  term
+  --                 ↓         ↓
+  , substNxvs ∷ 𝕏 ⇰ (𝕐 ∨ ℕ64 ∧ a)
+  --                     ↑↑↑
   --                     shifted
-  --                       term
-  --                       ↓
-  , substNyvs ∷ 𝕏 ⇰ (ℕ64 ∧ a)
-  --                 ↑↑↑
-  --                 shifted
   } deriving (Eq,Ord,Show)
 makePrettyRecord ''SSubst
 
-𝓈nvarSSubst ∷ SSubst a → 𝕏 → 𝑂 (ℕ64 ∧ a)
-𝓈nvarSSubst (SSubst _ρ _ι _bvs nvs) 𝓍 = nvs ⋕? 𝓍
+𝓈nvarSSubst ∷ SSubst a → 𝕏 → 𝕐 ∨ ℕ64 ∧ a
+𝓈nvarSSubst (SSubst _ρ _ι _bvs nvs) 𝓍 = ifNone (Inl $ NamedVar 𝓍) $ nvs ⋕? 𝓍
+
+𝓈bvarSSubst ∷ SSubst a → ℕ64 → 𝕐 ∨ ℕ64 ∧ a
+𝓈bvarSSubst (SSubst ρ ι bvs _nvs) 𝓃 =
+  if | 𝓃 < ρ → Inl $ BoundVar 𝓃
+     -- 𝓃 ≥ ρ
+     | 𝓃 - ρ < csize bvs → bvs ⋕! (𝓃 - ρ)
+     -- 𝓃 ≥ ρ 
+     -- 𝓃 - ρ < |bvs|
+     | otherwise → Inl $ BoundVar $ natΩ64 $ intΩ64 𝓃 + ι
 
 -- subst(ρ,ι,bvs,nvs)(𝓎) =
 --   𝓎       if  𝓎 bound  and  𝓎 < ρ
 --   𝓎+ι     if  𝓎 bound  and  𝓎 ≥ ρ  and  𝓎 - ρ ≥ |vs|
 --   bvs(𝓎)  if  𝓎 bound  and  𝓎 ≥ ρ  and  𝓎 - ρ < |vs|
 --   nvs(𝓎)  if  𝓎 named
-𝓈bvarSSubst ∷ SSubst a → ℕ64 → ℕ64 ∨ (ℕ64 ∧ a)
-𝓈bvarSSubst (SSubst ρ ι bvs _nvs) 𝓍 =
-  if | 𝓍 < ρ → Inl 𝓍
-     -- 𝓍 ≥ ρ
-     | 𝓍 - ρ < csize bvs → bvs ⋕! (𝓍 - ρ)
-     -- 𝓍 ≥ ρ 
-     -- 𝓍 - ρ < |bvs|
-     | otherwise → Inl $ natΩ64 $ intΩ64 𝓍 + ι
-
 𝓈varSSubst ∷ SSubst a → 𝕐 → 𝕐 ∨ (ℕ64 ∧ a)
 𝓈varSSubst 𝓈 = \case
-  NamedVar 𝓍 → elim𝑂 (Inl $ NamedVar 𝓍) Inr $ 𝓈nvarSSubst 𝓈 𝓍
-  BoundVar 𝓍 → mapInl BoundVar $ 𝓈bvarSSubst 𝓈 𝓍
+  NamedVar 𝓃 → 𝓈nvarSSubst 𝓈 𝓃
+  BoundVar 𝓍 → 𝓈bvarSSubst 𝓈 𝓍
 
 wfSSubst ∷ SSubst a → 𝔹
 wfSSubst (SSubst _ρ ι bvs _nvs) = and
@@ -146,8 +174,8 @@ nullSSubst ∷ SSubst a
 nullSSubst = SSubst
   { substShft = 0
   , substIncr = 0
-  , substByvs = vec []
-  , substNyvs = dø
+  , substBnvs = vec []
+  , substNxvs = dø
   }
 
 -- subst(intro)(𝓍) = 𝓍+1
@@ -156,8 +184,8 @@ nullSSubst = SSubst
 𝓈intro n = SSubst
   { substShft = 0
   , substIncr = intΩ64 n
-  , substByvs = vec []
-  , substNyvs = dø
+  , substBnvs = vec []
+  , substNxvs = dø
   }
 
 -- subst(𝓈shiftSSubst[n](ρ,vs,ι))(𝓍) = subst(ρ,vs,ι)(𝓍+n)
@@ -170,10 +198,11 @@ nullSSubst = SSubst
 𝓈shiftSSubst ∷ ℕ64 → SSubst a → SSubst a
 𝓈shiftSSubst n (SSubst ρ ι bvs nvs) = 
   let ρ' = ρ + n
-      bvs' = mapOn bvs $ \case
-        Inl 𝓍 → Inl $ 𝓍 + n
+      f = \case
+        Inl 𝓎 → Inl $ 𝓈shiftVar n 𝓎
         Inr (ρₑ :* e) → Inr $ (ρₑ + n) :* e
-      nvs' = mapOn nvs $ \ (ρₑ :* e) → (ρₑ + n) :* e
+      bvs' = map f bvs
+      nvs' = map f nvs
   in SSubst ρ' ι bvs' nvs'
 
 -- subst(bind(v))(𝓍) =
@@ -184,16 +213,32 @@ nullSSubst = SSubst
 𝓈bbind v = SSubst
   { substShft = 0
   , substIncr = neg 1
-  , substByvs = vec [Inr $ 0 :* v]
-  , substNyvs = dø
+  , substBnvs = vec [Inr $ 0 :* v]
+  , substNxvs = dø
   }
 
 𝓈nbind ∷ 𝕏 ⇰ a → SSubst a
-𝓈nbind xes = SSubst
+𝓈nbind xvs = SSubst
   { substShft = 0
   , substIncr = 0
-  , substByvs = vec []
-  , substNyvs = map (0 :*) xes
+  , substBnvs = vec []
+  , substNxvs = map (Inr ∘ (0 :*)) xvs
+  }
+
+𝓈open ∷ 𝕏 → SSubst a
+𝓈open 𝓍 = SSubst
+  { substShft = 0
+  , substIncr = neg 1
+  , substBnvs = vec [Inl $ NamedVar 𝓍]
+  , substNxvs = dø
+  }
+
+𝓈close ∷ 𝕏 → SSubst a
+𝓈close 𝓍 = SSubst
+  { substShft = 0
+  , substIncr = 1
+  , substBnvs = vec []
+  , substNxvs = 𝓍 ↦ Inl (BoundVar 0)
   }
 
 𝓈combineSSubst ∷ (Monad m) ⇒ (SSubst a → b → m a) → SSubst a → SSubst b → m (SSubst a)
@@ -212,15 +257,17 @@ nullSSubst = SSubst
         else
           case bvs₁ ⋕? (𝓍 - vsOffset₁) of
             Some v → case v of
-              Inl 𝓍' → return $ 𝓈bvarSSubst 𝓈₂ 𝓍'
+              Inl 𝓎 → return $ 𝓈varSSubst 𝓈₂ 𝓎
               Inr (ρₑ :* e) → do
                 𝓈 ← 𝓈combineSSubst sub 𝓈₂ $ 𝓈intro ρₑ
                 Inr ∘ (0 :*) ^$ sub 𝓈 e
             None → return $ 𝓈bvarSSubst 𝓈₂ $ natΩ64 $ intΩ64 (ρ + 𝓍) + ι₁
   nvs ← dict ^$ exchange
-    [ mapMOn nvs₁ $ \ (ρₑ :* e) → do
-        𝓈 ← 𝓈combineSSubst sub 𝓈₂ $ 𝓈intro ρₑ
-        (0 :*) ^$ sub 𝓈 e
+    [ mapMOn nvs₁ $ \case
+        Inl 𝓎 → return $ 𝓈varSSubst 𝓈₂ 𝓎
+        Inr (ρₑ :* e) → do
+          𝓈 ← 𝓈combineSSubst sub 𝓈₂ $ 𝓈intro ρₑ
+          (Inr ∘ (0 :*)) ^$ sub 𝓈 e
     , return nvs₂
     ]
   return $ SSubst ρ ι bvs nvs
@@ -236,6 +283,15 @@ instance Substy SSubst where
 ssubst ∷ (Substable ID a a) ⇒ SSubst a → a → a
 ssubst = subst
 
+mssubst ∷ (Substable m e a,Monad m) ⇒ SSubst e → a → m a
+mssubst = msubst
+
+srename ∷ (Substable ID e a) ⇒ SSubst Void → a → a
+srename = rename
+
+msrename ∷ (Substable m e a,Monad m) ⇒ SSubst Void → a → m a
+msrename = mrename
+
 instance Null (SSubst a) where null = nullSSubst
 instance (Substable ID a a) ⇒ Append (SSubst a) where (⧺) = unID ∘∘ (⋈)
 instance (Substable ID a a) ⇒ Monoid (SSubst a)
@@ -245,7 +301,7 @@ prandSSubst nˢ nᵈ = do
   ρ ← prandr zero nˢ
   vsSize ← prandr zero nˢ
   ι ← prandr (neg $ intΩ64 vsSize) $ intΩ64 nˢ
-  bvs ← mapMOn (vecF vsSize id) $ const $ prandChoice (const ∘ flip prandBVar zero) prand nˢ nᵈ
+  bvs ← mapMOn (vecF vsSize id) $ const $ prandChoice (const ∘ flip prand zero) prand nˢ nᵈ
   nvs ← dict ^$ mapMOn (upTo nˢ) $ const $ do
     x ← prandNVar nˢ
     v ← prand nˢ nᵈ
@@ -258,7 +314,7 @@ instance (Rand a) ⇒  Rand (SSubst a) where prand = prandSSubst
 -- FOR ULCD --
 --------------
 
-gsubstULCD ∷ ∀ t m a 𝒸. (Substy t,Monad m) ⇒ (a → m (ULCDExp 𝒸)) → t a → ULCDExp 𝒸 → m (ULCDExp 𝒸)
+gsubstULCD ∷ (Substy t,Monad m) ⇒ (a → m (ULCDExp 𝒸)) → t a → ULCDExp 𝒸 → m (ULCDExp 𝒸)
 gsubstULCD 𝓋 𝓈 (ULCDExp (𝐴 𝒸 e₀)) = case e₀ of
   Var_ULCD x → case 𝓈var 𝓈 x of
     Inl x' → return $ ULCDExp $ 𝐴 𝒸 $ Var_ULCD x'
@@ -534,6 +590,20 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
   [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) → 
        usubst ((𝓈₁ ⧺ 𝓈₂) ⧺ 𝓈₃) e ≡ usubst (𝓈₁ ⧺ (𝓈₂ ⧺ 𝓈₃)) e 
+  |]
+
+𝔣 "zzz:ssubst:open∘close" 100 
+  [| do randSml @ ULCDExpR
+  |]
+  [| \ e → 
+       ssubst (𝓈open (var "z") ⧺ 𝓈close (var "z")) e ≡ e
+  |]
+
+𝔣 "zzz:ssubst:close∘open" 100 
+  [| do randSml @ ULCDExpR
+  |]
+  [| \ e → 
+       ssubst (𝓈close (var "z") ⧺ 𝓈open (var "z")) e ≡ e
   |]
 
 buildTests

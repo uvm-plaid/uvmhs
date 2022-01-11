@@ -76,6 +76,12 @@ elimAddBot i f = \case
   Bot → i
   AddBot x → f x
 
+instance (POrd a) ⇒ POrd (AddBot a) where
+  xT ⊑ yT = case (xT,yT) of
+    (Bot,Bot) → True
+    (Bot,AddBot _) → True
+    (AddBot _,Bot) → False
+    (AddBot x,AddBot y) → x ⊑ y
 instance Bot (AddBot a) where 
   bot = Bot
 instance (Join a) ⇒ Join (AddBot a) where
@@ -113,18 +119,11 @@ elimAddTop i f = \case
   Top → i
   AddTop x → f x
 
--- instance (Null a) ⇒ Null (AddTop a) where 
---   null = AddTop null
--- instance (Append a) ⇒ Append (AddTop a) where
---   Top ⧺ _ = Top
---   _ ⧺ Top = Top
---   AddTop x ⧺ AddTop y = AddTop (x ⧺ y)
--- instance (Monoid a) ⇒ Monoid (AddTop a)
-
 instance (POrd a) ⇒ POrd (AddTop a) where
   xT ⊑ yT = case (xT,yT) of
-    (Top,_) → False
-    (_,Top) → True
+    (Top,Top) → True
+    (Top,AddTop _) → False
+    (AddTop _,Top) → True
     (AddTop x,AddTop y) → x ⊑ y
 instance (Bot a) ⇒ Bot (AddTop a) where 
   bot = AddTop bot

@@ -6,6 +6,7 @@ import UVMHS.Core.Classes.Monad
 
 infixl 5 ⧺
 infixl 6 ⨳
+infixl 7 ▷
 
 class Null a where null ∷ a
 class Append a where (⧺) ∷ a → a → a
