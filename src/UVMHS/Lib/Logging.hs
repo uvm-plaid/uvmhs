@@ -13,7 +13,7 @@ pplog ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel) ⇒ ℕ64 → D
 pplog l ~msg = do
   ll ← unLogLevel ^$ askL hasLens
   whenZ (l ≤ ll) $ io $ pprint $ concat 
-    [ ppBG grayDark $ ppFG white $ ppString $ concat ["▷",show𝕊 l,"▷"]
+    [ ppBG grayDark $ ppFG white $ ppString $ concat ["▷",show𝕊 l,"◁"]
     , ppSpace 1
     , ppGA msg
     ]
