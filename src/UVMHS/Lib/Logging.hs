@@ -12,11 +12,13 @@ newtype LogDepth = LogDepth { unLogDepth ∷ ℕ64 }
 pplog ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel) ⇒ ℕ64 → Doc → m ()
 pplog l ~msg = do
   ll ← unLogLevel ^$ askL hasLens
-  whenZ (l ≤ ll) $ io $ pprint $ concat 
-    [ ppBG grayDark $ ppFG white $ ppString $ concat ["▷",show𝕊 l,"◁"]
-    , ppSpace 1
-    , ppGA msg
-    ]
+  whenZ (l ≤ ll) $ io $ do
+    pprint $ concat 
+      [ ppBG grayDark $ ppFG white $ ppString $ concat ["▷",show𝕊 l,"◁"]
+      , ppSpace 1
+      , ppGA msg
+      ]
+    oflush
 
 pplogd ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ ℕ64 → Doc → m ()
 pplogd l msg = do
