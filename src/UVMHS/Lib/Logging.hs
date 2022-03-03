@@ -25,12 +25,14 @@ pplogd l msg = do
   ld ← unLogDepth ^$ askL hasLens
   pplog l $ ppSpace (ld × 𝕟64 2) ⧺ ppGA msg
 
-pplogdIndent ∷ 
-  (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth)
-  ⇒ m a → m a
+pplogdIndent ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ m a → m a
 pplogdIndent = mapEnvL hasLens $ LogDepth ∘ succ ∘ unLogDepth
 
-pplogdIndentReset ∷ 
-  (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth)
-  ⇒ m a → m a
+pplogdIndentU ∷ (Monad m,MonadIO m,MonadUCont m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ m a → m a
+pplogdIndentU = umapEnvL hasLens $ LogDepth ∘ succ ∘ unLogDepth
+
+pplogdIndentReset ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ m a → m a
 pplogdIndentReset = mapEnvL hasLens $ const $ LogDepth zero
+
+pplogdIndentResetU ∷ (Monad m,MonadIO m,MonadUCont m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ m a → m a
+pplogdIndentResetU = umapEnvL hasLens $ const $ LogDepth zero
