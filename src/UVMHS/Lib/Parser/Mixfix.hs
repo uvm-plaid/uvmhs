@@ -11,9 +11,13 @@ import UVMHS.Lib.Parser.CParser
 -- STATIC LEVELS --
 -------------------
 
+pDEF ∷ ℕ64
 pLET,pSEP,pASC,pARR,pOR,pAND,pCMP,pCONS ∷ ℕ64
 pBWAND,pBWOR,pBSHFT ∷ ℕ64
 pPLUS,pTIMES,pNEG,pPOW,pFAC,pAPP,pIDX ∷ ℕ64
+pTOP ∷ ℕ64
+
+pDEF    = 001  --  x = e
 
 pLET    = 005  --  let fun
 pSEP    = 006  --  , ;
@@ -34,9 +38,11 @@ pNEG    = 065  --  - (negation)
 pPOW    = 070  --  ^ ⋙ ⋘
 pFAC    = 090  --  !
 
-pAPP    = 200 --  ␣
+pAPP    = 200  --  ␣
 
-pIDX    = 300 --  x.y x@y
+pIDX    = 300  --  x.y x@y
+
+pTOP    = 999
 
 -----------------------------------
 -- Fully Functor/Comonad general --

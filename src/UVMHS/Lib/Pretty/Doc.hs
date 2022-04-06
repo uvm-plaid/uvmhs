@@ -97,6 +97,9 @@ docShape = summaryIShape ∘ staticDocA ∘ execDoc
 ppForceBreak ∷ Doc
 ppForceBreak = Doc $ tell $ StaticDocA $ SummaryI True null null
 
+ppWithForcedBreak ∷ Doc → Doc
+ppWithForcedBreak d = ppForceBreak ⧺ d
+
 ppAnnotate ∷ Annotation → Doc → Doc
 ppAnnotate = onDoc ∘ mapOut ∘ annotateDocA
 
@@ -228,6 +231,12 @@ ppSpace n = ppString $ string $ replicate n ' '
 ppNewline ∷ Doc
 ppNewline = ppString "\n"
 
+ppIndented ∷ Doc → Doc
+ppIndented d = concat
+  [ ppSpace 2
+  , ppGA d
+  ]
+
 ppSpaceIfBreak ∷ Doc
 ppSpaceIfBreak = ppStringModal "" " "
 
@@ -239,6 +248,14 @@ ppNewlineIfBreak = ppStringModal "" "\n"
 
 ppSpaceNewlineIfBreak ∷ Doc
 ppSpaceNewlineIfBreak = ppStringModal " " "\n"
+
+ppHangIfBreak ∷ Doc → Doc
+ppHangIfBreak d = concat
+  [ ppNewlineIfBreak
+  , ppSpaceIfBreak
+  , ppSpaceIfBreak
+  , ppGA d
+  ]
 
 ppHorizontal ∷ (ToIter Doc t) ⇒ t → Doc
 ppHorizontal = concat ∘ inbetween (ppSpace $ 𝕟64 1) ∘ iter
@@ -436,6 +453,7 @@ class PrettyM m a | a → m where
   mpretty ∷ a → m Doc
 
 instance Pretty Doc where pretty = id
+instance Pretty Void where pretty = \case
 instance Pretty () where pretty = ppCon ∘ show𝕊
 instance Pretty 𝔹 where pretty = ppCon ∘ show𝕊
 instance Pretty ℕ where pretty = ppLit ∘ show𝕊

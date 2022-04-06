@@ -37,6 +37,17 @@ snoc𝐿 xs x = case xs of
   Nil → x :& Nil
   x' :& xs' → x' :& snoc𝐿 xs' x
 
+unsnoc𝐿 ∷ 𝐿 a → 𝑂 (𝐿 a ∧ a)
+unsnoc𝐿 = \case
+  Nil → None
+  x₀ :& xs₀ → Some $
+    let loop x xs = case xs of
+          Nil → Nil :* x
+          x' :& xs' →
+            let xsᵣ :* xᵣ = loop x' xs'
+            in (x :& xsᵣ) :* xᵣ
+    in loop x₀ xs₀
+
 append𝐿 ∷ 𝐿 a → 𝐿 a → 𝐿 a
 append𝐿 xs ys = case xs of
   Nil → ys

@@ -18,3 +18,6 @@ instance Cobind (𝐴 t) where 𝐴 e x =≫ f = 𝐴 e $ f $ 𝐴 e x
 instance Functor (𝐴 t) where map = wmap
 instance FunctorM (𝐴 t) where mapM f (𝐴 e x) = 𝐴 e ^$ f x
 instance Comonad (𝐴 t)
+
+instance (Null e,Null a) ⇒ Null (𝐴 e a) where null = 𝐴 null null
+instance (Append e,Append a) ⇒ Append (𝐴 e a) where 𝐴 e₁ x₁ ⧺ 𝐴 e₂ x₂ = 𝐴 (e₁ ⧺ e₂) $ x₁ ⧺ x₂

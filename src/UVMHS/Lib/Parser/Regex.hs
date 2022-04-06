@@ -72,7 +72,8 @@ instance (Ord u,Additive u) ⇒ Seqoid (RegexInfo o u)
 -- Regex --
 -----------
 
-type Regex c t o u = 𝐴 (RegexInfo o u) (RegexU c t o u)
+newtype Regex c t o u = Regex { unRegex ∷ 𝐴 (RegexInfo o u) (RegexU c t o u) }
+  deriving (Eq,Ord,Show)
 data RegexU c t o u =
     NullR
   | ResR (RegexResult o u)
@@ -102,10 +103,10 @@ instance (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Seqoid (Regex c t o u)
 instance (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Kleene (Regex c t o u)
 
 nullRegex ∷ (Zero u) ⇒ Regex c t o u
-nullRegex = 𝐴 null NullR
+nullRegex = Regex $ 𝐴 null NullR
 
 resRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ RegexResult o u → Regex c t o u
-resRegex r = 𝐴 (RegexInfo $ Some r) $ ResR r
+resRegex r = Regex $ 𝐴 (RegexInfo $ Some r) $ ResR r
 
 epsRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ Regex c t o u
 epsRegex = resRegex null
@@ -129,7 +130,7 @@ uepsRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ u → Regex c t o u
 uepsRegex u = retRegex zero null None u
 
 atomRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ RegexAtom c t o u → Regex c t o u
-atomRegex = 𝐴 null ∘ AtomR eps
+atomRegex = Regex ∘ 𝐴 null ∘ AtomR eps
 
 tokRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ t → Regex c t o u
 tokRegex t = atomRegex $ TokRA t
@@ -141,7 +142,7 @@ classRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ c → Regex c t o u
 classRegex c = atomRegex $ ClassRA c
 
 consEpsRegex ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ RegexResult o u → Regex c t o u → Regex c t o u
-consEpsRegex r (𝐴 i e) = 𝐴 (RegexInfo (Some r) ▷ i) $ consEpsRegexU r e
+consEpsRegex r (Regex (𝐴 i e)) = Regex $ 𝐴 (RegexInfo (Some r) ▷ i) $ consEpsRegexU r e
 
 consEpsRegexU ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ RegexResult o u → RegexU c t o u → RegexU c t o u
 consEpsRegexU r = \case
@@ -154,7 +155,7 @@ consEpsRegexU r = \case
   StarR r' e → StarR (r ▷ r') e
 
 snocEpsRegex ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ RegexResult o u → Regex c t o u → Regex c t o u
-snocEpsRegex r (𝐴 i e) = 𝐴 (i ▷ RegexInfo (Some r)) $ snocEpsRegexU r e
+snocEpsRegex r (Regex (𝐴 i e)) = Regex $ 𝐴 (i ▷ RegexInfo (Some r)) $ snocEpsRegexU r e
 
 snocEpsRegexU ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ RegexResult o u → RegexU c t o u → RegexU c t o u
 snocEpsRegexU r = \case
@@ -171,7 +172,7 @@ snocEpsRegexU r = \case
   StarR r' e → StarR (r' ▷ r) e
 
 sumRegex ∷ (Ord c,Ord t,Ord o,Ord u,Plus u) ⇒ Regex c t o u → Regex c t o u → Regex c t o u
-sumRegex e₁@(𝐴 i₁ e₁') e₂@(𝐴 i₂ e₂') = 𝐴 (i₁ ⧺ i₂) $ case (e₁',e₂') of
+sumRegex e₁@(Regex (𝐴 i₁ e₁')) e₂@(Regex (𝐴 i₂ e₂')) = Regex $ 𝐴 (i₁ ⧺ i₂) $ case (e₁',e₂') of
   (NullR,_) → e₂'
   (_,NullR) → e₁'
   (ResR r₁,ResR r₂) → ResR $ r₁ ⧺ r₂
@@ -181,7 +182,7 @@ sumRegex e₁@(𝐴 i₁ e₁') e₂@(𝐴 i₂ e₂') = 𝐴 (i₁ ⧺ i₂) $ 
   _ → SumsR $ pow [e₁,e₂]
   
 seqRegex ∷ (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Regex c t o u → Regex c t o u → Regex c t o u
-seqRegex e₁@(𝐴 i₁ e₁') e₂@(𝐴 i₂ e₂') = 𝐴 (i₁ ▷ i₂) $ case (e₁',e₂') of
+seqRegex e₁@(Regex (𝐴 i₁ e₁')) e₂@(Regex (𝐴 i₂ e₂')) = Regex $ 𝐴 (i₁ ▷ i₂) $ case (e₁',e₂') of
   (NullR,_) → NullR
   (_,NullR) → NullR
   (ResR r₁,_) → consEpsRegexU r₁ e₂'
@@ -194,16 +195,16 @@ seqRegex e₁@(𝐴 i₁ e₁') e₂@(𝐴 i₂ e₂') = 𝐴 (i₁ ▷ i₂) $ 
   _ → SeqsR $ list [e₁,e₂]
 
 starRegex ∷ (Ord c,Ord t,Ord o,Ord u,Zero u) ⇒ Regex c t o u → Regex c t o u
-starRegex e@(𝐴 i e') = case e' of
+starRegex e@(Regex (𝐴 i e')) = case e' of
   NullR → nullRegex
   ResR r → resRegex r
   StarR _ _ → e
-  _ → 𝐴 (eps ⧺ i) $ StarR eps e
+  _ → Regex $ 𝐴 (eps ⧺ i) $ StarR eps e
 
 -- Derivative --
 
 derRegex ∷ (Ord c,Ord t,Classified c t,Ord o,Ord u,Additive u) ⇒ t ∨ c → Regex c t o u → Regex c t o u
-derRegex xc e₀ = case extract e₀ of
+derRegex xc e₀ = case extract $ unRegex e₀ of
   NullR → null
   ResR _ → null
   AtomR r a → consEpsRegex r $ derRegexAtom xc a
@@ -233,7 +234,7 @@ derRegexAtom xc = \case
 
 derRegexSequence ∷ (Ord t,Ord c,Classified c t,Ord o,Ord u,Additive u) ⇒ t ∨ c → 𝐿 (Regex c t o u) → Regex c t o u
 derRegexSequence _ Nil = null
-derRegexSequence xc (e@(𝐴 i _) :& es) = case regexInfoResult i of
+derRegexSequence xc (e@(Regex (𝐴 i _)) :& es) = case regexInfoResult i of
   None → derRegex xc e ▷ sequence es
   Some r → concat
     [ derRegex xc e ▷ sequence es
@@ -243,7 +244,7 @@ derRegexSequence xc (e@(𝐴 i _) :& es) = case regexInfoResult i of
 -- Literals --
   
 regexLits ∷ (Ord t) ⇒ Regex c t o u → 𝑃 t
-regexLits e₀ = case extract e₀ of
+regexLits e₀ = case extract $ unRegex e₀ of
   NullR → pø
   ResR _ → pø
   AtomR _ a → regexLitsAtom a
@@ -298,8 +299,8 @@ compileRegex e₀ =
         Some n → return n
         None → do
           n ← newRegexEntry e
-          modifyL regexStateResultsL $ (⩌) $ n ↦ regexInfoResult (atag e)
-          modifyL regexStateDeadL $ (⩌) $ n ↦ (extract e ≡ NullR)
+          modifyL regexStateResultsL $ (⩌) $ n ↦ regexInfoResult (atag $ unRegex e)
+          modifyL regexStateDeadL $ (⩌) $ n ↦ (extract (unRegex e) ≡ NullR)
           eachOn codes $ \ xc → do
             n' ← compile $ derRegex xc e
             modifyL regexStateTransitionsL $ unionWith (⩌) $ xc ↦ (n ↦ n')

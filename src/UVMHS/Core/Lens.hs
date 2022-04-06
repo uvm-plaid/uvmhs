@@ -112,6 +112,11 @@ single𝐷L = prism (curry (↦)) $ \ kvs → case dminView kvs of
   Some (kv :* kvs') | isEmpty kvs' → Some kv
   _ → None
 
+keyL ∷ (Ord k) ⇒ k → (k ⇰ v) ⟢ 𝑂 v
+keyL k = lens (⋕? k) $ flip $ \case
+  None → delete k
+  Some v → ((k ↦ v) ⩌)
+
 nullZOML ∷ ZOM a ⌲ ()
 nullZOML = prism (const NullZOM) $ \case
   NullZOM → Some ()

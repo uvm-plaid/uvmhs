@@ -65,3 +65,7 @@ instance Pretty SrcCxt where
           ]
  
 instance Show SrcCxt where show = tohsChars ∘ ppshow
+
+
+srcCxt₀ ∷ SrcCxt
+srcCxt₀ = SrcCxt "<unknown>" bot null null null

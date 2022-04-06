@@ -48,6 +48,9 @@ stream = stream𝐼 ∘ iter
 zipWith ∷ (ToIter a t₁,ToIter b t₂) ⇒ (a → b → c) → t₁ → t₂ → 𝐼 c
 zipWith f xs ys = iter $ zipWith𝑆 f (stream xs) $ stream ys
 
+zip ∷ (ToIter a t₁,ToIter b t₂) ⇒ t₁ → t₂ → 𝐼 (a ∧ b)
+zip = zipWith (:*)
+
 snoc𝐼 ∷ 𝐼 a → a → 𝐼 a
 snoc𝐼 xs x = 𝐼 HS.$ \ f i 𝓀 → 
   un𝐼 xs f i $ \ i' →

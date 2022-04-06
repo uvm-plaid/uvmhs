@@ -16,6 +16,8 @@ class (∀ a. Null (t a)) ⇒ Substy t where
 class Substable m s e a | a→e,a→s where
   gsubst ∷ (Substy t,Monad m) ⇒ s → (b → m e) → t b → a → m a
 
+instance Substable m () Void Void where gsubst () _ _ = \case
+
 msubstS ∷ (Substy t,Substable m s e a,Monad m) ⇒ s → t e → a → m a
 msubstS s = gsubst s return
 
@@ -321,6 +323,38 @@ prandSSubst nˢ nᵈ = do
   return $ SSubst ρ ι bvs nvs
 
 instance (Rand a) ⇒  Rand (SSubst a) where prand = prandSSubst
+
+--------------------
+-- RENAMING MONAD --
+--------------------
+
+newtype RenameM s a = RenameM { unRenameM ∷ UContT ((→) (s ⇰ SSubst Void)) a }
+  deriving
+  ( Return,Bind,Functor,Monad
+  , MonadReader (s ⇰ SSubst Void)
+  , MonadUCont
+  )
+
+runRenameM ∷ s ⇰ SSubst Void → RenameM s a → a
+runRenameM 𝓈 = appto 𝓈 ∘ evalUContT ∘ unRenameM
+
+evalRenameM ∷ RenameM s a → a
+evalRenameM = runRenameM null
+
+ppVarScoped ∷ (Ord s) ⇒ s → 𝕐 → RenameM s Doc
+ppVarScoped s 𝓎 = do
+  𝓈 ← ask
+  let 𝓎' = elim𝑂 id rename (𝓈 ⋕? s) 𝓎
+  return $ concat
+    [ pretty 𝓎'
+    , if 𝓎' ≡ 𝓎 
+      then null
+      else concat
+        [ ppPun "«"
+        , pretty 𝓎
+        , ppPun "»"
+        ]
+    ]
 
 --------------
 -- FOR ULCD --

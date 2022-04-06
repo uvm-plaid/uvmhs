@@ -28,4 +28,13 @@ import UVMHS.Lib.Testing
 
 𝔱 "core:dict" [| dict [𝕟 1 ↦ 𝕟 2,𝕟 1 ↦ 𝕟 3] |] [| dict [𝕟 1 ↦ 𝕟 2] |]
 
+𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) ("x" ↦ 𝕟 1) |] [| "x" ↦ 𝕟 2 |]
+𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) ("y" ↦ 𝕟 1) |] [| "y" ↦ 𝕟 1 |]
+𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) (dict ["x" ↦ 𝕟 10,"y" ↦ 𝕟 20]) |] 
+              [| dict ["x" ↦ 𝕟 11,"y" ↦ 𝕟 20] |]
+𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) ("x" ↦ 𝕟 1) |] [| dø |]
+𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) ("y" ↦ 𝕟 1) |] [| "y" ↦ 𝕟 1 |]
+𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) (dict ["x" ↦ 𝕟 10,"y" ↦ 𝕟 20]) |] 
+              [| dict ["y" ↦ 𝕟 20] |]
+
 buildTests

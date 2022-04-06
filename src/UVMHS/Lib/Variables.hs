@@ -44,14 +44,42 @@ instance Pretty 𝕐 where
     NamedVar x → pretty x
     BoundVar n → concat [ppPun "!",ppString $ show𝕊 n]
 
----------------
--- FREE VARS --
----------------
+-------------------------
+-- FREE AND BOUND VARS --
+-------------------------
 
-class HasFV a where
-  fv ∷ a → 𝑃 𝕏
+data FBV = FBV
+  { fbvBound ∷ 𝑃 𝕏
+  , fbvFree ∷ 𝑃 𝕏
+  }
 
-fvVar ∷ 𝕐 → 𝑃 𝕏
-fvVar = elim𝑂 null single ∘ view namedVarL
+instance Null FBV where null = FBV null null
+instance Append FBV where FBV bv₁ fv₁ ⧺ FBV bv₂ fv₂ = FBV (bv₁ ⧺ bv₂) $ fv₁ ⧺ fv₂
+instance Monoid FBV
 
-instance HasFV 𝕐 where fv = fvVar
+instance Bot FBV where bot = FBV bot bot
+instance Join FBV where FBV bv₁ fv₁ ⊔ FBV bv₂ fv₂ = FBV (bv₁ ⊔ bv₂) $ fv₁ ⊔ fv₂
+instance JoinLattice FBV
+
+class HasFBV a where
+  fbv ∷ a → FBV
+
+fv ∷ (HasFBV a) ⇒ a → 𝑃 𝕏
+fv = fbvFree ∘ fbv
+
+bv ∷ (HasFBV a) ⇒ a → 𝑃 𝕏
+bv = fbvBound ∘ fbv
+
+scopeFBV ∷ FBV → FBV → FBV
+scopeFBV (FBV bv₁ fv₁) (FBV bv₂ fv₂) = FBV bv₂ $ fv₁ ⊔ (fv₂ ∖ bv₁)
+
+varBoundFBV ∷ 𝕏 → FBV
+varBoundFBV x = FBV (single x) null
+
+varFreeFBV ∷ 𝕏 → FBV
+varFreeFBV x = FBV null $ single x
+
+instance HasFBV 𝕐 where 
+  fbv = \case
+    NamedVar x → varFreeFBV x
+    BoundVar _ → null

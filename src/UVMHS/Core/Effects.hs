@@ -467,6 +467,21 @@ umapEnvL ℓ f xM = do
   r ← askL ℓ
   ulocalL ℓ (f r) xM
 
+uhijack ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m) ⇒ m a → m (o ∧ a)
+uhijack xM = do
+  o :* (r :* x) ← hijack $ do
+    x ← xM
+    r ← ask
+    return $ r :* x
+  putEnv r
+  return $ o :* x
+
+uhijackL ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m,Null o') ⇒ o ⟢ o' → m a → m (o' ∧ a)
+uhijackL ℓ xM = do
+  o :* x ← uhijack xM
+  tell $ update ℓ null o
+  return $ access ℓ o :* x
+
 --------------
 -- DERIVING --
 --------------

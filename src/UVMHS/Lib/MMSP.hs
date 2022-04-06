@@ -244,7 +244,7 @@ fvMMSPAtom ∷ MMSPAtom → 𝑃 𝕏
 fvMMSPAtom = \case
   Var_MMSPAtom xA → fv $ aval xA
 
-instance HasFV MMSP where fv = fvMMSP
+instance HasFBV MMSP where fbv = FBV pø ∘ fvMMSP
 
 ----------
 -- MAXS --
