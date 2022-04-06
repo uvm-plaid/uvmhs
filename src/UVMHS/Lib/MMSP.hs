@@ -219,7 +219,7 @@ gsubstMMSPAtom 𝓋 𝓈 = \case
     Inl 𝓎' → return $ varMMSP $ 𝐴 𝒸 𝓎'
     Inr (𝓈O :* e) → elim𝑂 return (gsubstMMSP exfalso) 𝓈O *$ 𝓋 e
 
-instance Substable m () MMSP MMSP where gsubst () = gsubstMMSP
+instance Substable m () MMSP MMSP where gsubstS 𝓋 𝓈 = gsubstMMSP 𝓋 $ ifNone null $ 𝓈 ⋕? ()
 
 ---------------
 -- FREE VARS --

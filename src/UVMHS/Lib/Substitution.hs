@@ -14,33 +14,36 @@ class (∀ a. Null (t a)) ⇒ Substy t where
   𝓈combine ∷ (Monad m) ⇒ (t a → b → m a) → t a → t b → m (t a)
 
 class Substable m s e a | a→e,a→s where
-  gsubst ∷ (Substy t,Monad m) ⇒ s → (b → m e) → t b → a → m a
+  gsubstS ∷ (Substy t,Monad m) ⇒ (b → m e) → s ⇰ t b → a → m a
 
-instance Substable m () Void Void where gsubst () _ _ = \case
+instance Substable m () Void Void where gsubstS _ _ = \case
 
-msubstS ∷ (Substy t,Substable m s e a,Monad m) ⇒ s → t e → a → m a
-msubstS s = gsubst s return
+gsubst ∷ (Substy t,Substable m () e a,Monad m) ⇒ (b → m e) → t b → a → m a
+gsubst 𝓋 = gsubstS 𝓋 ∘ (↦) ()
+
+msubstS ∷ (Substy t,Substable m s e a,Monad m) ⇒ s ⇰ t e → a → m a
+msubstS = gsubstS return
 
 msubst ∷ (Substy t,Substable m () e a,Monad m) ⇒ t e → a → m a
-msubst = msubstS ()
+msubst = msubstS ∘ (↦) ()
 
-mrenameS ∷ (Substy t,Substable m s e a,Monad m) ⇒ s → t Void → a → m a
-mrenameS s = gsubst s exfalso
+mrenameS ∷ (Substy t,Substable m s e a,Monad m) ⇒ s ⇰ t Void → a → m a
+mrenameS = gsubstS exfalso
 
 mrename ∷ (Substy t,Substable m () e a,Monad m) ⇒ t Void → a → m a
-mrename = mrenameS ()
+mrename = mrenameS ∘ (↦) ()
 
-substS ∷ (Substy t,Substable ID s a a) ⇒ s → t a → a → a
-substS s = unID ∘∘ msubstS s
+substS ∷ (Substy t,Substable ID s a a) ⇒ s ⇰ t a → a → a
+substS = unID ∘∘ msubstS
 
 subst ∷ (Substy t,Substable ID () a a) ⇒ t a → a → a
-subst = substS ()
+subst = substS ∘ (↦) ()
 
-renameS ∷ (Substy t,Substable ID s e a) ⇒ s → t Void → a → a
-renameS s = unID ∘∘ mrenameS s
+renameS ∷ (Substy t,Substable ID s e a) ⇒ s ⇰ t Void → a → a
+renameS = unID ∘∘ mrenameS
 
 rename ∷ (Substy t,Substable ID () e a) ⇒ t Void → a → a
-rename = renameS ()
+rename = renameS ∘ (↦) ()
 
 (⋈) ∷ (Substy t,Substable m () a a,Monad m) ⇒ t a → t a → m (t a)
 (⋈) = 𝓈combine msubst
@@ -62,7 +65,7 @@ grename 𝓋 𝓈 𝓎 = case 𝓈var 𝓈 𝓎 of
   Inl 𝓎' → return 𝓎'
   Inr (𝓈O :* e) → elim𝑂 return (grename exfalso) 𝓈O *$ 𝓋 e
 
-instance Substable m () 𝕐 𝕐 where gsubst () = grename
+instance Substable m () 𝕐 𝕐 where gsubstS 𝓋 𝓈 = grename 𝓋 $ ifNone null $ 𝓈 ⋕? ()
 
 prandNVar ∷ ℕ64 → State RG 𝕏
 prandNVar nˢ = 𝕏 "x" ∘ Some ^$ prandr 0 nˢ
@@ -103,7 +106,7 @@ nullUSubst = USubst dø
   ]
 
 appendUSubst ∷ (Substable ID () a a) ⇒ USubst a → USubst a → USubst a
-appendUSubst = unID ∘∘ 𝓈combineUSubst (gsubst () ID)
+appendUSubst = unID ∘∘ 𝓈combineUSubst msubst
 
 instance Substy USubst where
   𝓈var 𝓈 = mapInr (None :*) ∘ 𝓈varUSubst 𝓈
@@ -287,7 +290,7 @@ nullSSubst = SSubst
   return $ SSubst ρ ι bvs nvs
 
 appendSubst ∷ (Substable ID () a a) ⇒ SSubst a → SSubst a → SSubst a
-appendSubst = unID ∘∘ 𝓈combineSSubst (gsubst () ID)
+appendSubst = unID ∘∘ 𝓈combineSSubst msubst
 
 instance Substy SSubst where
   𝓈var 𝓈 = mapInr (mapFst $ Some ∘ 𝓈intro) ∘ 𝓈varSSubst 𝓈
@@ -373,7 +376,7 @@ gsubstULCD 𝓋 𝓈 (ULCDExp (𝐴 𝒸 e₀)) = case e₀ of
     e₂' ← gsubstULCD 𝓋 𝓈 e₂
     return $ ULCDExp $ 𝐴 𝒸 $ App_ULCD e₁' e₂'
 
-instance Substable m () (ULCDExp 𝒸) (ULCDExp 𝒸) where gsubst () = gsubstULCD
+instance Substable m () (ULCDExp 𝒸) (ULCDExp 𝒸) where gsubstS 𝓋 𝓈 = gsubstULCD 𝓋 $ ifNone null $ 𝓈 ⋕? ()
 
 prandULCDExp ∷ ℕ64 → ℕ64 → ℕ64 → State RG ULCDExpR
 prandULCDExp nˢ nᵇ nᵈ = ULCDExp ∘ 𝐴 () ^$ mjoin $ prwchoose
