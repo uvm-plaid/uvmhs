@@ -560,7 +560,7 @@ lCommentMLBodyOpen = sequence
 lCommentMLBodyClose ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lCommentMLBodyClose = sequence
   [ oom (tokRegex '-') ▷ tokRegex '}'
-  , uepsRegex (neg one)
+  , uepsRegex $ neg one
   ]
 
 lCommentMLBody ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
@@ -913,7 +913,7 @@ mkTokenWSBasic ∷ 𝐼C ℂ → 𝑂 TokenClassWSBasic → 𝔹 ∧ TokenWSBasi
 mkTokenWSBasic cs = \case
   None → error "no token class"
   Some SpaceCWSBasic → (:*) True $ SpaceTWSBasic $ stringCS cs
-  Some NewlineCWSBasic → (:*) True $ NewlineTWSBasic $ string cs
+  Some NewlineCWSBasic → (:*) True $ NewlineTWSBasic $ stringCS cs
   Some CommentCWSBasic → (:*) True $ CommentTWSBasic $ stringCS cs
   Some SyntaxCWSBasic → (:*) False $ SyntaxTWSBasic $ stringCS cs
   Some BlockCWSBasic → (:*) False $ BlockTWSBasic $ stringCS cs

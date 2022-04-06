@@ -13,25 +13,37 @@ class (∀ a. Null (t a)) ⇒ Substy t where
   𝓈shift ∷ ℕ64 → t a → t a
   𝓈combine ∷ (Monad m) ⇒ (t a → b → m a) → t a → t b → m (t a)
 
-class Substable m e a | a → e where
-  gsubst ∷ (Substy t,Monad m) ⇒ (b → m e) → t b → a → m a
+class Substable m s e a | a→e,a→s where
+  gsubst ∷ (Substy t,Monad m) ⇒ s → (b → m e) → t b → a → m a
 
-msubst ∷ (Substy t,Substable m e a,Monad m) ⇒ t e → a → m a
-msubst = gsubst return
+msubstS ∷ (Substy t,Substable m s e a,Monad m) ⇒ s → t e → a → m a
+msubstS s = gsubst s return
 
-mrename ∷ (Substy t,Substable m e a,Monad m) ⇒ t Void → a → m a
-mrename = gsubst exfalso
+msubst ∷ (Substy t,Substable m () e a,Monad m) ⇒ t e → a → m a
+msubst = msubstS ()
 
-subst ∷ (Substy t,Substable ID a a) ⇒ t a → a → a
-subst = unID ∘∘ msubst
+mrenameS ∷ (Substy t,Substable m s e a,Monad m) ⇒ s → t Void → a → m a
+mrenameS s = gsubst s exfalso
 
-rename ∷ (Substy t,Substable ID e a) ⇒ t Void → a → a
-rename = unID ∘∘ mrename
+mrename ∷ (Substy t,Substable m () e a,Monad m) ⇒ t Void → a → m a
+mrename = mrenameS ()
 
-(⋈) ∷ (Substy t,Substable m a a,Monad m) ⇒ t a → t a → m (t a)
-(⋈) = 𝓈combine $ gsubst return
+substS ∷ (Substy t,Substable ID s a a) ⇒ s → t a → a → a
+substS s = unID ∘∘ msubstS s
 
-mcomposeSubs ∷ (ToIter (t a) f,Substy t,Substable m a a,Monad m) ⇒ f → m (t a)
+subst ∷ (Substy t,Substable ID () a a) ⇒ t a → a → a
+subst = substS ()
+
+renameS ∷ (Substy t,Substable ID s e a) ⇒ s → t Void → a → a
+renameS s = unID ∘∘ mrenameS s
+
+rename ∷ (Substy t,Substable ID () e a) ⇒ t Void → a → a
+rename = renameS ()
+
+(⋈) ∷ (Substy t,Substable m () a a,Monad m) ⇒ t a → t a → m (t a)
+(⋈) = 𝓈combine msubst
+
+mcomposeSubs ∷ (ToIter (t a) f,Substy t,Substable m () a a,Monad m) ⇒ f → m (t a)
 mcomposeSubs = mfoldrFromWith null (⋈)
 
 ---------------
@@ -48,7 +60,7 @@ grename 𝓋 𝓈 𝓎 = case 𝓈var 𝓈 𝓎 of
   Inl 𝓎' → return 𝓎'
   Inr (𝓈O :* e) → elim𝑂 return (grename exfalso) 𝓈O *$ 𝓋 e
 
-instance Substable m 𝕐 𝕐 where gsubst = grename
+instance Substable m () 𝕐 𝕐 where gsubst () = grename
 
 prandNVar ∷ ℕ64 → State RG 𝕏
 prandNVar nˢ = 𝕏 "x" ∘ Some ^$ prandr 0 nˢ
@@ -88,29 +100,29 @@ nullUSubst = USubst dø
   , return $ unUSubst 𝓈₂
   ]
 
-appendUSubst ∷ (Substable ID a a) ⇒ USubst a → USubst a → USubst a
-appendUSubst = unID ∘∘ 𝓈combineUSubst (gsubst ID)
+appendUSubst ∷ (Substable ID () a a) ⇒ USubst a → USubst a → USubst a
+appendUSubst = unID ∘∘ 𝓈combineUSubst (gsubst () ID)
 
 instance Substy USubst where
   𝓈var 𝓈 = mapInr (None :*) ∘ 𝓈varUSubst 𝓈
   𝓈shift = const id
   𝓈combine = 𝓈combineUSubst
 
-usubst ∷ (Substable ID a a) ⇒ USubst a → a → a
+usubst ∷ (Substable ID () a a) ⇒ USubst a → a → a
 usubst = subst
 
-musubst ∷ (Substable m e a,Monad m) ⇒ USubst e → a → m a
+musubst ∷ (Substable m () e a,Monad m) ⇒ USubst e → a → m a
 musubst = msubst
 
-urename ∷ (Substable ID e a) ⇒ USubst Void → a → a
+urename ∷ (Substable ID () e a) ⇒ USubst Void → a → a
 urename = rename
 
-murename ∷ (Substable m e a,Monad m) ⇒ USubst Void → a → m a
+murename ∷ (Substable m () e a,Monad m) ⇒ USubst Void → a → m a
 murename = mrename
 
 instance Null (USubst a) where null = USubst dø
-instance (Substable ID a a) ⇒ Append (USubst a) where (⧺) = unID ∘∘ (⋈)
-instance (Substable ID a a) ⇒ Monoid (USubst a)
+instance (Substable ID () a a) ⇒ Append (USubst a) where (⧺) = unID ∘∘ (⋈)
+instance (Substable ID () a a) ⇒ Monoid (USubst a)
 
 prandUSubst ∷ (Rand a) ⇒ ℕ64 → ℕ64 → State RG (USubst a)
 prandUSubst nˢ nᵈ = USubst ∘ dict ^$ mapMOn (upTo nˢ) $ const $ do
@@ -272,29 +284,29 @@ nullSSubst = SSubst
     ]
   return $ SSubst ρ ι bvs nvs
 
-appendSubst ∷ (Substable ID a a) ⇒ SSubst a → SSubst a → SSubst a
-appendSubst = unID ∘∘ 𝓈combineSSubst (gsubst ID)
+appendSubst ∷ (Substable ID () a a) ⇒ SSubst a → SSubst a → SSubst a
+appendSubst = unID ∘∘ 𝓈combineSSubst (gsubst () ID)
 
 instance Substy SSubst where
   𝓈var 𝓈 = mapInr (mapFst $ Some ∘ 𝓈intro) ∘ 𝓈varSSubst 𝓈
   𝓈shift = 𝓈shiftSSubst
   𝓈combine = 𝓈combineSSubst
 
-ssubst ∷ (Substable ID a a) ⇒ SSubst a → a → a
+ssubst ∷ (Substable ID () a a) ⇒ SSubst a → a → a
 ssubst = subst
 
-mssubst ∷ (Substable m e a,Monad m) ⇒ SSubst e → a → m a
+mssubst ∷ (Substable m () e a,Monad m) ⇒ SSubst e → a → m a
 mssubst = msubst
 
-srename ∷ (Substable ID e a) ⇒ SSubst Void → a → a
+srename ∷ (Substable ID () e a) ⇒ SSubst Void → a → a
 srename = rename
 
-msrename ∷ (Substable m e a,Monad m) ⇒ SSubst Void → a → m a
+msrename ∷ (Substable m () e a,Monad m) ⇒ SSubst Void → a → m a
 msrename = mrename
 
 instance Null (SSubst a) where null = nullSSubst
-instance (Substable ID a a) ⇒ Append (SSubst a) where (⧺) = unID ∘∘ (⋈)
-instance (Substable ID a a) ⇒ Monoid (SSubst a)
+instance (Substable ID () a a) ⇒ Append (SSubst a) where (⧺) = unID ∘∘ (⋈)
+instance (Substable ID () a a) ⇒ Monoid (SSubst a)
 
 prandSSubst ∷ (Rand a) ⇒ ℕ64 → ℕ64 → State RG (SSubst a)
 prandSSubst nˢ nᵈ = do
@@ -327,7 +339,7 @@ gsubstULCD 𝓋 𝓈 (ULCDExp (𝐴 𝒸 e₀)) = case e₀ of
     e₂' ← gsubstULCD 𝓋 𝓈 e₂
     return $ ULCDExp $ 𝐴 𝒸 $ App_ULCD e₁' e₂'
 
-instance Substable m (ULCDExp 𝒸) (ULCDExp 𝒸) where gsubst = gsubstULCD
+instance Substable m () (ULCDExp 𝒸) (ULCDExp 𝒸) where gsubst () = gsubstULCD
 
 prandULCDExp ∷ ℕ64 → ℕ64 → ℕ64 → State RG ULCDExpR
 prandULCDExp nˢ nᵇ nᵈ = ULCDExp ∘ 𝐴 () ^$ mjoin $ prwchoose

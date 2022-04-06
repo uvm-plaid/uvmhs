@@ -53,7 +53,7 @@ data MixesF t f a = MixesF
 instance Null (MixesF t f a) where null = MixesF null null null null null
 instance (Ord t) ⇒ Append (MixesF t f a) where
   MixesF pre₁ post₁ inf₁ infl₁ infr₁ ⧺ MixesF pre₂ post₂ inf₂ infl₂ infr₂ = 
-    MixesF (pre₁ ⧺ pre₂) (post₁ ⧺ post₂) (inf₁ ⧺ inf₂) (infl₁ ⧺ infl₂) (infr₁ ⧺ infr₂)
+    MixesF (pre₁ ⧺ pre₂) (post₁ ⧺ post₂) (inf₁ ⧺ inf₂) (infl₁ ⧺ infl₂) $ infr₁ ⧺ infr₂
 instance (Ord t) ⇒ Monoid (MixesF t f a)
 
 data MixfixF t f a = MixfixF
