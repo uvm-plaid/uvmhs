@@ -72,8 +72,8 @@ sccGroups deps =
         x₂ ↦ single x₁ :* (deps ⋕! x₁)
   in sccs :* groups
 
-sccEachGroupM ∷ ∀ a b m. (Ord a,Monad m) ⇒ a ⇰ 𝑃 a → (𝔹 → 𝐼 a → m (𝐼 b)) → m (𝐼 b)
-sccEachGroupM deps f =
+sccEachGroupM ∷ ∀ a b m. (Ord a,Monad m) ⇒ 𝐼 a → a ⇰ 𝑃 a → (𝔹 → 𝐼 a → m (𝐼 b)) → m (𝐼 b)
+sccEachGroupM xs deps f =
   let sccs :* groups = sccGroups deps
       visitVar ∷ a → RWST () (𝐼 b) (𝑃 a) m ()
       visitVar x = do
@@ -92,4 +92,4 @@ sccEachGroupM deps f =
           eachOn (gdeps ∖ gdefs) visitVar
           -- build a list of results
           tell *$ lift $ f cyclic $ iter gdefs 
-    in evalRWST () pø $ retOut $ eachOn (iter $ keys deps) visitVar
+    in evalRWST () pø $ retOut $ eachOn xs visitVar

@@ -42,4 +42,107 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span></span><span>
-</span><span id="line-21"></span></pre></body></html>
+</span><span id="line-21"></span><span>
+</span><span id="line-22"></span><span class="hs-comment">-- -- MONAD STUFF</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- --</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- -- state is threaded between continuations</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- -- M1 A &#8776; (A &#8594; State S R) &#8594; State S R</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- -- M1 A &#8776; (A &#8594; S &#8594; S &#8743; R) &#8594; S &#8594; S &#8743; R</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- -- M1 A &#8776; (S &#8743; A &#8594; S &#8743; R) &#8594; S &#8594; S &#8743; R</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- --</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- -- if we swap state with writer we get this...</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- -- M1W A &#8776; (A &#8594; Writer O R) &#8594; Writer O R</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- -- M1W A &#8776; (A &#8594; O &#8743; R) &#8594; O &#8743; R</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- -- hijack &#8759; ((A &#8594; O &#8743; R) &#8594; O &#8743; R) &#8594; (O &#8743; A &#8594; O &#8743; R) &#8594; O &#8743; R</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- -- &#8593;&#8593;&#8593;&#8593;&#8593;&#8593;</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- -- not possible to implement in a way that does anything useful</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- newtype M1 a = M1 { unM1 &#8759; ContT &#8469; (StateT &#8469; ID) a }</span><span>
+</span><span id="line-36"></span><span class="hs-comment">--   deriving</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--   ( Return,Bind,Monad,Functor</span><span>
+</span><span id="line-38"></span><span class="hs-comment">--   , MonadState &#8469;</span><span>
+</span><span id="line-39"></span><span class="hs-comment">--   , MonadCont &#8469;</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--   )</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- runM1 &#8759; &#8469; &#8594; M1 &#8469; &#8594; &#8469; &#8743; &#8469;</span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- runM1 n = unID &#8728; runStateT n &#8728; evalContT &#8728; unM1</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-45"></span><span class="hs-comment">-- -- state is passed explicitly</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- -- M2S &#8776; S &#8594; Cont (S &#8743; R) (S &#8743; A)</span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- -- M2S &#8776; S &#8594; (S &#8743; A &#8594; S &#8743; R) &#8594; S &#8743; R</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- -- M2S &#8776; (S &#8743; A &#8594; S &#8743; R) &#8594; S &#8594; S &#8743; R</span><span>
+</span><span id="line-49"></span><span class="hs-comment">-- --</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- -- M1W &#8776; Cont (O &#8743; R) (O &#8743; A)</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- -- M1W &#8776; (O &#8743; A &#8594; O &#8743; R) &#8594; O &#8743; R</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- newtype M2 a = M2 { unM2 &#8759; StateT &#8469; (ContT (&#8469; &#8743; &#8469;) ID) a }</span><span>
+</span><span id="line-53"></span><span class="hs-comment">--   deriving</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--   ( Return,Bind,Monad,Functor</span><span>
+</span><span id="line-55"></span><span class="hs-comment">--   , MonadState &#8469;</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--   , MonadCont &#8469;</span><span>
+</span><span id="line-57"></span><span class="hs-comment">--   )</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- runM2 &#8759; &#8469; &#8594; M2 (&#8469; &#8743; &#8469;) &#8594; &#8469; &#8743; &#8469;</span><span>
+</span><span id="line-60"></span><span class="hs-comment">-- runM2 n = unID &#8728; evalContT &#8728; map snd &#8728; runStateT n &#8728; unM2</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- newtype M3 a = M3 { unM3 &#8759; WriterT &#8469; (ContT (&#8469; &#8743; &#8469;) ID) a }</span><span>
+</span><span id="line-63"></span><span class="hs-comment">--   deriving</span><span>
+</span><span id="line-64"></span><span class="hs-comment">--   ( Return,Bind,Monad,Functor</span><span>
+</span><span id="line-65"></span><span class="hs-comment">--   , MonadWriter &#8469;</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--   , MonadCont &#8469;</span><span>
+</span><span id="line-67"></span><span class="hs-comment">--   )</span><span>
+</span><span id="line-68"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-69"></span><span class="hs-comment">-- runM3 &#8759; M3 (&#8469; &#8743; &#8469;) &#8594; &#8469; &#8743; &#8469;</span><span>
+</span><span id="line-70"></span><span class="hs-comment">-- runM3 = unID &#8728; evalContT &#8728; map snd &#8728; unWriterT &#8728; unM3</span><span>
+</span><span id="line-71"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-72"></span><span class="hs-comment">-- monadTest &#8759; IO ()</span><span>
+</span><span id="line-73"></span><span class="hs-comment">-- monadTest = do</span><span>
+</span><span id="line-74"></span><span class="hs-comment">--   -- state is threaded between continuations</span><span>
+</span><span id="line-75"></span><span class="hs-comment">--   pprint $ runM1 0 $ do</span><span>
+</span><span id="line-76"></span><span class="hs-comment">--     callCC $ \ &#120000; &#8594; do</span><span>
+</span><span id="line-77"></span><span class="hs-comment">--       n&#8321; &#8592; &#120000; ()</span><span>
+</span><span id="line-78"></span><span class="hs-comment">--       n&#8322; &#8592; &#120000; ()</span><span>
+</span><span id="line-79"></span><span class="hs-comment">--       n' &#8592; get</span><span>
+</span><span id="line-80"></span><span class="hs-comment">--       return $ n' &#215; n&#8321; &#215; n&#8322;</span><span>
+</span><span id="line-81"></span><span class="hs-comment">--     n &#8592; get</span><span>
+</span><span id="line-82"></span><span class="hs-comment">--     put $ n + 1</span><span>
+</span><span id="line-83"></span><span class="hs-comment">--     return $ n + 10</span><span>
+</span><span id="line-84"></span><span class="hs-comment">--   pprint $ &#120159; 2 &#215; 10 &#215; 11</span><span>
+</span><span id="line-85"></span><span class="hs-comment">--   pprint $ runM2 0 $ do</span><span>
+</span><span id="line-86"></span><span class="hs-comment">--     callCC $ \ &#120000; &#8594; do</span><span>
+</span><span id="line-87"></span><span class="hs-comment">--       n&#8321; &#8592; &#120000; ()</span><span>
+</span><span id="line-88"></span><span class="hs-comment">--       n&#8322; &#8592; &#120000; ()</span><span>
+</span><span id="line-89"></span><span class="hs-comment">--       n' &#8592; get</span><span>
+</span><span id="line-90"></span><span class="hs-comment">--       return $ n' &#215; n&#8321; &#215; n&#8322;</span><span>
+</span><span id="line-91"></span><span class="hs-comment">--     n &#8592; get</span><span>
+</span><span id="line-92"></span><span class="hs-comment">--     put $ n + 1 -- doesn't do anything because `map snd` in runM2</span><span>
+</span><span id="line-93"></span><span class="hs-comment">--     return $ </span><span>
+</span><span id="line-94"></span><span class="hs-comment">--       (n + 1) -- manually &quot;threaded&quot; state</span><span>
+</span><span id="line-95"></span><span class="hs-comment">--       :* </span><span>
+</span><span id="line-96"></span><span class="hs-comment">--       (n + 10)</span><span>
+</span><span id="line-97"></span><span class="hs-comment">--   pprint $ &#120159; 2 &#215; 10 &#215; 11</span><span>
+</span><span id="line-98"></span><span class="hs-comment">--   pprint $ runM3 $ do</span><span>
+</span><span id="line-99"></span><span class="hs-comment">--     n' :* () &#8592; hijack $ callCC $ \ &#120000; &#8594; do</span><span>
+</span><span id="line-100"></span><span class="hs-comment">--       n&#8321;&#8321; :* n&#8321;&#8322; &#8592; hijack $ &#120000; ()</span><span>
+</span><span id="line-101"></span><span class="hs-comment">--       n&#8322;&#8321; :* n&#8322;&#8322; &#8592; hijack $ &#120000; ()</span><span>
+</span><span id="line-102"></span><span class="hs-comment">--       pptraceM $ &#120164; &quot;n&#8321;&#8321;&quot; :* n&#8321;&#8321;</span><span>
+</span><span id="line-103"></span><span class="hs-comment">--       pptraceM $ &#120164; &quot;n&#8321;&#8322;&quot; :* n&#8321;&#8322;</span><span>
+</span><span id="line-104"></span><span class="hs-comment">--       pptraceM $ &#120164; &quot;n&#8322;&#8321;&quot; :* n&#8322;&#8321;</span><span>
+</span><span id="line-105"></span><span class="hs-comment">--       pptraceM $ &#120164; &quot;n&#8322;&#8322;&quot; :* n&#8322;&#8322;</span><span>
+</span><span id="line-106"></span><span class="hs-comment">--       tell 1</span><span>
+</span><span id="line-107"></span><span class="hs-comment">--       return $ n&#8321;&#8322; &#215; n&#8322;&#8322;</span><span>
+</span><span id="line-108"></span><span class="hs-comment">--     pptraceM $ &#120164; &quot;n'&quot; :* n'</span><span>
+</span><span id="line-109"></span><span class="hs-comment">--     tell 1000 -- doesn't do anything because `map snd` in runM3</span><span>
+</span><span id="line-110"></span><span class="hs-comment">--     return $ </span><span>
+</span><span id="line-111"></span><span class="hs-comment">--       2</span><span>
+</span><span id="line-112"></span><span class="hs-comment">--       :* </span><span>
+</span><span id="line-113"></span><span class="hs-comment">--       10</span><span>
+</span><span id="line-114"></span><span class="hs-comment">--   </span><span>
+</span><span id="line-115"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-116"></span><span class="hs-comment">-- callCC' </span><span>
+</span><span id="line-117"></span><span class="hs-comment">--   &#8759; &#8704; o r m a.</span><span>
+</span><span id="line-118"></span><span class="hs-comment">--     (Monoid o,Monad m,MonadCont r m) </span><span>
+</span><span id="line-119"></span><span class="hs-comment">--   &#8658; ((a &#8594; WriterT o m r) &#8594; WriterT o m r) &#8594; WriterT o m a</span><span>
+</span><span id="line-120"></span><span class="hs-comment">-- callCC' kk = WriterT $ callCC $ \ (k &#8759; (o &#8743; a) &#8594; m r) &#8594; do</span><span>
+</span><span id="line-121"></span><span class="hs-comment">--   _o :* x &#8592; unWriterT $ kk $ \ (x &#8759; a) &#8594;</span><span>
+</span><span id="line-122"></span><span class="hs-comment">--     WriterT $ (null :*) ^$ k $ null :* x</span><span>
+</span><span id="line-123"></span><span class="hs-comment">--   return x</span><span>
+</span><span id="line-124"></span></pre></body></html>

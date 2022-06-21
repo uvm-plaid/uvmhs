@@ -980,24 +980,24 @@ instance LiftIO (ContT r) where
     x ← ioM xM
     k x
 
--- instance (Monad m,MonadReader r' m) ⇒ MonadReader r' (ContT r m) where
---   ask ∷ ContT r m r'
---   ask = ContT $ \ (k ∷ r' → m r) → k *$ ask
--- 
---   local ∷ ∀ a. r' → ContT r m a → ContT r m a
---   local r xM = ContT $ \ (k ∷ a → m r) → local r $ unContT xM k
+instance (Monad m,MonadReader r' m) ⇒ MonadReader r' (ContT r m) where
+  ask ∷ ContT r m r'
+  ask = ContT $ \ (k ∷ r' → m r) → k *$ ask
 
--- instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT r m) where
---   tell ∷ o → ContT r m ()
---   tell o = ContT $ \ (k ∷ () → m r) → do
---     tell o
---     k ()
--- 
---   hijack ∷ ∀ a. ContT r m a → ContT r m (o ∧ a)
---   hijack xM = ContT $ \ (k ∷ (o ∧ a) → m r) → do
---     o :* r ← hijack $ unContT xM $ \ (x ∷ a) → k $ null :* x
---     tell o
---     return r
+  local ∷ ∀ a. r' → ContT r m a → ContT r m a
+  local r xM = ContT $ \ (k ∷ a → m r) → local r $ unContT xM k
+
+instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT r m) where
+  tell ∷ o → ContT r m ()
+  tell o = ContT $ \ (k ∷ () → m r) → do
+    tell o
+    k ()
+
+  hijack ∷ ∀ a. ContT r m a → ContT r m (o ∧ a)
+  hijack xM = ContT $ \ (k ∷ (o ∧ a) → m r) → do
+    o :* r ← hijack $ unContT xM $ \ (x ∷ a) → k $ null :* x
+    tell o
+    return r
 
 instance (Monad m,MonadState s m) ⇒ MonadState s (ContT r m) where
   get ∷ ContT r m s

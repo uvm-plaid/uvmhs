@@ -409,27 +409,27 @@ modifyC f = callCC $ \ k → f *$ k ()
 withCOn ∷ (Monad m,MonadCont u m) ⇒ m a → (a → m u) → m u
 withCOn = flip withC
 
--- putEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r → m ()
--- putEnv r = callCC $ \ 𝓀 → local r $ 𝓀 ()
--- 
--- putEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → r' → m ()
--- putEnvL ℓ r = callCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
--- 
--- modifyEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ (r → r) → m ()
--- modifyEnv f = callCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
--- 
--- modifyEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → (r' → r') → m ()
--- modifyEnvL ℓ f = callCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
--- 
--- delimitEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ m a → m a
--- delimitEnv xM = callCC $ \ 𝓀 → do
---   r ← ask
---   withCOn xM $ local r ∘ 𝓀
--- 
--- delimitEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → m a → m a
--- delimitEnvL ℓ xM = callCC $ \ 𝓀 → do
---   r ← askL ℓ
---   withCOn xM $ localL ℓ r ∘ 𝓀
+putEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r → m ()
+putEnv r = callCC $ \ 𝓀 → local r $ 𝓀 ()
+
+putEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → r' → m ()
+putEnvL ℓ r = callCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
+
+modifyEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ (r → r) → m ()
+modifyEnv f = callCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
+
+modifyEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → (r' → r') → m ()
+modifyEnvL ℓ f = callCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
+
+delimitEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ m a → m a
+delimitEnv xM = callCC $ \ 𝓀 → do
+  r ← ask
+  withCOn xM $ local r ∘ 𝓀
+
+delimitEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → m a → m a
+delimitEnvL ℓ xM = callCC $ \ 𝓀 → do
+  r ← askL ℓ
+  withCOn xM $ localL ℓ r ∘ 𝓀
 
 -- UCont --
 
@@ -442,24 +442,24 @@ umodifyC f = ucallCC HS.$ \ k → f *$ k ()
 uwithCOn ∷ (Monad m,MonadUCont m) ⇒ m a → (a → m u) → m u
 uwithCOn = flip uwithC
 
-putEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r → m ()
-putEnv r = ucallCC HS.$ \ 𝓀 → local r $ 𝓀 ()
+uputEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r → m ()
+uputEnv r = ucallCC HS.$ \ 𝓀 → local r $ 𝓀 ()
 
-putEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m ()
-putEnvL ℓ r = ucallCC HS.$ \ 𝓀 → localL ℓ r $ 𝓀 ()
+uputEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m ()
+uputEnvL ℓ r = ucallCC HS.$ \ 𝓀 → localL ℓ r $ 𝓀 ()
 
-modifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
-modifyEnv f = ucallCC HS.$ \ 𝓀 → mapEnv f $ 𝓀 ()
+umodifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
+umodifyEnv f = ucallCC HS.$ \ 𝓀 → mapEnv f $ 𝓀 ()
 
-modifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
-modifyEnvL ℓ f = ucallCC HS.$ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
+umodifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
+umodifyEnvL ℓ f = ucallCC HS.$ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
 
 ulocalL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m a → m a
 ulocalL ℓ r xM = do
   r' ← askL ℓ
-  putEnvL ℓ r 
+  uputEnvL ℓ r 
   x ← xM
-  putEnvL ℓ r'
+  uputEnvL ℓ r'
   return x
 
 umapEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m a → m a
@@ -473,7 +473,7 @@ uhijack xM = do
     x ← xM
     r ← ask
     return $ r :* x
-  putEnv r
+  uputEnv r
   return $ o :* x
 
 uhijackL ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m,Null o') ⇒ o ⟢ o' → m a → m (o' ∧ a)

@@ -117,6 +117,14 @@ unionWithGM f₁ f₂ f₃ kvs₁ kvs₂ = assoc ^$ mapMOn (iter $ keys kvs₁ �
     (Some v₁,Some v₂) → f₃ v₁ v₂
     _ → error "impossible"
 
+unionWithKeyGM ∷ (Ord k,Monad m) ⇒ (k → a → m c) → (k → b → m c) → (k → a → b → m c) → k ⇰ a → k ⇰ b → m (k ⇰ c)
+unionWithKeyGM f₁ f₂ f₃ kvs₁ kvs₂ = assoc ^$ mapMOn (iter $ keys kvs₁ ∪ keys kvs₂) $ \ k → (:*) k ^$
+  case (kvs₁ ⋕? k,kvs₂ ⋕? k) of
+    (Some v₁,None) → f₁ k v₁
+    (None,Some v₂) → f₂ k v₂
+    (Some v₁,Some v₂) → f₃ k v₁ v₂
+    _ → error "impossible"
+
 unionWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
 unionWith f kvs₁ kvs₂ = 𝐷 $ Map.unionWith f (un𝐷 kvs₁) (un𝐷 kvs₂)
 
