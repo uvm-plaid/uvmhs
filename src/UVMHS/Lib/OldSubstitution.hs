@@ -1,11 +1,11 @@
-module UVMHS.Lib.Substitution where
+module UVMHS.Lib.OldSubstitution where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Testing
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Rand
-import UVMHS.Lib.Variables
+import UVMHS.Lib.OldVariables
 import UVMHS.Lang.ULCD
 
 class (∀ a. Null (t a)) ⇒ Substy t where

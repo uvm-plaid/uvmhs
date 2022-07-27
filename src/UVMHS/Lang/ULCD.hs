@@ -7,7 +7,7 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Window
 import UVMHS.Lib.TreeAnnote
-import UVMHS.Lib.Variables
+import UVMHS.Lib.OldVariables
 
 import qualified Language.Haskell.TH.Syntax as TH
 import qualified Language.Haskell.TH.Quote  as TH

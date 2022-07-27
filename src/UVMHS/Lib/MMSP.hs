@@ -5,7 +5,7 @@ import UVMHS.Core
 import UVMHS.Lib.Variables
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Annotated
-import UVMHS.Lib.Substitution
+-- import UVMHS.Lib.Substitution
 
 -- MMSP ≈
 -- c ⊔ (c ⊓ (c + c(xᶜ…xᶜ) 
@@ -52,7 +52,7 @@ data MMSPProds = MMSPProds
   deriving (Eq,Ord,Show)
 
 data MMSPAtom = 
-    Var_MMSPAtom (𝐴 (𝑃 SrcCxt) 𝕐)
+    Var_MMSPAtom (𝐴 (𝑃 SrcCxt) 𝕏)
   deriving (Eq,Ord,Show)
 makePrisms ''MMSPAtom
 
@@ -114,7 +114,7 @@ atomMMSPL =
         _ → None
   in prism mk vw ⊚ prodsMMSPL
 
-varMMSPL ∷ MMSP ⌲ 𝐴 (𝑃 SrcCxt) 𝕐
+varMMSPL ∷ MMSP ⌲ 𝐴 (𝑃 SrcCxt) 𝕏
 varMMSPL = var_MMSPAtomL ⊚ atomMMSPL
 
 litMMSPL ∷ MMSP ⌲ ℕ
@@ -159,7 +159,7 @@ prodsMMSP = construct prodsMMSPL
 atomMMSP ∷ MMSPAtom → MMSP
 atomMMSP = construct atomMMSPL
 
-varMMSP ∷ 𝐴 (𝑃 SrcCxt) 𝕐 → MMSP
+varMMSP ∷ 𝐴 (𝑃 SrcCxt) 𝕏 → MMSP
 varMMSP = construct varMMSPL
 
 litMMSP ∷ ℕ → MMSP
@@ -187,39 +187,39 @@ ponMMSP e n = product $ replicate n e
 -- SUBSTITUTION --
 ------------------
 
-gsubstMMSP ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSP → m MMSP
-gsubstMMSP 𝓋 𝓈 (MMSP α̇) = gsubstMMSPMaxs 𝓋 𝓈 α̇
-
-gsubstMMSPMaxs ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPMaxs → m MMSP
-gsubstMMSPMaxs 𝓋 𝓈 (MMSPMaxs a α) = (litMMSP a ⊔) ^$ gsubstMMSPMaxsMins 𝓋 𝓈 α
-
-gsubstMMSPMaxsMins ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → 𝑃 MMSPMins → m MMSP
-gsubstMMSPMaxsMins 𝓋 𝓈 α = joins ^$ mapM (gsubstMMSPMins 𝓋 𝓈) $ iter α
-
-gsubstMMSPMins ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPMins → m MMSP
-gsubstMMSPMins 𝓋 𝓈 (MMSPMins b β) = (elimAddTop top litMMSP b ⊓) ^$ gsubstMMSPMinsSums 𝓋 𝓈 β
-
-gsubstMMSPMinsSums ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → 𝑃 MMSPSums → m MMSP
-gsubstMMSPMinsSums 𝓋 𝓈 β = meets ^$ mapM (gsubstMMSPSums 𝓋 𝓈) $ iter β
-
-gsubstMMSPSums ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPSums → m MMSP
-gsubstMMSPSums 𝓋 𝓈 (MMSPSums c γ) = (litMMSP c +) ^$ gsubstMMSPSumsProds 𝓋 𝓈 γ
-
-gsubstMMSPSumsProds ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPProds ⇰ ℕ → m MMSP
-gsubstMMSPSumsProds 𝓋 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → 
-  (litMMSP d ×) ^$ gsubstMMSPProds 𝓋 𝓈 δ
-
-gsubstMMSPProds ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPProds → m MMSP
-gsubstMMSPProds 𝓋 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
-  (^^ e) ^$ gsubstMMSPAtom 𝓋 𝓈 ω
-
-gsubstMMSPAtom ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPAtom → m MMSP
-gsubstMMSPAtom 𝓋 𝓈 = \case
-  Var_MMSPAtom (𝐴 𝒸 𝓎) → case 𝓈var 𝓈 𝓎 of
-    Inl 𝓎' → return $ varMMSP $ 𝐴 𝒸 𝓎'
-    Inr (𝓈O :* e) → elim𝑂 return (gsubstMMSP exfalso) 𝓈O *$ 𝓋 e
-
-instance Substable m () MMSP MMSP where gsubstS 𝓋 𝓈 = gsubstMMSP 𝓋 $ ifNone null $ 𝓈 ⋕? ()
+-- gsubstMMSP ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSP → m MMSP
+-- gsubstMMSP 𝓋 𝓈 (MMSP α̇) = gsubstMMSPMaxs 𝓋 𝓈 α̇
+-- 
+-- gsubstMMSPMaxs ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPMaxs → m MMSP
+-- gsubstMMSPMaxs 𝓋 𝓈 (MMSPMaxs a α) = (litMMSP a ⊔) ^$ gsubstMMSPMaxsMins 𝓋 𝓈 α
+-- 
+-- gsubstMMSPMaxsMins ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → 𝑃 MMSPMins → m MMSP
+-- gsubstMMSPMaxsMins 𝓋 𝓈 α = joins ^$ mapM (gsubstMMSPMins 𝓋 𝓈) $ iter α
+-- 
+-- gsubstMMSPMins ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPMins → m MMSP
+-- gsubstMMSPMins 𝓋 𝓈 (MMSPMins b β) = (elimAddTop top litMMSP b ⊓) ^$ gsubstMMSPMinsSums 𝓋 𝓈 β
+-- 
+-- gsubstMMSPMinsSums ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → 𝑃 MMSPSums → m MMSP
+-- gsubstMMSPMinsSums 𝓋 𝓈 β = meets ^$ mapM (gsubstMMSPSums 𝓋 𝓈) $ iter β
+-- 
+-- gsubstMMSPSums ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPSums → m MMSP
+-- gsubstMMSPSums 𝓋 𝓈 (MMSPSums c γ) = (litMMSP c +) ^$ gsubstMMSPSumsProds 𝓋 𝓈 γ
+-- 
+-- gsubstMMSPSumsProds ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPProds ⇰ ℕ → m MMSP
+-- gsubstMMSPSumsProds 𝓋 𝓈 γ = sum ^$ mapMOn (iter γ) $ \ (δ :* d) → 
+--   (litMMSP d ×) ^$ gsubstMMSPProds 𝓋 𝓈 δ
+-- 
+-- gsubstMMSPProds ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPProds → m MMSP
+-- gsubstMMSPProds 𝓋 𝓈 (MMSPProds δ) = product ^$ mapMOn (iter δ) $ \ (ω :* e) → 
+--   (^^ e) ^$ gsubstMMSPAtom 𝓋 𝓈 ω
+-- 
+-- gsubstMMSPAtom ∷ (Substy t,Monad m) ⇒ (a → m MMSP) → t a → MMSPAtom → m MMSP
+-- gsubstMMSPAtom 𝓋 𝓈 = \case
+--   Var_MMSPAtom (𝐴 𝒸 𝓎) → case 𝓈var 𝓈 𝓎 of
+--     Inl 𝓎' → return $ varMMSP $ 𝐴 𝒸 𝓎'
+--     Inr (𝓈O :* e) → elim𝑂 return (gsubstMMSP exfalso) 𝓈O *$ 𝓋 e
+-- 
+-- instance Substable m () MMSP MMSP where gsubstS 𝓋 𝓈 = gsubstMMSP 𝓋 $ ifNone null $ 𝓈 ⋕? ()
 
 ---------------
 -- FREE VARS --

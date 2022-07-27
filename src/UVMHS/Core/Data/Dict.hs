@@ -163,6 +163,12 @@ without ks kvs = 𝐷 $ Map.withoutKeys (un𝐷 kvs) $ un𝑃 ks
 restrict ∷ (Ord k) ⇒ 𝑃 k → k ⇰ v → k ⇰ v
 restrict ks kvs = 𝐷 $ Map.restrictKeys (un𝐷 kvs) (un𝑃 ks)
 
+dmapWithKey ∷ (a → b → b) → a ⇰ b → a ⇰ b
+dmapWithKey f = 𝐷 ∘ Map.mapWithKey f ∘ un𝐷
+
+dmapOnWithKey ∷ a ⇰ b → (a → b → b) → a ⇰ b
+dmapOnWithKey = flip dmapWithKey
+
 keys ∷ (Ord k) ⇒ k ⇰ v → 𝑃 k
 keys = pow ∘ Map.keys ∘ un𝐷
 
