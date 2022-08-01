@@ -9,30 +9,43 @@ newtype LogLevel = LogLevel { unLogLevel ∷ ℕ64 }
 newtype LogDepth = LogDepth { unLogDepth ∷ ℕ64 }
   deriving (Eq,Ord,Show,Pretty)
 
-pplog ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel) ⇒ ℕ64 → Doc → m ()
+data LogOptions = LogOptions
+  { logOptionsLevel ∷ ℕ64
+  , logOptionsDepth ∷ ℕ64
+  , logOptionsShowLevel ∷ 𝔹
+  } deriving (Eq,Ord,Show)
+makeLenses ''LogOptions
+
+logOptions₀ ∷ LogOptions
+logOptions₀ = LogOptions 0 0 False
+
+pplog ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogOptions) ⇒ ℕ64 → Doc → m ()
 pplog l ~msg = do
-  ll ← unLogLevel ^$ askL hasLens
+  ll ← askL $ logOptionsLevelL ⊚ hasLens
+  b ← askL $ logOptionsShowLevelL ⊚ hasLens
   whenZ (l ≤ ll) $ io $ do
-    pprint $ concat 
-      [ ppBG grayDark $ ppFG white $ ppString $ concat ["▷",show𝕊 l,"◁"]
-      , ppSpace 1
+    pprint $ concat
+      [ if not b then null else concat
+          [ ppBG grayDark $ ppFG white $ ppString $ concat ["▷",show𝕊 l,"◁"]
+          , ppSpace 1
+          ]
       , ppGA msg
       ]
     oflush
 
-pplogd ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ ℕ64 → Doc → m ()
+pplogd ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogOptions) ⇒ ℕ64 → Doc → m ()
 pplogd l msg = do
-  ld ← unLogDepth ^$ askL hasLens
+  ld ← askL $ logOptionsDepthL ⊚ hasLens
   pplog l $ ppSpace (ld × 𝕟64 2) ⧺ ppGA msg
 
-pplogdIndent ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ m a → m a
-pplogdIndent = mapEnvL hasLens $ LogDepth ∘ succ ∘ unLogDepth
+pplogdIndent ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogOptions) ⇒ m a → m a
+pplogdIndent = mapEnvL (logOptionsDepthL ⊚ hasLens) succ
 
-pplogdIndentU ∷ (Monad m,MonadIO m,MonadUCont m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ m a → m a
-pplogdIndentU = umapEnvL hasLens $ LogDepth ∘ succ ∘ unLogDepth
+-- upplogdIndent ∷ (Monad m,MonadIO m,MonadUCont m,MonadReader r m,HasLens r LogOptions) ⇒ m a → m a
+-- upplogdIndent = umapEnvL (logOptionsDepthL ⊚ hasLens) succ
 
-pplogdIndentReset ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ m a → m a
-pplogdIndentReset = mapEnvL hasLens $ const $ LogDepth zero
+pplogdIndentReset ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogOptions) ⇒ m a → m a
+pplogdIndentReset = localL (logOptionsDepthL ⊚ hasLens) zero
 
-pplogdIndentResetU ∷ (Monad m,MonadIO m,MonadUCont m,MonadReader r m,HasLens r LogLevel,HasLens r LogDepth) ⇒ m a → m a
-pplogdIndentResetU = umapEnvL hasLens $ const $ LogDepth zero
+-- upplogdIndentReset ∷ (Monad m,MonadIO m,MonadUCont m,MonadReader r m,HasLens r LogOptions) ⇒ m a → m a
+-- upplogdIndentReset = ulocalL (logOptionsDepthL ⊚ hasLens) zero

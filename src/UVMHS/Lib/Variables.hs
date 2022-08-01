@@ -92,6 +92,18 @@ scopeFBV (FBV bv₁ fv₁) (FBV bv₂ fv₂) =
       fv' = joins [fv₁,fv₂ ∖ pow (map varOfBdr $ iter bv₁)]
   in FBV bv' fv'
 
+class HasSFBV s a | a → s where
+  sfbv ∷ a → s ⇰ FBV
+
+sbv ∷ (Ord s,HasSFBV s a) ⇒ a → s → 𝑃 𝕏ᴮ
+sbv x s = ifNone bot $ map fbvBound $ sfbv x ⋕? s
+
+sfv ∷ (Ord s,HasSFBV s a) ⇒ a → s → 𝑃 𝕏
+sfv x s = ifNone bot $ map fbvFree $ sfbv x ⋕? s
+
+scopeSFBV ∷ (Ord s) ⇒ s ⇰ FBV → s ⇰ FBV → s ⇰ FBV
+scopeSFBV = unionWithD bot scopeFBV
+
 ------------------
 -- SUBSTITUTION --
 ------------------

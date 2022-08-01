@@ -91,5 +91,5 @@ sccEachGroupM xs deps f =
           -- sequentialize all dependencies (that aren't cyclic)
           eachOn (gdeps ∖ gdefs) visitVar
           -- build a list of results
-          tell *$ lift $ f cyclic $ iter gdefs 
+          tell *$ lift $ f cyclic $ iter gdefs
     in evalRWST () pø $ retOut $ eachOn xs visitVar

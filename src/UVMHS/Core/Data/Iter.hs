@@ -414,6 +414,21 @@ sort = sortWith (⋚)
 materialize ∷ (ToIter a t) ⇒ t → 𝐼 a
 materialize = iter ∘ list
 
+mapWhile ∷ (a → a) → (a → 𝔹) → 𝐼 a → 𝐼 a
+mapWhile f p = reiter True $ \ x b → do
+  if b ⩓ p x
+  then True :* f x
+  else False :* x
+
+dropWhile ∷ (a → 𝔹) → 𝐼 a → 𝐼 a
+dropWhile p xs₀ =
+  let loop = \case
+        None → null
+        Some (x :* xs')
+          | p x → loop $ un𝑆 xs' ()
+          | otherwise → iter $ 𝑆 $ \ () → Some $ x :* xs'
+  in loop $ un𝑆 (stream xs₀) ()
+
 ---------
 -- All --
 ---------

@@ -364,6 +364,9 @@ g ∘ f = \ x → g (f x)
 (∘∘) ∷ (c → d) → (a → b → c) → (a → b → d)
 (∘∘) = (∘) ∘ (∘)
 
+(∘∘∘) ∷ (d → e) → (a → b → c → d) → a → b → c → e
+(∘∘∘) = (∘∘) ∘ (∘)
+
 flip ∷ (a → b → c) → (b → a → c)
 flip f = \ y x → f x y
 

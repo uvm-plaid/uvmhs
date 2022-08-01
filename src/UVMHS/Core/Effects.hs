@@ -421,15 +421,15 @@ modifyEnv f = callCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
 modifyEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → (r' → r') → m ()
 modifyEnvL ℓ f = callCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
 
-delimitEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ m a → m a
-delimitEnv xM = callCC $ \ 𝓀 → do
-  r ← ask
-  withCOn xM $ local r ∘ 𝓀
-
-delimitEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → m a → m a
-delimitEnvL ℓ xM = callCC $ \ 𝓀 → do
-  r ← askL ℓ
-  withCOn xM $ localL ℓ r ∘ 𝓀
+-- delimitEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ m a → m a
+-- delimitEnv xM = callCC $ \ 𝓀 → do
+--   r ← ask
+--   withCOn xM $ local r ∘ 𝓀
+-- 
+-- delimitEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → m a → m a
+-- delimitEnvL ℓ xM = callCC $ \ 𝓀 → do
+--   r ← askL ℓ
+--   withCOn xM $ localL ℓ r ∘ 𝓀
 
 -- UCont --
 
@@ -454,33 +454,33 @@ umodifyEnv f = ucallCC HS.$ \ 𝓀 → mapEnv f $ 𝓀 ()
 umodifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
 umodifyEnvL ℓ f = ucallCC HS.$ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
 
-ulocalL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m a → m a
-ulocalL ℓ r xM = do
-  r' ← askL ℓ
-  uputEnvL ℓ r 
-  x ← xM
-  uputEnvL ℓ r'
-  return x
-
-umapEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m a → m a
-umapEnvL ℓ f xM = do
-  r ← askL ℓ
-  ulocalL ℓ (f r) xM
-
-uhijack ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m) ⇒ m a → m (o ∧ a)
-uhijack xM = do
-  o :* (r :* x) ← hijack $ do
-    x ← xM
-    r ← ask
-    return $ r :* x
-  uputEnv r
-  return $ o :* x
-
-uhijackL ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m,Null o') ⇒ o ⟢ o' → m a → m (o' ∧ a)
-uhijackL ℓ xM = do
-  o :* x ← uhijack xM
-  tell $ update ℓ null o
-  return $ access ℓ o :* x
+-- ulocalL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m a → m a
+-- ulocalL ℓ r xM = do
+--   r' ← askL ℓ
+--   uputEnvL ℓ r 
+--   x ← xM
+--   uputEnvL ℓ r'
+--   return x
+-- 
+-- umapEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m a → m a
+-- umapEnvL ℓ f xM = do
+--   r ← askL ℓ
+--   ulocalL ℓ (f r) xM
+-- 
+-- uhijack ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m) ⇒ m a → m (o ∧ a)
+-- uhijack xM = do
+--   o :* (r :* x) ← hijack $ do
+--     x ← xM
+--     r ← ask
+--     return $ r :* x
+--   uputEnv r
+--   return $ o :* x
+-- 
+-- uhijackL ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m,Null o') ⇒ o ⟢ o' → m a → m (o' ∧ a)
+-- uhijackL ℓ xM = do
+--   o :* x ← uhijack xM
+--   tell $ update ℓ null o
+--   return $ access ℓ o :* x
 
 --------------
 -- DERIVING --

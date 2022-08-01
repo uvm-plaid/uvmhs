@@ -568,7 +568,7 @@ instance LiftCont (ReaderT r) where
           k x
   liftWithC ∷ ∀ m r'. (Monad m) ⇒ (∀ a. (a → m r') → m a → m r') → (∀ a. (a → ReaderT r m r') → ReaderT r m a → ReaderT r m r')
   liftWithC withCM k xM = ReaderT $ \ r →
-    flip withCM (unReaderT xM r) $ \ x → runReaderT r $ k x
+    flip withCM (runReaderT r xM) $ \ x → runReaderT r $ k x
 
 ------------
 -- WRITER --
@@ -985,19 +985,24 @@ instance (Monad m,MonadReader r' m) ⇒ MonadReader r' (ContT r m) where
   ask = ContT $ \ (k ∷ r' → m r) → k *$ ask
 
   local ∷ ∀ a. r' → ContT r m a → ContT r m a
-  local r xM = ContT $ \ (k ∷ a → m r) → local r $ unContT xM k
+  local r xM = ContT $ \ (k ∷ a → m r) → do
+    r' ← ask
+    local r $ unContT xM $ \ x → do
+      local r' $ k x
 
-instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT r m) where
-  tell ∷ o → ContT r m ()
-  tell o = ContT $ \ (k ∷ () → m r) → do
+instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT (o ∧ r) m) where
+  tell ∷ o → ContT (o ∧ r) m ()
+  tell o = ContT $ \ (k ∷ () → m (o ∧ r)) → do
     tell o
     k ()
 
-  hijack ∷ ∀ a. ContT r m a → ContT r m (o ∧ a)
-  hijack xM = ContT $ \ (k ∷ (o ∧ a) → m r) → do
-    o :* r ← hijack $ unContT xM $ \ (x ∷ a) → k $ null :* x
+  hijack ∷ ∀ a. ContT (o ∧ r) m a → ContT (o ∧ r) m (o ∧ a)
+  hijack xM = ContT $ \ (k ∷ (o ∧ a) → m (o ∧ r)) → do
+    o :* ox ← hijack $ unContT xM $ \ (x ∷ a) → do
+      o₁ :* (o₂ :* r) ← hijack $ k $ null :* x
+      return $ (o₁ ⧺ o₂) :* r
     tell o
-    return r
+    return ox
 
 instance (Monad m,MonadState s m) ⇒ MonadState s (ContT r m) where
   get ∷ ContT r m s

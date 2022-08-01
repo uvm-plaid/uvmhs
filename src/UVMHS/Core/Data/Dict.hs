@@ -128,6 +128,9 @@ unionWithKeyGM f₁ f₂ f₃ kvs₁ kvs₂ = assoc ^$ mapMOn (iter $ keys kvs�
 unionWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
 unionWith f kvs₁ kvs₂ = 𝐷 $ Map.unionWith f (un𝐷 kvs₁) (un𝐷 kvs₂)
 
+unionWithD ∷ (Ord k) ⇒ v → (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
+unionWithD d f = unionWithG (\ x → f x d) (\ y → f d y) f
+
 (⊎) ∷ (Ord k,Additive v) ⇒ k ⇰ v → k ⇰ v → k ⇰ v
 (⊎) = unionWith (+)
 
@@ -199,3 +202,9 @@ assoc = dict ∘ map single ∘ iter
 
 djoin ∷ (Ord k,Ord v₁,Ord v₂) ⇒ k ⇰ 𝑃 v₁ → k ⇰ 𝑃 v₂ → k ⇰ 𝑃 (v₁ ∧ v₂)
 djoin = interWith $ \ vs₁ vs₂ → pow $ zipWith (:*) vs₁ vs₂
+
+mapWithKey ∷ (a → b → b) → a ⇰ b → a ⇰ b
+mapWithKey f = 𝐷 ∘ Map.mapWithKey f ∘ un𝐷
+
+mapOnWithKey ∷ a ⇰ b → (a → b → b) → a ⇰ b
+mapOnWithKey = flip mapWithKey

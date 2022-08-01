@@ -132,6 +132,11 @@ moreZOML = prism (const MoreZOM) $ \case
   MoreZOM → Some ()
   _ → None
 
+keyL𝑂 ∷ (Ord k,Null v) ⇒ k → (k ⇰ v) ⟢ v
+keyL𝑂 k =
+  let ℓ = lens (ifNone null) $ const Some
+  in ℓ ⊚ keyL k
+
 --------------------------
 -- HasPrism and HasLens --
 --------------------------

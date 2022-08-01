@@ -32,4 +32,8 @@ chrFrNat = HS.chr ∘ HS.fromIntegral
 natFrChr ∷ ℂ → ℕ64
 natFrChr = HS.fromIntegral ∘ HS.ord
 
+isLower ∷ ℂ → 𝔹
+isLower = HS.isLower
 
+isUpper ∷ ℂ → 𝔹
+isUpper = HS.isUpper
