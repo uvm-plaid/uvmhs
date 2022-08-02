@@ -486,17 +486,17 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
 
 -- fuzzing --
 
-𝔣 "zzz:ssubst:wf" 100 [| randSml @ (SSubst ULCDExpR) |] [| wfSSubst |]
+𝔣 "zzz:ssubst:wf" 100 [| randSml @(SSubst ULCDExpR) |] [| wfSSubst |]
 
 𝔣 "zzz:ssubst:⧺:wf" 100 
-  [| do 𝓈₁ ← randSml @ (SSubst ULCDExpR)
-        𝓈₂ ← randSml @ (SSubst ULCDExpR)
+  [| do 𝓈₁ ← randSml @(SSubst ULCDExpR)
+        𝓈₂ ← randSml @(SSubst ULCDExpR)
         return $ 𝓈₁ :* 𝓈₂
   |]
   [| \ (𝓈₁ :* 𝓈₂) → wfSSubst (𝓈₁ ⧺ 𝓈₂) |]
 
 𝔣 "zzz:ssubst:refl:hom" 100 
-  [| do e ← randSml @ ULCDExpR
+  [| do e ← randSml @ULCDExpR
         return $ e
   |]
   [| \ e → 
@@ -504,16 +504,16 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:ssubst:refl/shift:hom" 100
-  [| do n ← randSml @ ℕ64
-        e ← randSml @ ULCDExpR
+  [| do n ← randSml @ℕ64
+        e ← randSml @ULCDExpR
         return $ n :* e
   |]
   [| \ (n :* e) → ssubst (𝓈shift n null) e ≡ e 
   |]
 
 𝔣 "zzz:ssubst:bind" 100
-  [| do e₁ ← randSml @ ULCDExpR
-        e₂ ← randSml @ ULCDExpR
+  [| do e₁ ← randSml @ULCDExpR
+        e₂ ← randSml @ULCDExpR
         return $ e₁ :* e₂
   |]
   [| \ (e₁ :* e₂) → 
@@ -523,8 +523,8 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:ssubst:commute" 100
-  [| do e₁ ← randSml @ ULCDExpR
-        e₂ ← randSml @ ULCDExpR
+  [| do e₁ ← randSml @ULCDExpR
+        e₂ ← randSml @ULCDExpR
         return $ e₁ :* e₂
   |]
   [| \ (e₁ :* e₂) → 
@@ -535,9 +535,9 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
 
 
 𝔣 "zzz:ssubst:⧺:hom" 100 
-  [| do 𝓈₁ ← randSml @ (SSubst ULCDExpR)
-        𝓈₂ ← randSml @ (SSubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do 𝓈₁ ← randSml @(SSubst ULCDExpR)
+        𝓈₂ ← randSml @(SSubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ 𝓈₁ :* 𝓈₂ :* e
   |]
   [| \ (𝓈₁ :* 𝓈₂ :* e) → 
@@ -545,8 +545,8 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:ssubst:⧺:lrefl" 100 
-  [| do 𝓈 ← randSml @ (SSubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do 𝓈 ← randSml @(SSubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ 𝓈 :* e
   |]
   [| \ (𝓈 :* e) → 
@@ -554,8 +554,8 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:ssubst:⧺:rrefl" 100 
-  [| do 𝓈 ← randSml @ (SSubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do 𝓈 ← randSml @(SSubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ 𝓈 :* e
   |]
   [| \ (𝓈 :* e) → 
@@ -563,28 +563,28 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:ssubst:⧺:lrefl/shift" 100
-  [| do n ← randSml @ ℕ64
-        𝓈 ← randSml @ (SSubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do n ← randSml @ℕ64
+        𝓈 ← randSml @(SSubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ n :* 𝓈 :* e
   |]
   [| \ (n :* 𝓈 :* e) → ssubst (𝓈shift n null ⧺ 𝓈) e ≡ ssubst 𝓈 e 
   |]
 
 𝔣 "zzz:ssubst:⧺:rrefl/shift" 100
-  [| do n ← randSml @ ℕ64
-        𝓈 ← randSml @ (SSubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do n ← randSml @ℕ64
+        𝓈 ← randSml @(SSubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ n :* 𝓈 :* e
   |]
   [| \ (n :* 𝓈 :* e) → ssubst (𝓈 ⧺ 𝓈shift n null) e ≡ ssubst 𝓈 e 
   |]
 
 𝔣 "zzz:ssubst:⧺:trans" 100 
-  [| do 𝓈₁ ← randSml @ (SSubst ULCDExpR)
-        𝓈₂ ← randSml @ (SSubst ULCDExpR)
-        𝓈₃ ← randSml @ (SSubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do 𝓈₁ ← randSml @(SSubst ULCDExpR)
+        𝓈₂ ← randSml @(SSubst ULCDExpR)
+        𝓈₃ ← randSml @(SSubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ 𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e
   |]
   [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) → 
@@ -592,10 +592,10 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:ssubst:shift/⧺:shift:dist" 100 
-  [| do n ← randSml @ ℕ64
-        𝓈₁ ← randSml @ (SSubst ULCDExpR)
-        𝓈₂ ← randSml @ (SSubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do n ← randSml @ℕ64
+        𝓈₁ ← randSml @(SSubst ULCDExpR)
+        𝓈₂ ← randSml @(SSubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ n :* 𝓈₁ :* 𝓈₂ :* e
   |]
   [| \ (n :* 𝓈₁ :* 𝓈₂ :* e) → 
@@ -603,9 +603,9 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:usubst:⧺:hom" 100 
-  [| do 𝓈₁ ← randSml @ (USubst ULCDExpR)
-        𝓈₂ ← randSml @ (USubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do 𝓈₁ ← randSml @(USubst ULCDExpR)
+        𝓈₂ ← randSml @(USubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ 𝓈₁ :* 𝓈₂ :* e
   |]
   [| \ (𝓈₁ :* 𝓈₂ :* e) → 
@@ -613,8 +613,8 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:usubst:⧺:lrefl" 100 
-  [| do 𝓈 ← randSml @ (USubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do 𝓈 ← randSml @(USubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ 𝓈 :* e
   |]
   [| \ (𝓈 :* e) → 
@@ -622,8 +622,8 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:usubst:⧺:rrefl" 100 
-  [| do 𝓈 ← randSml @ (USubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do 𝓈 ← randSml @(USubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ 𝓈 :* e
   |]
   [| \ (𝓈 :* e) → 
@@ -631,10 +631,10 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:usubst:⧺:trans" 100 
-  [| do 𝓈₁ ← randSml @ (USubst ULCDExpR)
-        𝓈₂ ← randSml @ (USubst ULCDExpR)
-        𝓈₃ ← randSml @ (USubst ULCDExpR)
-        e ← randSml @ ULCDExpR
+  [| do 𝓈₁ ← randSml @(USubst ULCDExpR)
+        𝓈₂ ← randSml @(USubst ULCDExpR)
+        𝓈₃ ← randSml @(USubst ULCDExpR)
+        e ← randSml @ULCDExpR
         return $ 𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e
   |]
   [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) → 
@@ -642,14 +642,14 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 𝔣 "zzz:ssubst:open∘close" 100 
-  [| do randSml @ ULCDExpR
+  [| do randSml @ULCDExpR
   |]
   [| \ e → 
        ssubst (𝓈open (var "z") ⧺ 𝓈close (var "z")) e ≡ e
   |]
 
 𝔣 "zzz:ssubst:close∘open" 100 
-  [| do randSml @ ULCDExpR
+  [| do randSml @ULCDExpR
   |]
   [| \ e → 
        ssubst (𝓈close (var "z") ⧺ 𝓈open (var "z")) e ≡ e

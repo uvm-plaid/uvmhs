@@ -182,7 +182,7 @@ map𝐷 ∷ (v₁ → v₂) → k ⇰ v₁ → k ⇰ v₂
 map𝐷 f = 𝐷 ∘ Map.map f ∘ un𝐷
 
 mapM𝐷 ∷ ∀ m k v₁ v₂. (Monad m) ⇒ (v₁ → m v₂) → k ⇰ v₁ → m (k ⇰ v₂)
-mapM𝐷 f kvs = with (tohsMonad @ m) HS.$
+mapM𝐷 f kvs = with (tohsMonad @m) HS.$
   𝐷 ^$ HS.mapM f $ un𝐷 kvs
 
 mapK𝐷 ∷ (Ord k) ⇒ (k → v₁ → v₂) → k ⇰ v₁ → k ⇰ v₂

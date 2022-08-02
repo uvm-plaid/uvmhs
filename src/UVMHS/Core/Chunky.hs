@@ -69,7 +69,7 @@ class Chunky a where
   toChunk ∷ a → 𝐼 ℕ8
 
 instance {-# OVERLAPPABLE #-} (Chunky b,a ⇄ b) ⇒ Chunky a where
-  chunkSize P = chunkSize @ b P
+  chunkSize P = chunkSize @b P
   fromChunk = map isofr ∘ fromChunk
   toChunk = toChunk ∘ isoto
 
@@ -127,16 +127,16 @@ instance Chunky ℕ64 where
 
 instance Chunky ℤ64 where
   chunkSize P = 𝕟64 8
-  fromChunk = map (coerce_UNSAFE @ ℕ64 @ ℤ64) ∘ fromChunk
-  toChunk = toChunk ∘ (coerce_UNSAFE @ ℤ64 @ ℕ64)
+  fromChunk = map (coerce_UNSAFE @ℕ64 @ℤ64) ∘ fromChunk
+  toChunk = toChunk ∘ (coerce_UNSAFE @ℤ64 @ℕ64)
 
 instance Chunky 𝔻 where
   chunkSize P = 𝕟64 8
-  fromChunk = map (coerce_UNSAFE @ ℕ64 @ 𝔻) ∘ fromChunk
-  toChunk = toChunk ∘ (coerce_UNSAFE @ 𝔻 @ ℕ64)
+  fromChunk = map (coerce_UNSAFE @ℕ64 @𝔻) ∘ fromChunk
+  toChunk = toChunk ∘ (coerce_UNSAFE @𝔻 @ℕ64)
 
 instance (Chunky a,Chunky b) ⇒ Chunky (a ∧ b) where
-  chunkSize P = chunkSize @ a P + chunkSize @ b P
+  chunkSize P = chunkSize @a P + chunkSize @b P
   fromChunk g = do
     x ← fromChunk g
     y ← fromChunk g
@@ -144,21 +144,21 @@ instance (Chunky a,Chunky b) ⇒ Chunky (a ∧ b) where
   toChunk (x :* y) = toChunk x ⧺ toChunk y
 
 instance (Chunky a,Chunky b) ⇒ Chunky (a ∨ b) where
-  chunkSize P = 𝕟64 1 + (chunkSize @ a P ⩏ chunkSize @ b P)
+  chunkSize P = 𝕟64 1 + (chunkSize @a P ⩏ chunkSize @b P)
   fromChunk g = do
     b ← g
     case b ≡ 𝕟8 0 of
       True → do
         x ← fromChunk g
-        skipChunk g $ (chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ a P
+        skipChunk g $ (chunkSize @a P ⩏ chunkSize @b P) - chunkSize @a P
         return $ Inl x
       False → do
         y ← fromChunk g
-        skipChunk g $ (chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ b P
+        skipChunk g $ (chunkSize @a P ⩏ chunkSize @b P) - chunkSize @b P
         return $ Inr y
   toChunk = \case
-    Inl x → single (𝕟8 0) ⧺ toChunk x ⧺ emptyChunk ((chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ a P)
-    Inr y → single (𝕟8 1) ⧺ toChunk y ⧺ emptyChunk ((chunkSize @ a P ⩏ chunkSize @ b P) - chunkSize @ b P)
+    Inl x → single (𝕟8 0) ⧺ toChunk x ⧺ emptyChunk ((chunkSize @a P ⩏ chunkSize @b P) - chunkSize @a P)
+    Inr y → single (𝕟8 1) ⧺ toChunk y ⧺ emptyChunk ((chunkSize @a P ⩏ chunkSize @b P) - chunkSize @b P)
 
 -- chunkIOBytes ∷ UArr.UArray ℕ64 ℕ8 → State ℕ64 ℕ8
 -- chunkIOBytes a = do

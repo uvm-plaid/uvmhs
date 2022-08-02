@@ -57,7 +57,7 @@ charContext l c =
 
 preTokens ∷ 𝕊 → 𝕍 (PreParserToken ℂ)
 preTokens cs = 
-  vecC $ snd $ foldOnFrom cs (bot :* null @ (𝐼C _)) $ \ c (loc :* ts) →
+  vecC $ snd $ foldOnFrom cs (bot :* null @(𝐼C _)) $ \ c (loc :* ts) →
     let (loc',pc) = 
           if c ≡ '\n'
             then (bumpRow₁ loc,nlContext loc)
@@ -66,7 +66,7 @@ preTokens cs =
     in loc' :* (ts ⧺ single t)
 
 finalizeTokens ∷ 𝕍 (PreParserToken t) → 𝕍 (ParserToken t)
-finalizeTokens ts₀ = vecC $ fst $ foldrOnFrom ts₀ (null @ (𝐼C _) :* null) $ \ (PreParserToken x sk pc) (ts :* ps) →
+finalizeTokens ts₀ = vecC $ fst $ foldrOnFrom ts₀ (null @(𝐼C _) :* null) $ \ (PreParserToken x sk pc) (ts :* ps) →
   let t = ParserToken x sk pc ps
   in
   (single t ⧺ ts) :* (parserContextDisplayL pc ⧺ ps)

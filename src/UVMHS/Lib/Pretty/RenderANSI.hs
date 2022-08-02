@@ -98,7 +98,7 @@ sgrIt False = "23"
 sgrFormat ∷ Formats → 𝐼A 𝕊
 sgrFormat (Formats fg bg ul bd it) = single $ stringS $ iter
   [ sgrLeader 
-  , concat $ inbetween ";" $ mconcat $ map (mzero𝑂 @ 𝑄) $ iter
+  , concat $ inbetween ";" $ mconcat $ map (mzero𝑂 @𝑄) $ iter
       [ sgrFg ^$ fg
       , sgrBg ^$ bg
       , sgrUl ^$ ul
@@ -137,7 +137,7 @@ compileOTree ∷ TreeO → RenderANSIM ()
 compileOTree sd = un𝑇V sd fₑ fₐ
   where
     fₑ ∷ Sep () (𝐼A ChunkO) → RenderANSIM ()
-    fₑ chs = eachWith tell $ iter $ mapSep (const $ single @ _ @ (𝐼A _) $ 𝕤 "\n") (concat ∘ map renderChunkANSI ∘ iter) chs
+    fₑ chs = eachWith tell $ iter $ mapSep (const $ single @_ @(𝐼A _) $ 𝕤 "\n") (concat ∘ map renderChunkANSI ∘ iter) chs
     fₐ ∷ Formats → RenderANSIM () → RenderANSIM ()
     fₐ fm = formatRenderANSI fm
 

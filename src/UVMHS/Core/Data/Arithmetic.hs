@@ -68,37 +68,37 @@ instance Monoid         ℕ
 instance ToNat ℕ where nat = id
 instance ToNatO64 ℕ where 
   natO64 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ64) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ64) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToNatO32 ℕ where 
   natO32 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ32) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ32) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToNatO16 ℕ where 
   natO16 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ16) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToNatO8 ℕ where 
   natO8 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ8) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToInt ℕ where int = HS.fromIntegral
 instance ToIntO64 ℕ where 
   intO64 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ64) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ64) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToIntO32 ℕ where 
   intO32 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ32) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToIntO16 ℕ where 
   intO16 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ16) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToIntO8 ℕ where 
   intO8 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ8) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToRational  ℕ where rat  = HS.fromIntegral
@@ -134,33 +134,33 @@ instance ToNat   ℕ64 where nat   = HS.fromIntegral
 instance ToNat64 ℕ64 where nat64 = id
 instance ToNatO32 ℕ64 where 
   natO32 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ32) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ32) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToNatO16 ℕ64 where 
   natO16 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ16) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToNatO8 ℕ64 where 
   natO8 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ8) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToInt ℕ64 where int = HS.fromIntegral
 instance ToIntO64 ℕ64 where 
   intO64 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ64) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ64) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToIntO32 ℕ64 where 
   intO32 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ32) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToIntO16 ℕ64 where 
   intO16 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ16) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToIntO8 ℕ64 where 
   intO8 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ8) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToRational  ℕ64 where rat  = HS.fromIntegral
@@ -197,26 +197,26 @@ instance ToNat64  ℕ32 where nat64 = HS.fromIntegral
 instance ToNat32  ℕ32 where nat32 = id
 instance ToNatO16 ℕ32 where 
   natO16 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ16) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToNatO8 ℕ32 where 
   natO8 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ8) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToInt   ℕ32 where int   = HS.fromIntegral
 instance ToInt64 ℕ32 where int64 = HS.fromIntegral
 instance ToIntO32 ℕ32 where 
   intO32 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ32) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToIntO16 ℕ32 where 
   intO16 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ16) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToIntO8 ℕ32 where 
   intO8 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ8) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToRational  ℕ32 where rat  = HS.fromIntegral
@@ -254,7 +254,7 @@ instance ToNat32 ℕ16 where nat32 = HS.fromIntegral
 instance ToNat16 ℕ16 where nat16 = id
 instance ToNatO8 ℕ16 where 
   natO8 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℕ8) = None
+    | n > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToInt   ℕ16 where int   = HS.fromIntegral
@@ -262,11 +262,11 @@ instance ToInt64 ℕ16 where int64 = HS.fromIntegral
 instance ToInt32 ℕ16 where int32 = HS.fromIntegral
 instance ToIntO16 ℕ16 where 
   intO16 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ16) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral n
 instance ToIntO8 ℕ16 where 
   intO8 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ8) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToRational  ℕ16 where rat  = HS.fromIntegral
@@ -310,7 +310,7 @@ instance ToInt32 ℕ8 where int32 = HS.fromIntegral
 instance ToInt16 ℕ8 where int16 = HS.fromIntegral
 instance ToIntO8 ℕ8 where 
   intO8 n 
-    | n > HS.fromIntegral (HS.maxBound @ ℤ8) = None
+    | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToRational  ℕ8 where rat  = HS.fromIntegral
@@ -348,44 +348,44 @@ instance ToNatO ℤ where
 instance ToNatO64 ℤ where 
   natO64 i 
     | i < 𝕫 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ64) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ64) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO32 ℤ where 
   natO32 i 
     | i < 𝕫 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ32) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ32) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO16 ℤ where 
   natO16 i 
     | i < 𝕫 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ16) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO8 ℤ where 
   natO8 i 
     | i < 𝕫 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ8) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToInt ℤ where int = id
 instance ToIntO64 ℤ where 
   intO64 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ64) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ64) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ64) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ64) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToIntO32 ℤ where 
   intO32 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ32) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ32) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ32) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToIntO16 ℤ where 
   intO16 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ16) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ16) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ16) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToIntO8 ℤ where 
   intO8 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ8) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ8) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ8) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToRational ℤ where rat = HS.fromIntegral
@@ -438,35 +438,35 @@ instance ToNatO64 ℤ64 where
 instance ToNatO32 ℤ64 where 
   natO32 i 
     | i < 𝕫64 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ32) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ32) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO16 ℤ64 where 
   natO16 i 
     | i < 𝕫64 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ16) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO8 ℤ64 where 
   natO8 i 
     | i < 𝕫64 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ8) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToInt    ℤ64 where int   = HS.fromIntegral
 instance ToInt64  ℤ64 where int64 = id
 instance ToIntO32 ℤ64 where 
   intO32 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ32) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ32) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ32) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToIntO16 ℤ64 where 
   intO16 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ16) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ16) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ16) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToIntO8 ℤ64 where 
   intO8 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ8) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ8) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ8) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToRational ℤ64 where rat = HS.fromIntegral
@@ -523,12 +523,12 @@ instance ToNatO32 ℤ32 where
 instance ToNatO16 ℤ32 where 
   natO16 i 
     | i < 𝕫32 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ16) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO8 ℤ32 where 
   natO8 i 
     | i < 𝕫32 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ8) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToInt   ℤ32 where int   = HS.fromIntegral
@@ -536,13 +536,13 @@ instance ToInt64 ℤ32 where int64 = HS.fromIntegral
 instance ToInt32 ℤ32 where int32 = id
 instance ToIntO16 ℤ32 where 
   intO16 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ16) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ16) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ16) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToIntO8 ℤ32 where 
   intO8 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ8) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ8) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ8) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToRational ℤ32 where rat = HS.fromIntegral
@@ -603,7 +603,7 @@ instance ToNatO16 ℤ16 where
 instance ToNatO8 ℤ16 where 
   natO8 i 
     | i < 𝕫16 0 = None
-    | i > HS.fromIntegral (HS.maxBound @ ℕ8) = None
+    | i > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToInt   ℤ16 where int   = HS.fromIntegral
@@ -612,8 +612,8 @@ instance ToInt32 ℤ16 where int32 = HS.fromIntegral
 instance ToInt16 ℤ16 where int16 = id
 instance ToIntO8 ℤ16 where 
   intO8 i 
-    | i < HS.fromIntegral (HS.minBound @ ℤ8) = None
-    | i > HS.fromIntegral (HS.maxBound @ ℤ8) = None
+    | i < HS.fromIntegral (HS.minBound @ℤ8) = None
+    | i > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToRational ℤ16 where rat = HS.fromIntegral

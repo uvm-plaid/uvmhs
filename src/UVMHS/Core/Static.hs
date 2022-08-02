@@ -48,16 +48,16 @@ type (m ∷ 𝐍) ≻  (n ∷ 𝐍) = (m ⋚ n) ≡ 'GT ~ 'True
 type (m ∷ 𝐍) ≼ (n ∷ 𝐍) = ((m ⋚ n) ≡ 'LT) ⩔ ((m ⋚ n ≡ 'EQ)) ~ 'True
 
 wnlt_UNSAFE ∷ ∀ m n. P m → P n → W (m ≺ n)
-wnlt_UNSAFE _ _ = weq_UNSAFE @ (m ⋚ n ≡ 'LT) @ 'True P P
+wnlt_UNSAFE _ _ = weq_UNSAFE @(m ⋚ n ≡ 'LT) @'True P P
 
 wneq_UNSAFE ∷ ∀ m n. P m → P n → W (m ≍ n)
-wneq_UNSAFE _ _ = weq_UNSAFE @ (m ⋚ n ≡ 'EQ) @ 'True P P
+wneq_UNSAFE _ _ = weq_UNSAFE @(m ⋚ n ≡ 'EQ) @'True P P
 
 wngt_UNSAFE ∷ ∀ m n. P m → P n → W (m ≻ n)
-wngt_UNSAFE _ _ = weq_UNSAFE @ (m ⋚ n ≡ 'GT) @ 'True P P
+wngt_UNSAFE _ _ = weq_UNSAFE @(m ⋚ n ≡ 'GT) @'True P P
 
 wnlte_UNSAFE ∷ ∀ m n. P m → P n → W (m ≼ n)
-wnlte_UNSAFE _ _ = weq_UNSAFE @ ((m ⋚ n ≡ 'LT) ⩔ (m ⋚ n ≡ 'EQ)) @ 'True P P 
+wnlte_UNSAFE _ _ = weq_UNSAFE @((m ⋚ n ≡ 'LT) ⩔ (m ⋚ n ≡ 'EQ)) @'True P P 
 
 data (m ∷ 𝐍) < (n ∷ 𝐍) where
   W_LT ∷ (m ≺ n) ⇒ m < n
@@ -66,7 +66,7 @@ withLT ∷ m < n → ((m ≺ n) ⇒ a) → a
 withLT W_LT x = x
 
 nlt_UNSAFE ∷ ∀ m n. P m → P n → m < n
-nlt_UNSAFE _ _ = with (wnlt_UNSAFE @ m @ n P P) W_LT
+nlt_UNSAFE _ _ = with (wnlt_UNSAFE @m @n P P) W_LT
 
 instance Transitive (<) where
   _ ⊚ _ = nlt_UNSAFE P P
@@ -78,7 +78,7 @@ withLTE ∷ m ≤ n → ((m ≼ n) ⇒ a) → a
 withLTE W_LTE x = x
 
 nlte_UNSAFE ∷ ∀ m n. P m → P n → m ≤ n
-nlte_UNSAFE _ _ = with (wnlte_UNSAFE @ m @ n P P) W_LTE
+nlte_UNSAFE _ _ = with (wnlte_UNSAFE @m @n P P) W_LTE
 
 instance Reflexive (≤) where
   refl = W_LTE
@@ -114,37 +114,37 @@ class (HS.KnownNat n)    ⇒ 𝒩   (n ∷ 𝐍) where reifyℕ   ∷ P n → �
 class (HS.KnownNat n)    ⇒ 𝒩64 (n ∷ 𝐍) where reifyℕ64 ∷ P n → ℕ64
 class (HS.KnownSymbol s) ⇒ 𝒮   (s ∷ 𝐒) where reify𝕊   ∷ P s → 𝕊
 
-instance (HS.KnownNat n)    ⇒ 𝒩   (n ∷ 𝐍) where reifyℕ   _ = natΩ   $ HS.natVal    @ n P
-instance (HS.KnownNat n)    ⇒ 𝒩64 (n ∷ 𝐍) where reifyℕ64 _ = natΩ64 $ HS.natVal    @ n P
-instance (HS.KnownSymbol s) ⇒ 𝒮   (s ∷ 𝐒) where reify𝕊   _ = string $ HS.symbolVal @ s P
+instance (HS.KnownNat n)    ⇒ 𝒩   (n ∷ 𝐍) where reifyℕ   _ = natΩ   $ HS.natVal    @n P
+instance (HS.KnownNat n)    ⇒ 𝒩64 (n ∷ 𝐍) where reifyℕ64 _ = natΩ64 $ HS.natVal    @n P
+instance (HS.KnownSymbol s) ⇒ 𝒮   (s ∷ 𝐒) where reify𝕊   _ = string $ HS.symbolVal @s P
 
 compare𝐍 ∷ ∀ (a ∷ 𝐍) (b ∷ 𝐍). (𝒩 a,𝒩 b) ⇒ 𝑂 (a ≟ b)
-compare𝐍 = case HS.sameNat (HS.Proxy @ a) (HS.Proxy @ b) of
+compare𝐍 = case HS.sameNat (HS.Proxy @a) (HS.Proxy @b) of
   HS.Nothing → None
   HS.Just HS.Refl → Some Refl
 
 𝕟s ∷ ∀ n. (𝒩 n) ⇒ ℕS n
-𝕟s = ℕS_UNSAFE $ reifyℕ @ n P
+𝕟s = ℕS_UNSAFE $ reifyℕ @n P
 
 𝕟d ∷ ℕ → (∀ n. (𝒩 n) ⇒ ℕS n → a) → a
 𝕟d n f = case HS.someNatVal $ int n of
   HS.Nothing → error "impossible"
-  HS.Just (HS.SomeNat (HS.Proxy ∷ HS.Proxy n)) → f @ n $ ℕS_UNSAFE n
+  HS.Just (HS.SomeNat (HS.Proxy ∷ HS.Proxy n)) → f @n $ ℕS_UNSAFE n
 
 𝕟64s ∷ ∀ n. (𝒩64 n) ⇒ ℕ64S n
-𝕟64s = ℕ64S_UNSAFE $ reifyℕ64 @ n P
+𝕟64s = ℕ64S_UNSAFE $ reifyℕ64 @n P
 
 𝕟64d ∷ ℕ64 → (∀ n. (𝒩64 n) ⇒ ℕ64S n → a) → a
 𝕟64d n f = case HS.someNatVal $ int n of
   HS.Nothing → error "impossible"
-  HS.Just (HS.SomeNat (HS.Proxy ∷ HS.Proxy n)) → f @ n $ ℕ64S_UNSAFE n
+  HS.Just (HS.SomeNat (HS.Proxy ∷ HS.Proxy n)) → f @n $ ℕ64S_UNSAFE n
 
 𝕤s ∷ ∀ s. (HS.KnownSymbol s) ⇒ 𝕊S s
-𝕤s = 𝕊S_UNSAFE $ reify𝕊 @ s P
+𝕤s = 𝕊S_UNSAFE $ reify𝕊 @s P
 
 𝕤sd ∷ 𝕊 → (∀ s. (𝒮 s) ⇒ 𝕊S s → a) → a
 𝕤sd s f = case HS.someSymbolVal $ tohsChars s of
-  HS.SomeSymbol (HS.Proxy ∷ HS.Proxy s) → f $ 𝕊S_UNSAFE @ s s
+  HS.SomeSymbol (HS.Proxy ∷ HS.Proxy s) → f $ 𝕊S_UNSAFE @s s
 
 -- heterogeneous lists --
 
@@ -226,12 +226,12 @@ newtype 𝕀64 (n ∷ 𝐍) = 𝕀64_UNSAFE { un𝕀64 ∷ ℕ64 }
 
 𝕚64d ∷ ∀ n. (𝒩64 n) ⇒ ℕ64 → 𝑂 (𝕀64 n)
 𝕚64d m = 
-  if m < unℕ64S (𝕟64s @ n)
+  if m < unℕ64S (𝕟64s @n)
   then Some $ 𝕀64_UNSAFE m
   else None
 
 𝕟64di ∷ ∀ n a. 𝕀64 n → (∀ m. (m ≺ n) ⇒ ℕ64S m → a) → a
-𝕟64di i f = 𝕟64d (un𝕀64 i) HS.$ \ (m ∷ ℕ64S m) → with (wnlt_UNSAFE @ m @ n P P) HS.$ f m
+𝕟64di i f = 𝕟64d (un𝕀64 i) HS.$ \ (m ∷ ℕ64S m) → with (wnlt_UNSAFE @m @n P P) HS.$ f m
 
 upTo𝕀64 ∷ ∀ n. (𝒩64 n) ⇒ ℕ64S n → 𝐼S n (𝕀64 n)
 upTo𝕀64 n = 𝐼S_UNSAFE $ map 𝕀64_UNSAFE $ upTo $ unℕ64S n
@@ -260,8 +260,8 @@ instance ToIter a (𝐼S n a) where iter = un𝐼S
 -- class PlusS  t where (+♮)  ∷ t m → t n → t (m + n)
 -- class TimesS t where (×♮)  ∷ t m → t n → t (m × n)
 -- 
--- instance ZeroS  ℕ64S where zeroS  = 𝕟64s @ 0
--- instance OneS   ℕ64S where oneS   = 𝕟64s @ 1
+-- instance ZeroS  ℕ64S where zeroS  = 𝕟64s @0
+-- instance OneS   ℕ64S where oneS   = 𝕟64s @1
 -- instance PlusS  ℕ64S where m +♮ n = ℕ64S_UNSAFE $ unℕ64S m + unℕ64S n
 -- instance TimesS ℕ64S where m ×♮ n = ℕ64S_UNSAFE $ unℕ64S m × unℕ64S n
 

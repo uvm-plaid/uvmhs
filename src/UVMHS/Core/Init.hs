@@ -232,7 +232,7 @@ coerce_UNSAFE ∷ a → b
 coerce_UNSAFE = HS.unsafeCoerce
 
 weq_UNSAFE ∷ P a → P b → W (a ~ b)
-weq_UNSAFE P P = coerce_UNSAFE $ W @ (() ~ ())
+weq_UNSAFE P P = coerce_UNSAFE $ W @(() ~ ())
 
 void_UNSAFE ∷ Void
 void_UNSAFE = coerce_UNSAFE ()

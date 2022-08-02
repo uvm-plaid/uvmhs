@@ -55,7 +55,7 @@ data 𝑇V i a = 𝑇V
   }
 
 fold𝑇VOn ∷ (Monoid b) ⇒ 𝑇V i a → (a → b) → (i → b → b) → b
-fold𝑇VOn = un𝑇V
+fold𝑇VOn xs = un𝑇V xs
 
 fold𝑇VWith ∷ (Monoid b) ⇒ (a → b) → (i → b → b) → 𝑇V i a → b
 fold𝑇VWith = rotateL fold𝑇VOn

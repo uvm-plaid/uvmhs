@@ -52,7 +52,7 @@ runCR x y xM = unID $ runReaderT (x :* y) $ evalContT $ unCR xM
 𝔱 "core:monads:cr" [| 30 |] [| runCR 1 2 $ do putEnv $ 10 :* 20 ; x :* y ← ask ; return $ x + y |]
 𝔱 "core:monads:cr" [| 12 |] [| runCR 1 2 $ do putEnvL fstL 10 ; x :* y ← ask ; return $ x + y |]
 𝔱 "core:monads:cr" [| 12 |] [| runCR 1 2 $ do putEnvL fstL 10 ; reset (do x :* y ← ask ; return $ x + y) |]
-𝔱 "core:monads:cr" [| 3  |] [| runCR 1 2 $ do _←reset $ (do putEnvL fstL 10;return 0);x:*y←ask;return $ x + y |]
+𝔱 "core:monads:cr" [| 3  |] [| runCR 1 2 $ do _←reset $ (do putEnvL fstL 10;return $ 𝕟64 0);x:*y←ask;return $ x + y |]
 𝔱 "core:monads:cr" [| 110  |] 
   [| runCR 1 2 $ do putEnvL fstL 10;x ← reset $ (do putEnvL fstL 100;askL fstL);y←askL fstL;return $ x + y |]
 
@@ -71,7 +71,7 @@ runUR x y xM = unID $ runReaderT (x :* y) $ evalUContT $ unUR xM
 𝔱 "core:monads:ur" [| 30 |] [| runUR 1 2 $ do uputEnv $ 10 :* 20 ; x :* y ← ask ; return $ x + y |]
 𝔱 "core:monads:ur" [| 12 |] [| runUR 1 2 $ do uputEnvL fstL 10 ; x :* y ← ask ; return $ x + y |]
 𝔱 "core:monads:ur" [| 12 |] [| runUR 1 2 $ do uputEnvL fstL 10 ; ureset (do x :* y ← ask ; return $ x + y) |]
-𝔱 "core:monads:ur" [| 3  |] [| runUR 1 2 $ do _←ureset $ (do uputEnvL fstL 10;return 0);x:*y←ask;return $ x + y |]
+𝔱 "core:monads:ur" [| 3  |] [| runUR 1 2 $ do _←ureset $ (do uputEnvL fstL 10;return $ 𝕟64 0);x:*y←ask;return $ x + y |]
 𝔱 "core:monads:ur" [| 110  |]
   [| runUR 1 2 $ do uputEnvL fstL 10;x ← ureset $ (do uputEnvL fstL 100;askL fstL);y←askL fstL;return $ x + y |]
 

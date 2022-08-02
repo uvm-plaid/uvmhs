@@ -138,10 +138,12 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append o,Append a) ⇒ Append (Wri
   (⧺) ∷ WriterT o m a → WriterT o m a → WriterT o m a
   xM₁ ⧺ xM₂ = WriterT $ unWriterT xM₁ ⧺ unWriterT xM₂
 instance 
-  (∀ a'. Null a' ⇒ Null (m a')
-  ,∀ a'. Append a' ⇒ Append (m a')
-  ,∀ a'. Monoid a' ⇒ Monoid (m a')
-  ,Monoid o,Monoid a) 
+  ( ∀ a'. Null a' ⇒ Null (m a')
+  , ∀ a'. Append a' ⇒ Append (m a')
+  -- ( (∀ a'. Monoid a' ⇒ Monoid (m a'))
+  , Monoid o
+  , Monoid a
+  ) 
   ⇒ Monoid (WriterT o m a)
 
 instance (Null o) ⇒ Transformer (WriterT o) where
@@ -192,10 +194,11 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append s,Append a) ⇒ Append (Sta
   (⧺) ∷ StateT s m a → StateT s m a → StateT s m a
   xM₁ ⧺ xM₂ = StateT $ \ s → unStateT xM₁ s ⧺ unStateT xM₂ s
 instance 
-  (∀ a'. Null a' ⇒ Null (m a')
-  ,∀ a'. Append a' ⇒ Append (m a')
-  ,∀ a'. Monoid a' ⇒ Monoid (m a')
-  ,Monoid s,Monoid a) 
+  ( ∀ a'. Null a' ⇒ Null (m a')
+  , ∀ a'. Append a' ⇒ Append (m a')
+  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
+  , Monoid s,Monoid a
+  ) 
   ⇒ Monoid (StateT s m a)
 
 type State s = StateT s ID
@@ -257,10 +260,11 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append a) ⇒ Append (FailT m a) w
   (⧺) ∷ FailT m a → FailT m a → FailT m a
   xM₁ ⧺ xM₂ = FailT $ unFailT xM₁ ⧺ unFailT xM₂
 instance 
-  (∀ a'. Null a' ⇒ Null (m a')
-  ,∀ a'. Append a' ⇒ Append (m a')
-  ,∀ a'. Monoid a' ⇒ Monoid (m a')
-  ,Monoid a) 
+  ( ∀ a'. Null a' ⇒ Null (m a')
+  , ∀ a'. Append a' ⇒ Append (m a')
+  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
+  , Monoid a
+  ) 
   ⇒ Monoid (FailT m a)
 
 instance Transformer FailT where
@@ -311,10 +315,11 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append e,Append a) ⇒ Append (Err
   (⧺) ∷ ErrorT e m a → ErrorT e m a → ErrorT e m a
   xM₁ ⧺ xM₂ = ErrorT $ unErrorT xM₁ ⧺ unErrorT xM₂
 instance 
-  (∀ a'. Null a' ⇒ Null (m a')
-  ,∀ a'. Append a' ⇒ Append (m a')
-  ,∀ a'. Monoid a' ⇒ Monoid (m a')
-  ,Append e,Monoid a) 
+  ( ∀ a'. Null a' ⇒ Null (m a')
+  , ∀ a'. Append a' ⇒ Append (m a')
+  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
+  , Append e,Monoid a
+  )
   ⇒ Monoid (ErrorT e m a)
 
 instance Transformer (ErrorT e) where
@@ -401,10 +406,11 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append r) ⇒ Append (ContT r m a)
   (⧺) ∷ ContT r m a → ContT r m a → ContT r m a
   xM₁ ⧺ xM₂ = ContT $ \ (k ∷ a → m r) → unContT xM₁ k ⧺ unContT xM₂ k
 instance 
-  (∀ a'. Null a' ⇒ Null (m a')
-  ,∀ a'. Append a' ⇒ Append (m a')
-  ,∀ a'. Monoid a' ⇒ Monoid (m a')
-  ,Monoid r) 
+  ( ∀ a'. Null a' ⇒ Null (m a')
+  , ∀ a'. Append a' ⇒ Append (m a')
+  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
+  , Monoid r
+  ) 
   ⇒ Monoid (ContT r m a)
 
 instance Transformer (ContT r) where
@@ -418,7 +424,7 @@ instance Transformer (ContT r) where
 newtype UContT m a = UContT { unUContT ∷ ∀ u. (a → m u) → m u }
 
 runUContT ∷ ∀ u m a. (a → m u) → UContT m a → m u
-runUContT = flip unUContT
+runUContT k xM = unUContT xM k
 
 evalUContT ∷ (Return m) ⇒ UContT m a → m a
 evalUContT = runUContT return
@@ -460,9 +466,9 @@ instance (∀ a'. Append (m a')) ⇒ Append (UContT m a) where
   (⧺) ∷ UContT m a → UContT m a → UContT m a
   xM₁ ⧺ xM₂ = UContT HS.$ \ (𝓀 ∷ a → m u) → unUContT xM₁ 𝓀 ⧺ unUContT xM₂ 𝓀
 instance 
-  ( ∀ a'. Null (m a')
-  , ∀ a'. Append (m a')
-  , ∀ a'. Monoid (m a')
+  -- ( ∀ a'. Null (m a')
+  -- , ∀ a'. Append (m a')
+  ( ∀ a'. Monoid (m a')
   ) ⇒ Monoid (UContT m a)
 
 instance Transformer UContT where
@@ -1151,10 +1157,11 @@ instance (Monoid o) ⇒ Transformer (RWST r o s) where
 deriving instance (∀ a'. Null a' ⇒ Null (m a'),Null o,Null s,Null a) ⇒ Null (RWST r o s m a)
 deriving instance (∀ a'. Append a' ⇒ Append (m a'),Append o,Append s,Append a) ⇒ Append (RWST r o s m a)
 deriving instance 
-  (∀ a'. Null a' ⇒ Null (m a')
-  ,∀ a'. Append a' ⇒ Append (m a')
-  ,∀ a'. Monoid a' ⇒ Monoid (m a')
-  ,Monoid o,Monoid s,Monoid a) 
+  ( ∀ a'. Null a' ⇒ Null (m a')
+  , ∀ a'. Append a' ⇒ Append (m a')
+  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
+  , Monoid o,Monoid s,Monoid a
+  ) 
   ⇒ Monoid (RWST r o s m a)
 
 type RWS r o s = RWST r o s ID

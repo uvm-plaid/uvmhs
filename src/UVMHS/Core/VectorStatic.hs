@@ -47,7 +47,7 @@ instance (𝒩 n,Times a) ⇒ Times (𝕍S n a) where xs × ys  = svecF 𝕟64s 
 -- instance DotProduct U 𝕍S where
 
 svec ∷ ∀ n a. (𝒩 n) ⇒ 𝐼S n a → 𝕍S n a
-svec xs = 𝕍S_UNSAFE $ VB.fromListN (tohs $ intΩ64 $ unℕ64S $ 𝕟64s @ n) $ lazyList $ un𝐼S xs
+svec xs = 𝕍S_UNSAFE $ VB.fromListN (tohs $ intΩ64 $ unℕ64S $ 𝕟64s @n) $ lazyList $ un𝐼S xs
 
 svecF ∷ ∀ n a. (𝒩 n) ⇒ ℕ64S n → (𝕀64 n → a) → 𝕍S n a
 svecF n f = svec $ map f $ upTo𝕀64 n
@@ -98,7 +98,7 @@ xs ⋅ ys = sum $ map (\ i → xs ⋕ i × ys ⋕ i) $ upTo𝕀64 $ 𝕟64s
 xs ✖ ys = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j → xs ⋕ i ⋅ ys ⋕ j
 
 d𝕍 ∷ 𝕍 a → (∀ n. (𝒩64 n) ⇒ 𝕍S n a → b) → b
-d𝕍 xs f = 𝕟64d (natΩ64 $ frhs $ VB.length $ un𝕍 xs) HS.$ \ (_ ∷ ℕ64S n) → f @ n $ 𝕍S_UNSAFE $ un𝕍 xs
+d𝕍 xs f = 𝕟64d (natΩ64 $ frhs $ VB.length $ un𝕍 xs) HS.$ \ (_ ∷ ℕ64S n) → f @n $ 𝕍S_UNSAFE $ un𝕍 xs
 
 --------
 -- 𝕌S --
@@ -114,7 +114,7 @@ instance (Storable a) ⇒ Lookup ℕ64 a (𝕌S n a)     where (⋕?)   = flip i
 instance (𝒩 n,Storable a,Null a) ⇒ Null (𝕌S n a)  where null   = null𝕌S 𝕟64s
 
 suvec ∷ ∀ n a. (𝒩 n,Storable a) ⇒ 𝐼S n a → 𝕌S n a
-suvec xs = 𝕌S_UNSAFE $ VU.fromListN (tohs $ intΩ64 $ unℕ64S $ 𝕟64s @ n) $ lazyList $ un𝐼S xs
+suvec xs = 𝕌S_UNSAFE $ VU.fromListN (tohs $ intΩ64 $ unℕ64S $ 𝕟64s @n) $ lazyList $ un𝐼S xs
 
 suvecF ∷ ∀ n a. (𝒩 n,Storable a) ⇒ ℕ64S n → (𝕀64 n → a) → 𝕌S n a
 suvecF n f = suvec $ map f $ upTo𝕀64 n
@@ -141,7 +141,7 @@ map𝕌S ∷ (𝒩 n,Storable a,Storable b) ⇒ (a → b) → 𝕌S n a → 𝕌
 map𝕌S f = suvec ∘ map f ∘ iter𝕌SS
 
 d𝕌 ∷ (Storable a) ⇒ 𝕌 a → (∀ n. (𝒩64 n) ⇒ 𝕌S n a → b) → b
-d𝕌 xs f = 𝕟64d (natΩ64 $ frhs $ VU.length $ un𝕌 xs) HS.$ \ (_ ∷ ℕ64S n) → f @ n $ 𝕌S_UNSAFE $ un𝕌 xs
+d𝕌 xs f = 𝕟64d (natΩ64 $ frhs $ VU.length $ un𝕌 xs) HS.$ \ (_ ∷ ℕ64S n) → f @n $ 𝕌S_UNSAFE $ un𝕌 xs
 
 --------
 -- 𝕄S --

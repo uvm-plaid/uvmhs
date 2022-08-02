@@ -67,7 +67,7 @@ map𝕍 ∷ (a → b) → 𝕍 a → 𝕍 b
 map𝕍 f = 𝕍 ∘ VB.map f ∘ un𝕍
 
 mapM𝕍 ∷ ∀ m a b. (Monad m) ⇒ (a → m b) → 𝕍 a → m (𝕍 b)
-mapM𝕍 f = with (tohsMonad @ m) HS.$ 𝕍 ^∘ VB.mapM f ∘ un𝕍
+mapM𝕍 f = with (tohsMonad @m) HS.$ 𝕍 ^∘ VB.mapM f ∘ un𝕍
 
 null𝕍 ∷ (Null a) ⇒ ℕ64 → 𝕍 a
 null𝕍 n = vecF n $ const null
@@ -156,7 +156,7 @@ map𝕍 ∷ (a → b) → 𝕍 a → 𝕍 b
 map𝕍 f = 𝕍 ∘ VB.map f ∘ un𝕍
 
 mapM𝕍 ∷ ∀ m a b. (Monad m) ⇒ (a → m b) → 𝕍 a → m (𝕍 b)
-mapM𝕍 f = with (tohsMonad @ m) $ 𝕍 ^∘ VB.mapM f ∘ un𝕍
+mapM𝕍 f = with (tohsMonad @m) $ 𝕍 ^∘ VB.mapM f ∘ un𝕍
 
 null𝕍 ∷ (Null a) ⇒ ℕ64 → 𝕍 a
 null𝕍 n = vecF n $ const null
@@ -208,7 +208,7 @@ map𝕌 ∷ (Storable a,Storable b) ⇒ (a → b) → 𝕌 a → 𝕌 b
 map𝕌 f = 𝕌 ∘ VU.map f ∘ un𝕌
 
 mapM𝕌 ∷ ∀ m a b. (Monad m,Storable a,Storable b) ⇒ (a → m b) → 𝕌 a → m (𝕌 b)
-mapM𝕌 f = with (tohsMonad @ m) HS.$ 𝕌 ^∘ VU.mapM f ∘ un𝕌
+mapM𝕌 f = with (tohsMonad @m) HS.$ 𝕌 ^∘ VU.mapM f ∘ un𝕌
 
 null𝕌 ∷ (Storable a,Null a) ⇒ ℕ64 → 𝕌 a
 null𝕌 n = uvecF n $ const null

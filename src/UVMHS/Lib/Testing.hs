@@ -114,34 +114,34 @@ runTests verb tests = do
 
 𝔱 ∷ 𝕊 → TH.Q TH.Exp → TH.Q TH.Exp → TH.Q [TH.Dec]
 #ifdef UVMHS_TESTS
-𝔱 tag xEQ yEQ = 𝔱T @ () tag (TH.TExp ^$ xEQ) (TH.TExp ^$ yEQ)
+𝔱 tag xEQ yEQ = 𝔱T @() tag (TH.Code $ TH.TExp ^$ xEQ) (TH.Code $ TH.TExp ^$ yEQ)
 #else
 𝔱 _ _ _ = return []
 #endif
 
-𝔱T ∷ (Eq a,Pretty a) ⇒ 𝕊 → TH.Q (TH.TExp a) → TH.Q (TH.TExp a) → TH.Q [TH.Dec]
+𝔱T ∷ (Eq a,Pretty a) ⇒ 𝕊 → TH.Code TH.Q a → TH.Code TH.Q a → TH.Q [TH.Dec]
 𝔱T tag xEQ yEQ = do
   l ← TH.location
   let lS = concat [frhsChars $ TH.loc_module l,":",show𝕊 $ fst $ frhs $ TH.loc_start l]
-  xE ← xEQ
-  yE ← yEQ
+  xE ← TH.unTypeCode xEQ
+  yE ← TH.unTypeCode yEQ
   let tags = list $ splitOn𝕊 ":" tag
-      xS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint $ TH.unType xE
-      yS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint $ TH.unType yE
-  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test)))))
+      xS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint xE
+      yS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint yE
+  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.Code TH.Q (IO (𝑇D Test))))
   let t = [|| return $ eqTest tags lS xS yS $$xEQ $$yEQ ||]
       tests' = tests ⧺ single t
-  TH.putQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test))))) tests'
+  TH.putQ @(𝐼 (TH.Code TH.Q (IO (𝑇D Test)))) tests'
   [d| |]
 
 𝔣 ∷ 𝕊 → ℕ64 → TH.Q TH.Exp → TH.Q TH.Exp → TH.Q [TH.Dec]
 #ifdef UVMHS_TESTS
-𝔣 tag k xEQ pEQ = 𝔣T @ () tag k (TH.TExp ^$ xEQ) (TH.TExp ^$ pEQ)
+𝔣 tag k xEQ pEQ = 𝔣T @() tag k (TH.Code $ TH.TExp ^$ xEQ) (TH.Code $ TH.TExp ^$ pEQ)
 #else
 𝔣 _ _ _ _ = return []
 #endif
 
-𝔣T ∷ (Pretty a) ⇒ 𝕊 → ℕ64 → TH.Q (TH.TExp (IO a)) → TH.Q (TH.TExp (a → 𝔹)) → TH.Q [TH.Dec]
+𝔣T ∷ (Pretty a) ⇒ 𝕊 → ℕ64 → TH.Code TH.Q (IO a) → TH.Code TH.Q (a → 𝔹) → TH.Q [TH.Dec]
 𝔣T tag k xEQ pEQ = do
   l ← TH.location
   let lS = concat
@@ -149,41 +149,41 @@ runTests verb tests = do
         , ":"
         , show𝕊 $ fst $ frhs $ TH.loc_start l
         ]
-  xE ← xEQ
-  pE ← pEQ
+  xE ← TH.unTypeCode xEQ
+  pE ← TH.unTypeCode pEQ
   let tags = list $ splitOn𝕊 ":" tag
-      xS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint $ TH.unType xE
-      pS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint $ TH.unType pE
-  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test)))))
+      xS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint xE
+      pS = truncate𝕊 (𝕟64 80) "…" $ frhsChars $ TH.pprint pE
+  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.Code TH.Q (IO (𝑇D Test))))
   let t' = [|| fuzzTest tags lS xS pS $$xEQ $$pEQ ||]
       tests' = foldOnFrom (upTo k) tests $ const $ pospend $ single t'
-  TH.putQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test))))) tests'
+  TH.putQ @(𝐼 (TH.Code TH.Q (IO (𝑇D Test)))) tests'
   [d| |]
 
 buildTests ∷ TH.Q [TH.Dec]
 buildTests = do
-  testEQs ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @ (𝐼 (TH.Q (TH.TExp (IO (𝑇D Test)))))
+  testEQs ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.Code TH.Q (IO (𝑇D Test))))
   l ← TH.location
   let modNameS = frhsChars $ TH.loc_module l 
       testsNameS = "g__TESTS__" ⧺ replace𝕊 "." "__" modNameS
       testsName = TH.mkName $ tohsChars testsNameS
-      testEQs' ∷ TH.Q (TH.TExp [IO (𝑇D Test)])
-      testEQs' = TH.TExp ^$ TH.listE $ lazyList $ mapp TH.unType testEQs
-      testsEQ ∷ TH.Q (TH.TExp (IO (𝑇D Test)))
+      testEQs' ∷ TH.Code TH.Q [IO (𝑇D Test)]
+      testEQs' = TH.Code $ TH.TExp ^$ TH.listE $ lazyList $ map TH.unTypeCode testEQs
+      testsEQ ∷ TH.Code TH.Q (IO (𝑇D Test))
       testsEQ = [|| concat ^$ exchange $$testEQs' ||]
   concat ^$ exchange $
     [ single ^$ TH.sigD testsName [t| IO (𝑇D Test) |]
-    , [d| $(TH.varP testsName) = $(TH.unType ^$ testsEQ) |]
+    , [d| $(TH.varP testsName) = $(TH.unTypeCode testsEQ) |]
     ]
     
-testModules ∷ 𝔹 → [𝕊] → TH.Q (TH.TExp (IO ()))
+testModules ∷ 𝔹 → [𝕊] → TH.Code TH.Q (IO ())
 testModules verb nsS =
   let nss = map (splitOn𝕊 ":") nsS
       testsNamesS = mapOn nss $ \ ns → 
         concat $ inbetween "." $ mapLastOn ns $ \ n → "g__TESTS__" ⧺ replace𝕊 "." "__" n
       testsNames = mapOn testsNamesS $ \ testsNameS → TH.mkName $ tohsChars testsNameS
       testNamesE = mapOn testsNames $ \ testsName → TH.varE testsName
-      testsEQ ∷ TH.Q (TH.TExp [IO (𝑇D Test)])
-      testsEQ = TH.TExp ^$ TH.listE $ lazyList testNamesE
+      testsEQ ∷ TH.Code TH.Q [IO (𝑇D Test)]
+      testsEQ = TH.Code $ TH.TExp ^$ TH.listE $ lazyList testNamesE
   in
   [|| runTests verb *$ concat ^$ exchange $$testsEQ ||]

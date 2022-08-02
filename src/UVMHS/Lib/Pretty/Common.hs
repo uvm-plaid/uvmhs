@@ -87,7 +87,7 @@ chunkIO = \case
   PaddingChunkO n → RawChunkI n $ string $ replicate n ' '
 
 treeIO ∷ TreeO → TreeI
-treeIO = map𝑇V formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @ _ @ (𝐼 _) $ NewlineChunkI zero) (map chunkIO ∘ iter)
+treeIO = map𝑇V formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @_ @(𝐼 _) $ NewlineChunkI zero) (map chunkIO ∘ iter)
 
 --------------
 -- SummaryI --
@@ -184,9 +184,9 @@ hvalign ha va m n (SummaryO sh cs) =
         RH → hwrap (\ s → m - s) $ const zero
       g ∷ Sep () (𝐼A ChunkO) → Sep () (𝐼A ChunkO)
       g = case va of
-        TV → vwrap (zero @ ℕ64) $ n - h
+        TV → vwrap (zero @ℕ64) $ n - h
         CV → vwrap hdm $ n - h - hdm
-        BV → vwrap (n - h) $ zero @ ℕ64
+        BV → vwrap (n - h) $ zero @ℕ64
   in SummaryO (boxShape m n) $ map (map f ∘ g) cs
   where
     hwrap fi fj xs =

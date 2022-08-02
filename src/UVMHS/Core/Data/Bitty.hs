@@ -14,7 +14,7 @@ shiftR_shim ∷ (HS.Bits a) ⇒ a → ℕ64 → a
 shiftR_shim x n = HS.shiftR x $ tohs $ intΩ64 n
 
 bsize_shim ∷ ∀ a. (HS.FiniteBits a) ⇒ P a → ℕ64
-bsize_shim _ = natΩ64 $ frhs $ HS.finiteBitSize @ a undefined
+bsize_shim _ = natΩ64 $ frhs $ HS.finiteBitSize @a undefined
 
 instance BitZero   𝔹 where bzero  = HS.zeroBits
 instance BitOne    𝔹 where bone   = True
