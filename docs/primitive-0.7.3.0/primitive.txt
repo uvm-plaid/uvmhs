@@ -301,11 +301,15 @@ sizeofMutableArray :: MutableArray s a -> Int
 -- | The empty <a>Array</a>.
 emptyArray :: Array a
 
--- | The <a>fromListN</a> function takes the input list's length as a hint.
---   Its behaviour should be equivalent to <a>fromList</a>. The hint can be
---   used to construct the structure <tt>l</tt> more efficiently compared
---   to <a>fromList</a>. If the given hint does not equal to the input
---   list's length the behaviour of <a>fromListN</a> is not specified.
+-- | The <a>fromListN</a> function takes the input list's length and
+--   potentially uses it to construct the structure <tt>l</tt> more
+--   efficiently compared to <a>fromList</a>. If the given number does not
+--   equal to the input list's length the behaviour of <a>fromListN</a> is
+--   not specified.
+--   
+--   <pre>
+--   fromListN (length xs) xs == fromList xs
+--   </pre>
 fromListN :: IsList l => Int -> [Item l] -> l
 
 -- | The <a>fromList</a> function constructs the structure <tt>l</tt> from

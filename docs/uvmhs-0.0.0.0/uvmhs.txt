@@ -174,7 +174,7 @@ assert :: Bool -> a -> a
 --   <tt>RuntimeRep</tt> type argument is marked as <tt>Inferred</tt>,
 --   meaning that it is not available for visible type application. This
 --   means the typechecker will accept <tt>coerce @Int @Age 42</tt>.
-coerce :: forall (k :: RuntimeRep) (a :: TYPE k) (b :: TYPE k). Coercible a b => a -> b
+coerce :: forall {k :: RuntimeRep} (a :: TYPE k) (b :: TYPE k). Coercible a b => a -> b
 
 -- | The kind of constraints, like <tt>Show a</tt>
 data Constraint
@@ -2560,15 +2560,15 @@ class MonadQ (m :: ★ -> ★)
 qio :: MonadQ m => Q a -> m a
 thString :: 𝕊 -> Exp
 thConNames :: Con -> 𝐿 Name
-thTyVarBndrName :: TyVarBndr -> Name
+thTyVarBndrName :: TyVarBndr a -> Name
 thSingleClause :: 𝐿 Pat -> Exp -> Clause
 thSingleMatch :: Pat -> Exp -> Match
 thViewSimpleCon :: Con -> 𝑂 (Name ∧ 𝐿 Type)
 thTyConIL :: Info ⌲ Dec
-thDataDL :: Dec ⌲ (((((Cxt ∧ Name) ∧ 𝐿 TyVarBndr) ∧ 𝑂 Kind) ∧ 𝐿 Con) ∧ 𝐿 DerivClause)
-thNewtypeDL :: Dec ⌲ (((((Cxt ∧ Name) ∧ 𝐿 TyVarBndr) ∧ 𝑂 Kind) ∧ Con) ∧ 𝐿 DerivClause)
-thViewADT :: Dec -> 𝑂 (((((Cxt ∧ Name) ∧ 𝐿 TyVarBndr) ∧ 𝑂 Kind) ∧ 𝐿 Con) ∧ 𝐿 DerivClause)
-thViewSingleConADT :: Dec -> 𝑂 (((((Cxt ∧ Name) ∧ 𝐿 TyVarBndr) ∧ 𝑂 Kind) ∧ Con) ∧ 𝐿 DerivClause)
+thDataDL :: Dec ⌲ (((((Cxt ∧ Name) ∧ 𝐿 (TyVarBndr ())) ∧ 𝑂 Kind) ∧ 𝐿 Con) ∧ 𝐿 DerivClause)
+thNewtypeDL :: Dec ⌲ (((((Cxt ∧ Name) ∧ 𝐿 (TyVarBndr ())) ∧ 𝑂 Kind) ∧ Con) ∧ 𝐿 DerivClause)
+thViewADT :: Dec -> 𝑂 (((((Cxt ∧ Name) ∧ 𝐿 (TyVarBndr ())) ∧ 𝑂 Kind) ∧ 𝐿 Con) ∧ 𝐿 DerivClause)
+thViewSingleConADT :: Dec -> 𝑂 (((((Cxt ∧ Name) ∧ 𝐿 (TyVarBndr ())) ∧ 𝑂 Kind) ∧ Con) ∧ 𝐿 DerivClause)
 thRecCL :: Con ⌲ (Name ∧ 𝐿 VarStrictType)
 thLoc𝕊 :: Q 𝕊
 thLoc :: Q (TExp ((𝕊 -> c) -> c))
@@ -2750,7 +2750,7 @@ instance (UVMHS.Core.Classes.Monad.Return m, UVMHS.Core.Classes.Monoid.Null o) =
 instance UVMHS.Core.Classes.Functor.Functor m => UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Monads.RWST r o s m)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), UVMHS.Core.Classes.Monoid.Null o, UVMHS.Core.Classes.Monoid.Null s, UVMHS.Core.Classes.Monoid.Null a) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Monads.RWST r o s m a)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Append o, UVMHS.Core.Classes.Monoid.Append s, UVMHS.Core.Classes.Monoid.Append a) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Monads.RWST r o s m a)
-instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), forall a'. UVMHS.Core.Classes.Monoid.Monoid a' => UVMHS.Core.Classes.Monoid.Monoid (m a'), UVMHS.Core.Classes.Monoid.Monoid o, UVMHS.Core.Classes.Monoid.Monoid s, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.RWST r o s m a)
+instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid o, UVMHS.Core.Classes.Monoid.Monoid s, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.RWST r o s m a)
 instance UVMHS.Core.Classes.Monoid.Monoid o => UVMHS.Core.Classes.Functor.Functor2 (UVMHS.Core.Monads.RWST r o s)
 instance UVMHS.Core.Monads.RWST r o s UVMHS.Core.Classes.Morphism.⇄⁼ ((UVMHS.Core.Monads.ReaderT r UVMHS.Core.Transformers.⊡ UVMHS.Core.Monads.WriterT o) UVMHS.Core.Transformers.⊡ UVMHS.Core.Monads.StateT s)
 instance UVMHS.Core.Classes.Monoid.Monoid o => UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.RWST r o s)
@@ -2770,7 +2770,7 @@ instance UVMHS.Core.Classes.Functor.Functor2Iso UVMHS.Core.Monads.UContT
 instance UVMHS.Core.Classes.Monad.Monad m => UVMHS.Core.Effects.MonadUCont (UVMHS.Core.Monads.UContT m)
 instance forall k (m :: k -> *) a. (forall (a' :: k). UVMHS.Core.Classes.Monoid.Null (m a')) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Monads.UContT m a)
 instance forall k (m :: k -> *) a. (forall (a' :: k). UVMHS.Core.Classes.Monoid.Append (m a')) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Monads.UContT m a)
-instance forall k (m :: k -> *) a. (forall (a' :: k). UVMHS.Core.Classes.Monoid.Null (m a'), forall (a' :: k). UVMHS.Core.Classes.Monoid.Append (m a'), forall (a' :: k). UVMHS.Core.Classes.Monoid.Monoid (m a')) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.UContT m a)
+instance forall k (m :: k -> *) a. (forall (a' :: k). UVMHS.Core.Classes.Monoid.Monoid (m a')) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.UContT m a)
 instance UVMHS.Core.Classes.Monad.Transformer UVMHS.Core.Monads.UContT
 instance UVMHS.Core.Effects.LiftIO UVMHS.Core.Monads.UContT
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m) => UVMHS.Core.Effects.MonadReader r (UVMHS.Core.Monads.UContT m)
@@ -2788,7 +2788,7 @@ instance UVMHS.Core.Classes.Functor.Functor2Iso (UVMHS.Core.Monads.ContT r)
 instance UVMHS.Core.Classes.Monad.Monad m => UVMHS.Core.Effects.MonadCont r (UVMHS.Core.Monads.ContT r m)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), UVMHS.Core.Classes.Monoid.Null r) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Monads.ContT r m a)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Append r) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Monads.ContT r m a)
-instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), forall a'. UVMHS.Core.Classes.Monoid.Monoid a' => UVMHS.Core.Classes.Monoid.Monoid (m a'), UVMHS.Core.Classes.Monoid.Monoid r) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.ContT r m a)
+instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid r) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.ContT r m a)
 instance UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.ContT r)
 instance UVMHS.Core.Effects.LiftIO (UVMHS.Core.Monads.ContT r)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r' m) => UVMHS.Core.Effects.MonadReader r' (UVMHS.Core.Monads.ContT r m)
@@ -2821,7 +2821,7 @@ instance UVMHS.Core.Classes.Functor.Functor2 (UVMHS.Core.Monads.ErrorT e)
 instance UVMHS.Core.Classes.Monad.Monad m => UVMHS.Core.Effects.MonadError e (UVMHS.Core.Monads.ErrorT e m)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), UVMHS.Core.Classes.Monoid.Null a) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Monads.ErrorT e m a)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Append e, UVMHS.Core.Classes.Monoid.Append a) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Monads.ErrorT e m a)
-instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), forall a'. UVMHS.Core.Classes.Monoid.Monoid a' => UVMHS.Core.Classes.Monoid.Monoid (m a'), UVMHS.Core.Classes.Monoid.Append e, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.ErrorT e m a)
+instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Append e, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.ErrorT e m a)
 instance UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.ErrorT e)
 instance UVMHS.Core.Effects.LiftIO (UVMHS.Core.Monads.ErrorT e)
 instance UVMHS.Core.Effects.LiftReader (UVMHS.Core.Monads.ErrorT e)
@@ -2840,7 +2840,7 @@ instance UVMHS.Core.Classes.Functor.Functor2 UVMHS.Core.Monads.FailT
 instance UVMHS.Core.Classes.Monad.Monad m => UVMHS.Core.Effects.MonadFail (UVMHS.Core.Monads.FailT m)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), UVMHS.Core.Classes.Monoid.Null a) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Monads.FailT m a)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Append a) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Monads.FailT m a)
-instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), forall a'. UVMHS.Core.Classes.Monoid.Monoid a' => UVMHS.Core.Classes.Monoid.Monoid (m a'), UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.FailT m a)
+instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.FailT m a)
 instance UVMHS.Core.Classes.Monad.Transformer UVMHS.Core.Monads.FailT
 instance UVMHS.Core.Effects.LiftIO UVMHS.Core.Monads.FailT
 instance UVMHS.Core.Effects.LiftReader UVMHS.Core.Monads.FailT
@@ -2859,7 +2859,7 @@ instance UVMHS.Core.Classes.Functor.Functor2 (UVMHS.Core.Monads.StateT s)
 instance UVMHS.Core.Classes.Monad.Return m => UVMHS.Core.Effects.MonadState s (UVMHS.Core.Monads.StateT s m)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), UVMHS.Core.Classes.Monoid.Null s, UVMHS.Core.Classes.Monoid.Null a) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Monads.StateT s m a)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Append s, UVMHS.Core.Classes.Monoid.Append a) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Monads.StateT s m a)
-instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), forall a'. UVMHS.Core.Classes.Monoid.Monoid a' => UVMHS.Core.Classes.Monoid.Monoid (m a'), UVMHS.Core.Classes.Monoid.Monoid s, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.StateT s m a)
+instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid s, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.StateT s m a)
 instance UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.StateT s)
 instance UVMHS.Core.Effects.LiftIO (UVMHS.Core.Monads.StateT s)
 instance UVMHS.Core.Effects.LiftReader (UVMHS.Core.Monads.StateT s)
@@ -2878,7 +2878,7 @@ instance UVMHS.Core.Classes.Monoid.Monoid o => UVMHS.Core.Classes.Functor.Functo
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Classes.Monoid.Null o) => UVMHS.Core.Effects.MonadWriter o (UVMHS.Core.Monads.WriterT o m)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), UVMHS.Core.Classes.Monoid.Null o, UVMHS.Core.Classes.Monoid.Null a) => UVMHS.Core.Classes.Monoid.Null (UVMHS.Core.Monads.WriterT o m a)
 instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Append o, UVMHS.Core.Classes.Monoid.Append a) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Monads.WriterT o m a)
-instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), forall a'. UVMHS.Core.Classes.Monoid.Monoid a' => UVMHS.Core.Classes.Monoid.Monoid (m a'), UVMHS.Core.Classes.Monoid.Monoid o, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.WriterT o m a)
+instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid o, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.WriterT o m a)
 instance UVMHS.Core.Classes.Monoid.Null o => UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.WriterT o)
 instance UVMHS.Core.Classes.Monoid.Null o => UVMHS.Core.Effects.LiftIO (UVMHS.Core.Monads.WriterT o)
 instance UVMHS.Core.Classes.Monoid.Null o => UVMHS.Core.Effects.LiftReader (UVMHS.Core.Monads.WriterT o)
@@ -2971,9 +2971,9 @@ rtimeIO :: 𝕊 -> IO a -> IO a
 profile :: (() -> a) -> IO (TimeD ∧ 𝔻)
 
 module UVMHS.Core.LensDeriving
-makeLensLogic :: Cxt -> Name -> 𝐿 TyVarBndr -> Name -> Type -> Q (𝐿 Dec)
+makeLensLogic :: Cxt -> Name -> 𝐿 (TyVarBndr ()) -> Name -> Type -> Q (𝐿 Dec)
 makeLenses :: Name -> Q [Dec]
-makePrismLogic :: Cxt -> Name -> 𝐿 TyVarBndr -> Name -> 𝐿 Type -> ℕ -> Q (𝐿 Dec)
+makePrismLogic :: Cxt -> Name -> 𝐿 (TyVarBndr ()) -> Name -> 𝐿 Type -> ℕ -> Q (𝐿 Dec)
 makePrisms :: Name -> Q [Dec]
 
 module UVMHS.Core.Vector
@@ -4026,11 +4026,11 @@ instance GHC.Classes.Ord UVMHS.Lib.Pretty.RenderANSI.ANSIEnv
 instance GHC.Classes.Eq UVMHS.Lib.Pretty.RenderANSI.ANSIEnv
 
 module UVMHS.Lib.Pretty.Deriving
-makePrettySumLogic :: Cxt -> Name -> 𝐿 TyVarBndr -> 𝐿 (Name ∧ 𝐿 Type) -> Q (𝐿 Dec)
+makePrettySumLogic :: Cxt -> Name -> 𝐿 (TyVarBndr ()) -> 𝐿 (Name ∧ 𝐿 Type) -> Q (𝐿 Dec)
 makePrettySum :: Name -> Q [Dec]
-makePrettyUnionLogic :: Cxt -> Name -> 𝐿 TyVarBndr -> 𝐿 (Name ∧ 𝐿 Type) -> Q (𝐿 Dec)
+makePrettyUnionLogic :: Cxt -> Name -> 𝐿 (TyVarBndr ()) -> 𝐿 (Name ∧ 𝐿 Type) -> Q (𝐿 Dec)
 makePrettyUnion :: Name -> Q [Dec]
-makePrettyRecordLogic :: Cxt -> Name -> 𝐿 TyVarBndr -> Name -> 𝐿 (Name ∧ Type) -> Q (𝐿 Dec)
+makePrettyRecordLogic :: Cxt -> Name -> 𝐿 (TyVarBndr ()) -> Name -> 𝐿 (Name ∧ Type) -> Q (𝐿 Dec)
 makePrettyRecord :: Name -> Q [Dec]
 
 module UVMHS.Lib.Pretty.DerivedInstances
@@ -4117,8 +4117,8 @@ data 𝐴 e a
 𝐴 :: e -> a -> 𝐴 e a
 [atag] :: 𝐴 e a -> e
 [aval] :: 𝐴 e a -> a
-avalL :: forall (e_a300D :: Type) (a_a300E :: Type). (⟢) (𝐴 e_a300D a_a300E) a_a300E
-atagL :: forall (e_a300D :: Type) (a_a300E :: Type). (⟢) (𝐴 e_a300D a_a300E) e_a300D
+avalL :: forall (e_a35DN :: Type) (a_a35DO :: Type). (⟢) (𝐴 e_a35DN a_a35DO) a_a35DO
+atagL :: forall (e_a35DN :: Type) (a_a35DO :: Type). (⟢) (𝐴 e_a35DN a_a35DO) e_a35DN
 untag :: (e -> b -> b) -> 𝐴 e a -> (a -> b) -> b
 untagWith :: (e -> b -> b) -> (a -> b) -> 𝐴 e a -> b
 retag :: Monad m => m e -> a -> m (𝐴 e a)
@@ -4139,8 +4139,8 @@ data ADF a
 ADF :: a -> a -> ADF a
 [adfVal] :: ADF a -> a
 [adfDer] :: ADF a -> a
-adfDerL :: forall (a_a317n :: Type). (⟢) (ADF a_a317n) a_a317n
-adfValL :: forall (a_a317n :: Type). (⟢) (ADF a_a317n) a_a317n
+adfDerL :: forall (a_a3bDN :: Type). (⟢) (ADF a_a3bDN) a_a3bDN
+adfValL :: forall (a_a3bDN :: Type). (⟢) (ADF a_a3bDN) a_a3bDN
 constADF :: Zero a => a -> ADF a
 sensADF :: a -> a -> ADF a
 plusADF :: Plus a => ADF a -> ADF a -> ADF a
@@ -4149,8 +4149,8 @@ data ADB a
 ADB :: a -> (a -> a -> a) -> ADB a
 [adbVal] :: ADB a -> a
 [adbDer] :: ADB a -> a -> a -> a
-adbDerL :: forall (a_a31cI :: Type). (⟢) (ADB a_a31cI) (a_a31cI -> a_a31cI -> a_a31cI)
-adbValL :: forall (a_a31cI :: Type). (⟢) (ADB a_a31cI) a_a31cI
+adbDerL :: forall (a_a3bPD :: Type). (⟢) (ADB a_a3bPD) (a_a3bPD -> a_a3bPD -> a_a3bPD)
+adbValL :: forall (a_a3bPD :: Type). (⟢) (ADB a_a3bPD) a_a3bPD
 constADB :: Zero a => a -> ADB a
 sensADB :: a -> (a -> a -> a) -> ADB a
 plusADB :: Plus a => ADB a -> ADB a -> ADB a
@@ -4159,8 +4159,8 @@ data ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adffVal] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adffDer] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
-adffDerL :: forall (ns_a31gR :: [𝐍]) (f_a31gS :: [𝐍] -> Type -> Type) (ms_a31gT :: [𝐍]) (a_a31gU :: Type). (⟢) (ADFF ns_a31gR f_a31gS ms_a31gT a_a31gU) (f_a31gS ((⧺) ns_a31gR ms_a31gT) a_a31gU)
-adffValL :: forall (ns_a31gR :: [𝐍]) (f_a31gS :: [𝐍] -> Type -> Type) (ms_a31gT :: [𝐍]) (a_a31gU :: Type). (⟢) (ADFF ns_a31gR f_a31gS ms_a31gT a_a31gU) (f_a31gS ((⧺) ns_a31gR ms_a31gT) a_a31gU)
+adffDerL :: forall (ns_a3bVr :: [𝐍]) (f_a3bVs :: [𝐍] -> Type -> Type) (ms_a3bVt :: [𝐍]) (a_a3bVu :: Type). (⟢) (ADFF ns_a3bVr f_a3bVs ms_a3bVt a_a3bVu) (f_a3bVs ((⧺) ns_a3bVr ms_a3bVt) a_a3bVu)
+adffValL :: forall (ns_a3bVr :: [𝐍]) (f_a3bVs :: [𝐍] -> Type -> Type) (ms_a3bVt :: [𝐍]) (a_a3bVu :: Type). (⟢) (ADFF ns_a3bVr f_a3bVs ms_a3bVt a_a3bVu) (f_a3bVs ((⧺) ns_a3bVr ms_a3bVt) a_a3bVu)
 constADFF :: Zero (f (ns ⧺ ms) a) => f (ns ⧺ ms) a -> ADFF ns f ms a
 sensADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF ns f ms a
 plusADFF :: Plus (f (ns ⧺ ms) a) => ADFF ns f ms a -> ADFF ns f ms a -> ADFF ns f ms a
@@ -4169,8 +4169,8 @@ data ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adfbVal] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adfbDer] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a
-adfbDerL :: forall (ns_a31mF :: [𝐍]) (f_a31mG :: [𝐍] -> Type -> Type) (ms_a31mH :: [𝐍]) (a_a31mI :: Type). (⟢) (ADFB ns_a31mF f_a31mG ms_a31mH a_a31mI) (f_a31mG ((⧺) ns_a31mF ms_a31mH) a_a31mI -> f_a31mG ((⧺) ns_a31mF ms_a31mH) a_a31mI -> f_a31mG ((⧺) ns_a31mF ms_a31mH) a_a31mI)
-adfbValL :: forall (ns_a31mF :: [𝐍]) (f_a31mG :: [𝐍] -> Type -> Type) (ms_a31mH :: [𝐍]) (a_a31mI :: Type). (⟢) (ADFB ns_a31mF f_a31mG ms_a31mH a_a31mI) (f_a31mG ((⧺) ns_a31mF ms_a31mH) a_a31mI)
+adfbDerL :: forall (ns_a3c5h :: [𝐍]) (f_a3c5i :: [𝐍] -> Type -> Type) (ms_a3c5j :: [𝐍]) (a_a3c5k :: Type). (⟢) (ADFB ns_a3c5h f_a3c5i ms_a3c5j a_a3c5k) (f_a3c5i ((⧺) ns_a3c5h ms_a3c5j) a_a3c5k -> f_a3c5i ((⧺) ns_a3c5h ms_a3c5j) a_a3c5k -> f_a3c5i ((⧺) ns_a3c5h ms_a3c5j) a_a3c5k)
+adfbValL :: forall (ns_a3c5h :: [𝐍]) (f_a3c5i :: [𝐍] -> Type -> Type) (ms_a3c5j :: [𝐍]) (a_a3c5k :: Type). (⟢) (ADFB ns_a3c5h f_a3c5i ms_a3c5j a_a3c5k) (f_a3c5i ((⧺) ns_a3c5h ms_a3c5j) a_a3c5k)
 constADFB :: f (ns ⧺ ms) a -> ADFB ns f ms a
 sensADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB ns f ms a
 plusADFB :: Plus (f (ns ⧺ ms) a) => ADFB ns f ms a -> ADFB ns f ms a -> ADFB ns f ms a
@@ -4234,11 +4234,11 @@ eqTest :: (Eq a, Pretty a) => 𝐿 𝕊 -> 𝕊 -> 𝕊 -> 𝕊 -> a -> a -> �
 fuzzTest :: Pretty a => 𝐿 𝕊 -> 𝕊 -> 𝕊 -> 𝕊 -> IO a -> (a -> 𝔹) -> IO (𝑇D Test)
 runTests :: 𝔹 -> 𝑇D Test -> IO ()
 𝔱 :: 𝕊 -> Q Exp -> Q Exp -> Q [Dec]
-𝔱T :: (Eq a, Pretty a) => 𝕊 -> Q (TExp a) -> Q (TExp a) -> Q [Dec]
+𝔱T :: (Eq a, Pretty a) => 𝕊 -> Code Q a -> Code Q a -> Q [Dec]
 𝔣 :: 𝕊 -> ℕ64 -> Q Exp -> Q Exp -> Q [Dec]
-𝔣T :: Pretty a => 𝕊 -> ℕ64 -> Q (TExp (IO a)) -> Q (TExp (a -> 𝔹)) -> Q [Dec]
+𝔣T :: Pretty a => 𝕊 -> ℕ64 -> Code Q (IO a) -> Code Q (a -> 𝔹) -> Q [Dec]
 buildTests :: Q [Dec]
-testModules :: 𝔹 -> [𝕊] -> Q (TExp (IO ()))
+testModules :: 𝔹 -> [𝕊] -> Code Q (IO ())
 instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Testing.TestsOut
 instance UVMHS.Core.Classes.Monoid.Append UVMHS.Lib.Testing.TestsOut
 instance UVMHS.Core.Classes.Monoid.Monoid UVMHS.Lib.Testing.TestsOut
@@ -4358,19 +4358,19 @@ PreParserToken :: t -> 𝔹 -> ParserContext -> PreParserToken t
 [preParserTokenValue] :: PreParserToken t -> t
 [preParserTokenSkip] :: PreParserToken t -> 𝔹
 [preParserTokenContext] :: PreParserToken t -> ParserContext
-preParserTokenContextL :: forall (t_a3l3p :: Type). (⟢) (PreParserToken t_a3l3p) ParserContext
-preParserTokenSkipL :: forall (t_a3l3p :: Type). (⟢) (PreParserToken t_a3l3p) 𝔹
-preParserTokenValueL :: forall (t_a3l3p :: Type). (⟢) (PreParserToken t_a3l3p) t_a3l3p
+preParserTokenContextL :: forall (t_a3ung :: Type). (⟢) (PreParserToken t_a3ung) ParserContext
+preParserTokenSkipL :: forall (t_a3ung :: Type). (⟢) (PreParserToken t_a3ung) 𝔹
+preParserTokenValueL :: forall (t_a3ung :: Type). (⟢) (PreParserToken t_a3ung) t_a3ung
 data ParserToken t
 ParserToken :: t -> 𝔹 -> ParserContext -> WindowL Doc Doc -> ParserToken t
 [parserTokenValue] :: ParserToken t -> t
 [parserTokenSkip] :: ParserToken t -> 𝔹
 [parserTokenContext] :: ParserToken t -> ParserContext
 [parserTokenSuffix] :: ParserToken t -> WindowL Doc Doc
-parserTokenSuffixL :: forall (t_a3l5u :: Type). (⟢) (ParserToken t_a3l5u) (WindowL Doc Doc)
-parserTokenContextL :: forall (t_a3l5u :: Type). (⟢) (ParserToken t_a3l5u) ParserContext
-parserTokenSkipL :: forall (t_a3l5u :: Type). (⟢) (ParserToken t_a3l5u) 𝔹
-parserTokenValueL :: forall (t_a3l5u :: Type). (⟢) (ParserToken t_a3l5u) t_a3l5u
+parserTokenSuffixL :: forall (t_a3urQ :: Type). (⟢) (ParserToken t_a3urQ) (WindowL Doc Doc)
+parserTokenContextL :: forall (t_a3urQ :: Type). (⟢) (ParserToken t_a3urQ) ParserContext
+parserTokenSkipL :: forall (t_a3urQ :: Type). (⟢) (ParserToken t_a3urQ) 𝔹
+parserTokenValueL :: forall (t_a3urQ :: Type). (⟢) (ParserToken t_a3urQ) t_a3urQ
 renderNLDisplay :: Doc
 renderNLError :: Doc
 renderEOFDisplay :: Doc
@@ -4442,11 +4442,11 @@ RegexState :: ℕ64 -> (Regex c t o u ⇰ ℕ64) -> ((t ∨ c) ⇰ (ℕ64 ⇰ �
 [regexStateTransitions] :: RegexState c t o u -> (t ∨ c) ⇰ (ℕ64 ⇰ ℕ64)
 [regexStateResults] :: RegexState c t o u -> ℕ64 ⇰ 𝑂 (RegexResult o u)
 [regexStateDead] :: RegexState c t o u -> ℕ64 ⇰ 𝔹
-regexStateDeadL :: forall (c_a3nEd :: Type) (t_a3nEe :: Type) (o_a3nEf :: Type) (u_a3nEg :: Type). (⟢) (RegexState c_a3nEd t_a3nEe o_a3nEf u_a3nEg) ((⇰) ℕ64 𝔹)
-regexStateResultsL :: forall (c_a3nEd :: Type) (t_a3nEe :: Type) (o_a3nEf :: Type) (u_a3nEg :: Type). (⟢) (RegexState c_a3nEd t_a3nEe o_a3nEf u_a3nEg) ((⇰) ℕ64 (𝑂 (RegexResult o_a3nEf u_a3nEg)))
-regexStateTransitionsL :: forall (c_a3nEd :: Type) (t_a3nEe :: Type) (o_a3nEf :: Type) (u_a3nEg :: Type). (⟢) (RegexState c_a3nEd t_a3nEe o_a3nEf u_a3nEg) ((⇰) ((∨) t_a3nEe c_a3nEd) ((⇰) ℕ64 ℕ64))
-regexStateMapL :: forall (c_a3nEd :: Type) (t_a3nEe :: Type) (o_a3nEf :: Type) (u_a3nEg :: Type). (⟢) (RegexState c_a3nEd t_a3nEe o_a3nEf u_a3nEg) ((⇰) (Regex c_a3nEd t_a3nEe o_a3nEf u_a3nEg) ℕ64)
-regexStateNextIDL :: forall (c_a3nEd :: Type) (t_a3nEe :: Type) (o_a3nEf :: Type) (u_a3nEg :: Type). (⟢) (RegexState c_a3nEd t_a3nEe o_a3nEf u_a3nEg) ℕ64
+regexStateDeadL :: forall (c_a3yZr :: Type) (t_a3yZs :: Type) (o_a3yZt :: Type) (u_a3yZu :: Type). (⟢) (RegexState c_a3yZr t_a3yZs o_a3yZt u_a3yZu) ((⇰) ℕ64 𝔹)
+regexStateResultsL :: forall (c_a3yZr :: Type) (t_a3yZs :: Type) (o_a3yZt :: Type) (u_a3yZu :: Type). (⟢) (RegexState c_a3yZr t_a3yZs o_a3yZt u_a3yZu) ((⇰) ℕ64 (𝑂 (RegexResult o_a3yZt u_a3yZu)))
+regexStateTransitionsL :: forall (c_a3yZr :: Type) (t_a3yZs :: Type) (o_a3yZt :: Type) (u_a3yZu :: Type). (⟢) (RegexState c_a3yZr t_a3yZs o_a3yZt u_a3yZu) ((⇰) ((∨) t_a3yZs c_a3yZr) ((⇰) ℕ64 ℕ64))
+regexStateMapL :: forall (c_a3yZr :: Type) (t_a3yZs :: Type) (o_a3yZt :: Type) (u_a3yZu :: Type). (⟢) (RegexState c_a3yZr t_a3yZs o_a3yZt u_a3yZu) ((⇰) (Regex c_a3yZr t_a3yZs o_a3yZt u_a3yZu) ℕ64)
+regexStateNextIDL :: forall (c_a3yZr :: Type) (t_a3yZs :: Type) (o_a3yZt :: Type) (u_a3yZu :: Type). (⟢) (RegexState c_a3yZr t_a3yZs o_a3yZt u_a3yZu) ℕ64
 regexState₀ :: RegexState c t o u
 data DFA c t o u
 DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult o u)) -> 𝕍 𝔹 -> DFA c t o u
@@ -4687,12 +4687,12 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateEndPos] :: ParserState t -> AddBT Loc
 [parserStateInput] :: ParserState t -> 𝑆 (ParserToken t)
-parserStateInputL :: forall (t_a3Su2 :: Type). (⟢) (ParserState t_a3Su2) (𝑆 (ParserToken t_a3Su2))
-parserStateEndPosL :: forall (t_a3Su2 :: Type). (⟢) (ParserState t_a3Su2) (AddBT Loc)
-parserStateSuffixL :: forall (t_a3Su2 :: Type). (⟢) (ParserState t_a3Su2) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a3Su2 :: Type). (⟢) (ParserState t_a3Su2) ParserContext
-parserStateSkipContextL :: forall (t_a3Su2 :: Type). (⟢) (ParserState t_a3Su2) ParserContext
-parserStatePrefixL :: forall (t_a3Su2 :: Type). (⟢) (ParserState t_a3Su2) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a3wWq :: Type). (⟢) (ParserState t_a3wWq) (𝑆 (ParserToken t_a3wWq))
+parserStateEndPosL :: forall (t_a3wWq :: Type). (⟢) (ParserState t_a3wWq) (AddBT Loc)
+parserStateSuffixL :: forall (t_a3wWq :: Type). (⟢) (ParserState t_a3wWq) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a3wWq :: Type). (⟢) (ParserState t_a3wWq) ParserContext
+parserStateSkipContextL :: forall (t_a3wWq :: Type). (⟢) (ParserState t_a3wWq) ParserContext
+parserStatePrefixL :: forall (t_a3wWq :: Type). (⟢) (ParserState t_a3wWq) (WindowR Doc Doc)
 parserState₀ :: 𝑆 (ParserToken t) -> ParserState t
 newtype Parser t a
 Parser :: ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a
@@ -4929,16 +4929,16 @@ data Subst s a m
 Subst :: (s ⇰ (𝕏ᴮ ⇰ 𝕏ᴮ)) -> (s ⇰ (𝕏 ⇰ (𝕏 ∨ FailT m a))) -> Subst s a m
 [substBdr] :: Subst s a m -> s ⇰ (𝕏ᴮ ⇰ 𝕏ᴮ)
 [substVar] :: Subst s a m -> s ⇰ (𝕏 ⇰ (𝕏 ∨ FailT m a))
-substVarL :: forall (s_a4aKW :: Type) (a_a4aKX :: Type) (m_a4aKY :: Type -> Type). (⟢) (Subst s_a4aKW a_a4aKX m_a4aKY) ((⇰) s_a4aKW ((⇰) 𝕏 ((∨) 𝕏 (FailT m_a4aKY a_a4aKX))))
-substBdrL :: forall (s_a4aKW :: Type) (a_a4aKX :: Type) (m_a4aKY :: Type -> Type). (⟢) (Subst s_a4aKW a_a4aKX m_a4aKY) ((⇰) s_a4aKW ((⇰) 𝕏ᴮ 𝕏ᴮ))
+substVarL :: forall (s_a4m21 :: Type) (a_a4m22 :: Type) (m_a4m23 :: Type -> Type). (⟢) (Subst s_a4m21 a_a4m22 m_a4m23) ((⇰) s_a4m21 ((⇰) 𝕏 ((∨) 𝕏 (FailT m_a4m23 a_a4m22))))
+substBdrL :: forall (s_a4m21 :: Type) (a_a4m22 :: Type) (m_a4m23 :: Type -> Type). (⟢) (Subst s_a4m21 a_a4m22 m_a4m23) ((⇰) s_a4m21 ((⇰) 𝕏ᴮ 𝕏ᴮ))
 data SubstEnv s a b m
 SubstEnv :: 𝑂 (m ℕ64) -> (a -> 𝑂 b) -> Subst s a m -> SubstEnv s a b m
 [substEnvFresh] :: SubstEnv s a b m -> 𝑂 (m ℕ64)
 [substEnvView] :: SubstEnv s a b m -> a -> 𝑂 b
 [substEnvSubst] :: SubstEnv s a b m -> Subst s a m
-substEnvSubstL :: forall (s_a4aWh :: Type) (a_a4aWi :: Type) (b_a4aWj :: Type) (m_a4aWk :: Type -> Type). (⟢) (SubstEnv s_a4aWh a_a4aWi b_a4aWj m_a4aWk) (Subst s_a4aWh a_a4aWi m_a4aWk)
-substEnvViewL :: forall (s_a4aWh :: Type) (a_a4aWi :: Type) (b_a4aWj :: Type) (m_a4aWk :: Type -> Type). (⟢) (SubstEnv s_a4aWh a_a4aWi b_a4aWj m_a4aWk) (a_a4aWi -> 𝑂 b_a4aWj)
-substEnvFreshL :: forall (s_a4aWh :: Type) (a_a4aWi :: Type) (b_a4aWj :: Type) (m_a4aWk :: Type -> Type). (⟢) (SubstEnv s_a4aWh a_a4aWi b_a4aWj m_a4aWk) (𝑂 (m_a4aWk ℕ64))
+substEnvSubstL :: forall (s_a4mko :: Type) (a_a4mkp :: Type) (b_a4mkq :: Type) (m_a4mkr :: Type -> Type). (⟢) (SubstEnv s_a4mko a_a4mkp b_a4mkq m_a4mkr) (Subst s_a4mko a_a4mkp m_a4mkr)
+substEnvViewL :: forall (s_a4mko :: Type) (a_a4mkp :: Type) (b_a4mkq :: Type) (m_a4mkr :: Type -> Type). (⟢) (SubstEnv s_a4mko a_a4mkp b_a4mkq m_a4mkr) (a_a4mkp -> 𝑂 b_a4mkq)
+substEnvFreshL :: forall (s_a4mko :: Type) (a_a4mkp :: Type) (b_a4mkq :: Type) (m_a4mkr :: Type -> Type). (⟢) (SubstEnv s_a4mko a_a4mkp b_a4mkq m_a4mkr) (𝑂 (m_a4mkr ℕ64))
 newtype SubstT s e₁ e₂ m a
 SubstM :: UContT (ReaderT (SubstEnv s e₁ e₂ m) (FailT m)) a -> SubstT s e₁ e₂ m a
 [unSubstM] :: SubstT s e₁ e₂ m a -> UContT (ReaderT (SubstEnv s e₁ e₂ m) (FailT m)) a

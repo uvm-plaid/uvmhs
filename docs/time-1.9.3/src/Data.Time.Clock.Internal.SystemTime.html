@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-cpp">#if __GLASGOW_HASKELL__ &gt;= 710
+</span><span class="hs-pragma">{-# OPTIONS -fno-warn-trustworthy-safe #-}</span><span class="hs-cpp">
+#endif
+</span><span class="hs-pragma">{-# LANGUAGE Trustworthy #-}</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Data.Time.Clock.Internal.SystemTime</span><span>
+</span><span id="line-6"></span><span>    </span><span class="hs-special">(</span><span>
+</span><span id="line-7"></span><span>    </span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#SystemTime"><span class="hs-identifier">SystemTime</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><span id="line-8"></span><span>    </span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#getSystemTime"><span class="hs-identifier">getSystemTime</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-9"></span><span>    </span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#getTime_resolution"><span class="hs-identifier">getTime_resolution</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-10"></span><span>    </span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#getTAISystemTime"><span class="hs-identifier">getTAISystemTime</span></a></span><span class="hs-special">,</span><span>
+</span><span id="line-11"></span><span>    </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-12"></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base/src/Data.Int.html#"><span class="hs-identifier">Data.Int</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Int.html#Int64"><span class="hs-identifier">Int64</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base/src/Data.Word.html#"><span class="hs-identifier">Data.Word</span></a></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../deepseq/src/Control.DeepSeq.html#"><span class="hs-identifier">Control.DeepSeq</span></a></span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Data.Time.Clock.Internal.DiffTime.html"><span class="hs-identifier">Data.Time.Clock.Internal.DiffTime</span></a></span><span class="hs-cpp">
+
+#include &quot;HsTimeConfig.h&quot;
+</span><span class="hs-cpp">
+#ifdef mingw32_HOST_OS
+</span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="hs-identifier">System.Win32.Time</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="hs-identifier">Win32</span><span class="hs-cpp">
+#elif defined(HAVE_CLOCK_GETTIME)
+</span><span class="hs-keyword">import</span><span> </span><span class="hs-identifier">Data.Time.Clock.Internal.CTimespec</span><span>
+</span><span id="line-24"></span><span class="hs-keyword">import</span><span> </span><span class="hs-identifier">Foreign.C.Types</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">CTime</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">CLong</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-cpp">
+#else
+</span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Data.Time.Clock.Internal.CTimeval.html"><span class="hs-identifier">Data.Time.Clock.Internal.CTimeval</span></a></span><span>
+</span><span id="line-27"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#"><span class="hs-identifier">Foreign.C.Types</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CLong"><span class="hs-identifier">CLong</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-cpp">
+#endif
+</span><span>
+</span><span id="line-30"></span><span class="hs-comment">--------------------------------------------------------------------------------</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- | 'SystemTime' is time returned by system clock functions.</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- Its semantics depends on the clock function, but the epoch is typically the beginning of 1970.</span><span>
+</span><span id="line-34"></span><span class="hs-comment">-- Note that 'systemNanoseconds' of 1E9 to 2E9-1 can be used to represent leap seconds.</span><span>
+</span><span id="line-35"></span><span class="hs-keyword">data</span><span> </span><span id="SystemTime"><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#SystemTime"><span class="hs-identifier hs-var">SystemTime</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="MkSystemTime"><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#MkSystemTime"><span class="hs-identifier hs-var">MkSystemTime</span></a></span></span><span>
+</span><span id="line-36"></span><span>    </span><span class="hs-special">{</span><span> </span><span id="systemSeconds"><span class="annot"><span class="annottext">SystemTime -&gt; Int64
+</span><a href="Data.Time.Clock.Internal.SystemTime.html#systemSeconds"><span class="hs-identifier hs-var hs-var">systemSeconds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span>     </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="../../base/src/GHC.Int.html#Int64"><span class="hs-identifier hs-type">Int64</span></a></span><span>
+</span><span id="line-37"></span><span>    </span><span class="hs-special">,</span><span> </span><span id="systemNanoseconds"><span class="annot"><span class="annottext">SystemTime -&gt; Word32
+</span><a href="Data.Time.Clock.Internal.SystemTime.html#systemNanoseconds"><span class="hs-identifier hs-var hs-var">systemNanoseconds</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><a href="../../base/src/GHC.Word.html#Word32"><span class="hs-identifier hs-type">Word32</span></a></span><span>
+</span><span id="line-38"></span><span>    </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679066994"><span id="local-6989586621679067000"><span class="annot"><span class="annottext">SystemTime -&gt; SystemTime -&gt; Bool
+(SystemTime -&gt; SystemTime -&gt; Bool)
+-&gt; (SystemTime -&gt; SystemTime -&gt; Bool) -&gt; Eq SystemTime
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SystemTime -&gt; SystemTime -&gt; Bool
+$c/= :: SystemTime -&gt; SystemTime -&gt; Bool
+== :: SystemTime -&gt; SystemTime -&gt; Bool
+$c== :: SystemTime -&gt; SystemTime -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679066968"><span id="local-6989586621679066970"><span id="local-6989586621679066973"><span id="local-6989586621679066976"><span id="local-6989586621679066979"><span id="local-6989586621679066983"><span id="local-6989586621679066989"><span class="annot"><span class="annottext">Eq SystemTime
+Eq SystemTime
+-&gt; (SystemTime -&gt; SystemTime -&gt; Ordering)
+-&gt; (SystemTime -&gt; SystemTime -&gt; Bool)
+-&gt; (SystemTime -&gt; SystemTime -&gt; Bool)
+-&gt; (SystemTime -&gt; SystemTime -&gt; Bool)
+-&gt; (SystemTime -&gt; SystemTime -&gt; Bool)
+-&gt; (SystemTime -&gt; SystemTime -&gt; SystemTime)
+-&gt; (SystemTime -&gt; SystemTime -&gt; SystemTime)
+-&gt; Ord SystemTime
+SystemTime -&gt; SystemTime -&gt; Bool
+SystemTime -&gt; SystemTime -&gt; Ordering
+SystemTime -&gt; SystemTime -&gt; SystemTime
+forall a.
+Eq a
+-&gt; (a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SystemTime -&gt; SystemTime -&gt; SystemTime
+$cmin :: SystemTime -&gt; SystemTime -&gt; SystemTime
+max :: SystemTime -&gt; SystemTime -&gt; SystemTime
+$cmax :: SystemTime -&gt; SystemTime -&gt; SystemTime
+&gt;= :: SystemTime -&gt; SystemTime -&gt; Bool
+$c&gt;= :: SystemTime -&gt; SystemTime -&gt; Bool
+&gt; :: SystemTime -&gt; SystemTime -&gt; Bool
+$c&gt; :: SystemTime -&gt; SystemTime -&gt; Bool
+&lt;= :: SystemTime -&gt; SystemTime -&gt; Bool
+$c&lt;= :: SystemTime -&gt; SystemTime -&gt; Bool
+&lt; :: SystemTime -&gt; SystemTime -&gt; Bool
+$c&lt; :: SystemTime -&gt; SystemTime -&gt; Bool
+compare :: SystemTime -&gt; SystemTime -&gt; Ordering
+$ccompare :: SystemTime -&gt; SystemTime -&gt; Ordering
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621679066955"><span id="local-6989586621679066957"><span id="local-6989586621679066965"><span class="annot"><span class="annottext">Int -&gt; SystemTime -&gt; ShowS
+[SystemTime] -&gt; ShowS
+SystemTime -&gt; String
+(Int -&gt; SystemTime -&gt; ShowS)
+-&gt; (SystemTime -&gt; String)
+-&gt; ([SystemTime] -&gt; ShowS)
+-&gt; Show SystemTime
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+showList :: [SystemTime] -&gt; ShowS
+$cshowList :: [SystemTime] -&gt; ShowS
+show :: SystemTime -&gt; String
+$cshow :: SystemTime -&gt; String
+showsPrec :: Int -&gt; SystemTime -&gt; ShowS
+$cshowsPrec :: Int -&gt; SystemTime -&gt; ShowS
+</span><a href="../../base/src/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="../../deepseq/src/Control.DeepSeq.html#NFData"><span class="hs-identifier hs-type">NFData</span></a></span><span> </span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#SystemTime"><span class="hs-identifier hs-type">SystemTime</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-41"></span><span>    </span><span id="local-6989586621679066950"><span class="annot"><span class="annottext">rnf :: SystemTime -&gt; ()
+</span><a href="../../deepseq/src/Control.DeepSeq.html#rnf"><span class="hs-identifier hs-var hs-var hs-var hs-var">rnf</span></a></span></span><span> </span><span id="local-6989586621679066948"><span class="annot"><span class="annottext">SystemTime
+</span><a href="#local-6989586621679066948"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">SystemTime
+</span><a href="#local-6989586621679066948"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">SystemTime -&gt; () -&gt; ()
+</span><span class="hs-operator hs-var">`seq`</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="hs-comment">-- | Get the system time, epoch start of 1970 UTC, leap-seconds ignored.</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- 'getSystemTime' is typically much faster than 'getCurrentTime'.</span><span>
+</span><span id="line-45"></span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#getSystemTime"><span class="hs-identifier hs-type">getSystemTime</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#SystemTime"><span class="hs-identifier hs-type">SystemTime</span></a></span><span>
+</span><span id="line-46"></span><span>
+</span><span id="line-47"></span><span class="hs-comment">-- | The resolution of 'getSystemTime', 'getCurrentTime', 'getPOSIXTime'</span><span>
+</span><span id="line-48"></span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#getTime_resolution"><span class="hs-identifier hs-type">getTime_resolution</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Time.Clock.Internal.DiffTime.html#DiffTime"><span class="hs-identifier hs-type">DiffTime</span></a></span><span>
+</span><span id="line-49"></span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- | If supported, get TAI time, epoch start of 1970 TAI, with resolution.</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- This is supported only on UNIX systems, and only those with CLOCK_TAI available at run-time.</span><span>
+</span><span id="line-52"></span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#getTAISystemTime"><span class="hs-identifier hs-type">getTAISystemTime</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Maybe.html#Maybe"><span class="hs-identifier hs-type">Maybe</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Time.Clock.Internal.DiffTime.html#DiffTime"><span class="hs-identifier hs-type">DiffTime</span></a></span><span class="hs-special">,</span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="Data.Time.Clock.Internal.SystemTime.html#SystemTime"><span class="hs-identifier hs-type">SystemTime</span></a></span><span class="hs-special">)</span><span class="hs-cpp">
+
+#ifdef mingw32_HOST_OS
+</span><span class="hs-comment">-- On Windows, the equlvalent of POSIX time is &quot;file time&quot;, defined as</span><span>
+</span><span id="line-56"></span><span class="hs-comment">-- the number of 100-nanosecond intervals that have elapsed since</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- 12:00 A.M. January 1, 1601 (UTC).  We can convert this into a POSIX</span><span>
+</span><span id="line-58"></span><span class="hs-comment">-- time by adjusting the offset to be relative to the POSIX epoch.</span><span>
+</span><span id="line-59"></span><span>
+</span><span id="line-60"></span><span class="hs-identifier">getSystemTime</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-61"></span><span>    </span><span class="hs-identifier">Win32.FILETIME</span><span> </span><span class="hs-identifier">ft</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-identifier">Win32.getSystemTimeAsFileTime</span><span>
+</span><span id="line-62"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">s</span><span class="hs-special">,</span><span> </span><span class="hs-identifier">us</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">ft</span><span> </span><span class="hs-glyph">-</span><span> </span><span class="hs-identifier">win32_epoch_adjust</span><span class="hs-special">)</span><span> </span><span class="hs-special">`</span><span class="hs-identifier">divMod</span><span class="hs-special">`</span><span> </span><span class="hs-number">10000000</span><span>
+</span><span id="line-63"></span><span>    </span><span class="hs-identifier">return</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">MkSystemTime</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromIntegral</span><span> </span><span class="hs-identifier">s</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromIntegral</span><span> </span><span class="hs-identifier">us</span><span> </span><span class="hs-operator">*</span><span> </span><span class="hs-number">100</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-64"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-65"></span><span>    </span><span class="hs-identifier">win32_epoch_adjust</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier">Word64</span><span>
+</span><span id="line-66"></span><span>    </span><span class="hs-identifier">win32_epoch_adjust</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-number">116444736000000000</span><span>
+</span><span id="line-67"></span><span class="hs-identifier">getTime_resolution</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-number">100E-9</span><span> </span><span class="hs-comment">-- 100ns</span><span>
+</span><span id="line-68"></span><span class="hs-identifier">getTAISystemTime</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">Nothing</span><span class="hs-cpp">
+
+#elif defined(HAVE_CLOCK_GETTIME)
+</span><span class="hs-comment">-- Use hi-res clock_gettime</span><span>
+</span><span id="line-72"></span><span>
+</span><span id="line-73"></span><span class="hs-identifier">timespecToSystemTime</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier">CTimespec</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">SystemTime</span><span>
+</span><span id="line-74"></span><span class="hs-identifier">timespecToSystemTime</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">MkCTimespec</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">CTime</span><span> </span><span class="hs-identifier">s</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">CLong</span><span> </span><span class="hs-identifier">ns</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">MkSystemTime</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromIntegral</span><span> </span><span class="hs-identifier">s</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromIntegral</span><span> </span><span class="hs-identifier">ns</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span>
+</span><span id="line-76"></span><span class="hs-identifier">timespecToDiffTime</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier">CTimespec</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">DiffTime</span><span>
+</span><span id="line-77"></span><span class="hs-identifier">timespecToDiffTime</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">MkCTimespec</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">CTime</span><span> </span><span class="hs-identifier">s</span><span class="hs-special">)</span><span> </span><span class="hs-identifier">ns</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromIntegral</span><span> </span><span class="hs-identifier">s</span><span class="hs-special">)</span><span> </span><span class="hs-operator">+</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromIntegral</span><span> </span><span class="hs-identifier">ns</span><span class="hs-special">)</span><span> </span><span class="hs-operator">*</span><span> </span><span class="hs-number">1E-9</span><span>
+</span><span id="line-78"></span><span>
+</span><span id="line-79"></span><span class="hs-identifier">clockGetSystemTime</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier">ClockID</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">IO</span><span> </span><span class="hs-identifier">SystemTime</span><span>
+</span><span id="line-80"></span><span class="hs-identifier">clockGetSystemTime</span><span> </span><span class="hs-identifier">clock</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">fmap</span><span> </span><span class="hs-identifier">timespecToSystemTime</span><span> </span><span class="hs-operator">$</span><span> </span><span class="hs-identifier">clockGetTime</span><span> </span><span class="hs-identifier">clock</span><span>
+</span><span id="line-81"></span><span>
+</span><span id="line-82"></span><span class="hs-identifier">getSystemTime</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">clockGetSystemTime</span><span> </span><span class="hs-identifier">clock_REALTIME</span><span>
+</span><span id="line-83"></span><span class="hs-identifier">getTime_resolution</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">timespecToDiffTime</span><span> </span><span class="hs-identifier">realtimeRes</span><span>
+</span><span id="line-84"></span><span class="hs-identifier">getTAISystemTime</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">fmap</span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-identifier">resolution</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">timespecToDiffTime</span><span> </span><span class="hs-identifier">resolution</span><span class="hs-special">,</span><span class="hs-identifier">clockGetSystemTime</span><span> </span><span class="hs-identifier">clock_TAI</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-operator">$</span><span> </span><span class="hs-identifier">clockResolution</span><span> </span><span class="hs-identifier">clock_TAI</span><span class="hs-cpp">
+
+#else
+</span><span class="hs-comment">-- Use gettimeofday</span><span>
+</span><span id="line-88"></span><span id="getSystemTime"><span class="annot"><span class="annottext">getSystemTime :: IO SystemTime
+</span><a href="Data.Time.Clock.Internal.SystemTime.html#getSystemTime"><span class="hs-identifier hs-var hs-var">getSystemTime</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-89"></span><span>    </span><span class="annot"><a href="Data.Time.Clock.Internal.CTimeval.html#MkCTimeval"><span class="hs-identifier hs-type">MkCTimeval</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CLong"><span class="hs-identifier hs-type">CLong</span></a></span><span> </span><span id="local-6989586621679066945"><span class="annot"><span class="annottext">Int64
+</span><a href="#local-6989586621679066945"><span class="hs-identifier hs-var">s</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CLong"><span class="hs-identifier hs-type">CLong</span></a></span><span> </span><span id="local-6989586621679066944"><span class="annot"><span class="annottext">Int64
+</span><a href="#local-6989586621679066944"><span class="hs-identifier hs-var">us</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO CTimeval
+</span><a href="Data.Time.Clock.Internal.CTimeval.html#getCTimeval"><span class="hs-identifier hs-var">getCTimeval</span></a></span><span>
+</span><span id="line-90"></span><span>    </span><span class="annot"><span class="annottext">SystemTime -&gt; IO SystemTime
+forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int64 -&gt; Word32 -&gt; SystemTime
+</span><a href="Data.Time.Clock.Internal.SystemTime.html#MkSystemTime"><span class="hs-identifier hs-var">MkSystemTime</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int64 -&gt; Int64
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int64
+</span><a href="#local-6989586621679066945"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int64 -&gt; Word32
+forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int64
+</span><a href="#local-6989586621679066944"><span class="hs-identifier hs-var">us</span></a></span><span> </span><span class="annot"><span class="annottext">Word32 -&gt; Word32 -&gt; Word32
+forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="../../base/src/GHC.Num.html#%2A"><span class="hs-operator hs-var">*</span></a></span><span> </span><span class="annot"><span class="annottext">Word32
+</span><span class="hs-number">1000</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-91"></span><span id="getTime_resolution"><span class="annot"><span class="annottext">getTime_resolution :: DiffTime
+</span><a href="Data.Time.Clock.Internal.SystemTime.html#getTime_resolution"><span class="hs-identifier hs-var hs-var">getTime_resolution</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">DiffTime
+</span><span class="hs-number">1E-6</span></span><span> </span><span class="hs-comment">-- microsecond</span><span>
+</span><span id="line-92"></span><span id="getTAISystemTime"><span class="annot"><span class="annottext">getTAISystemTime :: Maybe (DiffTime, IO SystemTime)
+</span><a href="Data.Time.Clock.Internal.SystemTime.html#getTAISystemTime"><span class="hs-identifier hs-var hs-var">getTAISystemTime</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Maybe (DiffTime, IO SystemTime)
+forall a. Maybe a
+</span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span class="hs-cpp">
+
+#endif
+</span></pre></body></html>

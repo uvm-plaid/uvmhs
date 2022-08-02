@@ -78,11 +78,6 @@ monthLength :: Bool -> Int -> Int
 
 module Data.Time.Calendar.Julian
 
--- | Convert to proleptic Julian year and day format. First element of
---   result is year (proleptic Julian calendar), second is the day of the
---   year, with 1 for Jan 1, and 365 (or 366 in leap years) for Dec 31.
-toJulianYearAndDay :: Day -> (Integer, Int)
-
 -- | Convert from proleptic Julian year and day format. Invalid day numbers
 --   will be clipped to the correct range (1 to 365 or 366).
 fromJulianYearAndDay :: Integer -> Int -> Day
@@ -91,11 +86,16 @@ fromJulianYearAndDay :: Integer -> Int -> Day
 --   will return Nothing
 fromJulianYearAndDayValid :: Integer -> Int -> Maybe Day
 
+-- | Is this year a leap year according to the proleptic Julian calendar?
+isJulianLeapYear :: Integer -> Bool
+
 -- | Show in proleptic Julian year and day format (yyyy-ddd)
 showJulianYearAndDay :: Day -> String
 
--- | Is this year a leap year according to the proleptic Julian calendar?
-isJulianLeapYear :: Integer -> Bool
+-- | Convert to proleptic Julian year and day format. First element of
+--   result is year (proleptic Julian calendar), second is the day of the
+--   year, with 1 for Jan 1, and 365 (or 366 in leap years) for Dec 31.
+toJulianYearAndDay :: Day -> (Integer, Int)
 
 -- | Convert to proleptic Julian calendar. First element of result is year,
 --   second month number (1-12), third day (1-31).
@@ -732,16 +732,16 @@ dayFractionToTimeOfDay :: Rational -> TimeOfDay
 
 -- | Get the fraction of a day since midnight given a time of day.
 timeOfDayToDayFraction :: TimeOfDay -> Rational
-data CalendarDiffTime
-CalendarDiffTime :: Integer -> NominalDiffTime -> CalendarDiffTime
-[ctMonths] :: CalendarDiffTime -> Integer
-[ctTime] :: CalendarDiffTime -> NominalDiffTime
 calendarTimeDays :: CalendarDiffDays -> CalendarDiffTime
 calendarTimeTime :: NominalDiffTime -> CalendarDiffTime
 
 -- | Scale by a factor. Note that <tt>scaleCalendarDiffTime (-1)</tt> will
 --   not perfectly invert a duration, due to variable month lengths.
 scaleCalendarDiffTime :: Integer -> CalendarDiffTime -> CalendarDiffTime
+data CalendarDiffTime
+CalendarDiffTime :: Integer -> NominalDiffTime -> CalendarDiffTime
+[ctMonths] :: CalendarDiffTime -> Integer
+[ctTime] :: CalendarDiffTime -> NominalDiffTime
 
 -- | A simple day and time aggregate, where the day is of the specified
 --   parameter, and the time is a TimeOfDay. Conversion of this (as local
@@ -897,18 +897,18 @@ ModifiedJulianDay :: Integer -> Day
 [toModifiedJulianDay] :: Day -> Integer
 addDays :: Integer -> Day -> Day
 diffDays :: Day -> Day -> Integer
-data CalendarDiffDays
-CalendarDiffDays :: Integer -> Integer -> CalendarDiffDays
-[cdMonths] :: CalendarDiffDays -> Integer
-[cdDays] :: CalendarDiffDays -> Integer
 calendarDay :: CalendarDiffDays
-calendarWeek :: CalendarDiffDays
 calendarMonth :: CalendarDiffDays
+calendarWeek :: CalendarDiffDays
 calendarYear :: CalendarDiffDays
 
 -- | Scale by a factor. Note that <tt>scaleCalendarDiffDays (-1)</tt> will
 --   not perfectly invert a duration, due to variable month lengths.
 scaleCalendarDiffDays :: Integer -> CalendarDiffDays -> CalendarDiffDays
+data CalendarDiffDays
+CalendarDiffDays :: Integer -> Integer -> CalendarDiffDays
+[cdMonths] :: CalendarDiffDays -> Integer
+[cdDays] :: CalendarDiffDays -> Integer
 
 -- | Convert to proleptic Gregorian calendar. First element of result is
 --   year, second month number (1-12), third day (1-31).

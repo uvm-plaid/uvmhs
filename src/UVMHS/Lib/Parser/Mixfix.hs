@@ -14,7 +14,7 @@ import UVMHS.Lib.Parser.CParser
 pDEF ∷ ℕ64
 pLET,pSEP,pASC,pARR,pOR,pAND,pCMP,pCONS ∷ ℕ64
 pBWAND,pBWOR,pBSHFT ∷ ℕ64
-pPLUS,pTIMES,pNEG,pPOW,pFAC,pAPP,pIDX ∷ ℕ64
+pPLUS,pTIMES,pNEG,pPOW,pFAC,pAPP,pREF,pIDX ∷ ℕ64
 pTOP ∷ ℕ64
 
 pDEF    = 001  --  x = e
@@ -40,7 +40,9 @@ pFAC    = 090  --  !
 
 pAPP    = 200  --  ␣
 
+pREF    = 250  --  *x &x
 pIDX    = 300  --  x.y x@y
+
 
 pTOP    = 999
 

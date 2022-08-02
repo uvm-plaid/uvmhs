@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# LANGUAGE Safe #-}</span><span>
+</span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE CPP #-}</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-comment">-----------------------------------------------------------------------------</span><span>
+</span><span id="line-5"></span><span class="hs-comment">-- |</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- Module      :  Data.Bifunctor</span><span>
+</span><span id="line-7"></span><span class="hs-comment">-- Copyright   :  (C) 2008-2014 Edward Kmett,</span><span>
+</span><span id="line-8"></span><span class="hs-comment">-- License     :  BSD-style (see the file LICENSE)</span><span>
+</span><span id="line-9"></span><span class="hs-comment">--</span><span>
+</span><span id="line-10"></span><span class="hs-comment">-- Maintainer  :  libraries@haskell.org</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- Stability   :  provisional</span><span>
+</span><span id="line-12"></span><span class="hs-comment">-- Portability :  portable</span><span>
+</span><span id="line-13"></span><span class="hs-comment">--</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- @since 4.8.0.0</span><span>
+</span><span id="line-15"></span><span class="hs-comment">----------------------------------------------------------------------------</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Data.Bifunctor</span><span>
+</span><span id="line-17"></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier">Bifunctor</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-19"></span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Control.Applicative.html"><span class="hs-identifier">Control.Applicative</span></a></span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Data.Functor.Const.html#Const"><span class="hs-identifier">Const</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="GHC.Generics.html"><span class="hs-identifier">GHC.Generics</span></a></span><span> </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="GHC.Generics.html#K1"><span class="hs-identifier">K1</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span> </span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- $setup</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- &gt;&gt;&gt; import Prelude</span><span>
+</span><span id="line-25"></span><span class="hs-comment">-- &gt;&gt;&gt; import Data.Char (toUpper)</span><span>
+</span><span id="line-26"></span><span>
+</span><span id="line-27"></span><span class="hs-comment">-- | A bifunctor is a type constructor that takes</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- two type arguments and is a functor in /both/ arguments. That</span><span>
+</span><span id="line-29"></span><span class="hs-comment">-- is, unlike with 'Functor', a type constructor such as 'Either'</span><span>
+</span><span id="line-30"></span><span class="hs-comment">-- does not need to be partially applied for a 'Bifunctor'</span><span>
+</span><span id="line-31"></span><span class="hs-comment">-- instance, and the methods in this class permit mapping</span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- functions over the 'Left' value or the 'Right' value,</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- or both at the same time.</span><span>
+</span><span id="line-34"></span><span class="hs-comment">--</span><span>
+</span><span id="line-35"></span><span class="hs-comment">-- Formally, the class 'Bifunctor' represents a bifunctor</span><span>
+</span><span id="line-36"></span><span class="hs-comment">-- from @Hask@ -&gt; @Hask@.</span><span>
+</span><span id="line-37"></span><span class="hs-comment">--</span><span>
+</span><span id="line-38"></span><span class="hs-comment">-- Intuitively it is a bifunctor where both the first and second</span><span>
+</span><span id="line-39"></span><span class="hs-comment">-- arguments are covariant.</span><span>
+</span><span id="line-40"></span><span class="hs-comment">--</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-- You can define a 'Bifunctor' by either defining 'bimap' or by</span><span>
+</span><span id="line-42"></span><span class="hs-comment">-- defining both 'first' and 'second'.</span><span>
+</span><span id="line-43"></span><span class="hs-comment">--</span><span>
+</span><span id="line-44"></span><span class="hs-comment">-- If you supply 'bimap', you should ensure that:</span><span>
+</span><span id="line-45"></span><span class="hs-comment">--</span><span>
+</span><span id="line-46"></span><span class="hs-comment">-- @'bimap' 'id' 'id' &#8801; 'id'@</span><span>
+</span><span id="line-47"></span><span class="hs-comment">--</span><span>
+</span><span id="line-48"></span><span class="hs-comment">-- If you supply 'first' and 'second', ensure:</span><span>
+</span><span id="line-49"></span><span class="hs-comment">--</span><span>
+</span><span id="line-50"></span><span class="hs-comment">-- @</span><span>
+</span><span id="line-51"></span><span class="hs-comment">-- 'first' 'id' &#8801; 'id'</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- 'second' 'id' &#8801; 'id'</span><span>
+</span><span id="line-53"></span><span class="hs-comment">-- @</span><span>
+</span><span id="line-54"></span><span class="hs-comment">--</span><span>
+</span><span id="line-55"></span><span class="hs-comment">-- If you supply both, you should also ensure:</span><span>
+</span><span id="line-56"></span><span class="hs-comment">--</span><span>
+</span><span id="line-57"></span><span class="hs-comment">-- @'bimap' f g &#8801; 'first' f '.' 'second' g@</span><span>
+</span><span id="line-58"></span><span class="hs-comment">--</span><span>
+</span><span id="line-59"></span><span class="hs-comment">-- These ensure by parametricity:</span><span>
+</span><span id="line-60"></span><span class="hs-comment">--</span><span>
+</span><span id="line-61"></span><span class="hs-comment">-- @</span><span>
+</span><span id="line-62"></span><span class="hs-comment">-- 'bimap'  (f '.' g) (h '.' i) &#8801; 'bimap' f h '.' 'bimap' g i</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- 'first'  (f '.' g) &#8801; 'first'  f '.' 'first'  g</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- 'second' (f '.' g) &#8801; 'second' f '.' 'second' g</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- @</span><span>
+</span><span id="line-66"></span><span class="hs-comment">--</span><span>
+</span><span id="line-67"></span><span class="hs-comment">-- @since 4.8.0.0</span><span>
+</span><span id="line-68"></span><span class="hs-keyword">class</span><span> </span><span id="Bifunctor"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-var">Bifunctor</span></a></span></span><span> </span><span id="local-6989586621679591007"><span class="annot"><a href="#local-6989586621679591007"><span class="hs-identifier hs-type">p</span></a></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-69"></span><span>    </span><span class="hs-pragma">{-# MINIMAL</span><span> </span><span class="annot"><a href="Data.Bifunctor.html#bimap"><span class="hs-pragma hs-type">bimap</span></a></span><span> </span><span class="hs-pragma">|</span><span> </span><span class="annot"><a href="Data.Bifunctor.html#first"><span class="hs-pragma hs-type">first</span></a></span><span class="hs-pragma">,</span><span> </span><span class="annot"><a href="Data.Bifunctor.html#second"><span class="hs-pragma hs-type">second</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
+</span><span id="line-70"></span><span>
+</span><span id="line-71"></span><span>    </span><span class="hs-comment">-- | Map over both arguments at the same time.</span><span>
+</span><span id="line-72"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-73"></span><span>    </span><span class="hs-comment">-- @'bimap' f g &#8801; 'first' f '.' 'second' g@</span><span>
+</span><span id="line-74"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-75"></span><span>    </span><span class="hs-comment">-- ==== __Examples__</span><span>
+</span><span id="line-76"></span><span>    </span><span class="hs-comment">-- &gt;&gt;&gt; bimap toUpper (+1) ('j', 3)</span><span>
+</span><span id="line-77"></span><span>    </span><span class="hs-comment">-- ('J',4)</span><span>
+</span><span id="line-78"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-79"></span><span>    </span><span class="hs-comment">-- &gt;&gt;&gt; bimap toUpper (+1) (Left 'j')</span><span>
+</span><span id="line-80"></span><span>    </span><span class="hs-comment">-- Left 'J'</span><span>
+</span><span id="line-81"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-82"></span><span>    </span><span class="hs-comment">-- &gt;&gt;&gt; bimap toUpper (+1) (Right 3)</span><span>
+</span><span id="line-83"></span><span>    </span><span class="hs-comment">-- Right 4</span><span>
+</span><span id="line-84"></span><span>    </span><span id="local-6989586621679591008"><span id="local-6989586621679591009"><span id="local-6989586621679591010"><span id="local-6989586621679591011"><span id="bimap"><span class="annot"><a href="Data.Bifunctor.html#bimap"><span class="hs-identifier hs-type">bimap</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679591011"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679591010"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679591009"><span class="hs-identifier hs-type">c</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679591008"><span class="hs-identifier hs-type">d</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679591007"><span class="hs-identifier hs-type">p</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679591011"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679591009"><span class="hs-identifier hs-type">c</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679591007"><span class="hs-identifier hs-type">p</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679591010"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679591008"><span class="hs-identifier hs-type">d</span></a></span></span></span></span></span><span>
+</span><span id="line-85"></span><span>    </span><span id="local-6989586621679590894"><span class="annot"><a href="Data.Bifunctor.html#bimap"><span class="hs-identifier hs-var hs-var">bimap</span></a></span><span> </span><span id="local-6989586621679590891"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590891"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679590890"><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590890"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; b) -&gt; p a d -&gt; p b d
+forall (p :: * -&gt; * -&gt; *) a b c.
+Bifunctor p =&gt;
+(a -&gt; b) -&gt; p a c -&gt; p b c
+</span><a href="Data.Bifunctor.html#first"><span class="hs-identifier hs-var">first</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590891"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">(p a d -&gt; p b d) -&gt; (p a c -&gt; p a d) -&gt; p a c -&gt; p b d
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="GHC.Base.html#."><span class="hs-operator hs-var">.</span></a></span><span> </span><span class="annot"><span class="annottext">(c -&gt; d) -&gt; p a c -&gt; p a d
+forall (p :: * -&gt; * -&gt; *) b c a.
+Bifunctor p =&gt;
+(b -&gt; c) -&gt; p a b -&gt; p a c
+</span><a href="Data.Bifunctor.html#second"><span class="hs-identifier hs-var">second</span></a></span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590890"><span class="hs-identifier hs-var">g</span></a></span></span><span>
+</span><span id="line-86"></span><span>
+</span><span id="line-87"></span><span>
+</span><span id="line-88"></span><span>    </span><span class="hs-comment">-- | Map covariantly over the first argument.</span><span>
+</span><span id="line-89"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-90"></span><span>    </span><span class="hs-comment">-- @'first' f &#8801; 'bimap' f 'id'@</span><span>
+</span><span id="line-91"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-92"></span><span>    </span><span class="hs-comment">-- ==== __Examples__</span><span>
+</span><span id="line-93"></span><span>    </span><span class="hs-comment">-- &gt;&gt;&gt; first toUpper ('j', 3)</span><span>
+</span><span id="line-94"></span><span>    </span><span class="hs-comment">-- ('J',3)</span><span>
+</span><span id="line-95"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-96"></span><span>    </span><span class="hs-comment">-- &gt;&gt;&gt; first toUpper (Left 'j')</span><span>
+</span><span id="line-97"></span><span>    </span><span class="hs-comment">-- Left 'J'</span><span>
+</span><span id="line-98"></span><span>    </span><span id="local-6989586621679591000"><span id="local-6989586621679591001"><span id="local-6989586621679591002"><span id="first"><span class="annot"><a href="Data.Bifunctor.html#first"><span class="hs-identifier hs-type">first</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679591002"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679591001"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679591007"><span class="hs-identifier hs-type">p</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679591002"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679591000"><span class="hs-identifier hs-type">c</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679591007"><span class="hs-identifier hs-type">p</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679591001"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679591000"><span class="hs-identifier hs-type">c</span></a></span></span></span></span><span>
+</span><span id="line-99"></span><span>    </span><span id="local-6989586621679590888"><span class="annot"><a href="Data.Bifunctor.html#first"><span class="hs-identifier hs-var hs-var">first</span></a></span><span> </span><span id="local-6989586621679590886"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590886"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; b) -&gt; (c -&gt; c) -&gt; p a c -&gt; p b c
+forall (p :: * -&gt; * -&gt; *) a b c d.
+Bifunctor p =&gt;
+(a -&gt; b) -&gt; (c -&gt; d) -&gt; p a c -&gt; p b d
+</span><a href="Data.Bifunctor.html#bimap"><span class="hs-identifier hs-var">bimap</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590886"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">c -&gt; c
+forall a. a -&gt; a
+</span><a href="GHC.Base.html#id"><span class="hs-identifier hs-var">id</span></a></span></span><span>
+</span><span id="line-100"></span><span>
+</span><span id="line-101"></span><span>
+</span><span id="line-102"></span><span>    </span><span class="hs-comment">-- | Map covariantly over the second argument.</span><span>
+</span><span id="line-103"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-104"></span><span>    </span><span class="hs-comment">-- @'second' &#8801; 'bimap' 'id'@</span><span>
+</span><span id="line-105"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-106"></span><span>    </span><span class="hs-comment">-- ==== __Examples__</span><span>
+</span><span id="line-107"></span><span>    </span><span class="hs-comment">-- &gt;&gt;&gt; second (+1) ('j', 3)</span><span>
+</span><span id="line-108"></span><span>    </span><span class="hs-comment">-- ('j',4)</span><span>
+</span><span id="line-109"></span><span>    </span><span class="hs-comment">--</span><span>
+</span><span id="line-110"></span><span>    </span><span class="hs-comment">-- &gt;&gt;&gt; second (+1) (Right 3)</span><span>
+</span><span id="line-111"></span><span>    </span><span class="hs-comment">-- Right 4</span><span>
+</span><span id="line-112"></span><span>    </span><span id="local-6989586621679590994"><span id="local-6989586621679590995"><span id="local-6989586621679590996"><span id="second"><span class="annot"><a href="Data.Bifunctor.html#second"><span class="hs-identifier hs-type">second</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621679590996"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679590995"><span class="hs-identifier hs-type">c</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679591007"><span class="hs-identifier hs-type">p</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590994"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590996"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679591007"><span class="hs-identifier hs-type">p</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590994"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590995"><span class="hs-identifier hs-type">c</span></a></span></span></span></span><span>
+</span><span id="line-113"></span><span>    </span><span id="local-6989586621679590884"><span class="annot"><a href="Data.Bifunctor.html#second"><span class="hs-identifier hs-var hs-var">second</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a -&gt; a) -&gt; (b -&gt; c) -&gt; p a b -&gt; p a c
+forall (p :: * -&gt; * -&gt; *) a b c d.
+Bifunctor p =&gt;
+(a -&gt; b) -&gt; (c -&gt; d) -&gt; p a c -&gt; p b d
+</span><a href="Data.Bifunctor.html#bimap"><span class="hs-identifier hs-var">bimap</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a
+forall a. a -&gt; a
+</span><a href="GHC.Base.html#id"><span class="hs-identifier hs-var">id</span></a></span></span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span>
+</span><span id="line-116"></span><span>
+</span><span id="line-117"></span><span class="hs-comment">-- | @since 4.8.0.0</span><span>
+</span><span id="line-118"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679590878"><span id="local-6989586621679590880"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-type">Bifunctor</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-119"></span><span>    </span><span id="local-6989586621679590876"><span class="annot"><span class="annottext">bimap :: forall a b c d. (a -&gt; b) -&gt; (c -&gt; d) -&gt; (a, c) -&gt; (b, d)
+</span><a href="#local-6989586621679590876"><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></a></span></span><span> </span><span id="local-6989586621679590875"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590875"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679590874"><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590874"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="hs-special">(</span><span id="local-6989586621679590873"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590873"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590872"><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590872"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590875"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590873"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590874"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590872"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-120"></span><span>
+</span><span id="line-121"></span><span class="hs-comment">-- | @since 4.8.0.0</span><span>
+</span><span id="line-122"></span><span id="local-6989586621679590982"><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679590867"><span id="local-6989586621679590869"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-type">Bifunctor</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679590982"><span class="hs-identifier hs-type">x1</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-123"></span><span>    </span><span id="local-6989586621679590866"><span class="annot"><span class="annottext">bimap :: forall a b c d. (a -&gt; b) -&gt; (c -&gt; d) -&gt; (x1, a, c) -&gt; (x1, b, d)
+</span><a href="#local-6989586621679590866"><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></a></span></span><span> </span><span id="local-6989586621679590865"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590865"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679590864"><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590864"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="hs-special">(</span><span id="local-6989586621679590863"><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590863"><span class="hs-identifier hs-var">x1</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590862"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590862"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590861"><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590861"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590863"><span class="hs-identifier hs-var">x1</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590865"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590862"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590864"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590861"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-124"></span><span>
+</span><span id="line-125"></span><span class="hs-comment">-- | @since 4.8.0.0</span><span>
+</span><span id="line-126"></span><span id="local-6989586621679590976"><span id="local-6989586621679590977"><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679590856"><span id="local-6989586621679590858"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-type">Bifunctor</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679590977"><span class="hs-identifier hs-type">x1</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590976"><span class="hs-identifier hs-type">x2</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-127"></span><span>    </span><span id="local-6989586621679590855"><span class="annot"><span class="annottext">bimap :: forall a b c d.
+(a -&gt; b) -&gt; (c -&gt; d) -&gt; (x1, x2, a, c) -&gt; (x1, x2, b, d)
+</span><a href="#local-6989586621679590855"><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></a></span></span><span> </span><span id="local-6989586621679590854"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590854"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679590853"><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590853"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="hs-special">(</span><span id="local-6989586621679590852"><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590852"><span class="hs-identifier hs-var">x1</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590851"><span class="annot"><span class="annottext">x2
+</span><a href="#local-6989586621679590851"><span class="hs-identifier hs-var">x2</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590850"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590850"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590849"><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590849"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590852"><span class="hs-identifier hs-var">x1</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x2
+</span><a href="#local-6989586621679590851"><span class="hs-identifier hs-var">x2</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590854"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590850"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590853"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590849"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span></span></span><span>
+</span><span id="line-128"></span><span>
+</span><span id="line-129"></span><span class="hs-comment">-- | @since 4.8.0.0</span><span>
+</span><span id="line-130"></span><span id="local-6989586621679590969"><span id="local-6989586621679590970"><span id="local-6989586621679590971"><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679590844"><span id="local-6989586621679590846"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-type">Bifunctor</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679590971"><span class="hs-identifier hs-type">x1</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590970"><span class="hs-identifier hs-type">x2</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590969"><span class="hs-identifier hs-type">x3</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-131"></span><span>    </span><span id="local-6989586621679590843"><span class="annot"><span class="annottext">bimap :: forall a b c d.
+(a -&gt; b) -&gt; (c -&gt; d) -&gt; (x1, x2, x3, a, c) -&gt; (x1, x2, x3, b, d)
+</span><a href="#local-6989586621679590843"><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></a></span></span><span> </span><span id="local-6989586621679590842"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590842"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679590841"><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590841"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="hs-special">(</span><span id="local-6989586621679590840"><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590840"><span class="hs-identifier hs-var">x1</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590839"><span class="annot"><span class="annottext">x2
+</span><a href="#local-6989586621679590839"><span class="hs-identifier hs-var">x2</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590838"><span class="annot"><span class="annottext">x3
+</span><a href="#local-6989586621679590838"><span class="hs-identifier hs-var">x3</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590837"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590837"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590836"><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590836"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590840"><span class="hs-identifier hs-var">x1</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x2
+</span><a href="#local-6989586621679590839"><span class="hs-identifier hs-var">x2</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x3
+</span><a href="#local-6989586621679590838"><span class="hs-identifier hs-var">x3</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590842"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590837"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590841"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590836"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span></span></span></span><span>
+</span><span id="line-132"></span><span>
+</span><span id="line-133"></span><span class="hs-comment">-- | @since 4.8.0.0</span><span>
+</span><span id="line-134"></span><span id="local-6989586621679590961"><span id="local-6989586621679590962"><span id="local-6989586621679590963"><span id="local-6989586621679590964"><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679590831"><span id="local-6989586621679590833"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-type">Bifunctor</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679590964"><span class="hs-identifier hs-type">x1</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590963"><span class="hs-identifier hs-type">x2</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590962"><span class="hs-identifier hs-type">x3</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590961"><span class="hs-identifier hs-type">x4</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-135"></span><span>    </span><span id="local-6989586621679590830"><span class="annot"><span class="annottext">bimap :: forall a b c d.
+(a -&gt; b)
+-&gt; (c -&gt; d) -&gt; (x1, x2, x3, x4, a, c) -&gt; (x1, x2, x3, x4, b, d)
+</span><a href="#local-6989586621679590830"><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></a></span></span><span> </span><span id="local-6989586621679590829"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590829"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679590828"><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590828"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="hs-special">(</span><span id="local-6989586621679590827"><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590827"><span class="hs-identifier hs-var">x1</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590826"><span class="annot"><span class="annottext">x2
+</span><a href="#local-6989586621679590826"><span class="hs-identifier hs-var">x2</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590825"><span class="annot"><span class="annottext">x3
+</span><a href="#local-6989586621679590825"><span class="hs-identifier hs-var">x3</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590824"><span class="annot"><span class="annottext">x4
+</span><a href="#local-6989586621679590824"><span class="hs-identifier hs-var">x4</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590823"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590823"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590822"><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590822"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590827"><span class="hs-identifier hs-var">x1</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x2
+</span><a href="#local-6989586621679590826"><span class="hs-identifier hs-var">x2</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x3
+</span><a href="#local-6989586621679590825"><span class="hs-identifier hs-var">x3</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x4
+</span><a href="#local-6989586621679590824"><span class="hs-identifier hs-var">x4</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590829"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590823"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590828"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590822"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span></span></span></span></span><span>
+</span><span id="line-136"></span><span>
+</span><span id="line-137"></span><span class="hs-comment">-- | @since 4.8.0.0</span><span>
+</span><span id="line-138"></span><span id="local-6989586621679590952"><span id="local-6989586621679590953"><span id="local-6989586621679590954"><span id="local-6989586621679590955"><span id="local-6989586621679590956"><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679590817"><span id="local-6989586621679590819"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-type">Bifunctor</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">,</span><span class="hs-special">)</span><span> </span><span class="annot"><a href="#local-6989586621679590956"><span class="hs-identifier hs-type">x1</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590955"><span class="hs-identifier hs-type">x2</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590954"><span class="hs-identifier hs-type">x3</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590953"><span class="hs-identifier hs-type">x4</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590952"><span class="hs-identifier hs-type">x5</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-139"></span><span>    </span><span id="local-6989586621679590816"><span class="annot"><span class="annottext">bimap :: forall a b c d.
+(a -&gt; b)
+-&gt; (c -&gt; d)
+-&gt; (x1, x2, x3, x4, x5, a, c)
+-&gt; (x1, x2, x3, x4, x5, b, d)
+</span><a href="#local-6989586621679590816"><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></a></span></span><span> </span><span id="local-6989586621679590815"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590815"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span id="local-6989586621679590814"><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590814"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-glyph">~</span><span class="hs-special">(</span><span id="local-6989586621679590813"><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590813"><span class="hs-identifier hs-var">x1</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590812"><span class="annot"><span class="annottext">x2
+</span><a href="#local-6989586621679590812"><span class="hs-identifier hs-var">x2</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590811"><span class="annot"><span class="annottext">x3
+</span><a href="#local-6989586621679590811"><span class="hs-identifier hs-var">x3</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590810"><span class="annot"><span class="annottext">x4
+</span><a href="#local-6989586621679590810"><span class="hs-identifier hs-var">x4</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590809"><span class="annot"><span class="annottext">x5
+</span><a href="#local-6989586621679590809"><span class="hs-identifier hs-var">x5</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590808"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590808"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679590807"><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590807"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">x1
+</span><a href="#local-6989586621679590813"><span class="hs-identifier hs-var">x1</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x2
+</span><a href="#local-6989586621679590812"><span class="hs-identifier hs-var">x2</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x3
+</span><a href="#local-6989586621679590811"><span class="hs-identifier hs-var">x3</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x4
+</span><a href="#local-6989586621679590810"><span class="hs-identifier hs-var">x4</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">x5
+</span><a href="#local-6989586621679590809"><span class="hs-identifier hs-var">x5</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590815"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590808"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590814"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590807"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span></span></span></span></span></span><span>
+</span><span id="line-140"></span><span>
+</span><span id="line-141"></span><span>
+</span><span id="line-142"></span><span class="hs-comment">-- | @since 4.8.0.0</span><span>
+</span><span id="line-143"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679590802"><span id="local-6989586621679590804"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-type">Bifunctor</span></a></span><span> </span><span class="annot"><a href="Data.Either.html#Either"><span class="hs-identifier hs-type">Either</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-144"></span><span>    </span><span id="local-6989586621679590801"><span class="annot"><span class="annottext">bimap :: forall a b c d. (a -&gt; b) -&gt; (c -&gt; d) -&gt; Either a c -&gt; Either b d
+</span><a href="#local-6989586621679590801"><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></a></span></span><span> </span><span id="local-6989586621679590800"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590800"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Either.html#Left"><span class="hs-identifier hs-type">Left</span></a></span><span> </span><span id="local-6989586621679590799"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590799"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; Either b d
+forall a b. a -&gt; Either a b
+</span><a href="Data.Either.html#Left"><span class="hs-identifier hs-var">Left</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590800"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590799"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-145"></span><span>    </span><span class="annot"><a href="Data.Bifunctor.html#bimap"><span class="hs-identifier hs-var">bimap</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679590798"><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590798"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Either.html#Right"><span class="hs-identifier hs-type">Right</span></a></span><span> </span><span id="local-6989586621679590797"><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590797"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">d -&gt; Either b d
+forall a b. b -&gt; Either a b
+</span><a href="Data.Either.html#Right"><span class="hs-identifier hs-var">Right</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">c -&gt; d
+</span><a href="#local-6989586621679590798"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">c
+</span><a href="#local-6989586621679590797"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-146"></span><span>
+</span><span id="line-147"></span><span class="hs-comment">-- | @since 4.8.0.0</span><span>
+</span><span id="line-148"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679590792"><span id="local-6989586621679590794"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-type">Bifunctor</span></a></span><span> </span><span class="annot"><a href="Data.Functor.Const.html#Const"><span class="hs-identifier hs-type">Const</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-149"></span><span>    </span><span id="local-6989586621679590791"><span class="annot"><span class="annottext">bimap :: forall a b c d. (a -&gt; b) -&gt; (c -&gt; d) -&gt; Const a c -&gt; Const b d
+</span><a href="#local-6989586621679590791"><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></a></span></span><span> </span><span id="local-6989586621679590790"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590790"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Functor.Const.html#Const"><span class="hs-identifier hs-type">Const</span></a></span><span> </span><span id="local-6989586621679590788"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590788"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; Const b d
+forall {k} a (b :: k). a -&gt; Const a b
+</span><a href="Data.Functor.Const.html#Const"><span class="hs-identifier hs-var">Const</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590790"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590788"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-150"></span><span>
+</span><span id="line-151"></span><span class="hs-comment">-- | @since 4.9.0.0</span><span>
+</span><span id="line-152"></span><span id="local-6989586621679590934"><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679590783"><span id="local-6989586621679590785"><span class="annot"><a href="Data.Bifunctor.html#Bifunctor"><span class="hs-identifier hs-type">Bifunctor</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="GHC.Generics.html#K1"><span class="hs-identifier hs-type">K1</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679590934"><span class="hs-identifier hs-type">i</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-153"></span><span>    </span><span id="local-6989586621679590782"><span class="annot"><span class="annottext">bimap :: forall a b c d. (a -&gt; b) -&gt; (c -&gt; d) -&gt; K1 i a c -&gt; K1 i b d
+</span><a href="#local-6989586621679590782"><span class="hs-identifier hs-var hs-var hs-var hs-var">bimap</span></a></span></span><span> </span><span id="local-6989586621679590781"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590781"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="annot"><span class="annottext">c -&gt; d
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="GHC.Generics.html#K1"><span class="hs-identifier hs-type">K1</span></a></span><span> </span><span id="local-6989586621679590779"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590779"><span class="hs-identifier hs-var">c</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; K1 i b d
+forall k i c (p :: k). c -&gt; K1 i c p
+</span><a href="GHC.Generics.html#K1"><span class="hs-identifier hs-var">K1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621679590781"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679590779"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-154"></span></pre></body></html>
