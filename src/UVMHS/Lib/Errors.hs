@@ -1,10 +1,8 @@
 module UVMHS.Lib.Errors where
 
 import UVMHS.Core
-import UVMHS.Lib.Annotated
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Pretty
-import UVMHS.Lib.TreeNested
 
 oops ∷ (Monad m,MonadReader r m,HasLens r e,MonadError e m) ⇒ m a
 oops = throw *$ askL hasLens

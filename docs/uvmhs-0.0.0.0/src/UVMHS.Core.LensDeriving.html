@@ -17,14 +17,14 @@
 </span><span id="line-17"></span><span class="hs-comment">--   |]</span><span>
 </span><span id="line-18"></span><span class="annot"><a href="UVMHS.Core.LensDeriving.html#makeLensLogic"><span class="hs-identifier hs-type">makeLensLogic</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Cxt</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Name</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43F"><span class="hs-identifier hs-type">&#119871;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">TH.TyVarBndr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Name</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Type</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Q</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43F"><span class="hs-identifier hs-type">&#119871;</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Dec</span></span><span class="hs-special">)</span><span>
 </span><span id="line-19"></span><span id="makeLensLogic"><span class="annot"><span class="annottext">makeLensLogic :: Cxt -&gt; Name -&gt; &#119871; (TyVarBndr ()) -&gt; Name -&gt; Type -&gt; Q (&#119871; Dec)
-</span><a href="UVMHS.Core.LensDeriving.html#makeLensLogic"><span class="hs-identifier hs-var hs-var">makeLensLogic</span></a></span></span><span> </span><span id="local-6989586621680256302"><span class="annot"><span class="annottext">Cxt
-</span><a href="#local-6989586621680256302"><span class="hs-identifier hs-var">cx</span></a></span></span><span> </span><span id="local-6989586621680256301"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256301"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span id="local-6989586621680256300"><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256300"><span class="hs-identifier hs-var">tyargs</span></a></span></span><span> </span><span id="local-6989586621680256299"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256299"><span class="hs-identifier hs-var">field</span></a></span></span><span> </span><span id="local-6989586621680256298"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621680256298"><span class="hs-identifier hs-var">fieldty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-20"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680256297"><span class="annot"><span class="annottext">lensName :: Name
-</span><a href="#local-6989586621680256297"><span class="hs-identifier hs-var hs-var">lensName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Name
+</span><a href="UVMHS.Core.LensDeriving.html#makeLensLogic"><span class="hs-identifier hs-var hs-var">makeLensLogic</span></a></span></span><span> </span><span id="local-6989586621680256349"><span class="annot"><span class="annottext">Cxt
+</span><a href="#local-6989586621680256349"><span class="hs-identifier hs-var">cx</span></a></span></span><span> </span><span id="local-6989586621680256348"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256348"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span id="local-6989586621680256347"><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
+</span><a href="#local-6989586621680256347"><span class="hs-identifier hs-var">tyargs</span></a></span></span><span> </span><span id="local-6989586621680256346"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256346"><span class="hs-identifier hs-var">field</span></a></span></span><span> </span><span id="local-6989586621680256345"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621680256345"><span class="hs-identifier hs-var">fieldty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-20"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680256344"><span class="annot"><span class="annottext">lensName :: Name
+</span><a href="#local-6989586621680256344"><span class="hs-identifier hs-var hs-var">lensName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Name
 </span><span class="hs-identifier hs-var">TH.mkName</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Name) -&gt; String -&gt; Name
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
@@ -34,12 +34,12 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
 </span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; String
 </span><span class="hs-identifier hs-var">TH.nameBase</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256299"><span class="hs-identifier hs-var">field</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#120138; -&gt; &#120138;
+</span><a href="#local-6989586621680256346"><span class="hs-identifier hs-var">field</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#120138; -&gt; &#120138;
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;L&quot;</span></span><span>
-</span><span id="line-21"></span><span>      </span><span id="local-6989586621680256291"><span class="annot"><span class="annottext">tyargVars :: &#119871; Type
-</span><a href="#local-6989586621680256291"><span class="hs-identifier hs-var hs-var">tyargVars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(TyVarBndr () -&gt; Type) -&gt; &#119871; (TyVarBndr ()) -&gt; &#119871; Type
+</span><span id="line-21"></span><span>      </span><span id="local-6989586621680256338"><span class="annot"><span class="annottext">tyargVars :: &#119871; Type
+</span><a href="#local-6989586621680256338"><span class="hs-identifier hs-var hs-var">tyargVars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(TyVarBndr () -&gt; Type) -&gt; &#119871; (TyVarBndr ()) -&gt; &#119871; Type
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Type
 </span><span class="hs-identifier hs-var">TH.VarT</span></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Type) -&gt; (TyVarBndr () -&gt; Name) -&gt; TyVarBndr () -&gt; Type
@@ -47,43 +47,43 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">TyVarBndr () -&gt; Name
 forall a. TyVarBndr a -&gt; Name
 </span><a href="UVMHS.Core.TH.html#thTyVarBndrName"><span class="hs-identifier hs-var">thTyVarBndrName</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256300"><span class="hs-identifier hs-var">tyargs</span></a></span><span>
-</span><span id="line-22"></span><span>      </span><span id="local-6989586621680256286"><span class="annot"><span class="annottext">tyargs' :: &#119871; (TyVarBndr Specificity)
-</span><a href="#local-6989586621680256286"><span class="hs-identifier hs-var hs-var">tyargs'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
+</span><a href="#local-6989586621680256347"><span class="hs-identifier hs-var">tyargs</span></a></span><span>
+</span><span id="line-22"></span><span>      </span><span id="local-6989586621680256333"><span class="annot"><span class="annottext">tyargs' :: &#119871; (TyVarBndr Specificity)
+</span><a href="#local-6989586621680256333"><span class="hs-identifier hs-var hs-var">tyargs'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
 -&gt; (TyVarBndr () -&gt; TyVarBndr Specificity)
 -&gt; &#119871; (TyVarBndr Specificity)
 forall (t :: * -&gt; *) a b. Functor t =&gt; t a -&gt; (a -&gt; b) -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#mapOn"><span class="hs-identifier hs-var">mapOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256300"><span class="hs-identifier hs-var">tyargs</span></a></span><span> </span><span class="annot"><span class="annottext">((TyVarBndr () -&gt; TyVarBndr Specificity)
+</span><a href="#local-6989586621680256347"><span class="hs-identifier hs-var">tyargs</span></a></span><span> </span><span class="annot"><span class="annottext">((TyVarBndr () -&gt; TyVarBndr Specificity)
  -&gt; &#119871; (TyVarBndr Specificity))
 -&gt; (TyVarBndr () -&gt; TyVarBndr Specificity)
 -&gt; &#119871; (TyVarBndr Specificity)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-23"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">TH.PlainTV</span></span><span> </span><span id="local-6989586621680256283"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256283"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Specificity -&gt; TyVarBndr Specificity
+</span><span id="line-23"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">TH.PlainTV</span></span><span> </span><span id="local-6989586621680256330"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256330"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Specificity -&gt; TyVarBndr Specificity
 forall flag. Name -&gt; flag -&gt; TyVarBndr flag
 </span><span class="hs-identifier hs-var">TH.PlainTV</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256283"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Specificity
+</span><a href="#local-6989586621680256330"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Specificity
 </span><span class="hs-identifier hs-var">TH.SpecifiedSpec</span></span><span>
-</span><span id="line-24"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">TH.KindedTV</span></span><span> </span><span id="local-6989586621680256280"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256280"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span id="local-6989586621680256279"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621680256279"><span class="hs-identifier hs-var">&#954;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Specificity -&gt; Type -&gt; TyVarBndr Specificity
+</span><span id="line-24"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">TH.KindedTV</span></span><span> </span><span id="local-6989586621680256327"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256327"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span id="local-6989586621680256326"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621680256326"><span class="hs-identifier hs-var">&#954;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Specificity -&gt; Type -&gt; TyVarBndr Specificity
 forall flag. Name -&gt; flag -&gt; Type -&gt; TyVarBndr flag
 </span><span class="hs-identifier hs-var">TH.KindedTV</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256280"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Specificity
+</span><a href="#local-6989586621680256327"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Specificity
 </span><span class="hs-identifier hs-var">TH.SpecifiedSpec</span></span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621680256279"><span class="hs-identifier hs-var">&#954;</span></a></span><span>
-</span><span id="line-25"></span><span>  </span><span id="local-6989586621680256278"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256278"><span class="hs-identifier hs-var">tmp&#739;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
+</span><a href="#local-6989586621680256326"><span class="hs-identifier hs-var">&#954;</span></a></span><span>
+</span><span id="line-25"></span><span>  </span><span id="local-6989586621680256325"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256325"><span class="hs-identifier hs-var">tmp&#739;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
 forall (m :: * -&gt; *). Quote m =&gt; String -&gt; m Name
 </span><span class="hs-identifier hs-var">TH.newName</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Name) -&gt; String -&gt; Q Name
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
 </span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;x&quot;</span></span><span>
-</span><span id="line-26"></span><span>  </span><span id="local-6989586621680256277"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256277"><span class="hs-identifier hs-var">tmp&#738;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
+</span><span id="line-26"></span><span>  </span><span id="local-6989586621680256324"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256324"><span class="hs-identifier hs-var">tmp&#738;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
 forall (m :: * -&gt; *). Quote m =&gt; String -&gt; m Name
 </span><span class="hs-identifier hs-var">TH.newName</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Name) -&gt; String -&gt; Q Name
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -102,21 +102,21 @@ forall a t. ToIter a t =&gt; t -&gt; &#119871; a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Inline -&gt; RuleMatch -&gt; Phases -&gt; Pragma
 </span><span class="hs-identifier hs-var">TH.InlineP</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256297"><span class="hs-identifier hs-var">lensName</span></a></span><span> </span><span class="annot"><span class="annottext">Inline
+</span><a href="#local-6989586621680256344"><span class="hs-identifier hs-var">lensName</span></a></span><span> </span><span class="annot"><span class="annottext">Inline
 </span><span class="hs-identifier hs-var">TH.Inline</span></span><span> </span><span class="annot"><span class="annottext">RuleMatch
 </span><span class="hs-identifier hs-var">TH.FunLike</span></span><span> </span><span class="annot"><span class="annottext">Phases
 </span><span class="hs-identifier hs-var">TH.AllPhases</span></span><span>
 </span><span id="line-29"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Type -&gt; Dec
 </span><span class="hs-identifier hs-var">TH.SigD</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256297"><span class="hs-identifier hs-var">lensName</span></a></span><span> </span><span class="annot"><span class="annottext">(Type -&gt; Dec) -&gt; Type -&gt; Dec
+</span><a href="#local-6989586621680256344"><span class="hs-identifier hs-var">lensName</span></a></span><span> </span><span class="annot"><span class="annottext">(Type -&gt; Dec) -&gt; Type -&gt; Dec
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span>
 </span><span id="line-30"></span><span>        </span><span class="annot"><span class="annottext">[TyVarBndr Specificity] -&gt; Cxt -&gt; Type -&gt; Type
 </span><span class="hs-identifier hs-var">TH.ForallT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119871; (TyVarBndr Specificity) -&gt; [TyVarBndr Specificity]
 forall a b. CHS a b =&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#tohs"><span class="hs-identifier hs-var">tohs</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr Specificity)
-</span><a href="#local-6989586621680256286"><span class="hs-identifier hs-var">tyargs'</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Cxt
-</span><a href="#local-6989586621680256302"><span class="hs-identifier hs-var">cx</span></a></span><span> </span><span class="annot"><span class="annottext">(Type -&gt; Type) -&gt; Type -&gt; Type
+</span><a href="#local-6989586621680256333"><span class="hs-identifier hs-var">tyargs'</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Cxt
+</span><a href="#local-6989586621680256349"><span class="hs-identifier hs-var">cx</span></a></span><span> </span><span class="annot"><span class="annottext">(Type -&gt; Type) -&gt; Type -&gt; Type
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
 </span><span id="line-31"></span><span>          </span><span class="annot"><span class="annottext">Name -&gt; Type
@@ -124,16 +124,16 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a. Apply a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299"><span class="hs-operator hs-var">&#8857;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Type
 </span><span class="hs-identifier hs-var">TH.ConT</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256301"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">Type -&gt; &#119871; Type -&gt; Type
+</span><a href="#local-6989586621680256348"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">Type -&gt; &#119871; Type -&gt; Type
 forall e t. (Apply e, ToIter e t) =&gt; e -&gt; t -&gt; e
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299%22C6"><span class="hs-operator hs-var">&#8857;&#8902;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; Type
-</span><a href="#local-6989586621680256291"><span class="hs-identifier hs-var">tyargVars</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Type -&gt; Type -&gt; Type
+</span><a href="#local-6989586621680256338"><span class="hs-identifier hs-var">tyargVars</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Type -&gt; Type -&gt; Type
 forall a. Apply a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299"><span class="hs-operator hs-var">&#8857;</span></a></span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621680256298"><span class="hs-identifier hs-var">fieldty</span></a></span><span>
+</span><a href="#local-6989586621680256345"><span class="hs-identifier hs-var">fieldty</span></a></span><span>
 </span><span id="line-32"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Name -&gt; [Clause] -&gt; Dec
 </span><span class="hs-identifier hs-var">TH.FunD</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256297"><span class="hs-identifier hs-var">lensName</span></a></span><span> </span><span class="annot"><span class="annottext">([Clause] -&gt; Dec) -&gt; [Clause] -&gt; Dec
+</span><a href="#local-6989586621680256344"><span class="hs-identifier hs-var">lensName</span></a></span><span> </span><span class="annot"><span class="annottext">([Clause] -&gt; Dec) -&gt; [Clause] -&gt; Dec
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Clause -&gt; [Clause]
 forall a t. Single a t =&gt; a -&gt; t
@@ -150,34 +150,34 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a. Apply a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299"><span class="hs-operator hs-var">&#8857;</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.VarE</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256299"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Exp -&gt; Exp -&gt; Exp
+</span><a href="#local-6989586621680256346"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Exp -&gt; Exp -&gt; Exp
 forall a. Apply a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299%24"><span class="hs-operator hs-var">&#8857;$</span></a></span><span> </span><span class="annot"><span class="annottext">[Pat] -&gt; Exp -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.LamE</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Name -&gt; Pat
 </span><span class="hs-identifier hs-var">TH.VarP</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256277"><span class="hs-identifier hs-var">tmp&#738;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Name -&gt; Pat
+</span><a href="#local-6989586621680256324"><span class="hs-identifier hs-var">tmp&#738;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Name -&gt; Pat
 </span><span class="hs-identifier hs-var">TH.VarP</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256278"><span class="hs-identifier hs-var">tmp&#739;</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">(Exp -&gt; Exp) -&gt; Exp -&gt; Exp
+</span><a href="#local-6989586621680256325"><span class="hs-identifier hs-var">tmp&#739;</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">(Exp -&gt; Exp) -&gt; Exp -&gt; Exp
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Exp -&gt; [FieldExp] -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.RecUpdE</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.VarE</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256277"><span class="hs-identifier hs-var">tmp&#738;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256299"><span class="hs-identifier hs-var">field</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Name -&gt; Exp
+</span><a href="#local-6989586621680256324"><span class="hs-identifier hs-var">tmp&#738;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256346"><span class="hs-identifier hs-var">field</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Name -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.VarE</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256278"><span class="hs-identifier hs-var">tmp&#739;</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621680256325"><span class="hs-identifier hs-var">tmp&#739;</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
 </span><span id="line-34"></span><span>    </span><span class="hs-special">]</span><span>
 </span><span id="line-35"></span><span>
 </span><span id="line-36"></span><span class="annot"><a href="UVMHS.Core.LensDeriving.html#makeLenses"><span class="hs-identifier hs-type">makeLenses</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Name</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">TH.Dec</span></span><span class="hs-special">]</span><span>
 </span><span id="line-37"></span><span id="makeLenses"><span class="annot"><span class="annottext">makeLenses :: Name -&gt; Q [Dec]
-</span><a href="UVMHS.Core.LensDeriving.html#makeLenses"><span class="hs-identifier hs-var hs-var">makeLenses</span></a></span></span><span> </span><span id="local-6989586621680256256"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256256"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-38"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621680256255"><span class="annot"><span class="annottext">Cxt
-</span><a href="#local-6989586621680256255"><span class="hs-identifier hs-var">cx</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256253"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256253"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256252"><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256252"><span class="hs-identifier hs-var">tyargs</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Type
-</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256251"><span class="annot"><span class="annottext">Con
-</span><a href="#local-6989586621680256251"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; DerivClause
+</span><a href="UVMHS.Core.LensDeriving.html#makeLenses"><span class="hs-identifier hs-var hs-var">makeLenses</span></a></span></span><span> </span><span id="local-6989586621680256303"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256303"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-38"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621680256302"><span class="annot"><span class="annottext">Cxt
+</span><a href="#local-6989586621680256302"><span class="hs-identifier hs-var">cx</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256300"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256300"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256299"><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
+</span><a href="#local-6989586621680256299"><span class="hs-identifier hs-var">tyargs</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Type
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256298"><span class="annot"><span class="annottext">Con
+</span><a href="#local-6989586621680256298"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; DerivClause
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">Q (((((Cxt &#8743; Name) &#8743; &#119871; (TyVarBndr ())) &#8743; &#119874; Type) &#8743; Con)
    &#8743; &#119871; DerivClause)
 -&gt; &#119874; (((((Cxt &#8743; Name) &#8743; &#119871; (TyVarBndr ())) &#8743; &#119874; Type) &#8743; Con)
@@ -231,10 +231,10 @@ forall a b. (a &#9010; b) -&gt; a -&gt; &#119874; b
 forall (m :: * -&gt; *) a b. Bind m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
 </span><a href="UVMHS.Core.Classes.Monad.html#%2A%24"><span class="hs-operator hs-var">*$</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Info
 </span><span class="hs-identifier hs-var">TH.reify</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256256"><span class="hs-identifier hs-var">name</span></a></span><span>
+</span><a href="#local-6989586621680256303"><span class="hs-identifier hs-var">name</span></a></span><span>
 </span><span id="line-39"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name
-</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256241"><span class="annot"><span class="annottext">&#119871; VarStrictType
-</span><a href="#local-6989586621680256241"><span class="hs-identifier hs-var">fields</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">Q (Name &#8743; &#119871; VarStrictType)
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256288"><span class="annot"><span class="annottext">&#119871; VarStrictType
+</span><a href="#local-6989586621680256288"><span class="hs-identifier hs-var">fields</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">Q (Name &#8743; &#119871; VarStrictType)
 -&gt; &#119874; (Name &#8743; &#119871; VarStrictType) -&gt; Q (Name &#8743; &#119871; VarStrictType)
 forall (m :: * -&gt; *) a. Return m =&gt; m a -&gt; &#119874; a -&gt; m a
 </span><a href="UVMHS.Core.Data.Option.html#ifNoneM"><span class="hs-identifier hs-var">ifNoneM</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IO (Name &#8743; &#119871; VarStrictType) -&gt; Q (Name &#8743; &#119871; VarStrictType)
@@ -249,7 +249,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a b. (a &#9010; b) -&gt; a -&gt; &#119874; b
 </span><a href="UVMHS.Core.Lens.html#view"><span class="hs-identifier hs-var hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">Con &#9010; (Name &#8743; &#119871; VarStrictType)
 </span><a href="UVMHS.Core.TH.html#thRecCL"><span class="hs-identifier hs-var">thRecCL</span></a></span><span> </span><span class="annot"><span class="annottext">Con
-</span><a href="#local-6989586621680256251"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><a href="#local-6989586621680256298"><span class="hs-identifier hs-var">c</span></a></span><span>
 </span><span id="line-40"></span><span>  </span><span class="annot"><span class="annottext">(&#119871; (&#119871; Dec) -&gt; [Dec]) -&gt; Q (&#119871; (&#119871; Dec)) -&gt; Q [Dec]
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119871; Dec -&gt; [Dec]
@@ -265,21 +265,21 @@ forall (m :: * -&gt; *) (t :: * -&gt; *) a b.
 (Monad m, FunctorM t) =&gt;
 t a -&gt; (a -&gt; m b) -&gt; m (t b)
 </span><a href="UVMHS.Core.Classes.FunctorM.html#mapMOn"><span class="hs-identifier hs-var">mapMOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; VarStrictType
-</span><a href="#local-6989586621680256241"><span class="hs-identifier hs-var">fields</span></a></span><span> </span><span class="annot"><span class="annottext">((VarStrictType -&gt; Q (&#119871; Dec)) -&gt; Q (&#119871; (&#119871; Dec)))
+</span><a href="#local-6989586621680256288"><span class="hs-identifier hs-var">fields</span></a></span><span> </span><span class="annot"><span class="annottext">((VarStrictType -&gt; Q (&#119871; Dec)) -&gt; Q (&#119871; (&#119871; Dec)))
 -&gt; (VarStrictType -&gt; Q (&#119871; Dec)) -&gt; Q (&#119871; (&#119871; Dec))
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">VarStrictType -&gt; (Name &#8743; Bang) &#8743; Type
 forall a b. CHS a b =&gt; b -&gt; a
-</span><a href="UVMHS.Core.Init.html#frhs"><span class="hs-identifier hs-var">frhs</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680256236"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256236"><span class="hs-identifier hs-var">field</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">Bang
-</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256235"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621680256235"><span class="hs-identifier hs-var">fieldty</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Cxt -&gt; Name -&gt; &#119871; (TyVarBndr ()) -&gt; Name -&gt; Type -&gt; Q (&#119871; Dec)
+</span><a href="UVMHS.Core.Init.html#frhs"><span class="hs-identifier hs-var">frhs</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680256283"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256283"><span class="hs-identifier hs-var">field</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">Bang
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256282"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621680256282"><span class="hs-identifier hs-var">fieldty</span></a></span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Cxt -&gt; Name -&gt; &#119871; (TyVarBndr ()) -&gt; Name -&gt; Type -&gt; Q (&#119871; Dec)
 </span><a href="UVMHS.Core.LensDeriving.html#makeLensLogic"><span class="hs-identifier hs-var">makeLensLogic</span></a></span><span> </span><span class="annot"><span class="annottext">Cxt
-</span><a href="#local-6989586621680256255"><span class="hs-identifier hs-var">cx</span></a></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256253"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256252"><span class="hs-identifier hs-var">tyargs</span></a></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256236"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621680256235"><span class="hs-identifier hs-var">fieldty</span></a></span><span>
+</span><a href="#local-6989586621680256302"><span class="hs-identifier hs-var">cx</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256300"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
+</span><a href="#local-6989586621680256299"><span class="hs-identifier hs-var">tyargs</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256283"><span class="hs-identifier hs-var">field</span></a></span><span> </span><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621680256282"><span class="hs-identifier hs-var">fieldty</span></a></span><span>
 </span><span id="line-41"></span><span>
 </span><span id="line-42"></span><span class="hs-comment">-- makePrismLogic [C&#8321;,&#8230;,C&#8345;] ty [a&#8321;,&#8230;,a&#8345;] con (fieldty&#8321;,&#8230;,fieldty&#8345;) &#8788; </span><span>
 </span><span id="line-43"></span><span class="hs-comment">--   [| fieldL &#8759; &#8704; a&#8321; &#8230; a&#8345;. (C&#8321;,&#8230;,C&#8345;) &#8658; ty a&#8321; &#8230; a&#8345; &#9010; (fieldty&#8321;,&#8230;,fieldty&#8345;)</span><span>
@@ -292,15 +292,15 @@ forall a b. CHS a b =&gt; b -&gt; a
 </span><span id="line-50"></span><span class="hs-comment">--   |]</span><span>
 </span><span id="line-51"></span><span class="annot"><a href="UVMHS.Core.LensDeriving.html#makePrismLogic"><span class="hs-identifier hs-type">makePrismLogic</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Cxt</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Name</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43F"><span class="hs-identifier hs-type">&#119871;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">TH.TyVarBndr</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Name</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43F"><span class="hs-identifier hs-type">&#119871;</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Type</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2115"><span class="hs-identifier hs-type">&#8469;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Q</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43F"><span class="hs-identifier hs-type">&#119871;</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Dec</span></span><span class="hs-special">)</span><span>
 </span><span id="line-52"></span><span id="makePrismLogic"><span class="annot"><span class="annottext">makePrismLogic :: Cxt -&gt; Name -&gt; &#119871; (TyVarBndr ()) -&gt; Name -&gt; &#119871; Type -&gt; &#8469; -&gt; Q (&#119871; Dec)
-</span><a href="UVMHS.Core.LensDeriving.html#makePrismLogic"><span class="hs-identifier hs-var hs-var">makePrismLogic</span></a></span></span><span> </span><span id="local-6989586621680256233"><span class="annot"><span class="annottext">Cxt
-</span><a href="#local-6989586621680256233"><span class="hs-identifier hs-var">cx</span></a></span></span><span> </span><span id="local-6989586621680256232"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256232"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span id="local-6989586621680256231"><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256231"><span class="hs-identifier hs-var">tyargs</span></a></span></span><span> </span><span id="local-6989586621680256230"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256230"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span id="local-6989586621680256229"><span class="annot"><span class="annottext">&#119871; Type
-</span><a href="#local-6989586621680256229"><span class="hs-identifier hs-var">fieldtys</span></a></span></span><span> </span><span id="local-6989586621680256228"><span class="annot"><span class="annottext">&#8469;
-</span><a href="#local-6989586621680256228"><span class="hs-identifier hs-var">numcons</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-53"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680256227"><span class="annot"><span class="annottext">prismName :: Name
-</span><a href="#local-6989586621680256227"><span class="hs-identifier hs-var hs-var">prismName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Name
+</span><a href="UVMHS.Core.LensDeriving.html#makePrismLogic"><span class="hs-identifier hs-var hs-var">makePrismLogic</span></a></span></span><span> </span><span id="local-6989586621680256280"><span class="annot"><span class="annottext">Cxt
+</span><a href="#local-6989586621680256280"><span class="hs-identifier hs-var">cx</span></a></span></span><span> </span><span id="local-6989586621680256279"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256279"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span id="local-6989586621680256278"><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
+</span><a href="#local-6989586621680256278"><span class="hs-identifier hs-var">tyargs</span></a></span></span><span> </span><span id="local-6989586621680256277"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256277"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span id="local-6989586621680256276"><span class="annot"><span class="annottext">&#119871; Type
+</span><a href="#local-6989586621680256276"><span class="hs-identifier hs-var">fieldtys</span></a></span></span><span> </span><span id="local-6989586621680256275"><span class="annot"><span class="annottext">&#8469;
+</span><a href="#local-6989586621680256275"><span class="hs-identifier hs-var">numcons</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-53"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680256274"><span class="annot"><span class="annottext">prismName :: Name
+</span><a href="#local-6989586621680256274"><span class="hs-identifier hs-var hs-var">prismName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Name
 </span><span class="hs-identifier hs-var">TH.mkName</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Name) -&gt; String -&gt; Name
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
@@ -317,12 +317,12 @@ forall a t. ToIter a t =&gt; (a -&gt; a) -&gt; t -&gt; &#119868; a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; String
 </span><span class="hs-identifier hs-var">TH.nameBase</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256230"><span class="hs-identifier hs-var">con</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#120138; -&gt; &#120138;
+</span><a href="#local-6989586621680256277"><span class="hs-identifier hs-var">con</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#120138; -&gt; &#120138;
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;L&quot;</span></span><span>
-</span><span id="line-54"></span><span>      </span><span id="local-6989586621680256224"><span class="annot"><span class="annottext">tyargVars :: &#119871; Type
-</span><a href="#local-6989586621680256224"><span class="hs-identifier hs-var hs-var">tyargVars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(TyVarBndr () -&gt; Type) -&gt; &#119871; (TyVarBndr ()) -&gt; &#119871; Type
+</span><span id="line-54"></span><span>      </span><span id="local-6989586621680256271"><span class="annot"><span class="annottext">tyargVars :: &#119871; Type
+</span><a href="#local-6989586621680256271"><span class="hs-identifier hs-var hs-var">tyargVars</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(TyVarBndr () -&gt; Type) -&gt; &#119871; (TyVarBndr ()) -&gt; &#119871; Type
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Type
 </span><span class="hs-identifier hs-var">TH.VarT</span></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Type) -&gt; (TyVarBndr () -&gt; Name) -&gt; TyVarBndr () -&gt; Type
@@ -330,48 +330,48 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">TyVarBndr () -&gt; Name
 forall a. TyVarBndr a -&gt; Name
 </span><a href="UVMHS.Core.TH.html#thTyVarBndrName"><span class="hs-identifier hs-var">thTyVarBndrName</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256231"><span class="hs-identifier hs-var">tyargs</span></a></span><span>
-</span><span id="line-55"></span><span>      </span><span id="local-6989586621680256223"><span class="annot"><span class="annottext">tyargs' :: &#119871; (TyVarBndr Specificity)
-</span><a href="#local-6989586621680256223"><span class="hs-identifier hs-var hs-var">tyargs'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
+</span><a href="#local-6989586621680256278"><span class="hs-identifier hs-var">tyargs</span></a></span><span>
+</span><span id="line-55"></span><span>      </span><span id="local-6989586621680256270"><span class="annot"><span class="annottext">tyargs' :: &#119871; (TyVarBndr Specificity)
+</span><a href="#local-6989586621680256270"><span class="hs-identifier hs-var hs-var">tyargs'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
 -&gt; (TyVarBndr () -&gt; TyVarBndr Specificity)
 -&gt; &#119871; (TyVarBndr Specificity)
 forall (t :: * -&gt; *) a b. Functor t =&gt; t a -&gt; (a -&gt; b) -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#mapOn"><span class="hs-identifier hs-var">mapOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256231"><span class="hs-identifier hs-var">tyargs</span></a></span><span> </span><span class="annot"><span class="annottext">((TyVarBndr () -&gt; TyVarBndr Specificity)
+</span><a href="#local-6989586621680256278"><span class="hs-identifier hs-var">tyargs</span></a></span><span> </span><span class="annot"><span class="annottext">((TyVarBndr () -&gt; TyVarBndr Specificity)
  -&gt; &#119871; (TyVarBndr Specificity))
 -&gt; (TyVarBndr () -&gt; TyVarBndr Specificity)
 -&gt; &#119871; (TyVarBndr Specificity)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-56"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">TH.PlainTV</span></span><span> </span><span id="local-6989586621680256222"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256222"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Specificity -&gt; TyVarBndr Specificity
+</span><span id="line-56"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">TH.PlainTV</span></span><span> </span><span id="local-6989586621680256269"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256269"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Specificity -&gt; TyVarBndr Specificity
 forall flag. Name -&gt; flag -&gt; TyVarBndr flag
 </span><span class="hs-identifier hs-var">TH.PlainTV</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256222"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Specificity
+</span><a href="#local-6989586621680256269"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Specificity
 </span><span class="hs-identifier hs-var">TH.SpecifiedSpec</span></span><span>
-</span><span id="line-57"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">TH.KindedTV</span></span><span> </span><span id="local-6989586621680256221"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256221"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span id="local-6989586621680256220"><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621680256220"><span class="hs-identifier hs-var">&#954;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Specificity -&gt; Type -&gt; TyVarBndr Specificity
+</span><span id="line-57"></span><span>        </span><span class="annot"><span class="hs-identifier hs-type">TH.KindedTV</span></span><span> </span><span id="local-6989586621680256268"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256268"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span id="local-6989586621680256267"><span class="annot"><span class="annottext">Type
+</span><a href="#local-6989586621680256267"><span class="hs-identifier hs-var">&#954;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Specificity -&gt; Type -&gt; TyVarBndr Specificity
 forall flag. Name -&gt; flag -&gt; Type -&gt; TyVarBndr flag
 </span><span class="hs-identifier hs-var">TH.KindedTV</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256221"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Specificity
+</span><a href="#local-6989586621680256268"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">Specificity
 </span><span class="hs-identifier hs-var">TH.SpecifiedSpec</span></span><span> </span><span class="annot"><span class="annottext">Type
-</span><a href="#local-6989586621680256220"><span class="hs-identifier hs-var">&#954;</span></a></span><span>
-</span><span id="line-58"></span><span>  </span><span id="local-6989586621680256219"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256219"><span class="hs-identifier hs-var">tmp&#739;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
+</span><a href="#local-6989586621680256267"><span class="hs-identifier hs-var">&#954;</span></a></span><span>
+</span><span id="line-58"></span><span>  </span><span id="local-6989586621680256266"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256266"><span class="hs-identifier hs-var">tmp&#739;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Name
 forall (m :: * -&gt; *). Quote m =&gt; String -&gt; m Name
 </span><span class="hs-identifier hs-var">TH.newName</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Name) -&gt; String -&gt; Q Name
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
 </span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;x&quot;</span></span><span>
-</span><span id="line-59"></span><span>  </span><span id="local-6989586621680256218"><span class="annot"><span class="annottext">&#119871; Name
-</span><a href="#local-6989586621680256218"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">&#119871; Type -&gt; (Type -&gt; Q Name) -&gt; Q (&#119871; Name)
+</span><span id="line-59"></span><span>  </span><span id="local-6989586621680256265"><span class="annot"><span class="annottext">&#119871; Name
+</span><a href="#local-6989586621680256265"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">&#119871; Type -&gt; (Type -&gt; Q Name) -&gt; Q (&#119871; Name)
 forall (m :: * -&gt; *) (t :: * -&gt; *) a b.
 (Monad m, FunctorM t) =&gt;
 t a -&gt; (a -&gt; m b) -&gt; m (t b)
 </span><a href="UVMHS.Core.Classes.FunctorM.html#mapMOn"><span class="hs-identifier hs-var">mapMOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; Type
-</span><a href="#local-6989586621680256229"><span class="hs-identifier hs-var">fieldtys</span></a></span><span> </span><span class="annot"><span class="annottext">((Type -&gt; Q Name) -&gt; Q (&#119871; Name)) -&gt; (Type -&gt; Q Name) -&gt; Q (&#119871; Name)
+</span><a href="#local-6989586621680256276"><span class="hs-identifier hs-var">fieldtys</span></a></span><span> </span><span class="annot"><span class="annottext">((Type -&gt; Q Name) -&gt; Q (&#119871; Name)) -&gt; (Type -&gt; Q Name) -&gt; Q (&#119871; Name)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Q Name -&gt; Type -&gt; Q Name
 forall a b. a -&gt; b -&gt; a
@@ -397,21 +397,21 @@ forall a t. ToIter a t =&gt; t -&gt; &#119871; a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Inline -&gt; RuleMatch -&gt; Phases -&gt; Pragma
 </span><span class="hs-identifier hs-var">TH.InlineP</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256227"><span class="hs-identifier hs-var">prismName</span></a></span><span> </span><span class="annot"><span class="annottext">Inline
+</span><a href="#local-6989586621680256274"><span class="hs-identifier hs-var">prismName</span></a></span><span> </span><span class="annot"><span class="annottext">Inline
 </span><span class="hs-identifier hs-var">TH.Inline</span></span><span> </span><span class="annot"><span class="annottext">RuleMatch
 </span><span class="hs-identifier hs-var">TH.FunLike</span></span><span> </span><span class="annot"><span class="annottext">Phases
 </span><span class="hs-identifier hs-var">TH.AllPhases</span></span><span>
 </span><span id="line-63"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Type -&gt; Dec
 </span><span class="hs-identifier hs-var">TH.SigD</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256227"><span class="hs-identifier hs-var">prismName</span></a></span><span> </span><span class="annot"><span class="annottext">(Type -&gt; Dec) -&gt; Type -&gt; Dec
+</span><a href="#local-6989586621680256274"><span class="hs-identifier hs-var">prismName</span></a></span><span> </span><span class="annot"><span class="annottext">(Type -&gt; Dec) -&gt; Type -&gt; Dec
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span>
 </span><span id="line-64"></span><span>        </span><span class="annot"><span class="annottext">[TyVarBndr Specificity] -&gt; Cxt -&gt; Type -&gt; Type
 </span><span class="hs-identifier hs-var">TH.ForallT</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119871; (TyVarBndr Specificity) -&gt; [TyVarBndr Specificity]
 forall a b. CHS a b =&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#tohs"><span class="hs-identifier hs-var">tohs</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr Specificity)
-</span><a href="#local-6989586621680256223"><span class="hs-identifier hs-var">tyargs'</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Cxt
-</span><a href="#local-6989586621680256233"><span class="hs-identifier hs-var">cx</span></a></span><span> </span><span class="annot"><span class="annottext">(Type -&gt; Type) -&gt; Type -&gt; Type
+</span><a href="#local-6989586621680256270"><span class="hs-identifier hs-var">tyargs'</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Cxt
+</span><a href="#local-6989586621680256280"><span class="hs-identifier hs-var">cx</span></a></span><span> </span><span class="annot"><span class="annottext">(Type -&gt; Type) -&gt; Type -&gt; Type
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span>
 </span><span id="line-65"></span><span>          </span><span class="annot"><span class="annottext">Name -&gt; Type
@@ -419,18 +419,18 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a. Apply a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299"><span class="hs-operator hs-var">&#8857;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Type
 </span><span class="hs-identifier hs-var">TH.ConT</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256232"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">Type -&gt; &#119871; Type -&gt; Type
+</span><a href="#local-6989586621680256279"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">Type -&gt; &#119871; Type -&gt; Type
 forall e t. (Apply e, ToIter e t) =&gt; e -&gt; t -&gt; e
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299%22C6"><span class="hs-operator hs-var">&#8857;&#8902;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; Type
-</span><a href="#local-6989586621680256224"><span class="hs-identifier hs-var">tyargVars</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Type -&gt; Type -&gt; Type
+</span><a href="#local-6989586621680256271"><span class="hs-identifier hs-var">tyargVars</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Type -&gt; Type -&gt; Type
 forall a. Apply a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299"><span class="hs-operator hs-var">&#8857;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; Type -&gt; Type
 forall a t. (Tup a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Classes.DSL.html#tup"><span class="hs-identifier hs-var">tup</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; Type
-</span><a href="#local-6989586621680256229"><span class="hs-identifier hs-var">fieldtys</span></a></span><span>
+</span><a href="#local-6989586621680256276"><span class="hs-identifier hs-var">fieldtys</span></a></span><span>
 </span><span id="line-66"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Name -&gt; [Clause] -&gt; Dec
 </span><span class="hs-identifier hs-var">TH.FunD</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256227"><span class="hs-identifier hs-var">prismName</span></a></span><span> </span><span class="annot"><span class="annottext">([Clause] -&gt; Dec) -&gt; [Clause] -&gt; Dec
+</span><a href="#local-6989586621680256274"><span class="hs-identifier hs-var">prismName</span></a></span><span> </span><span class="annot"><span class="annottext">([Clause] -&gt; Dec) -&gt; [Clause] -&gt; Dec
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Clause -&gt; [Clause]
 forall a t. Single a t =&gt; a -&gt; t
@@ -455,29 +455,29 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Pat
 </span><span class="hs-identifier hs-var">TH.VarP</span></span><span> </span><span class="annot"><span class="annottext">&#119871; Name
-</span><a href="#local-6989586621680256218"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">(Exp -&gt; Exp) -&gt; Exp -&gt; Exp
+</span><a href="#local-6989586621680256265"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">(Exp -&gt; Exp) -&gt; Exp -&gt; Exp
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.ConE</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256230"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">Exp -&gt; &#119871; Exp -&gt; Exp
+</span><a href="#local-6989586621680256277"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">Exp -&gt; &#119871; Exp -&gt; Exp
 forall e t. (Apply e, ToIter e t) =&gt; e -&gt; t -&gt; e
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299%22C6"><span class="hs-operator hs-var">&#8857;&#8902;</span></a></span><span> </span><span class="annot"><span class="annottext">(Name -&gt; Exp) -&gt; &#119871; Name -&gt; &#119871; Exp
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.VarE</span></span><span> </span><span class="annot"><span class="annottext">&#119871; Name
-</span><a href="#local-6989586621680256218"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680256265"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-69"></span><span>        </span><span class="annot"><span class="annottext">Exp -&gt; Exp -&gt; Exp
 forall a. Apply a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.DSL.html#%2299"><span class="hs-operator hs-var">&#8857;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Pat] -&gt; Exp -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.LamE</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Name -&gt; Pat
 </span><span class="hs-identifier hs-var">TH.VarP</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256219"><span class="hs-identifier hs-var">tmp&#739;</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">(Exp -&gt; Exp) -&gt; Exp -&gt; Exp
+</span><a href="#local-6989586621680256266"><span class="hs-identifier hs-var">tmp&#739;</span></a></span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">(Exp -&gt; Exp) -&gt; Exp -&gt; Exp
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span>
 </span><span id="line-70"></span><span>            </span><span class="annot"><span class="annottext">Exp -&gt; [Match] -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.CaseE</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.VarE</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256219"><span class="hs-identifier hs-var">tmp&#739;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([Match] -&gt; Exp) -&gt; [Match] -&gt; Exp
+</span><a href="#local-6989586621680256266"><span class="hs-identifier hs-var">tmp&#739;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">([Match] -&gt; Exp) -&gt; [Match] -&gt; Exp
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">[[Match]] -&gt; [Match]
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
@@ -489,7 +489,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Pat -&gt; Exp -&gt; Match
 </span><a href="UVMHS.Core.TH.html#thSingleMatch"><span class="hs-identifier hs-var">thSingleMatch</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Name -&gt; [Pat] -&gt; Pat
 </span><span class="hs-identifier hs-var">TH.ConP</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256230"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">([Pat] -&gt; Pat) -&gt; [Pat] -&gt; Pat
+</span><a href="#local-6989586621680256277"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">([Pat] -&gt; Pat) -&gt; [Pat] -&gt; Pat
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; Pat -&gt; [Pat]
 forall a b. CHS a b =&gt; a -&gt; b
@@ -497,7 +497,7 @@ forall a b. CHS a b =&gt; a -&gt; b
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Pat
 </span><span class="hs-identifier hs-var">TH.VarP</span></span><span> </span><span class="annot"><span class="annottext">&#119871; Name
-</span><a href="#local-6989586621680256218"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Exp -&gt; Match) -&gt; Exp -&gt; Match
+</span><a href="#local-6989586621680256265"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Exp -&gt; Match) -&gt; Exp -&gt; Match
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span>
 </span><span id="line-72"></span><span>                  </span><span class="annot"><span class="annottext">Name -&gt; Exp
@@ -509,9 +509,9 @@ forall a t. (Tup a, ToIter a t) =&gt; t -&gt; a
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Exp
 </span><span class="hs-identifier hs-var">TH.VarE</span></span><span> </span><span class="annot"><span class="annottext">&#119871; Name
-</span><a href="#local-6989586621680256218"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680256265"><span class="hs-identifier hs-var">tmp&#739;&#738;</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-73"></span><span>              </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#8469;
-</span><a href="#local-6989586621680256228"><span class="hs-identifier hs-var">numcons</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469; -&gt; &#120121;
+</span><a href="#local-6989586621680256275"><span class="hs-identifier hs-var">numcons</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8469; -&gt; &#120121;
 forall a. Ord a =&gt; a -&gt; a -&gt; &#120121;
 </span><a href="UVMHS.Core.Classes.Order.html#%2264"><span class="hs-operator hs-var">&#8804;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">1</span></span><span> </span><span class="hs-keyword">of</span><span>
@@ -534,14 +534,14 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span id="line-79"></span><span>
 </span><span id="line-80"></span><span class="annot"><a href="UVMHS.Core.LensDeriving.html#makePrisms"><span class="hs-identifier hs-type">makePrisms</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Name</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Q</span></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-identifier hs-type">TH.Dec</span></span><span class="hs-special">]</span><span>
 </span><span id="line-81"></span><span id="makePrisms"><span class="annot"><span class="annottext">makePrisms :: Name -&gt; Q [Dec]
-</span><a href="UVMHS.Core.LensDeriving.html#makePrisms"><span class="hs-identifier hs-var hs-var">makePrisms</span></a></span></span><span> </span><span id="local-6989586621680256208"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256208"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-82"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621680256207"><span class="annot"><span class="annottext">Cxt
-</span><a href="#local-6989586621680256207"><span class="hs-identifier hs-var">cx</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256206"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256206"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256205"><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256205"><span class="hs-identifier hs-var">tyargs</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Type
-</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256204"><span class="annot"><span class="annottext">&#119871; Con
-</span><a href="#local-6989586621680256204"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; DerivClause
+</span><a href="UVMHS.Core.LensDeriving.html#makePrisms"><span class="hs-identifier hs-var hs-var">makePrisms</span></a></span></span><span> </span><span id="local-6989586621680256255"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256255"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-82"></span><span>  </span><span class="hs-special">(</span><span id="local-6989586621680256254"><span class="annot"><span class="annottext">Cxt
+</span><a href="#local-6989586621680256254"><span class="hs-identifier hs-var">cx</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256253"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256253"><span class="hs-identifier hs-var">ty</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256252"><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
+</span><a href="#local-6989586621680256252"><span class="hs-identifier hs-var">tyargs</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Type
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256251"><span class="annot"><span class="annottext">&#119871; Con
+</span><a href="#local-6989586621680256251"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; DerivClause
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">Q (((((Cxt &#8743; Name) &#8743; &#119871; (TyVarBndr ())) &#8743; &#119874; Type) &#8743; &#119871; Con)
    &#8743; &#119871; DerivClause)
 -&gt; &#119874; (((((Cxt &#8743; Name) &#8743; &#119871; (TyVarBndr ())) &#8743; &#119874; Type) &#8743; &#119871; Con)
@@ -595,9 +595,9 @@ forall a b. (a &#9010; b) -&gt; a -&gt; &#119874; b
 forall (m :: * -&gt; *) a b. Bind m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
 </span><a href="UVMHS.Core.Classes.Monad.html#%2A%24"><span class="hs-operator hs-var">*$</span></a></span><span> </span><span class="annot"><span class="annottext">Name -&gt; Q Info
 </span><span class="hs-identifier hs-var">TH.reify</span></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256208"><span class="hs-identifier hs-var">name</span></a></span><span>
-</span><span id="line-83"></span><span>  </span><span id="local-6989586621680256202"><span class="annot"><span class="annottext">&#119871; (Name &#8743; &#119871; Type)
-</span><a href="#local-6989586621680256202"><span class="hs-identifier hs-var">scs</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">(Con -&gt; Q (Name &#8743; &#119871; Type)) -&gt; &#119871; Con -&gt; Q (&#119871; (Name &#8743; &#119871; Type))
+</span><a href="#local-6989586621680256255"><span class="hs-identifier hs-var">name</span></a></span><span>
+</span><span id="line-83"></span><span>  </span><span id="local-6989586621680256249"><span class="annot"><span class="annottext">&#119871; (Name &#8743; &#119871; Type)
+</span><a href="#local-6989586621680256249"><span class="hs-identifier hs-var">scs</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">(Con -&gt; Q (Name &#8743; &#119871; Type)) -&gt; &#119871; Con -&gt; Q (&#119871; (Name &#8743; &#119871; Type))
 forall (t :: * -&gt; *) (m :: * -&gt; *) a b.
 (FunctorM t, Monad m) =&gt;
 (a -&gt; m b) -&gt; t a -&gt; m (t b)
@@ -612,12 +612,12 @@ forall a. IO a
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">Con -&gt; &#119874; (Name &#8743; &#119871; Type)
 </span><a href="UVMHS.Core.TH.html#thViewSimpleCon"><span class="hs-identifier hs-var">thViewSimpleCon</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119871; Con
-</span><a href="#local-6989586621680256204"><span class="hs-identifier hs-var">cs</span></a></span><span>
-</span><span id="line-84"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680256199"><span class="annot"><span class="annottext">numcons :: &#8469;
-</span><a href="#local-6989586621680256199"><span class="hs-identifier hs-var hs-var">numcons</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119871; (Name &#8743; &#119871; Type) -&gt; &#8469;
+</span><a href="#local-6989586621680256251"><span class="hs-identifier hs-var">cs</span></a></span><span>
+</span><span id="line-84"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680256246"><span class="annot"><span class="annottext">numcons :: &#8469;
+</span><a href="#local-6989586621680256246"><span class="hs-identifier hs-var hs-var">numcons</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119871; (Name &#8743; &#119871; Type) -&gt; &#8469;
 forall n t a. (Zero n, One n, Plus n, ToIter a t) =&gt; t -&gt; n
 </span><a href="UVMHS.Core.Data.Iter.html#count"><span class="hs-identifier hs-var">count</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (Name &#8743; &#119871; Type)
-</span><a href="#local-6989586621680256202"><span class="hs-identifier hs-var">scs</span></a></span><span>
+</span><a href="#local-6989586621680256249"><span class="hs-identifier hs-var">scs</span></a></span><span>
 </span><span id="line-85"></span><span>  </span><span class="annot"><span class="annottext">(&#119871; (&#119871; Dec) -&gt; [Dec]) -&gt; Q (&#119871; (&#119871; Dec)) -&gt; Q [Dec]
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119871; Dec -&gt; [Dec]
@@ -634,18 +634,18 @@ forall (m :: * -&gt; *) (t :: * -&gt; *) a b.
 (Monad m, FunctorM t) =&gt;
 t a -&gt; (a -&gt; m b) -&gt; m (t b)
 </span><a href="UVMHS.Core.Classes.FunctorM.html#mapMOn"><span class="hs-identifier hs-var">mapMOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (Name &#8743; &#119871; Type)
-</span><a href="#local-6989586621680256202"><span class="hs-identifier hs-var">scs</span></a></span><span> </span><span class="annot"><span class="annottext">(((Name &#8743; &#119871; Type) -&gt; Q (&#119871; Dec)) -&gt; Q (&#119871; (&#119871; Dec)))
+</span><a href="#local-6989586621680256249"><span class="hs-identifier hs-var">scs</span></a></span><span> </span><span class="annot"><span class="annottext">(((Name &#8743; &#119871; Type) -&gt; Q (&#119871; Dec)) -&gt; Q (&#119871; (&#119871; Dec)))
 -&gt; ((Name &#8743; &#119871; Type) -&gt; Q (&#119871; Dec)) -&gt; Q (&#119871; (&#119871; Dec))
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680256197"><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256197"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256196"><span class="annot"><span class="annottext">&#119871; Type
-</span><a href="#local-6989586621680256196"><span class="hs-identifier hs-var">fieldtys</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Cxt -&gt; Name -&gt; &#119871; (TyVarBndr ()) -&gt; Name -&gt; &#119871; Type -&gt; &#8469; -&gt; Q (&#119871; Dec)
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680256244"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256244"><span class="hs-identifier hs-var">con</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680256243"><span class="annot"><span class="annottext">&#119871; Type
+</span><a href="#local-6989586621680256243"><span class="hs-identifier hs-var">fieldtys</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Cxt -&gt; Name -&gt; &#119871; (TyVarBndr ()) -&gt; Name -&gt; &#119871; Type -&gt; &#8469; -&gt; Q (&#119871; Dec)
 </span><a href="UVMHS.Core.LensDeriving.html#makePrismLogic"><span class="hs-identifier hs-var">makePrismLogic</span></a></span><span> </span><span class="annot"><span class="annottext">Cxt
-</span><a href="#local-6989586621680256207"><span class="hs-identifier hs-var">cx</span></a></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256206"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
-</span><a href="#local-6989586621680256205"><span class="hs-identifier hs-var">tyargs</span></a></span><span> </span><span class="annot"><span class="annottext">Name
-</span><a href="#local-6989586621680256197"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; Type
-</span><a href="#local-6989586621680256196"><span class="hs-identifier hs-var">fieldtys</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
-</span><a href="#local-6989586621680256199"><span class="hs-identifier hs-var">numcons</span></a></span><span>
+</span><a href="#local-6989586621680256254"><span class="hs-identifier hs-var">cx</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256253"><span class="hs-identifier hs-var">ty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (TyVarBndr ())
+</span><a href="#local-6989586621680256252"><span class="hs-identifier hs-var">tyargs</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680256244"><span class="hs-identifier hs-var">con</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; Type
+</span><a href="#local-6989586621680256243"><span class="hs-identifier hs-var">fieldtys</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
+</span><a href="#local-6989586621680256246"><span class="hs-identifier hs-var">numcons</span></a></span><span>
 </span><span id="line-86"></span><span>
 </span><span id="line-87"></span></pre></body></html>
