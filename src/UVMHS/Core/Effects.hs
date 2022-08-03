@@ -4,8 +4,6 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 
-import UVMHS.Core.Lens
-
 import qualified Prelude as HS
 
 infixl 5 ⊞,⎅
@@ -16,12 +14,12 @@ class LiftIO t where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → t m a)
 
 class MonadReader r m | m → r where
-  ask ∷ m r
-  local ∷ ∀ a. r → m a → m a
+  askL ∷ r ⟢ r' → m r'
+  localL ∷ ∀ a r'. r ⟢ r' → r' → m a → m a
 
 class LiftReader t where
-  liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → t m r
-  liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → t m a → t m a)
+  liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → t m r')
+  liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → t m a → t m a)
 
 class MonadWriter o m | m → o where
   tell ∷ o → m ()
@@ -105,11 +103,11 @@ class MonadBad m where
 ------------------------
 
 instance MonadReader r ((→) r) where
-  ask ∷ r → r
-  ask = id
+  askL ∷ r ⟢ r' → r → r'
+  askL = access
 
-  local ∷ ∀ a. r → (r → a) → (r → a)
-  local r f = const $ f r
+  localL ∷ ∀ a r'. r ⟢ r' → r' → (r → a) → (r → a)
+  localL ℓ r' f = f ∘ update ℓ r'
 
 instance (Null o) ⇒ MonadWriter o ((∧) o) where
   tell ∷ o → (o ∧ ())
@@ -161,19 +159,19 @@ instance MonadNondet 𝑄 where
 
 -- Reader
 
-askL ∷ (Monad m,MonadReader r m) ⇒ r ⟢ a → m a 
-askL l = access l ^$ ask
+mapEnvL ∷ (Monad m,MonadReader r₁ m) ⇒ (r₁ ⟢ r₂) → (r₂ → r₂) → m a → m a
+mapEnvL ℓ f xM = do
+  r ← askL ℓ
+  localL ℓ (f r) xM
+
+ask ∷ (Monad m,MonadReader r m) ⇒ m r
+ask = askL refl
+
+local ∷ (Monad m,MonadReader r m) ⇒ r → m a → m a
+local = localL refl
 
 mapEnv ∷ (Monad m,MonadReader r m) ⇒ (r → r) → m a → m a 
-mapEnv f aM = do
-  r ← ask
-  local (f r) aM
-
-localL ∷ (Monad m,MonadReader r₁ m) ⇒ (r₁ ⟢ r₂) → r₂ → m a → m a
-localL 𝓁 r = mapEnv $ update 𝓁 r
-
-mapEnvL ∷ (Monad m,MonadReader r₁ m) ⇒ (r₁ ⟢ r₂) → (r₂ → r₂) → m a → m a
-mapEnvL 𝓁 f = mapEnv $ alter 𝓁 f
+mapEnv = mapEnvL refl
 
 -- Writer
 
@@ -421,6 +419,14 @@ modifyEnv f = callCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
 modifyEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → (r' → r') → m ()
 modifyEnvL ℓ f = callCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
 
+plocalL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → r' → m a → m a
+plocalL ℓ r xM = do
+  r' ← askL ℓ
+  putEnvL ℓ r 
+  x ← xM
+  putEnvL ℓ r'
+  return x
+
 -- delimitEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ m a → m a
 -- delimitEnv xM = callCC $ \ 𝓀 → do
 --   r ← ask
@@ -448,25 +454,25 @@ uputEnv r = ucallCC HS.$ \ 𝓀 → local r $ 𝓀 ()
 uputEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m ()
 uputEnvL ℓ r = ucallCC HS.$ \ 𝓀 → localL ℓ r $ 𝓀 ()
 
-umodifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
-umodifyEnv f = ucallCC HS.$ \ 𝓀 → mapEnv f $ 𝓀 ()
+uplocalL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m a → m a
+uplocalL ℓ r xM = do
+  r' ← askL ℓ
+  uputEnvL ℓ r 
+  x ← xM
+  uputEnvL ℓ r'
+  return x
 
-umodifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
-umodifyEnvL ℓ f = ucallCC HS.$ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
+uplocal ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r → m a → m a
+uplocal = uplocalL refl
 
--- ulocalL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m a → m a
--- ulocalL ℓ r xM = do
---   r' ← askL ℓ
---   uputEnvL ℓ r 
---   x ← xM
---   uputEnvL ℓ r'
---   return x
--- 
--- umapEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m a → m a
--- umapEnvL ℓ f xM = do
---   r ← askL ℓ
---   ulocalL ℓ (f r) xM
--- 
+upmodifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
+upmodifyEnvL ℓ f = ucallCC HS.$ \ 𝓀 → do
+  r ← askL ℓ
+  uplocalL ℓ (f r) $ 𝓀 ()
+
+upmodifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
+upmodifyEnv = upmodifyEnvL refl
+
 -- uhijack ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m) ⇒ m a → m (o ∧ a)
 -- uhijack xM = do
 --   o :* (r :* x) ← hijack $ do
@@ -486,11 +492,11 @@ umodifyEnvL ℓ f = ucallCC HS.$ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
 -- DERIVING --
 --------------
 
-deriveAsk ∷ ∀ m₁ m₂ r. (m₁ ⇄⁻ m₂,MonadReader r m₂) ⇒ m₁ r
-deriveAsk = isofr2 ask
+deriveAskL ∷ ∀ m₁ m₂ r r'. (m₁ ⇄⁻ m₂,MonadReader r m₂) ⇒ r ⟢ r' → m₁ r'
+deriveAskL = isofr2 ∘ askL
 
-deriveLocal ∷ ∀ m₁ m₂ r a. (m₁ ⇄⁻ m₂,MonadReader r m₂) ⇒ r → m₁ a → m₁ a
-deriveLocal r = isofr2 ∘ local r ∘ isoto2
+deriveLocal ∷ ∀ m₁ m₂ r r' a. (m₁ ⇄⁻ m₂,MonadReader r m₂) ⇒ r ⟢ r' → r' → m₁ a → m₁ a
+deriveLocal ℓ r = isofr2 ∘ localL ℓ r ∘ isoto2
 
 deriveTell ∷ ∀ m₁ m₂ o. (m₁ ⇄⁻ m₂,MonadWriter o m₂) ⇒ o → m₁ ()
 deriveTell = isofr2 ∘ tell

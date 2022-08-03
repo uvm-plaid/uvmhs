@@ -4,8 +4,8 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 
-import UVMHS.Core.Lens
 import UVMHS.Core.Effects
+import UVMHS.Core.Monads
 
 import qualified Language.Haskell.TH as TH
 import qualified Language.Haskell.TH.Syntax as TH
@@ -140,3 +140,11 @@ thExp ∷ TH.Q (TH.TExp a) → TH.Q (TH.TExp ((𝕊 → a → c) → c))
 thExp xQ = do
   xS ← show𝕊 ∘ TH.unType ^$ xQ
   TH.examineCode [|| \ f → f xS $$(TH.Code xQ) ||]
+
+thmut ∷ (HS.Monad (WriterT (𝐼 TH.Dec) TH.Q) ⇒ WriterT (𝐼 TH.Dec) TH.Q ()) → TH.Q [TH.Dec]
+thmut xM = do
+  ds :* () ← unWriterT $ with (tohsMonad @(WriterT (𝐼 TH.Dec) TH.Q)) xM
+  return $ lazyList ds
+
+thdec ∷ TH.Q [TH.Dec] → WriterT (𝐼 TH.Dec) TH.Q ()
+thdec dsM = tell *$ iter ^$ lift dsM

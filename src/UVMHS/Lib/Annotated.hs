@@ -22,6 +22,27 @@ instance Comonad (𝐴 t)
 instance (Null e,Null a) ⇒ Null (𝐴 e a) where null = 𝐴 null null
 instance (Append e,Append a) ⇒ Append (𝐴 e a) where 𝐴 e₁ x₁ ⧺ 𝐴 e₂ x₂ = 𝐴 (e₁ ⧺ e₂) $ x₁ ⧺ x₂
 
+map𝐴 ∷ (e → e') → (a → b) → 𝐴 e a → 𝐴 e' b
+map𝐴 f g (𝐴 e x) = 𝐴 (f e) $ g x
+
+mapATag ∷ (e → e') → 𝐴 e a → 𝐴 e' a
+mapATag f = map𝐴 f id
+
+mapAVal ∷ (a → b) → 𝐴 e a → 𝐴 e b
+mapAVal f = map𝐴 id f
+
+mapM𝐴 ∷ (Monad m) ⇒ (e → m e') → (a → m b) → 𝐴 e a → m (𝐴 e' b)
+mapM𝐴 f g (𝐴 e x) = do
+  e' ← f e
+  y ← g x
+  return $ 𝐴 e' y
+
+mapMATag ∷ (Monad m) ⇒ (e → m e') → 𝐴 e a → m (𝐴 e' a)
+mapMATag f = mapM𝐴 f return
+
+mapMAVal ∷ (Monad m) ⇒ (a → m b) → 𝐴 e a → m (𝐴 e b)
+mapMAVal f = mapM𝐴 return f
+
 untag ∷ (e → b → b) → 𝐴 e a → (a → b) → b
 untag cxt (𝐴 𝒸 x) f = cxt 𝒸 $ f x
 

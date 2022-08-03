@@ -4,7 +4,6 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 
-import UVMHS.Core.Lens
 import UVMHS.Core.Effects
 import UVMHS.Core.IO
 import UVMHS.Core.TH

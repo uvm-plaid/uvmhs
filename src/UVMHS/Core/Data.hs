@@ -1,19 +1,20 @@
 module UVMHS.Core.Data
-  (module UVMHS.Core.Data.Char
-  ,module UVMHS.Core.Data.Choice
-  ,module UVMHS.Core.Data.Bitty
-  ,module UVMHS.Core.Data.Dict
-  ,module UVMHS.Core.Data.Function
-  ,module UVMHS.Core.Data.Iter
-  ,module UVMHS.Core.Data.Lattice
-  ,module UVMHS.Core.Data.LazyList
-  ,module UVMHS.Core.Data.List
-  ,module UVMHS.Core.Data.Option
-  ,module UVMHS.Core.Data.Pair
-  ,module UVMHS.Core.Data.Sequence
-  ,module UVMHS.Core.Data.Set
-  ,module UVMHS.Core.Data.Stream
-  ,module UVMHS.Core.Data.String
+  ( module UVMHS.Core.Data.Char
+  , module UVMHS.Core.Data.Choice
+  , module UVMHS.Core.Data.Bitty
+  , module UVMHS.Core.Data.Dict
+  , module UVMHS.Core.Data.Function
+  , module UVMHS.Core.Data.Lens
+  , module UVMHS.Core.Data.Iter
+  , module UVMHS.Core.Data.Lattice
+  , module UVMHS.Core.Data.LazyList
+  , module UVMHS.Core.Data.List
+  , module UVMHS.Core.Data.Option
+  , module UVMHS.Core.Data.Pair
+  , module UVMHS.Core.Data.Sequence
+  , module UVMHS.Core.Data.Set
+  , module UVMHS.Core.Data.Stream
+  , module UVMHS.Core.Data.String
   ) where
 
 import UVMHS.Core.Data.Arithmetic ()
@@ -23,6 +24,7 @@ import UVMHS.Core.Data.Choice
 import UVMHS.Core.Data.Bool ()
 import UVMHS.Core.Data.Dict
 import UVMHS.Core.Data.Function
+import UVMHS.Core.Data.Lens
 import UVMHS.Core.Data.Iter
 import UVMHS.Core.Data.Lattice
 import UVMHS.Core.Data.LazyList

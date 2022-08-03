@@ -2,6 +2,7 @@ module UVMHS.Core.Pointed where
 
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
+import UVMHS.Core.Data
 
 -- ======= --
 -- AddNull --
@@ -208,3 +209,21 @@ instance Bind AddBT where
 instance Monad AddBT
 instance FunctorM AddBT where 
   mapM f xM = case xM of {TopBT → return TopBT;BotBT → return BotBT;AddBT x → map AddBT $ f x}
+
+-- LENSES --
+
+nullZOML ∷ ZOM a ⌲ ()
+nullZOML = prism (const NullZOM) $ \case
+  NullZOM → Some ()
+  _ → None
+
+oneZOML ∷ ZOM a ⌲ a
+oneZOML = prism OneZOM $ \case
+  OneZOM x → Some x
+  _ → None
+
+moreZOML ∷ ZOM a ⌲ ()
+moreZOML = prism (const MoreZOM) $ \case
+  MoreZOM → Some ()
+  _ → None
+

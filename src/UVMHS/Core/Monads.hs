@@ -77,11 +77,11 @@ instance Functor2 (ReaderT r) where
   map2 f = ReaderT ∘ map f ∘ unReaderT
 
 instance (Monad m) ⇒ MonadReader r (ReaderT r m) where
-  ask ∷ ReaderT r m r
-  ask = ReaderT $ \ r → return r
+  askL ∷ ∀ r'. r ⟢ r' → ReaderT r m r'
+  askL ℓ = ReaderT $ \ r → return $ access ℓ r
 
-  local ∷ ∀ a. r → ReaderT r m a → ReaderT r m a
-  local r xM = ReaderT $ \ _ → unReaderT xM r
+  localL ∷ ∀ r' a. r ⟢ r' → r' → ReaderT r m a → ReaderT r m a
+  localL ℓ r' xM = ReaderT $ \ r → unReaderT xM $ update ℓ r' r
 
 instance (∀ a'. Null a' ⇒ Null (m a'),Null a) ⇒ Null (ReaderT r m a) where
   null ∷ ReaderT r m a
@@ -361,60 +361,59 @@ instance Transformer NondetT where
 -- Cont --
 ----------
 
-newtype ContT r m a = ContT { unContT ∷ (a → m r) → m r }
+newtype ContT u m a = ContT { unContT ∷ (a → m u) → m u }
 
-runContT ∷ (a → m r) → ContT r m a → m r
+runContT ∷ (a → m u) → ContT u m a → m u
 runContT = flip unContT
 
-evalContT ∷ (Return m) ⇒ ContT r m r → m r
+evalContT ∷ (Return m) ⇒ ContT u m u → m u
 evalContT = runContT return
 
-instance Functor (ContT r m) where
-  map ∷ ∀ a b. (a → b) → ContT r m a → ContT r m b
+instance Functor (ContT u m) where
+  map ∷ ∀ a b. (a → b) → ContT u m a → ContT u m b
   map f xM = ContT $ \ (k ∷ b → m r) → unContT xM $ \ x → k $ f x
 
-instance Return (ContT r m) where
-  return ∷ ∀ a. a → ContT r m a
+instance Return (ContT u m) where
+  return ∷ ∀ a. a → ContT u m a
   return x = ContT $ \ (k ∷ a → m r) → k x
-instance Bind (ContT r m) where
-  (≫=) ∷ ∀ a b. ContT r m a → (a → ContT r m b) → ContT r m b
+instance Bind (ContT u m) where
+  (≫=) ∷ ∀ a b. ContT u m a → (a → ContT u m b) → ContT u m b
   xM ≫= kk = ContT $ \ (k ∷ b → m r) → unContT xM $ \ (x ∷ a) → unContT (kk x) k
-instance Monad (ContT r m)
+instance Monad (ContT u m)
 
-instance Functor2Iso (ContT r) where
-  map2iso ∷ ∀ m₁ m₂. Iso2 m₁ m₂ → ∀ a. ContT r m₁ a → ContT r m₂ a
+instance Functor2Iso (ContT u) where
+  map2iso ∷ ∀ m₁ m₂. Iso2 m₁ m₂ → ∀ a. ContT u m₁ a → ContT u m₂ a
   map2iso i xM = ContT $ \ (k ∷ a → m₂ r) → 
     ito2 i $ unContT xM $ \ (x ∷ a) → 
       ifr2 i $ k x
 
-instance (Monad m) ⇒ MonadCont r (ContT r m) where
-  callCC ∷ ∀ a. ((a → ContT r m r) → ContT r m r) → ContT r m a
+instance (Monad m) ⇒ MonadCont u (ContT u m) where
+  callCC ∷ ∀ a. ((a → ContT u m u) → ContT u m u) → ContT u m a
   callCC kk = ContT $ \ (k ∷ a → m r) → 
     runContT return $ kk $ \ (x ∷ a) → 
       ContT $ \ (k' ∷ r → m r) → 
         k' *$ k x
 
-  withC ∷ ∀ a. (a → ContT r m r) → ContT r m a → ContT r m r
-  withC k₁ xM = ContT $ \ (k₂ ∷ r → m r) →
+  withC ∷ ∀ a. (a → ContT u m u) → ContT u m a → ContT u m u
+  withC k₁ xM = ContT $ \ (k₂ ∷ u → m u) →
     k₂ *$ unContT xM $ \ (x ∷ a) → 
       runContT return $ k₁ x
 
-instance (∀ a'. Null a' ⇒ Null (m a'),Null r) ⇒ Null (ContT r m a) where
-  null ∷ ContT r m a
+instance (∀ a'. Null a' ⇒ Null (m a'),Null u) ⇒ Null (ContT u m a) where
+  null ∷ ContT u m a
   null = ContT $ \ (_ ∷ a → m r) → null
-instance (∀ a'. Append a' ⇒ Append (m a'),Append r) ⇒ Append (ContT r m a) where
-  (⧺) ∷ ContT r m a → ContT r m a → ContT r m a
+instance (∀ a'. Append a' ⇒ Append (m a'),Append u) ⇒ Append (ContT u m a) where
+  (⧺) ∷ ContT u m a → ContT u m a → ContT u m a
   xM₁ ⧺ xM₂ = ContT $ \ (k ∷ a → m r) → unContT xM₁ k ⧺ unContT xM₂ k
 instance 
   ( ∀ a'. Null a' ⇒ Null (m a')
   , ∀ a'. Append a' ⇒ Append (m a')
-  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
-  , Monoid r
+  , Monoid u
   ) 
-  ⇒ Monoid (ContT r m a)
+  ⇒ Monoid (ContT u m a)
 
-instance Transformer (ContT r) where
-  lift ∷ ∀ m a. (Monad m) ⇒ m a → ContT r m a
+instance Transformer (ContT u) where
+  lift ∷ ∀ m a. (Monad m) ⇒ m a → ContT u m a
   lift xM = ContT $ \ (κ ∷ a → m r) → κ *$ xM
 
 -----------
@@ -520,11 +519,11 @@ instance LiftIO (ReaderT r) where
   liftIO ioM xM = ReaderT $ \ _ → ioM xM
 
 instance LiftReader (ReaderT r) where
-  liftAsk ∷ ∀ m r'. (Monad m) ⇒ m r' → ReaderT r m r'
-  liftAsk askM = ReaderT $ \ _ → askM
+  liftAskL ∷ ∀ m r'. (Monad m) ⇒ (∀ r''. r' ⟢ r'' → m r'') → (∀ r''. r' ⟢ r'' → ReaderT r m r'')
+  liftAskL askLM ℓ = ReaderT $ \ _ → askLM ℓ
 
-  liftLocal ∷ ∀ m r'. (Monad m) ⇒ (∀ a. r' → m a → m a) → (∀ a. r' → ReaderT r m a → ReaderT r m a)
-  liftLocal localM r' xM = ReaderT $ \ r → localM r' $ unReaderT xM r
+  liftLocalL ∷ ∀ m r'. (Monad m) ⇒ (∀ r'' a. r' ⟢ r'' → r'' → m a → m a) → (∀ r'' a. r' ⟢ r'' → r'' → ReaderT r m a → ReaderT r m a)
+  liftLocalL localLM ℓ r' xM = ReaderT $ \ r → localLM ℓ r' $ unReaderT xM r
 
 instance LiftWriter (ReaderT r) where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → ReaderT r m ())
@@ -587,13 +586,13 @@ instance (Null o) ⇒ LiftIO (WriterT o) where
     return (null :* x)
 
 instance (Null o) ⇒ LiftReader (WriterT o) where
-  liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → WriterT o m r
-  liftAsk askM = WriterT $ do
-    r ← askM
-    return (null :* r)
+  liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → WriterT o m r')
+  liftAskL askLM ℓ = WriterT $ do
+    r ← askLM ℓ
+    return $ null :* r
 
-  liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → WriterT o m a → WriterT o m a)
-  liftLocal localM r xM = WriterT $ localM r $ unWriterT xM
+  liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → WriterT o m a → WriterT o m a)
+  liftLocalL localLM ℓ r xM = WriterT $ localLM ℓ r $ unWriterT xM
     
 instance (Null o) ⇒ LiftWriter (WriterT o) where
   liftTell ∷ ∀ m o'. (Monad m) ⇒ (o' → m ()) → (o' → WriterT o m ())
@@ -665,13 +664,13 @@ instance LiftIO (StateT s) where
     return (s :* x)
 
 instance LiftReader (StateT s) where
-  liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → StateT s m r
-  liftAsk askM = StateT $ \ s → do
-    r ← askM
-    return (s :* r)
+  liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → StateT s m r')
+  liftAskL askLM ℓ = StateT $ \ s → do
+    r ← askLM ℓ
+    return $ s :* r
 
-  liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → StateT s m a → StateT s m a)
-  liftLocal localM r xM = StateT $ \ s → localM r $ unStateT xM s
+  liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → StateT s m a → StateT s m a)
+  liftLocalL localLM ℓ r xM = StateT $ \ s → localLM ℓ r $ unStateT xM s
 
 instance LiftWriter (StateT s) where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → StateT s m ())
@@ -744,13 +743,13 @@ instance LiftIO FailT where
     return $ Some x
 
 instance LiftReader FailT where
-  liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → FailT m r
-  liftAsk askM = FailT $ do
-    r ← askM
+  liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → FailT m r')
+  liftAskL askLM ℓ = FailT $ do
+    r ← askLM ℓ
     return $ Some r
 
-  liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → FailT m a → FailT m a)
-  liftLocal localM r xM = FailT $ localM r $ unFailT xM
+  liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → FailT m a → FailT m a)
+  liftLocalL localLM ℓ r xM = FailT $ localLM ℓ r $ unFailT xM
 
 instance LiftWriter FailT where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → FailT m ())
@@ -825,13 +824,13 @@ instance LiftIO (ErrorT e) where
     return $ Inr x
 
 instance LiftReader (ErrorT e) where
-  liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → ErrorT e m r
-  liftAsk askM = ErrorT $ do
-    r ← askM
+  liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → ErrorT e m r')
+  liftAskL askLM ℓ = ErrorT $ do
+    r ← askLM ℓ
     return $ Inr r
 
-  liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → ErrorT e m a → ErrorT e m a)
-  liftLocal localM r xM = ErrorT $ localM r $ unErrorT xM
+  liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → ErrorT e m a → ErrorT e m a)
+  liftLocalL localLM ℓ r xM = ErrorT $ localLM ℓ r $ unErrorT xM
 
 instance LiftWriter (ErrorT e) where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → ErrorT e m ())
@@ -908,13 +907,13 @@ instance LiftIO NondetT where
     return $ single x
 
 instance LiftReader NondetT where
-  liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → NondetT m r
-  liftAsk askM = NondetT $ do
-    r ← askM
+  liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → NondetT m r')
+  liftAskL askLM ℓ = NondetT $ do
+    r ← askLM ℓ
     return $ single r
 
-  liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → NondetT m a → NondetT m a)
-  liftLocal localM r xM = NondetT $ localM r $ unNondetT xM
+  liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → NondetT m a → NondetT m a)
+  liftLocalL localLM ℓ r xM = NondetT $ localLM ℓ r $ unNondetT xM
     
 instance LiftWriter NondetT where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → NondetT m ())
@@ -980,21 +979,21 @@ instance (Monad m,∀ a'. Monoid a' ⇒ Monoid (m a'),MonadCont (𝑄 r) m) ⇒ 
 -- Cont --
 ----------
 
-instance LiftIO (ContT r) where
-  liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → ContT r m a)
+instance LiftIO (ContT u) where
+  liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → ContT u m a)
   liftIO ioM xM = ContT $ \ (k ∷ a → m r) → do
     x ← ioM xM
     k x
 
-instance (Monad m,MonadReader r' m) ⇒ MonadReader r' (ContT r m) where
-  ask ∷ ContT r m r'
-  ask = ContT $ \ (k ∷ r' → m r) → k *$ ask
+instance (Monad m,MonadReader r m) ⇒ MonadReader r (ContT u m) where
+  askL ∷ ∀ r'. r ⟢ r' → ContT u m r'
+  askL ℓ = ContT $ \ (k ∷ r' → m u) → k *$ askL ℓ
 
-  local ∷ ∀ a. r' → ContT r m a → ContT r m a
-  local r xM = ContT $ \ (k ∷ a → m r) → do
-    r' ← ask
-    local r $ unContT xM $ \ x → do
-      local r' $ k x
+  localL ∷ ∀ r' a. r ⟢ r' → r' → ContT u m a → ContT u m a
+  localL ℓ r xM = ContT $ \ (k ∷ a → m u) → do
+    r' ← askL ℓ
+    localL ℓ r $ unContT xM $ \ x → do
+      localL ℓ r' $ k x
 
 instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT (o ∧ r) m) where
   tell ∷ o → ContT (o ∧ r) m ()
@@ -1010,44 +1009,44 @@ instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (ContT (o ∧ r) m
     tell o
     return ox
 
-instance (Monad m,MonadState s m) ⇒ MonadState s (ContT r m) where
-  get ∷ ContT r m s
+instance (Monad m,MonadState s m) ⇒ MonadState s (ContT u m) where
+  get ∷ ContT u m s
   get = ContT $ \ (k ∷ s → m r) → do
     s ← get
     k s
 
-  put ∷ s → ContT r m ()
+  put ∷ s → ContT u m ()
   put s = ContT $ \ (k ∷ () → m r) → do
     put s
     k ()
 
-instance (Monad m,MonadFail m) ⇒ MonadFail (ContT r m) where
-  abort ∷ ∀ a. ContT r m a
+instance (Monad m,MonadFail m) ⇒ MonadFail (ContT u m) where
+  abort ∷ ∀ a. ContT u m a
   abort = ContT $ \ (_ ∷ a → m r) → abort
 
-  (⎅) ∷ ∀ a. ContT r m a → ContT r m a → ContT r m a
+  (⎅) ∷ ∀ a. ContT u m a → ContT u m a → ContT u m a
   xM₁ ⎅ xM₂ = ContT $ \ (k ∷ a → m r) → do
     runContT k xM₁ ⎅ runContT k xM₂
 
-instance (Monad m,MonadError e m) ⇒ MonadError e (ContT r m) where
-  throw ∷ ∀ a. e → ContT r m a
+instance (Monad m,MonadError e m) ⇒ MonadError e (ContT u m) where
+  throw ∷ ∀ a. e → ContT u m a
   throw e = ContT $ \ (_ ∷ a → m r) → throw e
 
-  catch ∷ ∀ a. ContT r m a → (e → ContT r m a) → ContT r m a
+  catch ∷ ∀ a. ContT u m a → (e → ContT u m a) → ContT u m a
   catch xM₁ kk = ContT $ \ (k ∷ a → m r) → do
     catch (runContT k xM₁) $ \ e →
       runContT k $ kk e
 
-instance (Monad m,MonadNondet m) ⇒ MonadNondet (ContT r m) where
-  mzero ∷ ∀ a. ContT r m a
+instance (Monad m,MonadNondet m) ⇒ MonadNondet (ContT u m) where
+  mzero ∷ ∀ a. ContT u m a
   mzero = ContT $ \ (_ ∷ a → m r) → mzero
 
-  (⊞) ∷ ∀ a. ContT r m a → ContT r m a → ContT r m a
+  (⊞) ∷ ∀ a. ContT u m a → ContT u m a → ContT u m a
   xM₁ ⊞ xM₂ = ContT $ \ (k ∷ a → m r) → do
     runContT k xM₁ ⊞ runContT k xM₂
 
-instance (Monad m,MonadTop m) ⇒ MonadTop (ContT r m) where
-  mtop ∷ ∀ a. ContT r m a
+instance (Monad m,MonadTop m) ⇒ MonadTop (ContT u m) where
+  mtop ∷ ∀ a. ContT u m a
   mtop = ContT $ \ (_ ∷ a → m r) → mtop
 
 -----------
@@ -1059,11 +1058,14 @@ instance LiftIO UContT where
   liftIO ioM xM = UContT HS.$ \ (𝓀 ∷ a → m u) → 𝓀 *$ ioM xM
 
 instance (Monad m,MonadReader r m) ⇒ MonadReader r (UContT m) where
-  ask ∷ UContT m r
-  ask = UContT HS.$ \ (𝓀 ∷ r → m u) → 𝓀 *$ ask
+  askL ∷ ∀ r'. r ⟢ r' → UContT m r'
+  askL ℓ = UContT HS.$ \ (𝓀 ∷ r' → m u) → 𝓀 *$ askL ℓ
 
-  local ∷ ∀ a. r → UContT m a → UContT m a
-  local r xM = UContT HS.$ \ (𝓀 ∷ a → m u) → 𝓀 *$ local r $ evalUContT xM
+  localL ∷ ∀ r' a. r ⟢ r' → r' → UContT m a → UContT m a
+  localL ℓ r xM = UContT HS.$ \ (𝓀 ∷ a → m u) → do
+    r' ← askL ℓ
+    localL ℓ r $ unUContT xM $ \ x → do
+      localL ℓ r' $ 𝓀 x
 
 instance (Monad m,Monoid o,MonadWriter o m) ⇒ MonadWriter o (UContT m) where
   tell ∷ o → UContT m ()

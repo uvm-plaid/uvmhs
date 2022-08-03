@@ -4,7 +4,6 @@ module UVMHS.Core
   , module UVMHS.Core.Effects
   , module UVMHS.Core.IO
   , module UVMHS.Core.Init
-  , module UVMHS.Core.Lens
   , module UVMHS.Core.LensDeriving
   , module UVMHS.Core.Monads
   , module UVMHS.Core.Pointed
@@ -23,7 +22,6 @@ import UVMHS.Core.Data
 import UVMHS.Core.Effects
 import UVMHS.Core.IO
 import UVMHS.Core.Init
-import UVMHS.Core.Lens
 import UVMHS.Core.LensDerivedInstances ()
 import UVMHS.Core.LensDeriving
 import UVMHS.Core.Monads

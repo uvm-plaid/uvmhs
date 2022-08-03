@@ -2,6 +2,7 @@ module UVMHS.Core.Transformers where
 
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
+import UVMHS.Core.Data
 
 import UVMHS.Core.Effects
 
@@ -36,11 +37,11 @@ instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftIO t₁,LiftIO t₂) ⇒ Lift
   liftIO ioM xM = Compose2 $ liftIO (liftIO ioM) xM
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftReader t₁,LiftReader t₂) ⇒ LiftReader (t₁ ⊡ t₂) where
-  liftAsk ∷ ∀ m r. (Monad m) ⇒ m r → (t₁ ⊡ t₂) m r
-  liftAsk askM = Compose2 $ liftAsk $ liftAsk askM
+  liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → ∀ r'. r ⟢ r' → (t₁ ⊡ t₂) m r'
+  liftAskL askLM = Compose2 ∘ liftAskL (liftAskL askLM)
 
-  liftLocal ∷ ∀ m r. (Monad m) ⇒ (∀ a. r → m a → m a) → (∀ a. r → (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m a)
-  liftLocal localM r = Compose2 ∘ (liftLocal HS.$ liftLocal localM) r ∘ unCompose2
+  liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → (t₁ ⊡ t₂) m a → (t₁ ⊡ t₂) m a)
+  liftLocalL localLM ℓ r = Compose2 ∘ (liftLocalL HS.$ liftLocalL localLM) ℓ r ∘ unCompose2
 
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftWriter t₁,LiftWriter t₂) ⇒ LiftWriter (t₁ ⊡ t₂) where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → (t₁ ⊡ t₂) m ())
@@ -95,8 +96,8 @@ instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftCont t₁,LiftCont t₂) ⇒ 
 instance {-# OVERLAPPABLE #-} (Monad m,MonadIO m,LiftIO t) ⇒ MonadIO (t m) where
   io = liftIO io
 instance {-# OVERLAPPABLE #-} (Monad m,MonadReader r m,LiftReader t) ⇒ MonadReader r (t m) where
-  ask = liftAsk ask
-  local = liftLocal local
+  askL = liftAskL askL
+  localL = liftLocalL localL
 instance {-# OVERLAPPABLE #-} (Monad m,MonadWriter o m,LiftWriter t) ⇒ MonadWriter o (t m) where
   tell = liftTell tell
   hijack = liftHijack hijack
@@ -125,11 +126,11 @@ instance {-# OVERLAPPABLE #-} (Monad m,MonadCont r m,LiftCont t) ⇒ MonadCont r
 deriveLiftIO ∷ ∀ t₁ t₂ m. (Monad m,t₁ ⇄⁼ t₂,LiftIO t₂) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → t₁ m a)
 deriveLiftIO ioM xM = isofr3 $ liftIO ioM xM
 
-deriveLiftAsk ∷ ∀ t₁ t₂ m r. (Monad m,t₁ ⇄⁼ t₂,LiftReader t₂) ⇒ m r → t₁ m r
-deriveLiftAsk askM = isofr3 $ liftAsk askM
+deriveLiftAskL ∷ ∀ t₁ t₂ m r. (Monad m,t₁ ⇄⁼ t₂,LiftReader t₂) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → t₁ m r')
+deriveLiftAskL askLM = isofr3 ∘ liftAskL askLM
 
-deriveLiftLocal ∷ ∀ t₁ t₂ m r. (Monad m,t₁ ⇄⁼ t₂,LiftReader t₂) ⇒ (∀ a. r → m a → m a) → (∀ a. r → t₁ m a → t₁ m a)
-deriveLiftLocal localM r = isofr3 ∘ liftLocal localM r ∘ isoto3
+deriveLiftLocalL ∷ ∀ t₁ t₂ m r. (Monad m,t₁ ⇄⁼ t₂,LiftReader t₂) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → t₁ m a → t₁ m a)
+deriveLiftLocalL localLM ℓ r = isofr3 ∘ liftLocalL localLM ℓ r ∘ isoto3
 
 deriveLiftTell ∷ ∀ t₁ t₂ m o. (Monad m,t₁ ⇄⁼ t₂,LiftWriter t₂) ⇒ (o → m ()) → (o → t₁ m ())
 deriveLiftTell tellM = isofr3 ∘ liftTell tellM
@@ -173,8 +174,8 @@ deriveLiftWithC withCM k xM = isofr3 $ liftWithC withCM (isoto3 ∘ k) (isoto3 x
 instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftIO t₂) ⇒ LiftIO t₁ where
   liftIO = deriveLiftIO
 instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftReader t₂) ⇒ LiftReader t₁ where
-  liftAsk = deriveLiftAsk
-  liftLocal = deriveLiftLocal
+  liftAskL = deriveLiftAskL
+  liftLocalL = deriveLiftLocalL
 instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftWriter t₂) ⇒ LiftWriter t₁ where
   liftTell = deriveLiftTell
   liftHijack = deriveLiftHijack
@@ -195,4 +196,3 @@ instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftTop t₂) ⇒ LiftTop t₁ w
 instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftCont t₂) ⇒ LiftCont t₁ where
   liftCallCC = deriveLiftCallCC
   liftWithC = deriveLiftWithC
-

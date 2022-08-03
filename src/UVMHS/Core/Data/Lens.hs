@@ -1,9 +1,15 @@
-module UVMHS.Core.Lens where
+module UVMHS.Core.Data.Lens where
 
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
-import UVMHS.Core.Data
-import UVMHS.Core.Pointed
+
+import UVMHS.Core.Data.Choice
+import UVMHS.Core.Data.Dict
+import UVMHS.Core.Data.Iter
+import UVMHS.Core.Data.Option
+import UVMHS.Core.Data.Pair
+import UVMHS.Core.Data.Sequence
+import UVMHS.Core.Data.Set
 
 infixr 1 ⟢
 infixr 1 ⌲
@@ -65,8 +71,8 @@ prism = Prism
 isoPrism ∷ (b → a) → (a → b) → a ⌲ b
 isoPrism from to = prism from $ Some ∘ to
 
-unsafeView ∷ a ⌲ b → a → b
-unsafeView p = elim𝑂 (error "unsafeView") id ∘ view p
+viewΩ ∷ a ⌲ b → a → b
+viewΩ p = elim𝑂 (error "viewΩ") id ∘ view p
 
 shape ∷ a ⌲ b → a → 𝔹
 shape p = elim𝑂 False (const True) ∘ view p
@@ -117,21 +123,6 @@ keyL k = lens (⋕? k) $ flip $ \case
   None → delete k
   Some v → ((k ↦ v) ⩌)
 
-nullZOML ∷ ZOM a ⌲ ()
-nullZOML = prism (const NullZOM) $ \case
-  NullZOM → Some ()
-  _ → None
-
-oneZOML ∷ ZOM a ⌲ a
-oneZOML = prism OneZOM $ \case
-  OneZOM x → Some x
-  _ → None
-
-moreZOML ∷ ZOM a ⌲ ()
-moreZOML = prism (const MoreZOM) $ \case
-  MoreZOM → Some ()
-  _ → None
-
 keyL𝑂 ∷ (Ord k,Null v) ⇒ k → (k ⇰ v) ⟢ v
 keyL𝑂 k =
   let ℓ = lens (ifNone null) $ const Some
@@ -160,3 +151,4 @@ instance HasLens a a where
 
 𝛏 ∷ (HasLens a b) ⇒ b → a → a
 𝛏 y x = snd (runLens hasLens x) y
+

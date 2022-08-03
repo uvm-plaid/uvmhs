@@ -225,6 +225,12 @@ ppLineNumFmt = ppFormatParam lineNumberFormatL
 ppLineNum ∷ 𝕊 → Doc
 ppLineNum = ppLineNumFmt ∘ ppString
 
+ppCxt ∷ 𝕊 → Doc → Doc
+ppCxt k v = ppHorizontal
+  [ ppFG teal $ ppBD $ ppString k
+  , ppGA v
+  ]
+
 ppSpace ∷ ℕ64 → Doc
 ppSpace n = ppString $ string $ replicate n ' '
 
