@@ -8,22 +8,22 @@ import UVMHS.Lib.Parser
 -- VARIABLES --
 ---------------
 
--- raw names
+-- simple variables
 data 𝕏 = 𝕏
   { 𝕩mark ∷ 𝑂 ℕ64
   , 𝕩name ∷ 𝕊
   } deriving (Eq,Ord,Show)
 makeLenses ''𝕏
 
--- variables (scoped or meta)
+-- marked variables (scoped or meta)
 data 𝕐 = 𝕐
   { 𝕪meta ∷ 𝔹
   , 𝕪name ∷ 𝕏
   } deriving (Eq,Ord,Show)
 makeLenses ''𝕐
 
-name ∷ 𝕊 → 𝕏
-name = 𝕏 None
+var ∷ 𝕊 → 𝕏
+var = 𝕏 None
 
 svar𝕏 ∷ 𝕏 → 𝕐
 svar𝕏 = 𝕐 False
@@ -32,10 +32,10 @@ mvar𝕏 ∷ 𝕏 → 𝕐
 mvar𝕏 = 𝕐 True
 
 svar ∷ 𝕊 → 𝕐
-svar = svar𝕏 ∘ name
+svar = svar𝕏 ∘ var
 
 mvar ∷ 𝕊 → 𝕐
-mvar = mvar𝕏 ∘ name
+mvar = mvar𝕏 ∘ var
 
 svar𝕏L ∷ 𝕐 ⌲ 𝕏
 svar𝕏L = prism svar𝕏 $ \ (𝕐 m x) → if not m then Some x else None
@@ -55,8 +55,8 @@ instance Pretty 𝕐 where
     , if not m then null else ppPun "†"
     ]
 
-cpName ∷ CParser TokenBasic 𝕏
-cpName = name ^$ cpShaped $ view nameTBasicL
+cpVar ∷ CParser TokenBasic 𝕏
+cpVar = var ^$ cpShaped $ view nameTBasicL
 
 cpSVar ∷ CParser TokenBasic 𝕐
 cpSVar = svar ^$ cpShaped $ view nameTBasicL
@@ -64,8 +64,8 @@ cpSVar = svar ^$ cpShaped $ view nameTBasicL
 cpMVar ∷ CParser TokenBasic 𝕐
 cpMVar = mvar ^$ cpShaped $ view nameTBasicL
 
-cpNameWS ∷ CParser TokenWSBasic 𝕏
-cpNameWS = name ^$ cpShaped $ view nameTWSBasicL
+cpVarWS ∷ CParser TokenWSBasic 𝕏
+cpVarWS = var ^$ cpShaped $ view nameTWSBasicL
 
 cpSVarWS ∷ CParser TokenWSBasic 𝕐
 cpSVarWS = svar ^$ cpShaped $ view nameTWSBasicL
