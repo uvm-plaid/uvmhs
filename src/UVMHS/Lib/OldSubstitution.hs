@@ -2,7 +2,7 @@ module UVMHS.Lib.OldSubstitution where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty
-import UVMHS.Lib.Testing
+-- import UVMHS.Lib.Testing
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Rand
 import UVMHS.Lib.OldVariables
@@ -392,6 +392,8 @@ prandULCDExp nˢ nᵇ nᵈ = ULCDExp ∘ 𝐴 () ^$ mjoin $ prwchoose
 
 instance Rand ULCDExpR where prand = flip prandULCDExp zero
 
+{-
+
 -----------
 -- TESTS --
 -----------
@@ -656,3 +658,5 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   |]
 
 buildTests
+
+-}

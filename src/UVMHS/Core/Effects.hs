@@ -414,28 +414,14 @@ putEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → r' → m ()
 putEnvL ℓ r = callCC $ \ 𝓀 → localL ℓ r $ 𝓀 ()
 
 modifyEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ (r → r) → m ()
-modifyEnv f = callCC $ \ 𝓀 → mapEnv f $ 𝓀 ()
+modifyEnv f = do
+  r ← ask
+  putEnv $ f r
 
 modifyEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → (r' → r') → m ()
-modifyEnvL ℓ f = callCC $ \ 𝓀 → mapEnvL ℓ f $ 𝓀 ()
-
-plocalL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → r' → m a → m a
-plocalL ℓ r xM = do
-  r' ← askL ℓ
-  putEnvL ℓ r 
-  x ← xM
-  putEnvL ℓ r'
-  return x
-
--- delimitEnv ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ m a → m a
--- delimitEnv xM = callCC $ \ 𝓀 → do
---   r ← ask
---   withCOn xM $ local r ∘ 𝓀
--- 
--- delimitEnvL ∷ (Monad m,MonadReader r m,MonadCont u m) ⇒ r ⟢ r' → m a → m a
--- delimitEnvL ℓ xM = callCC $ \ 𝓀 → do
---   r ← askL ℓ
---   withCOn xM $ localL ℓ r ∘ 𝓀
+modifyEnvL ℓ f = do
+  r ← askL ℓ
+  putEnvL ℓ $ f r
 
 -- UCont --
 
@@ -454,39 +440,15 @@ uputEnv r = ucallCC HS.$ \ 𝓀 → local r $ 𝓀 ()
 uputEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m ()
 uputEnvL ℓ r = ucallCC HS.$ \ 𝓀 → localL ℓ r $ 𝓀 ()
 
-uplocalL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → r' → m a → m a
-uplocalL ℓ r xM = do
-  r' ← askL ℓ
-  uputEnvL ℓ r 
-  x ← xM
-  uputEnvL ℓ r'
-  return x
+umodifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
+umodifyEnv f = do
+  r ← ask
+  uputEnv $ f r
 
-uplocal ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r → m a → m a
-uplocal = uplocalL refl
-
-upmodifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
-upmodifyEnvL ℓ f = ucallCC HS.$ \ 𝓀 → do
+umodifyEnvL ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ r ⟢ r' → (r' → r') → m ()
+umodifyEnvL ℓ f = do
   r ← askL ℓ
-  uplocalL ℓ (f r) $ 𝓀 ()
-
-upmodifyEnv ∷ (Monad m,MonadReader r m,MonadUCont m) ⇒ (r → r) → m ()
-upmodifyEnv = upmodifyEnvL refl
-
--- uhijack ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m) ⇒ m a → m (o ∧ a)
--- uhijack xM = do
---   o :* (r :* x) ← hijack $ do
---     x ← xM
---     r ← ask
---     return $ r :* x
---   uputEnv r
---   return $ o :* x
--- 
--- uhijackL ∷ (Monad m,MonadReader r m,MonadWriter o m,MonadUCont m,Null o') ⇒ o ⟢ o' → m a → m (o' ∧ a)
--- uhijackL ℓ xM = do
---   o :* x ← uhijack xM
---   tell $ update ℓ null o
---   return $ access ℓ o :* x
+  uputEnvL ℓ $ f r
 
 --------------
 -- DERIVING --

@@ -52,15 +52,3 @@ errMsg = askL $ gerrorMsgL ⊚ hasLens
 
 errCxt ∷ (Monad m,MonadReader r m,HasLens r GError) ⇒ m Doc
 errCxt = askL $ gerrorCxtL ⊚ hasLens
-
--- uerrTyp ∷ (Monad m,MonadUCont m,MonadReader r m,HasLens r GError) ⇒ 𝕊 → m a → m a
--- uerrTyp = ulocalL $ gerrorTypL ⊚ hasLens
--- 
--- uerrLoc ∷ (Monad m,MonadUCont m,MonadReader r m,HasLens r GError) ⇒ 𝑃 SrcCxt → m a → m a
--- uerrLoc = ulocalL $ gerrorLocL ⊚ hasLens
--- 
--- uerrMsg ∷ (Monad m,MonadUCont m,MonadReader r m,HasLens r GError) ⇒ 𝕊 → m a → m a
--- uerrMsg = ulocalL $ gerrorMsgL ⊚ hasLens
--- 
--- uerrCxt ∷ (Monad m,MonadUCont m,MonadReader r m,HasLens r GError) ⇒ 𝑇A Doc → m a → m a
--- uerrCxt = ulocalL $ gerrorCxtL ⊚ hasLens

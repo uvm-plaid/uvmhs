@@ -225,16 +225,15 @@ substyBdr ss x = do
   x' ← case xO of
     Some x' → do
       eachOn ss $ \ s →
-        upmodifyEnvL (keyL s ⊚ substVarL ⊚ substEnvSubstL) $ \ 𝓈O →
+        umodifyEnvL (keyL s ⊚ substVarL ⊚ substEnvSubstL) $ \ 𝓈O →
           Some $ (svar𝕏 x ↦ Inl (svar𝕏 x')) ⩌ ifNone null 𝓈O
       return x'
     None → return x
   eachOn ss $ \ s →
-    upmodifyEnvL (keyL s ⊚ substVarL ⊚ substEnvSubstL) $ map $ delete $ svar𝕏 x'
+    umodifyEnvL (keyL s ⊚ substVarL ⊚ substEnvSubstL) $ map $ delete $ svar𝕏 x'
   return x'
 
 substyFrame ∷ (Monad m) ⇒ (e₂ → 𝑂 e₃) → SubstT s e₁ e₃ m a → SubstT s e₁ e₂ m a
 substyFrame 𝓋 xM = do
   SubstEnv 𝑓M 𝓋' 𝓈 ← ask
   failEff *$ lift $ runSubstT (SubstEnv 𝑓M (𝓋 *∘ 𝓋') 𝓈) xM
-
