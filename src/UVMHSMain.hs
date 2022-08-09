@@ -15,6 +15,6 @@ main = cleanExit $ do
   pprint colorsDemo
   $$(testModules False
     [ "UVMHS.CoreTests"
-    -- , "UVMHS.Lib.Substitution"
+    , "UVMHS.Lib.Substitution"
     ])
   pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"

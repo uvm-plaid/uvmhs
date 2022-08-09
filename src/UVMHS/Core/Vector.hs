@@ -24,13 +24,17 @@ import qualified Data.Vector.Storable as VU
 newtype 𝕍 a = 𝕍 { un𝕍 ∷ VB.Vector a }
   deriving (Eq,Ord)
 
-instance ToIter a (𝕍 a)        where iter   = iter𝕍
-instance (Show a) ⇒ Show (𝕍 a) where show   = tohsChars ∘ show𝕍
-instance Lookup ℕ64 a (𝕍 a)    where (⋕?)   = flip idx𝕍
-instance Functor 𝕍             where map    = map𝕍
-instance FunctorM 𝕍            where mapM   = mapM𝕍
+instance            ToIter a (𝕍 a)     where iter  = iter𝕍
+instance (Show a) ⇒ Show (𝕍 a)         where show  = tohsChars ∘ show𝕍
+instance            Lookup ℕ64 a (𝕍 a) where (⋕?)  = flip idx𝕍
+instance            Functor 𝕍          where map   = map𝕍
+instance            FunctorM 𝕍         where mapM  = mapM𝕍
+instance            CSized (𝕍 a)       where csize = csize𝕍
+instance            Single a (𝕍 a)     where single = single𝕍
+instance            Null (𝕍 a)         where null  = null𝕍
+instance            Append (𝕍 a)       where (⧺)   = append𝕍
+instance            Monoid (𝕍 a)
 
-instance CSized (𝕍 a)          where csize = csize𝕍
 
 vec ∷ (ToIter a t) ⇒ t → 𝕍 a
 vec = 𝕍 ∘ VB.fromList ∘ lazyList
@@ -41,7 +45,7 @@ vecC xs =
   in 𝕍 $ VB.fromListN (tohs $ intΩ64 $ csize xsi) $ lazyList xsi
 
 vecF ∷ ℕ64 → (ℕ64 → a) → 𝕍 a
-vecF n f = vecC $ map f $ upToC n
+vecF n f = vecC $ map f $ uptoC n
 
 vecDΩ ∷ ℕ64 ⇰ a → 𝕍 a
 vecDΩ d = case dmaxKey d of
@@ -69,11 +73,20 @@ map𝕍 f = 𝕍 ∘ VB.map f ∘ un𝕍
 mapM𝕍 ∷ ∀ m a b. (Monad m) ⇒ (a → m b) → 𝕍 a → m (𝕍 b)
 mapM𝕍 f = with (tohsMonad @m) HS.$ 𝕍 ^∘ VB.mapM f ∘ un𝕍
 
-null𝕍 ∷ (Null a) ⇒ ℕ64 → 𝕍 a
-null𝕍 n = vecF n $ const null
+nulls𝕍 ∷ (Null a) ⇒ ℕ64 → 𝕍 a
+nulls𝕍 n = vecF n $ const null
 
 csize𝕍 ∷ 𝕍 a → ℕ64
 csize𝕍 = natΩ64 ∘ frhs ∘ VB.length ∘ un𝕍
+
+null𝕍 ∷ 𝕍 a
+null𝕍 = vec []
+
+append𝕍 ∷ 𝕍 a → 𝕍 a → 𝕍 a
+append𝕍 xs ys = 𝕍 $ (VB.++) (un𝕍 xs) $ un𝕍 ys
+
+single𝕍 ∷ a → 𝕍 a
+single𝕍 = 𝕍 ∘ VB.singleton
 
 ----------
 --- 𝕍M ---
@@ -182,7 +195,7 @@ uvecC xs =
   in 𝕌 $ VU.fromListN (tohs $ intΩ64 $ csize xsi) $ lazyList xsi
 
 uvecF ∷ (Storable a) ⇒ ℕ64 → (ℕ64 → a) → 𝕌 a
-uvecF n f = uvec $ map f $ upTo n
+uvecF n f = uvec $ map f $ upto n
 
 uvecDΩ ∷ (Storable a) ⇒ ℕ64 ⇰ a → 𝕌 a
 uvecDΩ d = case dmaxKey d of

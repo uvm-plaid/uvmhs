@@ -279,8 +279,8 @@ build n₀ x₀ g = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
 range ∷ (Eq n,Zero n,One n,Plus n,Minus n) ⇒ n → n → 𝐼 n
 range lb ub = build (ub - lb) lb succ
 
-upTo ∷ (Eq n,Zero n,One n,Plus n) ⇒ n → 𝐼 n
-upTo n = build n zero succ
+upto ∷ (Eq n,Zero n,One n,Plus n) ⇒ n → 𝐼 n
+upto n = build n zero succ
 
 reiter ∷ (ToIter a t) ⇒ s → (a → s → (s ∧ b)) → t → 𝐼 b
 reiter s₀ f xs = 
@@ -332,6 +332,9 @@ filterMap f xs = 𝐼 HS.$ \ g →
     case f x of
       None → 𝓀 i
       Some y → g y i 𝓀
+
+filterMapOn ∷ (ToIter a t) ⇒ t → (a → 𝑂 b) → 𝐼 b
+filterMapOn = flip filterMap
 
 filter ∷ (ToIter a t) ⇒ (a → 𝔹) → t → 𝐼 a
 filter f = filterMap $ \ x → case f x of {True → Some x;False → None}

@@ -7,7 +7,7 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Window
 import UVMHS.Lib.TreeAnnote
-import UVMHS.Lib.OldVariables
+import UVMHS.Lib.Variables
 
 import qualified Language.Haskell.TH.Syntax as TH
 import qualified Language.Haskell.TH.Quote  as TH
@@ -37,10 +37,10 @@ pULCDExp = ULCDExp ^$ fmixfixWithContext "exp" $ concat
       return $ aval $ unULCDExp e
   , fmixTerminal $ do
       i ← cpInteger
-      return $ Var_ULCD $ BoundVar $ natΩ64 i
+      return $ Var_ULCD $ DVar $ intΩ64 i
   , fmixTerminal $ do
       x ← cpVar
-      return $ Var_ULCD $ NamedVar x
+      return $ Var_ULCD $ NVar 0 x
   , fmixPrefix pLET $ do
       void $ concat $ map cpSyntax ["lam","λ"]
       void $ concat $ map cpSyntax ["->","→"]

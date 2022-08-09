@@ -14,9 +14,9 @@ import UVMHS.Lib.Testing
 𝔱 "core:iter" [| list $ range (𝕟 0) (𝕟 2) |] [| list [𝕟 0,𝕟 1] |]
 𝔱 "core:iter" [| list $ range (𝕟 1) (𝕟 3) |] [| list [𝕟 1,𝕟 2] |]
 
-𝔱 "core:iter" [| list $ upTo (𝕟 0) |] [| list []  |]
-𝔱 "core:iter" [| list $ upTo (𝕟 1) |] [| list [𝕟 0] |]
-𝔱 "core:iter" [| list $ upTo (𝕟 2) |] [| list [𝕟 0,𝕟 1] |]
+𝔱 "core:iter" [| list $ upto (𝕟 0) |] [| list []  |]
+𝔱 "core:iter" [| list $ upto (𝕟 1) |] [| list [𝕟 0] |]
+𝔱 "core:iter" [| list $ upto (𝕟 2) |] [| list [𝕟 0,𝕟 1] |]
 
 𝔱 "core:iter" [| list $ keepN (𝕟 0) [𝕟 0,𝕟 1] |] [| list [] |]
 𝔱 "core:iter" [| list $ keepN (𝕟 1) [𝕟 0,𝕟 1] |] [| list [𝕟 0] |]

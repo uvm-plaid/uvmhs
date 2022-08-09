@@ -106,6 +106,7 @@ library
       UVMHS.Lib.Pretty.Shape
       UVMHS.Lib.Rand
       UVMHS.Lib.Sep
+      UVMHS.Lib.Substitution
       UVMHS.Lib.Testing
       UVMHS.Lib.TreeAnnote
       UVMHS.Lib.TreeNested
@@ -156,7 +157,7 @@ library
       UndecidableSuperClasses
       UnicodeSyntax
       ViewPatterns
-  ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -Wno-star-is-type -j2 -fno-prof-auto -O2 -optc-O3 -fspecialise-aggressively -fexpose-all-unfoldings
+  ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -Wno-star-is-type -j2 -fno-prof-auto -O2 -optc-O3 -fspecialise-aggressively -fexpose-all-unfoldings -fprint-potential-instances
   build-depends:
       base
     , bytestring
@@ -219,7 +220,7 @@ executable uvmhs
       UndecidableSuperClasses
       UnicodeSyntax
       ViewPatterns
-  ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -Wno-star-is-type -j2 -fno-prof-auto -O2 -optc-O3 -fspecialise-aggressively -fexpose-all-unfoldings
+  ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -Wno-star-is-type -j2 -fno-prof-auto -O2 -optc-O3 -fspecialise-aggressively -fexpose-all-unfoldings -fprint-potential-instances
   build-depends:
       base
     , bytestring

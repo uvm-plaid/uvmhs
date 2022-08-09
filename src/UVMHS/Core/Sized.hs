@@ -100,8 +100,8 @@ instance (ASized a,ASized b) ⇒ ASized (a ∧ b) where asize (x :* y)  = asize 
 buildC ∷ ℕ64 → a → (a → a) → 𝐼C a
 buildC n x g = 𝐼C n $ build n x g
 
-upToC ∷ ℕ64 → 𝐼C ℕ64
-upToC n = buildC n zero succ
+uptoC ∷ ℕ64 → 𝐼C ℕ64
+uptoC n = buildC n zero succ
 
 stringCS ∷ (ToIter ℂ t,CSized t) ⇒ t → 𝕊
 stringCS ss = build𝕊CN (csize ss) ss

@@ -3,10 +3,10 @@ module UVMHS.Lib.OldSubstitution where
 import UVMHS.Core
 import UVMHS.Lib.Pretty
 -- import UVMHS.Lib.Testing
-import UVMHS.Lib.Annotated
+-- import UVMHS.Lib.Annotated
 import UVMHS.Lib.Rand
 import UVMHS.Lib.OldVariables
-import UVMHS.Lang.ULCD
+-- import UVMHS.Lang.ULCD
 
 class (∀ a. Null (t a)) ⇒ Substy t where
   𝓈var ∷ t a → 𝕐 → 𝕐 ∨ (𝑂 (t Void) ∧ a)
@@ -130,7 +130,7 @@ instance (Substable ID () a a) ⇒ Append (USubst a) where (⧺) = unID ∘∘ (
 instance (Substable ID () a a) ⇒ Monoid (USubst a)
 
 prandUSubst ∷ (Rand a) ⇒ ℕ64 → ℕ64 → State RG (USubst a)
-prandUSubst nˢ nᵈ = USubst ∘ dict ^$ mapMOn (upTo nˢ) $ const $ do
+prandUSubst nˢ nᵈ = USubst ∘ dict ^$ mapMOn (upto nˢ) $ const $ do
   x ← prandNVar nˢ
   v ← prand nˢ nᵈ
   return $ x ↦ v
@@ -319,7 +319,7 @@ prandSSubst nˢ nᵈ = do
   vsSize ← prandr zero nˢ
   ι ← prandr (neg $ intΩ64 vsSize) $ intΩ64 nˢ
   bvs ← mapMOn (vecF vsSize id) $ const $ prandChoice (const ∘ flip prand zero) prand nˢ nᵈ
-  nvs ← dict ^$ mapMOn (upTo nˢ) $ const $ do
+  nvs ← dict ^$ mapMOn (upto nˢ) $ const $ do
     x ← prandNVar nˢ
     v ← prand nˢ nᵈ
     return $ x ↦ v
@@ -359,304 +359,304 @@ ppVarScoped s 𝓎 = do
         ]
     ]
 
---------------
--- FOR ULCD --
---------------
-
-gsubstULCD ∷ (Substy t,Monad m) ⇒ (a → m (ULCDExp 𝒸)) → t a → ULCDExp 𝒸 → m (ULCDExp 𝒸)
-gsubstULCD 𝓋 𝓈 (ULCDExp (𝐴 𝒸 e₀)) = case e₀ of
-  Var_ULCD x → case 𝓈var 𝓈 x of
-    Inl x' → return $ ULCDExp $ 𝐴 𝒸 $ Var_ULCD x'
-    Inr (𝓈O :* e) → elim𝑂 return (gsubstULCD exfalso) 𝓈O *$ 𝓋 e
-  Lam_ULCD e → do
-    e' ← gsubstULCD 𝓋 (𝓈shift 1 𝓈) e
-    return $ ULCDExp $ 𝐴 𝒸 $ Lam_ULCD e'
-  App_ULCD e₁ e₂ → do
-    e₁' ← gsubstULCD 𝓋 𝓈 e₁
-    e₂' ← gsubstULCD 𝓋 𝓈 e₂
-    return $ ULCDExp $ 𝐴 𝒸 $ App_ULCD e₁' e₂'
-
-instance Substable m () (ULCDExp 𝒸) (ULCDExp 𝒸) where gsubstS 𝓋 𝓈 = gsubstULCD 𝓋 $ ifNone null $ 𝓈 ⋕? ()
-
-prandULCDExp ∷ ℕ64 → ℕ64 → ℕ64 → State RG ULCDExpR
-prandULCDExp nˢ nᵇ nᵈ = ULCDExp ∘ 𝐴 () ^$ mjoin $ prwchoose
-    [ (2 :*) $ \ () → do
-        Var_ULCD ^$ prandVar nˢ nᵇ
-    , (nᵈ :*) $ \ () → do
-        Lam_ULCD ^$ prandULCDExp nˢ (nᵇ + 1) $ nᵈ - 1
-    , (nᵈ :*) $ \ () → do
-        e₁ ← prandULCDExp nˢ nᵇ $ nᵈ - 1
-        e₂ ← prandULCDExp nˢ nᵇ $ nᵈ - 1
-        return $ App_ULCD e₁ e₂
-    ]
-
-instance Rand ULCDExpR where prand = flip prandULCDExp zero
-
-{-
-
------------
--- TESTS --
------------
-
--- basic --
-
-𝔱 "ssubst:id" [| ssubst null [ulcd| λ → 0   |] |] [| [ulcd| λ → 0   |] |]
-𝔱 "ssubst:id" [| ssubst null [ulcd| λ → 1   |] |] [| [ulcd| λ → 1   |] |]
-𝔱 "ssubst:id" [| ssubst null [ulcd| λ → 2   |] |] [| [ulcd| λ → 2   |] |]
-𝔱 "ssubst:id" [| ssubst null [ulcd| λ → 0 2 |] |] [| [ulcd| λ → 0 2 |] |]
-
-𝔱 "ssubst:intro" [| ssubst (𝓈intro 1) [ulcd| λ → 0   |] |] [| [ulcd| λ → 0   |] |]
-𝔱 "ssubst:intro" [| ssubst (𝓈intro 1) [ulcd| λ → 1   |] |] [| [ulcd| λ → 2   |] |]
-𝔱 "ssubst:intro" [| ssubst (𝓈intro 1) [ulcd| λ → 2   |] |] [| [ulcd| λ → 3   |] |]
-𝔱 "ssubst:intro" [| ssubst (𝓈intro 1) [ulcd| λ → 0 2 |] |] [| [ulcd| λ → 0 3 |] |]
-
-𝔱 "ssubst:intro" [| ssubst (𝓈intro 2) [ulcd| λ → 0   |] |] [| [ulcd| λ → 0   |] |]
-𝔱 "ssubst:intro" [| ssubst (𝓈intro 2) [ulcd| λ → 1   |] |] [| [ulcd| λ → 3   |] |]
-𝔱 "ssubst:intro" [| ssubst (𝓈intro 2) [ulcd| λ → 2   |] |] [| [ulcd| λ → 4   |] |]
-𝔱 "ssubst:intro" [| ssubst (𝓈intro 2) [ulcd| λ → 0 2 |] |] [| [ulcd| λ → 0 4 |] |]
-
-𝔱 "ssubst:bind" [| subst (𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0     |] |]
-𝔱 "ssubst:bind" [| subst (𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0     |] |]
-𝔱 "ssubst:bind" [| subst (𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] [| [ulcd| λ → λ → 0 |] |]
-𝔱 "ssubst:bind" [| subst (𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |] [| [ulcd| λ → λ → 2 |] |]
-
-𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |] 
-                 [| [ulcd| λ → 0 |] |]
-𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |] 
-                 [| [ulcd| λ → 0 |] |]
-𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
-                 [| [ulcd| λ → 1 |] |]
-𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |] 
-                 [| [ulcd| λ → 1 |] |]
-𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 2 |]) [ulcd| λ → 0 |] |] 
-                 [| [ulcd| λ → 0 |] |]
-𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 2 |]) [ulcd| λ → 1 |] |] 
-                 [| [ulcd| λ → 1 |] |]
-𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 2 |] |] 
-                 [| [ulcd| λ → λ → 3 |] |]
-𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 2 |]) [ulcd| λ → 2 |] |] 
-                 [| [ulcd| λ → λ → 4 |] |]
-
--- append --
-
-𝔱 "ssubst:⧺" [| ssubst null            [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
-𝔱 "ssubst:⧺" [| ssubst (null ⧺ null)   [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
-𝔱 "ssubst:⧺" [| ssubst (𝓈shift 1 null) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
-𝔱 "ssubst:⧺" [| ssubst (𝓈shift 2 null) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
-
-𝔱 "ssubst:⧺" [| ssubst null          [ulcd| λ → 1 |] |] [| [ulcd| λ → 1 |] |]
-𝔱 "ssubst:⧺" [| ssubst (null ⧺ null) [ulcd| λ → 1 |] |] [| [ulcd| λ → 1 |] |]
-
-𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1)               [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
-𝔱 "ssubst:⧺" [| ssubst (null ⧺ 𝓈intro 1 ⧺ null) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
-
-𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1)               [ulcd| λ → 1 |] |] [| [ulcd| λ → 2 |] |]
-𝔱 "ssubst:⧺" [| ssubst (null ⧺ 𝓈intro 1 ⧺ null) [ulcd| λ → 1 |] |] [| [ulcd| λ → 2 |] |]
-
-𝔱 "ssubst:⧺" [| ssubst (𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
-             [| [ulcd| λ → λ → 0 |] |]
-𝔱 "ssubst:⧺" [| ssubst (null ⧺ 𝓈bbind [ulcd| λ → 0 |] ⧺ null) [ulcd| λ → 1 |] |] 
-             [| [ulcd| λ → λ → 0 |] |]
-
-𝔱 "ssubst:⧺" [| ssubst (𝓈intro 2) [ulcd| λ → 1 |] |]            [| [ulcd| λ → 3 |] |]
-𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1 ⧺ 𝓈intro 1) [ulcd| λ → 1 |] |] [| [ulcd| λ → 3 |] |]
-
-𝔱 "ssubst:⧺" [| ssubst (𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
-             [| [ulcd| λ → λ → 0 |] |]
-𝔱 "ssubst:⧺" [| ssubst (𝓈shift 1 (𝓈bbind [ulcd| λ → 0 |]) ⧺ 𝓈intro 1) [ulcd| λ → 1 |] |] 
-             [| [ulcd| λ → λ → 0 |] |]
-
-𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1 ⧺ 𝓈bbind [ulcd| 1 |]) [ulcd| 0 (λ → 2) |] |] 
-             [| [ulcd| 2 (λ → 2) |] |]
-𝔱 "ssubst:⧺" [| ssubst (𝓈shift 1 (𝓈bbind [ulcd| 1 |]) ⧺ 𝓈intro 1) [ulcd| 0 (λ → 2) |] |] 
-             [| [ulcd| 2 (λ → 2) |] |]
-
-𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1) (ssubst (𝓈shift 1 null) [ulcd| 0 |]) |]
-             [| ssubst (𝓈intro 1 ⧺ 𝓈shift 1 null) [ulcd| 0 |] |]
-
-𝔱 "ssubst:⧺" [| ssubst (𝓈bbind [ulcd| 1 |]) (ssubst (𝓈shift 1 (𝓈intro 1)) [ulcd| 0 |]) |]
-             [| ssubst (𝓈bbind [ulcd| 1 |] ⧺ 𝓈shift 1 (𝓈intro 1)) [ulcd| 0 |] |]
-
-𝔱 "ssubst:⧺" [| ssubst (𝓈shift 1 (𝓈bbind [ulcd| 1 |])) (ssubst (𝓈shift 1 null) [ulcd| 1 |]) |]
-             [| ssubst (𝓈shift 1 (𝓈bbind [ulcd| 1 |]) ⧺ 𝓈shift 1 null) [ulcd| 1 |] |]
-
--- unscoped --
-
-𝔱 "usubst:bind" [| usubst (𝓈ubind $ var "x" ↦ [ulcd| 0 |]) [ulcd| x     |] |] [| [ulcd| 0     |] |]
-𝔱 "usubst:bind" [| usubst (𝓈ubind $ var "x" ↦ [ulcd| 0 |]) [ulcd| λ → x |] |] [| [ulcd| λ → 0 |] |]
-𝔱 "ssubst:bind" [| ssubst (𝓈nbind $ var "x" ↦ [ulcd| 0 |]) [ulcd| λ → x |] |] [| [ulcd| λ → 1 |] |]
-
--- fuzzing --
-
-𝔣 "zzz:ssubst:wf" 100 [| randSml @(SSubst ULCDExpR) |] [| wfSSubst |]
-
-𝔣 "zzz:ssubst:⧺:wf" 100 
-  [| do 𝓈₁ ← randSml @(SSubst ULCDExpR)
-        𝓈₂ ← randSml @(SSubst ULCDExpR)
-        return $ 𝓈₁ :* 𝓈₂
-  |]
-  [| \ (𝓈₁ :* 𝓈₂) → wfSSubst (𝓈₁ ⧺ 𝓈₂) |]
-
-𝔣 "zzz:ssubst:refl:hom" 100 
-  [| do e ← randSml @ULCDExpR
-        return $ e
-  |]
-  [| \ e → 
-       ssubst null e ≡ e
-  |]
-
-𝔣 "zzz:ssubst:refl/shift:hom" 100
-  [| do n ← randSml @ℕ64
-        e ← randSml @ULCDExpR
-        return $ n :* e
-  |]
-  [| \ (n :* e) → ssubst (𝓈shift n null) e ≡ e 
-  |]
-
-𝔣 "zzz:ssubst:bind" 100
-  [| do e₁ ← randSml @ULCDExpR
-        e₂ ← randSml @ULCDExpR
-        return $ e₁ :* e₂
-  |]
-  [| \ (e₁ :* e₂) → 
-       ssubst (𝓈bbind e₁ ⧺ 𝓈intro 1) e₂ 
-       ≡ 
-       e₂
-  |]
-
-𝔣 "zzz:ssubst:commute" 100
-  [| do e₁ ← randSml @ULCDExpR
-        e₂ ← randSml @ULCDExpR
-        return $ e₁ :* e₂
-  |]
-  [| \ (e₁ :* e₂) → 
-       ssubst (𝓈intro 1 ⧺ 𝓈bbind e₁) e₂
-       ≡ 
-       ssubst (𝓈shift 1 (𝓈bbind e₁) ⧺ 𝓈intro 1) e₂
-  |]
-
-
-𝔣 "zzz:ssubst:⧺:hom" 100 
-  [| do 𝓈₁ ← randSml @(SSubst ULCDExpR)
-        𝓈₂ ← randSml @(SSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈₁ :* 𝓈₂ :* e
-  |]
-  [| \ (𝓈₁ :* 𝓈₂ :* e) → 
-       ssubst (𝓈₁ ⧺ 𝓈₂) e ≡ ssubst 𝓈₁ (ssubst 𝓈₂ e)
-  |]
-
-𝔣 "zzz:ssubst:⧺:lrefl" 100 
-  [| do 𝓈 ← randSml @(SSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈 :* e
-  |]
-  [| \ (𝓈 :* e) → 
-       ssubst (null ⧺ 𝓈) e ≡ ssubst 𝓈 e
-  |]
-
-𝔣 "zzz:ssubst:⧺:rrefl" 100 
-  [| do 𝓈 ← randSml @(SSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈 :* e
-  |]
-  [| \ (𝓈 :* e) → 
-       ssubst (𝓈 ⧺ null) e ≡ ssubst 𝓈 e
-  |]
-
-𝔣 "zzz:ssubst:⧺:lrefl/shift" 100
-  [| do n ← randSml @ℕ64
-        𝓈 ← randSml @(SSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ n :* 𝓈 :* e
-  |]
-  [| \ (n :* 𝓈 :* e) → ssubst (𝓈shift n null ⧺ 𝓈) e ≡ ssubst 𝓈 e 
-  |]
-
-𝔣 "zzz:ssubst:⧺:rrefl/shift" 100
-  [| do n ← randSml @ℕ64
-        𝓈 ← randSml @(SSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ n :* 𝓈 :* e
-  |]
-  [| \ (n :* 𝓈 :* e) → ssubst (𝓈 ⧺ 𝓈shift n null) e ≡ ssubst 𝓈 e 
-  |]
-
-𝔣 "zzz:ssubst:⧺:trans" 100 
-  [| do 𝓈₁ ← randSml @(SSubst ULCDExpR)
-        𝓈₂ ← randSml @(SSubst ULCDExpR)
-        𝓈₃ ← randSml @(SSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e
-  |]
-  [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) → 
-       ssubst ((𝓈₁ ⧺ 𝓈₂) ⧺ 𝓈₃) e ≡ ssubst (𝓈₁ ⧺ (𝓈₂ ⧺ 𝓈₃)) e 
-  |]
-
-𝔣 "zzz:ssubst:shift/⧺:shift:dist" 100 
-  [| do n ← randSml @ℕ64
-        𝓈₁ ← randSml @(SSubst ULCDExpR)
-        𝓈₂ ← randSml @(SSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ n :* 𝓈₁ :* 𝓈₂ :* e
-  |]
-  [| \ (n :* 𝓈₁ :* 𝓈₂ :* e) → 
-       ssubst (𝓈shift n (𝓈₁ ⧺ 𝓈₂)) e ≡ ssubst (𝓈shift n 𝓈₁ ⧺ 𝓈shift n 𝓈₂) e 
-  |]
-
-𝔣 "zzz:usubst:⧺:hom" 100 
-  [| do 𝓈₁ ← randSml @(USubst ULCDExpR)
-        𝓈₂ ← randSml @(USubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈₁ :* 𝓈₂ :* e
-  |]
-  [| \ (𝓈₁ :* 𝓈₂ :* e) → 
-       usubst (𝓈₁ ⧺ 𝓈₂) e ≡ usubst 𝓈₁ (usubst 𝓈₂ e)
-  |]
-
-𝔣 "zzz:usubst:⧺:lrefl" 100 
-  [| do 𝓈 ← randSml @(USubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈 :* e
-  |]
-  [| \ (𝓈 :* e) → 
-       usubst (null ⧺ 𝓈) e ≡ usubst 𝓈 e
-  |]
-
-𝔣 "zzz:usubst:⧺:rrefl" 100 
-  [| do 𝓈 ← randSml @(USubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈 :* e
-  |]
-  [| \ (𝓈 :* e) → 
-       usubst (𝓈 ⧺ null) e ≡ usubst 𝓈 e
-  |]
-
-𝔣 "zzz:usubst:⧺:trans" 100 
-  [| do 𝓈₁ ← randSml @(USubst ULCDExpR)
-        𝓈₂ ← randSml @(USubst ULCDExpR)
-        𝓈₃ ← randSml @(USubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e
-  |]
-  [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) → 
-       usubst ((𝓈₁ ⧺ 𝓈₂) ⧺ 𝓈₃) e ≡ usubst (𝓈₁ ⧺ (𝓈₂ ⧺ 𝓈₃)) e 
-  |]
-
-𝔣 "zzz:ssubst:open∘close" 100 
-  [| do randSml @ULCDExpR
-  |]
-  [| \ e → 
-       ssubst (𝓈open (var "z") ⧺ 𝓈close (var "z")) e ≡ e
-  |]
-
-𝔣 "zzz:ssubst:close∘open" 100 
-  [| do randSml @ULCDExpR
-  |]
-  [| \ e → 
-       ssubst (𝓈close (var "z") ⧺ 𝓈open (var "z")) e ≡ e
-  |]
-
-buildTests
-
--}
+-- --------------
+-- -- FOR ULCD --
+-- --------------
+-- 
+-- gsubstULCD ∷ (Substy t,Monad m) ⇒ (a → m (ULCDExp 𝒸)) → t a → ULCDExp 𝒸 → m (ULCDExp 𝒸)
+-- gsubstULCD 𝓋 𝓈 (ULCDExp (𝐴 𝒸 e₀)) = case e₀ of
+--   Var_ULCD x → case 𝓈var 𝓈 x of
+--     Inl x' → return $ ULCDExp $ 𝐴 𝒸 $ Var_ULCD x'
+--     Inr (𝓈O :* e) → elim𝑂 return (gsubstULCD exfalso) 𝓈O *$ 𝓋 e
+--   Lam_ULCD e → do
+--     e' ← gsubstULCD 𝓋 (𝓈shift 1 𝓈) e
+--     return $ ULCDExp $ 𝐴 𝒸 $ Lam_ULCD e'
+--   App_ULCD e₁ e₂ → do
+--     e₁' ← gsubstULCD 𝓋 𝓈 e₁
+--     e₂' ← gsubstULCD 𝓋 𝓈 e₂
+--     return $ ULCDExp $ 𝐴 𝒸 $ App_ULCD e₁' e₂'
+-- 
+-- instance Substable m () (ULCDExp 𝒸) (ULCDExp 𝒸) where gsubstS 𝓋 𝓈 = gsubstULCD 𝓋 $ ifNone null $ 𝓈 ⋕? ()
+-- 
+-- prandULCDExp ∷ ℕ64 → ℕ64 → ℕ64 → State RG ULCDExpR
+-- prandULCDExp nˢ nᵇ nᵈ = ULCDExp ∘ 𝐴 () ^$ mjoin $ prwchoose
+--     [ (2 :*) $ \ () → do
+--         Var_ULCD ^$ prandVar nˢ nᵇ
+--     , (nᵈ :*) $ \ () → do
+--         Lam_ULCD ^$ prandULCDExp nˢ (nᵇ + 1) $ nᵈ - 1
+--     , (nᵈ :*) $ \ () → do
+--         e₁ ← prandULCDExp nˢ nᵇ $ nᵈ - 1
+--         e₂ ← prandULCDExp nˢ nᵇ $ nᵈ - 1
+--         return $ App_ULCD e₁ e₂
+--     ]
+-- 
+-- instance Rand ULCDExpR where prand = flip prandULCDExp zero
+-- 
+-- {-
+-- 
+-- -----------
+-- -- TESTS --
+-- -----------
+-- 
+-- -- basic --
+-- 
+-- 𝔱 "ssubst:id" [| ssubst null [ulcd| λ → 0   |] |] [| [ulcd| λ → 0   |] |]
+-- 𝔱 "ssubst:id" [| ssubst null [ulcd| λ → 1   |] |] [| [ulcd| λ → 1   |] |]
+-- 𝔱 "ssubst:id" [| ssubst null [ulcd| λ → 2   |] |] [| [ulcd| λ → 2   |] |]
+-- 𝔱 "ssubst:id" [| ssubst null [ulcd| λ → 0 2 |] |] [| [ulcd| λ → 0 2 |] |]
+-- 
+-- 𝔱 "ssubst:intro" [| ssubst (𝓈intro 1) [ulcd| λ → 0   |] |] [| [ulcd| λ → 0   |] |]
+-- 𝔱 "ssubst:intro" [| ssubst (𝓈intro 1) [ulcd| λ → 1   |] |] [| [ulcd| λ → 2   |] |]
+-- 𝔱 "ssubst:intro" [| ssubst (𝓈intro 1) [ulcd| λ → 2   |] |] [| [ulcd| λ → 3   |] |]
+-- 𝔱 "ssubst:intro" [| ssubst (𝓈intro 1) [ulcd| λ → 0 2 |] |] [| [ulcd| λ → 0 3 |] |]
+-- 
+-- 𝔱 "ssubst:intro" [| ssubst (𝓈intro 2) [ulcd| λ → 0   |] |] [| [ulcd| λ → 0   |] |]
+-- 𝔱 "ssubst:intro" [| ssubst (𝓈intro 2) [ulcd| λ → 1   |] |] [| [ulcd| λ → 3   |] |]
+-- 𝔱 "ssubst:intro" [| ssubst (𝓈intro 2) [ulcd| λ → 2   |] |] [| [ulcd| λ → 4   |] |]
+-- 𝔱 "ssubst:intro" [| ssubst (𝓈intro 2) [ulcd| λ → 0 2 |] |] [| [ulcd| λ → 0 4 |] |]
+-- 
+-- 𝔱 "ssubst:bind" [| subst (𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0     |] |]
+-- 𝔱 "ssubst:bind" [| subst (𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0     |] |]
+-- 𝔱 "ssubst:bind" [| subst (𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] [| [ulcd| λ → λ → 0 |] |]
+-- 𝔱 "ssubst:bind" [| subst (𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |] [| [ulcd| λ → λ → 2 |] |]
+-- 
+-- 𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |] 
+--                  [| [ulcd| λ → 0 |] |]
+-- 𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |] 
+--                  [| [ulcd| λ → 0 |] |]
+-- 𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
+--                  [| [ulcd| λ → 1 |] |]
+-- 𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |] 
+--                  [| [ulcd| λ → 1 |] |]
+-- 𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 2 |]) [ulcd| λ → 0 |] |] 
+--                  [| [ulcd| λ → 0 |] |]
+-- 𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 2 |]) [ulcd| λ → 1 |] |] 
+--                  [| [ulcd| λ → 1 |] |]
+-- 𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 1 |]) [ulcd| λ → 2 |] |] 
+--                  [| [ulcd| λ → λ → 3 |] |]
+-- 𝔱 "ssubst:shift" [| subst (𝓈shift 1 $ 𝓈bbind [ulcd| λ → 2 |]) [ulcd| λ → 2 |] |] 
+--                  [| [ulcd| λ → λ → 4 |] |]
+-- 
+-- -- append --
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst null            [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (null ⧺ null)   [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈shift 1 null) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈shift 2 null) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst null          [ulcd| λ → 1 |] |] [| [ulcd| λ → 1 |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (null ⧺ null) [ulcd| λ → 1 |] |] [| [ulcd| λ → 1 |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1)               [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (null ⧺ 𝓈intro 1 ⧺ null) [ulcd| λ → 0 |] |] [| [ulcd| λ → 0 |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1)               [ulcd| λ → 1 |] |] [| [ulcd| λ → 2 |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (null ⧺ 𝓈intro 1 ⧺ null) [ulcd| λ → 1 |] |] [| [ulcd| λ → 2 |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
+--              [| [ulcd| λ → λ → 0 |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (null ⧺ 𝓈bbind [ulcd| λ → 0 |] ⧺ null) [ulcd| λ → 1 |] |] 
+--              [| [ulcd| λ → λ → 0 |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈intro 2) [ulcd| λ → 1 |] |]            [| [ulcd| λ → 3 |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1 ⧺ 𝓈intro 1) [ulcd| λ → 1 |] |] [| [ulcd| λ → 3 |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈bbind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
+--              [| [ulcd| λ → λ → 0 |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈shift 1 (𝓈bbind [ulcd| λ → 0 |]) ⧺ 𝓈intro 1) [ulcd| λ → 1 |] |] 
+--              [| [ulcd| λ → λ → 0 |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1 ⧺ 𝓈bbind [ulcd| 1 |]) [ulcd| 0 (λ → 2) |] |] 
+--              [| [ulcd| 2 (λ → 2) |] |]
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈shift 1 (𝓈bbind [ulcd| 1 |]) ⧺ 𝓈intro 1) [ulcd| 0 (λ → 2) |] |] 
+--              [| [ulcd| 2 (λ → 2) |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈intro 1) (ssubst (𝓈shift 1 null) [ulcd| 0 |]) |]
+--              [| ssubst (𝓈intro 1 ⧺ 𝓈shift 1 null) [ulcd| 0 |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈bbind [ulcd| 1 |]) (ssubst (𝓈shift 1 (𝓈intro 1)) [ulcd| 0 |]) |]
+--              [| ssubst (𝓈bbind [ulcd| 1 |] ⧺ 𝓈shift 1 (𝓈intro 1)) [ulcd| 0 |] |]
+-- 
+-- 𝔱 "ssubst:⧺" [| ssubst (𝓈shift 1 (𝓈bbind [ulcd| 1 |])) (ssubst (𝓈shift 1 null) [ulcd| 1 |]) |]
+--              [| ssubst (𝓈shift 1 (𝓈bbind [ulcd| 1 |]) ⧺ 𝓈shift 1 null) [ulcd| 1 |] |]
+-- 
+-- -- unscoped --
+-- 
+-- 𝔱 "usubst:bind" [| usubst (𝓈ubind $ var "x" ↦ [ulcd| 0 |]) [ulcd| x     |] |] [| [ulcd| 0     |] |]
+-- 𝔱 "usubst:bind" [| usubst (𝓈ubind $ var "x" ↦ [ulcd| 0 |]) [ulcd| λ → x |] |] [| [ulcd| λ → 0 |] |]
+-- 𝔱 "ssubst:bind" [| ssubst (𝓈nbind $ var "x" ↦ [ulcd| 0 |]) [ulcd| λ → x |] |] [| [ulcd| λ → 1 |] |]
+-- 
+-- -- fuzzing --
+-- 
+-- 𝔣 "zzz:ssubst:wf" 100 [| randSml @(SSubst ULCDExpR) |] [| wfSSubst |]
+-- 
+-- 𝔣 "zzz:ssubst:⧺:wf" 100 
+--   [| do 𝓈₁ ← randSml @(SSubst ULCDExpR)
+--         𝓈₂ ← randSml @(SSubst ULCDExpR)
+--         return $ 𝓈₁ :* 𝓈₂
+--   |]
+--   [| \ (𝓈₁ :* 𝓈₂) → wfSSubst (𝓈₁ ⧺ 𝓈₂) |]
+-- 
+-- 𝔣 "zzz:ssubst:refl:hom" 100 
+--   [| do e ← randSml @ULCDExpR
+--         return $ e
+--   |]
+--   [| \ e → 
+--        ssubst null e ≡ e
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:refl/shift:hom" 100
+--   [| do n ← randSml @ℕ64
+--         e ← randSml @ULCDExpR
+--         return $ n :* e
+--   |]
+--   [| \ (n :* e) → ssubst (𝓈shift n null) e ≡ e 
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:bind" 100
+--   [| do e₁ ← randSml @ULCDExpR
+--         e₂ ← randSml @ULCDExpR
+--         return $ e₁ :* e₂
+--   |]
+--   [| \ (e₁ :* e₂) → 
+--        ssubst (𝓈bbind e₁ ⧺ 𝓈intro 1) e₂ 
+--        ≡ 
+--        e₂
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:commute" 100
+--   [| do e₁ ← randSml @ULCDExpR
+--         e₂ ← randSml @ULCDExpR
+--         return $ e₁ :* e₂
+--   |]
+--   [| \ (e₁ :* e₂) → 
+--        ssubst (𝓈intro 1 ⧺ 𝓈bbind e₁) e₂
+--        ≡ 
+--        ssubst (𝓈shift 1 (𝓈bbind e₁) ⧺ 𝓈intro 1) e₂
+--   |]
+-- 
+-- 
+-- 𝔣 "zzz:ssubst:⧺:hom" 100 
+--   [| do 𝓈₁ ← randSml @(SSubst ULCDExpR)
+--         𝓈₂ ← randSml @(SSubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ 𝓈₁ :* 𝓈₂ :* e
+--   |]
+--   [| \ (𝓈₁ :* 𝓈₂ :* e) → 
+--        ssubst (𝓈₁ ⧺ 𝓈₂) e ≡ ssubst 𝓈₁ (ssubst 𝓈₂ e)
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:⧺:lrefl" 100 
+--   [| do 𝓈 ← randSml @(SSubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ 𝓈 :* e
+--   |]
+--   [| \ (𝓈 :* e) → 
+--        ssubst (null ⧺ 𝓈) e ≡ ssubst 𝓈 e
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:⧺:rrefl" 100 
+--   [| do 𝓈 ← randSml @(SSubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ 𝓈 :* e
+--   |]
+--   [| \ (𝓈 :* e) → 
+--        ssubst (𝓈 ⧺ null) e ≡ ssubst 𝓈 e
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:⧺:lrefl/shift" 100
+--   [| do n ← randSml @ℕ64
+--         𝓈 ← randSml @(SSubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ n :* 𝓈 :* e
+--   |]
+--   [| \ (n :* 𝓈 :* e) → ssubst (𝓈shift n null ⧺ 𝓈) e ≡ ssubst 𝓈 e 
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:⧺:rrefl/shift" 100
+--   [| do n ← randSml @ℕ64
+--         𝓈 ← randSml @(SSubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ n :* 𝓈 :* e
+--   |]
+--   [| \ (n :* 𝓈 :* e) → ssubst (𝓈 ⧺ 𝓈shift n null) e ≡ ssubst 𝓈 e 
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:⧺:trans" 100 
+--   [| do 𝓈₁ ← randSml @(SSubst ULCDExpR)
+--         𝓈₂ ← randSml @(SSubst ULCDExpR)
+--         𝓈₃ ← randSml @(SSubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ 𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e
+--   |]
+--   [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) → 
+--        ssubst ((𝓈₁ ⧺ 𝓈₂) ⧺ 𝓈₃) e ≡ ssubst (𝓈₁ ⧺ (𝓈₂ ⧺ 𝓈₃)) e 
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:shift/⧺:shift:dist" 100 
+--   [| do n ← randSml @ℕ64
+--         𝓈₁ ← randSml @(SSubst ULCDExpR)
+--         𝓈₂ ← randSml @(SSubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ n :* 𝓈₁ :* 𝓈₂ :* e
+--   |]
+--   [| \ (n :* 𝓈₁ :* 𝓈₂ :* e) → 
+--        ssubst (𝓈shift n (𝓈₁ ⧺ 𝓈₂)) e ≡ ssubst (𝓈shift n 𝓈₁ ⧺ 𝓈shift n 𝓈₂) e 
+--   |]
+-- 
+-- 𝔣 "zzz:usubst:⧺:hom" 100 
+--   [| do 𝓈₁ ← randSml @(USubst ULCDExpR)
+--         𝓈₂ ← randSml @(USubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ 𝓈₁ :* 𝓈₂ :* e
+--   |]
+--   [| \ (𝓈₁ :* 𝓈₂ :* e) → 
+--        usubst (𝓈₁ ⧺ 𝓈₂) e ≡ usubst 𝓈₁ (usubst 𝓈₂ e)
+--   |]
+-- 
+-- 𝔣 "zzz:usubst:⧺:lrefl" 100 
+--   [| do 𝓈 ← randSml @(USubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ 𝓈 :* e
+--   |]
+--   [| \ (𝓈 :* e) → 
+--        usubst (null ⧺ 𝓈) e ≡ usubst 𝓈 e
+--   |]
+-- 
+-- 𝔣 "zzz:usubst:⧺:rrefl" 100 
+--   [| do 𝓈 ← randSml @(USubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ 𝓈 :* e
+--   |]
+--   [| \ (𝓈 :* e) → 
+--        usubst (𝓈 ⧺ null) e ≡ usubst 𝓈 e
+--   |]
+-- 
+-- 𝔣 "zzz:usubst:⧺:trans" 100 
+--   [| do 𝓈₁ ← randSml @(USubst ULCDExpR)
+--         𝓈₂ ← randSml @(USubst ULCDExpR)
+--         𝓈₃ ← randSml @(USubst ULCDExpR)
+--         e ← randSml @ULCDExpR
+--         return $ 𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e
+--   |]
+--   [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) → 
+--        usubst ((𝓈₁ ⧺ 𝓈₂) ⧺ 𝓈₃) e ≡ usubst (𝓈₁ ⧺ (𝓈₂ ⧺ 𝓈₃)) e 
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:open∘close" 100 
+--   [| do randSml @ULCDExpR
+--   |]
+--   [| \ e → 
+--        ssubst (𝓈open (var "z") ⧺ 𝓈close (var "z")) e ≡ e
+--   |]
+-- 
+-- 𝔣 "zzz:ssubst:close∘open" 100 
+--   [| do randSml @ULCDExpR
+--   |]
+--   [| \ e → 
+--        ssubst (𝓈close (var "z") ⧺ 𝓈open (var "z")) e ≡ e
+--   |]
+-- 
+-- buildTests
+-- 
+-- -}

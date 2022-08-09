@@ -50,7 +50,7 @@ svec ∷ ∀ n a. (𝒩 n) ⇒ 𝐼S n a → 𝕍S n a
 svec xs = 𝕍S_UNSAFE $ VB.fromListN (tohs $ intΩ64 $ unℕ64S $ 𝕟64s @n) $ lazyList $ un𝐼S xs
 
 svecF ∷ ∀ n a. (𝒩 n) ⇒ ℕ64S n → (𝕀64 n → a) → 𝕍S n a
-svecF n f = svec $ map f $ upTo𝕀64 n
+svecF n f = svec $ map f $ upto𝕀64 n
 
 idx𝕍S ∷ 𝕀64 n → 𝕍S n a → a
 idx𝕍S i xs = VB.unsafeIndex (un𝕍S xs) $ tohs $ intΩ64 $ un𝕀64 i
@@ -92,7 +92,7 @@ sconc2 m n = sconc m ∘ map (sconc n)
 𝐭 xs = svecF 𝕟64s $ \ j → svecF 𝕟64s $ \ i → xs ⋕ i ⋕ j
 
 (⋅) ∷ (𝒩 n,Additive a,Times a) ⇒ 𝕍S n a → 𝕍S n a → a
-xs ⋅ ys = sum $ map (\ i → xs ⋕ i × ys ⋕ i) $ upTo𝕀64 $ 𝕟64s
+xs ⋅ ys = sum $ map (\ i → xs ⋕ i × ys ⋕ i) $ upto𝕀64 $ 𝕟64s
 
 (✖) ∷ (𝒩 m,𝒩 n,𝒩 o,Additive a,Times a) ⇒ 𝕍S m (𝕍S o a) → 𝕍S n (𝕍S o a) → 𝕍S m (𝕍S n a)
 xs ✖ ys = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j → xs ⋕ i ⋅ ys ⋕ j
@@ -117,7 +117,7 @@ suvec ∷ ∀ n a. (𝒩 n,Storable a) ⇒ 𝐼S n a → 𝕌S n a
 suvec xs = 𝕌S_UNSAFE $ VU.fromListN (tohs $ intΩ64 $ unℕ64S $ 𝕟64s @n) $ lazyList $ un𝐼S xs
 
 suvecF ∷ ∀ n a. (𝒩 n,Storable a) ⇒ ℕ64S n → (𝕀64 n → a) → 𝕌S n a
-suvecF n f = suvec $ map f $ upTo𝕀64 n
+suvecF n f = suvec $ map f $ upto𝕀64 n
 
 idx𝕌S ∷ (Storable a) ⇒ 𝕀64 n → 𝕌S n a → a
 idx𝕌S i xs = VU.unsafeIndex (un𝕌S xs) $ tohs $ intΩ64 $ un𝕀64 i

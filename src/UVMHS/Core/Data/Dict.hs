@@ -203,6 +203,12 @@ assoc = dict ∘ map single ∘ iter
 djoin ∷ (Ord k,Ord v₁,Ord v₂) ⇒ k ⇰ 𝑃 v₁ → k ⇰ 𝑃 v₂ → k ⇰ 𝑃 (v₁ ∧ v₂)
 djoin = interWith $ \ vs₁ vs₂ → pow $ zipWith (:*) vs₁ vs₂
 
+mapOnKeyWith ∷ (Ord k) ⇒ (v → v) → k → k ⇰ v → k ⇰ v
+mapOnKeyWith f k = 𝐷 ∘ Map.adjust f k ∘ un𝐷
+
+mapOnKey ∷ (Ord k) ⇒ k → (v → v) → k ⇰ v → k ⇰ v
+mapOnKey = flip mapOnKeyWith
+
 mapWithKey ∷ (a → b → b) → a ⇰ b → a ⇰ b
 mapWithKey f = 𝐷 ∘ Map.mapWithKey f ∘ un𝐷
 

@@ -225,26 +225,26 @@ ponMMSP e n = product $ replicate n e
 -- FREE VARS --
 ---------------
 
-fvMMSP ∷ MMSP → 𝑃 𝕐
-fvMMSP (MMSP α̇) = fvMMSPMaxs α̇
+-- fvMMSP ∷ MMSP → 𝑃 𝕐
+-- fvMMSP (MMSP α̇) = fvMMSPMaxs α̇
+-- 
+-- fvMMSPMaxs ∷ MMSPMaxs → 𝑃 𝕐
+-- fvMMSPMaxs (MMSPMaxs _ α) = joins $ map fvMMSPMins $ iter α
+-- 
+-- fvMMSPMins ∷ MMSPMins → 𝑃 𝕐
+-- fvMMSPMins (MMSPMins _ β) = joins $ map fvMMSPSums $ iter β
+-- 
+-- fvMMSPSums ∷ MMSPSums → 𝑃 𝕐
+-- fvMMSPSums (MMSPSums _ γ) = joins $ map (fvMMSPProds ∘ fst) $ iter γ
+-- 
+-- fvMMSPProds ∷ MMSPProds → 𝑃 𝕐
+-- fvMMSPProds (MMSPProds δ) = joins $ map (fvMMSPAtom ∘ fst) $ iter δ
+-- 
+-- fvMMSPAtom ∷ MMSPAtom → 𝑃 𝕐
+-- fvMMSPAtom = \case
+--   Var_MMSPAtom xA → fv $ aval xA
 
-fvMMSPMaxs ∷ MMSPMaxs → 𝑃 𝕐
-fvMMSPMaxs (MMSPMaxs _ α) = joins $ map fvMMSPMins $ iter α
-
-fvMMSPMins ∷ MMSPMins → 𝑃 𝕐
-fvMMSPMins (MMSPMins _ β) = joins $ map fvMMSPSums $ iter β
-
-fvMMSPSums ∷ MMSPSums → 𝑃 𝕐
-fvMMSPSums (MMSPSums _ γ) = joins $ map (fvMMSPProds ∘ fst) $ iter γ
-
-fvMMSPProds ∷ MMSPProds → 𝑃 𝕐
-fvMMSPProds (MMSPProds δ) = joins $ map (fvMMSPAtom ∘ fst) $ iter δ
-
-fvMMSPAtom ∷ MMSPAtom → 𝑃 𝕐
-fvMMSPAtom = \case
-  Var_MMSPAtom xA → fv $ aval xA
-
-instance HasFBV MMSP where fbv = FBV pø ∘ fvMMSP
+-- instance HasFBV MMSP where fbv = FBV pø ∘ fvMMSP
 
 ----------
 -- MAXS --

@@ -12,6 +12,9 @@ class Access k v t | t → k,t → v where (⋕) ∷ t → k → v
 
 class ToIter a t | t → a where iter ∷ t → 𝐼 a
 
+lup ∷ (Lookup k v t) ⇒ k → t → 𝑂 v
+lup = flip (⋕?)
+
 (⋕!) ∷ (Lookup k v t,STACK) ⇒ t → k → v
 kvs ⋕! k = case kvs ⋕? k of
   Some v → v
