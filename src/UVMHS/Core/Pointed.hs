@@ -154,10 +154,13 @@ instance (Append a) ⇒ Append (AddTop a) where
   AddTop x ⧺ AddTop y = AddTop $ x ⧺ y
 instance (Monoid a) ⇒ Monoid (AddTop a)
 
+instance (Zero a) ⇒ Zero (AddTop a) where
+  zero = AddTop zero
 instance (Plus a) ⇒ Plus (AddTop a) where
   Top + _ = Top
   _ + Top = Top
   AddTop x + AddTop y = AddTop $ x + y
+instance (Additive a) ⇒ Additive (AddTop a)
 
 instance (Times a) ⇒ Times (AddTop a) where
   Top × _ = Top
@@ -211,6 +214,11 @@ instance FunctorM AddBT where
   mapM f xM = case xM of {TopBT → return TopBT;BotBT → return BotBT;AddBT x → map AddBT $ f x}
 
 -- LENSES --
+
+addTopL ∷ AddTop a ⌲ a
+addTopL = prism AddTop $ \case
+  AddTop x → Some x
+  _ → None
 
 nullZOML ∷ ZOM a ⌲ ()
 nullZOML = prism (const NullZOM) $ \case

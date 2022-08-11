@@ -72,7 +72,7 @@ isoPrism ∷ (b → a) → (a → b) → a ⌲ b
 isoPrism from to = prism from $ Some ∘ to
 
 viewΩ ∷ a ⌲ b → a → b
-viewΩ p = elim𝑂 (error "viewΩ") id ∘ view p
+viewΩ p = elim𝑂Z (error "viewΩ") id ∘ view p
 
 shape ∷ a ⌲ b → a → 𝔹
 shape p = elim𝑂 False (const True) ∘ view p

@@ -519,6 +519,8 @@ instance (Pretty a,Pretty b) ⇒ Pretty (a,b) where
 instance (Pretty a,Pretty b) ⇒ Pretty (a ∧ b) where
   pretty (a :* b) = ppCollection (ppPun "⟨") (ppPun "⟩") (ppPun ",") [pretty a, pretty b]
 
+instance (Pretty a) ⇒ Pretty (() → a) where pretty = pretty ∘ appto ()
+
 instance (Pretty a) ⇒ Pretty (𝐿 a) where 
   pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
 instance (Pretty a) ⇒ Pretty [a] where 

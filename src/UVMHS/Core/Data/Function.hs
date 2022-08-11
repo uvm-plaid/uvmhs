@@ -17,6 +17,9 @@ instance (Append a) ⇒ Append (r → a) where
   f ⧺ g = \ r → f r ⧺ g r
 instance (Monoid a) ⇒ Monoid (r → a)
 
+instance (Eq a) ⇒ Eq (() → a) where
+  f == g = f () ≡ g ()
+
 appto ∷ a → (a → b) → b
 appto x f = f x
 
