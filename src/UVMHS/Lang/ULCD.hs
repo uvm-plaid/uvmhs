@@ -36,8 +36,9 @@ pULCDExp = ULCDExp ^$ fmixfixWithContext "exp" $ concat
       void $ cpToken $ SyntaxTBasic ")"
       return $ aval $ unULCDExp e
   , fmixTerminal $ do
-      i ← cpInteger
-      return $ Var_ULCD $ DVar $ intΩ64 i
+      n ← cpInteger
+      n' ← failEff $ natO64 n
+      return $ Var_ULCD $ DVar n'
   , fmixTerminal $ do
       x ← cpVar
       return $ Var_ULCD $ NVar 0 x

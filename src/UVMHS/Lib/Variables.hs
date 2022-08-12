@@ -17,8 +17,8 @@ makeLenses ''𝕏
 
 -- fancy variables
 data 𝕐 = 
-    NVar ℤ64 𝕏
-  | DVar ℤ64
+    DVar ℕ64
+  | NVar ℕ64 𝕏
   | MVar 𝕏
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
@@ -26,11 +26,11 @@ makePrisms ''𝕐
 var ∷ 𝕊 → 𝕏
 var = 𝕏 None
 
-svar ∷ 𝕏 → 𝕐
-svar = NVar 0
+nvar ∷ 𝕏 → 𝕐
+nvar = NVar 0
 
-svarL ∷ 𝕐 ⌲ 𝕏
-svarL = prism svar $ \case
+nvarL ∷ 𝕐 ⌲ 𝕏
+nvarL = prism nvar $ \case
   NVar n x | n≡0 → Some x
   _ → None
 
@@ -49,8 +49,8 @@ instance Pretty 𝕐 where
 cpVar ∷ CParser TokenBasic 𝕏
 cpVar = var ^$ cpShaped $ view nameTBasicL
 
-cpSVar ∷ CParser TokenBasic 𝕐
-cpSVar = svar ∘ var ^$ cpShaped $ view nameTBasicL
+cpNVar ∷ CParser TokenBasic 𝕐
+cpNVar = nvar ∘ var ^$ cpShaped $ view nameTBasicL
 
 cpMVar ∷ CParser TokenBasic 𝕐
 cpMVar = MVar ∘ var ^$ cpShaped $ view nameTBasicL
@@ -58,8 +58,8 @@ cpMVar = MVar ∘ var ^$ cpShaped $ view nameTBasicL
 cpVarWS ∷ CParser TokenWSBasic 𝕏
 cpVarWS = var ^$ cpShaped $ view nameTWSBasicL
 
-cpSVarWS ∷ CParser TokenWSBasic 𝕐
-cpSVarWS = svar ∘ var ^$ cpShaped $ view nameTWSBasicL
+cpNVarWS ∷ CParser TokenWSBasic 𝕐
+cpNVarWS = nvar ∘ var ^$ cpShaped $ view nameTWSBasicL
 
 cpMVarWS ∷ CParser TokenWSBasic 𝕐
 cpMVarWS = MVar ∘ var ^$ cpShaped $ view nameTWSBasicL
