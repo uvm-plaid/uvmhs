@@ -9,12 +9,15 @@ import qualified Examples.Lang.SExp as SExp
 
 import qualified Prelude as HS
 
+import UVMHS.Tests.Core
+import UVMHS.Tests.Substitution
+
 main ∷ IO ()
 main = cleanExit $ do
   pprint $ ppHeader "COLOR TEST"
   pprint colorsDemo
   $$(testModules False
-    [ "UVMHS.CoreTests"
-    , "UVMHS.Lib.Substitution"
+    [ "UVMHS.Tests.Core"
+    , "UVMHS.Tests.Substitution"
     ])
   pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"

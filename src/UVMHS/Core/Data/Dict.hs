@@ -128,6 +128,9 @@ unionWithKeyGM f₁ f₂ f₃ kvs₁ kvs₂ = assoc ^$ mapMOn (iter $ keys kvs�
 unionWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
 unionWith f kvs₁ kvs₂ = 𝐷 $ Map.unionWith f (un𝐷 kvs₁) (un𝐷 kvs₂)
 
+unionWithKey ∷ (Ord k) ⇒ (k → v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
+unionWithKey f kvs₁ kvs₂ = 𝐷 $ Map.unionWithKey f (un𝐷 kvs₁) (un𝐷 kvs₂)
+
 unionWithD ∷ (Ord k) ⇒ v → (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
 unionWithD d f = unionWithG (\ x → f x d) (\ y → f d y) f
 
@@ -136,6 +139,12 @@ unionWithD d f = unionWithG (\ x → f x d) (\ y → f d y) f
 
 unionsWith ∷ (Ord k,ToIter (k ⇰ v) t) ⇒ (v → v → v) → t → k ⇰ v
 unionsWith = fold dø ∘ unionWith
+
+unionWithOn ∷ (Ord k) ⇒ k ⇰ v → k ⇰ v → (v → v → v) → k ⇰ v
+unionWithOn = rotateL unionWith
+
+unionWithKeyOn ∷ (Ord k) ⇒ k ⇰ v → k ⇰ v → (k → v → v → v) → k ⇰ v
+unionWithKeyOn = rotateL unionWithKey
 
 interWith ∷ (Ord k) ⇒ (v₁ → v₂ → v₃) → k ⇰ v₁ → k ⇰ v₂ → k ⇰ v₃
 interWith f kvs₁ kvs₂ = 𝐷 $ Map.intersectionWith f (un𝐷 kvs₁) (un𝐷 kvs₂)
@@ -164,13 +173,13 @@ without ∷ (Ord k) ⇒ 𝑃 k → k ⇰ v → k ⇰ v
 without ks kvs = 𝐷 $ Map.withoutKeys (un𝐷 kvs) $ un𝑃 ks
 
 restrict ∷ (Ord k) ⇒ 𝑃 k → k ⇰ v → k ⇰ v
-restrict ks kvs = 𝐷 $ Map.restrictKeys (un𝐷 kvs) (un𝑃 ks)
+restrict ks kvs = 𝐷 $ Map.restrictKeys (un𝐷 kvs) $ un𝑃 ks
 
-dmapWithKey ∷ (a → b → b) → a ⇰ b → a ⇰ b
-dmapWithKey f = 𝐷 ∘ Map.mapWithKey f ∘ un𝐷
+mapWithKey ∷ (a → b → b) → a ⇰ b → a ⇰ b
+mapWithKey f = 𝐷 ∘ Map.mapWithKey f ∘ un𝐷
 
-dmapOnWithKey ∷ a ⇰ b → (a → b → b) → a ⇰ b
-dmapOnWithKey = flip dmapWithKey
+mapWithKeyOn ∷ a ⇰ b → (a → b → b) → a ⇰ b
+mapWithKeyOn = flip mapWithKey
 
 keys ∷ (Ord k) ⇒ k ⇰ v → 𝑃 k
 keys = pow ∘ Map.keys ∘ un𝐷
@@ -208,9 +217,3 @@ mapOnKeyWith f k = 𝐷 ∘ Map.adjust f k ∘ un𝐷
 
 mapOnKey ∷ (Ord k) ⇒ k → (v → v) → k ⇰ v → k ⇰ v
 mapOnKey = flip mapOnKeyWith
-
-mapWithKey ∷ (a → b → b) → a ⇰ b → a ⇰ b
-mapWithKey f = 𝐷 ∘ Map.mapWithKey f ∘ un𝐷
-
-mapOnWithKey ∷ a ⇰ b → (a → b → b) → a ⇰ b
-mapOnWithKey = flip mapWithKey

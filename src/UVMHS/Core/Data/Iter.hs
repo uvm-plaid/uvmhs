@@ -163,6 +163,27 @@ mfoldWithOn = rotateL mfold
 mfoldWithFrom ∷ (Monad m,ToIter a t) ⇒ (a → b → m b) → b → t → m b
 mfoldWithFrom = flip mfold
 
+mfoldk ∷ (Monad m,ToIter a t) ⇒ b → (a → b → (m b → m b) → m b) → t → m b
+mfoldk i₀ f = foldkFromWith (return i₀) $ \ x iM 𝓀 → do i ← iM ; f x i 𝓀
+
+mfoldkFromWith ∷ (Monad m,ToIter a t) ⇒ b → (a → b → (m b → m b) → m b) → t → m b
+mfoldkFromWith = mfoldk
+
+mfoldkFromOn ∷ (Monad m,ToIter a t) ⇒ b → t → (a → b → (m b → m b) → m b) → m b
+mfoldkFromOn = flip ∘ mfoldk
+
+mfoldkOnFrom ∷ (Monad m,ToIter a t) ⇒ t → b → (a → b → (m b → m b) → m b) → m b
+mfoldkOnFrom = rotateR mfoldk
+
+mfoldkOnWith ∷ (Monad m,ToIter a t) ⇒ t → (a → b → (m b → m b) → m b) → b → m b
+mfoldkOnWith = mirror mfoldk
+
+mfoldkWithOn ∷ (Monad m,ToIter a t) ⇒ (a → b → (m b → m b) → m b) → t → b → m b
+mfoldkWithOn = rotateL mfoldk
+
+mfoldkWithFrom ∷ (Monad m,ToIter a t) ⇒ (a → b → (m b → m b) → m b) → b → t → m b
+mfoldkWithFrom = flip mfoldk
+
 mfoldr ∷ (Monad m,ToIter a t) ⇒ b → (a → b → m b) → t → m b
 mfoldr i₀ f = foldkFromWith (return i₀) $ \ x iM 𝓀 → do i ← 𝓀 iM ; f x i
 
@@ -189,6 +210,12 @@ eachWith f = mfoldFromWith () $ const ∘ f
 
 eachOn ∷ (Monad m,ToIter a t) ⇒ t → (a → m ()) → m () 
 eachOn = flip eachWith
+
+eachkWith ∷ (Monad m,ToIter a t) ⇒ (a → (m () → m ()) → m ()) → t → m ()
+eachkWith f = mfoldkFromWith () $ const ∘ f
+
+eachkOn ∷ (Monad m,ToIter a t) ⇒ t → (a → (m () → m ()) → m ()) → m () 
+eachkOn = flip eachkWith
 
 exec ∷ (Monad m,ToIter (m ()) t) ⇒ t → m () 
 exec = eachWith id

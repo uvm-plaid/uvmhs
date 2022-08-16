@@ -1,4 +1,4 @@
-module UVMHS.CoreTests (g__TESTS__UVMHS__CoreTests) where
+module UVMHS.Tests.Core (g__TESTS__UVMHS__Tests__Core) where
 
 import UVMHS.Core
 import UVMHS.Lib.Testing
@@ -86,3 +86,4 @@ execUR = runUR 0 0
 𝔱 "core:monads:ur" [| 2 |] [| execUR $ do localL fstL 1 $ uputEnvL sndL 2 ; askL sndL |]
 
 buildTests
+

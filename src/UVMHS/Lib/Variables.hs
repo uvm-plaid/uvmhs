@@ -3,6 +3,7 @@ module UVMHS.Lib.Variables where
 import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser
+import UVMHS.Lib.Rand
 
 -- ========= --
 -- VARIABLES --
@@ -19,7 +20,7 @@ makeLenses ''𝕏
 data 𝕐 = 
     DVar ℕ64
   | NVar ℕ64 𝕏
-  | MVar 𝕏
+  | GVar 𝕏
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
 
@@ -44,7 +45,7 @@ instance Pretty 𝕐 where
   pretty = \case
     NVar n x → concat [pretty x,if n ≡ 0 then null else ppPun $ concat ["↑",show𝕊 n]]
     DVar n → concat [ppPun "⌊",pretty n,ppPun "⌋"]
-    MVar x → concat [pretty x,ppPun "†"]
+    GVar x → concat [pretty x,ppPun "†"]
 
 cpVar ∷ CParser TokenBasic 𝕏
 cpVar = var ^$ cpShaped $ view nameTBasicL
@@ -52,8 +53,8 @@ cpVar = var ^$ cpShaped $ view nameTBasicL
 cpNVar ∷ CParser TokenBasic 𝕐
 cpNVar = nvar ∘ var ^$ cpShaped $ view nameTBasicL
 
-cpMVar ∷ CParser TokenBasic 𝕐
-cpMVar = MVar ∘ var ^$ cpShaped $ view nameTBasicL
+cpGVar ∷ CParser TokenBasic 𝕐
+cpGVar = GVar ∘ var ^$ cpShaped $ view nameTBasicL
 
 cpVarWS ∷ CParser TokenWSBasic 𝕏
 cpVarWS = var ^$ cpShaped $ view nameTWSBasicL
@@ -61,5 +62,25 @@ cpVarWS = var ^$ cpShaped $ view nameTWSBasicL
 cpNVarWS ∷ CParser TokenWSBasic 𝕐
 cpNVarWS = nvar ∘ var ^$ cpShaped $ view nameTWSBasicL
 
-cpMVarWS ∷ CParser TokenWSBasic 𝕐
-cpMVarWS = MVar ∘ var ^$ cpShaped $ view nameTWSBasicL
+cpGVarWS ∷ CParser TokenWSBasic 𝕐
+cpGVarWS = GVar ∘ var ^$ cpShaped $ view nameTWSBasicL
+
+-----------
+-- FUZZY --
+-----------
+
+instance Fuzzy 𝕏 where
+  fuzzy = do
+    nO ← fuzzy
+    return $ 𝕏 nO "x"
+
+instance Fuzzy 𝕐 where
+  fuzzy = rchoose
+    [ \ () → DVar ^$ fuzzy
+    , \ () → do
+          n ← fuzzy
+          x ← fuzzy
+          return $ NVar n x
+    , \ () → GVar ^$ fuzzy
+    ]
+

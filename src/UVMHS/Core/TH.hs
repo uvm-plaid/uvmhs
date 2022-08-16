@@ -12,6 +12,8 @@ import qualified Language.Haskell.TH.Syntax as TH
 
 import qualified Prelude as HS
 
+type THLift = TH.Lift
+
 class MonadQ (m ∷ ★ → ★) where qio ∷ TH.Q a → m a
 
 instance Functor TH.Q where map = mmap

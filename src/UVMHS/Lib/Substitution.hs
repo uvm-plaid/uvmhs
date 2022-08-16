@@ -1,73 +1,63 @@
 module UVMHS.Lib.Substitution where
 
 import UVMHS.Core
-import UVMHS.Lib.Annotated
 import UVMHS.Lib.Variables
-import UVMHS.Lib.Testing
-import UVMHS.Lib.Rand
 import UVMHS.Lib.Pretty
+import UVMHS.Lib.Rand
 
-import UVMHS.Lang.ULCD
+---------------------------------
+-- GENERIC SUBSTITUION ELEMENT --
+---------------------------------
 
--- ===================== --
--- DEBRUIJN SUBSTITUTION --
--- ===================== --
-
--- ℯ ⩴ i | ⟨ι,e⟩
-data DSubstElem e = 
-    Var_DSE ℕ64
-  | Trm_DSE ℕ64 (() → 𝑂 e)
+-- ℯ ⩴ i | s⇈e
+data GSubstElem s a = 
+    Var_GSE ℕ64
+  | Val_GSE s (() → 𝑂 a)
   deriving (Eq)
 
-instance (Pretty a) ⇒ Pretty (DSubstElem a) where
+instance (Pretty s,Pretty a) ⇒ Pretty (GSubstElem s a) where
   pretty = \case
-    Var_DSE i → pretty $ DVar i
-    Trm_DSE ι e → concat
-      [ ppPun $ show𝕊 ι
+    Var_GSE i → pretty $ DVar i
+    Val_GSE n e → concat
+      [ ppPun $ ppshow n
       , ppPun "⇈"
       , ifNone (ppPun "bu") $ pretty ^$ e ()
       ]
 
+introGSubstElem ∷ (Additive 𝑠) ⇒ (𝑠 → ℕ64 → ℕ64) → 𝑠 → GSubstElem 𝑠 e → GSubstElem 𝑠 e
+introGSubstElem introVar 𝑠 = \case
+  Var_GSE n → Var_GSE $ introVar 𝑠 n
+  Val_GSE 𝑠' ueO → Val_GSE (𝑠' + 𝑠 ) ueO
+
+------------------------------------
+-- GENERIC DE BRUIJN SUBSTITUTION --
+------------------------------------
+
 -- 𝓈 ⩴ ⟨ρ,es,ι⟩ 
 -- INVARIANT: |es| + ι ≥ 0
-data DSubst e = DSubst
+data GDSubst 𝑠 e = GDSubst
   { dsubstShift ∷ ℕ64
-  , dsubstElems ∷ 𝕍 (DSubstElem e)
+  , dsubstElems ∷ 𝕍 (GSubstElem 𝑠 e)
   , dsubstIntro ∷ ℤ64
   } deriving (Eq)
-makeLenses ''DSubst
-makePrettyRecord ''DSubst
+makeLenses ''GDSubst
+makePrettyRecord ''GDSubst
 
-introDSubstElem ∷ ℤ64 → DSubstElem e → DSubstElem e
-introDSubstElem ι = \case
-  Var_DSE i → Var_DSE $ natΩ64 $ intΩ64 i+ι
-  Trm_DSE ι' ueO → Trm_DSE (natΩ64 $ intΩ64 ι'+ι) ueO
-
-𝓈shift ∷ ℕ64 → DSubst e → DSubst e
-𝓈shift n (DSubst ρ es ι) =
-  let ρ'   = ρ+n
-      es' = mapOn es $ introDSubstElem $ intΩ64 n
-  in DSubst ρ' es' ι
-
-𝓈intro ∷ ℕ64 → DSubst e
-𝓈intro ι = DSubst zero null $ intΩ64 ι
-
-𝓈binds ∷ 𝕍 e → DSubst e
-𝓈binds es = DSubst zero (map (Trm_DSE 0 ∘ const ∘ return) es) $ neg $ intΩ64 $ csize es
-
-𝓈bind ∷ e → DSubst e
-𝓈bind = 𝓈binds ∘ single
+isNullGDSubst ∷ GDSubst 𝑠 e → 𝔹
+isNullGDSubst (GDSubst ρ es ι) = ρ ≡ 0 ⩓ csize es ≡ 0 ⩓ ι ≡ 0
 
 -- 𝓈 ≜ ⟨ρ,es,ι⟩
 -- 𝔰 ≜ |es|
--- cases (disjoint):
---   |       i < ρ   ⇒ i
---   |   ρ ≤ i < ρ+𝔰 ⇒ es[i-ρ]
---   | ρ+𝔰 ≤ i       ⇒ i+ι
--- cases (sequential):
---   | i < ρ   ⇒ i
---   | i < ρ+𝔰 ⇒ es[i-ρ]
---   | ⊤       ⇒ i+ι
+-- 𝓈(i) ≜
+--   cases (disjoint):
+--     |       i < ρ   ⇒ i
+--     |   ρ ≤ i < ρ+𝔰 ⇒ es[i-ρ]
+--     | ρ+𝔰 ≤ i       ⇒ i+ι
+-- 𝓈(i) ≜
+--   cases (sequential):
+--     | i < ρ   ⇒ i
+--     | i < ρ+𝔰 ⇒ es[i-ρ]
+--     | ⊤       ⇒ i+ι
 -- e.g.,
 -- 𝓈 = ⟨2,[e],-1⟩
 -- 𝓈 is logically equivalent to the (infinite) substitution vector
@@ -81,25 +71,54 @@ introDSubstElem ι = \case
 -- ,  4 ↦ ⌊ 3⌋    |
 -- , …
 -- ]
-dsubstVar ∷ DSubst e → ℕ64 → DSubstElem e
-dsubstVar (DSubst ρ̇ es ι) ṅ =
-  let 𝔰̇ = csize es
-      n = intΩ64 ṅ
+gsubstVar ∷ GDSubst 𝑠 e → ℕ64 → GSubstElem 𝑠 e
+gsubstVar (GDSubst ρ̇ es ι) ṅ =
+  let 𝔰̇  = csize es
+      n  = intΩ64 ṅ
   in 
   if
-  | ṅ < ρ̇      → Var_DSE ṅ
+  | ṅ < ρ̇     → Var_GSE ṅ
   | ṅ < 𝔰̇+ρ̇   → es ⋕! (ṅ-ρ̇)
-  | otherwise  → Var_DSE $ natΩ64 $ n+ι
+  | otherwise → Var_GSE $ natΩ64 $ n+ι
 
--- esubst(ι,σ,e) ≡ σ(ι(e))
-dsubstElem ∷ (ℕ64 → DSubst e → e → 𝑂 e) → DSubst e → DSubstElem e → DSubstElem e
-dsubstElem esubst 𝓈 = \case
-  Var_DSE n → dsubstVar 𝓈 n
-  Trm_DSE ι ueO → Trm_DSE 0 $ \ () → esubst ι 𝓈 *$ ueO ()
+-- esubst(𝑠,𝓈,e) ≡ 𝓈(𝑠⇈e)
+gsubstElem ∷ (Null 𝑠) ⇒ (𝑠 → e → 𝑂 e) → GDSubst 𝑠 e → GSubstElem 𝑠 e → GSubstElem 𝑠 e
+gsubstElem esubst 𝓈 = \case
+  Var_GSE n     → gsubstVar 𝓈 n
+  Val_GSE 𝑠 ueO → Val_GSE null $ \ () → esubst 𝑠 *$ ueO ()
 
------------------
--- COMPOSITION --
------------------
+----------------------------
+-- DE BRUIJN SUBSTITUTION --
+----------------------------
+
+type DSubstElem = GSubstElem ℕ64
+
+newtype DSubst e = DSubst { unDSubst ∷ GDSubst ℕ64 e }
+
+introDSubstElem ∷ ℕ64 → DSubstElem e → DSubstElem e
+introDSubstElem = introGSubstElem (+)
+
+𝓈shiftD ∷ ℕ64 → DSubst e → DSubst e
+𝓈shiftD n 𝓈 =
+  let GDSubst ρ es ι = unDSubst 𝓈
+      ρ'             = ρ+n
+      es'            = mapOn es $ introDSubstElem n
+  in DSubst $ GDSubst ρ' es' ι
+
+𝓈introD ∷ ℕ64 → DSubst e
+𝓈introD n = DSubst $ GDSubst zero null $ intΩ64 n
+
+𝓈bindsD ∷ 𝕍 e → DSubst e
+𝓈bindsD es = 
+  let ℯs = map (Val_GSE 0 ∘ const ∘ return) es
+      ι  = neg $ intΩ64 $ csize es
+  in DSubst $ GDSubst zero ℯs ι
+
+𝓈bindD ∷ e → DSubst e
+𝓈bindD = 𝓈bindsD ∘ single
+
+dsubstElem ∷ (DSubst e → ℕ64 → e → 𝑂 e) → DSubst e → DSubstElem e → DSubstElem e
+dsubstElem esubst 𝓈 = gsubstElem (esubst 𝓈) $ unDSubst 𝓈
 
 -- 𝓈₁ ≜ ⟨ρ₁,es₁,ι₁⟩
 -- 𝓈₂ ≜ ⟨ρ₂,es₂,ι₂⟩
@@ -143,306 +162,323 @@ dsubstElem esubst 𝓈 = \case
 --   ρ+𝔰 = (ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁)
 --     𝔰 = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
 
-dsubstAppend ∷ (Pretty e) ⇒ (ℕ64 → DSubst e → e → 𝑂 e) → DSubst e → DSubst e → DSubst e
-dsubstAppend esubst 𝓈₂@(DSubst ρ̇₂ es₂ ι₂) (DSubst ρ̇₁ es₁ ι₁) =
-  let 𝔰₁ = intΩ64 $ csize es₁
-      𝔰₂ = intΩ64 $ csize es₂
-      ρ₁  = intΩ64 ρ̇₁
-      ρ₂  = intΩ64 ρ̇₂
-      ρ̇   = ρ̇₁⊓ρ̇₂
-      ρ   = intΩ64 ρ̇
-      ι   = ι₁+ι₂
-      𝔰  = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
-      δ₂  = ρ
-      sub = dsubstElem esubst
-      es = vecF (natΩ64 𝔰) $ \ ṅ → 
-        let n = intΩ64 ṅ + δ₂ in 
+dsubstAppend ∷ (DSubst e → e → 𝑂 e) → DSubst e → DSubst e → DSubst e
+dsubstAppend esubst 𝓈₂ 𝓈₁ =
+  if
+  | isNullGDSubst $ unDSubst 𝓈₁ → 𝓈₂
+  | isNullGDSubst $ unDSubst 𝓈₂ → 𝓈₁
+  | otherwise →
+      let GDSubst ρ̇₂ es₂ ι₂ = unDSubst 𝓈₂
+          GDSubst ρ̇₁ es₁ ι₁ = unDSubst 𝓈₁
+          𝔰₁ = intΩ64 $ csize es₁
+          𝔰₂ = intΩ64 $ csize es₂
+          ρ₁  = intΩ64 ρ̇₁
+          ρ₂  = intΩ64 ρ̇₂
+          ρ̇   = ρ̇₁⊓ρ̇₂
+          ρ   = intΩ64 ρ̇
+          ι   = ι₁+ι₂
+          𝔰  = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
+          δ₂  = ρ
+          sub = dsubstElem $ \ 𝓈 n → esubst $ dsubstAppend esubst (𝓈introD n) 𝓈
+          es = vecF (natΩ64 𝔰) $ \ ṅ → 
+            let n = intΩ64 ṅ + δ₂ in 
+            if
+            | n < ρ₁⊓(ρ₂+𝔰₂) → es₂ ⋕! natΩ64 (n-ρ₂)
+            | n < ρ₁         → Var_GSE $ natΩ64 $ n+ι₂
+            | n < ρ₁+𝔰₁      → sub 𝓈₂ $ es₁ ⋕! natΩ64 (n-ρ₁)
+            | n < ρ₂-ι₁      → Var_GSE $ natΩ64 $ n+ι₁
+            | n < ρ₂+𝔰₂-ι₁   → es₂ ⋕! natΩ64 (n+ι₁-ρ₂)
+            | otherwise      → error "bad"
+      in
+      DSubst $ GDSubst ρ̇ es ι
+
+-------------------------
+-- SCOPED SUBSTITUTION --
+-------------------------
+
+type SubstElem s = GSubstElem (s ⇰ ℕ64)
+data Subst s₁ s₂ e = Subst 
+  { substGlobal ∷ s₁ ⇰ ((s₂ ⇰ ℕ64) ∧ (() → 𝑂 e))
+  , substScoped ∷ s₂ ⇰ GDSubst (s₂ ⇰ ℕ64) e 
+  } 
+  deriving (Eq)
+makeLenses ''Subst
+makePrettyUnion ''Subst
+
+introSubstElem ∷ (Ord s) ⇒ s → s ⇰ ℕ64 → SubstElem s e → SubstElem s e
+introSubstElem s = introGSubstElem $ \ 𝑠 n → n + ifNone 0 (𝑠 ⋕? s)
+
+𝓈shiftG ∷ (Ord s₂) ⇒ s₂ ⇰ ℕ64 → Subst s₁ s₂ e → Subst s₁ s₂ e
+𝓈shiftG 𝑠 (Subst esᴳ 𝓈s) = 
+  let 𝓈s' = mapWithKeyOn 𝓈s $ \ s 𝓈 →
+        case 𝑠 ⋕? s of
+          None   → 𝓈
+          Some n →
+            let GDSubst ρ es ι = 𝓈
+                ρ'             = ρ+n
+                es'            = mapOn es $ introSubstElem s 𝑠
+            in GDSubst ρ' es' ι
+      esᴳ' = mapOn esᴳ $ \ (𝑠' :* ueO) → (𝑠'+𝑠) :* ueO
+  in Subst esᴳ' 𝓈s'
+
+𝓈introG ∷ s₂ ⇰ ℕ64 → Subst s₁ s₂ e
+𝓈introG 𝑠 = Subst null $ mapOn 𝑠 $ GDSubst 0 null ∘ intΩ64
+
+𝓈sbindsG ∷ s₂ ⇰ 𝕍 e → Subst s₁ s₂ e
+𝓈sbindsG ess = Subst null $ mapOn ess $ \ es →
+  let ℯs = map (Val_GSE null ∘ const ∘ return) es
+      ι  = neg $ intΩ64 $ csize es
+  in GDSubst zero ℯs ι
+
+𝓈sbindG ∷ (Ord s₂) ⇒ s₂ → e → Subst s₁ s₂ e
+𝓈sbindG s e = 𝓈sbindsG $ s ↦ single e
+
+𝓈gbindsG ∷ s₁ ⇰ e → Subst s₁ s₂ e
+𝓈gbindsG esᴳ = Subst (map ((:*) null ∘ const ∘ return) esᴳ) null
+
+𝓈gbindG ∷ (Ord s₁) ⇒ s₁ → e → Subst s₁ s₂ e
+𝓈gbindG s e = 𝓈gbindsG $ s ↦ e
+
+substElem 
+  ∷ (Ord s₂) 
+  ⇒ s₂ 
+  → (Subst s₁ s₂ e → s₂ ⇰ ℕ64 → e → 𝑂 e) 
+  → Subst s₁ s₂ e 
+  → SubstElem s₂ e 
+  → SubstElem s₂ e
+substElem s esubst 𝓈̂ = 
+  let Subst _esᴳ 𝓈s = 𝓈̂
+  in 
+  case 𝓈s ⋕? s of
+    None   → id
+    Some 𝓈 → gsubstElem (esubst 𝓈̂) 𝓈
+
+substAppend ∷ 
+  (Ord s₁,Ord s₂) 
+  ⇒ (Subst s₁ s₂ e → e → 𝑂 e) 
+  → Subst s₁ s₂ e 
+  → Subst s₁ s₂ e 
+  → Subst s₁ s₂ e
+substAppend esubst 𝓈̂₂ 𝓈̂₁ =
+  let Subst esᴳ₁ 𝓈s₁ = 𝓈̂₁
+      Subst esᴳ₂ 𝓈s₂ = 𝓈̂₂
+      esᴳ₁' = mapOn esᴳ₁ $ \ (𝑠 :* ueO) → (:*) null $ \ () →
+        esubst (substAppend esubst 𝓈̂₂ (𝓈introG 𝑠)) *$ ueO ()
+      esᴳ = esᴳ₁' ⩌ esᴳ₂ 
+      𝓈s = unionWithKeyOn 𝓈s₂ 𝓈s₁ $ \ s 𝓈₂@(GDSubst ρ̇₂ es₂ ι₂) 𝓈₁@(GDSubst ρ̇₁ es₁ ι₁) →
         if
-        | n < ρ₁⊓(ρ₂+𝔰₂) → es₂ ⋕! natΩ64 (n-ρ₂)
-        | n < ρ₁         → Var_DSE $ natΩ64 $ n+ι₂
-        | n < ρ₁+𝔰₁      → sub 𝓈₂ $ es₁ ⋕! natΩ64 (n-ρ₁)
-        | n < ρ₂-ι₁      → Var_DSE $ natΩ64 $ n+ι₁
-        | n < ρ₂+𝔰₂-ι₁   → es₂ ⋕! natΩ64 (n+ι₁-ρ₂)
-        | otherwise      → error "bad"
-  in
-  DSubst ρ̇ es ι
+        | isNullGDSubst 𝓈₁ → 𝓈₂
+        | isNullGDSubst 𝓈₂ → 𝓈₁
+        | otherwise →
+            let 𝔰₁ = intΩ64 $ csize es₁
+                𝔰₂ = intΩ64 $ csize es₂
+                ρ₁  = intΩ64 ρ̇₁
+                ρ₂  = intΩ64 ρ̇₂
+                ρ̇   = ρ̇₁⊓ρ̇₂
+                ρ   = intΩ64 ρ̇
+                ι   = ι₁+ι₂
+                𝔰  = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
+                δ₂  = ρ
+                sub = substElem s $ \ 𝓈 𝑠 → esubst $ substAppend esubst (𝓈introG 𝑠) 𝓈
+                es = vecF (natΩ64 𝔰) $ \ ṅ → 
+                  let n = intΩ64 ṅ + δ₂ in 
+                  if
+                  | n < ρ₁⊓(ρ₂+𝔰₂) → es₂ ⋕! natΩ64 (n-ρ₂)
+                  | n < ρ₁         → Var_GSE $ natΩ64 $ n+ι₂
+                  | n < ρ₁+𝔰₁      → sub 𝓈̂₂ $ es₁ ⋕! natΩ64 (n-ρ₁)
+                  | n < ρ₂-ι₁      → Var_GSE $ natΩ64 $ n+ι₁
+                  | n < ρ₂+𝔰₂-ι₁   → es₂ ⋕! natΩ64 (n+ι₁-ρ₂)
+                  | otherwise      → error "bad"
+            in
+            GDSubst ρ̇ es ι
+  in Subst esᴳ 𝓈s
 
 -- ====== --
 -- SUBSTY --
 -- ====== --
 
-newtype SubstT e a = SubstT { unSubstT ∷ UContT (ReaderT (DSubst e) (FailT ID)) a }
+newtype SubstT s₁ s₂ e a = SubstT { unSubstT ∷ UContT (ReaderT (Subst s₁ s₂ e) (FailT ID)) a }
   deriving
   ( Return,Bind,Functor,Monad
   , MonadUCont
-  , MonadReader (DSubst e)
+  , MonadReader (Subst s₁ s₂ e)
   , MonadFail
   )
 
-runSubstT ∷ DSubst e → SubstT e a → 𝑂 a
+runSubstT ∷ Subst s₁ s₂ e → SubstT s₁ s₂ e a → 𝑂 a
 runSubstT γ = unID ∘ unFailT ∘ runReaderT γ ∘ evalUContT ∘ unSubstT
 
-class Substy e a | a→e where
-  substy ∷ a → SubstT e a
+class Substy s₁ s₂ e a | a→s₁,a→s₂,a→e where
+  substy ∷ a → SubstT s₁ s₂ e a
 
-subst ∷ (Substy e a) ⇒ DSubst e → a → 𝑂 a
+subst ∷ (Substy s₁ s₂ e a) ⇒ Subst s₁ s₂ e → a → 𝑂 a
 subst 𝓈 x = runSubstT 𝓈 $ substy x
 
-instance                Null (DSubst e)   where null = DSubst zero null 0
-instance (Pretty e,Substy e e) ⇒ Append (DSubst e) where 
-  (⧺) = dsubstAppend $ \ i 𝓈 → 
-    subst 𝓈 *∘ subst (𝓈intro i)
-instance (Pretty e,Substy e e) ⇒ Monoid (DSubst e)
+instance                                    Null   (Subst s₁ s₂ e) where null = Subst null null
+instance (Ord s₁,Ord s₂,Substy s₁ s₂ e e) ⇒ Append (Subst s₁ s₂ e) where (⧺)  = substAppend subst
+instance (Ord s₁,Ord s₂,Substy s₁ s₂ e e) ⇒ Monoid (Subst s₁ s₂ e)
 
-substyDBdr ∷ SubstT e ()
-substyDBdr = umodifyEnv $ 𝓈shift 1
+substyDBdrG ∷ (Ord s₂) ⇒ s₂ → SubstT s₁ s₂ e ()
+substyDBdrG s = umodifyEnv $ 𝓈shiftG $ s ↦ 1
 
-substyDVar ∷ (Substy e e) ⇒ (ℕ64 → e) → ℕ64 → SubstT e e
-substyDVar 𝓋 i = do
-  𝓈 ← ask
-  case dsubstVar 𝓈 i of
-    Var_DSE i' → return $ 𝓋 i'
-    Trm_DSE ι ueO → failEff $ subst (𝓈intro ι) *$ ueO ()
+substyNBdrG ∷ (Ord s₂) ⇒ (𝕏 → s₂) → 𝕏 → SubstT s₁ s₂ e ()
+substyNBdrG 𝒸 x = umodifyEnv $ 𝓈shiftG $ 𝒸 x ↦ 1
 
+substyVarG ∷ (Ord s₂,Substy s₁ s₂ e e) ⇒ (ℕ64 → e) → s₂ → ℕ64 → SubstT s₁ s₂ e e
+substyVarG 𝓋 s n = do
+  𝓈s ← askL substScopedL
+  case 𝓈s ⋕? s of
+    None → return $ 𝓋 n
+    Some 𝓈 → case gsubstVar 𝓈 n of
+      Var_GSE n' → return $ 𝓋 n'
+      Val_GSE 𝑠 ueO → failEff $ subst (𝓈introG 𝑠) *$ ueO ()
 
--- ======== --
--- FOR ULCD --
--- ======== --
+substyDVarG ∷ (Ord s₂,Substy s₁ s₂ e e) ⇒ s₂ → (ℕ64 → e) → ℕ64 → SubstT s₁ s₂ e e
+substyDVarG s 𝓋 = substyVarG 𝓋 s
 
-instance Substy (ULCDExp 𝒸) (ULCDExp 𝒸) where
-  substy = pipe unULCDExp $ \ (𝐴 𝒸 e₀) → ULCDExp ^$ case e₀ of
-    Var_ULCD y → case y of
-      DVar i → unULCDExp ^$ substyDVar (ULCDExp ∘ 𝐴 𝒸 ∘ Var_ULCD ∘ DVar) i
-      _      → return $ 𝐴 𝒸 $ Var_ULCD y
-    Lam_ULCD e → ureset $ do
-      substyDBdr
-      e' ← substy e
-      return $ 𝐴 𝒸 $ Lam_ULCD e'
-    App_ULCD e₁ e₂ → do
-      e₁' ← substy e₁
-      e₂' ← substy e₂
-      return $ 𝐴 𝒸 $ App_ULCD e₁' e₂'
+substyNVarG ∷ (Ord s₂,Substy s₁ s₂ e e) ⇒ (𝕏 → s₂) → (ℕ64 → e) → 𝕏 → ℕ64 → SubstT s₁ s₂ e e
+substyNVarG 𝒸 𝓋 x = substyVarG 𝓋 $ 𝒸 x
 
-prandDVar ∷ ℕ64 → ℕ64 → State RG ℕ64
-prandDVar nˢ nᵇ = prandr 0 $ nᵇ + nˢ
+substyGVarG ∷ (Ord s₁,Substy s₁ s₂ e e) ⇒ (𝕏 → s₁) → (𝕏 → e) → 𝕏 → SubstT s₁ s₂ e e
+substyGVarG 𝒸 𝓋 x = do
+  gsᴱ ← askL substGlobalL
+  case gsᴱ ⋕? 𝒸 x of
+    None → return $ 𝓋 x
+    Some (𝑠 :* ueO) → failEff $ subst (𝓈introG 𝑠) *$ ueO ()
 
-prandNVar ∷ ℕ64 → State RG 𝕏
-prandNVar nˢ = flip 𝕏 "x" ∘ Some ^$ prandr 0 nˢ
+--------------------
+-- Standard Scope --
+--------------------
 
--- TODO: be aware of named scope
-prandVar ∷ ℕ64 → ℕ64 → State RG 𝕐
-prandVar nˢ nᵇ = mjoin $ prchoose
-  [ \ () → DVar ^$ prandDVar nˢ nᵇ
-  , \ () → NVar 0 ^$ prandNVar nˢ
-  ]
+data 𝔖 s = 
+    Dbr_𝔖 s
+  | Nmd_𝔖 s 𝕏
+  deriving (Eq,Ord,Show)
+makePrettyUnion ''𝔖
 
-prandULCDExp ∷ ℕ64 → ℕ64 → ℕ64 → State RG ULCDExpR
-prandULCDExp nˢ nᵇ nᵈ = ULCDExp ∘ 𝐴 () ^$ mjoin $ prwchoose
-    [ (2 :*) $ \ () → do
-        Var_ULCD ^$ prandVar nˢ nᵇ
-    , (nᵈ :*) $ \ () → do
-        Lam_ULCD ^$ prandULCDExp nˢ (nᵇ + 1) $ nᵈ - 1
-    , (nᵈ :*) $ \ () → do
-        e₁ ← prandULCDExp nˢ nᵇ $ nᵈ - 1
-        e₂ ← prandULCDExp nˢ nᵇ $ nᵈ - 1
-        return $ App_ULCD e₁ e₂
+substyDBdr ∷ (Ord s) ⇒ s → SubstT 𝕏 (𝔖 s) e ()
+substyDBdr s = substyDBdrG $ Dbr_𝔖 s
+
+substyNBdr ∷ (Ord s) ⇒ s → 𝕏 → SubstT 𝕏 (𝔖 s) e ()
+substyNBdr s = substyNBdrG $ Nmd_𝔖 s
+
+substyDVar ∷ (Ord s,Substy 𝕏 (𝔖 s) e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstT 𝕏 (𝔖 s) e e
+substyDVar s = substyDVarG $ Dbr_𝔖 s
+
+substyNVar ∷ (Ord s,Substy 𝕏 (𝔖 s) e e) ⇒ s → (ℕ64 → e) → 𝕏 → ℕ64 → SubstT 𝕏 (𝔖 s) e e
+substyNVar s = substyNVarG $ Nmd_𝔖 s
+
+substyGVar ∷ (Substy 𝕏 (𝔖 s) e e) ⇒ (𝕏 → e) → 𝕏 → SubstT 𝕏 (𝔖 s) e e
+substyGVar = substyGVarG id 
+
+substy𝕐 ∷ (Ord s,Substy 𝕏 (𝔖 s) e e) ⇒ s → (𝕐 → e) → 𝕐 → SubstT 𝕏 (𝔖 s) e e
+substy𝕐 s 𝓋 = \case
+  DVar n → substyDVar s (𝓋 ∘ DVar) n
+  NVar n x → substyNVar s (𝓋 ∘ flip NVar x) x n
+  GVar x → substyGVar (𝓋 ∘ GVar) x
+
+𝓈sdshift ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst 𝕏 (𝔖 s) e → Subst 𝕏 (𝔖 s) e
+𝓈sdshift = 𝓈shiftG ∘ assoc ∘ map (mapFst Dbr_𝔖) ∘ iter
+
+𝓈snshift ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ ℕ64 → Subst 𝕏 (𝔖 s) e → Subst 𝕏 (𝔖 s) e
+𝓈snshift 𝑠 = 𝓈shiftG $ assoc $ do
+  s :* xns ← iter 𝑠
+  x :* n ← iter xns
+  return $ (Nmd_𝔖 s x) :* n
+
+𝓈sdintro ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst 𝕏 (𝔖 s) e
+𝓈sdintro = 𝓈introG ∘ assoc ∘ map (mapFst Dbr_𝔖) ∘ iter
+
+𝓈snintro ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ ℕ64 → Subst 𝕏 (𝔖 s) e
+𝓈snintro 𝑠 = 𝓈introG $ assoc $ do
+  s :* xns ← iter 𝑠
+  x :* n ← iter xns
+  return $ (Nmd_𝔖 s x) :* n
+
+𝓈sdbinds ∷ (Ord s) ⇒ s ⇰ 𝕍 e → Subst 𝕏 (𝔖 s) e
+𝓈sdbinds = 𝓈sbindsG ∘ assoc ∘ map (mapFst Dbr_𝔖) ∘ iter
+
+𝓈sdbind ∷ (Ord s) ⇒ s → e → Subst 𝕏 (𝔖 s) e
+𝓈sdbind s e = 𝓈sdbinds $ s ↦ single e
+
+𝓈snbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ 𝕍 e → Subst 𝕏 (𝔖 s) e
+𝓈snbinds 𝑠 = 𝓈sbindsG $ assoc $ do
+  s :* xess ← iter 𝑠
+  x :* es ← iter xess
+  return $ (Nmd_𝔖 s x) :* es
+
+𝓈snbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst 𝕏 (𝔖 s) e
+𝓈snbind s x e = 𝓈snbinds $ s ↦ x ↦ single e
+
+𝓈sgbinds ∷ (Ord s) ⇒ 𝕏 ⇰ e → Subst 𝕏 (𝔖 s) e
+𝓈sgbinds = 𝓈gbindsG
+
+𝓈sgbind ∷ (Ord s) ⇒ 𝕏 → e → Subst 𝕏 (𝔖 s) e
+𝓈sgbind x e = 𝓈sgbinds $ x ↦ e
+
+𝓈dshift ∷ ℕ64 → Subst 𝕏 (𝔖 ()) e → Subst 𝕏 (𝔖 ()) e
+𝓈dshift = 𝓈sdshift ∘ (↦) ()
+
+𝓈nshift ∷ 𝕏 ⇰ ℕ64 → Subst 𝕏 (𝔖 ()) e → Subst 𝕏 (𝔖 ()) e
+𝓈nshift = 𝓈snshift ∘ (↦) ()
+
+𝓈dintro ∷ ℕ64 → Subst 𝕏 (𝔖 ()) e
+𝓈dintro = 𝓈sdintro ∘ (↦) ()
+
+𝓈nintro ∷ 𝕏 ⇰ ℕ64 → Subst 𝕏 (𝔖 ()) e
+𝓈nintro = 𝓈snintro ∘ (↦) ()
+
+𝓈dbinds ∷ 𝕍 e → Subst 𝕏 (𝔖 ()) e
+𝓈dbinds = 𝓈sdbinds ∘ (↦) ()
+
+𝓈dbind ∷ e → Subst 𝕏 (𝔖 ()) e
+𝓈dbind = 𝓈sdbind ()
+
+𝓈nbinds ∷ 𝕏 ⇰ 𝕍 e → Subst 𝕏 (𝔖 ()) e
+𝓈nbinds = 𝓈snbinds ∘ (↦) ()
+
+𝓈nbind ∷ 𝕏 → e → Subst 𝕏 (𝔖 ()) e
+𝓈nbind = 𝓈snbind ()
+
+𝓈gbinds ∷ 𝕏 ⇰ e → Subst 𝕏 (𝔖 ()) e
+𝓈gbinds = 𝓈sgbinds
+
+𝓈gbind ∷ 𝕏 → e → Subst 𝕏 (𝔖 ()) e
+𝓈gbind = 𝓈sgbind
+
+-----------
+-- Fuzzy --
+-----------
+
+fuzzyGSubstElem ∷ FuzzyM s → FuzzyM a → FuzzyM (GSubstElem s a)
+fuzzyGSubstElem sM xM = rchoose
+    [ \ () → Var_GSE ^$ fuzzy
+    , \ () → do
+        𝑠 ← sM
+        e ← xM
+        return $ Val_GSE 𝑠 $ const $ return e
     ]
 
-instance Rand ULCDExpR where prand = flip prandULCDExp zero
+fuzzyGDSubst ∷ FuzzyM s → FuzzyM a → FuzzyM (GDSubst s a)
+fuzzyGDSubst sM xM = do
+  ρ ← fuzzy
+  𝔰 ← fuzzy
+  es ← mapMOn (vecF 𝔰 id) $ const $ fuzzyGSubstElem sM xM
+  ι ← randr (neg $ intΩ64 𝔰) $ intΩ64 𝔰
+  return $ GDSubst ρ es ι
 
-prandSubstElem ∷ (Rand a) ⇒ ℕ64 → ℕ64 → State RG (DSubstElem a)
-prandSubstElem nˢ nᵈ = mjoin $ prchoose
-  [ \ () → do
-      i ← prand @ℕ64 nˢ nᵈ
-      return $ Var_DSE i
+fuzzy𝔖 ∷ FuzzyM s → FuzzyM (𝔖 s)
+fuzzy𝔖 sM = rchoose
+  [ \ () → Dbr_𝔖 ^$ sM
   , \ () → do
-      ι ← prand @ℕ64 nˢ nᵈ
-      e ← prand nˢ nᵈ
-      return $ Trm_DSE ι $ const $ return e
+      s ← sM
+      x ← fuzzy
+      return $ Nmd_𝔖 s x
   ]
 
-instance (Rand a) ⇒ Rand (DSubstElem a) where prand = prandSubstElem
+instance (Fuzzy s,Fuzzy a) ⇒ Fuzzy (GSubstElem s a) where fuzzy = fuzzyGSubstElem fuzzy fuzzy
+instance (Fuzzy s,Fuzzy a) ⇒ Fuzzy (GDSubst s a) where fuzzy = fuzzyGDSubst fuzzy fuzzy
+instance (Fuzzy s) ⇒ Fuzzy (𝔖 s) where fuzzy = fuzzy𝔖 fuzzy
 
-prandDSubst ∷ (Rand a) ⇒ ℕ64 → ℕ64 → State RG (DSubst a)
-prandDSubst nˢ nᵈ = do
-  ρ ← prand nˢ nᵈ
-  𝔰 ← prandr zero nˢ
-  es ← mapMOn (vecF 𝔰 id) $ const $ prand nˢ nᵈ
-  ι ← prandr (neg $ intΩ64 𝔰) $ intΩ64 nˢ
-  return $ DSubst ρ es ι
+instance (Ord s₂,Fuzzy s₂,Fuzzy a) ⇒ Fuzzy (Subst s₁ s₂ a) where fuzzy = Subst null ^$ fuzzy
 
-instance (Rand a) ⇒  Rand (DSubst a) where prand = prandDSubst
-
--- basic --
-
-𝔱 "subst:id" [| subst null [ulcd| λ → 0   |] |] [| Some [ulcd| λ → 0   |] |]
-𝔱 "subst:id" [| subst null [ulcd| λ → 1   |] |] [| Some [ulcd| λ → 1   |] |]
-𝔱 "subst:id" [| subst null [ulcd| λ → 2   |] |] [| Some [ulcd| λ → 2   |] |]
-𝔱 "subst:id" [| subst null [ulcd| λ → 0 2 |] |] [| Some [ulcd| λ → 0 2 |] |]
-
-𝔱 "subst:intro" [| subst (𝓈intro 1) [ulcd| λ → 0   |] |] [| Some [ulcd| λ → 0   |] |]
-𝔱 "subst:intro" [| subst (𝓈intro 1) [ulcd| λ → 1   |] |] [| Some [ulcd| λ → 2   |] |]
-𝔱 "subst:intro" [| subst (𝓈intro 1) [ulcd| λ → 2   |] |] [| Some [ulcd| λ → 3   |] |]
-𝔱 "subst:intro" [| subst (𝓈intro 1) [ulcd| λ → 0 2 |] |] [| Some [ulcd| λ → 0 3 |] |]
-
-𝔱 "subst:intro" [| subst (𝓈intro 2) [ulcd| λ → 0   |] |] [| Some [ulcd| λ → 0   |] |]
-𝔱 "subst:intro" [| subst (𝓈intro 2) [ulcd| λ → 1   |] |] [| Some [ulcd| λ → 3   |] |]
-𝔱 "subst:intro" [| subst (𝓈intro 2) [ulcd| λ → 2   |] |] [| Some [ulcd| λ → 4   |] |]
-𝔱 "subst:intro" [| subst (𝓈intro 2) [ulcd| λ → 0 2 |] |] [| Some [ulcd| λ → 0 4 |] |]
-
-𝔱 "subst:bind" [| subst (𝓈bind [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |] [| Some [ulcd| λ → 0     |] |]
-𝔱 "subst:bind" [| subst (𝓈bind [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |] [| Some [ulcd| λ → 0     |] |]
-𝔱 "subst:bind" [| subst (𝓈bind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] [| Some [ulcd| λ → λ → 0 |] |]
-𝔱 "subst:bind" [| subst (𝓈bind [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |] [| Some [ulcd| λ → λ → 2 |] |]
-
-𝔱 "subst:shift" [| subst (𝓈shift 1 $ 𝓈bind [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |] 
-                 [| Some [ulcd| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (𝓈shift 1 $ 𝓈bind [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |] 
-                 [| Some [ulcd| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (𝓈shift 1 $ 𝓈bind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
-                 [| Some [ulcd| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (𝓈shift 1 $ 𝓈bind [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |] 
-                 [| Some [ulcd| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (𝓈shift 1 $ 𝓈bind [ulcd| λ → 2 |]) [ulcd| λ → 0 |] |] 
-                 [| Some [ulcd| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (𝓈shift 1 $ 𝓈bind [ulcd| λ → 2 |]) [ulcd| λ → 1 |] |] 
-                 [| Some [ulcd| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (𝓈shift 1 $ 𝓈bind [ulcd| λ → 1 |]) [ulcd| λ → 2 |] |] 
-                 [| Some [ulcd| λ → λ → 3 |] |]
-𝔱 "subst:shift" [| subst (𝓈shift 1 $ 𝓈bind [ulcd| λ → 2 |]) [ulcd| λ → 2 |] |] 
-                 [| Some [ulcd| λ → λ → 4 |] |]
-
--- append --
-
-𝔱 "subst:⧺" [| subst null            [ulcd| λ → 0 |] |] [| Some [ulcd| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ null)   [ulcd| λ → 0 |] |] [| Some [ulcd| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (𝓈shift 1 null) [ulcd| λ → 0 |] |] [| Some [ulcd| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (𝓈shift 2 null) [ulcd| λ → 0 |] |] [| Some [ulcd| λ → 0 |] |]
-
-𝔱 "subst:⧺" [| subst null          [ulcd| λ → 1 |] |] [| Some [ulcd| λ → 1 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ null) [ulcd| λ → 1 |] |] [| Some [ulcd| λ → 1 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈intro 1)               [ulcd| λ → 0 |] |] [| Some [ulcd| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ 𝓈intro 1 ⧺ null) [ulcd| λ → 0 |] |] [| Some [ulcd| λ → 0 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈intro 1)               [ulcd| λ → 1 |] |] [| Some [ulcd| λ → 2 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ 𝓈intro 1 ⧺ null) [ulcd| λ → 1 |] |] [| Some [ulcd| λ → 2 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈bind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
-            [| Some [ulcd| λ → λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ 𝓈bind [ulcd| λ → 0 |] ⧺ null) [ulcd| λ → 1 |] |] 
-            [| Some [ulcd| λ → λ → 0 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈intro 2) [ulcd| λ → 1 |] |]            [| Some [ulcd| λ → 3 |] |]
-𝔱 "subst:⧺" [| subst (𝓈intro 1 ⧺ 𝓈intro 1) [ulcd| λ → 1 |] |] [| Some [ulcd| λ → 3 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈bind [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
-            [| Some [ulcd| λ → λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (𝓈shift 1 (𝓈bind [ulcd| λ → 0 |]) ⧺ 𝓈intro 1) [ulcd| λ → 1 |] |] 
-            [| Some [ulcd| λ → λ → 0 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈intro 1 ⧺ 𝓈bind [ulcd| 1 |]) [ulcd| 0 (λ → 2) |] |] 
-            [| Some [ulcd| 2 (λ → 2) |] |]
-𝔱 "subst:⧺" [| subst (𝓈shift 1 (𝓈bind [ulcd| 1 |]) ⧺ 𝓈intro 1) [ulcd| 0 (λ → 2) |] |] 
-            [| Some [ulcd| 2 (λ → 2) |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈intro 1) *$ subst (𝓈shift 1 null) [ulcd| 0 |] |]
-            [| subst (𝓈intro 1 ⧺ 𝓈shift 1 null) [ulcd| 0 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈bind [ulcd| 1 |]) *$ subst (𝓈shift 1 (𝓈intro 1)) [ulcd| 0 |] |]
-            [| subst (𝓈bind [ulcd| 1 |] ⧺ 𝓈shift 1 (𝓈intro 1)) [ulcd| 0 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈shift 1 (𝓈bind [ulcd| 1 |])) *$ subst (𝓈shift 1 null) [ulcd| 1 |] |]
-            [| subst (𝓈shift 1 (𝓈bind [ulcd| 1 |]) ⧺ 𝓈shift 1 null) [ulcd| 1 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈shift 1 (𝓈bind [ulcd| 3 |]) ⧺ null) [ulcd| 0 |] |]
-            [| subst (𝓈shift 1 (𝓈bind [ulcd| 3 |])) [ulcd| 0 |] |]
-
--- fuzzing --
-
-𝔣 "zzz:subst:hom:refl" 100 
-  [| do e ← randSml @ULCDExpR
-        return $ e
-  |]
-  [| \ e → 
-       subst null e ≡ Some e
-  |]
-
-𝔣 "zzz:subst:hom:⧺" 100
-  [| do 𝓈₁ ← randSml @(DSubst ULCDExpR)
-        𝓈₂ ← randSml @(DSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈₁ :* 𝓈₂ :* e
-  |]
-  [| \ (𝓈₁ :* 𝓈₂ :* e) → 
-       subst (𝓈₁ ⧺ 𝓈₂) e ≡ (subst 𝓈₁ *$ subst 𝓈₂ e)
-  |]
-
-𝔣 "zzz:subst:lunit:⧺" 100 
-  [| do 𝓈 ← randSml @(DSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈 :* e
-  |]
-  [| \ (𝓈 :* e) → 
-       subst (null ⧺ 𝓈) e ≡ subst 𝓈 e
-  |]
-
-𝔣 "zzz:subst:runit:⧺" 100 
-  [| do 𝓈 ← randSml @(DSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈 :* e
-  |]
-  [| \ (𝓈 :* e) → 
-       subst (𝓈 ⧺ null) e ≡ subst 𝓈 e
-  |]
-
-𝔣 "zzz:subst:trans:⧺" 100 
-  [| do 𝓈₁ ← randSml @(DSubst ULCDExpR)
-        𝓈₂ ← randSml @(DSubst ULCDExpR)
-        𝓈₃ ← randSml @(DSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ 𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e
-  |]
-  [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) → 
-       subst ((𝓈₁ ⧺ 𝓈₂) ⧺ 𝓈₃) e ≡ subst (𝓈₁ ⧺ (𝓈₂ ⧺ 𝓈₃)) e 
-  |]
-
-𝔣 "zzz:subst:unit:shift" 100
-  [| do i ← randSml @ℕ64
-        e ← randSml @ULCDExpR
-        return $ i :* e
-  |]
-  [| \ (i :* e) → subst (𝓈shift i null) e ≡ Some e 
-  |]
-
-𝔣 "zzz:subst:unit:bind∘intro" 100
-  [| do e₁ ← randSml @ULCDExpR
-        e₂ ← randSml @ULCDExpR
-        return $ e₁ :* e₂
-  |]
-  [| \ (e₁ :* e₂) → (subst (𝓈bind e₁) *$ subst (𝓈intro 1) e₂) ≡ Some e₂
-  |]
-
-𝔣 "zzz:subst:commute:intro∘bind" 100
-  [| do e₁ ← randSml @ULCDExpR
-        e₂ ← randSml @ULCDExpR
-        return $ e₁ :* e₂
-  |]
-  [| \ (e₁ :* e₂) → 
-       (subst (𝓈intro 1) *$ subst (𝓈bind e₁) e₂)
-       ≡ 
-       (subst (𝓈shift 1 $ 𝓈bind e₁) *$ subst (𝓈intro 1) e₂)
-  |]
-
-𝔣 "zzz:subst:dist:shift/⧺" 100 
-  [| do n ← randSml @ℕ64
-        𝓈₁ ← randSml @(DSubst ULCDExpR)
-        𝓈₂ ← randSml @(DSubst ULCDExpR)
-        e ← randSml @ULCDExpR
-        return $ n :* 𝓈₁ :* 𝓈₂ :* e
-  |]
-  [| \ (n :* 𝓈₁ :* 𝓈₂ :* e) → 
-       subst (𝓈shift n (𝓈₁ ⧺ 𝓈₂)) e ≡ subst (𝓈shift n 𝓈₁ ⧺ 𝓈shift n 𝓈₂) e 
-  |]
-
-buildTests
