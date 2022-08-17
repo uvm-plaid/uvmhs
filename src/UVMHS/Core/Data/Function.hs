@@ -19,6 +19,10 @@ instance (Monoid a) ⇒ Monoid (r → a)
 
 instance (Eq a) ⇒ Eq (() → a) where
   f == g = f () ≡ g ()
+instance (Ord a) ⇒ Ord (() → a) where
+  compare f g = f () ⋚ g ()
+instance (Show a) ⇒ Show (() → a) where
+  show = show ∘ appto ()
 
 appto ∷ a → (a → b) → b
 appto x f = f x

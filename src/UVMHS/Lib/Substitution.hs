@@ -3,48 +3,91 @@ module UVMHS.Lib.Substitution where
 import UVMHS.Core
 import UVMHS.Lib.Variables
 import UVMHS.Lib.Pretty
+import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 
----------------------------------
--- GENERIC SUBSTITUION ELEMENT --
----------------------------------
+--------------------------
+-- SUBSTITUTION ELEMENT --
+--------------------------
+
+-- ℯ ⩴ s⇈e
+data SubstElem s a = SubstElem
+  { substElemIntro ∷ s ⇰ ℕ64
+  , substElemValue ∷ () → 𝑂 a
+  } deriving (Eq,Ord,Show)
+makeLenses ''SubstElem
+
+instance (Pretty s,Pretty a) ⇒ Pretty (SubstElem s a) where
+  pretty (SubstElem s ueO) = ppInfr pASC (ppPun "⇈") (pretty s) $
+    ifNone (ppPun "⊥") $ pretty ^$ ueO ()
+
+instance (Ord s,Fuzzy s,Fuzzy a) ⇒ Fuzzy (SubstElem s a) where
+  fuzzy = do
+    𝑠 ← fuzzy
+    ueO ← fuzzy
+    return $ SubstElem 𝑠 ueO
+
+introSubstElem ∷ (Ord s) ⇒ s ⇰ ℕ64 → SubstElem s a → SubstElem s a
+introSubstElem = alter substElemIntroL ∘ (+)
+
+subSubstElem ∷ (s ⇰ ℕ64 → a → 𝑂 a) → SubstElem s a → SubstElem s a
+subSubstElem substE (SubstElem 𝑠 ueO) = SubstElem zero $ \ () → substE 𝑠 *$ ueO ()
+
+--------------------------------
+-- SCOPED SUBSTITUION ELEMENT --
+--------------------------------
 
 -- ℯ ⩴ i | s⇈e
-data GSubstElem s a = 
-    Var_GSE ℕ64
-  | Val_GSE s (() → 𝑂 a)
-  deriving (Eq)
+data SSubstElem s a = 
+    Var_SSE ℕ64
+  | Trm_SSE (SubstElem s a)
+  deriving (Eq,Ord,Show)
 
-instance (Pretty s,Pretty a) ⇒ Pretty (GSubstElem s a) where
+instance (Pretty s,Pretty a) ⇒ Pretty (SSubstElem s a) where
   pretty = \case
-    Var_GSE i → pretty $ DVar i
-    Val_GSE n e → concat
-      [ ppPun $ ppshow n
-      , ppPun "⇈"
-      , ifNone (ppPun "bu") $ pretty ^$ e ()
-      ]
+    Var_SSE i → pretty $ DVar i
+    Trm_SSE e → pretty e
 
-introGSubstElem ∷ (Additive 𝑠) ⇒ (𝑠 → ℕ64 → ℕ64) → 𝑠 → GSubstElem 𝑠 e → GSubstElem 𝑠 e
-introGSubstElem introVar 𝑠 = \case
-  Var_GSE n → Var_GSE $ introVar 𝑠 n
-  Val_GSE 𝑠' ueO → Val_GSE (𝑠' + 𝑠 ) ueO
+instance (Ord s,Fuzzy s,Fuzzy a) ⇒ Fuzzy (SSubstElem s a) where 
+  fuzzy = rchoose
+    [ \ () → Var_SSE ^$ fuzzy
+    , \ () → Trm_SSE ^$ fuzzy
+    ]
 
-------------------------------------
--- GENERIC DE BRUIJN SUBSTITUTION --
-------------------------------------
+introSSubstElem ∷ (Ord s) ⇒ s → s ⇰ ℕ64 → SSubstElem s e → SSubstElem s e
+introSSubstElem s 𝑠 = \case
+  Var_SSE n → Var_SSE $ n + ifNone 0 (𝑠 ⋕? s)
+  Trm_SSE e → Trm_SSE $ introSubstElem 𝑠 e
+
+subSSubstElem ∷ (ℕ64 → SSubstElem s e) → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e
+subSSubstElem substV substE = \case
+  Var_SSE n → substV n
+  Trm_SSE ℯ → Trm_SSE $ subSubstElem substE ℯ
+
+----------------------------
+-- DE BRUIJN SUBSTITUTION --
+----------------------------
 
 -- 𝓈 ⩴ ⟨ρ,es,ι⟩ 
 -- INVARIANT: |es| + ι ≥ 0
-data GDSubst 𝑠 e = GDSubst
+data DSubst s e = DSubst
   { dsubstShift ∷ ℕ64
-  , dsubstElems ∷ 𝕍 (GSubstElem 𝑠 e)
+  , dsubstElems ∷ 𝕍 (SSubstElem s e)
   , dsubstIntro ∷ ℤ64
-  } deriving (Eq)
-makeLenses ''GDSubst
-makePrettyRecord ''GDSubst
+  } deriving (Eq,Ord,Show)
+makeLenses ''DSubst
+makePrettyRecord ''DSubst
 
-isNullGDSubst ∷ GDSubst 𝑠 e → 𝔹
-isNullGDSubst (GDSubst ρ es ι) = ρ ≡ 0 ⩓ csize es ≡ 0 ⩓ ι ≡ 0
+instance (Ord s,Fuzzy s,Fuzzy a) ⇒ Fuzzy (DSubst s a) where 
+  fuzzy = do
+    ρ ← fuzzy
+    𝔰 ← fuzzy
+    es ← mapMOn (vecF 𝔰 id) $ const $ fuzzy
+    ι ← randr (neg $ intΩ64 𝔰) $ intΩ64 𝔰
+    return $ DSubst ρ es ι
+
+isNullDSubst ∷ DSubst s e → 𝔹
+isNullDSubst (DSubst _ρ es ι) = csize es ≡ 0 ⩓ ι ≡ 0
 
 -- 𝓈 ≜ ⟨ρ,es,ι⟩
 -- 𝔰 ≜ |es|
@@ -71,54 +114,60 @@ isNullGDSubst (GDSubst ρ es ι) = ρ ≡ 0 ⩓ csize es ≡ 0 ⩓ ι ≡ 0
 -- ,  4 ↦ ⌊ 3⌋    |
 -- , …
 -- ]
-gsubstVar ∷ GDSubst 𝑠 e → ℕ64 → GSubstElem 𝑠 e
-gsubstVar (GDSubst ρ̇ es ι) ṅ =
+dsubstVar ∷ DSubst 𝑠 e → ℕ64 → SSubstElem 𝑠 e
+dsubstVar (DSubst ρ̇ es ι) ṅ =
   let 𝔰̇  = csize es
       n  = intΩ64 ṅ
   in 
   if
-  | ṅ < ρ̇     → Var_GSE ṅ
+  | ṅ < ρ̇     → Var_SSE ṅ
   | ṅ < 𝔰̇+ρ̇   → es ⋕! (ṅ-ρ̇)
-  | otherwise → Var_GSE $ natΩ64 $ n+ι
+  | otherwise → Var_SSE $ natΩ64 $ n+ι
 
--- esubst(𝑠,𝓈,e) ≡ 𝓈(𝑠⇈e)
-gsubstElem ∷ (Null 𝑠) ⇒ (𝑠 → e → 𝑂 e) → GDSubst 𝑠 e → GSubstElem 𝑠 e → GSubstElem 𝑠 e
-gsubstElem esubst 𝓈 = \case
-  Var_GSE n     → gsubstVar 𝓈 n
-  Val_GSE 𝑠 ueO → Val_GSE null $ \ () → esubst 𝑠 *$ ueO ()
+-------------------------------
+-- GENERIC SCOPED SUBSTITUTION --
+-------------------------------
 
-----------------------------
--- DE BRUIJN SUBSTITUTION --
-----------------------------
+data GSubst s₁ s₂ e = GSubst 
+  { gsubstGlobal ∷ s₁ ⇰ SubstElem s₂ e
+  , gsubstScoped ∷ s₂ ⇰ DSubst s₂ e 
+  } 
+  deriving (Eq,Ord,Show)
+makeLenses ''GSubst
+makePrettyUnion ''GSubst
 
-type DSubstElem = GSubstElem ℕ64
+instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy a) ⇒ Fuzzy (GSubst s₁ s₂ a) where 
+  fuzzy = do
+    esᴳ ← fuzzy
+    𝓈 ← fuzzy
+    return $ GSubst esᴳ 𝓈
 
-newtype DSubst e = DSubst { unDSubst ∷ GDSubst ℕ64 e }
+𝓈shiftG ∷ (Ord s₂) ⇒ s₂ ⇰ ℕ64 → GSubst s₁ s₂ e → GSubst s₁ s₂ e
+𝓈shiftG 𝑠 (GSubst esᴳ 𝓈s) = 
+  let 𝓈s' = mapWithKeyOn 𝓈s $ \ s (DSubst ρ es ι) →
+        let ρ'  = ρ + ifNone 0 (𝑠 ⋕? s)
+            es' = mapOn es $ introSSubstElem s 𝑠
+        in DSubst ρ' es' ι
+      esᴳ' = mapOn esᴳ $ introSubstElem 𝑠
+  in GSubst esᴳ' 𝓈s'
 
-introDSubstElem ∷ ℕ64 → DSubstElem e → DSubstElem e
-introDSubstElem = introGSubstElem (+)
+𝓈introG ∷ s₂ ⇰ ℕ64 → GSubst s₁ s₂ e
+𝓈introG 𝑠 = GSubst null $ mapOn 𝑠 $ DSubst 0 null ∘ intΩ64
 
-𝓈shiftD ∷ ℕ64 → DSubst e → DSubst e
-𝓈shiftD n 𝓈 =
-  let GDSubst ρ es ι = unDSubst 𝓈
-      ρ'             = ρ+n
-      es'            = mapOn es $ introDSubstElem n
-  in DSubst $ GDSubst ρ' es' ι
-
-𝓈introD ∷ ℕ64 → DSubst e
-𝓈introD n = DSubst $ GDSubst zero null $ intΩ64 n
-
-𝓈bindsD ∷ 𝕍 e → DSubst e
-𝓈bindsD es = 
-  let ℯs = map (Val_GSE 0 ∘ const ∘ return) es
+𝓈sbindsG ∷ s₂ ⇰ 𝕍 e → GSubst s₁ s₂ e
+𝓈sbindsG ess = GSubst null $ mapOn ess $ \ es →
+  let ℯs = map (Trm_SSE ∘ SubstElem null ∘ const ∘ return) es
       ι  = neg $ intΩ64 $ csize es
-  in DSubst $ GDSubst zero ℯs ι
+  in DSubst zero ℯs ι
 
-𝓈bindD ∷ e → DSubst e
-𝓈bindD = 𝓈bindsD ∘ single
+𝓈sbindG ∷ (Ord s₂) ⇒ s₂ → e → GSubst s₁ s₂ e
+𝓈sbindG s e = 𝓈sbindsG $ s ↦ single e
 
-dsubstElem ∷ (DSubst e → ℕ64 → e → 𝑂 e) → DSubst e → DSubstElem e → DSubstElem e
-dsubstElem esubst 𝓈 = gsubstElem (esubst 𝓈) $ unDSubst 𝓈
+𝓈gbindsG ∷ s₁ ⇰ e → GSubst s₁ s₂ e
+𝓈gbindsG esᴳ = GSubst (map (SubstElem null ∘ const ∘ return) esᴳ) null
+
+𝓈gbindG ∷ (Ord s₁) ⇒ s₁ → e → GSubst s₁ s₂ e
+𝓈gbindG s e = 𝓈gbindsG $ s ↦ e
 
 -- 𝓈₁ ≜ ⟨ρ₁,es₁,ι₁⟩
 -- 𝓈₂ ≜ ⟨ρ₂,es₂,ι₂⟩
@@ -161,324 +210,221 @@ dsubstElem esubst 𝓈 = gsubstElem (esubst 𝓈) $ unDSubst 𝓈
 --     𝔰 ≜ |es|
 --   ρ+𝔰 = (ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁)
 --     𝔰 = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
-
-dsubstAppend ∷ (DSubst e → e → 𝑂 e) → DSubst e → DSubst e → DSubst e
-dsubstAppend esubst 𝓈₂ 𝓈₁ =
-  if
-  | isNullGDSubst $ unDSubst 𝓈₁ → 𝓈₂
-  | isNullGDSubst $ unDSubst 𝓈₂ → 𝓈₁
-  | otherwise →
-      let GDSubst ρ̇₂ es₂ ι₂ = unDSubst 𝓈₂
-          GDSubst ρ̇₁ es₁ ι₁ = unDSubst 𝓈₁
-          𝔰₁ = intΩ64 $ csize es₁
-          𝔰₂ = intΩ64 $ csize es₂
-          ρ₁  = intΩ64 ρ̇₁
-          ρ₂  = intΩ64 ρ̇₂
-          ρ̇   = ρ̇₁⊓ρ̇₂
-          ρ   = intΩ64 ρ̇
-          ι   = ι₁+ι₂
-          𝔰  = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
-          δ₂  = ρ
-          sub = dsubstElem $ \ 𝓈 n → esubst $ dsubstAppend esubst (𝓈introD n) 𝓈
-          es = vecF (natΩ64 𝔰) $ \ ṅ → 
-            let n = intΩ64 ṅ + δ₂ in 
-            if
-            | n < ρ₁⊓(ρ₂+𝔰₂) → es₂ ⋕! natΩ64 (n-ρ₂)
-            | n < ρ₁         → Var_GSE $ natΩ64 $ n+ι₂
-            | n < ρ₁+𝔰₁      → sub 𝓈₂ $ es₁ ⋕! natΩ64 (n-ρ₁)
-            | n < ρ₂-ι₁      → Var_GSE $ natΩ64 $ n+ι₁
-            | n < ρ₂+𝔰₂-ι₁   → es₂ ⋕! natΩ64 (n+ι₁-ρ₂)
-            | otherwise      → error "bad"
-      in
-      DSubst $ GDSubst ρ̇ es ι
-
--------------------------
--- SCOPED SUBSTITUTION --
--------------------------
-
-type SubstElem s = GSubstElem (s ⇰ ℕ64)
-data Subst s₁ s₂ e = Subst 
-  { substGlobal ∷ s₁ ⇰ ((s₂ ⇰ ℕ64) ∧ (() → 𝑂 e))
-  , substScoped ∷ s₂ ⇰ GDSubst (s₂ ⇰ ℕ64) e 
-  } 
-  deriving (Eq)
-makeLenses ''Subst
-makePrettyUnion ''Subst
-
-introSubstElem ∷ (Ord s) ⇒ s → s ⇰ ℕ64 → SubstElem s e → SubstElem s e
-introSubstElem s = introGSubstElem $ \ 𝑠 n → n + ifNone 0 (𝑠 ⋕? s)
-
-𝓈shiftG ∷ (Ord s₂) ⇒ s₂ ⇰ ℕ64 → Subst s₁ s₂ e → Subst s₁ s₂ e
-𝓈shiftG 𝑠 (Subst esᴳ 𝓈s) = 
-  let 𝓈s' = mapWithKeyOn 𝓈s $ \ s 𝓈 →
-        case 𝑠 ⋕? s of
-          None   → 𝓈
-          Some n →
-            let GDSubst ρ es ι = 𝓈
-                ρ'             = ρ+n
-                es'            = mapOn es $ introSubstElem s 𝑠
-            in GDSubst ρ' es' ι
-      esᴳ' = mapOn esᴳ $ \ (𝑠' :* ueO) → (𝑠'+𝑠) :* ueO
-  in Subst esᴳ' 𝓈s'
-
-𝓈introG ∷ s₂ ⇰ ℕ64 → Subst s₁ s₂ e
-𝓈introG 𝑠 = Subst null $ mapOn 𝑠 $ GDSubst 0 null ∘ intΩ64
-
-𝓈sbindsG ∷ s₂ ⇰ 𝕍 e → Subst s₁ s₂ e
-𝓈sbindsG ess = Subst null $ mapOn ess $ \ es →
-  let ℯs = map (Val_GSE null ∘ const ∘ return) es
-      ι  = neg $ intΩ64 $ csize es
-  in GDSubst zero ℯs ι
-
-𝓈sbindG ∷ (Ord s₂) ⇒ s₂ → e → Subst s₁ s₂ e
-𝓈sbindG s e = 𝓈sbindsG $ s ↦ single e
-
-𝓈gbindsG ∷ s₁ ⇰ e → Subst s₁ s₂ e
-𝓈gbindsG esᴳ = Subst (map ((:*) null ∘ const ∘ return) esᴳ) null
-
-𝓈gbindG ∷ (Ord s₁) ⇒ s₁ → e → Subst s₁ s₂ e
-𝓈gbindG s e = 𝓈gbindsG $ s ↦ e
-
-substElem 
-  ∷ (Ord s₂) 
-  ⇒ s₂ 
-  → (Subst s₁ s₂ e → s₂ ⇰ ℕ64 → e → 𝑂 e) 
-  → Subst s₁ s₂ e 
-  → SubstElem s₂ e 
-  → SubstElem s₂ e
-substElem s esubst 𝓈̂ = 
-  let Subst _esᴳ 𝓈s = 𝓈̂
-  in 
-  case 𝓈s ⋕? s of
-    None   → id
-    Some 𝓈 → gsubstElem (esubst 𝓈̂) 𝓈
-
-substAppend ∷ 
+appendGSubst ∷ 
   (Ord s₁,Ord s₂) 
-  ⇒ (Subst s₁ s₂ e → e → 𝑂 e) 
-  → Subst s₁ s₂ e 
-  → Subst s₁ s₂ e 
-  → Subst s₁ s₂ e
-substAppend esubst 𝓈̂₂ 𝓈̂₁ =
-  let Subst esᴳ₁ 𝓈s₁ = 𝓈̂₁
-      Subst esᴳ₂ 𝓈s₂ = 𝓈̂₂
-      esᴳ₁' = mapOn esᴳ₁ $ \ (𝑠 :* ueO) → (:*) null $ \ () →
-        esubst (substAppend esubst 𝓈̂₂ (𝓈introG 𝑠)) *$ ueO ()
+  ⇒ (GSubst s₁ s₂ e → e → 𝑂 e) 
+  → GSubst s₁ s₂ e 
+  → GSubst s₁ s₂ e 
+  → GSubst s₁ s₂ e
+appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
+  let GSubst esᴳ₁ 𝓈s₁ = 𝓈̂₁
+      GSubst esᴳ₂ 𝓈s₂ = 𝓈̂₂
+      esub 𝓈 𝑠 = esubst $ appendGSubst esubst 𝓈 $ 𝓈introG 𝑠
+      ℯsub s 𝓈 = subSSubstElem (elim𝑂 Var_SSE dsubstVar $ gsubstScoped 𝓈 ⋕? s) $ esub 𝓈
+      esᴳ₁' = mapOn esᴳ₁ $ subSubstElem $ esub 𝓈̂₂
       esᴳ = esᴳ₁' ⩌ esᴳ₂ 
-      𝓈s = unionWithKeyOn 𝓈s₂ 𝓈s₁ $ \ s 𝓈₂@(GDSubst ρ̇₂ es₂ ι₂) 𝓈₁@(GDSubst ρ̇₁ es₁ ι₁) →
+      𝓈s₁' = mapWithKeyOn 𝓈s₁ $ \ s (DSubst ρ̇₁ es₁ ι₁) → DSubst ρ̇₁ (mapOn es₁ $ ℯsub s 𝓈̂₂) ι₁
+      𝓈s = unionWithOn 𝓈s₂ 𝓈s₁' $ \ 𝓈₂@(DSubst ρ̇₂ es₂ ι₂) 𝓈₁@(DSubst ρ̇₁ es₁ ι₁) →
         if
-        | isNullGDSubst 𝓈₁ → 𝓈₂
-        | isNullGDSubst 𝓈₂ → 𝓈₁
+        | isNullDSubst 𝓈₁ → 𝓈₂
+        | isNullDSubst 𝓈₂ → 𝓈₁
         | otherwise →
             let 𝔰₁ = intΩ64 $ csize es₁
                 𝔰₂ = intΩ64 $ csize es₂
-                ρ₁  = intΩ64 ρ̇₁
-                ρ₂  = intΩ64 ρ̇₂
-                ρ̇   = ρ̇₁⊓ρ̇₂
-                ρ   = intΩ64 ρ̇
-                ι   = ι₁+ι₂
+                ρ₁ = intΩ64 ρ̇₁
+                ρ₂ = intΩ64 ρ̇₂
+                ρ̇  = ρ̇₁⊓ρ̇₂
+                ρ  = intΩ64 ρ̇
+                ι  = ι₁+ι₂
                 𝔰  = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
-                δ₂  = ρ
-                sub = substElem s $ \ 𝓈 𝑠 → esubst $ substAppend esubst (𝓈introG 𝑠) 𝓈
+                δ  = ρ
                 es = vecF (natΩ64 𝔰) $ \ ṅ → 
-                  let n = intΩ64 ṅ + δ₂ in 
+                  let n = intΩ64 ṅ + δ in 
                   if
                   | n < ρ₁⊓(ρ₂+𝔰₂) → es₂ ⋕! natΩ64 (n-ρ₂)
-                  | n < ρ₁         → Var_GSE $ natΩ64 $ n+ι₂
-                  | n < ρ₁+𝔰₁      → sub 𝓈̂₂ $ es₁ ⋕! natΩ64 (n-ρ₁)
-                  | n < ρ₂-ι₁      → Var_GSE $ natΩ64 $ n+ι₁
+                  | n < ρ₁         → Var_SSE $ natΩ64 $ n+ι₂
+                  | n < ρ₁+𝔰₁      → es₁ ⋕! natΩ64 (n-ρ₁)
+                  | n < ρ₂-ι₁      → Var_SSE $ natΩ64 $ n+ι₁
                   | n < ρ₂+𝔰₂-ι₁   → es₂ ⋕! natΩ64 (n+ι₁-ρ₂)
                   | otherwise      → error "bad"
             in
-            GDSubst ρ̇ es ι
-  in Subst esᴳ 𝓈s
+            DSubst ρ̇ es ι
+  in GSubst esᴳ 𝓈s
 
--- ====== --
--- SUBSTY --
--- ====== --
+-------------------------------------------
+-- SUBSTY (STANDARD SCOPED SUBSTITUTION) --
+-------------------------------------------
 
-newtype SubstT s₁ s₂ e a = SubstT { unSubstT ∷ UContT (ReaderT (Subst s₁ s₂ e) (FailT ID)) a }
+newtype Subst s e = Subst { unSubst ∷ GSubst 𝕏 (s ∧ 𝑂 𝕏) e }
+  deriving (Eq,Ord,Show,Pretty,Fuzzy)
+makeLenses ''Subst
+
+data SubstEnv s e = SubstEnv
+  { substEnvRenam ∷ 𝑂 (𝔹 ∧ (𝕐 → e))
+  , substEnvSubst ∷ Subst s e
+  }
+makeLenses ''SubstEnv
+
+newtype SubstM s e a = SubstM { unSubstM ∷ UContT (ReaderT (SubstEnv s e) (FailT ID)) a }
   deriving
   ( Return,Bind,Functor,Monad
   , MonadUCont
-  , MonadReader (Subst s₁ s₂ e)
+  , MonadReader (SubstEnv s e)
   , MonadFail
   )
 
-runSubstT ∷ Subst s₁ s₂ e → SubstT s₁ s₂ e a → 𝑂 a
-runSubstT γ = unID ∘ unFailT ∘ runReaderT γ ∘ evalUContT ∘ unSubstT
+runSubstM ∷ SubstEnv s e → SubstM s e a → 𝑂 a
+runSubstM γ = unID ∘ unFailT ∘ runReaderT γ ∘ evalUContT ∘ unSubstM
 
-class Substy s₁ s₂ e a | a→s₁,a→s₂,a→e where
-  substy ∷ a → SubstT s₁ s₂ e a
+class Substy s e a | a→s,a→e where
+  substy ∷ a → SubstM s e a
 
-subst ∷ (Substy s₁ s₂ e a) ⇒ Subst s₁ s₂ e → a → 𝑂 a
-subst 𝓈 x = runSubstT 𝓈 $ substy x
+subst ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
+subst 𝓈 = runSubstM (SubstEnv None 𝓈) ∘ substy
 
-instance                                    Null   (Subst s₁ s₂ e) where null = Subst null null
-instance (Ord s₁,Ord s₂,Substy s₁ s₂ e e) ⇒ Append (Subst s₁ s₂ e) where (⧺)  = substAppend subst
-instance (Ord s₁,Ord s₂,Substy s₁ s₂ e e) ⇒ Monoid (Subst s₁ s₂ e)
+todbr ∷ (Substy s e a) ⇒ (𝕐 → e) → a → 𝑂 a
+todbr 𝓋 = runSubstM (SubstEnv (Some (True :* 𝓋)) null) ∘ substy
 
-substyDBdrG ∷ (Ord s₂) ⇒ s₂ → SubstT s₁ s₂ e ()
-substyDBdrG s = umodifyEnv $ 𝓈shiftG $ s ↦ 1
+frdbr ∷ (Substy s e a) ⇒ (𝕐 → e) → a → 𝑂 a
+frdbr 𝓋 = runSubstM (SubstEnv (Some (False :* 𝓋)) null) ∘ substy
 
-substyNBdrG ∷ (Ord s₂) ⇒ (𝕏 → s₂) → 𝕏 → SubstT s₁ s₂ e ()
-substyNBdrG 𝒸 x = umodifyEnv $ 𝓈shiftG $ 𝒸 x ↦ 1
+nullSubst ∷ Subst s e
+nullSubst = Subst $ GSubst null null
 
-substyVarG ∷ (Ord s₂,Substy s₁ s₂ e e) ⇒ (ℕ64 → e) → s₂ → ℕ64 → SubstT s₁ s₂ e e
-substyVarG 𝓋 s n = do
-  𝓈s ← askL substScopedL
-  case 𝓈s ⋕? s of
-    None → return $ 𝓋 n
-    Some 𝓈 → case gsubstVar 𝓈 n of
-      Var_GSE n' → return $ 𝓋 n'
-      Val_GSE 𝑠 ueO → failEff $ subst (𝓈introG 𝑠) *$ ueO ()
+appendSubst ∷ (Ord s,Substy s e e) ⇒ Subst s e → Subst s e → Subst s e
+appendSubst 𝓈₂ 𝓈₁ = Subst $ appendGSubst (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
 
-substyDVarG ∷ (Ord s₂,Substy s₁ s₂ e e) ⇒ s₂ → (ℕ64 → e) → ℕ64 → SubstT s₁ s₂ e e
-substyDVarG s 𝓋 = substyVarG 𝓋 s
+instance                        Null   (Subst s e) where null = nullSubst
+instance (Ord s,Substy s e e) ⇒ Append (Subst s e) where (⧺)  = appendSubst
+instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 
-substyNVarG ∷ (Ord s₂,Substy s₁ s₂ e e) ⇒ (𝕏 → s₂) → (ℕ64 → e) → 𝕏 → ℕ64 → SubstT s₁ s₂ e e
-substyNVarG 𝒸 𝓋 x = substyVarG 𝓋 $ 𝒸 x
+𝓈sdshift ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst s e → Subst s e
+𝓈sdshift = alter unSubstL ∘ 𝓈shiftG ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
-substyGVarG ∷ (Ord s₁,Substy s₁ s₂ e e) ⇒ (𝕏 → s₁) → (𝕏 → e) → 𝕏 → SubstT s₁ s₂ e e
-substyGVarG 𝒸 𝓋 x = do
-  gsᴱ ← askL substGlobalL
-  case gsᴱ ⋕? 𝒸 x of
-    None → return $ 𝓋 x
-    Some (𝑠 :* ueO) → failEff $ subst (𝓈introG 𝑠) *$ ueO ()
-
---------------------
--- Standard Scope --
---------------------
-
-data 𝔖 s = 
-    Dbr_𝔖 s
-  | Nmd_𝔖 s 𝕏
-  deriving (Eq,Ord,Show)
-makePrettyUnion ''𝔖
-
-substyDBdr ∷ (Ord s) ⇒ s → SubstT 𝕏 (𝔖 s) e ()
-substyDBdr s = substyDBdrG $ Dbr_𝔖 s
-
-substyNBdr ∷ (Ord s) ⇒ s → 𝕏 → SubstT 𝕏 (𝔖 s) e ()
-substyNBdr s = substyNBdrG $ Nmd_𝔖 s
-
-substyDVar ∷ (Ord s,Substy 𝕏 (𝔖 s) e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstT 𝕏 (𝔖 s) e e
-substyDVar s = substyDVarG $ Dbr_𝔖 s
-
-substyNVar ∷ (Ord s,Substy 𝕏 (𝔖 s) e e) ⇒ s → (ℕ64 → e) → 𝕏 → ℕ64 → SubstT 𝕏 (𝔖 s) e e
-substyNVar s = substyNVarG $ Nmd_𝔖 s
-
-substyGVar ∷ (Substy 𝕏 (𝔖 s) e e) ⇒ (𝕏 → e) → 𝕏 → SubstT 𝕏 (𝔖 s) e e
-substyGVar = substyGVarG id 
-
-substy𝕐 ∷ (Ord s,Substy 𝕏 (𝔖 s) e e) ⇒ s → (𝕐 → e) → 𝕐 → SubstT 𝕏 (𝔖 s) e e
-substy𝕐 s 𝓋 = \case
-  DVar n → substyDVar s (𝓋 ∘ DVar) n
-  NVar n x → substyNVar s (𝓋 ∘ flip NVar x) x n
-  GVar x → substyGVar (𝓋 ∘ GVar) x
-
-𝓈sdshift ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst 𝕏 (𝔖 s) e → Subst 𝕏 (𝔖 s) e
-𝓈sdshift = 𝓈shiftG ∘ assoc ∘ map (mapFst Dbr_𝔖) ∘ iter
-
-𝓈snshift ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ ℕ64 → Subst 𝕏 (𝔖 s) e → Subst 𝕏 (𝔖 s) e
-𝓈snshift 𝑠 = 𝓈shiftG $ assoc $ do
+𝓈snshift ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ ℕ64 → Subst s e → Subst s e
+𝓈snshift 𝑠 = alter unSubstL $ 𝓈shiftG $ assoc $ do
   s :* xns ← iter 𝑠
   x :* n ← iter xns
-  return $ (Nmd_𝔖 s x) :* n
+  return $ s :* Some x :* n
 
-𝓈sdintro ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst 𝕏 (𝔖 s) e
-𝓈sdintro = 𝓈introG ∘ assoc ∘ map (mapFst Dbr_𝔖) ∘ iter
+𝓈sdintro ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst s e
+𝓈sdintro = Subst ∘ 𝓈introG ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
-𝓈snintro ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ ℕ64 → Subst 𝕏 (𝔖 s) e
-𝓈snintro 𝑠 = 𝓈introG $ assoc $ do
+𝓈snintro ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ ℕ64 → Subst s e
+𝓈snintro 𝑠 = Subst $ 𝓈introG $ assoc $ do
   s :* xns ← iter 𝑠
   x :* n ← iter xns
-  return $ (Nmd_𝔖 s x) :* n
+  return $ s :* Some x :* n
 
-𝓈sdbinds ∷ (Ord s) ⇒ s ⇰ 𝕍 e → Subst 𝕏 (𝔖 s) e
-𝓈sdbinds = 𝓈sbindsG ∘ assoc ∘ map (mapFst Dbr_𝔖) ∘ iter
+𝓈sdbinds ∷ (Ord s) ⇒ s ⇰ 𝕍 e → Subst s e
+𝓈sdbinds = Subst ∘ 𝓈sbindsG ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
-𝓈sdbind ∷ (Ord s) ⇒ s → e → Subst 𝕏 (𝔖 s) e
+𝓈sdbind ∷ (Ord s) ⇒ s → e → Subst s e
 𝓈sdbind s e = 𝓈sdbinds $ s ↦ single e
 
-𝓈snbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ 𝕍 e → Subst 𝕏 (𝔖 s) e
-𝓈snbinds 𝑠 = 𝓈sbindsG $ assoc $ do
+𝓈snbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ 𝕍 e → Subst s e
+𝓈snbinds 𝑠 = Subst $ 𝓈sbindsG $ assoc $ do
   s :* xess ← iter 𝑠
   x :* es ← iter xess
-  return $ (Nmd_𝔖 s x) :* es
+  return $ s :* Some x :* es
 
-𝓈snbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst 𝕏 (𝔖 s) e
+𝓈snbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
 𝓈snbind s x e = 𝓈snbinds $ s ↦ x ↦ single e
 
-𝓈sgbinds ∷ (Ord s) ⇒ 𝕏 ⇰ e → Subst 𝕏 (𝔖 s) e
-𝓈sgbinds = 𝓈gbindsG
+𝓈gbinds ∷ (Ord s) ⇒ 𝕏 ⇰ e → Subst s e
+𝓈gbinds = Subst ∘ 𝓈gbindsG
 
-𝓈sgbind ∷ (Ord s) ⇒ 𝕏 → e → Subst 𝕏 (𝔖 s) e
-𝓈sgbind x e = 𝓈sgbinds $ x ↦ e
+𝓈gbind ∷ (Ord s) ⇒ 𝕏 → e → Subst s e
+𝓈gbind x e = 𝓈gbinds $ x ↦ e
 
-𝓈dshift ∷ ℕ64 → Subst 𝕏 (𝔖 ()) e → Subst 𝕏 (𝔖 ()) e
+𝓈dshift ∷ ℕ64 → Subst () e → Subst () e
 𝓈dshift = 𝓈sdshift ∘ (↦) ()
 
-𝓈nshift ∷ 𝕏 ⇰ ℕ64 → Subst 𝕏 (𝔖 ()) e → Subst 𝕏 (𝔖 ()) e
+𝓈nshift ∷ 𝕏 ⇰ ℕ64 → Subst () e → Subst () e
 𝓈nshift = 𝓈snshift ∘ (↦) ()
 
-𝓈dintro ∷ ℕ64 → Subst 𝕏 (𝔖 ()) e
+𝓈dintro ∷ ℕ64 → Subst () e
 𝓈dintro = 𝓈sdintro ∘ (↦) ()
 
-𝓈nintro ∷ 𝕏 ⇰ ℕ64 → Subst 𝕏 (𝔖 ()) e
+𝓈nintro ∷ 𝕏 ⇰ ℕ64 → Subst () e
 𝓈nintro = 𝓈snintro ∘ (↦) ()
 
-𝓈dbinds ∷ 𝕍 e → Subst 𝕏 (𝔖 ()) e
+𝓈dbinds ∷ 𝕍 e → Subst () e
 𝓈dbinds = 𝓈sdbinds ∘ (↦) ()
 
-𝓈dbind ∷ e → Subst 𝕏 (𝔖 ()) e
+𝓈dbind ∷ e → Subst () e
 𝓈dbind = 𝓈sdbind ()
 
-𝓈nbinds ∷ 𝕏 ⇰ 𝕍 e → Subst 𝕏 (𝔖 ()) e
+𝓈nbinds ∷ 𝕏 ⇰ 𝕍 e → Subst () e
 𝓈nbinds = 𝓈snbinds ∘ (↦) ()
 
-𝓈nbind ∷ 𝕏 → e → Subst 𝕏 (𝔖 ()) e
+𝓈nbind ∷ 𝕏 → e → Subst () e
 𝓈nbind = 𝓈snbind ()
 
-𝓈gbinds ∷ 𝕏 ⇰ e → Subst 𝕏 (𝔖 ()) e
-𝓈gbinds = 𝓈sgbinds
+substyDBdr ∷ (Ord s) ⇒ s → SubstM s e ()
+substyDBdr s = umodifyEnv $ alter substEnvSubstL $ 𝓈sdshift $ s ↦ 1
 
-𝓈gbind ∷ 𝕏 → e → Subst 𝕏 (𝔖 ()) e
-𝓈gbind = 𝓈sgbind
+substyNBdr ∷ (Ord s) ⇒ s → 𝕏 → SubstM s e ()
+substyNBdr s x = umodifyEnv $ alter substEnvSubstL $ 𝓈snshift $ s ↦ x ↦ 1
+
+substyBdr ∷ (Ord s,Substy s e e) ⇒ s → 𝕏 → SubstM s e ()
+substyBdr s x = do
+  substyDBdr s
+  substyNBdr s x
+  bb𝓋O ← askL substEnvRenamL
+  case bb𝓋O of
+    None → skip
+    Some (b :* 𝓋) → do
+      if b 
+      then
+        umodifyEnv $ alter substEnvSubstL $ flip (⧺) $ concat
+          [ 𝓈snintro $ s ↦ x ↦ 1
+          , 𝓈snbind s x $ 𝓋 $ DVar 0
+          ]
+      else
+        umodifyEnv $ alter substEnvSubstL $ flip (⧺) $ concat
+          [ 𝓈sdintro $ s ↦ 1
+          , 𝓈sdbind s $ 𝓋 $ NVar 0 x
+          ]
+
+substyVar ∷ (Ord s,Substy s e e) ⇒ 𝑂 𝕏 → s → (ℕ64 → e) → ℕ64 → SubstM s e e
+substyVar xO s 𝓋 n = do
+  𝓈s ← askL $ gsubstScopedL ⊚ unSubstL ⊚ substEnvSubstL
+  case 𝓈s ⋕? (s :* xO) of
+    None → return $ 𝓋 n
+    Some 𝓈 → case dsubstVar 𝓈 n of
+      Var_SSE n' → return $ 𝓋 n'
+      Trm_SSE (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
+
+substyDVar ∷ (Ord s,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstM s e e
+substyDVar = substyVar None
+
+substyNVar ∷ (Ord s,Substy s e e) ⇒ s → (ℕ64 → e) → 𝕏 → ℕ64 → SubstM s e e
+substyNVar s 𝓋 x = substyVar (Some x) s 𝓋
+
+substyGVar ∷ (Substy s e e) ⇒ (𝕏 → e) → 𝕏 → SubstM s e e
+substyGVar 𝓋 x = do
+  gsᴱ ← askL $ gsubstGlobalL ⊚ unSubstL ⊚ substEnvSubstL
+  case gsᴱ ⋕? x of
+    None → return $ 𝓋 x
+    Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
+
+substy𝕐 ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 → e) → 𝕐 → SubstM s e e
+substy𝕐 s 𝓋 = \case
+  DVar n   → substyDVar s (𝓋 ∘ DVar)        n
+  NVar n x → substyNVar s (𝓋 ∘ flip NVar x) x n
+  GVar   x → substyGVar   (𝓋 ∘ GVar)        x
 
 -----------
 -- Fuzzy --
 -----------
 
-fuzzyGSubstElem ∷ FuzzyM s → FuzzyM a → FuzzyM (GSubstElem s a)
-fuzzyGSubstElem sM xM = rchoose
-    [ \ () → Var_GSE ^$ fuzzy
-    , \ () → do
-        𝑠 ← sM
-        e ← xM
-        return $ Val_GSE 𝑠 $ const $ return e
-    ]
-
-fuzzyGDSubst ∷ FuzzyM s → FuzzyM a → FuzzyM (GDSubst s a)
-fuzzyGDSubst sM xM = do
-  ρ ← fuzzy
-  𝔰 ← fuzzy
-  es ← mapMOn (vecF 𝔰 id) $ const $ fuzzyGSubstElem sM xM
-  ι ← randr (neg $ intΩ64 𝔰) $ intΩ64 𝔰
-  return $ GDSubst ρ es ι
-
-fuzzy𝔖 ∷ FuzzyM s → FuzzyM (𝔖 s)
-fuzzy𝔖 sM = rchoose
-  [ \ () → Dbr_𝔖 ^$ sM
-  , \ () → do
-      s ← sM
-      x ← fuzzy
-      return $ Nmd_𝔖 s x
-  ]
-
-instance (Fuzzy s,Fuzzy a) ⇒ Fuzzy (GSubstElem s a) where fuzzy = fuzzyGSubstElem fuzzy fuzzy
-instance (Fuzzy s,Fuzzy a) ⇒ Fuzzy (GDSubst s a) where fuzzy = fuzzyGDSubst fuzzy fuzzy
-instance (Fuzzy s) ⇒ Fuzzy (𝔖 s) where fuzzy = fuzzy𝔖 fuzzy
-
-instance (Ord s₂,Fuzzy s₂,Fuzzy a) ⇒ Fuzzy (Subst s₁ s₂ a) where fuzzy = Subst null ^$ fuzzy
+-- instance (Fuzzy s) ⇒ Fuzzy (𝔖 s) where 
+--   fuzzy = rchoose
+--     [ \ () → D𝔖 ^$ fuzzy
+--     , \ () → do
+--         s ← fuzzy
+--         x ← fuzzy
+--         return $ N𝔖 s x
+--     ]
 

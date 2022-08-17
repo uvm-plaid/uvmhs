@@ -27,22 +27,24 @@ type ULCDExpSrc = ULCDExp SrcCxt
 type ULCDExpRaw = ULCDExp ()
 
 lexULCDExp ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexULCDExp = lexerBasic (list ["(",")","->","→"]) (list ["lam","λ"]) null null
+lexULCDExp = lexerBasic (list ["(",")","->","→","^","↑"]) (list ["lam","λ"]) null null
 
 pULCDExp ∷ CParser TokenBasic ULCDExpSrc
 pULCDExp = ULCDExp ^$ fmixfixWithContext "exp" $ concat
   [ fmixTerminal $ do
-      void $ cpToken $ SyntaxTBasic "("
+      void $ cpSyntax "("
       e ← pULCDExp
-      void $ cpToken $ SyntaxTBasic ")"
+      void $ cpSyntax ")"
       return $ aval $ unULCDExp e
   , fmixTerminal $ do
-      n ← cpInteger
-      n' ← failEff $ natO64 n
-      return $ Var_ULCD $ DVar n'
+      n ← failEff ∘ natO64 *$ cpInteger
+      return $ Var_ULCD $ DVar n
   , fmixTerminal $ do
       x ← cpVar
-      return $ Var_ULCD $ NVar 0 x
+      n ← ifNone 0 ^$ cpOptional $ do
+        void $ concat $ map cpSyntax ["^","↑"]
+        failEff ∘ natO64 *$ cpInteger
+      return $ Var_ULCD $ NVar n x
   , fmixPrefix pLET $ do
       void $ concat $ map cpSyntax ["lam","λ"]
       xO ← cpOptional $ cpVar
@@ -101,14 +103,13 @@ instance Fuzzy ULCDExpRaw where
           ]
       ]
 
-instance Substy 𝕏 (𝔖 ()) (ULCDExp 𝒸) (ULCDExp 𝒸) where
+instance Substy () (ULCDExp 𝒸) (ULCDExp 𝒸) where
   substy = pipe unULCDExp $ \ (𝐴 𝒸 e₀) → ULCDExp ^$ case e₀ of
     Var_ULCD x → unULCDExp ^$ substy𝕐 () (ULCDExp ∘  𝐴 𝒸 ∘ Var_ULCD) x
     Lam_ULCD xO e → ureset $ do
-      substyDBdr ()
       case xO of
-        None → skip
-        Some x → substyNBdr () x
+        None → substyDBdr ()
+        Some x → substyBdr () x
       e' ← substy e
       return $ 𝐴 𝒸 $ Lam_ULCD xO e'
     App_ULCD e₁ e₂ → do

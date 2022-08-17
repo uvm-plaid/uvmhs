@@ -169,34 +169,6 @@ untilPass f xM = loop
 -- FUZZY INSTANCES --
 ---------------------
 
-fuzzy𝑂 ∷ (Monad m,MonadRand m) ⇒ m a → m (𝑂 a)
-fuzzy𝑂 xM = rchoose
-  [ const $ return None
-  , const $ Some ^$ xM
-  ]
-
-prandChoice ∷ (Monad m,MonadRand m) ⇒ m a → m b → m (a ∨ b)
-prandChoice xM yM = rchoose
-  [ const $ Inl ^$ xM
-  , const $ Inr ^$ yM
-  ]
-
-prandPair ∷ (Monad m,MonadRand m) ⇒ m a → m b → m (a ∧ b)
-prandPair xM yM = do
-  x ← xM
-  y ← yM
-  return $ x :* y
-
-fuzzyList ∷ FuzzyM a → FuzzyM (𝐿 a)
-fuzzyList xM = do
-  w ← (×2) ^$ askL fuzzyEnvRadiusL
-  list ^$ mapMOn (upto w) $ const xM
-
-fuzzyDict ∷ (Ord k) ⇒ FuzzyM k → FuzzyM v → FuzzyM (k ⇰ v)
-fuzzyDict xM yM = do
-  n ← (×2) ^$ askL fuzzyEnvRadiusL
-  assoc ^$ mapMOn (upto n) $ const $ prandPair xM yM
-
 instance Fuzzy ℕ64 where fuzzy = randr zero          ∘ (×2) *$ askL fuzzyEnvRadiusL
 instance Fuzzy ℕ32 where fuzzy = randr zero ∘ natΩ32 ∘ (×2) *$ askL fuzzyEnvRadiusL
 instance Fuzzy ℕ16 where fuzzy = randr zero ∘ natΩ16 ∘ (×2) *$ askL fuzzyEnvRadiusL
@@ -209,10 +181,31 @@ instance Fuzzy ℤ8  where fuzzy = randrRadius ∘ intΩ8  *$ askL fuzzyEnvRadiu
 
 instance Fuzzy 𝔻   where fuzzy = randrRadius ∘ dbl    *$ askL fuzzyEnvRadiusL
 
-instance                     Fuzzy ()      where fuzzy = return ()
-instance (Fuzzy a)         ⇒ Fuzzy (𝑂 a)   where fuzzy = fuzzy𝑂 fuzzy
-instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∨ b) where fuzzy = prandChoice fuzzy fuzzy
-instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∧ b) where fuzzy = prandPair fuzzy fuzzy
-instance (Fuzzy a)         ⇒ Fuzzy (𝐿 a)   where fuzzy = fuzzyList fuzzy
+instance Fuzzy () where fuzzy = return ()
+instance (Fuzzy a) ⇒ Fuzzy (() → a) where fuzzy = const ^$ fuzzy
 
-instance (Ord k,Fuzzy k,Fuzzy v) ⇒ Fuzzy (k ⇰ v) where fuzzy = fuzzyDict fuzzy fuzzy
+instance (Fuzzy a) ⇒ Fuzzy (𝑂 a) where 
+  fuzzy = rchoose
+    [ const $ return None
+    , const $ Some ^$ fuzzy
+    ]
+
+instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∨ b) where 
+  fuzzy = rchoose
+    [ const $ Inl ^$ fuzzy
+    , const $ Inr ^$ fuzzy
+    ]
+
+instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∧ b) where 
+  fuzzy = do
+    x ← fuzzy
+    y ← fuzzy
+    return $ x :* y
+
+instance (Fuzzy a) ⇒ Fuzzy (𝐿 a) where 
+  fuzzy = do
+    w ← (×2) ^$ askL fuzzyEnvRadiusL
+    list ^$ mapMOn (upto w) $ const fuzzy
+
+instance (Ord k,Fuzzy k,Fuzzy v) ⇒ Fuzzy (k ⇰ v) where 
+  fuzzy = assoc ^$ fuzzy @(𝐿 _)
