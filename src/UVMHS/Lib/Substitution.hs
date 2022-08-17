@@ -259,34 +259,57 @@ newtype Subst s e = Subst { unSubst ∷ GSubst 𝕏 (s ∧ 𝑂 𝕏) e }
   deriving (Eq,Ord,Show,Pretty,Fuzzy)
 makeLenses ''Subst
 
-data SubstEnv s e = SubstEnv
-  { substEnvRenam ∷ 𝑂 (𝔹 ∧ (𝕐 → e))
-  , substEnvSubst ∷ Subst s e
-  }
-makeLenses ''SubstEnv
+data FreeVars s = FreeVars
+  { freeVarsGlobal ∷ 𝑃 𝕏
+  , freeVarsScoped ∷ (s ∧ 𝑂 𝕏) ⇰ 𝑃 ℕ64
+  } deriving (Eq,Ord,Show)
+makeLenses ''FreeVars
+makePrettyRecord ''FreeVars
 
-newtype SubstM s e a = SubstM { unSubstM ∷ UContT (ReaderT (SubstEnv s e) (FailT ID)) a }
-  deriving
+instance Null (FreeVars s) where 
+  null = FreeVars null null
+instance (Ord s) ⇒ Append (FreeVars s) where 
+  FreeVars xs₁ sys₁ ⧺ FreeVars xs₂ sys₂ = FreeVars (xs₁ ⧺ xs₂) $ sys₁ ⧺ sys₂
+instance (Ord s) ⇒ Monoid (FreeVars s)
+
+data SubstAction s e = SubstAction
+  { substActionRebnd ∷ 𝑂 𝔹
+  , substActionSubst ∷ Subst s e
+  }
+makeLenses ''SubstAction
+
+data SubstEnv s e = 
+    FVsSubstEnv ((s ∧ 𝑂 𝕏) ⇰ ℕ64)
+  | SubSubstEnv (SubstAction s e)
+makePrisms ''SubstEnv
+
+newtype SubstM s e a = SubstM 
+  { unSubstM ∷ UContT (ReaderT (SubstEnv s e) (FailT (WriterT (FreeVars s) ID))) a 
+  } deriving
   ( Return,Bind,Functor,Monad
   , MonadUCont
   , MonadReader (SubstEnv s e)
+  , MonadWriter (FreeVars s)
   , MonadFail
   )
 
-runSubstM ∷ SubstEnv s e → SubstM s e a → 𝑂 a
-runSubstM γ = unID ∘ unFailT ∘ runReaderT γ ∘ evalUContT ∘ unSubstM
+runSubstM ∷ SubstEnv s e → SubstM s e a → FreeVars s ∧ 𝑂 a
+runSubstM γ = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ evalUContT ∘ unSubstM
 
 class Substy s e a | a→s,a→e where
   substy ∷ a → SubstM s e a
 
 subst ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
-subst 𝓈 = runSubstM (SubstEnv None 𝓈) ∘ substy
+subst 𝓈 = snd ∘ runSubstM (SubSubstEnv $ SubstAction None 𝓈) ∘ substy
 
-todbr ∷ (Substy s e a) ⇒ (𝕐 → e) → a → 𝑂 a
-todbr 𝓋 = runSubstM (SubstEnv (Some (True :* 𝓋)) null) ∘ substy
+todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
+todbr = snd ∘ runSubstM (SubSubstEnv $ SubstAction (Some True) null) ∘ substy
 
-frdbr ∷ (Substy s e a) ⇒ (𝕐 → e) → a → 𝑂 a
-frdbr 𝓋 = runSubstM (SubstEnv (Some (False :* 𝓋)) null) ∘ substy
+tonmd ∷ (Substy s e a) ⇒ a → 𝑂 a
+tonmd = snd ∘ runSubstM (SubSubstEnv $ SubstAction (Some False) null) ∘ substy
+
+freev ∷ (Substy s e a) ⇒ a → FreeVars s
+freev = fst ∘ runSubstM (FVsSubstEnv null) ∘ substy
 
 nullSubst ∷ Subst s e
 nullSubst = Subst $ GSubst null null
@@ -362,39 +385,53 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈nbind = 𝓈snbind ()
 
 substyDBdr ∷ (Ord s) ⇒ s → SubstM s e ()
-substyDBdr s = umodifyEnv $ alter substEnvSubstL $ 𝓈sdshift $ s ↦ 1
+substyDBdr s = umodifyEnv $ compose
+  [ alter subSubstEnvL $ alter substActionSubstL $ 𝓈sdshift $ s ↦ 1
+  , alter fVsSubstEnvL $ (⧺) $ (s :* None) ↦ 1
+  ]
 
 substyNBdr ∷ (Ord s) ⇒ s → 𝕏 → SubstM s e ()
-substyNBdr s x = umodifyEnv $ alter substEnvSubstL $ 𝓈snshift $ s ↦ x ↦ 1
+substyNBdr s x = umodifyEnv $ compose
+  [ alter subSubstEnvL $ alter substActionSubstL $ 𝓈snshift $ s ↦ x ↦ 1
+  , alter fVsSubstEnvL $ (⧺) $ (s :* Some x) ↦ 1
+  ]
 
-substyBdr ∷ (Ord s,Substy s e e) ⇒ s → 𝕏 → SubstM s e ()
-substyBdr s x = do
+substyBdr ∷ (Ord s,Substy s e e) ⇒ s → 𝕏 → (𝕐 → e) → SubstM s e ()
+substyBdr s x 𝓋 = do
   substyDBdr s
   substyNBdr s x
-  bb𝓋O ← askL substEnvRenamL
-  case bb𝓋O of
+  bO ← access substActionRebndL *∘ view subSubstEnvL ^$ ask
+  case bO of
     None → skip
-    Some (b :* 𝓋) → do
+    Some b → do
       if b 
       then
-        umodifyEnv $ alter substEnvSubstL $ flip (⧺) $ concat
+        umodifyEnv $ alter subSubstEnvL $ alter substActionSubstL $ flip (⧺) $ concat
           [ 𝓈snintro $ s ↦ x ↦ 1
           , 𝓈snbind s x $ 𝓋 $ DVar 0
           ]
       else
-        umodifyEnv $ alter substEnvSubstL $ flip (⧺) $ concat
+        umodifyEnv $ alter subSubstEnvL $ alter substActionSubstL $ flip (⧺) $ concat
           [ 𝓈sdintro $ s ↦ 1
           , 𝓈sdbind s $ 𝓋 $ NVar 0 x
           ]
 
 substyVar ∷ (Ord s,Substy s e e) ⇒ 𝑂 𝕏 → s → (ℕ64 → e) → ℕ64 → SubstM s e e
 substyVar xO s 𝓋 n = do
-  𝓈s ← askL $ gsubstScopedL ⊚ unSubstL ⊚ substEnvSubstL
-  case 𝓈s ⋕? (s :* xO) of
-    None → return $ 𝓋 n
-    Some 𝓈 → case dsubstVar 𝓈 n of
-      Var_SSE n' → return $ 𝓋 n'
-      Trm_SSE (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
+  γ ← ask
+  case γ of
+    FVsSubstEnv 𝑠 → do
+      let n₀ = ifNone 0 (𝑠 ⋕? (s :* xO))
+      when (n ≥ n₀) $ do
+        tell $ FreeVars null $ (s :* xO) ↦ single (n-n₀)
+      return $ 𝓋 n
+    SubSubstEnv 𝓈A → do
+      let 𝓈s = gsubstScoped $ unSubst $ substActionSubst 𝓈A
+      case 𝓈s ⋕? (s :* xO) of
+        None → return $ 𝓋 n
+        Some 𝓈 → case dsubstVar 𝓈 n of
+          Var_SSE n' → return $ 𝓋 n'
+          Trm_SSE (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
 
 substyDVar ∷ (Ord s,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstM s e e
 substyDVar = substyVar None
@@ -402,29 +439,21 @@ substyDVar = substyVar None
 substyNVar ∷ (Ord s,Substy s e e) ⇒ s → (ℕ64 → e) → 𝕏 → ℕ64 → SubstM s e e
 substyNVar s 𝓋 x = substyVar (Some x) s 𝓋
 
-substyGVar ∷ (Substy s e e) ⇒ (𝕏 → e) → 𝕏 → SubstM s e e
+substyGVar ∷ (Ord s,Substy s e e) ⇒ (𝕏 → e) → 𝕏 → SubstM s e e
 substyGVar 𝓋 x = do
-  gsᴱ ← askL $ gsubstGlobalL ⊚ unSubstL ⊚ substEnvSubstL
-  case gsᴱ ⋕? x of
-    None → return $ 𝓋 x
-    Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
+  γ ← ask
+  case γ of
+    FVsSubstEnv _𝑠 → do
+      tell $ FreeVars (single x) null
+      return $ 𝓋 x
+    SubSubstEnv 𝓈A → do
+      let gsᴱ =  gsubstGlobal $ unSubst $ substActionSubst 𝓈A
+      case gsᴱ ⋕? x of
+        None → return $ 𝓋 x
+        Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
 
 substy𝕐 ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 → e) → 𝕐 → SubstM s e e
 substy𝕐 s 𝓋 = \case
   DVar n   → substyDVar s (𝓋 ∘ DVar)        n
   NVar n x → substyNVar s (𝓋 ∘ flip NVar x) x n
   GVar   x → substyGVar   (𝓋 ∘ GVar)        x
-
------------
--- Fuzzy --
------------
-
--- instance (Fuzzy s) ⇒ Fuzzy (𝔖 s) where 
---   fuzzy = rchoose
---     [ \ () → D𝔖 ^$ fuzzy
---     , \ () → do
---         s ← fuzzy
---         x ← fuzzy
---         return $ N𝔖 s x
---     ]
-
