@@ -1,6 +1,6 @@
 module UVMHS
   ( module UVMHS.Core
-  , module UVMHS.Lang.ULCD
+  , module UVMHS.Lang.ULC
   , module UVMHS.Lib.Annotated
   , module UVMHS.Lib.Errors
   , module UVMHS.Lib.Graph
@@ -19,7 +19,7 @@ module UVMHS
   ) where
 
 import UVMHS.Core
-import UVMHS.Lang.ULCD
+import UVMHS.Lang.ULC
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Errors
 import UVMHS.Lib.Graph
