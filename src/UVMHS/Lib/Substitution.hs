@@ -11,26 +11,26 @@ import UVMHS.Lib.Rand
 --------------------------
 
 -- ℯ ⩴ s⇈e
-data SubstElem s a = SubstElem
+data SubstElem s e = SubstElem
   { substElemIntro ∷ s ⇰ ℕ64
-  , substElemValue ∷ () → 𝑂 a
+  , substElemValue ∷ () → 𝑂 e
   } deriving (Eq,Ord,Show)
 makeLenses ''SubstElem
 
-instance (Pretty s,Pretty a) ⇒ Pretty (SubstElem s a) where
+instance (Pretty s,Pretty e) ⇒ Pretty (SubstElem s e) where
   pretty (SubstElem s ueO) = ppInfr pASC (ppPun "⇈") (pretty s) $
     ifNone (ppPun "⊥") $ pretty ^$ ueO ()
 
-instance (Ord s,Fuzzy s,Fuzzy a) ⇒ Fuzzy (SubstElem s a) where
+instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SubstElem s e) where
   fuzzy = do
     𝑠 ← fuzzy
     ueO ← fuzzy
     return $ SubstElem 𝑠 ueO
 
-introSubstElem ∷ (Ord s) ⇒ s ⇰ ℕ64 → SubstElem s a → SubstElem s a
+introSubstElem ∷ (Ord s) ⇒ s ⇰ ℕ64 → SubstElem s e → SubstElem s e
 introSubstElem = alter substElemIntroL ∘ (+)
 
-subSubstElem ∷ (s ⇰ ℕ64 → a → 𝑂 a) → SubstElem s a → SubstElem s a
+subSubstElem ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e
 subSubstElem substE (SubstElem 𝑠 ueO) = SubstElem zero $ \ () → substE 𝑠 *$ ueO ()
 
 --------------------------------
@@ -38,20 +38,20 @@ subSubstElem substE (SubstElem 𝑠 ueO) = SubstElem zero $ \ () → substE 𝑠
 --------------------------------
 
 -- ℯ ⩴ i | s⇈e
-data SSubstElem s a = 
+data SSubstElem s e = 
     Var_SSE ℕ64
-  | Trm_SSE (SubstElem s a)
+  | Trm_SSE (SubstElem s e)
   deriving (Eq,Ord,Show)
 
-instance (Pretty s,Pretty a) ⇒ Pretty (SSubstElem s a) where
+instance (Pretty s,Pretty e) ⇒ Pretty (SSubstElem s e) where
   pretty = \case
     Var_SSE i → pretty $ DVar i
     Trm_SSE e → pretty e
 
-instance (Ord s,Fuzzy s,Fuzzy a) ⇒ Fuzzy (SSubstElem s a) where 
-  fuzzy = rchoose
-    [ \ () → Var_SSE ^$ fuzzy
-    , \ () → Trm_SSE ^$ fuzzy
+instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SSubstElem s e) where 
+  fuzzy = rchoose $ map const
+    [ Var_SSE ^$ fuzzy
+    , Trm_SSE ^$ fuzzy
     ]
 
 introSSubstElem ∷ (Ord s) ⇒ s → s ⇰ ℕ64 → SSubstElem s e → SSubstElem s e
@@ -78,7 +78,7 @@ data DSubst s e = DSubst
 makeLenses ''DSubst
 makePrettyRecord ''DSubst
 
-instance (Ord s,Fuzzy s,Fuzzy a) ⇒ Fuzzy (DSubst s a) where 
+instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (DSubst s e) where 
   fuzzy = do
     ρ ← fuzzy
     𝔰 ← fuzzy
@@ -136,7 +136,7 @@ data GSubst s₁ s₂ e = GSubst
 makeLenses ''GSubst
 makePrettyUnion ''GSubst
 
-instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy a) ⇒ Fuzzy (GSubst s₁ s₂ a) where 
+instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s₁ s₂ e) where 
   fuzzy = do
     esᴳ ← fuzzy
     𝓈 ← fuzzy
@@ -160,14 +160,8 @@ instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy a) ⇒ Fuzzy (GSubst s�
       ι  = neg $ intΩ64 $ csize es
   in DSubst zero ℯs ι
 
-𝓈sbindG ∷ (Ord s₂) ⇒ s₂ → e → GSubst s₁ s₂ e
-𝓈sbindG s e = 𝓈sbindsG $ s ↦ single e
-
-𝓈gbindsG ∷ s₁ ⇰ e → GSubst s₁ s₂ e
-𝓈gbindsG esᴳ = GSubst (map (SubstElem null ∘ const ∘ return) esᴳ) null
-
-𝓈gbindG ∷ (Ord s₁) ⇒ s₁ → e → GSubst s₁ s₂ e
-𝓈gbindG s e = 𝓈gbindsG $ s ↦ e
+𝓈sgbindsG ∷ s₁ ⇰ e → GSubst s₁ s₂ e
+𝓈sgbindsG esᴳ = GSubst (map (SubstElem null ∘ const ∘ return) esᴳ) null
 
 -- 𝓈₁ ≜ ⟨ρ₁,es₁,ι₁⟩
 -- 𝓈₂ ≜ ⟨ρ₂,es₂,ι₂⟩
@@ -255,12 +249,12 @@ appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
 -- SUBSTY (STANDARD SCOPED SUBSTITUTION) --
 -------------------------------------------
 
-newtype Subst s e = Subst { unSubst ∷ GSubst 𝕏 (s ∧ 𝑂 𝕏) e }
+newtype Subst s e = Subst { unSubst ∷ GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e }
   deriving (Eq,Ord,Show,Pretty,Fuzzy)
 makeLenses ''Subst
 
 data FreeVars s = FreeVars
-  { freeVarsGlobal ∷ 𝑃 𝕏
+  { freeVarsGlobal ∷ s ⇰ 𝑃 𝕏
   , freeVarsScoped ∷ (s ∧ 𝑂 𝕏) ⇰ 𝑃 ℕ64
   } deriving (Eq,Ord,Show)
 makeLenses ''FreeVars
@@ -273,7 +267,8 @@ instance (Ord s) ⇒ Append (FreeVars s) where
 instance (Ord s) ⇒ Monoid (FreeVars s)
 
 data SubstAction s e = SubstAction
-  { substActionRebnd ∷ 𝑂 𝔹
+  { substActionNoBdr ∷ 𝔹
+  , substActionRebnd ∷ 𝑂 𝔹
   , substActionSubst ∷ Subst s e
   }
 makeLenses ''SubstAction
@@ -300,13 +295,13 @@ class Substy s e a | a→s,a→e where
   substy ∷ a → SubstM s e a
 
 subst ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
-subst 𝓈 = snd ∘ runSubstM (SubSubstEnv $ SubstAction None 𝓈) ∘ substy
+subst 𝓈 = snd ∘ runSubstM (SubSubstEnv $ SubstAction False None 𝓈) ∘ substy
 
 todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
-todbr = snd ∘ runSubstM (SubSubstEnv $ SubstAction (Some True) null) ∘ substy
+todbr = snd ∘ runSubstM (SubSubstEnv $ SubstAction False (Some True) null) ∘ substy
 
 tonmd ∷ (Substy s e a) ⇒ a → 𝑂 a
-tonmd = snd ∘ runSubstM (SubSubstEnv $ SubstAction (Some False) null) ∘ substy
+tonmd = snd ∘ runSubstM (SubSubstEnv $ SubstAction False (Some False) null) ∘ substy
 
 freev ∷ (Substy s e a) ⇒ a → FreeVars s
 freev = fst ∘ runSubstM (FVsSubstEnv null) ∘ substy
@@ -354,11 +349,14 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈snbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
 𝓈snbind s x e = 𝓈snbinds $ s ↦ x ↦ single e
 
-𝓈gbinds ∷ (Ord s) ⇒ 𝕏 ⇰ e → Subst s e
-𝓈gbinds = Subst ∘ 𝓈gbindsG
+𝓈sgbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ e → Subst s e
+𝓈sgbinds sxes = Subst $ 𝓈sgbindsG $ assoc $ do
+  s :* xes ← iter sxes
+  x :* e ← iter xes
+  return $ s :* x :* e
 
-𝓈gbind ∷ (Ord s) ⇒ 𝕏 → e → Subst s e
-𝓈gbind x e = 𝓈gbinds $ x ↦ e
+𝓈sgbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
+𝓈sgbind s x e = 𝓈sgbinds $ s ↦ x ↦ e
 
 𝓈dshift ∷ ℕ64 → Subst () e → Subst () e
 𝓈dshift = 𝓈sdshift ∘ (↦) ()
@@ -384,6 +382,12 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈nbind ∷ 𝕏 → e → Subst () e
 𝓈nbind = 𝓈snbind ()
 
+𝓈gbinds ∷ 𝕏 ⇰ e → Subst () e
+𝓈gbinds = 𝓈sgbinds ∘ (↦) ()
+
+𝓈gbind ∷ 𝕏 → e → Subst () e
+𝓈gbind x e = 𝓈gbinds $ x ↦ e
+
 substyDBdr ∷ (Ord s) ⇒ s → SubstM s e ()
 substyDBdr s = umodifyEnv $ compose
   [ alter subSubstEnvL $ alter substActionSubstL $ 𝓈sdshift $ s ↦ 1
@@ -396,8 +400,8 @@ substyNBdr s x = umodifyEnv $ compose
   , alter fVsSubstEnvL $ (⧺) $ (s :* Some x) ↦ 1
   ]
 
-substyBdr ∷ (Ord s,Substy s e e) ⇒ s → 𝕏 → (𝕐 → e) → SubstM s e ()
-substyBdr s x 𝓋 = do
+substyBdr ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 → e) → 𝕏 → SubstM s e ()
+substyBdr s 𝓋 x = do
   substyDBdr s
   substyNBdr s x
   bO ← access substActionRebndL *∘ view subSubstEnvL ^$ ask
@@ -439,16 +443,16 @@ substyDVar = substyVar None
 substyNVar ∷ (Ord s,Substy s e e) ⇒ s → (ℕ64 → e) → 𝕏 → ℕ64 → SubstM s e e
 substyNVar s 𝓋 x = substyVar (Some x) s 𝓋
 
-substyGVar ∷ (Ord s,Substy s e e) ⇒ (𝕏 → e) → 𝕏 → SubstM s e e
-substyGVar 𝓋 x = do
+substyGVar ∷ (Ord s,Substy s e e) ⇒ s → (𝕏 → e) → 𝕏 → SubstM s e e
+substyGVar s 𝓋 x = do
   γ ← ask
   case γ of
     FVsSubstEnv _𝑠 → do
-      tell $ FreeVars (single x) null
+      tell $ FreeVars (s ↦ single x) null
       return $ 𝓋 x
     SubSubstEnv 𝓈A → do
       let gsᴱ =  gsubstGlobal $ unSubst $ substActionSubst 𝓈A
-      case gsᴱ ⋕? x of
+      case gsᴱ ⋕? (s :* x) of
         None → return $ 𝓋 x
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
 
@@ -456,4 +460,4 @@ substy𝕐 ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 → e) → 𝕐 → SubstM s
 substy𝕐 s 𝓋 = \case
   DVar n   → substyDVar s (𝓋 ∘ DVar)        n
   NVar n x → substyNVar s (𝓋 ∘ flip NVar x) x n
-  GVar   x → substyGVar   (𝓋 ∘ GVar)        x
+  GVar   x → substyGVar s (𝓋 ∘ GVar)        x

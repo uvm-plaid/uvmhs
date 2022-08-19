@@ -182,18 +182,23 @@ instance Fuzzy ℤ8  where fuzzy = randrRadius ∘ intΩ8  *$ askL fuzzyEnvRadiu
 instance Fuzzy 𝔻   where fuzzy = randrRadius ∘ dbl    *$ askL fuzzyEnvRadiusL
 
 instance Fuzzy () where fuzzy = return ()
-instance (Fuzzy a) ⇒ Fuzzy (() → a) where fuzzy = const ^$ fuzzy
+
+instance Fuzzy 𝔹 where 
+  fuzzy = rchoose $ map (const ∘ return)
+    [ True
+    , False
+    ]
 
 instance (Fuzzy a) ⇒ Fuzzy (𝑂 a) where 
-  fuzzy = rchoose
-    [ const $ return None
-    , const $ Some ^$ fuzzy
+  fuzzy = rchoose $ map const
+    [ return None
+    , Some ^$ fuzzy
     ]
 
 instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∨ b) where 
-  fuzzy = rchoose
-    [ const $ Inl ^$ fuzzy
-    , const $ Inr ^$ fuzzy
+  fuzzy = rchoose $ map const
+    [ Inl ^$ fuzzy
+    , Inr ^$ fuzzy
     ]
 
 instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∧ b) where 
@@ -209,3 +214,5 @@ instance (Fuzzy a) ⇒ Fuzzy (𝐿 a) where
 
 instance (Ord k,Fuzzy k,Fuzzy v) ⇒ Fuzzy (k ⇰ v) where 
   fuzzy = assoc ^$ fuzzy @(𝐿 _)
+
+instance (Fuzzy a) ⇒ Fuzzy (() → a) where fuzzy = const ^$ fuzzy

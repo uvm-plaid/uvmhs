@@ -7,7 +7,6 @@ build:
 .PHONY: dev
 dev: .stack-work
 	ghcid --test=$E --warnings --command="stack ghci --ghc-options='-fobject-code -DUVMHS_TESTS'"
-	# ghcid --test=$E --warnings --command="stack ghci --trace --ghc-options='-fobject-code -fexternal-interpreter -prof -DUVMHS_TESTS'"
 
 .stack-work:
 	stack setup

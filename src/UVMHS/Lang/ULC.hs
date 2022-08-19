@@ -109,7 +109,7 @@ instance Substy () (ULCExp 𝒸) (ULCExp 𝒸) where
     Lam_ULC xO e → ureset $ do
       case xO of
         None → substyDBdr ()
-        Some x → substyBdr () x $ ULCExp ∘ 𝐴 𝒸 ∘ Var_ULC
+        Some x → substyBdr () (ULCExp ∘ 𝐴 𝒸 ∘ Var_ULC) x
       e' ← substy e
       return $ 𝐴 𝒸 $ Lam_ULC xO e'
     App_ULC e₁ e₂ → do
