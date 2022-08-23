@@ -324,10 +324,13 @@ tonmd = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction False (Some False) null
 fvsWith ∷ (Substy s e a) ⇒ (FreeVarsAction s → FreeVarsAction s) → a → s ⇰ 𝑃 𝕐
 fvsWith f = fst ∘ runSubstMHalt (FVsSubstEnv $ f $ FreeVarsAction (const $ const True) null) ∘ substy
 
-fvsMetas ∷ (Ord s,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 𝕏
-fvsMetas ss = 
+fvsSMetas ∷ (Ord s,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 𝕏
+fvsSMetas ss = 
   map (pow ∘ filterMap (view mVarL) ∘ iter) 
   ∘ fvsWith (update freeVarsActionFilterL $ \ s y → s ∈ ss ⩓ shape mVarL y)
+
+fvsMetas ∷ (Ord s,Substy s e a) ⇒ s → a → 𝑃 𝕏
+fvsMetas s x = ifNone pø $ fvsSMetas (single s) x ⋕? s
 
 fvs ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 𝕐
 fvs = fvsWith id
