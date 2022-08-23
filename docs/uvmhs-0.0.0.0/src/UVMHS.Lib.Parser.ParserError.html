@@ -18,7 +18,7 @@
 </span><a href="UVMHS.Lib.Parser.ParserError.html#parserErrorInfoStackTail"><span class="hs-identifier hs-var hs-var">parserErrorInfoStackTail</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span>
 </span><span id="line-15"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-16"></span><span>
-</span><span id="line-17"></span><span class="hs-keyword">data</span><span> </span><span id="ParserError"><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-var">ParserError</span></a></span></span><span> </span><span id="local-6989586621680298374"><span class="annot"><a href="#local-6989586621680298374"><span class="hs-identifier hs-type">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ParserError"><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-var">ParserError</span></a></span></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">data</span><span> </span><span id="ParserError"><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-var">ParserError</span></a></span></span><span> </span><span id="local-6989586621680298680"><span class="annot"><a href="#local-6989586621680298680"><span class="hs-identifier hs-type">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ParserError"><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-var">ParserError</span></a></span></span><span>
 </span><span id="line-18"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="parserErrorTokenLoc"><span class="annot"><span class="annottext">forall {k} (t :: k). ParserError t -&gt; AddBT Loc
 </span><a href="UVMHS.Lib.Parser.ParserError.html#parserErrorTokenLoc"><span class="hs-identifier hs-var hs-var">parserErrorTokenLoc</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Pointed.html#AddBT"><span class="hs-identifier hs-type">AddBT</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Loc.html#Loc"><span class="hs-identifier hs-type">Loc</span></a></span><span>
 </span><span id="line-19"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="parserErrorTokenContext"><span class="annot"><span class="annottext">forall {k} (t :: k). ParserError t -&gt; WindowR Doc Doc
@@ -29,27 +29,27 @@
 </span><a href="UVMHS.Lib.Parser.ParserError.html#parserErrorFailures"><span class="hs-identifier hs-var hs-var">parserErrorFailures</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorInfo"><span class="hs-identifier hs-type">ParserErrorInfo</span></a></span><span>
 </span><span id="line-22"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-23"></span><span>
-</span><span id="line-24"></span><span id="local-6989586621680298356"><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680298356"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-25"></span><span>  </span><span id="local-6989586621680298181"><span class="annot"><span class="annottext">e&#8321; :: ParserError t
-</span><a href="#local-6989586621680298181"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span id="local-6989586621680298180"><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680298180"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298179"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298179"><span class="hs-identifier hs-var">d&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298178"><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680298178"><span class="hs-identifier hs-var">s&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298177"><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
-</span><a href="#local-6989586621680298177"><span class="hs-identifier hs-var">f&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621680298176"><span class="annot"><span class="annottext">&#10746; :: ParserError t -&gt; ParserError t -&gt; ParserError t
-</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span id="local-6989586621680298174"><span class="annot"><span class="annottext">e&#8322; :: ParserError t
-</span><a href="#local-6989586621680298174"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span id="local-6989586621680298173"><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680298173"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><span id="line-24"></span><span id="local-6989586621680298662"><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680298662"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-25"></span><span>  </span><span id="local-6989586621680298487"><span class="annot"><span class="annottext">e&#8321; :: ParserError t
+</span><a href="#local-6989586621680298487"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span id="local-6989586621680298486"><span class="annot"><span class="annottext">AddBT Loc
+</span><a href="#local-6989586621680298486"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298485"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298485"><span class="hs-identifier hs-var">d&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298484"><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680298484"><span class="hs-identifier hs-var">s&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298483"><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
+</span><a href="#local-6989586621680298483"><span class="hs-identifier hs-var">f&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621680298482"><span class="annot"><span class="annottext">&#10746; :: ParserError t -&gt; ParserError t -&gt; ParserError t
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span id="local-6989586621680298480"><span class="annot"><span class="annottext">e&#8322; :: ParserError t
+</span><a href="#local-6989586621680298480"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span id="local-6989586621680298479"><span class="annot"><span class="annottext">AddBT Loc
+</span><a href="#local-6989586621680298479"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680298172"><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
-</span><a href="#local-6989586621680298172"><span class="hs-identifier hs-var">f&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680298478"><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
+</span><a href="#local-6989586621680298478"><span class="hs-identifier hs-var">f&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-26"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680298180"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">AddBT Loc -&gt; AddBT Loc -&gt; Ordering
+</span><a href="#local-6989586621680298486"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">AddBT Loc -&gt; AddBT Loc -&gt; Ordering
 forall a. Ord a =&gt; a -&gt; a -&gt; Ordering
 </span><a href="UVMHS.Core.Classes.Order.html#%22DA"><span class="hs-operator hs-var">&#8922;</span></a></span><span> </span><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680298173"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621680298479"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-27"></span><span>      </span><span class="annot"><span class="annottext">Ordering
 </span><span class="hs-identifier hs-var">LT</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ParserError t
-</span><a href="#local-6989586621680298174"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span>
+</span><a href="#local-6989586621680298480"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span>
 </span><span id="line-28"></span><span>      </span><span class="annot"><span class="annottext">Ordering
 </span><span class="hs-identifier hs-var">EQ</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">AddBT Loc
 -&gt; WindowR Doc Doc
@@ -63,26 +63,26 @@ AddBT Loc
 -&gt; &#119868; ParserErrorInfo
 -&gt; ParserError t
 </span><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-var">ParserError</span></a></span><span> </span><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680298180"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298179"><span class="hs-identifier hs-var">d&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680298178"><span class="hs-identifier hs-var">s&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; ParserErrorInfo -&gt; ParserError t)
+</span><a href="#local-6989586621680298486"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298485"><span class="hs-identifier hs-var">d&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680298484"><span class="hs-identifier hs-var">s&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; ParserErrorInfo -&gt; ParserError t)
 -&gt; &#119868; ParserErrorInfo -&gt; ParserError t
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
-</span><a href="#local-6989586621680298177"><span class="hs-identifier hs-var">f&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; ParserErrorInfo -&gt; &#119868; ParserErrorInfo -&gt; &#119868; ParserErrorInfo
+</span><a href="#local-6989586621680298483"><span class="hs-identifier hs-var">f&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; ParserErrorInfo -&gt; &#119868; ParserErrorInfo -&gt; &#119868; ParserErrorInfo
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
-</span><a href="#local-6989586621680298172"><span class="hs-identifier hs-var">f&#8322;</span></a></span><span>
+</span><a href="#local-6989586621680298478"><span class="hs-identifier hs-var">f&#8322;</span></a></span><span>
 </span><span id="line-29"></span><span>      </span><span class="annot"><span class="annottext">Ordering
 </span><span class="hs-identifier hs-var">GT</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ParserError t
-</span><a href="#local-6989586621680298181"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span>
+</span><a href="#local-6989586621680298487"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span>
 </span><span id="line-30"></span><span>
 </span><span id="line-31"></span><span class="hs-keyword">data</span><span> </span><span id="ParserErrorStackTraces"><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-var">ParserErrorStackTraces</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ParserErrorStackTraces"><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-var">ParserErrorStackTraces</span></a></span></span><span> </span><span>
 </span><span id="line-32"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="parserErrorStackTracesMessages"><span class="annot"><span class="annottext">ParserErrorStackTraces -&gt; &#119875; Text
 </span><a href="UVMHS.Lib.Parser.ParserError.html#parserErrorStackTracesMessages"><span class="hs-identifier hs-var hs-var">parserErrorStackTracesMessages</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D443"><span class="hs-identifier hs-type">&#119875;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span>
 </span><span id="line-33"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="parserErrorStackTracesChain"><span class="annot"><span class="annottext">ParserErrorStackTraces -&gt; Text &#8688; ParserErrorStackTraces
 </span><a href="UVMHS.Lib.Parser.ParserError.html#parserErrorStackTracesChain"><span class="hs-identifier hs-var hs-var">parserErrorStackTracesChain</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21F0"><span class="hs-operator hs-type">&#8688;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span>
-</span><span id="line-34"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680298157"><span id="local-6989586621680298165"><span class="annot"><span class="annottext">ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; &#120121;
+</span><span id="line-34"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680298463"><span id="local-6989586621680298471"><span class="annot"><span class="annottext">ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; &#120121;
 (ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; &#120121;)
 -&gt; (ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; &#120121;)
 -&gt; Eq ParserErrorStackTraces
@@ -91,7 +91,7 @@ forall a. (a -&gt; a -&gt; &#120121;) -&gt; (a -&gt; a -&gt; &#120121;) -&gt; Eq
 $c/= :: ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; &#120121;
 == :: ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; &#120121;
 $c== :: ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; &#120121;
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680298126"><span id="local-6989586621680298128"><span id="local-6989586621680298131"><span id="local-6989586621680298134"><span id="local-6989586621680298137"><span id="local-6989586621680298143"><span id="local-6989586621680298151"><span class="annot"><span class="annottext">Eq ParserErrorStackTraces
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680298432"><span id="local-6989586621680298434"><span id="local-6989586621680298437"><span id="local-6989586621680298440"><span id="local-6989586621680298443"><span id="local-6989586621680298449"><span id="local-6989586621680298457"><span class="annot"><span class="annottext">Eq ParserErrorStackTraces
 Eq ParserErrorStackTraces
 -&gt; (ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; Ordering)
 -&gt; (ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; &#120121;)
@@ -137,10 +137,10 @@ compare :: ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; Ordering
 $ccompare :: ParserErrorStackTraces -&gt; ParserErrorStackTraces -&gt; Ordering
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
 </span><span id="line-35"></span><span id="parserErrorStackTracesChainL"><span id="parserErrorStackTracesMessagesL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserErrorStackTraces</span></span></span><span>
-</span><span id="line-36"></span><span id="local-6989586621680298114"><span class="hs-identifier">makePrettyRecord</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserErrorStackTraces</span></span><span>
+</span><span id="line-36"></span><span id="local-6989586621680298420"><span class="hs-identifier">makePrettyRecord</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserErrorStackTraces</span></span><span>
 </span><span id="line-37"></span><span>
 </span><span id="line-38"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#Bot"><span class="hs-identifier hs-type">Bot</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-39"></span><span>  </span><span id="local-6989586621680298085"><span class="annot"><span class="annottext">bot :: ParserErrorStackTraces
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621680298391"><span class="annot"><span class="annottext">bot :: ParserErrorStackTraces
 </span><a href="UVMHS.Core.Classes.Lattice.html#bot"><span class="hs-identifier hs-var hs-var hs-var hs-var">bot</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119875; Text -&gt; (Text &#8688; ParserErrorStackTraces) -&gt; ParserErrorStackTraces
 </span><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-var">ParserErrorStackTraces</span></a></span><span> </span><span class="annot"><span class="annottext">&#119875; Text
 forall a. Bot a =&gt; a
@@ -148,49 +148,49 @@ forall a. Bot a =&gt; a
 forall a. Bot a =&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#bot"><span class="hs-identifier hs-var">bot</span></a></span><span>
 </span><span id="line-40"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#Join"><span class="hs-identifier hs-type">Join</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-41"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span> </span><span id="local-6989586621680298077"><span class="annot"><span class="annottext">&#119875; Text
-</span><a href="#local-6989586621680298077"><span class="hs-identifier hs-var">fin&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298076"><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
-</span><a href="#local-6989586621680298076"><span class="hs-identifier hs-var">ch&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298075"><span class="annot"><span class="annottext">&#8852; :: ParserErrorStackTraces
+</span><span id="line-41"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span> </span><span id="local-6989586621680298383"><span class="annot"><span class="annottext">&#119875; Text
+</span><a href="#local-6989586621680298383"><span class="hs-identifier hs-var">fin&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298382"><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
+</span><a href="#local-6989586621680298382"><span class="hs-identifier hs-var">ch&#8321;</span></a></span></span><span> </span><span id="local-6989586621680298381"><span class="annot"><span class="annottext">&#8852; :: ParserErrorStackTraces
 -&gt; ParserErrorStackTraces -&gt; ParserErrorStackTraces
-</span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var hs-var hs-var hs-var">&#8852;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span> </span><span id="local-6989586621680298073"><span class="annot"><span class="annottext">&#119875; Text
-</span><a href="#local-6989586621680298073"><span class="hs-identifier hs-var">fin&#8322;</span></a></span></span><span> </span><span id="local-6989586621680298072"><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
-</span><a href="#local-6989586621680298072"><span class="hs-identifier hs-var">ch&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119875; Text -&gt; (Text &#8688; ParserErrorStackTraces) -&gt; ParserErrorStackTraces
+</span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var hs-var hs-var hs-var">&#8852;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span> </span><span id="local-6989586621680298379"><span class="annot"><span class="annottext">&#119875; Text
+</span><a href="#local-6989586621680298379"><span class="hs-identifier hs-var">fin&#8322;</span></a></span></span><span> </span><span id="local-6989586621680298378"><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
+</span><a href="#local-6989586621680298378"><span class="hs-identifier hs-var">ch&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119875; Text -&gt; (Text &#8688; ParserErrorStackTraces) -&gt; ParserErrorStackTraces
 </span><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-var">ParserErrorStackTraces</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119875; Text
-</span><a href="#local-6989586621680298077"><span class="hs-identifier hs-var">fin&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119875; Text -&gt; &#119875; Text -&gt; &#119875; Text
+</span><a href="#local-6989586621680298383"><span class="hs-identifier hs-var">fin&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119875; Text -&gt; &#119875; Text -&gt; &#119875; Text
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119875; Text
-</span><a href="#local-6989586621680298073"><span class="hs-identifier hs-var">fin&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
-</span><a href="#local-6989586621680298076"><span class="hs-identifier hs-var">ch&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">(Text &#8688; ParserErrorStackTraces)
+</span><a href="#local-6989586621680298379"><span class="hs-identifier hs-var">fin&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
+</span><a href="#local-6989586621680298382"><span class="hs-identifier hs-var">ch&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">(Text &#8688; ParserErrorStackTraces)
 -&gt; (Text &#8688; ParserErrorStackTraces) -&gt; Text &#8688; ParserErrorStackTraces
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
-</span><a href="#local-6989586621680298072"><span class="hs-identifier hs-var">ch&#8322;</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680298378"><span class="hs-identifier hs-var">ch&#8322;</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-42"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#JoinLattice"><span class="hs-identifier hs-type">JoinLattice</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span>
 </span><span id="line-43"></span><span>
 </span><span id="line-44"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#stackTraces"><span class="hs-identifier hs-type">stackTraces</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span>
 </span><span id="line-45"></span><span id="stackTraces"><span class="annot"><span class="annottext">stackTraces :: Text -&gt; &#119868; Text -&gt; ParserErrorStackTraces
-</span><a href="UVMHS.Lib.Parser.ParserError.html#stackTraces"><span class="hs-identifier hs-var hs-var">stackTraces</span></a></span></span><span> </span><span id="local-6989586621680298064"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680298064"><span class="hs-identifier hs-var">fin</span></a></span></span><span> </span><span id="local-6989586621680298063"><span class="annot"><span class="annottext">&#119868; Text
-</span><a href="#local-6989586621680298063"><span class="hs-identifier hs-var">msgs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; Text
+</span><a href="UVMHS.Lib.Parser.ParserError.html#stackTraces"><span class="hs-identifier hs-var hs-var">stackTraces</span></a></span></span><span> </span><span id="local-6989586621680298370"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621680298370"><span class="hs-identifier hs-var">fin</span></a></span></span><span> </span><span id="local-6989586621680298369"><span class="annot"><span class="annottext">&#119868; Text
+</span><a href="#local-6989586621680298369"><span class="hs-identifier hs-var">msgs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; Text
 -&gt; ParserErrorStackTraces
 -&gt; (Text -&gt; ParserErrorStackTraces -&gt; ParserErrorStackTraces)
 -&gt; ParserErrorStackTraces
 forall a t b. ToIter a t =&gt; t -&gt; b -&gt; (a -&gt; b -&gt; b) -&gt; b
 </span><a href="UVMHS.Core.Data.Iter.html#foldrOnFrom"><span class="hs-identifier hs-var">foldrOnFrom</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; Text
-</span><a href="#local-6989586621680298063"><span class="hs-identifier hs-var">msgs</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119875; Text -&gt; (Text &#8688; ParserErrorStackTraces) -&gt; ParserErrorStackTraces
+</span><a href="#local-6989586621680298369"><span class="hs-identifier hs-var">msgs</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119875; Text -&gt; (Text &#8688; ParserErrorStackTraces) -&gt; ParserErrorStackTraces
 </span><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-var">ParserErrorStackTraces</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; &#119875; Text
 forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680298064"><span class="hs-identifier hs-var">fin</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
+</span><a href="#local-6989586621680298370"><span class="hs-identifier hs-var">fin</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
 forall a. Bot a =&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#bot"><span class="hs-identifier hs-var">bot</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((Text -&gt; ParserErrorStackTraces -&gt; ParserErrorStackTraces)
  -&gt; ParserErrorStackTraces)
 -&gt; (Text -&gt; ParserErrorStackTraces -&gt; ParserErrorStackTraces)
 -&gt; ParserErrorStackTraces
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680298060"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680298060"><span class="hs-identifier hs-var">msg</span></a></span></span><span> </span><span id="local-6989586621680298059"><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680298059"><span class="hs-identifier hs-var">tr</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span>
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680298366"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621680298366"><span class="hs-identifier hs-var">msg</span></a></span></span><span> </span><span id="local-6989586621680298365"><span class="annot"><span class="annottext">ParserErrorStackTraces
+</span><a href="#local-6989586621680298365"><span class="hs-identifier hs-var">tr</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span>
 </span><span id="line-46"></span><span>  </span><span class="annot"><span class="annottext">&#119875; Text -&gt; (Text &#8688; ParserErrorStackTraces) -&gt; ParserErrorStackTraces
 </span><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-var">ParserErrorStackTraces</span></a></span><span> </span><span class="annot"><span class="annottext">&#119875; Text
 forall a. Bot a =&gt; a
@@ -198,17 +198,17 @@ forall a. Bot a =&gt; a
 -&gt; (Text &#8688; ParserErrorStackTraces) -&gt; ParserErrorStackTraces
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680298060"><span class="hs-identifier hs-var">msg</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; ParserErrorStackTraces -&gt; Text &#8688; ParserErrorStackTraces
+</span><a href="#local-6989586621680298366"><span class="hs-identifier hs-var">msg</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; ParserErrorStackTraces -&gt; Text &#8688; ParserErrorStackTraces
 forall k v. Ord k =&gt; k -&gt; v -&gt; k &#8688; v
 </span><a href="UVMHS.Core.Data.Dict.html#%21A6"><span class="hs-operator hs-var">&#8614;</span></a></span><span> </span><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680298059"><span class="hs-identifier hs-var">tr</span></a></span><span>
+</span><a href="#local-6989586621680298365"><span class="hs-identifier hs-var">tr</span></a></span><span>
 </span><span id="line-47"></span><span>
 </span><span id="line-48"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#parserErrorFailuresMap"><span class="hs-identifier hs-type">parserErrorFailuresMap</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorInfo"><span class="hs-identifier hs-type">ParserErrorInfo</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2227"><span class="hs-operator hs-type">&#8743;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21F0"><span class="hs-operator hs-type">&#8688;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2227"><span class="hs-operator hs-type">&#8743;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2227"><span class="hs-operator hs-type">&#8743;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span>
 </span><span id="line-49"></span><span id="parserErrorFailuresMap"><span class="annot"><span class="annottext">parserErrorFailuresMap :: &#119868; ParserErrorInfo
 -&gt; (Text &#8743; &#120121;)
    &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces)
-</span><a href="UVMHS.Lib.Parser.ParserError.html#parserErrorFailuresMap"><span class="hs-identifier hs-var hs-var">parserErrorFailuresMap</span></a></span></span><span> </span><span id="local-6989586621680298056"><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
-</span><a href="#local-6989586621680298056"><span class="hs-identifier hs-var">eis</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><a href="UVMHS.Lib.Parser.ParserError.html#parserErrorFailuresMap"><span class="hs-identifier hs-var hs-var">parserErrorFailuresMap</span></a></span></span><span> </span><span id="local-6989586621680298362"><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
+</span><a href="#local-6989586621680298362"><span class="hs-identifier hs-var">eis</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
 </span><span id="line-50"></span><span>  </span><span class="annot"><span class="annottext">((Text &#8743; &#120121;)
  &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces))
 -&gt; (((Text &#8743; &#120121;)
@@ -254,27 +254,27 @@ forall k v. Ord k =&gt; (v -&gt; v -&gt; v) -&gt; (k &#8688; v) -&gt; (k &#8688;
 -&gt; (Text &#8743; &#120121;)
    &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680298053"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298053"><span class="hs-identifier hs-var">c'</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680298052"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298052"><span class="hs-identifier hs-var">p'</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680298051"><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680298051"><span class="hs-identifier hs-var">t&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680298359"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298359"><span class="hs-identifier hs-var">c'</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680298358"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298358"><span class="hs-identifier hs-var">p'</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680298357"><span class="annot"><span class="annottext">ParserErrorStackTraces
+</span><a href="#local-6989586621680298357"><span class="hs-identifier hs-var">t&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowR Doc Doc
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680298050"><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680298050"><span class="hs-identifier hs-var">t&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298053"><span class="hs-identifier hs-var">c'</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680298356"><span class="annot"><span class="annottext">ParserErrorStackTraces
+</span><a href="#local-6989586621680298356"><span class="hs-identifier hs-var">t&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298359"><span class="hs-identifier hs-var">c'</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
 -&gt; WindowR Doc Doc -&gt; WindowR Doc Doc &#8743; WindowR Doc Doc
 forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298052"><span class="hs-identifier hs-var">p'</span></a></span><span> </span><span class="annot"><span class="annottext">(WindowR Doc Doc &#8743; WindowR Doc Doc)
+</span><a href="#local-6989586621680298358"><span class="hs-identifier hs-var">p'</span></a></span><span> </span><span class="annot"><span class="annottext">(WindowR Doc Doc &#8743; WindowR Doc Doc)
 -&gt; ParserErrorStackTraces
 -&gt; (WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces
 forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680298051"><span class="hs-identifier hs-var">t&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">ParserErrorStackTraces
+</span><a href="#local-6989586621680298357"><span class="hs-identifier hs-var">t&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">ParserErrorStackTraces
 -&gt; ParserErrorStackTraces -&gt; ParserErrorStackTraces
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680298050"><span class="hs-identifier hs-var">t&#8322;</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&#119868; ((Text &#8743; &#120121;)
+</span><a href="#local-6989586621680298356"><span class="hs-identifier hs-var">t&#8322;</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&#119868; ((Text &#8743; &#120121;)
     &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces))
  -&gt; (Text &#8743; &#120121;)
     &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces))
@@ -292,7 +292,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
       &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces))
 forall (t :: * -&gt; *) a b. Functor t =&gt; t a -&gt; (a -&gt; b) -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#mapOn"><span class="hs-identifier hs-var">mapOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
-</span><a href="#local-6989586621680298056"><span class="hs-identifier hs-var">eis</span></a></span><span> </span><span class="annot"><span class="annottext">((ParserErrorInfo
+</span><a href="#local-6989586621680298362"><span class="hs-identifier hs-var">eis</span></a></span><span> </span><span class="annot"><span class="annottext">((ParserErrorInfo
   -&gt; (Text &#8743; &#120121;)
      &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces))
  -&gt; &#119868; ((Text &#8743; &#120121;)
@@ -303,44 +303,44 @@ forall (t :: * -&gt; *) a b. Functor t =&gt; t a -&gt; (a -&gt; b) -&gt; t b
 -&gt; &#119868; ((Text &#8743; &#120121;)
       &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces))
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorInfo"><span class="hs-identifier hs-type">ParserErrorInfo</span></a></span><span> </span><span id="local-6989586621680298048"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298048"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680298047"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298047"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621680298046"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680298046"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span id="local-6989586621680298045"><span class="annot"><span class="annottext">&#119868; Text
-</span><a href="#local-6989586621680298045"><span class="hs-identifier hs-var">st</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span>
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorInfo"><span class="hs-identifier hs-type">ParserErrorInfo</span></a></span><span> </span><span id="local-6989586621680298354"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298354"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span id="local-6989586621680298353"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298353"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621680298352"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621680298352"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span id="local-6989586621680298351"><span class="annot"><span class="annottext">&#119868; Text
+</span><a href="#local-6989586621680298351"><span class="hs-identifier hs-var">st</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span>
 </span><span id="line-52"></span><span>      </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; Text
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#ppRender"><span class="hs-identifier hs-var">ppRender</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; Doc
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298047"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Text -&gt; &#120121; -&gt; Text &#8743; &#120121;
+</span><a href="#local-6989586621680298353"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Text -&gt; &#120121; -&gt; Text &#8743; &#120121;
 forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; &#120121;
 forall i a. WindowR i a -&gt; &#120121;
 </span><a href="UVMHS.Lib.Window.html#overflowR"><span class="hs-identifier hs-var">overflowR</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298047"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Text &#8743; &#120121;)
+</span><a href="#local-6989586621680298353"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Text &#8743; &#120121;)
 -&gt; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces)
 -&gt; (Text &#8743; &#120121;)
    &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces)
 forall k v. Ord k =&gt; k -&gt; v -&gt; k &#8688; v
 </span><a href="UVMHS.Core.Data.Dict.html#%21A6"><span class="hs-operator hs-var">&#8614;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298048"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298354"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
 -&gt; WindowR Doc Doc -&gt; WindowR Doc Doc &#8743; WindowR Doc Doc
 forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680298047"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">(WindowR Doc Doc &#8743; WindowR Doc Doc)
+</span><a href="#local-6989586621680298353"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">(WindowR Doc Doc &#8743; WindowR Doc Doc)
 -&gt; ParserErrorStackTraces
 -&gt; (WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces
 forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; &#119868; Text -&gt; ParserErrorStackTraces
 </span><a href="UVMHS.Lib.Parser.ParserError.html#stackTraces"><span class="hs-identifier hs-var">stackTraces</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680298046"><span class="hs-identifier hs-var">sh</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; Text
-</span><a href="#local-6989586621680298045"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680298352"><span class="hs-identifier hs-var">sh</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; Text
+</span><a href="#local-6989586621680298351"><span class="hs-identifier hs-var">st</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-53"></span><span>
-</span><span id="line-54"></span><span id="local-6989586621680298301"><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#displaySourceError"><span class="hs-identifier hs-type">displaySourceError</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Pointed.html#AddNull"><span class="hs-identifier hs-type">AddNull</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680298301"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span></span><span>
+</span><span id="line-54"></span><span id="local-6989586621680298607"><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#displaySourceError"><span class="hs-identifier hs-type">displaySourceError</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Pointed.html#AddNull"><span class="hs-identifier hs-type">AddNull</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680298607"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span></span><span>
 </span><span id="line-55"></span><span id="displaySourceError"><span class="annot"><span class="annottext">displaySourceError :: forall {k} (t :: k). Text -&gt; AddNull (ParserError t) -&gt; Doc
-</span><a href="UVMHS.Lib.Parser.ParserError.html#displaySourceError"><span class="hs-identifier hs-var hs-var">displaySourceError</span></a></span></span><span> </span><span id="local-6989586621680297988"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680297988"><span class="hs-identifier hs-var">so</span></a></span></span><span> </span><span id="local-6989586621680297987"><span class="annot"><span class="annottext">AddNull (ParserError t)
-</span><a href="#local-6989586621680297987"><span class="hs-identifier hs-var">peM</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Parser.ParserError.html#displaySourceError"><span class="hs-identifier hs-var hs-var">displaySourceError</span></a></span></span><span> </span><span id="local-6989586621680298294"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621680298294"><span class="hs-identifier hs-var">so</span></a></span></span><span> </span><span id="local-6989586621680298293"><span class="annot"><span class="annottext">AddNull (ParserError t)
+</span><a href="#local-6989586621680298293"><span class="hs-identifier hs-var">peM</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; Doc -&gt; Doc
 forall t. ToIter Doc t =&gt; t -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppVertical"><span class="hs-identifier hs-var">ppVertical</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; Doc -&gt; Doc) -&gt; &#119868; Doc -&gt; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -362,7 +362,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppHeader"><span class="hs-identifier hs-var">ppHeader</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;Source:&quot;</span></span><span>
 </span><span id="line-58"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680297988"><span class="hs-identifier hs-var">so</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; &#120121;
+</span><a href="#local-6989586621680298294"><span class="hs-identifier hs-var">so</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; &#120121;
 forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
 </span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 forall a. Null a =&gt; a
@@ -381,9 +381,9 @@ forall t. ToIter Doc t =&gt; t -&gt; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680297988"><span class="hs-identifier hs-var">so</span></a></span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621680298294"><span class="hs-identifier hs-var">so</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-59"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">AddNull (ParserError t)
-</span><a href="#local-6989586621680297987"><span class="hs-identifier hs-var">peM</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621680298293"><span class="hs-identifier hs-var">peM</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-60"></span><span>      </span><span class="annot"><span class="annottext">AddNull (ParserError t)
 </span><a href="UVMHS.Core.Pointed.html#Null"><span class="hs-identifier hs-var">Null</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; &#119868; Doc
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
@@ -392,11 +392,11 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppErr"><span class="hs-identifier hs-var">ppErr</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;&gt; No Reported Errors&quot;</span></span><span>
-</span><span id="line-61"></span><span>      </span><span class="annot"><a href="UVMHS.Core.Pointed.html#AddNull"><span class="hs-identifier hs-type">AddNull</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span id="local-6989586621680297975"><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680297975"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621680297974"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680297974"><span class="hs-identifier hs-var">tc</span></a></span></span><span> </span><span id="local-6989586621680297973"><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680297973"><span class="hs-identifier hs-var">ts</span></a></span></span><span> </span><span id="local-6989586621680297972"><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
-</span><a href="#local-6989586621680297972"><span class="hs-identifier hs-var">fs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">[&#119868; Doc] -&gt; &#119868; Doc
+</span><span id="line-61"></span><span>      </span><span class="annot"><a href="UVMHS.Core.Pointed.html#AddNull"><span class="hs-identifier hs-type">AddNull</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserError"><span class="hs-identifier hs-type">ParserError</span></a></span><span> </span><span id="local-6989586621680298281"><span class="annot"><span class="annottext">AddBT Loc
+</span><a href="#local-6989586621680298281"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621680298280"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298280"><span class="hs-identifier hs-var">tc</span></a></span></span><span> </span><span id="local-6989586621680298279"><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680298279"><span class="hs-identifier hs-var">ts</span></a></span></span><span> </span><span id="local-6989586621680298278"><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
+</span><a href="#local-6989586621680298278"><span class="hs-identifier hs-var">fs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">[&#119868; Doc] -&gt; &#119868; Doc
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
 </span><span id="line-62"></span><span>        </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; &#119868; Doc
@@ -427,7 +427,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Lib.Parser.Loc.html#locRow"><span class="hs-identifier hs-var hs-var">locRow</span></a></span><span> </span><span class="annot"><span class="annottext">(Loc -&gt; &#8469;64) -&gt; AddBT Loc -&gt; AddBT &#8469;64
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680297975"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><a href="#local-6989586621680298281"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-67"></span><span>                </span><span class="hs-special">]</span><span>
 </span><span id="line-68"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
@@ -447,7 +447,7 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Lib.Parser.Loc.html#locCol"><span class="hs-identifier hs-var hs-var">locCol</span></a></span><span> </span><span class="annot"><span class="annottext">(Loc -&gt; &#8469;64) -&gt; AddBT Loc -&gt; AddBT &#8469;64
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680297975"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><a href="#local-6989586621680298281"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-71"></span><span>                </span><span class="hs-special">]</span><span>
 </span><span id="line-72"></span><span>            </span><span class="hs-special">]</span><span>
 </span><span id="line-73"></span><span>        </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; &#119868; Doc
@@ -505,17 +505,17 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 -&gt; (Text &#8743; &#120121;)
    &#8688; ((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces)
 </span><a href="UVMHS.Lib.Parser.ParserError.html#parserErrorFailuresMap"><span class="hs-identifier hs-var">parserErrorFailuresMap</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; ParserErrorInfo
-</span><a href="#local-6989586621680297972"><span class="hs-identifier hs-var">fs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces)
+</span><a href="#local-6989586621680298278"><span class="hs-identifier hs-var">fs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces)
   -&gt; Doc)
  -&gt; &#119868; Doc)
 -&gt; (((WindowR Doc Doc &#8743; WindowR Doc Doc) &#8743; ParserErrorStackTraces)
     -&gt; Doc)
 -&gt; &#119868; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680297962"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680297962"><span class="hs-identifier hs-var">pp</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680297961"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680297961"><span class="hs-identifier hs-var">pc</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680297960"><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680297960"><span class="hs-identifier hs-var">ets</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680298268"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298268"><span class="hs-identifier hs-var">pp</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680298267"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680298267"><span class="hs-identifier hs-var">pc</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680298266"><span class="annot"><span class="annottext">ParserErrorStackTraces
+</span><a href="#local-6989586621680298266"><span class="hs-identifier hs-var">ets</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
 </span><span id="line-75"></span><span>            </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
 forall t. ToIter Doc t =&gt; t -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppVertical"><span class="hs-identifier hs-var">ppVertical</span></a></span><span> </span><span>
@@ -524,7 +524,7 @@ forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
 </span><span id="line-77"></span><span>                  </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Window.html#renderWindowR"><span class="hs-identifier hs-var">renderWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680297962"><span class="hs-identifier hs-var">pp</span></a></span><span>
+</span><a href="#local-6989586621680298268"><span class="hs-identifier hs-var">pp</span></a></span><span>
 </span><span id="line-78"></span><span>                  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; Color -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppUT"><span class="hs-identifier hs-var">ppUT</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450;
 </span><span class="hs-char">'^'</span></span><span> </span><span class="annot"><span class="annottext">Color
@@ -532,7 +532,7 @@ forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Window.html#renderWindowR"><span class="hs-identifier hs-var">renderWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680297961"><span class="hs-identifier hs-var">pc</span></a></span><span>
+</span><a href="#local-6989586621680298267"><span class="hs-identifier hs-var">pc</span></a></span><span>
 </span><span id="line-79"></span><span>                  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; Color -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppUT"><span class="hs-identifier hs-var">ppUT</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450;
 </span><span class="hs-char">'^'</span></span><span> </span><span class="annot"><span class="annottext">Color
@@ -540,23 +540,23 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Window.html#renderWindowR"><span class="hs-identifier hs-var">renderWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680297974"><span class="hs-identifier hs-var">tc</span></a></span><span>
+</span><a href="#local-6989586621680298280"><span class="hs-identifier hs-var">tc</span></a></span><span>
 </span><span id="line-80"></span><span>                  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Window.html#renderWindowL"><span class="hs-identifier hs-var">renderWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680297973"><span class="hs-identifier hs-var">ts</span></a></span><span>
+</span><a href="#local-6989586621680298279"><span class="hs-identifier hs-var">ts</span></a></span><span>
 </span><span id="line-81"></span><span>                  </span><span class="hs-special">]</span><span>
 </span><span id="line-82"></span><span>              </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ParserErrorStackTraces -&gt; Doc
 </span><a href="UVMHS.Lib.Parser.ParserError.html#displayErrorTraces"><span class="hs-identifier hs-var">displayErrorTraces</span></a></span><span> </span><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680297960"><span class="hs-identifier hs-var">ets</span></a></span><span>
+</span><a href="#local-6989586621680298266"><span class="hs-identifier hs-var">ets</span></a></span><span>
 </span><span id="line-83"></span><span>              </span><span class="hs-special">]</span><span>
 </span><span id="line-84"></span><span>        </span><span class="hs-special">]</span><span>
 </span><span id="line-85"></span><span>  </span><span class="hs-special">]</span><span>
 </span><span id="line-86"></span><span>
 </span><span id="line-87"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#displayErrorTraces"><span class="hs-identifier hs-type">displayErrorTraces</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span>
 </span><span id="line-88"></span><span id="displayErrorTraces"><span class="annot"><span class="annottext">displayErrorTraces :: ParserErrorStackTraces -&gt; Doc
-</span><a href="UVMHS.Lib.Parser.ParserError.html#displayErrorTraces"><span class="hs-identifier hs-var hs-var">displayErrorTraces</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span> </span><span id="local-6989586621680297953"><span class="annot"><span class="annottext">&#119875; Text
-</span><a href="#local-6989586621680297953"><span class="hs-identifier hs-var">final</span></a></span></span><span> </span><span id="local-6989586621680297952"><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
-</span><a href="#local-6989586621680297952"><span class="hs-identifier hs-var">chain</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Parser.ParserError.html#displayErrorTraces"><span class="hs-identifier hs-var hs-var">displayErrorTraces</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserError.html#ParserErrorStackTraces"><span class="hs-identifier hs-type">ParserErrorStackTraces</span></a></span><span> </span><span id="local-6989586621680298259"><span class="annot"><span class="annottext">&#119875; Text
+</span><a href="#local-6989586621680298259"><span class="hs-identifier hs-var">final</span></a></span></span><span> </span><span id="local-6989586621680298258"><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
+</span><a href="#local-6989586621680298258"><span class="hs-identifier hs-var">chain</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; Doc -&gt; Doc
 forall t. ToIter Doc t =&gt; t -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppVertical"><span class="hs-identifier hs-var">ppVertical</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; Doc -&gt; Doc) -&gt; &#119868; Doc -&gt; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -566,7 +566,7 @@ forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><span id="line-89"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#119875; Text -&gt; &#120121;
 forall a t. ToIter a t =&gt; t -&gt; &#120121;
 </span><a href="UVMHS.Core.Data.Iter.html#isEmpty"><span class="hs-identifier hs-var">isEmpty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119875; Text
-</span><a href="#local-6989586621680297953"><span class="hs-identifier hs-var">final</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621680298259"><span class="hs-identifier hs-var">final</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-90"></span><span>      </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#119868; Doc
 forall a. Null a =&gt; a
@@ -612,7 +612,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119875; Text -&gt; &#119868; Text
 forall a t. ToIter a t =&gt; t -&gt; &#119868; a
 </span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span> </span><span class="annot"><span class="annottext">&#119875; Text
-</span><a href="#local-6989586621680297953"><span class="hs-identifier hs-var">final</span></a></span><span>
+</span><a href="#local-6989586621680298259"><span class="hs-identifier hs-var">final</span></a></span><span>
 </span><span id="line-94"></span><span>        </span><span class="hs-special">]</span><span>
 </span><span id="line-95"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#119868; (Text &#8743; ParserErrorStackTraces)
 -&gt; ((Text &#8743; ParserErrorStackTraces) -&gt; Doc) -&gt; &#119868; Doc
@@ -621,12 +621,12 @@ forall (t :: * -&gt; *) a b. Functor t =&gt; t a -&gt; (a -&gt; b) -&gt; t b
 -&gt; &#119868; (Text &#8743; ParserErrorStackTraces)
 forall a t. ToIter a t =&gt; t -&gt; &#119868; a
 </span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span> </span><span class="annot"><span class="annottext">Text &#8688; ParserErrorStackTraces
-</span><a href="#local-6989586621680297952"><span class="hs-identifier hs-var">chain</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(((Text &#8743; ParserErrorStackTraces) -&gt; Doc) -&gt; &#119868; Doc)
+</span><a href="#local-6989586621680298258"><span class="hs-identifier hs-var">chain</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(((Text &#8743; ParserErrorStackTraces) -&gt; Doc) -&gt; &#119868; Doc)
 -&gt; ((Text &#8743; ParserErrorStackTraces) -&gt; Doc) -&gt; &#119868; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680297949"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680297949"><span class="hs-identifier hs-var">msg</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680297948"><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680297948"><span class="hs-identifier hs-var">tr</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680298255"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621680298255"><span class="hs-identifier hs-var">msg</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680298254"><span class="annot"><span class="annottext">ParserErrorStackTraces
+</span><a href="#local-6989586621680298254"><span class="hs-identifier hs-var">tr</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
 forall t. ToIter Doc t =&gt; t -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppVertical"><span class="hs-identifier hs-var">ppVertical</span></a></span><span>
 </span><span id="line-96"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
@@ -641,7 +641,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-string">&quot;Parsing&quot;</span></span><span>
 </span><span id="line-98"></span><span>          </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621680297949"><span class="hs-identifier hs-var">msg</span></a></span><span>
+</span><a href="#local-6989586621680298255"><span class="hs-identifier hs-var">msg</span></a></span><span>
 </span><span id="line-99"></span><span>          </span><span class="hs-special">]</span><span>
 </span><span id="line-100"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
@@ -655,7 +655,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">ParserErrorStackTraces -&gt; Doc
 </span><a href="UVMHS.Lib.Parser.ParserError.html#displayErrorTraces"><span class="hs-identifier hs-var">displayErrorTraces</span></a></span><span> </span><span class="annot"><span class="annottext">ParserErrorStackTraces
-</span><a href="#local-6989586621680297948"><span class="hs-identifier hs-var">tr</span></a></span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621680298254"><span class="hs-identifier hs-var">tr</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-101"></span><span>      </span><span class="hs-special">]</span><span>
 </span><span id="line-102"></span><span>  </span><span class="hs-special">]</span><span>    </span><span>
 </span><span id="line-103"></span></pre></body></html>
