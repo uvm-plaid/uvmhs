@@ -125,47 +125,47 @@ import UVMHS.Lang.ULC
 𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x 0 y   |] |] [| Some [ulc| λ y → λ x → x x y   |] |]
 𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x 0 1 y |] |] [| Some [ulc| λ y → λ x → x x y y |] |]
 
-𝔱 "subst:freev" [| freev [ulc| λ x → 0           |] |] [| FreeVars null null |]
-𝔱 "subst:freev" [| freev [ulc| λ x → x           |] |] [| FreeVars null null |]
-𝔱 "subst:freev" [| freev [ulc| λ x → λ y → 1 0   |] |] [| FreeVars null null |]
-𝔱 "subst:freev" [| freev [ulc| λ x → λ y → x 0   |] |] [| FreeVars null null |]
-𝔱 "subst:freev" [| freev [ulc| λ x → λ y → 1 y   |] |] [| FreeVars null null |]
-𝔱 "subst:freev" [| freev [ulc| λ x → λ y → x y   |] |] [| FreeVars null null |]
-𝔱 "subst:freev" [| freev [ulc| λ x → (λ y → 0) 0 |] |] [| FreeVars null null |]
-𝔱 "subst:freev" [| freev [ulc| λ x → (λ y → y) 0 |] |] [| FreeVars null null |]
-𝔱 "subst:freev" [| freev [ulc| λ x → (λ y → 0) x |] |] [| FreeVars null null |]
-𝔱 "subst:freev" [| freev [ulc| λ x → (λ y → y) x |] |] [| FreeVars null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → 0           |] |] [| FreeVars null null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → x           |] |] [| FreeVars null null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → λ y → 1 0   |] |] [| FreeVars null null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → λ y → x 0   |] |] [| FreeVars null null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → λ y → 1 y   |] |] [| FreeVars null null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → λ y → x y   |] |] [| FreeVars null null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → 0) 0 |] |] [| FreeVars null null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → y) 0 |] |] [| FreeVars null null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → 0) x |] |] [| FreeVars null null null |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → y) x |] |] [| FreeVars null null null |]
 
-𝔱 "subst:freev" [| freev [ulc| 0                 |] |] [| FreeVars null $ (():*None) ↦ pow [0]   |]
-𝔱 "subst:freev" [| freev [ulc| 0 1               |] |] [| FreeVars null $ (():*None) ↦ pow [0,1] |]
-𝔱 "subst:freev" [| freev [ulc| λ x → 0 1         |] |] [| FreeVars null $ (():*None) ↦ pow [0]   |]
-𝔱 "subst:freev" [| freev [ulc| λ x → (λ y → 2) 0 |] |] [| FreeVars null $ (():*None) ↦ pow [0]   |]
-𝔱 "subst:freev" [| freev [ulc| λ x → (λ y → 1) 1 |] |] [| FreeVars null $ (():*None) ↦ pow [0]   |]
-𝔱 "subst:freev" [| freev [ulc| λ x → (λ y → 2) 1 |] |] [| FreeVars null $ (():*None) ↦ pow [0]   |]
+𝔱 "subst:fvs" [| fvs [ulc| 0                 |] |] [| FreeVars null null $ (():*None) ↦ pow [0]   |]
+𝔱 "subst:fvs" [| fvs [ulc| 0 1               |] |] [| FreeVars null null $ (():*None) ↦ pow [0,1] |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → 0 1         |] |] [| FreeVars null null $ (():*None) ↦ pow [0]   |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → 2) 0 |] |] [| FreeVars null null $ (():*None) ↦ pow [0]   |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → 1) 1 |] |] [| FreeVars null null $ (():*None) ↦ pow [0]   |]
+𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → 2) 1 |] |] [| FreeVars null null $ (():*None) ↦ pow [0]   |]
 
-𝔱 "subst:freev" [| freev [ulc| x |] |] 
-                [| FreeVars null $ dict 
+𝔱 "subst:fvs" [| fvs [ulc| x |] |] 
+                [| FreeVars null null $ dict 
                      [ (():*Some (var "x")) ↦ pow [0]
                      ] 
                 |]
-𝔱 "subst:freev" [| freev [ulc| x y |] |] 
-                [| FreeVars null $ dict
+𝔱 "subst:fvs" [| fvs [ulc| x y |] |] 
+                [| FreeVars null null $ dict
                      [ (():*Some (var "x")) ↦ pow [0] 
                      , (():*Some (var "y")) ↦ pow [0] 
                      ]
                 |]
-𝔱 "subst:freev" [| freev [ulc| λ x → y |] |] 
-                [| FreeVars null $ dict
+𝔱 "subst:fvs" [| fvs [ulc| λ x → y |] |] 
+                [| FreeVars null null $ dict
                      [ (():*Some (var "y")) ↦ pow [0] 
                      ]
                 |]
-𝔱 "subst:freev" [| freev [ulc| λ x → (λ y → x) y |] |] 
-                [| FreeVars null $ dict
+𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → x) y |] |] 
+                [| FreeVars null null $ dict
                      [ (():*Some (var "y")) ↦ pow [0] 
                      ]
                 |]
-𝔱 "subst:freev" [| freev [ulc| λ x → (λ y → x) x y |] |] 
-                [| FreeVars null $ dict
+𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → x) x y |] |] 
+                [| FreeVars null null $ dict
                      [ (():*Some (var "y")) ↦ pow [0] 
                      ]
                 |]

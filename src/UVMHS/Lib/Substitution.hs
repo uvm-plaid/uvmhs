@@ -129,8 +129,9 @@ dsubstVar (DSubst ρ̇ es ι) ṅ =
 -------------------------------
 
 data GSubst s₁ s₂ e = GSubst 
-  { gsubstGlobal ∷ s₁ ⇰ SubstElem s₂ e
-  , gsubstScoped ∷ s₂ ⇰ DSubst s₂ e 
+  { gsubstGVars ∷ s₁ ⇰ SubstElem s₂ e
+  , gsubstMetas ∷ s₁ ⇰ SubstElem s₂ e
+  , gsubstSubst ∷ s₂ ⇰ DSubst s₂ e 
   } 
   deriving (Eq,Ord,Show)
 makeLenses ''GSubst
@@ -139,29 +140,34 @@ makePrettyUnion ''GSubst
 instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s₁ s₂ e) where 
   fuzzy = do
     esᴳ ← fuzzy
+    esᴹ ← fuzzy
     𝓈 ← fuzzy
-    return $ GSubst esᴳ 𝓈
+    return $ GSubst esᴳ esᴹ 𝓈
 
 𝓈shiftG ∷ (Ord s₂) ⇒ s₂ ⇰ ℕ64 → GSubst s₁ s₂ e → GSubst s₁ s₂ e
-𝓈shiftG 𝑠 (GSubst esᴳ 𝓈s) = 
-  let 𝓈s' = mapWithKeyOn 𝓈s $ \ s (DSubst ρ es ι) →
+𝓈shiftG 𝑠 (GSubst esᴳ esᴹ 𝓈s) = 
+  let esᴳ' = map (introSubstElem 𝑠) esᴳ
+      esᴹ' = map (introSubstElem 𝑠) esᴹ
+      𝓈s' = mapWithKeyOn 𝓈s $ \ s (DSubst ρ es ι) →
         let ρ'  = ρ + ifNone 0 (𝑠 ⋕? s)
             es' = mapOn es $ introSSubstElem s 𝑠
         in DSubst ρ' es' ι
-      esᴳ' = mapOn esᴳ $ introSubstElem 𝑠
-  in GSubst esᴳ' 𝓈s'
+  in GSubst esᴳ' esᴹ' 𝓈s'
 
 𝓈introG ∷ s₂ ⇰ ℕ64 → GSubst s₁ s₂ e
-𝓈introG 𝑠 = GSubst null $ mapOn 𝑠 $ DSubst 0 null ∘ intΩ64
+𝓈introG 𝑠 = GSubst null null $ mapOn 𝑠 $ DSubst 0 null ∘ intΩ64
 
 𝓈sbindsG ∷ s₂ ⇰ 𝕍 e → GSubst s₁ s₂ e
-𝓈sbindsG ess = GSubst null $ mapOn ess $ \ es →
+𝓈sbindsG ess = GSubst null null $ mapOn ess $ \ es →
   let ℯs = map (Trm_SSE ∘ SubstElem null ∘ const ∘ return) es
       ι  = neg $ intΩ64 $ csize es
   in DSubst zero ℯs ι
 
 𝓈sgbindsG ∷ s₁ ⇰ e → GSubst s₁ s₂ e
-𝓈sgbindsG esᴳ = GSubst (map (SubstElem null ∘ const ∘ return) esᴳ) null
+𝓈sgbindsG esᴳ = GSubst (map (SubstElem null ∘ const ∘ return) esᴳ) null null
+
+𝓈smbindsG ∷ s₁ ⇰ e → GSubst s₁ s₂ e
+𝓈smbindsG esᴳ = GSubst null (map (SubstElem null ∘ const ∘ return) esᴳ) null
 
 -- 𝓈₁ ≜ ⟨ρ₁,es₁,ι₁⟩
 -- 𝓈₂ ≜ ⟨ρ₂,es₂,ι₂⟩
@@ -211,13 +217,15 @@ appendGSubst ∷
   → GSubst s₁ s₂ e 
   → GSubst s₁ s₂ e
 appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
-  let GSubst esᴳ₁ 𝓈s₁ = 𝓈̂₁
-      GSubst esᴳ₂ 𝓈s₂ = 𝓈̂₂
+  let GSubst esᴳ₁ esᴹ₁ 𝓈s₁ = 𝓈̂₁
+      GSubst esᴳ₂ esᴹ₂ 𝓈s₂ = 𝓈̂₂
       esub 𝓈 𝑠 = esubst $ appendGSubst esubst 𝓈 $ 𝓈introG 𝑠
-      ℯsub s 𝓈 = subSSubstElem (elim𝑂 Var_SSE dsubstVar $ gsubstScoped 𝓈 ⋕? s) $ esub 𝓈
-      esᴳ₁' = mapOn esᴳ₁ $ subSubstElem $ esub 𝓈̂₂
-      esᴳ = esᴳ₁' ⩌ esᴳ₂ 
+      ℯsub s 𝓈 = subSSubstElem (elim𝑂 Var_SSE dsubstVar $ gsubstSubst 𝓈 ⋕? s) $ esub 𝓈
+      esᴳ₁' = map (subSubstElem $ esub 𝓈̂₂) esᴳ₁
+      esᴹ₁' = map (subSubstElem $ esub 𝓈̂₂) esᴹ₁
       𝓈s₁' = mapWithKeyOn 𝓈s₁ $ \ s (DSubst ρ̇₁ es₁ ι₁) → DSubst ρ̇₁ (mapOn es₁ $ ℯsub s 𝓈̂₂) ι₁
+      esᴳ = esᴳ₁' ⩌ esᴳ₂ 
+      esᴹ = esᴹ₁' ⩌ esᴹ₂ 
       𝓈s = unionWithOn 𝓈s₂ 𝓈s₁' $ \ 𝓈₂@(DSubst ρ̇₂ es₂ ι₂) 𝓈₁@(DSubst ρ̇₁ es₁ ι₁) →
         if
         | isNullDSubst 𝓈₁ → 𝓈₂
@@ -243,7 +251,7 @@ appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
                   | otherwise      → error "bad"
             in
             DSubst ρ̇ es ι
-  in GSubst esᴳ 𝓈s
+  in GSubst esᴳ esᴹ 𝓈s
 
 -------------------------------------------
 -- SUBSTY (STANDARD SCOPED SUBSTITUTION) --
@@ -254,27 +262,35 @@ newtype Subst s e = Subst { unSubst ∷ GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e 
 makeLenses ''Subst
 
 data FreeVars s = FreeVars
-  { freeVarsGlobal ∷ s ⇰ 𝑃 𝕏
-  , freeVarsScoped ∷ (s ∧ 𝑂 𝕏) ⇰ 𝑃 ℕ64
+  { freeVarsGVars ∷ s ⇰ 𝑃 𝕏
+  , freeVarsMetas ∷ s ⇰ 𝑃 𝕏
+  , freeVarsScope ∷ (s ∧ 𝑂 𝕏) ⇰ 𝑃 ℕ64
   } deriving (Eq,Ord,Show)
 makeLenses ''FreeVars
 makePrettyRecord ''FreeVars
 
 instance Null (FreeVars s) where 
-  null = FreeVars null null
+  null = FreeVars null null null
 instance (Ord s) ⇒ Append (FreeVars s) where 
-  FreeVars xs₁ sys₁ ⧺ FreeVars xs₂ sys₂ = FreeVars (xs₁ ⧺ xs₂) $ sys₁ ⧺ sys₂
+  FreeVars gxs₁ mxs₁ sys₁ ⧺ FreeVars gxs₂ mxs₂ sys₂ = 
+    FreeVars (gxs₁ ⧺ gxs₂) (mxs₁ ⧺ mxs₂) $ sys₁ ⧺ sys₂
 instance (Ord s) ⇒ Monoid (FreeVars s)
 
+data FreeVarsAction s = FreeVarsAction
+  { freeVarsActionFilter ∷ s → 𝕐 → 𝔹
+  , freeVarsActionScope  ∷ (s ∧ 𝑂 𝕏) ⇰ ℕ64
+  }
+makeLenses ''FreeVarsAction
+
 data SubstAction s e = SubstAction
-  { substActionNoBdr ∷ 𝔹
-  , substActionRebnd ∷ 𝑂 𝔹
-  , substActionSubst ∷ Subst s e
+  { substActionSkipShift ∷ 𝔹
+  , substActionBdrChange ∷ 𝑂 𝔹
+  , substActionSubst     ∷ Subst s e
   }
 makeLenses ''SubstAction
 
 data SubstEnv s e = 
-    FVsSubstEnv ((s ∧ 𝑂 𝕏) ⇰ ℕ64)
+    FVsSubstEnv (FreeVarsAction s)
   | SubSubstEnv (SubstAction s e)
 makePrisms ''SubstEnv
 
@@ -288,26 +304,49 @@ newtype SubstM s e a = SubstM
   , MonadFail
   )
 
-runSubstM ∷ SubstEnv s e → SubstM s e a → FreeVars s ∧ 𝑂 a
-runSubstM γ = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ evalUContT ∘ unSubstM
+mkSubstM ∷ (∀ u. SubstEnv s e → (a → SubstEnv s e → FreeVars s ∧ 𝑂 u) → FreeVars s ∧ 𝑂 u)
+         → SubstM s e a
+mkSubstM f = SubstM $ UContT (\ 𝓀 → ReaderT $ \ γ → FailT $ WriterT $ ID $ f γ $ \ x γ' → 
+  unID $ unWriterT $ unFailT $ runReaderT γ' $ 𝓀 x)
+
+runSubstM ∷ 
+    SubstEnv s e 
+  → (a → SubstEnv s e → FreeVars s ∧ 𝑂 u) 
+  → SubstM s e a 
+  → FreeVars s ∧ 𝑂 u
+runSubstM γ 𝓀 = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ runUContT 𝓀' ∘ unSubstM
+  where
+    𝓀' x = ReaderT $ \ γ' → FailT $ WriterT $ ID $ 𝓀 x γ'
+
+runSubstMHalt ∷ SubstEnv s e → SubstM s e a → FreeVars s ∧ 𝑂 a
+runSubstMHalt γ = runSubstM γ (\ x _ → null :* Some x)
 
 class Substy s e a | a→s,a→e where
   substy ∷ a → SubstM s e a
 
+substWith ∷ (Substy s e a) ⇒ (SubstAction s e → SubstAction s e) → Subst s e → a → 𝑂 a
+substWith f 𝓈 = snd ∘ runSubstMHalt (SubSubstEnv $ f $ SubstAction False None 𝓈) ∘ substy
+
 subst ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
-subst 𝓈 = snd ∘ runSubstM (SubSubstEnv $ SubstAction False None 𝓈) ∘ substy
+subst = substWith id
 
 todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
-todbr = snd ∘ runSubstM (SubSubstEnv $ SubstAction False (Some True) null) ∘ substy
+todbr = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction False (Some True) null) ∘ substy
 
 tonmd ∷ (Substy s e a) ⇒ a → 𝑂 a
-tonmd = snd ∘ runSubstM (SubSubstEnv $ SubstAction False (Some False) null) ∘ substy
+tonmd = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction False (Some False) null) ∘ substy
 
-freev ∷ (Substy s e a) ⇒ a → FreeVars s
-freev = fst ∘ runSubstM (FVsSubstEnv null) ∘ substy
+fvsWith ∷ (Substy s e a) ⇒ (FreeVarsAction s → FreeVarsAction s) → a → FreeVars s
+fvsWith f = fst ∘ runSubstMHalt (FVsSubstEnv $ f $ FreeVarsAction (const $ const True) null) ∘ substy
+
+fvsMetas ∷ (Ord s,Substy s e a) ⇒ 𝑃 s → a → FreeVars s
+fvsMetas ss = fvsWith $ update freeVarsActionFilterL $ \ s y → s ∈ ss ⩓ shape mVarL y
+
+fvs ∷ (Substy s e a) ⇒ a → FreeVars s
+fvs = fvsWith id
 
 nullSubst ∷ Subst s e
-nullSubst = Subst $ GSubst null null
+nullSubst = Subst $ GSubst null null null
 
 appendSubst ∷ (Ord s,Substy s e e) ⇒ Subst s e → Subst s e → Subst s e
 appendSubst 𝓈₂ 𝓈₁ = Subst $ appendGSubst (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
@@ -391,20 +430,20 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 substyDBdr ∷ (Ord s) ⇒ s → SubstM s e ()
 substyDBdr s = umodifyEnv $ compose
   [ alter subSubstEnvL $ alter substActionSubstL $ 𝓈sdshift $ s ↦ 1
-  , alter fVsSubstEnvL $ (⧺) $ (s :* None) ↦ 1
+  , alter fVsSubstEnvL $ alter freeVarsActionScopeL $ (⧺) $ (s :* None) ↦ 1
   ]
 
 substyNBdr ∷ (Ord s) ⇒ s → 𝕏 → SubstM s e ()
 substyNBdr s x = umodifyEnv $ compose
   [ alter subSubstEnvL $ alter substActionSubstL $ 𝓈snshift $ s ↦ x ↦ 1
-  , alter fVsSubstEnvL $ (⧺) $ (s :* Some x) ↦ 1
+  , alter fVsSubstEnvL $ alter freeVarsActionScopeL $ (⧺) $ (s :* Some x) ↦ 1
   ]
 
 substyBdr ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 → e) → 𝕏 → SubstM s e ()
 substyBdr s 𝓋 x = do
   substyDBdr s
   substyNBdr s x
-  bO ← access substActionRebndL *∘ view subSubstEnvL ^$ ask
+  bO ← access substActionBdrChangeL *∘ view subSubstEnvL ^$ ask
   case bO of
     None → skip
     Some b → do
@@ -424,13 +463,16 @@ substyVar ∷ (Ord s,Substy s e e) ⇒ 𝑂 𝕏 → s → (ℕ64 → e) → ℕ
 substyVar xO s 𝓋 n = do
   γ ← ask
   case γ of
-    FVsSubstEnv 𝑠 → do
-      let n₀ = ifNone 0 (𝑠 ⋕? (s :* xO))
+    FVsSubstEnv 𝒶 → do
+      let n₀ = ifNone 0 (freeVarsActionScope 𝒶 ⋕? (s :* xO))
       when (n ≥ n₀) $ do
-        tell $ FreeVars null $ (s :* xO) ↦ single (n-n₀)
+        let n' = n-n₀
+            y = elim𝑂 DVar (flip NVar) xO n'
+        when (freeVarsActionFilter 𝒶 s y) $
+          tell $ FreeVars null null $ (s :* xO) ↦ single n'
       return $ 𝓋 n
-    SubSubstEnv 𝓈A → do
-      let 𝓈s = gsubstScoped $ unSubst $ substActionSubst 𝓈A
+    SubSubstEnv 𝒶 → do
+      let 𝓈s = gsubstSubst $ unSubst $ substActionSubst 𝒶
       case 𝓈s ⋕? (s :* xO) of
         None → return $ 𝓋 n
         Some 𝓈 → case dsubstVar 𝓈 n of
@@ -447,17 +489,35 @@ substyGVar ∷ (Ord s,Substy s e e) ⇒ s → (𝕏 → e) → 𝕏 → SubstM s
 substyGVar s 𝓋 x = do
   γ ← ask
   case γ of
-    FVsSubstEnv _𝑠 → do
-      tell $ FreeVars (s ↦ single x) null
+    FVsSubstEnv 𝒶 → do
+      let y = GVar x
+      when (freeVarsActionFilter 𝒶 s y) $
+        tell $ FreeVars (s ↦ single x) null null
       return $ 𝓋 x
     SubSubstEnv 𝓈A → do
-      let gsᴱ =  gsubstGlobal $ unSubst $ substActionSubst 𝓈A
-      case gsᴱ ⋕? (s :* x) of
+      let gsᴳ =  gsubstGVars $ unSubst $ substActionSubst 𝓈A
+      case gsᴳ ⋕? (s :* x) of
+        None → return $ 𝓋 x
+        Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
+
+substyMVar ∷ (Ord s,Substy s e e) ⇒ s → (𝕏 → e) → 𝕏 → SubstM s e e
+substyMVar s 𝓋 x = do
+  γ ← ask
+  case γ of
+    FVsSubstEnv 𝒶 → do
+      let y = MVar x
+      when (freeVarsActionFilter 𝒶 s y) $
+        tell $ FreeVars null (s ↦ single x) null
+      return $ 𝓋 x
+    SubSubstEnv 𝓈A → do
+      let gsᴹ =  gsubstMetas $ unSubst $ substActionSubst 𝓈A
+      case gsᴹ ⋕? (s :* x) of
         None → return $ 𝓋 x
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
 
 substy𝕐 ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 → e) → 𝕐 → SubstM s e e
 substy𝕐 s 𝓋 = \case
-  DVar n   → substyDVar s (𝓋 ∘ DVar)        n
+  DVar n   → substyDVar s (𝓋 ∘ DVar)          n
   NVar n x → substyNVar s (𝓋 ∘ flip NVar x) x n
   GVar   x → substyGVar s (𝓋 ∘ GVar)        x
+  MVar   x → substyMVar s (𝓋 ∘ MVar)        x

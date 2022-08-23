@@ -11,8 +11,7 @@ import UVMHS.Lib.Rand
 
 -- simple variables
 data 𝕏 = 𝕏
-  { 𝕩meta ∷ 𝔹
-  , 𝕩mark ∷ 𝑂 ℕ64
+  { 𝕩mark ∷ 𝑂 ℕ64
   , 𝕩name ∷ 𝕊
   } deriving (Eq,Ord,Show)
 makeLenses ''𝕏
@@ -22,11 +21,12 @@ data 𝕐 =
     DVar ℕ64
   | NVar ℕ64 𝕏
   | GVar 𝕏
+  | MVar 𝕏
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
 
 var ∷ 𝕊 → 𝕏
-var = 𝕏 False None
+var = 𝕏 None
 
 nvar ∷ 𝕏 → 𝕐
 nvar = NVar 0
@@ -37,17 +37,17 @@ nvarL = prism nvar $ \case
   _ → None
 
 instance Pretty 𝕏 where
-  pretty (𝕏 m nO x) = concat
+  pretty (𝕏 nO x) = concat
     [ ppString x
     , elim𝑂 null (\ n → ppPun $ concat ["#",show𝕊 n]) nO
-    , if not m then null else ppPun "†"
     ]
 
 instance Pretty 𝕐 where
   pretty = \case
     NVar n x → concat [pretty x,if n ≡ 0 then null else ppPun $ concat ["↑",show𝕊 n]]
     DVar n → concat [ppPun "⌊",pretty n,ppPun "⌋"]
-    GVar x → concat [pretty x,ppPun "†"]
+    GVar x → concat [pretty x]
+    MVar x → concat [pretty x,ppPun "†"]
 
 cpVar ∷ CParser TokenBasic 𝕏
 cpVar = var ^$ cpShaped $ view nameTBasicL
@@ -73,9 +73,8 @@ cpGVarWS = GVar ∘ var ^$ cpShaped $ view nameTWSBasicL
 
 instance Fuzzy 𝕏 where
   fuzzy = do
-    m ← fuzzy
     nO ← fuzzy
-    return $ 𝕏 m nO "x"
+    return $ 𝕏 nO "x"
 
 instance Fuzzy 𝕐 where
   fuzzy = rchoose $ map const
@@ -84,4 +83,5 @@ instance Fuzzy 𝕐 where
          x ← fuzzy
          return $ NVar n x
     , GVar ^$ fuzzy
+    , MVar ^$ fuzzy
     ]

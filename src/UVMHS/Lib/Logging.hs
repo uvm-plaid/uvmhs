@@ -49,3 +49,9 @@ pplogdIndentReset = localL (logOptionsDepthL ⊚ hasLens) zero
 
 -- upplogdIndentReset ∷ (Monad m,MonadIO m,MonadUCont m,MonadReader r m,HasLens r LogOptions) ⇒ m a → m a
 -- upplogdIndentReset = ulocalL (logOptionsDepthL ⊚ hasLens) zero
+
+whenLogLevelZ ∷ (Monad m,MonadReader r m,HasLens r LogOptions) ⇒ ℕ64 → m () → m ()
+whenLogLevelZ l xM = do
+  ll ← askL $ logOptionsLevelL ⊚ hasLens
+  whenZ (l ≤ ll) xM
+
