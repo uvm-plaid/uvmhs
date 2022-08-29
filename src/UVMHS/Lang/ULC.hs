@@ -27,7 +27,11 @@ type ULCExpSrc = ULCExp SrcCxt
 type ULCExpRaw = ULCExp ()
 
 lexULCExp ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexULCExp = lexerBasic (list ["(",")","->","→","^","↑"]) (list ["lam","λ"]) null null
+lexULCExp = 
+  lexerBasic (list ["(",")","->","→","^","↑",":"]) 
+             (list ["lam","λ"]) 
+             (list ["glbl","𝔤","meta","𝔪"]) 
+             null
 
 pULCExp ∷ CParser TokenBasic ULCExpSrc
 pULCExp = ULCExp ^$ fmixfixWithContext "exp" $ concat
@@ -40,11 +44,22 @@ pULCExp = ULCExp ^$ fmixfixWithContext "exp" $ concat
       n ← failEff ∘ natO64 *$ cpInteger
       return $ Var_ULC $ DVar n
   , fmixTerminal $ do
+      fO ← cpOptional $ concat
+        [ do void $ concat $ map cpSyntax ["glbl","𝔤"]
+             void $ cpSyntax ":"
+             return GVar
+        , do void $ concat $ map cpSyntax ["meta","𝔪"]
+             void $ cpSyntax ":"
+             return MVar
+        ]
       x ← cpVar
-      n ← ifNone 0 ^$ cpOptional $ do
-        void $ concat $ map cpSyntax ["^","↑"]
-        failEff ∘ natO64 *$ cpInteger
-      return $ Var_ULC $ NVar n x
+      case fO of
+        Some f → return $ Var_ULC $ f x
+        None → do
+          n ← ifNone 0 ^$ cpOptional $ do
+            void $ concat $ map cpSyntax ["^","↑"]
+            failEff ∘ natO64 *$ cpInteger
+          return $ Var_ULC $ NVar n x
   , fmixPrefix pLET $ do
       void $ concat $ map cpSyntax ["lam","λ"]
       xO ← cpOptional $ cpVar

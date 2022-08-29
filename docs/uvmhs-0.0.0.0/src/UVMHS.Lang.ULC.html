@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621680314807"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHS.Lang.ULC</span><span> </span><span class="hs-keyword">where</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621680315587"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHS.Lang.ULC</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-2"></span><span>
 </span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Core.html"><span class="hs-identifier">UVMHS.Core</span></a></span><span>
 </span><span id="line-4"></span><span>
@@ -15,9 +15,9 @@
 </span><span id="line-15"></span><span>
 </span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Control.Monad.Fail</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">HS</span></span><span>
 </span><span id="line-17"></span><span>
-</span><span id="line-18"></span><span class="hs-keyword">newtype</span><span> </span><span id="ULCExp"><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span></span><span> </span><span id="local-6989586621680315008"><span class="annot"><a href="#local-6989586621680315008"><span class="hs-identifier hs-type">&#119992;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ULCExp"><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="unULCExp"><span class="annot"><span class="annottext">forall &#119992;. ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
-</span><a href="UVMHS.Lang.ULC.html#unULCExp"><span class="hs-identifier hs-var hs-var">unULCExp</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-type">&#119860;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315008"><span class="hs-identifier hs-type">&#119992;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp_R"><span class="hs-identifier hs-type">ULCExp_R</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315008"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">}</span><span>
-</span><span id="line-19"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680314716"><span id="local-6989586621680314722"><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool
+</span><span id="line-18"></span><span class="hs-keyword">newtype</span><span> </span><span id="ULCExp"><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span></span><span> </span><span id="local-6989586621680315786"><span class="annot"><a href="#local-6989586621680315786"><span class="hs-identifier hs-type">&#119992;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ULCExp"><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="unULCExp"><span class="annot"><span class="annottext">forall &#119992;. ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
+</span><a href="UVMHS.Lang.ULC.html#unULCExp"><span class="hs-identifier hs-var hs-var">unULCExp</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-type">&#119860;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315786"><span class="hs-identifier hs-type">&#119992;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp_R"><span class="hs-identifier hs-type">ULCExp_R</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315786"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-19"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680315464"><span id="local-6989586621680315470"><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool
 (ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool)
 -&gt; (ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool) -&gt; Eq (ULCExp &#119992;)
 forall &#119992;. ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool
@@ -26,7 +26,7 @@ forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 $c/= :: forall &#119992;. ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool
 == :: ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool
 $c== :: forall &#119992;. ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680314676"><span id="local-6989586621680314681"><span id="local-6989586621680314686"><span id="local-6989586621680314691"><span id="local-6989586621680314696"><span id="local-6989586621680314701"><span id="local-6989586621680314707"><span class="annot"><span class="annottext">Eq (ULCExp &#119992;)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680315424"><span id="local-6989586621680315429"><span id="local-6989586621680315434"><span id="local-6989586621680315439"><span id="local-6989586621680315444"><span id="local-6989586621680315449"><span id="local-6989586621680315455"><span class="annot"><span class="annottext">Eq (ULCExp &#119992;)
 Eq (ULCExp &#119992;)
 -&gt; (ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Ordering)
 -&gt; (ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool)
@@ -67,7 +67,7 @@ $c&lt;= :: forall &#119992;. ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool
 $c&lt; :: forall &#119992;. ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Bool
 compare :: ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Ordering
 $ccompare :: forall &#119992;. ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680314660"><span id="local-6989586621680314662"><span id="local-6989586621680314669"><span class="annot"><span class="annottext">Int -&gt; ULCExp &#119992; -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680315408"><span id="local-6989586621680315410"><span id="local-6989586621680315417"><span class="annot"><span class="annottext">Int -&gt; ULCExp &#119992; -&gt; ShowS
 [ULCExp &#119992;] -&gt; ShowS
 ULCExp &#119992; -&gt; String
 (Int -&gt; ULCExp &#119992; -&gt; ShowS)
@@ -84,11 +84,11 @@ $cshow :: forall &#119992;. Show &#119992; =&gt; ULCExp &#119992; -&gt; String
 showsPrec :: Int -&gt; ULCExp &#119992; -&gt; ShowS
 $cshowsPrec :: forall &#119992;. Show &#119992; =&gt; Int -&gt; ULCExp &#119992; -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-20"></span><span class="hs-keyword">data</span><span> </span><span id="ULCExp_R"><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp_R"><span class="hs-identifier hs-var">ULCExp_R</span></a></span></span><span> </span><span id="local-6989586621680315039"><span class="annot"><a href="#local-6989586621680315039"><span class="hs-identifier hs-type">&#119992;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">data</span><span> </span><span id="ULCExp_R"><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp_R"><span class="hs-identifier hs-var">ULCExp_R</span></a></span></span><span> </span><span id="local-6989586621680315819"><span class="annot"><a href="#local-6989586621680315819"><span class="hs-identifier hs-type">&#119992;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-21"></span><span>    </span><span id="Var_ULC"><span class="annot"><a href="UVMHS.Lang.ULC.html#Var_ULC"><span class="hs-identifier hs-var">Var_ULC</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Variables.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span>
-</span><span id="line-22"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Lam_ULC"><span class="annot"><a href="UVMHS.Lang.ULC.html#Lam_ULC"><span class="hs-identifier hs-var">Lam_ULC</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D442"><span class="hs-identifier hs-type">&#119874;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Variables.html#%1D54F"><span class="hs-identifier hs-type">&#120143;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315039"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-23"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="App_ULC"><span class="annot"><a href="UVMHS.Lang.ULC.html#App_ULC"><span class="hs-identifier hs-var">App_ULC</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315039"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315039"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-24"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680314644"><span id="local-6989586621680314654"><span class="annot"><span class="annottext">ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool
+</span><span id="line-22"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="Lam_ULC"><span class="annot"><a href="UVMHS.Lang.ULC.html#Lam_ULC"><span class="hs-identifier hs-var">Lam_ULC</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D442"><span class="hs-identifier hs-type">&#119874;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Variables.html#%1D54F"><span class="hs-identifier hs-type">&#120143;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315819"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="App_ULC"><span class="annot"><a href="UVMHS.Lang.ULC.html#App_ULC"><span class="hs-identifier hs-var">App_ULC</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315819"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315819"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-24"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680315392"><span id="local-6989586621680315402"><span class="annot"><span class="annottext">ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool
 (ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool)
 -&gt; (ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool) -&gt; Eq (ULCExp_R &#119992;)
 forall &#119992;. ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool
@@ -97,7 +97,7 @@ forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 $c/= :: forall &#119992;. ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool
 == :: ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool
 $c== :: forall &#119992;. ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680314610"><span id="local-6989586621680314612"><span id="local-6989586621680314615"><span id="local-6989586621680314618"><span id="local-6989586621680314621"><span id="local-6989586621680314629"><span id="local-6989586621680314639"><span class="annot"><span class="annottext">Eq (ULCExp_R &#119992;)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680315358"><span id="local-6989586621680315360"><span id="local-6989586621680315363"><span id="local-6989586621680315366"><span id="local-6989586621680315369"><span id="local-6989586621680315377"><span id="local-6989586621680315387"><span class="annot"><span class="annottext">Eq (ULCExp_R &#119992;)
 Eq (ULCExp_R &#119992;)
 -&gt; (ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Ordering)
 -&gt; (ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool)
@@ -138,7 +138,7 @@ $c&lt;= :: forall &#119992;. ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; B
 $c&lt; :: forall &#119992;. ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Bool
 compare :: ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Ordering
 $ccompare :: forall &#119992;. ULCExp_R &#119992; -&gt; ULCExp_R &#119992; -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680314592"><span id="local-6989586621680314594"><span id="local-6989586621680314607"><span class="annot"><span class="annottext">Int -&gt; ULCExp_R &#119992; -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680315340"><span id="local-6989586621680315342"><span id="local-6989586621680315355"><span class="annot"><span class="annottext">Int -&gt; ULCExp_R &#119992; -&gt; ShowS
 [ULCExp_R &#119992;] -&gt; ShowS
 ULCExp_R &#119992; -&gt; String
 (Int -&gt; ULCExp_R &#119992; -&gt; ShowS)
@@ -163,7 +163,8 @@ $cshowsPrec :: forall &#119992;. Show &#119992; =&gt; Int -&gt; ULCExp_R &#11999
 </span><span id="line-28"></span><span>
 </span><span id="line-29"></span><span class="annot"><a href="UVMHS.Lang.ULC.html#lexULCExp"><span class="hs-identifier hs-type">lexULCExp</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#CharClass"><span class="hs-identifier hs-type">CharClass</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2102"><span class="hs-identifier hs-type">&#8450;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenClassBasic"><span class="hs-identifier hs-type">TokenClassBasic</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span>
 </span><span id="line-30"></span><span id="lexULCExp"><span class="annot"><span class="annottext">lexULCExp :: Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
-</span><a href="UVMHS.Lang.ULC.html#lexULCExp"><span class="hs-identifier hs-var hs-var">lexULCExp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119871; &#120138;
+</span><a href="UVMHS.Lang.ULC.html#lexULCExp"><span class="hs-identifier hs-var hs-var">lexULCExp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><span id="line-31"></span><span>  </span><span class="annot"><span class="annottext">&#119871; &#120138;
 -&gt; &#119871; &#120138;
 -&gt; &#119871; &#120138;
 -&gt; &#119871; &#120138;
@@ -176,18 +177,26 @@ forall a t. ToIter a t =&gt; t -&gt; &#119871; a
 </span><span class="hs-string">&quot;-&gt;&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#8594;&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;^&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;&#8593;&quot;</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[&#120138;] -&gt; &#119871; &#120138;
+</span><span class="hs-string">&quot;&#8593;&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;:&quot;</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span>
+</span><span id="line-32"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[&#120138;] -&gt; &#119871; &#120138;
 forall a t. ToIter a t =&gt; t -&gt; &#119871; a
 </span><a href="UVMHS.Core.Data.Iter.html#list"><span class="hs-identifier hs-var">list</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;lam&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;&#955;&quot;</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119871; &#120138;
-forall a. Null a =&gt; a
-</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; &#120138;
+</span><span class="hs-string">&quot;&#955;&quot;</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span>
+</span><span id="line-33"></span><span>             </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[&#120138;] -&gt; &#119871; &#120138;
+forall a t. ToIter a t =&gt; t -&gt; &#119871; a
+</span><a href="UVMHS.Core.Data.Iter.html#list"><span class="hs-identifier hs-var">list</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;glbl&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;&#120100;&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;meta&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;&#120106;&quot;</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span>
+</span><span id="line-34"></span><span>             </span><span class="annot"><span class="annottext">&#119871; &#120138;
 forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
-</span><span id="line-31"></span><span>
-</span><span id="line-32"></span><span class="annot"><a href="UVMHS.Lang.ULC.html#pULCExp"><span class="hs-identifier hs-type">pULCExp</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.CParser.html#CParser"><span class="hs-identifier hs-type">CParser</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExpSrc"><span class="hs-identifier hs-type">ULCExpSrc</span></a></span><span>
-</span><span id="line-33"></span><span id="pULCExp"><span class="annot"><span class="annottext">pULCExp :: CParser TokenBasic ULCExpSrc
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="annot"><a href="UVMHS.Lang.ULC.html#pULCExp"><span class="hs-identifier hs-type">pULCExp</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.CParser.html#CParser"><span class="hs-identifier hs-type">CParser</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExpSrc"><span class="hs-identifier hs-type">ULCExpSrc</span></a></span><span>
+</span><span id="line-37"></span><span id="pULCExp"><span class="annot"><span class="annottext">pULCExp :: CParser TokenBasic ULCExpSrc
 </span><a href="UVMHS.Lang.ULC.html#pULCExp"><span class="hs-identifier hs-var hs-var">pULCExp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExpSrc
 forall &#119992;. &#119860; &#119992; (ULCExp_R &#119992;) -&gt; ULCExp &#119992;
 </span><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExpSrc)
@@ -210,7 +219,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) (ULCExp_R SrcCxt)
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
-</span><span id="line-34"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic (ULCExp_R SrcCxt)
+</span><span id="line-38"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic (ULCExp_R SrcCxt)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) (ULCExp_R SrcCxt)
 forall t a (f :: * -&gt; *). CParser t a -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixTerminal"><span class="hs-identifier hs-var">fmixTerminal</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic (ULCExp_R SrcCxt)
@@ -219,7 +228,7 @@ forall t a (f :: * -&gt; *). CParser t a -&gt; MixfixF t f a
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) (ULCExp_R SrcCxt)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-35"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+</span><span id="line-39"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
 forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
 </span><a href="UVMHS.Core.Classes.Monad.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
 -&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
@@ -227,10 +236,10 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;(&quot;</span></span><span>
-</span><span id="line-36"></span><span>      </span><span id="local-6989586621680314578"><span class="annot"><span class="annottext">ULCExpSrc
-</span><a href="#local-6989586621680314578"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic ULCExpSrc
+</span><span id="line-40"></span><span>      </span><span id="local-6989586621680315326"><span class="annot"><span class="annottext">ULCExpSrc
+</span><a href="#local-6989586621680315326"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic ULCExpSrc
 </span><a href="UVMHS.Lang.ULC.html#pULCExp"><span class="hs-identifier hs-var">pULCExp</span></a></span><span>
-</span><span id="line-37"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+</span><span id="line-41"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
 forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
 </span><a href="UVMHS.Core.Classes.Monad.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
 -&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
@@ -238,7 +247,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;)&quot;</span></span><span>
-</span><span id="line-38"></span><span>      </span><span class="annot"><span class="annottext">ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
+</span><span id="line-42"></span><span>      </span><span class="annot"><span class="annottext">ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt))
 -&gt; ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
@@ -251,8 +260,8 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExpSrc -&gt; &#119860; SrcCxt (ULCExp_R SrcCxt)
 forall &#119992;. ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 </span><a href="UVMHS.Lang.ULC.html#unULCExp"><span class="hs-identifier hs-var hs-var">unULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExpSrc
-</span><a href="#local-6989586621680314578"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-39"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic (ULCExp_R SrcCxt)
+</span><a href="#local-6989586621680315326"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-43"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic (ULCExp_R SrcCxt)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) (ULCExp_R SrcCxt)
 forall t a (f :: * -&gt; *). CParser t a -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixTerminal"><span class="hs-identifier hs-var">fmixTerminal</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic (ULCExp_R SrcCxt)
@@ -261,8 +270,8 @@ forall t a (f :: * -&gt; *). CParser t a -&gt; MixfixF t f a
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) (ULCExp_R SrcCxt)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-40"></span><span>      </span><span id="local-6989586621680314575"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680314575"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">&#119874; &#8469;64 -&gt; CParser TokenBasic &#8469;64
+</span><span id="line-44"></span><span>      </span><span id="local-6989586621680315323"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680315323"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">&#119874; &#8469;64 -&gt; CParser TokenBasic &#8469;64
 forall (m :: * -&gt; *) a. (Monad m, MonadFail m) =&gt; &#119874; a -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#failEff"><span class="hs-identifier hs-var">failEff</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119874; &#8469;64 -&gt; CParser TokenBasic &#8469;64)
 -&gt; (&#8484; -&gt; &#119874; &#8469;64) -&gt; &#8484; -&gt; CParser TokenBasic &#8469;64
@@ -274,7 +283,7 @@ forall a. ToNatO64 a =&gt; a -&gt; &#119874; &#8469;64
 forall (m :: * -&gt; *) a b. Bind m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
 </span><a href="UVMHS.Core.Classes.Monad.html#%2A%24"><span class="hs-operator hs-var">*$</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#8484;
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpInteger"><span class="hs-identifier hs-var">cpInteger</span></a></span><span>
-</span><span id="line-41"></span><span>      </span><span class="annot"><span class="annottext">ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
+</span><span id="line-45"></span><span>      </span><span class="annot"><span class="annottext">ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt))
 -&gt; ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
@@ -285,8 +294,8 @@ forall &#119992;. &#120144; -&gt; ULCExp_R &#119992;
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#120144;
 </span><a href="UVMHS.Lib.Variables.html#DVar"><span class="hs-identifier hs-var">DVar</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680314575"><span class="hs-identifier hs-var">n</span></a></span><span>
-</span><span id="line-42"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic (ULCExp_R SrcCxt)
+</span><a href="#local-6989586621680315323"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-46"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic (ULCExp_R SrcCxt)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) (ULCExp_R SrcCxt)
 forall t a (f :: * -&gt; *). CParser t a -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixTerminal"><span class="hs-identifier hs-var">fmixTerminal</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic (ULCExp_R SrcCxt)
@@ -295,11 +304,96 @@ forall t a (f :: * -&gt; *). CParser t a -&gt; MixfixF t f a
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) (ULCExp_R SrcCxt)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-43"></span><span>      </span><span id="local-6989586621680314568"><span class="annot"><span class="annottext">&#120143;
-</span><a href="#local-6989586621680314568"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#120143;
+</span><span id="line-47"></span><span>      </span><span id="local-6989586621680315316"><span class="annot"><span class="annottext">&#119874; (&#120143; -&gt; &#120144;)
+</span><a href="#local-6989586621680315316"><span class="hs-identifier hs-var">fO</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic (&#120143; -&gt; &#120144;) -&gt; CParser TokenBasic (&#119874; (&#120143; -&gt; &#120144;))
+forall t a. Ord t =&gt; CParser t a -&gt; CParser t (&#119874; a)
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpOptional"><span class="hs-identifier hs-var">cpOptional</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic (&#120143; -&gt; &#120144;) -&gt; CParser TokenBasic (&#119874; (&#120143; -&gt; &#120144;)))
+-&gt; CParser TokenBasic (&#120143; -&gt; &#120144;) -&gt; CParser TokenBasic (&#119874; (&#120143; -&gt; &#120144;))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">[CParser TokenBasic (&#120143; -&gt; &#120144;)] -&gt; CParser TokenBasic (&#120143; -&gt; &#120144;)
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
+</span><span id="line-48"></span><span>        </span><span class="hs-special">[</span><span> </span><span class="hs-keyword">do</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
+</span><a href="UVMHS.Core.Classes.Monad.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
+-&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">[CParser TokenBasic TokenBasic] -&gt; CParser TokenBasic TokenBasic
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">([CParser TokenBasic TokenBasic] -&gt; CParser TokenBasic TokenBasic)
+-&gt; [CParser TokenBasic TokenBasic] -&gt; CParser TokenBasic TokenBasic
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; CParser TokenBasic TokenBasic)
+-&gt; [&#120138;] -&gt; [CParser TokenBasic TokenBasic]
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;glbl&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;&#120100;&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-49"></span><span>             </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
+</span><a href="UVMHS.Core.Classes.Monad.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
+-&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;:&quot;</span></span><span>
+</span><span id="line-50"></span><span>             </span><span class="annot"><span class="annottext">(&#120143; -&gt; &#120144;) -&gt; CParser TokenBasic (&#120143; -&gt; &#120144;)
+forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
+</span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">&#120143; -&gt; &#120144;
+</span><a href="UVMHS.Lib.Variables.html#GVar"><span class="hs-identifier hs-var">GVar</span></a></span><span>
+</span><span id="line-51"></span><span>        </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">do</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
+</span><a href="UVMHS.Core.Classes.Monad.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
+-&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">[CParser TokenBasic TokenBasic] -&gt; CParser TokenBasic TokenBasic
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">([CParser TokenBasic TokenBasic] -&gt; CParser TokenBasic TokenBasic)
+-&gt; [CParser TokenBasic TokenBasic] -&gt; CParser TokenBasic TokenBasic
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; CParser TokenBasic TokenBasic)
+-&gt; [&#120138;] -&gt; [CParser TokenBasic TokenBasic]
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;meta&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;&#120106;&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-52"></span><span>             </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
+</span><a href="UVMHS.Core.Classes.Monad.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
+-&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><span class="hs-string">&quot;:&quot;</span></span><span>
+</span><span id="line-53"></span><span>             </span><span class="annot"><span class="annottext">(&#120143; -&gt; &#120144;) -&gt; CParser TokenBasic (&#120143; -&gt; &#120144;)
+forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
+</span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">&#120143; -&gt; &#120144;
+</span><a href="UVMHS.Lib.Variables.html#MVar"><span class="hs-identifier hs-var">MVar</span></a></span><span>
+</span><span id="line-54"></span><span>        </span><span class="hs-special">]</span><span>
+</span><span id="line-55"></span><span>      </span><span id="local-6989586621680315311"><span class="annot"><span class="annottext">&#120143;
+</span><a href="#local-6989586621680315311"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#120143;
 </span><a href="UVMHS.Lib.Variables.html#cpVar"><span class="hs-identifier hs-var">cpVar</span></a></span><span>
-</span><span id="line-44"></span><span>      </span><span id="local-6989586621680314566"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680314566"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#119874; &#8469;64 -&gt; &#8469;64
+</span><span id="line-56"></span><span>      </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#119874; (&#120143; -&gt; &#120144;)
+</span><a href="#local-6989586621680315316"><span class="hs-identifier hs-var">fO</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-57"></span><span>        </span><span class="annot"><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-type">Some</span></a></span><span> </span><span id="local-6989586621680315308"><span class="annot"><span class="annottext">&#120143; -&gt; &#120144;
+</span><a href="#local-6989586621680315308"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
+forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
+</span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt))
+-&gt; ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; -&gt; ULCExp_R SrcCxt
+forall &#119992;. &#120144; -&gt; ULCExp_R &#119992;
+</span><a href="UVMHS.Lang.ULC.html#Var_ULC"><span class="hs-identifier hs-var">Var_ULC</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120144; -&gt; ULCExp_R SrcCxt) -&gt; &#120144; -&gt; ULCExp_R SrcCxt
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120143; -&gt; &#120144;
+</span><a href="#local-6989586621680315308"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">&#120143;
+</span><a href="#local-6989586621680315311"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-58"></span><span>        </span><span class="annot"><span class="annottext">&#119874; (&#120143; -&gt; &#120144;)
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-59"></span><span>          </span><span id="local-6989586621680315306"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680315306"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#119874; &#8469;64 -&gt; &#8469;64
 forall a. a -&gt; &#119874; a -&gt; a
 </span><a href="UVMHS.Core.Data.Option.html#ifNone"><span class="hs-identifier hs-var">ifNone</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">(&#119874; &#8469;64 -&gt; &#8469;64)
@@ -311,7 +405,7 @@ forall t a. Ord t =&gt; CParser t a -&gt; CParser t (&#119874; a)
 -&gt; CParser TokenBasic &#8469;64 -&gt; CParser TokenBasic (&#119874; &#8469;64)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-45"></span><span>        </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+</span><span id="line-60"></span><span>            </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
 forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
 </span><a href="UVMHS.Core.Classes.Monad.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
 -&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
@@ -328,7 +422,7 @@ forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;^&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#8593;&quot;</span></span><span class="hs-special">]</span><span>
-</span><span id="line-46"></span><span>        </span><span class="annot"><span class="annottext">&#119874; &#8469;64 -&gt; CParser TokenBasic &#8469;64
+</span><span id="line-61"></span><span>            </span><span class="annot"><span class="annottext">&#119874; &#8469;64 -&gt; CParser TokenBasic &#8469;64
 forall (m :: * -&gt; *) a. (Monad m, MonadFail m) =&gt; &#119874; a -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#failEff"><span class="hs-identifier hs-var">failEff</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119874; &#8469;64 -&gt; CParser TokenBasic &#8469;64)
 -&gt; (&#8484; -&gt; &#119874; &#8469;64) -&gt; &#8484; -&gt; CParser TokenBasic &#8469;64
@@ -340,7 +434,7 @@ forall a. ToNatO64 a =&gt; a -&gt; &#119874; &#8469;64
 forall (m :: * -&gt; *) a b. Bind m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
 </span><a href="UVMHS.Core.Classes.Monad.html#%2A%24"><span class="hs-operator hs-var">*$</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#8484;
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpInteger"><span class="hs-identifier hs-var">cpInteger</span></a></span><span>
-</span><span id="line-47"></span><span>      </span><span class="annot"><span class="annottext">ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
+</span><span id="line-62"></span><span>          </span><span class="annot"><span class="annottext">ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt))
 -&gt; ULCExp_R SrcCxt -&gt; CParser TokenBasic (ULCExp_R SrcCxt)
@@ -351,9 +445,9 @@ forall &#119992;. &#120144; -&gt; ULCExp_R &#119992;
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#120143; -&gt; &#120144;
 </span><a href="UVMHS.Lib.Variables.html#NVar"><span class="hs-identifier hs-var">NVar</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680314566"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#120143;
-</span><a href="#local-6989586621680314568"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-48"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680315306"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#120143;
+</span><a href="#local-6989586621680315311"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-63"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; CParser
      TokenBasic (&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExp_R SrcCxt)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) (ULCExp_R SrcCxt)
@@ -367,7 +461,7 @@ forall t (f :: * -&gt; *) a.
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) (ULCExp_R SrcCxt)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-49"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+</span><span id="line-64"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
 forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
 </span><a href="UVMHS.Core.Classes.Monad.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
 -&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
@@ -384,15 +478,15 @@ forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;lam&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#955;&quot;</span></span><span class="hs-special">]</span><span>
-</span><span id="line-50"></span><span>      </span><span id="local-6989586621680314559"><span class="annot"><span class="annottext">&#119874; &#120143;
-</span><a href="#local-6989586621680314559"><span class="hs-identifier hs-var">xO</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#120143; -&gt; CParser TokenBasic (&#119874; &#120143;)
+</span><span id="line-65"></span><span>      </span><span id="local-6989586621680315301"><span class="annot"><span class="annottext">&#119874; &#120143;
+</span><a href="#local-6989586621680315301"><span class="hs-identifier hs-var">xO</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#120143; -&gt; CParser TokenBasic (&#119874; &#120143;)
 forall t a. Ord t =&gt; CParser t a -&gt; CParser t (&#119874; a)
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpOptional"><span class="hs-identifier hs-var">cpOptional</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic &#120143; -&gt; CParser TokenBasic (&#119874; &#120143;))
 -&gt; CParser TokenBasic &#120143; -&gt; CParser TokenBasic (&#119874; &#120143;)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#120143;
 </span><a href="UVMHS.Lib.Variables.html#cpVar"><span class="hs-identifier hs-var">cpVar</span></a></span><span>
-</span><span id="line-51"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+</span><span id="line-66"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
 forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
 </span><a href="UVMHS.Core.Classes.Monad.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
 -&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
@@ -409,7 +503,7 @@ forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;-&gt;&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#8594;&quot;</span></span><span class="hs-special">]</span><span>
-</span><span id="line-52"></span><span>      </span><span class="annot"><span class="annottext">(&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExp_R SrcCxt)
+</span><span id="line-67"></span><span>      </span><span class="annot"><span class="annottext">(&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExp_R SrcCxt)
 -&gt; CParser
      TokenBasic (&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExp_R SrcCxt)
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
@@ -420,17 +514,17 @@ forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 -&gt; CParser
      TokenBasic (&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExp_R SrcCxt)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680314558"><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt)
-</span><a href="#local-6989586621680314558"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143; -&gt; ULCExpSrc -&gt; ULCExp_R SrcCxt
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680315300"><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt)
+</span><a href="#local-6989586621680315300"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143; -&gt; ULCExpSrc -&gt; ULCExp_R SrcCxt
 forall &#119992;. &#119874; &#120143; -&gt; ULCExp &#119992; -&gt; ULCExp_R &#119992;
 </span><a href="UVMHS.Lang.ULC.html#Lam_ULC"><span class="hs-identifier hs-var">Lam_ULC</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143;
-</span><a href="#local-6989586621680314559"><span class="hs-identifier hs-var">xO</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExpSrc -&gt; ULCExp_R SrcCxt) -&gt; ULCExpSrc -&gt; ULCExp_R SrcCxt
+</span><a href="#local-6989586621680315301"><span class="hs-identifier hs-var">xO</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExpSrc -&gt; ULCExp_R SrcCxt) -&gt; ULCExpSrc -&gt; ULCExp_R SrcCxt
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExpSrc
 forall &#119992;. &#119860; &#119992; (ULCExp_R &#119992;) -&gt; ULCExp &#119992;
 </span><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt)
-</span><a href="#local-6989586621680314558"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-53"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680315300"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-68"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; CParser
      TokenBasic
      (&#119860; SrcCxt (ULCExp_R SrcCxt)
@@ -470,23 +564,23 @@ forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
      (&#119860; SrcCxt (ULCExp_R SrcCxt)
       -&gt; &#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExp_R SrcCxt)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680314555"><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt)
-</span><a href="#local-6989586621680314555"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span id="local-6989586621680314554"><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt)
-</span><a href="#local-6989586621680314554"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span>
-</span><span id="line-54"></span><span>      </span><span class="annot"><span class="annottext">ULCExpSrc -&gt; ULCExpSrc -&gt; ULCExp_R SrcCxt
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680315297"><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt)
+</span><a href="#local-6989586621680315297"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span id="local-6989586621680315296"><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt)
+</span><a href="#local-6989586621680315296"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span>
+</span><span id="line-69"></span><span>      </span><span class="annot"><span class="annottext">ULCExpSrc -&gt; ULCExpSrc -&gt; ULCExp_R SrcCxt
 forall &#119992;. ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; ULCExp_R &#119992;
 </span><a href="UVMHS.Lang.ULC.html#App_ULC"><span class="hs-identifier hs-var">App_ULC</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExpSrc
 forall &#119992;. &#119860; &#119992; (ULCExp_R &#119992;) -&gt; ULCExp &#119992;
 </span><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt)
-</span><a href="#local-6989586621680314555"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(ULCExpSrc -&gt; ULCExp_R SrcCxt) -&gt; ULCExpSrc -&gt; ULCExp_R SrcCxt
+</span><a href="#local-6989586621680315297"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(ULCExpSrc -&gt; ULCExp_R SrcCxt) -&gt; ULCExpSrc -&gt; ULCExp_R SrcCxt
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt) -&gt; ULCExpSrc
 forall &#119992;. &#119860; &#119992; (ULCExp_R &#119992;) -&gt; ULCExp &#119992;
 </span><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">&#119860; SrcCxt (ULCExp_R SrcCxt)
-</span><a href="#local-6989586621680314554"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span>
-</span><span id="line-55"></span><span>  </span><span class="hs-special">]</span><span>
-</span><span id="line-56"></span><span>
-</span><span id="line-57"></span><span id="local-6989586621680314936"><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680314936"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680314548"><span class="annot"><span class="annottext">pretty :: ULCExp &#119992; -&gt; Doc
+</span><a href="#local-6989586621680315296"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span>
+</span><span id="line-70"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-71"></span><span>
+</span><span id="line-72"></span><span id="local-6989586621680315716"><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315716"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680315290"><span class="annot"><span class="annottext">pretty :: ULCExp &#119992; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ULCExp_R &#119992; -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R &#119992; -&gt; Doc)
@@ -500,25 +594,25 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 forall &#119992;. ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 </span><a href="UVMHS.Lang.ULC.html#unULCExp"><span class="hs-identifier hs-var hs-var">unULCExp</span></a></span></span><span>
-</span><span id="line-58"></span><span>
-</span><span id="line-59"></span><span id="local-6989586621680314935"><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp_R"><span class="hs-identifier hs-type">ULCExp_R</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680314935"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-60"></span><span>  </span><span id="local-6989586621680314525"><span class="annot"><span class="annottext">pretty :: ULCExp_R &#119992; -&gt; Doc
-</span><a href="#local-6989586621680314525"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-61"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#Var_ULC"><span class="hs-identifier hs-type">Var_ULC</span></a></span><span> </span><span id="local-6989586621680314524"><span class="annot"><span class="annottext">&#120144;
-</span><a href="#local-6989586621680314524"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#120144; -&gt; Doc
+</span><span id="line-73"></span><span>
+</span><span id="line-74"></span><span id="local-6989586621680315715"><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp_R"><span class="hs-identifier hs-type">ULCExp_R</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315715"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-75"></span><span>  </span><span id="local-6989586621680315267"><span class="annot"><span class="annottext">pretty :: ULCExp_R &#119992; -&gt; Doc
+</span><a href="#local-6989586621680315267"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-76"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#Var_ULC"><span class="hs-identifier hs-type">Var_ULC</span></a></span><span> </span><span id="local-6989586621680315266"><span class="annot"><span class="annottext">&#120144;
+</span><a href="#local-6989586621680315266"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#120144; -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144;
-</span><a href="#local-6989586621680314524"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-62"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#Lam_ULC"><span class="hs-identifier hs-type">Lam_ULC</span></a></span><span> </span><span id="local-6989586621680314523"><span class="annot"><span class="annottext">&#119874; &#120143;
-</span><a href="#local-6989586621680314523"><span class="hs-identifier hs-var">xO</span></a></span></span><span> </span><span id="local-6989586621680314522"><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314522"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc -&gt; Doc) -&gt; Doc -&gt; Doc -&gt; Doc
+</span><a href="#local-6989586621680315266"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-77"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#Lam_ULC"><span class="hs-identifier hs-type">Lam_ULC</span></a></span><span> </span><span id="local-6989586621680315265"><span class="annot"><span class="annottext">&#119874; &#120143;
+</span><a href="#local-6989586621680315265"><span class="hs-identifier hs-var">xO</span></a></span></span><span> </span><span id="local-6989586621680315264"><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315264"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc -&gt; Doc) -&gt; Doc -&gt; Doc -&gt; Doc
 forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#flip"><span class="hs-identifier hs-var">flip</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64 -&gt; Doc -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppPreSep"><span class="hs-identifier hs-var">ppPreSep</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#pLET"><span class="hs-identifier hs-var">pLET</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314522"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+</span><a href="#local-6989586621680315264"><span class="hs-identifier hs-var">e</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; Doc -&gt; Doc
 forall t. ToIter Doc t =&gt; t -&gt; Doc
@@ -527,14 +621,14 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">[&#119868; Doc] -&gt; &#119868; Doc
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
-</span><span id="line-63"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; &#119868; Doc
+</span><span id="line-78"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; &#119868; Doc
 forall a. a -&gt; &#119868; a
 </span><a href="UVMHS.Core.Init.html#single%1D43C"><span class="hs-identifier hs-var">single&#119868;</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; &#119868; Doc) -&gt; Doc -&gt; &#119868; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppKey"><span class="hs-identifier hs-var">ppKey</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#955;&quot;</span></span><span>
-</span><span id="line-64"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#119868; Doc -&gt; (&#120143; -&gt; &#119868; Doc) -&gt; &#119874; &#120143; -&gt; &#119868; Doc
+</span><span id="line-79"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#119868; Doc -&gt; (&#120143; -&gt; &#119868; Doc) -&gt; &#119874; &#120143; -&gt; &#119868; Doc
 forall b a. b -&gt; (a -&gt; b) -&gt; &#119874; a -&gt; b
 </span><a href="UVMHS.Core.Data.Option.html#elim%1D442"><span class="hs-identifier hs-var">elim&#119874;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; Doc
 forall a. Null a =&gt; a
@@ -548,18 +642,18 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120143; -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143;
-</span><a href="#local-6989586621680314523"><span class="hs-identifier hs-var">xO</span></a></span><span>
-</span><span id="line-65"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; &#119868; Doc
+</span><a href="#local-6989586621680315265"><span class="hs-identifier hs-var">xO</span></a></span><span>
+</span><span id="line-80"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; &#119868; Doc
 forall a. a -&gt; &#119868; a
 </span><a href="UVMHS.Core.Init.html#single%1D43C"><span class="hs-identifier hs-var">single&#119868;</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; &#119868; Doc) -&gt; Doc -&gt; &#119868; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppKey"><span class="hs-identifier hs-var">ppKey</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#8594;&quot;</span></span><span>
-</span><span id="line-66"></span><span>      </span><span class="hs-special">]</span><span>
-</span><span id="line-67"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#App_ULC"><span class="hs-identifier hs-type">App_ULC</span></a></span><span> </span><span id="local-6989586621680314513"><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314513"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span id="local-6989586621680314512"><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314512"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; Doc -&gt; Doc -&gt; Doc -&gt; Doc
+</span><span id="line-81"></span><span>      </span><span class="hs-special">]</span><span>
+</span><span id="line-82"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#App_ULC"><span class="hs-identifier hs-type">App_ULC</span></a></span><span> </span><span id="local-6989586621680315255"><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315255"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span id="local-6989586621680315254"><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315254"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; Doc -&gt; Doc -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppInfl"><span class="hs-identifier hs-var">ppInfl</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#pAPP"><span class="hs-identifier hs-var">pAPP</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64 -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppSpace"><span class="hs-identifier hs-var">ppSpace</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
@@ -567,40 +661,40 @@ forall a. One a =&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#one"><span class="hs-identifier hs-var">one</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314513"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+</span><a href="#local-6989586621680315255"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314512"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span>
-</span><span id="line-68"></span><span>
-</span><span id="line-69"></span><span id="local-6989586621680314498"><span id="local-6989586621680314506"><span id="local-6989586621680314906"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="annot"><a href="#local-6989586621680314906"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680314906"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span></span></span></span><span>
-</span><span id="line-70"></span><span id="local-6989586621680314469"><span id="local-6989586621680314488"><span id="local-6989586621680314907"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="annot"><a href="#local-6989586621680314907"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp_R"><span class="hs-identifier hs-type">ULCExp_R</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680314907"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span></span></span></span><span>
-</span><span id="line-71"></span><span>
-</span><span id="line-72"></span><span class="annot"><a href="UVMHS.Lang.ULC.html#ulc"><span class="hs-identifier hs-type">ulc</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.QuasiQuoter</span></span><span>
-</span><span id="line-73"></span><span id="ulc"><span class="annot"><span class="annottext">ulc :: QuasiQuoter
+</span><a href="#local-6989586621680315254"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span>
+</span><span id="line-83"></span><span>
+</span><span id="line-84"></span><span id="local-6989586621680315240"><span id="local-6989586621680315248"><span id="local-6989586621680315686"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="annot"><a href="#local-6989586621680315686"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315686"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span></span></span></span><span>
+</span><span id="line-85"></span><span id="local-6989586621680315211"><span id="local-6989586621680315230"><span id="local-6989586621680315687"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="annot"><a href="#local-6989586621680315687"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp_R"><span class="hs-identifier hs-type">ULCExp_R</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315687"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span></span></span></span><span>
+</span><span id="line-86"></span><span>
+</span><span id="line-87"></span><span class="annot"><a href="UVMHS.Lang.ULC.html#ulc"><span class="hs-identifier hs-type">ulc</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.QuasiQuoter</span></span><span>
+</span><span id="line-88"></span><span id="ulc"><span class="annot"><span class="annottext">ulc :: QuasiQuoter
 </span><a href="UVMHS.Lang.ULC.html#ulc"><span class="hs-identifier hs-var hs-var">ulc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q Exp)
 -&gt; (String -&gt; Q Pat)
 -&gt; (String -&gt; Q Type)
 -&gt; (String -&gt; Q [Dec])
 -&gt; QuasiQuoter
 </span><span class="hs-identifier hs-var">TH.QuasiQuoter</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Exp
-</span><a href="#local-6989586621680314455"><span class="hs-identifier hs-var">qe</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Pat
+</span><a href="#local-6989586621680315197"><span class="hs-identifier hs-var">qe</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Pat
 forall {b} {a}. b -&gt; Q a
-</span><a href="#local-6989586621680314454"><span class="hs-identifier hs-var">qp</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Type
+</span><a href="#local-6989586621680315196"><span class="hs-identifier hs-var">qp</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q Type
 forall {b} {a}. b -&gt; Q a
-</span><a href="#local-6989586621680314453"><span class="hs-identifier hs-var">qt</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q [Dec]
+</span><a href="#local-6989586621680315195"><span class="hs-identifier hs-var">qt</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; Q [Dec]
 forall {b} {a}. b -&gt; Q a
-</span><a href="#local-6989586621680314452"><span class="hs-identifier hs-var">qd</span></a></span><span>
-</span><span id="line-74"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-75"></span><span>    </span><span id="local-6989586621680314455"><span class="annot"><span class="annottext">qe :: String -&gt; Q Exp
-</span><a href="#local-6989586621680314455"><span class="hs-identifier hs-var hs-var">qe</span></a></span></span><span> </span><span id="local-6989586621680314418"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680314418"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-76"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680314416"><span class="annot"><span class="annottext">sourceName :: &#120138;
-</span><a href="#local-6989586621680314416"><span class="hs-identifier hs-var hs-var">sourceName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621680315194"><span class="hs-identifier hs-var">qd</span></a></span><span>
+</span><span id="line-89"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-90"></span><span>    </span><span id="local-6989586621680315197"><span class="annot"><span class="annottext">qe :: String -&gt; Q Exp
+</span><a href="#local-6989586621680315197"><span class="hs-identifier hs-var hs-var">qe</span></a></span></span><span> </span><span id="local-6989586621680315160"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621680315160"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-91"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680315158"><span class="annot"><span class="annottext">sourceName :: &#120138;
+</span><a href="#local-6989586621680315158"><span class="hs-identifier hs-var hs-var">sourceName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&quot;</span></span><span>
-</span><span id="line-77"></span><span>      </span><span id="local-6989586621680314415"><span class="annot"><span class="annottext">&#120141; (ParserToken TokenBasic)
-</span><a href="#local-6989586621680314415"><span class="hs-identifier hs-var">ts</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">IO (&#120141; (ParserToken TokenBasic)) -&gt; Q (&#120141; (ParserToken TokenBasic))
+</span><span id="line-92"></span><span>      </span><span id="local-6989586621680315157"><span class="annot"><span class="annottext">&#120141; (ParserToken TokenBasic)
+</span><a href="#local-6989586621680315157"><span class="hs-identifier hs-var">ts</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">IO (&#120141; (ParserToken TokenBasic)) -&gt; Q (&#120141; (ParserToken TokenBasic))
 forall (m :: * -&gt; *) a. MonadIO m =&gt; IO a -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#io"><span class="hs-identifier hs-var">io</span></a></span><span> </span><span class="annot"><span class="annottext">(IO (&#120141; (ParserToken TokenBasic)) -&gt; Q (&#120141; (ParserToken TokenBasic)))
 -&gt; IO (&#120141; (ParserToken TokenBasic))
@@ -614,7 +708,7 @@ forall c t o u w.
 Lexer c t o u w -&gt; &#120138; -&gt; &#120141; (ParserToken t) -&gt; IO (&#120141; (ParserToken w))
 </span><a href="UVMHS.Lib.Parser.Regex.html#tokenizeIO"><span class="hs-identifier hs-var">tokenizeIO</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
 </span><a href="UVMHS.Lang.ULC.html#lexULCExp"><span class="hs-identifier hs-var">lexULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680314416"><span class="hs-identifier hs-var">sourceName</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic)))
+</span><a href="#local-6989586621680315158"><span class="hs-identifier hs-var">sourceName</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic)))
 -&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#120141; (ParserToken &#8450;)
@@ -622,22 +716,22 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; &#120138;
 </span><a href="UVMHS.Core.Init.html#frhsChars"><span class="hs-identifier hs-var">frhsChars</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621680314418"><span class="hs-identifier hs-var">s</span></a></span><span>
-</span><span id="line-78"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680314410"><span class="annot"><span class="annottext">eC :: Doc &#8744; ULCExpSrc
-</span><a href="#local-6989586621680314410"><span class="hs-identifier hs-var hs-var">eC</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic ULCExpSrc
+</span><a href="#local-6989586621680315160"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-93"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680315152"><span class="annot"><span class="annottext">eC :: Doc &#8744; ULCExpSrc
+</span><a href="#local-6989586621680315152"><span class="hs-identifier hs-var hs-var">eC</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic ULCExpSrc
 -&gt; &#120138; -&gt; &#120141; (ParserToken TokenBasic) -&gt; Doc &#8744; ULCExpSrc
 forall a t ts.
 (Pretty a, ToIter (ParserToken t) ts, Ord t) =&gt;
 CParser t a -&gt; &#120138; -&gt; ts -&gt; Doc &#8744; a
 </span><a href="UVMHS.Lib.Parser.CParser.html#parse"><span class="hs-identifier hs-var">parse</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic ULCExpSrc
 </span><a href="UVMHS.Lang.ULC.html#pULCExp"><span class="hs-identifier hs-var">pULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680314416"><span class="hs-identifier hs-var">sourceName</span></a></span><span> </span><span class="annot"><span class="annottext">&#120141; (ParserToken TokenBasic)
-</span><a href="#local-6989586621680314415"><span class="hs-identifier hs-var">ts</span></a></span><span>
-</span><span id="line-79"></span><span>      </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Doc &#8744; ULCExpSrc
-</span><a href="#local-6989586621680314410"><span class="hs-identifier hs-var">eC</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-80"></span><span>        </span><span class="annot"><a href="UVMHS.Core.Init.html#Inl"><span class="hs-identifier hs-type">Inl</span></a></span><span> </span><span id="local-6989586621680314407"><span class="annot"><span class="annottext">Doc
-</span><a href="#local-6989586621680314407"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-81"></span><span>          </span><span class="annot"><span class="annottext">String -&gt; Q ()
+</span><a href="#local-6989586621680315158"><span class="hs-identifier hs-var">sourceName</span></a></span><span> </span><span class="annot"><span class="annottext">&#120141; (ParserToken TokenBasic)
+</span><a href="#local-6989586621680315157"><span class="hs-identifier hs-var">ts</span></a></span><span>
+</span><span id="line-94"></span><span>      </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Doc &#8744; ULCExpSrc
+</span><a href="#local-6989586621680315152"><span class="hs-identifier hs-var">eC</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-95"></span><span>        </span><span class="annot"><a href="UVMHS.Core.Init.html#Inl"><span class="hs-identifier hs-type">Inl</span></a></span><span> </span><span id="local-6989586621680315149"><span class="annot"><span class="annottext">Doc
+</span><a href="#local-6989586621680315149"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-96"></span><span>          </span><span class="annot"><span class="annottext">String -&gt; Q ()
 </span><span class="hs-identifier hs-var">TH.reportError</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; Q ()) -&gt; String -&gt; Q ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
@@ -645,15 +739,15 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Doc -&gt; &#120138;
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#ppRenderNofmt"><span class="hs-identifier hs-var">ppRenderNofmt</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
-</span><a href="#local-6989586621680314407"><span class="hs-identifier hs-var">r</span></a></span><span>
-</span><span id="line-82"></span><span>          </span><span class="annot"><span class="annottext">String -&gt; Q Exp
+</span><a href="#local-6989586621680315149"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><span id="line-97"></span><span>          </span><span class="annot"><span class="annottext">String -&gt; Q Exp
 forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
 </span><span class="hs-identifier hs-var">HS.fail</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;Parse Failure&quot;</span></span><span>
-</span><span id="line-83"></span><span>        </span><span class="annot"><a href="UVMHS.Core.Init.html#Inr"><span class="hs-identifier hs-type">Inr</span></a></span><span> </span><span id="local-6989586621680314402"><span class="annot"><span class="annottext">ULCExpSrc
-</span><a href="#local-6989586621680314402"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">e</span><span> </span><span class="hs-special">|]</span><span>
-</span><span id="line-84"></span><span>    </span><span id="local-6989586621680314454"><span class="annot"><span class="annottext">qp :: b -&gt; Q a
-</span><a href="#local-6989586621680314454"><span class="hs-identifier hs-var hs-var">qp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Q a -&gt; b -&gt; Q a
+</span><span id="line-98"></span><span>        </span><span class="annot"><a href="UVMHS.Core.Init.html#Inr"><span class="hs-identifier hs-type">Inr</span></a></span><span> </span><span id="local-6989586621680315144"><span class="annot"><span class="annottext">ULCExpSrc
+</span><a href="#local-6989586621680315144"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">[|</span><span> </span><span class="hs-identifier">e</span><span> </span><span class="hs-special">|]</span><span>
+</span><span id="line-99"></span><span>    </span><span id="local-6989586621680315196"><span class="annot"><span class="annottext">qp :: b -&gt; Q a
+</span><a href="#local-6989586621680315196"><span class="hs-identifier hs-var hs-var">qp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Q a -&gt; b -&gt; Q a
 forall a b. a -&gt; b -&gt; a
 </span><a href="UVMHS.Core.Init.html#const"><span class="hs-identifier hs-var">const</span></a></span><span> </span><span class="annot"><span class="annottext">(Q a -&gt; b -&gt; Q a) -&gt; Q a -&gt; b -&gt; Q a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -661,8 +755,8 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
 </span><span class="hs-identifier hs-var">HS.fail</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;quoting patterns not supported&quot;</span></span><span>
-</span><span id="line-85"></span><span>    </span><span id="local-6989586621680314453"><span class="annot"><span class="annottext">qt :: b -&gt; Q a
-</span><a href="#local-6989586621680314453"><span class="hs-identifier hs-var hs-var">qt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Q a -&gt; b -&gt; Q a
+</span><span id="line-100"></span><span>    </span><span id="local-6989586621680315195"><span class="annot"><span class="annottext">qt :: b -&gt; Q a
+</span><a href="#local-6989586621680315195"><span class="hs-identifier hs-var hs-var">qt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Q a -&gt; b -&gt; Q a
 forall a b. a -&gt; b -&gt; a
 </span><a href="UVMHS.Core.Init.html#const"><span class="hs-identifier hs-var">const</span></a></span><span> </span><span class="annot"><span class="annottext">(Q a -&gt; b -&gt; Q a) -&gt; Q a -&gt; b -&gt; Q a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -670,8 +764,8 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
 </span><span class="hs-identifier hs-var">HS.fail</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;quoting types not supported&quot;</span></span><span>
-</span><span id="line-86"></span><span>    </span><span id="local-6989586621680314452"><span class="annot"><span class="annottext">qd :: b -&gt; Q a
-</span><a href="#local-6989586621680314452"><span class="hs-identifier hs-var hs-var">qd</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Q a -&gt; b -&gt; Q a
+</span><span id="line-101"></span><span>    </span><span id="local-6989586621680315194"><span class="annot"><span class="annottext">qd :: b -&gt; Q a
+</span><a href="#local-6989586621680315194"><span class="hs-identifier hs-var hs-var">qd</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Q a -&gt; b -&gt; Q a
 forall a b. a -&gt; b -&gt; a
 </span><a href="UVMHS.Core.Init.html#const"><span class="hs-identifier hs-var">const</span></a></span><span> </span><span class="annot"><span class="annottext">(Q a -&gt; b -&gt; Q a) -&gt; Q a -&gt; b -&gt; Q a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -679,16 +773,16 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall (m :: * -&gt; *) a. MonadFail m =&gt; String -&gt; m a
 </span><span class="hs-identifier hs-var">HS.fail</span></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;quoting declarations not supported&quot;</span></span><span>
-</span><span id="line-87"></span><span>
-</span><span id="line-88"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Lib.Rand.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExpRaw"><span class="hs-identifier hs-type">ULCExpRaw</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-89"></span><span>  </span><span id="local-6989586621680314362"><span class="annot"><span class="annottext">fuzzy :: FuzzyM ULCExpRaw
+</span><span id="line-102"></span><span>
+</span><span id="line-103"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Lib.Rand.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExpRaw"><span class="hs-identifier hs-type">ULCExpRaw</span></a></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-104"></span><span>  </span><span id="local-6989586621680315104"><span class="annot"><span class="annottext">fuzzy :: FuzzyM ULCExpRaw
 </span><a href="UVMHS.Lib.Rand.html#fuzzy"><span class="hs-identifier hs-var hs-var hs-var hs-var">fuzzy</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-90"></span><span>    </span><span id="local-6989586621680314360"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680314360"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">(FuzzyEnv &#10210; &#8469;64) -&gt; FuzzyM &#8469;64
+</span><span id="line-105"></span><span>    </span><span id="local-6989586621680315102"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680315102"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">(FuzzyEnv &#10210; &#8469;64) -&gt; FuzzyM &#8469;64
 forall r (m :: * -&gt; *) r'. MonadReader r m =&gt; (r &#10210; r') -&gt; m r'
 </span><a href="UVMHS.Core.Effects.html#askL"><span class="hs-identifier hs-var">askL</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyEnv &#10210; &#8469;64
 </span><a href="UVMHS.Lib.Rand.html#fuzzyEnvDepthL"><span class="hs-identifier hs-var">fuzzyEnvDepthL</span></a></span><span>
-</span><span id="line-91"></span><span>    </span><span class="annot"><span class="annottext">&#119860; () (ULCExp_R ()) -&gt; ULCExpRaw
+</span><span id="line-106"></span><span>    </span><span class="annot"><span class="annottext">&#119860; () (ULCExp_R ()) -&gt; ULCExpRaw
 forall &#119992;. &#119860; &#119992; (ULCExp_R &#119992;) -&gt; ULCExp &#119992;
 </span><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119860; () (ULCExp_R ()) -&gt; ULCExpRaw)
 -&gt; (ULCExp_R () -&gt; &#119860; () (ULCExp_R ())) -&gt; ULCExp_R () -&gt; ULCExpRaw
@@ -703,7 +797,7 @@ forall t (m :: * -&gt; *) a.
 (Monad m, MonadRand m, ToIter (&#8469;64 &#8743; (() -&gt; m a)) t) =&gt;
 t -&gt; m a
 </span><a href="UVMHS.Lib.Rand.html#wrchoose"><span class="hs-identifier hs-var">wrchoose</span></a></span><span>
-</span><span id="line-92"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span id="line-107"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; (() -&gt; FuzzyM (ULCExp_R ()))
 -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (ULCExp_R ()))
 forall a b. a -&gt; b -&gt; a &#8743; b
@@ -721,12 +815,12 @@ forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM &#120144;
 forall a. Fuzzy a =&gt; FuzzyM a
 </span><a href="UVMHS.Lib.Rand.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
-</span><span id="line-93"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span id="line-108"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; (() -&gt; FuzzyM (ULCExp_R ()))
 -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (ULCExp_R ()))
 forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">(:*)</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680314360"><span class="hs-identifier hs-var">d</span></a></span><span>   </span><span class="annot"><span class="annottext">((() -&gt; FuzzyM (ULCExp_R ()))
+</span><a href="#local-6989586621680315102"><span class="hs-identifier hs-var">d</span></a></span><span>   </span><span class="annot"><span class="annottext">((() -&gt; FuzzyM (ULCExp_R ()))
  -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (ULCExp_R ())))
 -&gt; (() -&gt; FuzzyM (ULCExp_R ()))
 -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (ULCExp_R ()))
@@ -736,18 +830,18 @@ forall (m :: * -&gt; *) a t.
 (Monad m, MonadRand m, ToIter (() -&gt; m a) t) =&gt;
 t -&gt; m a
 </span><a href="UVMHS.Lib.Rand.html#rchoose"><span class="hs-identifier hs-var">rchoose</span></a></span><span>
-</span><span id="line-94"></span><span>          </span><span class="hs-special">[</span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-95"></span><span>                </span><span id="local-6989586621680314353"><span class="annot"><span class="annottext">&#119874; &#120143;
-</span><a href="#local-6989586621680314353"><span class="hs-identifier hs-var">xO</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">FuzzyM (&#119874; &#120143;)
+</span><span id="line-109"></span><span>          </span><span class="hs-special">[</span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-110"></span><span>                </span><span id="local-6989586621680315095"><span class="annot"><span class="annottext">&#119874; &#120143;
+</span><a href="#local-6989586621680315095"><span class="hs-identifier hs-var">xO</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">FuzzyM (&#119874; &#120143;)
 forall a. Fuzzy a =&gt; FuzzyM a
 </span><a href="UVMHS.Lib.Rand.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
-</span><span id="line-96"></span><span>                </span><span id="local-6989586621680314352"><span class="annot"><span class="annottext">ULCExpRaw
-</span><a href="#local-6989586621680314352"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">FuzzyM ULCExpRaw -&gt; FuzzyM ULCExpRaw
+</span><span id="line-111"></span><span>                </span><span id="local-6989586621680315094"><span class="annot"><span class="annottext">ULCExpRaw
+</span><a href="#local-6989586621680315094"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">FuzzyM ULCExpRaw -&gt; FuzzyM ULCExpRaw
 forall a. FuzzyM a -&gt; FuzzyM a
 </span><a href="UVMHS.Lib.Rand.html#fuzzyRec"><span class="hs-identifier hs-var">fuzzyRec</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM ULCExpRaw
 forall a. Fuzzy a =&gt; FuzzyM a
 </span><a href="UVMHS.Lib.Rand.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
-</span><span id="line-97"></span><span>                </span><span class="annot"><span class="annottext">ULCExp_R () -&gt; FuzzyM (ULCExp_R ())
+</span><span id="line-112"></span><span>                </span><span class="annot"><span class="annottext">ULCExp_R () -&gt; FuzzyM (ULCExp_R ())
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R () -&gt; FuzzyM (ULCExp_R ()))
 -&gt; ULCExp_R () -&gt; FuzzyM (ULCExp_R ())
@@ -755,23 +849,23 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143; -&gt; ULCExpRaw -&gt; ULCExp_R ()
 forall &#119992;. &#119874; &#120143; -&gt; ULCExp &#119992; -&gt; ULCExp_R &#119992;
 </span><a href="UVMHS.Lang.ULC.html#Lam_ULC"><span class="hs-identifier hs-var">Lam_ULC</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143;
-</span><a href="#local-6989586621680314353"><span class="hs-identifier hs-var">xO</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExpRaw
-</span><a href="#local-6989586621680314352"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-98"></span><span>
-</span><span id="line-99"></span><span>          </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-100"></span><span>              </span><span id="local-6989586621680314350"><span class="annot"><span class="annottext">ULCExpRaw
-</span><a href="#local-6989586621680314350"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">FuzzyM ULCExpRaw -&gt; FuzzyM ULCExpRaw
+</span><a href="#local-6989586621680315095"><span class="hs-identifier hs-var">xO</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExpRaw
+</span><a href="#local-6989586621680315094"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-113"></span><span>
+</span><span id="line-114"></span><span>          </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-115"></span><span>              </span><span id="local-6989586621680315092"><span class="annot"><span class="annottext">ULCExpRaw
+</span><a href="#local-6989586621680315092"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">FuzzyM ULCExpRaw -&gt; FuzzyM ULCExpRaw
 forall a. FuzzyM a -&gt; FuzzyM a
 </span><a href="UVMHS.Lib.Rand.html#fuzzyRec"><span class="hs-identifier hs-var">fuzzyRec</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM ULCExpRaw
 forall a. Fuzzy a =&gt; FuzzyM a
 </span><a href="UVMHS.Lib.Rand.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
-</span><span id="line-101"></span><span>              </span><span id="local-6989586621680314349"><span class="annot"><span class="annottext">ULCExpRaw
-</span><a href="#local-6989586621680314349"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">FuzzyM ULCExpRaw -&gt; FuzzyM ULCExpRaw
+</span><span id="line-116"></span><span>              </span><span id="local-6989586621680315091"><span class="annot"><span class="annottext">ULCExpRaw
+</span><a href="#local-6989586621680315091"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">FuzzyM ULCExpRaw -&gt; FuzzyM ULCExpRaw
 forall a. FuzzyM a -&gt; FuzzyM a
 </span><a href="UVMHS.Lib.Rand.html#fuzzyRec"><span class="hs-identifier hs-var">fuzzyRec</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM ULCExpRaw
 forall a. Fuzzy a =&gt; FuzzyM a
 </span><a href="UVMHS.Lib.Rand.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
-</span><span id="line-102"></span><span>              </span><span class="annot"><span class="annottext">ULCExp_R () -&gt; FuzzyM (ULCExp_R ())
+</span><span id="line-117"></span><span>              </span><span class="annot"><span class="annottext">ULCExp_R () -&gt; FuzzyM (ULCExp_R ())
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R () -&gt; FuzzyM (ULCExp_R ()))
 -&gt; ULCExp_R () -&gt; FuzzyM (ULCExp_R ())
@@ -779,13 +873,13 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExpRaw -&gt; ULCExpRaw -&gt; ULCExp_R ()
 forall &#119992;. ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; ULCExp_R &#119992;
 </span><a href="UVMHS.Lang.ULC.html#App_ULC"><span class="hs-identifier hs-var">App_ULC</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExpRaw
-</span><a href="#local-6989586621680314350"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExpRaw
-</span><a href="#local-6989586621680314349"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span>
-</span><span id="line-103"></span><span>          </span><span class="hs-special">]</span><span>
-</span><span id="line-104"></span><span>      </span><span class="hs-special">]</span><span>
-</span><span id="line-105"></span><span>
-</span><span id="line-106"></span><span id="local-6989586621680314843"><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.html#Substy"><span class="hs-identifier hs-type">Substy</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680314843"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680314843"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-107"></span><span>  </span><span id="local-6989586621680314321"><span class="annot"><span class="annottext">substy :: ULCExp &#119992; -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
+</span><a href="#local-6989586621680315092"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExpRaw
+</span><a href="#local-6989586621680315091"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span>
+</span><span id="line-118"></span><span>          </span><span class="hs-special">]</span><span>
+</span><span id="line-119"></span><span>      </span><span class="hs-special">]</span><span>
+</span><span id="line-120"></span><span>
+</span><span id="line-121"></span><span id="local-6989586621680315623"><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.html#Substy"><span class="hs-identifier hs-type">Substy</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315623"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-type">ULCExp</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680315623"><span class="hs-identifier hs-type">&#119992;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-122"></span><span>  </span><span id="local-6989586621680315063"><span class="annot"><span class="annottext">substy :: ULCExp &#119992; -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
 </span><a href="UVMHS.Lib.Substitution.html#substy"><span class="hs-identifier hs-var hs-var hs-var hs-var">substy</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;))
 -&gt; (&#119860; &#119992; (ULCExp_R &#119992;) -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;))
 -&gt; ULCExp &#119992;
@@ -799,18 +893,18 @@ forall &#119992;. ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;
 -&gt; ULCExp &#119992;
 -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-type">&#119860;</span></a></span><span> </span><span id="local-6989586621680314318"><span class="annot"><span class="annottext">&#119992;
-</span><a href="#local-6989586621680314318"><span class="hs-identifier hs-var">&#119992;</span></a></span></span><span> </span><span id="local-6989586621680314317"><span class="annot"><span class="annottext">ULCExp_R &#119992;
-</span><a href="#local-6989586621680314317"><span class="hs-identifier hs-var">e&#8320;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#119860; &#119992; (ULCExp_R &#119992;) -&gt; ULCExp &#119992;
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-type">&#119860;</span></a></span><span> </span><span id="local-6989586621680315060"><span class="annot"><span class="annottext">&#119992;
+</span><a href="#local-6989586621680315060"><span class="hs-identifier hs-var">&#119992;</span></a></span></span><span> </span><span id="local-6989586621680315059"><span class="annot"><span class="annottext">ULCExp_R &#119992;
+</span><a href="#local-6989586621680315059"><span class="hs-identifier hs-var">e&#8320;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#119860; &#119992; (ULCExp_R &#119992;) -&gt; ULCExp &#119992;
 forall &#119992;. &#119860; &#119992; (ULCExp_R &#119992;) -&gt; ULCExp &#119992;
 </span><a href="UVMHS.Lang.ULC.html#ULCExp"><span class="hs-identifier hs-var">ULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119860; &#119992; (ULCExp_R &#119992;) -&gt; ULCExp &#119992;)
 -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
 -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ULCExp_R &#119992;
-</span><a href="#local-6989586621680314317"><span class="hs-identifier hs-var">e&#8320;</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-108"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#Var_ULC"><span class="hs-identifier hs-type">Var_ULC</span></a></span><span> </span><span id="local-6989586621680314316"><span class="annot"><span class="annottext">&#120144;
-</span><a href="#local-6989586621680314316"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
+</span><a href="#local-6989586621680315059"><span class="hs-identifier hs-var">e&#8320;</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-123"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#Var_ULC"><span class="hs-identifier hs-type">Var_ULC</span></a></span><span> </span><span id="local-6989586621680315058"><span class="annot"><span class="annottext">&#120144;
+</span><a href="#local-6989586621680315058"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 forall &#119992;. ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 </span><a href="UVMHS.Lang.ULC.html#unULCExp"><span class="hs-identifier hs-var hs-var">unULCExp</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;))
 -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
@@ -828,15 +922,15 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span>  </span><span class="annot"><span class="annottext">&#119992; -&gt; ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 forall e a. e -&gt; a -&gt; &#119860; e a
 </span><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-var">&#119860;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119992;
-</span><a href="#local-6989586621680314318"><span class="hs-identifier hs-var">&#119992;</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R &#119992; -&gt; ULCExp &#119992;) -&gt; (&#120144; -&gt; ULCExp_R &#119992;) -&gt; &#120144; -&gt; ULCExp &#119992;
+</span><a href="#local-6989586621680315060"><span class="hs-identifier hs-var">&#119992;</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R &#119992; -&gt; ULCExp &#119992;) -&gt; (&#120144; -&gt; ULCExp_R &#119992;) -&gt; &#120144; -&gt; ULCExp &#119992;
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; -&gt; ULCExp_R &#119992;
 forall &#119992;. &#120144; -&gt; ULCExp_R &#119992;
 </span><a href="UVMHS.Lang.ULC.html#Var_ULC"><span class="hs-identifier hs-var">Var_ULC</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#120144;
-</span><a href="#local-6989586621680314316"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-109"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#Lam_ULC"><span class="hs-identifier hs-type">Lam_ULC</span></a></span><span> </span><span id="local-6989586621680314314"><span class="annot"><span class="annottext">&#119874; &#120143;
-</span><a href="#local-6989586621680314314"><span class="hs-identifier hs-var">xO</span></a></span></span><span> </span><span id="local-6989586621680314313"><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314313"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
+</span><a href="#local-6989586621680315058"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-124"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#Lam_ULC"><span class="hs-identifier hs-type">Lam_ULC</span></a></span><span> </span><span id="local-6989586621680315056"><span class="annot"><span class="annottext">&#119874; &#120143;
+</span><a href="#local-6989586621680315056"><span class="hs-identifier hs-var">xO</span></a></span></span><span> </span><span id="local-6989586621680315055"><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315055"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
 -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
 forall (m :: * -&gt; *) a. (Monad m, MonadUCont m) =&gt; m a -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#ureset"><span class="hs-identifier hs-var">ureset</span></a></span><span> </span><span class="annot"><span class="annottext">(SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
@@ -845,14 +939,14 @@ forall (m :: * -&gt; *) a. (Monad m, MonadUCont m) =&gt; m a -&gt; m a
 -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-110"></span><span>      </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143;
-</span><a href="#local-6989586621680314314"><span class="hs-identifier hs-var">xO</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-111"></span><span>        </span><span class="annot"><span class="annottext">&#119874; &#120143;
+</span><span id="line-125"></span><span>      </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143;
+</span><a href="#local-6989586621680315056"><span class="hs-identifier hs-var">xO</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-126"></span><span>        </span><span class="annot"><span class="annottext">&#119874; &#120143;
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">() -&gt; SubstM () (ULCExp &#119992;) ()
 forall s e. Ord s =&gt; s -&gt; SubstM s e ()
 </span><a href="UVMHS.Lib.Substitution.html#substyDBdr"><span class="hs-identifier hs-var">substyDBdr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-112"></span><span>        </span><span class="annot"><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-type">Some</span></a></span><span> </span><span id="local-6989586621680314308"><span class="annot"><span class="annottext">&#120143;
-</span><a href="#local-6989586621680314308"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">() -&gt; (&#120144; -&gt; ULCExp &#119992;) -&gt; &#120143; -&gt; SubstM () (ULCExp &#119992;) ()
+</span><span id="line-127"></span><span>        </span><span class="annot"><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-type">Some</span></a></span><span> </span><span id="local-6989586621680315052"><span class="annot"><span class="annottext">&#120143;
+</span><a href="#local-6989586621680315052"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">() -&gt; (&#120144; -&gt; ULCExp &#119992;) -&gt; &#120143; -&gt; SubstM () (ULCExp &#119992;) ()
 forall s e.
 (Ord s, Substy s e e) =&gt;
 s -&gt; (&#120144; -&gt; e) -&gt; &#120143; -&gt; SubstM s e ()
@@ -864,18 +958,18 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119992; -&gt; ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 forall e a. e -&gt; a -&gt; &#119860; e a
 </span><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-var">&#119860;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119992;
-</span><a href="#local-6989586621680314318"><span class="hs-identifier hs-var">&#119992;</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R &#119992; -&gt; ULCExp &#119992;) -&gt; (&#120144; -&gt; ULCExp_R &#119992;) -&gt; &#120144; -&gt; ULCExp &#119992;
+</span><a href="#local-6989586621680315060"><span class="hs-identifier hs-var">&#119992;</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R &#119992; -&gt; ULCExp &#119992;) -&gt; (&#120144; -&gt; ULCExp_R &#119992;) -&gt; &#120144; -&gt; ULCExp &#119992;
 forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; -&gt; ULCExp_R &#119992;
 forall &#119992;. &#120144; -&gt; ULCExp_R &#119992;
 </span><a href="UVMHS.Lang.ULC.html#Var_ULC"><span class="hs-identifier hs-var">Var_ULC</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#120143;
-</span><a href="#local-6989586621680314308"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-113"></span><span>      </span><span id="local-6989586621680314306"><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314306"><span class="hs-identifier hs-var">e'</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
+</span><a href="#local-6989586621680315052"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-128"></span><span>      </span><span id="local-6989586621680315050"><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315050"><span class="hs-identifier hs-var">e'</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
 forall s e a. Substy s e a =&gt; a -&gt; SubstM s e a
 </span><a href="UVMHS.Lib.Substitution.html#substy"><span class="hs-identifier hs-var">substy</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314313"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-114"></span><span>      </span><span class="annot"><span class="annottext">&#119860; &#119992; (ULCExp_R &#119992;) -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
+</span><a href="#local-6989586621680315055"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-129"></span><span>      </span><span class="annot"><span class="annottext">&#119860; &#119992; (ULCExp_R &#119992;) -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119860; &#119992; (ULCExp_R &#119992;) -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;)))
 -&gt; &#119860; &#119992; (ULCExp_R &#119992;) -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
@@ -883,27 +977,27 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119992; -&gt; ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 forall e a. e -&gt; a -&gt; &#119860; e a
 </span><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-var">&#119860;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119992;
-</span><a href="#local-6989586621680314318"><span class="hs-identifier hs-var">&#119992;</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)) -&gt; ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
+</span><a href="#local-6989586621680315060"><span class="hs-identifier hs-var">&#119992;</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)) -&gt; ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143; -&gt; ULCExp &#119992; -&gt; ULCExp_R &#119992;
 forall &#119992;. &#119874; &#120143; -&gt; ULCExp &#119992; -&gt; ULCExp_R &#119992;
 </span><a href="UVMHS.Lang.ULC.html#Lam_ULC"><span class="hs-identifier hs-var">Lam_ULC</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; &#120143;
-</span><a href="#local-6989586621680314314"><span class="hs-identifier hs-var">xO</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314306"><span class="hs-identifier hs-var">e'</span></a></span><span>
-</span><span id="line-115"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#App_ULC"><span class="hs-identifier hs-type">App_ULC</span></a></span><span> </span><span id="local-6989586621680314305"><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314305"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span id="local-6989586621680314304"><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314304"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-116"></span><span>      </span><span id="local-6989586621680314303"><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314303"><span class="hs-identifier hs-var">e&#8321;'</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
+</span><a href="#local-6989586621680315056"><span class="hs-identifier hs-var">xO</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315050"><span class="hs-identifier hs-var">e'</span></a></span><span>
+</span><span id="line-130"></span><span>    </span><span class="annot"><a href="UVMHS.Lang.ULC.html#App_ULC"><span class="hs-identifier hs-type">App_ULC</span></a></span><span> </span><span id="local-6989586621680315049"><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315049"><span class="hs-identifier hs-var">e&#8321;</span></a></span></span><span> </span><span id="local-6989586621680315048"><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315048"><span class="hs-identifier hs-var">e&#8322;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-131"></span><span>      </span><span id="local-6989586621680315047"><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315047"><span class="hs-identifier hs-var">e&#8321;'</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
 forall s e a. Substy s e a =&gt; a -&gt; SubstM s e a
 </span><a href="UVMHS.Lib.Substitution.html#substy"><span class="hs-identifier hs-var">substy</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314305"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span>
-</span><span id="line-117"></span><span>      </span><span id="local-6989586621680314302"><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314302"><span class="hs-identifier hs-var">e&#8322;'</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
+</span><a href="#local-6989586621680315049"><span class="hs-identifier hs-var">e&#8321;</span></a></span><span>
+</span><span id="line-132"></span><span>      </span><span id="local-6989586621680315046"><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315046"><span class="hs-identifier hs-var">e&#8322;'</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; SubstM () (ULCExp &#119992;) (ULCExp &#119992;)
 forall s e a. Substy s e a =&gt; a -&gt; SubstM s e a
 </span><a href="UVMHS.Lib.Substitution.html#substy"><span class="hs-identifier hs-var">substy</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314304"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span>
-</span><span id="line-118"></span><span>      </span><span class="annot"><span class="annottext">&#119860; &#119992; (ULCExp_R &#119992;) -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
+</span><a href="#local-6989586621680315048"><span class="hs-identifier hs-var">e&#8322;</span></a></span><span>
+</span><span id="line-133"></span><span>      </span><span class="annot"><span class="annottext">&#119860; &#119992; (ULCExp_R &#119992;) -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Monad.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119860; &#119992; (ULCExp_R &#119992;) -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;)))
 -&gt; &#119860; &#119992; (ULCExp_R &#119992;) -&gt; SubstM () (ULCExp &#119992;) (&#119860; &#119992; (ULCExp_R &#119992;))
@@ -911,11 +1005,11 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119992; -&gt; ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 forall e a. e -&gt; a -&gt; &#119860; e a
 </span><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-var">&#119860;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119992;
-</span><a href="#local-6989586621680314318"><span class="hs-identifier hs-var">&#119992;</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)) -&gt; ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
+</span><a href="#local-6989586621680315060"><span class="hs-identifier hs-var">&#119992;</span></a></span><span> </span><span class="annot"><span class="annottext">(ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)) -&gt; ULCExp_R &#119992; -&gt; &#119860; &#119992; (ULCExp_R &#119992;)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; ULCExp_R &#119992;
 forall &#119992;. ULCExp &#119992; -&gt; ULCExp &#119992; -&gt; ULCExp_R &#119992;
 </span><a href="UVMHS.Lang.ULC.html#App_ULC"><span class="hs-identifier hs-var">App_ULC</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314303"><span class="hs-identifier hs-var">e&#8321;'</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
-</span><a href="#local-6989586621680314302"><span class="hs-identifier hs-var">e&#8322;'</span></a></span></span><span>
-</span><span id="line-119"></span></pre></body></html>
+</span><a href="#local-6989586621680315047"><span class="hs-identifier hs-var">e&#8321;'</span></a></span><span> </span><span class="annot"><span class="annottext">ULCExp &#119992;
+</span><a href="#local-6989586621680315046"><span class="hs-identifier hs-var">e&#8322;'</span></a></span></span><span>
+</span><span id="line-134"></span></pre></body></html>

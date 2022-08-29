@@ -148,6 +148,11 @@ import UVMHS.Lang.ULC
 𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → x) y   |] |] [| (↦) () $ pow $ map (nvar∘var) ["y"]     |]
 𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → x) x y |] |] [| (↦) () $ pow $ map (nvar∘var) ["y"]     |]
 
+𝔱 "subst:metas" [| subst (𝓈nbind (var "x") [ulc| y |]) [ulc| x |] |] [| Some [ulc| y |] |]
+𝔱 "subst:metas" [| subst (𝓈nbind (var "x") [ulc| y |]) [ulc| λ y → x |] |] [| Some [ulc| λ y → y↑1 |] |]
+𝔱 "subst:metas" [| subst (𝓈mbind (var "x") [ulc| y |]) [ulc| 𝔪:x |] |] [| Some [ulc| y |] |]
+𝔱 "subst:metas" [| subst (𝓈mbind (var "x") [ulc| y |]) [ulc| λ y → 𝔪:x |] |] [| Some [ulc| λ y → y |] |]
+
 -- fuzzing --
 
 𝔣 "zzz:subst:hom:refl" 100 
@@ -156,9 +161,9 @@ import UVMHS.Lang.ULC
   |]
   [| \ e → subst null e ≡ Some e |]
 
-𝔣 "zzz:subst:hom:⧺" 100
-  [| do 𝓈₁ ← randSml @(Subst () ULCExpRaw)
-        𝓈₂ ← randSml @(Subst () ULCExpRaw)
+𝔣 "zzz:subst:hom:⧺:nometa" 100
+  [| do 𝓈₁ ← alter (gsubstMetasL ⊚ unSubstL) null ^$ randSml @(Subst () ULCExpRaw)
+        𝓈₂ ← alter (gsubstMetasL ⊚ unSubstL) null ^$ randSml @(Subst () ULCExpRaw)
         e ← randSml @ULCExpRaw
         return $ 𝓈₁ :* 𝓈₂ :* e
   |]
@@ -212,10 +217,10 @@ import UVMHS.Lang.ULC
          (subst (𝓈dshift 1 $ 𝓈dbind e₁) *$ subst (𝓈dintro 1) e₂)
   |]
 
-𝔣 "zzz:subst:dist:shift/⧺" 100 
+𝔣 "zzz:subst:dist:shift/⧺:nometa" 100 
   [| do n  ← randSml @ℕ64
-        𝓈₁ ← randSml @(Subst () ULCExpRaw)
-        𝓈₂ ← randSml @(Subst () ULCExpRaw)
+        𝓈₁ ← alter (gsubstMetasL ⊚ unSubstL) null ^$ randSml @(Subst () ULCExpRaw)
+        𝓈₂ ← alter (gsubstMetasL ⊚ unSubstL) null ^$ randSml @(Subst () ULCExpRaw)
         e  ← randSml @ULCExpRaw
         return $ n :* 𝓈₁ :* 𝓈₂ :* e
   |]

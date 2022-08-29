@@ -147,12 +147,11 @@ instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s�
 𝓈shiftG ∷ (Ord s₂) ⇒ s₂ ⇰ ℕ64 → GSubst s₁ s₂ e → GSubst s₁ s₂ e
 𝓈shiftG 𝑠 (GSubst esᴳ esᴹ 𝓈s) = 
   let esᴳ' = map (introSubstElem 𝑠) esᴳ
-      esᴹ' = map (introSubstElem 𝑠) esᴹ
       𝓈s' = mapWithKeyOn 𝓈s $ \ s (DSubst ρ es ι) →
         let ρ'  = ρ + ifNone 0 (𝑠 ⋕? s)
             es' = mapOn es $ introSSubstElem s 𝑠
         in DSubst ρ' es' ι
-  in GSubst esᴳ' esᴹ' 𝓈s'
+  in GSubst esᴳ' esᴹ 𝓈s'
 
 𝓈introG ∷ s₂ ⇰ ℕ64 → GSubst s₁ s₂ e
 𝓈introG 𝑠 = GSubst null null $ mapOn 𝑠 $ DSubst 0 null ∘ intΩ64
@@ -268,9 +267,8 @@ data FreeVarsAction s = FreeVarsAction
 makeLenses ''FreeVarsAction
 
 data SubstAction s e = SubstAction
-  { substActionSkipShift ∷ 𝔹
-  , substActionBdrChange ∷ 𝑂 𝔹
-  , substActionSubst     ∷ Subst s e
+  { substActionReBdr ∷ 𝑂 𝔹
+  , substActionSubst ∷ Subst s e
   }
 makeLenses ''SubstAction
 
@@ -309,20 +307,14 @@ runSubstMHalt γ = runSubstM γ (\ x _ → null :* Some x)
 class Substy s e a | a→s,a→e where
   substy ∷ a → SubstM s e a
 
-substWith ∷ (Substy s e a) ⇒ (SubstAction s e → SubstAction s e) → Subst s e → a → 𝑂 a
-substWith f 𝓈 = snd ∘ runSubstMHalt (SubSubstEnv $ f $ SubstAction False None 𝓈) ∘ substy
-
 subst ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
-subst = substWith id
-
-substSkipShift ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
-substSkipShift = substWith $ update substActionSkipShiftL True
+subst 𝓈 = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction None 𝓈) ∘ substy
 
 todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
-todbr = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction False (Some True) null) ∘ substy
+todbr = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction (Some True) null) ∘ substy
 
 tonmd ∷ (Substy s e a) ⇒ a → 𝑂 a
-tonmd = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction False (Some False) null) ∘ substy
+tonmd = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction (Some False) null) ∘ substy
 
 fvsWith ∷ (Substy s e a) ⇒ (FreeVarsAction s → FreeVarsAction s) → a → s ⇰ 𝑃 𝕐
 fvsWith f = fst ∘ runSubstMHalt (FVsSubstEnv $ f $ FreeVarsAction (const $ const True) null) ∘ substy
@@ -399,12 +391,6 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈smbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
 𝓈smbind s x e = 𝓈smbinds $ s ↦ x ↦ e
 
-substSMetas ∷ (Ord s,Substy s e a) ⇒ s ⇰ 𝕏 ⇰ e → a → 𝑂 a
-substSMetas = substSkipShift ∘ 𝓈smbinds
-
-substSMeta ∷ (Ord s,Substy s e a) ⇒ s → 𝕏 → e → a → 𝑂 a
-substSMeta s x = substSkipShift ∘ 𝓈smbind s x
-
 𝓈dshift ∷ ℕ64 → Subst () e → Subst () e
 𝓈dshift = 𝓈sdshift ∘ (↦) ()
 
@@ -441,12 +427,6 @@ substSMeta s x = substSkipShift ∘ 𝓈smbind s x
 𝓈mbind ∷ 𝕏 → e → Subst () e
 𝓈mbind x e = 𝓈mbinds $ x ↦ e
 
-substMetas ∷ (Substy () e a) ⇒ 𝕏 ⇰ e → a → 𝑂 a
-substMetas = substSkipShift ∘ 𝓈mbinds
-
-substMeta ∷ (Substy () e a) ⇒ 𝕏 → e → a → 𝑂 a
-substMeta x = substSkipShift ∘ 𝓈mbind x
-
 substyDBdr ∷ (Ord s) ⇒ s → SubstM s e ()
 substyDBdr s = umodifyEnv $ compose
   [ alter subSubstEnvL $ alter substActionSubstL $ 𝓈sdshift $ s ↦ 1
@@ -463,7 +443,7 @@ substyBdr ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 → e) → 𝕏 → SubstM s 
 substyBdr s 𝓋 x = do
   substyDBdr s
   substyNBdr s x
-  bO ← access substActionBdrChangeL *∘ view subSubstEnvL ^$ ask
+  bO ← access substActionReBdrL *∘ view subSubstEnvL ^$ ask
   case bO of
     None → skip
     Some b → do
