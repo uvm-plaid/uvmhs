@@ -36,6 +36,11 @@ nvarL = prism nvar $ \case
   NVar n x | n≡0 → Some x
   _ → None
 
+gensymVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m 𝕏
+gensymVar ℓ s = do
+  n ← nextL ℓ
+  return $ 𝕏 (Some n) s
+
 instance Pretty 𝕏 where
   pretty (𝕏 nO x) = concat
     [ ppString x

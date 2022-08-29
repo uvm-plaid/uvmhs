@@ -315,6 +315,9 @@ substWith f 𝓈 = snd ∘ runSubstMHalt (SubSubstEnv $ f $ SubstAction False No
 subst ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
 subst = substWith id
 
+substSkipShift ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
+substSkipShift = substWith $ update substActionSkipShiftL True
+
 todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
 todbr = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction False (Some True) null) ∘ substy
 
@@ -396,6 +399,12 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈smbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
 𝓈smbind s x e = 𝓈smbinds $ s ↦ x ↦ e
 
+substSMetas ∷ (Ord s,Substy s e a) ⇒ s ⇰ 𝕏 ⇰ e → a → 𝑂 a
+substSMetas = substSkipShift ∘ 𝓈smbinds
+
+substSMeta ∷ (Ord s,Substy s e a) ⇒ s → 𝕏 → e → a → 𝑂 a
+substSMeta s x = substSkipShift ∘ 𝓈smbind s x
+
 𝓈dshift ∷ ℕ64 → Subst () e → Subst () e
 𝓈dshift = 𝓈sdshift ∘ (↦) ()
 
@@ -431,6 +440,12 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 
 𝓈mbind ∷ 𝕏 → e → Subst () e
 𝓈mbind x e = 𝓈mbinds $ x ↦ e
+
+substMetas ∷ (Substy () e a) ⇒ 𝕏 ⇰ e → a → 𝑂 a
+substMetas = substSkipShift ∘ 𝓈mbinds
+
+substMeta ∷ (Substy () e a) ⇒ 𝕏 → e → a → 𝑂 a
+substMeta x = substSkipShift ∘ 𝓈mbind x
 
 substyDBdr ∷ (Ord s) ⇒ s → SubstM s e ()
 substyDBdr s = umodifyEnv $ compose
