@@ -387,6 +387,15 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈sgbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
 𝓈sgbind s x e = 𝓈sgbinds $ s ↦ x ↦ e
 
+𝓈smbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ e → Subst s e
+𝓈smbinds sxes = Subst $ 𝓈smbindsG $ assoc $ do
+  s :* xes ← iter sxes
+  x :* e ← iter xes
+  return $ s :* x :* e
+
+𝓈smbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
+𝓈smbind s x e = 𝓈smbinds $ s ↦ x ↦ e
+
 𝓈dshift ∷ ℕ64 → Subst () e → Subst () e
 𝓈dshift = 𝓈sdshift ∘ (↦) ()
 
@@ -416,6 +425,12 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 
 𝓈gbind ∷ 𝕏 → e → Subst () e
 𝓈gbind x e = 𝓈gbinds $ x ↦ e
+
+𝓈mbinds ∷ 𝕏 ⇰ e → Subst () e
+𝓈mbinds = 𝓈smbinds ∘ (↦) ()
+
+𝓈mbind ∷ 𝕏 → e → Subst () e
+𝓈mbind x e = 𝓈mbinds $ x ↦ e
 
 substyDBdr ∷ (Ord s) ⇒ s → SubstM s e ()
 substyDBdr s = umodifyEnv $ compose
