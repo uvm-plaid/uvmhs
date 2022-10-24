@@ -89,6 +89,11 @@ instance (∀ a'. Null a' ⇒ Null (m a'),Null a) ⇒ Null (ReaderT r m a) where
 instance (∀ a'. Append a' ⇒ Append (m a'),Append a) ⇒ Append (ReaderT r m a) where
   (⧺) ∷ ReaderT r m a → ReaderT r m a → ReaderT r m a
   (⧺) xM₁ xM₂ = ReaderT $ \ r → unReaderT xM₁ r ⧺ unReaderT xM₂ r
+instance 
+  ( ∀ a'. Null a' ⇒ Null (m a')
+  , ∀ a'. Append a' ⇒ Append (m a')
+  , Monoid a
+  ) ⇒ Monoid (ReaderT r m a)
 
 instance Transformer (ReaderT r) where
   lift ∷ ∀ m a. (Monad m) ⇒ m a → ReaderT r m a
@@ -140,7 +145,6 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append o,Append a) ⇒ Append (Wri
 instance 
   ( ∀ a'. Null a' ⇒ Null (m a')
   , ∀ a'. Append a' ⇒ Append (m a')
-  -- ( (∀ a'. Monoid a' ⇒ Monoid (m a'))
   , Monoid o
   , Monoid a
   ) 
@@ -196,7 +200,6 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append s,Append a) ⇒ Append (Sta
 instance 
   ( ∀ a'. Null a' ⇒ Null (m a')
   , ∀ a'. Append a' ⇒ Append (m a')
-  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
   , Monoid s,Monoid a
   ) 
   ⇒ Monoid (StateT s m a)
@@ -262,7 +265,6 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append a) ⇒ Append (FailT m a) w
 instance 
   ( ∀ a'. Null a' ⇒ Null (m a')
   , ∀ a'. Append a' ⇒ Append (m a')
-  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
   , Monoid a
   ) 
   ⇒ Monoid (FailT m a)
@@ -317,7 +319,6 @@ instance (∀ a'. Append a' ⇒ Append (m a'),Append e,Append a) ⇒ Append (Err
 instance 
   ( ∀ a'. Null a' ⇒ Null (m a')
   , ∀ a'. Append a' ⇒ Append (m a')
-  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
   , Append e,Monoid a
   )
   ⇒ Monoid (ErrorT e m a)
@@ -325,6 +326,34 @@ instance
 instance Transformer (ErrorT e) where
   lift ∷ ∀ m a. (Monad m) ⇒ m a → ErrorT e m a
   lift xM = ErrorT $ Inr ^$ xM
+
+-----------
+-- DELAY --
+-----------
+
+newtype DelayT m a = DelayT { unDelayT ∷ () → m a }
+
+runDelayT ∷ DelayT m a → m a
+runDelayT = appto () ∘ unDelayT
+
+instance (Functor m) ⇒ Functor (DelayT m) where map f xM = DelayT $ \ () → map f $ runDelayT xM
+instance (Return m) ⇒ Return (DelayT m) where return = DelayT ∘ const ∘ return
+instance (Bind m) ⇒ Bind (DelayT m) where xM ≫= f = DelayT $ \ () → runDelayT xM ≫= runDelayT ∘ f
+instance (Monad m) ⇒ Monad (DelayT m)
+instance Functor2 DelayT where
+  map2 ∷ ∀ m₁ m₂. (∀ a. m₁ a → m₂ a) → (∀ a. DelayT m₁ a → DelayT m₂ a)
+  map2 f = DelayT ∘ map f ∘ unDelayT
+
+instance MonadDelay (DelayT m) where
+  delay xMU = DelayT $ \ () → runDelayT $ xMU ()
+
+instance (∀ a'. Null (m a')) ⇒ Null (DelayT m a) where 
+  null = DelayT $ \ () → null
+instance (∀ a'. Append (m a')) ⇒ Append (DelayT m a) where 
+  xM₁ ⧺ xM₂ = DelayT $ \ () → runDelayT xM₁ ⧺ runDelayT xM₂
+instance (∀ a'. Null (m a'),∀ a'. Append (m a')) ⇒ Monoid (DelayT m a)
+
+instance Transformer DelayT where lift xM = DelayT $ \ () → xM
 
 ------------
 -- NONDET --
@@ -465,46 +494,12 @@ instance (∀ a'. Append (m a')) ⇒ Append (UContT m a) where
   (⧺) ∷ UContT m a → UContT m a → UContT m a
   xM₁ ⧺ xM₂ = UContT HS.$ \ (𝓀 ∷ a → m u) → unUContT xM₁ 𝓀 ⧺ unUContT xM₂ 𝓀
 instance 
-  -- ( ∀ a'. Null (m a')
-  -- , ∀ a'. Append (m a')
   ( ∀ a'. Monoid (m a')
   ) ⇒ Monoid (UContT m a)
 
 instance Transformer UContT where
   lift ∷ ∀ m a. (Monad m) ⇒ m a → UContT m a
   lift xM = UContT HS.$ \ (𝓀 ∷ a → m u) → 𝓀 *$ xM
-
------------
--- NoBad --
------------
-
-newtype NoBad a = NoBad { unNoBad ∷ a }
-  deriving 
-  (Null,Append,Monoid
-  ,Bot,Join,JoinLattice
-  ,Top,Meet,MeetLattice
-  ,Lattice,Dual,Difference)
-
-instance Functor NoBad where 
-  map = mmap
-instance Return NoBad where
-  return ∷ ∀ a. a → NoBad a
-  return = NoBad
-instance Bind NoBad where
-  (≫=) ∷ ∀ a b. NoBad a → (a → NoBad b) → NoBad b
-  x ≫= f = f $ unNoBad x
-instance Monad NoBad
-
-instance Extract NoBad where
-  extract ∷ ∀ a. NoBad a → a
-  extract = unNoBad
-instance Cobind NoBad where
-  (=≫) ∷ ∀ a b. NoBad a → (NoBad a → b) → NoBad b
-  xM =≫ f = NoBad $ f xM
-instance Comonad NoBad
-
-instance MonadBad NoBad where
-  bad = error "<nobad>"
 
 -- ================= --
 -- AUTOMATIC LIFTING --
@@ -552,6 +547,9 @@ instance LiftError (ReaderT r) where
 
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. ReaderT r m a → (e → ReaderT r m a) → ReaderT r m a)
   liftCatch catchM xM k = ReaderT $ \ r → catchM (unReaderT xM r) (\ e → unReaderT (k e) r)
+
+instance LiftDelay (ReaderT r) where
+  liftDelay delayM xMU = ReaderT $ \ r → delayM $ \ () → runReaderT r $ xMU ()
 
 instance LiftNondet (ReaderT r) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ReaderT r m a)
@@ -630,6 +628,9 @@ instance LiftError (WriterT o) where
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. WriterT o m a → (e → WriterT o m a) → WriterT o m a)
   liftCatch catchM xM k = WriterT $ catchM (unWriterT xM) $ \ e → unWriterT $ k e
 
+instance LiftDelay (WriterT o) where
+  liftDelay delayM xMU = WriterT $ delayM $ \ () → unWriterT $ xMU ()
+
 instance LiftNondet (WriterT o) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. WriterT o m a)
   liftMzero mzeroM = WriterT mzeroM
@@ -707,6 +708,9 @@ instance LiftError (StateT s) where
 
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. StateT s m a → (e → StateT s m a) → StateT s m a)
   liftCatch catchM xM k = StateT $ \ s → catchM (unStateT xM s) (\ e → unStateT (k e) s)
+
+instance LiftDelay (StateT s) where
+  liftDelay delayM xMU = StateT $ \ s → delayM $ \ () → runStateT s $ xMU ()
 
 instance LiftNondet (StateT s) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. StateT s m a)
@@ -789,6 +793,9 @@ instance LiftError FailT where
   liftCatch ∷ ∀ e m. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. FailT m a → (e → FailT m a) → FailT m a)
   liftCatch catchM xM k = FailT $ catchM (unFailT xM) $ \ e → unFailT $ k e
 
+instance LiftDelay FailT where
+  liftDelay delayM xMU = FailT $ delayM $ \ () → unFailT $ xMU ()
+
 instance LiftNondet FailT where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. FailT m a)
   liftMzero mzeroM = FailT $ mzeroM
@@ -870,6 +877,9 @@ instance LiftError (ErrorT e) where
   liftCatch ∷ ∀ e' m. (Monad m) ⇒ (∀ a. m a → (e' → m a) → m a) → (∀ a. ErrorT e m a → (e' → ErrorT e m a) → ErrorT e m a)
   liftCatch catchM xM k = ErrorT $ catchM (unErrorT xM) $ \ e → unErrorT $ k e
 
+instance LiftDelay (ErrorT e) where
+  liftDelay delayM xMU = ErrorT $ delayM $ \ () → unErrorT $ xMU ()
+
 instance LiftNondet (ErrorT e) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ErrorT e m a)
   liftMzero mzeroM = ErrorT $ mzeroM
@@ -950,6 +960,9 @@ instance LiftError NondetT where
 
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. NondetT m a → (e → NondetT m a) → NondetT m a)
   liftCatch catchM xM k = NondetT $ catchM (unNondetT xM) $ \ e → unNondetT $ k e
+
+instance LiftDelay NondetT where
+  liftDelay delayM xMU = NondetT $ delayM $ \ () → unNondetT $ xMU ()
 
 instance LiftNondet NondetT where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. NondetT m a)
@@ -1037,6 +1050,9 @@ instance (Monad m,MonadError e m) ⇒ MonadError e (ContT u m) where
     catch (runContT k xM₁) $ \ e →
       runContT k $ kk e
 
+instance LiftDelay (ContT u) where
+  liftDelay delayM xMU = ContT $ \ 𝓀 → delayM $ \ () → runContT 𝓀 $ xMU ()
+
 instance (Monad m,MonadNondet m) ⇒ MonadNondet (ContT u m) where
   mzero ∷ ∀ a. ContT u m a
   mzero = ContT $ \ (_ ∷ a → m r) → mzero
@@ -1098,6 +1114,9 @@ instance (Monad m,MonadError e m) ⇒ MonadError e (UContT m) where
     catch (runUContT k xM₁) $ \ e →
       runUContT k $ kk e
 
+instance LiftDelay UContT where
+  liftDelay delayM xMU = UContT (\ 𝓀 → delayM $ \ () → runUContT 𝓀 $ xMU ())
+
 instance (Monad m,MonadNondet m) ⇒ MonadNondet (UContT m) where
   mzero ∷ ∀ a. UContT m a
   mzero = UContT HS.$ \ (_ ∷ a → m u) → mzero
@@ -1154,14 +1173,11 @@ instance (RWST r o s) ⇄⁼ (ReaderT r ⊡ WriterT o ⊡ StateT s) where
 instance (Monoid o) ⇒ Transformer (RWST r o s) where
   lift = RWST ∘ lift ∘ lift ∘ lift
 
--- deriving instance (Monoid o,Monad m,MonadCont (s ∧ (o ∧ r')) m) ⇒ MonadCont r' (RWST r o s m)
-
 deriving instance (∀ a'. Null a' ⇒ Null (m a'),Null o,Null s,Null a) ⇒ Null (RWST r o s m a)
 deriving instance (∀ a'. Append a' ⇒ Append (m a'),Append o,Append s,Append a) ⇒ Append (RWST r o s m a)
 deriving instance 
   ( ∀ a'. Null a' ⇒ Null (m a')
   , ∀ a'. Append a' ⇒ Append (m a')
-  -- ( ∀ a'. Monoid a' ⇒ Monoid (m a')
   , Monoid o,Monoid s,Monoid a
   ) 
   ⇒ Monoid (RWST r o s m a)

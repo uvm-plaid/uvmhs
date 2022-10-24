@@ -39,15 +39,10 @@ instance 𝑂 a ⇄ (() ∨ a) where
     Inl () → None
     Inr x → Some x
 
-elim𝑂 ∷ b → (a → b) → 𝑂 a → b
-elim𝑂 n s = \case
-  None → n
-  Some x → s x
-
-elim𝑂Z ∷ b → (a → b) → 𝑂 a → b
-elim𝑂Z ~n ~s = \case
-  None → n
-  Some x → s x
+elim𝑂 ∷ (() → b) → (a → b) → 𝑂 a → b
+elim𝑂 f g = \case
+  None → f ()
+  Some x → g x
 
 isNone ∷ 𝑂 a → 𝔹
 isNone = \case

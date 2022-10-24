@@ -2,6 +2,7 @@ module UVMHS
   ( module UVMHS.Core
   , module UVMHS.Lang.ULC
   , module UVMHS.Lib.Annotated
+  , module UVMHS.Lib.Dataframe
   , module UVMHS.Lib.Errors
   , module UVMHS.Lib.Graph
   , module UVMHS.Lib.Logging
@@ -21,6 +22,7 @@ module UVMHS
 import UVMHS.Core
 import UVMHS.Lang.ULC
 import UVMHS.Lib.Annotated
+import UVMHS.Lib.Dataframe
 import UVMHS.Lib.Errors
 import UVMHS.Lib.Graph
 import UVMHS.Lib.Logging

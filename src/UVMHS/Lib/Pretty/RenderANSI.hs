@@ -219,8 +219,8 @@ pptrace a = io_UNSAFE $ do
 pptraceM ∷ (Monad m,Pretty a) ⇒ a → m ()
 pptraceM a = let _ = pptrace a in skip
 
-ioError ∷ (Pretty e) ⇒ e ∨ a → IO a
-ioError = elimChoice (\ e → pprint e ≫ abortIO) return
+ppabort ∷ (Pretty a) ⇒ a → IO b
+ppabort x = do pprint x ; abortIO
 
 debugShape ∷ Doc → IO ()
 debugShape d = do

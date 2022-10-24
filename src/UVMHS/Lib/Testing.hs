@@ -66,7 +66,7 @@ runTests verb tests = do
           tags ← list ∘ reverse ^$ ask
           if b 
           then do
-            when verb $
+            when verb $ \ () →
               io $ pprint $ ppHorizontal
                 [ ppFG teal $ ppBD $ ppString $ concat $ inbetween ":" tags
                 , ppFG green $ ppString "PASS" 
@@ -74,7 +74,7 @@ runTests verb tests = do
                 ]
             tell $ TestsOut null $ tags ↦ (one :* zero)
           else do
-            when verb $
+            when verb $ \ () → 
               io $ pprint $ ppHorizontal
                 [ ppFG teal $ ppBD $ ppString $ concat $ inbetween ":" tags
                 , ppFG red $ ppString "FAIL"
@@ -103,7 +103,7 @@ runTests verb tests = do
           ]
        
     ]
-  when (not $ isEmpty $ iter $ testsOutFailures o) $
+  when (not $ isEmpty $ iter $ testsOutFailures o) $ \ () →
     pprint $ ppVertical
       [ ppHeader "FAILED TESTS"
       , pretty $ concat $ mapOn (iter $ testsOutFailures o) $ \ (tags :* lsds) → 

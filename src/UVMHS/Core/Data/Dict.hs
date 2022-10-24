@@ -160,6 +160,9 @@ unionWithKeyOn = rotateL unionWithKey
 interWith ∷ (Ord k) ⇒ (v₁ → v₂ → v₃) → k ⇰ v₁ → k ⇰ v₂ → k ⇰ v₃
 interWith f kvs₁ kvs₂ = 𝐷 $ Map.intersectionWith f (un𝐷 kvs₁) (un𝐷 kvs₂)
 
+interWithOn ∷ (Ord k) ⇒ k ⇰ v₁ → k ⇰ v₂ → (v₁ → v₂ → v₃) → k ⇰ v₃
+interWithOn = rotateL interWith
+
 diffWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
 diffWith f kvs₁ kvs₂ = 𝐷 $ Map.differenceWith (\ x y → HS.Just $ f x y) (un𝐷 kvs₁) $ un𝐷 kvs₂
 
@@ -186,11 +189,17 @@ without ks kvs = 𝐷 $ Map.withoutKeys (un𝐷 kvs) $ un𝑃 ks
 restrict ∷ (Ord k) ⇒ 𝑃 k → k ⇰ v → k ⇰ v
 restrict ks kvs = 𝐷 $ Map.restrictKeys (un𝐷 kvs) $ un𝑃 ks
 
-mapWithKey ∷ (a → b → b) → a ⇰ b → a ⇰ b
+mapWithKey ∷ (k → v → v') → k ⇰ v → k ⇰ v'
 mapWithKey f = 𝐷 ∘ Map.mapWithKey f ∘ un𝐷
 
-mapWithKeyOn ∷ a ⇰ b → (a → b → b) → a ⇰ b
+mapWithKeyOn ∷ k ⇰ v → (k → v → v') → k ⇰ v'
 mapWithKeyOn = flip mapWithKey
+
+mapMWithKey ∷ (Monad m) ⇒ (k → v → m v') → k ⇰ v → m (k ⇰ v')
+mapMWithKey = exchange ∘∘ mapWithKey
+
+mapMWithKeyOn ∷ (Monad m) ⇒ k ⇰ v → (k → v → m v') → m (k ⇰ v')
+mapMWithKeyOn = flip mapMWithKey
 
 keys ∷ (Ord k) ⇒ k ⇰ v → 𝑃 k
 keys = pow ∘ Map.keys ∘ un𝐷

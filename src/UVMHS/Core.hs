@@ -2,6 +2,7 @@ module UVMHS.Core
   ( module UVMHS.Core.Classes
   , module UVMHS.Core.Data
   , module UVMHS.Core.Effects
+  , module UVMHS.Core.FilePath
   , module UVMHS.Core.IO
   , module UVMHS.Core.Init
   , module UVMHS.Core.LensDeriving
@@ -20,6 +21,7 @@ module UVMHS.Core
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 import UVMHS.Core.Effects
+import UVMHS.Core.FilePath
 import UVMHS.Core.IO
 import UVMHS.Core.Init
 import UVMHS.Core.LensDerivedInstances ()

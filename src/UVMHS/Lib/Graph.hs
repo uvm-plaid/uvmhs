@@ -93,3 +93,6 @@ sccEachGroupM xs deps f =
           -- build a list of results
           tell *$ lift $ f cyclic $ iter gdefs
     in evalRWST () pø $ retOut $ eachOn xs visitVar
+
+sccEachGroup ∷ ∀ a b. (Ord a) ⇒ 𝐼 a → a ⇰ 𝑃 a → (𝔹 → 𝐼 a → 𝐼 b) → 𝐼 b
+sccEachGroup xs deps f = unID $ sccEachGroupM xs deps $ ID ∘∘ f

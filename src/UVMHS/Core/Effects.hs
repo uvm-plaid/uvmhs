@@ -53,6 +53,12 @@ class LiftError t where
   liftThrow ∷ ∀ m e. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → t m a)
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. t m a → (e → t m a) → t m a)
 
+class MonadDelay m where
+  delay ∷ (() → m a) → m a
+
+class LiftDelay t where
+  liftDelay ∷ ∀ m. (Monad m) ⇒ (∀ a. (() → m a) → m a) → (∀ a. (() → t m a) → t m a)
+
 class MonadNondet m where
   mzero ∷ ∀ a. m a
   (⊞) ∷ ∀ a. m a → m a → m a
@@ -299,7 +305,7 @@ localStateEffectsL ℓ xM = do
 -- Fail
 
 failEff ∷ (Monad m,MonadFail m) ⇒ 𝑂 a → m a
-failEff = elim𝑂 abort return
+failEff = elim𝑂 (const abort) return
 
 failObs ∷ (Monad m,MonadFail m) ⇒ m a → m (𝑂 a)
 failObs xM = tries
@@ -308,7 +314,7 @@ failObs xM = tries
   ]
 
 abort𝑂 ∷ (Monad m,MonadFail m) ⇒ 𝑂 a → m a
-abort𝑂 = elim𝑂 abort return
+abort𝑂 = elim𝑂 (const abort) return
 
 tries ∷ (Monad m,MonadFail m,ToIter (m a) t) ⇒ t → m a
 tries = foldr abort (⎅)
@@ -337,8 +343,14 @@ many aM = tries
 
 -- Error --
 
+throwEff ∷ (Monad m,MonadError e m) ⇒ m (e ∨ a) → m a
+throwEff = extend $ elimChoice throw return
+
+throwObs ∷ (Monad m,MonadError e m) ⇒ m a → m (e ∨ a)
+throwObs xM = catch (map Inr xM) $ return ∘ Inl
+
 throw𝑂 ∷ (Monad m,MonadError e m) ⇒ e → 𝑂 a → m a 
-throw𝑂 e = elim𝑂 (throw e) return
+throw𝑂 e = elim𝑂 (const $ throw e) return
 
 -- Nondet --
 
@@ -391,7 +403,7 @@ manyPrefBy uM xM = mconcat
   ]
 
 mzero𝑂 ∷ (Monad m,MonadNondet m) ⇒ 𝑂 a → m a
-mzero𝑂 = elim𝑂 mzero return
+mzero𝑂 = elim𝑂 (const mzero) return
 
 return𝑃 ∷ ∀ m a. (Monad m,MonadNondet m) ⇒ 𝑃 a → m a
 return𝑃 = fold mzero (\ x xM → xM ⊞ return x)

@@ -4,6 +4,8 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 
+import UVMHS.Core.LensDeriving
+
 -- aggregate size = sum of sizes of each element
 class ASized a where asize ∷ a → ℕ64
 
@@ -20,6 +22,7 @@ data 𝐼A a = 𝐼A
   { 𝑖aSize ∷ ℕ64
   , 𝑖aIter ∷ 𝐼 a
   } deriving (Show)
+makeLenses ''𝐼A
 
 class ToIterA a t | t → a where iterA ∷ t → 𝐼A a
 instance ToIterA a (𝐼A a) where iterA = id
@@ -32,6 +35,8 @@ instance              ToIter a (𝐼A a) where iter     = 𝑖aIter
 instance (ASized a) ⇒ Single a (𝐼A a) where single s = 𝐼A (asize s) $ single s
 instance              ASized   (𝐼A a) where asize    = 𝑖aSize
 
+instance FunctorM 𝐼C where mapM f (𝐼C n xs) = 𝐼C n ^$ mapM f xs
+
 iterAI ∷ (ToIter a t,ASized a) ⇒ t → 𝐼A a
 iterAI xs = 𝐼A (sum $ map asize $ iter xs) $ iter xs
 
@@ -43,6 +48,7 @@ data 𝐼C a = 𝐼C
   { 𝑖cSize ∷ ℕ64
   , 𝑖cIter ∷ 𝐼 a
   } deriving (Show)
+makeLenses ''𝐼C
 
 class ToIterC a t | t → a where iterC ∷ t → 𝐼C a
 instance ToIterC a (𝐼C a) where iterC = id
@@ -69,6 +75,7 @@ data 𝐼AC a = 𝐼AC
   , 𝑖acCSize ∷ ℕ64
   , 𝑖acIter ∷ 𝐼 a
   } deriving (Show)
+makeLenses ''𝐼AC
 
 class ToIterAC a t | t → a where iterAC ∷ t → 𝐼AC a
 instance ToIterAC a (𝐼AC a) where iterAC = id
@@ -108,3 +115,15 @@ stringCS ss = build𝕊CN (csize ss) ss
 
 stringSS ∷ (ToIter 𝕊 t,ASized t) ⇒ t → 𝕊
 stringSS ss = build𝕊SN (asize ss) ss
+
+reiterC ∷ (ToIterC a t) ⇒ s → (a → s → (s ∧ b)) → t → 𝐼C b
+reiterC s f (iterC → 𝐼C n xs) = 𝐼C n $ reiter s f xs
+
+withIndexC ∷ ∀ t a. (ToIterC a t) ⇒ t → 𝐼C (ℕ64 ∧ a)
+withIndexC = reiterC zero $ \ x i → (i + one) :* (i :* x)
+
+zipWithC ∷ (ToIterC a t₁,ToIterC b t₂) ⇒ (a → b → c) → t₁ → t₂ → 𝐼C c
+zipWithC f (iterC → 𝐼C n₁ xs) (iterC → 𝐼C n₂ ys) = 𝐼C (n₁ ⊓ n₂) $ zipWith f xs ys
+
+zipC ∷ (ToIterC a t₁,ToIterC b t₂) ⇒ t₁ → t₂ → 𝐼C (a ∧ b)
+zipC = zipWithC (:*)

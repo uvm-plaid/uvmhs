@@ -488,6 +488,7 @@ instance Pretty ℝᴾ  where
     Doubleᴾ d → pretty d
 
 instance Pretty Time where pretty = ppLit ∘ show𝕊
+instance Pretty TimeD where pretty = ppLit ∘ show𝕊
 
 escape ∷ ℂ → 𝐼 ℂ
 escape = \case

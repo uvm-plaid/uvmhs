@@ -57,24 +57,13 @@ fM ⊡ xM = do {f ← fM;x ← xM;return $ f x}
 skip ∷ (Return m) ⇒ m ()
 skip = return ()
 
-when ∷ (Return m) ⇒ 𝔹 → m () → m ()
-when b xM
-  | b = xM
-  | otherwise = skip
-
-whenZ ∷ (Return m) ⇒ 𝔹 → m () → m ()
-whenZ b ~xM
-  | b = xM
+when ∷ (Return m) ⇒ 𝔹 → (() → m ()) → m ()
+when b f
+  | b = f ()
   | otherwise = skip
 
 whenM ∷ (Monad m) ⇒ m 𝔹 → m () → m ()
-whenM bM xM = do b ← bM ; when b xM
-
-whenMZ ∷ (Monad m) ⇒ m 𝔹 → m () → m ()
-whenMZ bM ~xM = do b ← bM ; whenZ b xM
-
-when𝑂 ∷ (Return m) ⇒ 𝑂 a → (a → m ()) → m ()
-when𝑂 aO f = case aO of {None → skip;Some x → f x}
+whenM bM xM = do b ← bM ; when b $ const xM
 
 -- Compat --
 

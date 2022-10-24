@@ -63,7 +63,7 @@ instance Transitive (⌲) where
     }
 instance Category (⌲)
 instance Alter (⌲) where
-  alter p f a = elim𝑂 a (construct p ∘ f) $ view p a
+  alter p f a = elim𝑂 (const a) (construct p ∘ f) $ view p a
 
 prism ∷ (b → a) → (a → 𝑂 b) → a ⌲ b
 prism = Prism
@@ -72,10 +72,10 @@ isoPrism ∷ (b → a) → (a → b) → a ⌲ b
 isoPrism from to = prism from $ Some ∘ to
 
 viewΩ ∷ a ⌲ b → a → b
-viewΩ p = elim𝑂Z (error "viewΩ") id ∘ view p
+viewΩ p = elim𝑂 (\ () → error "viewΩ") id ∘ view p
 
 shape ∷ a ⌲ b → a → 𝔹
-shape p = elim𝑂 False (const True) ∘ view p
+shape p = elim𝑂 (const False) (const True) ∘ view p
 
 inlL ∷ a ∨ b ⌲ a
 inlL = Prism Inl $ elimChoice Some $ const None
@@ -90,7 +90,7 @@ sndL ∷ a ∧ b ⟢ b
 sndL = lens snd $ \ (a :* _) → (a :* )
 
 noneL ∷ 𝑂 a ⌲ ()
-noneL = prism (const None) $ elim𝑂 (Some ()) $ const None
+noneL = prism (const None) $ elim𝑂 (const $ Some ()) $ const None
 
 someL ∷ 𝑂 a ⌲ a
 someL = Prism Some id

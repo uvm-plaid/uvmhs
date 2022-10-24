@@ -219,7 +219,7 @@ appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
   let GSubst esᴳ₁ esᴹ₁ 𝓈s₁ = 𝓈̂₁
       GSubst esᴳ₂ esᴹ₂ 𝓈s₂ = 𝓈̂₂
       esub 𝓈 𝑠 = esubst $ appendGSubst esubst 𝓈 $ 𝓈introG 𝑠
-      ℯsub s 𝓈 = subSSubstElem (elim𝑂 Var_SSE dsubstVar $ gsubstSubst 𝓈 ⋕? s) $ esub 𝓈
+      ℯsub s 𝓈 = subSSubstElem (elim𝑂 (const Var_SSE) dsubstVar $ gsubstSubst 𝓈 ⋕? s) $ esub 𝓈
       esᴳ₁' = map (subSubstElem $ esub 𝓈̂₂) esᴳ₁
       esᴹ₁' = map (subSubstElem $ esub 𝓈̂₂) esᴹ₁
       𝓈s₁' = mapWithKeyOn 𝓈s₁ $ \ s (DSubst ρ̇₁ es₁ ι₁) → DSubst ρ̇₁ (mapOn es₁ $ ℯsub s 𝓈̂₂) ι₁
@@ -465,10 +465,10 @@ substyVar xO s 𝓋 n = do
   case γ of
     FVsSubstEnv 𝒶 → do
       let n₀ = ifNone 0 (freeVarsActionScope 𝒶 ⋕? (s :* xO))
-      when (n ≥ n₀) $ do
+      when (n ≥ n₀) $ \ () → do
         let n' = n-n₀
-            y = elim𝑂 DVar (flip NVar) xO n'
-        when (freeVarsActionFilter 𝒶 s y) $
+            y = elim𝑂 (const DVar) (flip NVar) xO n'
+        when (freeVarsActionFilter 𝒶 s y) $ \ () → 
           tell $ s ↦ single y
       return $ 𝓋 n
     SubSubstEnv 𝒶 → do
@@ -491,7 +491,7 @@ substyGVar s 𝓋 x = do
   case γ of
     FVsSubstEnv 𝒶 → do
       let y = GVar x
-      when (freeVarsActionFilter 𝒶 s y) $
+      when (freeVarsActionFilter 𝒶 s y) $ \ () → 
         tell $ s ↦ single y
       return $ 𝓋 x
     SubSubstEnv 𝓈A → do
@@ -506,7 +506,7 @@ substyMVar s 𝓋 x = do
   case γ of
     FVsSubstEnv 𝒶 → do
       let y = MVar x
-      when (freeVarsActionFilter 𝒶 s y) $
+      when (freeVarsActionFilter 𝒶 s y) $ \ () → 
         tell $ s ↦ single y
       return $ 𝓋 x
     SubSubstEnv 𝓈A → do

@@ -1,4 +1,8 @@
-module UVMHS.Core.IO where
+module UVMHS.Core.IO
+  ( module UVMHS.Core.IO 
+  , module System.IO.Error
+  , module System.Exit
+  ) where
 
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
@@ -6,23 +10,43 @@ import UVMHS.Core.Data
 import UVMHS.Core.Monads ()
 import UVMHS.Core.Time
 
-import System.Exit
+import System.Exit     (ExitCode)
+import System.IO.Error (IOError)
 
+import qualified Control.Exception     as HS
 import qualified Data.ByteString       as BS
+import qualified Data.IORef            as IORef
 import qualified Data.Text.Encoding    as Text
 import qualified GHC.IO.Handle         as IO
 import qualified GHC.Stats             as Stat
 import qualified Prelude               as HS
 import qualified System.Directory      as Dir
+import qualified System.Directory      as HS
 import qualified System.Environment    as Env
 import qualified System.Exit           as Exit
-import qualified System.FilePath.Posix as FP
+import qualified System.Exit           as HS
 import qualified System.IO             as IO
+import qualified System.IO.Error       as HS
 import qualified System.IO.Unsafe      as IO
 import qualified System.Mem            as Mem
 import qualified System.Process        as Proc
-import qualified Control.Exception     as HS
 
+infix 1 ↢
+
+----------------
+-- REFERENCES --
+----------------
+
+type 𝑅 = IORef.IORef
+
+ref ∷ a → IO (𝑅 a)
+ref = IORef.newIORef
+
+deref ∷ 𝑅 a → IO a
+deref = IORef.readIORef
+
+(↢) ∷ 𝑅 a → a → IO ()
+(↢) = IORef.writeIORef
 ---------------
 -- Unsafe IO --
 ---------------
@@ -104,16 +128,22 @@ ilocalArgs args = Env.withArgs $ lazyList $ map tohsChars $ iter args
 ------------
 
 abortIOCode ∷ ℤ64 → IO a
-abortIOCode i = exitWith $ ExitFailure $ tohs i
+abortIOCode i = HS.exitWith $ HS.ExitFailure $ tohs i
 
 abortIO ∷ IO a
 abortIO = abortIOCode $ 𝕫64 1
 
 exitIO ∷ IO a
-exitIO = exitWith $ ExitSuccess
+exitIO = HS.exitWith $ HS.ExitSuccess
 
 failIO ∷ 𝕊 → IO a
 failIO = HS.fail ∘ tohsChars
+
+throwIO ∷ IOError → IO a
+throwIO = HS.ioError
+
+catchIO ∷ IO a → (IOError → IO a) → IO a
+catchIO = HS.catchIOError
 
 cleanExit ∷ IO a → IO a
 cleanExit xM = HS.catch xM (\ (c ∷ ExitCode) → shout c ≫ exitIO)
@@ -157,24 +187,15 @@ dtouch = Dir.createDirectoryIfMissing True ∘ tohsChars
 drremove ∷ 𝕊 → IO ()
 drremove = Dir.removeDirectoryRecursive ∘ tohsChars
 
+dcurrent ∷ IO 𝕊
+dcurrent = string ^$ HS.getCurrentDirectory
+
 -----------
 -- Paths --
 -----------
 
 pexists ∷ 𝕊 → IO 𝔹
 pexists = Dir.doesPathExist ∘ tohsChars
-
-pfilename ∷ 𝕊 → 𝕊
-pfilename = string ∘ FP.takeFileName ∘ tohsChars
-
-pbasename ∷ 𝕊 → 𝕊
-pbasename = string ∘ FP.takeBaseName ∘ tohsChars
-
-pdirectory ∷ 𝕊 → 𝕊
-pdirectory = string ∘ FP.takeDirectory ∘ tohsChars
-
-pextension ∷ 𝕊 → 𝕊
-pextension = string ∘ FP.takeExtension ∘ tohsChars
 
 -----------
 -- Shell --
@@ -247,15 +268,18 @@ rtimeIO s xM = do
   do out $ "RESULT: " ⧺ show𝕊 t ; oflush
   return x
 
-profile ∷ (() → a) → IO (TimeD ∧ 𝔻)
-profile f = do
+profile ∷ IO a → IO (a ∧ TimeD ∧ 𝔻)
+profile xM = do
   gc
   s₁ ← Stat.getRTSStats
   let (n₁,u₁) = (Stat.major_gcs s₁,Stat.cumulative_live_bytes s₁)
   t₁ ← now
-  let _ = f ()
+  x ← xM
   t₂ ← now
+  gc
   s₂ ← Stat.getRTSStats
   let (n₂,u₂) = (Stat.major_gcs s₂,Stat.cumulative_live_bytes s₂)
-  return $ (t₂ ⨺ t₁) :* (dbl (HS.fromIntegral u₂ - HS.fromIntegral u₁ ∷ ℕ) / dbl (HS.fromIntegral n₂ - HS.fromIntegral n₁ ∷ ℕ))
-
+      t'      = t₂ ⨺ t₁
+      m       = dbl (HS.fromIntegral u₂ - HS.fromIntegral u₁ ∷ ℕ) 
+                / dbl (HS.fromIntegral n₂ - HS.fromIntegral n₁ ∷ ℕ)
+  return $ x :* t' :* m

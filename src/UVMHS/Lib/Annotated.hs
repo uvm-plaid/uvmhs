@@ -43,10 +43,10 @@ mapMATag f = mapM𝐴 f return
 mapMAVal ∷ (Monad m) ⇒ (a → m b) → 𝐴 e a → m (𝐴 e b)
 mapMAVal f = mapM𝐴 return f
 
-untag ∷ (e → b → b) → 𝐴 e a → (a → b) → b
-untag cxt (𝐴 𝒸 x) f = cxt 𝒸 $ f x
+untag ∷ ((() → e) → b → b) → 𝐴 e a → (a → b) → b
+untag cxt (𝐴 𝒸 x) f = cxt (const 𝒸) $ f x
 
-untagWith ∷ (e → b → b) → (a → b) → 𝐴 e a → b
+untagWith ∷ ((() → e) → b → b) → (a → b) → 𝐴 e a → b
 untagWith = flip ∘ untag
 
 retag ∷ (Monad m) ⇒ m e → a → m (𝐴 e a)

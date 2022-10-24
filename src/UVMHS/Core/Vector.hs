@@ -35,6 +35,8 @@ instance            Null (𝕍 a)         where null  = null𝕍
 instance            Append (𝕍 a)       where (⧺)   = append𝕍
 instance            Monoid (𝕍 a)
 
+instance ToIterC a (𝕍 a) where
+  iterC xs = 𝐼C (csize xs) $ iter xs
 
 vec ∷ (ToIter a t) ⇒ t → 𝕍 a
 vec = 𝕍 ∘ VB.fromList ∘ lazyList

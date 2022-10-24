@@ -56,6 +56,7 @@ library
       UVMHS.Core.Data.String
       UVMHS.Core.Data.Unit
       UVMHS.Core.Effects
+      UVMHS.Core.FilePath
       UVMHS.Core.Init
       UVMHS.Core.IO
       UVMHS.Core.LensDerivedInstances
@@ -73,6 +74,7 @@ library
       UVMHS.Lang.ULC
       UVMHS.Lib.AD
       UVMHS.Lib.Annotated
+      UVMHS.Lib.Dataframe
       UVMHS.Lib.Errors
       UVMHS.Lib.Graph
       UVMHS.Lib.GTree
@@ -90,6 +92,7 @@ library
       UVMHS.Lib.Parser.ParserError
       UVMHS.Lib.Parser.ParserInput
       UVMHS.Lib.Parser.Regex
+      UVMHS.Lib.Pipeline
       UVMHS.Lib.Pretty
       UVMHS.Lib.Pretty.Annotation
       UVMHS.Lib.Pretty.Color
@@ -161,6 +164,7 @@ library
   build-depends:
       base
     , bytestring
+    , cassava
     , containers
     , directory
     , filepath
@@ -224,6 +228,7 @@ executable uvmhs
   build-depends:
       base
     , bytestring
+    , cassava
     , containers
     , directory
     , filepath
