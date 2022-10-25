@@ -71,6 +71,10 @@ instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftError t₁,LiftError t₂) �
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. (t₁ ⊡ t₂) m a → (e → (t₁ ⊡ t₂) m a) → (t₁ ⊡ t₂) m a)
   liftCatch catchM xM k = Compose2 $ (liftCatch HS.$ liftCatch catchM) (unCompose2 xM) (unCompose2 ∘ k)
 
+instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftDelay t₁,LiftDelay t₂) ⇒ LiftDelay (t₁ ⊡ t₂) where
+  liftDelay ∷ ∀ m. (Monad m) ⇒ (∀ a. (() → m a) → m a) → (∀ a. (() → (t₁ ⊡ t₂) m a) → (t₁ ⊡ t₂) m a)
+  liftDelay delayM xMU = Compose2 $ (liftDelay HS.$ liftDelay delayM) (unCompose2 ∘ xMU)
+
 instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftNondet t₁,LiftNondet t₂) ⇒ LiftNondet (t₁ ⊡ t₂) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. (t₁ ⊡ t₂) m a)
   liftMzero mzeroM = Compose2 $ liftMzero HS.$ liftMzero mzeroM
@@ -110,6 +114,8 @@ instance {-# OVERLAPPABLE #-} (Monad m,MonadFail m,LiftFail t) ⇒ MonadFail (t 
 instance {-# OVERLAPPABLE #-} (Monad m,MonadError e m,LiftError t) ⇒ MonadError e (t m) where
   throw = liftThrow throw
   catch = liftCatch catch
+instance {-# OVERLAPPABLE #-} (Monad m,MonadDelay m,LiftDelay t) ⇒ MonadDelay (t m) where
+  delay = liftDelay delay
 instance {-# OVERLAPPABLE #-} (Monad m,MonadNondet m,LiftNondet t) ⇒ MonadNondet (t m) where
   mzero = liftMzero mzero
   (⊞) = liftMplus (⊞)
@@ -156,6 +162,9 @@ deriveLiftThrow throwM e = isofr3 $ liftThrow throwM e
 deriveLiftCatch ∷ ∀ t₁ t₂ m e. (Monad m,t₁ ⇄⁼ t₂,LiftError t₂) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. t₁ m a → (e → t₁ m a) → t₁ m a)
 deriveLiftCatch catchM xM k = isofr3 $ liftCatch catchM (isoto3 xM) (isoto3 ∘ k)
 
+deriveLiftDelay ∷ ∀ t₁ t₂ m. (Monad m,t₁ ⇄⁼ t₂,LiftDelay t₂) ⇒ (∀ a. (() → m a) → m a) → (∀ a. (() → t₁ m a) → t₁ m a)
+deriveLiftDelay delayM xMU = isofr3 $ liftDelay delayM $ isoto3 ∘ xMU
+
 deriveLiftMzero ∷ ∀ t₁ t₂ m. (Monad m,t₁ ⇄⁼ t₂,LiftNondet t₂) ⇒ (∀ a. m a) → (∀ a. t₁ m a)
 deriveLiftMzero mzeroM = isofr3 $ liftMzero mzeroM
 
@@ -188,6 +197,8 @@ instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftFail t₂) ⇒ LiftFail t₁
 instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftError t₂) ⇒ LiftError t₁ where
   liftThrow = deriveLiftThrow
   liftCatch = deriveLiftCatch
+instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftDelay t₂) ⇒ LiftDelay t₁ where
+  liftDelay = deriveLiftDelay
 instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftNondet t₂) ⇒ LiftNondet t₁ where
   liftMzero = deriveLiftMzero
   liftMplus = deriveLiftMplus

@@ -2569,6 +2569,7 @@ deriveLiftAbort :: forall t₁ t₂ m. (Monad m, t₁ ⇄⁼ t₂, LiftFail t₂
 deriveLiftTry :: forall t₁ t₂ m. (Monad m, t₁ ⇄⁼ t₂, LiftFail t₂) => (forall a. m a -> m a -> m a) -> forall a. t₁ m a -> t₁ m a -> t₁ m a
 deriveLiftThrow :: forall t₁ t₂ m e. (Monad m, t₁ ⇄⁼ t₂, LiftError t₂) => (forall a. e -> m a) -> forall a. e -> t₁ m a
 deriveLiftCatch :: forall t₁ t₂ m e. (Monad m, t₁ ⇄⁼ t₂, LiftError t₂) => (forall a. m a -> (e -> m a) -> m a) -> forall a. t₁ m a -> (e -> t₁ m a) -> t₁ m a
+deriveLiftDelay :: forall t₁ t₂ m. (Monad m, t₁ ⇄⁼ t₂, LiftDelay t₂) => (forall a. (() -> m a) -> m a) -> forall a. (() -> t₁ m a) -> t₁ m a
 deriveLiftMzero :: forall t₁ t₂ m. (Monad m, t₁ ⇄⁼ t₂, LiftNondet t₂) => (forall a. m a) -> forall a. t₁ m a
 deriveLiftMplus :: forall t₁ t₂ m. (Monad m, t₁ ⇄⁼ t₂, LiftNondet t₂) => (forall a. m a -> m a -> m a) -> forall a. t₁ m a -> t₁ m a -> t₁ m a
 deriveLiftMtop :: forall t₁ t₂ m. (Monad m, t₁ ⇄⁼ t₂, LiftTop t₂) => (forall a. m a) -> forall a. t₁ m a
@@ -2585,6 +2586,7 @@ instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core
 instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftState t₁, UVMHS.Core.Effects.LiftState t₂) => UVMHS.Core.Effects.LiftState (t₁ UVMHS.Core.Transformers.⊡ t₂)
 instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftFail t₁, UVMHS.Core.Effects.LiftFail t₂) => UVMHS.Core.Effects.LiftFail (t₁ UVMHS.Core.Transformers.⊡ t₂)
 instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftError t₁, UVMHS.Core.Effects.LiftError t₂) => UVMHS.Core.Effects.LiftError (t₁ UVMHS.Core.Transformers.⊡ t₂)
+instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftDelay t₁, UVMHS.Core.Effects.LiftDelay t₂) => UVMHS.Core.Effects.LiftDelay (t₁ UVMHS.Core.Transformers.⊡ t₂)
 instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftNondet t₁, UVMHS.Core.Effects.LiftNondet t₂) => UVMHS.Core.Effects.LiftNondet (t₁ UVMHS.Core.Transformers.⊡ t₂)
 instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftTop t₁, UVMHS.Core.Effects.LiftTop t₂) => UVMHS.Core.Effects.LiftTop (t₁ UVMHS.Core.Transformers.⊡ t₂)
 instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftCont t₁, UVMHS.Core.Effects.LiftCont t₂) => UVMHS.Core.Effects.LiftCont (t₁ UVMHS.Core.Transformers.⊡ t₂)
@@ -2594,6 +2596,7 @@ instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadWriter o m, 
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m, UVMHS.Core.Effects.LiftState t) => UVMHS.Core.Effects.MonadState s (t m)
 instance forall k (m :: * -> *) (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadFail m, UVMHS.Core.Effects.LiftFail t) => UVMHS.Core.Effects.MonadFail (t m)
 instance forall k (m :: * -> *) e (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadError e m, UVMHS.Core.Effects.LiftError t) => UVMHS.Core.Effects.MonadError e (t m)
+instance forall k (m :: * -> *) (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadDelay m, UVMHS.Core.Effects.LiftDelay t) => UVMHS.Core.Effects.MonadDelay (t m)
 instance forall k (m :: * -> *) (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadNondet m, UVMHS.Core.Effects.LiftNondet t) => UVMHS.Core.Effects.MonadNondet (t m)
 instance forall k (m :: * -> *) (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadTop m, UVMHS.Core.Effects.LiftTop t) => UVMHS.Core.Effects.MonadTop (t m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadCont r m, UVMHS.Core.Effects.LiftCont t) => UVMHS.Core.Effects.MonadCont r (t m)
@@ -2603,6 +2606,7 @@ instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftW
 instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftState t₂) => UVMHS.Core.Effects.LiftState t₁
 instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftFail t₂) => UVMHS.Core.Effects.LiftFail t₁
 instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftError t₂) => UVMHS.Core.Effects.LiftError t₁
+instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftDelay t₂) => UVMHS.Core.Effects.LiftDelay t₁
 instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftNondet t₂) => UVMHS.Core.Effects.LiftNondet t₁
 instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftTop t₂) => UVMHS.Core.Effects.LiftTop t₁
 instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftCont t₂) => UVMHS.Core.Effects.LiftCont t₁
@@ -2985,8 +2989,8 @@ data 𝐼A a
 𝐼A :: ℕ64 -> 𝐼 a -> 𝐼A a
 [𝑖aSize] :: 𝐼A a -> ℕ64
 [𝑖aIter] :: 𝐼A a -> 𝐼 a
-𝑖aIterL :: forall (a_a23ny :: Type). (⟢) (𝐼A a_a23ny) (𝐼 a_a23ny)
-𝑖aSizeL :: forall (a_a23ny :: Type). (⟢) (𝐼A a_a23ny) ℕ64
+𝑖aIterL :: forall (a_a23Cn :: Type). (⟢) (𝐼A a_a23Cn) (𝐼 a_a23Cn)
+𝑖aSizeL :: forall (a_a23Cn :: Type). (⟢) (𝐼A a_a23Cn) ℕ64
 class ToIterA a t | t -> a
 iterA :: ToIterA a t => t -> 𝐼A a
 iterAI :: (ToIter a t, ASized a) => t -> 𝐼A a
@@ -2994,8 +2998,8 @@ data 𝐼C a
 𝐼C :: ℕ64 -> 𝐼 a -> 𝐼C a
 [𝑖cSize] :: 𝐼C a -> ℕ64
 [𝑖cIter] :: 𝐼C a -> 𝐼 a
-𝑖cIterL :: forall (a_a23sl :: Type). (⟢) (𝐼C a_a23sl) (𝐼 a_a23sl)
-𝑖cSizeL :: forall (a_a23sl :: Type). (⟢) (𝐼C a_a23sl) ℕ64
+𝑖cIterL :: forall (a_a23Ha :: Type). (⟢) (𝐼C a_a23Ha) (𝐼 a_a23Ha)
+𝑖cSizeL :: forall (a_a23Ha :: Type). (⟢) (𝐼C a_a23Ha) ℕ64
 class ToIterC a t | t -> a
 iterC :: ToIterC a t => t -> 𝐼C a
 iterCI :: ToIter a t => t -> 𝐼C a
@@ -3004,9 +3008,9 @@ data 𝐼AC a
 [𝑖acSize] :: 𝐼AC a -> ℕ64
 [𝑖acCSize] :: 𝐼AC a -> ℕ64
 [𝑖acIter] :: 𝐼AC a -> 𝐼 a
-𝑖acIterL :: forall (a_a23A0 :: Type). (⟢) (𝐼AC a_a23A0) (𝐼 a_a23A0)
-𝑖acCSizeL :: forall (a_a23A0 :: Type). (⟢) (𝐼AC a_a23A0) ℕ64
-𝑖acSizeL :: forall (a_a23A0 :: Type). (⟢) (𝐼AC a_a23A0) ℕ64
+𝑖acIterL :: forall (a_a23OP :: Type). (⟢) (𝐼AC a_a23OP) (𝐼 a_a23OP)
+𝑖acCSizeL :: forall (a_a23OP :: Type). (⟢) (𝐼AC a_a23OP) ℕ64
+𝑖acSizeL :: forall (a_a23OP :: Type). (⟢) (𝐼AC a_a23OP) ℕ64
 class ToIterAC a t | t -> a
 iterAC :: ToIterAC a t => t -> 𝐼AC a
 iterACI :: (ToIter a t, ASized a) => t -> 𝐼AC a
@@ -4302,8 +4306,8 @@ data 𝐴 e a
 𝐴 :: e -> a -> 𝐴 e a
 [atag] :: 𝐴 e a -> e
 [aval] :: 𝐴 e a -> a
-avalL :: forall (e_a3x2n :: Type) (a_a3x2o :: Type). (⟢) (𝐴 e_a3x2n a_a3x2o) a_a3x2o
-atagL :: forall (e_a3x2n :: Type) (a_a3x2o :: Type). (⟢) (𝐴 e_a3x2n a_a3x2o) e_a3x2n
+avalL :: forall (e_a3xbJ :: Type) (a_a3xbK :: Type). (⟢) (𝐴 e_a3xbJ a_a3xbK) a_a3xbK
+atagL :: forall (e_a3xbJ :: Type) (a_a3xbK :: Type). (⟢) (𝐴 e_a3xbJ a_a3xbK) e_a3xbJ
 map𝐴 :: (e -> e') -> (a -> b) -> 𝐴 e a -> 𝐴 e' b
 mapATag :: (e -> e') -> 𝐴 e a -> 𝐴 e' a
 mapAVal :: (a -> b) -> 𝐴 e a -> 𝐴 e b
@@ -4330,8 +4334,8 @@ data ADF a
 ADF :: a -> a -> ADF a
 [adfVal] :: ADF a -> a
 [adfDer] :: ADF a -> a
-adfDerL :: forall (a_a3tX5 :: Type). (⟢) (ADF a_a3tX5) a_a3tX5
-adfValL :: forall (a_a3tX5 :: Type). (⟢) (ADF a_a3tX5) a_a3tX5
+adfDerL :: forall (a_a3u8T :: Type). (⟢) (ADF a_a3u8T) a_a3u8T
+adfValL :: forall (a_a3u8T :: Type). (⟢) (ADF a_a3u8T) a_a3u8T
 constADF :: Zero a => a -> ADF a
 sensADF :: a -> a -> ADF a
 plusADF :: Plus a => ADF a -> ADF a -> ADF a
@@ -4340,8 +4344,8 @@ data ADB a
 ADB :: a -> (a -> a -> a) -> ADB a
 [adbVal] :: ADB a -> a
 [adbDer] :: ADB a -> a -> a -> a
-adbDerL :: forall (a_a3u7c :: Type). (⟢) (ADB a_a3u7c) (a_a3u7c -> a_a3u7c -> a_a3u7c)
-adbValL :: forall (a_a3u7c :: Type). (⟢) (ADB a_a3u7c) a_a3u7c
+adbDerL :: forall (a_a3ulw :: Type). (⟢) (ADB a_a3ulw) (a_a3ulw -> a_a3ulw -> a_a3ulw)
+adbValL :: forall (a_a3ulw :: Type). (⟢) (ADB a_a3ulw) a_a3ulw
 constADB :: Zero a => a -> ADB a
 sensADB :: a -> (a -> a -> a) -> ADB a
 plusADB :: Plus a => ADB a -> ADB a -> ADB a
@@ -4350,8 +4354,8 @@ data ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adffVal] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adffDer] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
-adffDerL :: forall (ns_a3ugL :: [𝐍]) (f_a3ugQ :: [𝐍] -> Type -> Type) (ms_a3ugR :: [𝐍]) (a_a3ugS :: Type). (⟢) (ADFF ns_a3ugL f_a3ugQ ms_a3ugR a_a3ugS) (f_a3ugQ ((⧺) ns_a3ugL ms_a3ugR) a_a3ugS)
-adffValL :: forall (ns_a3ugL :: [𝐍]) (f_a3ugQ :: [𝐍] -> Type -> Type) (ms_a3ugR :: [𝐍]) (a_a3ugS :: Type). (⟢) (ADFF ns_a3ugL f_a3ugQ ms_a3ugR a_a3ugS) (f_a3ugQ ((⧺) ns_a3ugL ms_a3ugR) a_a3ugS)
+adffDerL :: forall (ns_a3utV :: [𝐍]) (f_a3utW :: [𝐍] -> Type -> Type) (ms_a3utX :: [𝐍]) (a_a3utY :: Type). (⟢) (ADFF ns_a3utV f_a3utW ms_a3utX a_a3utY) (f_a3utW ((⧺) ns_a3utV ms_a3utX) a_a3utY)
+adffValL :: forall (ns_a3utV :: [𝐍]) (f_a3utW :: [𝐍] -> Type -> Type) (ms_a3utX :: [𝐍]) (a_a3utY :: Type). (⟢) (ADFF ns_a3utV f_a3utW ms_a3utX a_a3utY) (f_a3utW ((⧺) ns_a3utV ms_a3utX) a_a3utY)
 constADFF :: Zero (f (ns ⧺ ms) a) => f (ns ⧺ ms) a -> ADFF ns f ms a
 sensADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF ns f ms a
 plusADFF :: Plus (f (ns ⧺ ms) a) => ADFF ns f ms a -> ADFF ns f ms a -> ADFF ns f ms a
@@ -4360,8 +4364,8 @@ data ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adfbVal] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adfbDer] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a
-adfbDerL :: forall (ns_a3uq5 :: [𝐍]) (f_a3uq6 :: [𝐍] -> Type -> Type) (ms_a3uq7 :: [𝐍]) (a_a3uq8 :: Type). (⟢) (ADFB ns_a3uq5 f_a3uq6 ms_a3uq7 a_a3uq8) (f_a3uq6 ((⧺) ns_a3uq5 ms_a3uq7) a_a3uq8 -> f_a3uq6 ((⧺) ns_a3uq5 ms_a3uq7) a_a3uq8 -> f_a3uq6 ((⧺) ns_a3uq5 ms_a3uq7) a_a3uq8)
-adfbValL :: forall (ns_a3uq5 :: [𝐍]) (f_a3uq6 :: [𝐍] -> Type -> Type) (ms_a3uq7 :: [𝐍]) (a_a3uq8 :: Type). (⟢) (ADFB ns_a3uq5 f_a3uq6 ms_a3uq7 a_a3uq8) (f_a3uq6 ((⧺) ns_a3uq5 ms_a3uq7) a_a3uq8)
+adfbDerL :: forall (ns_a3uCz :: [𝐍]) (f_a3uCA :: [𝐍] -> Type -> Type) (ms_a3uCB :: [𝐍]) (a_a3uCD :: Type). (⟢) (ADFB ns_a3uCz f_a3uCA ms_a3uCB a_a3uCD) (f_a3uCA ((⧺) ns_a3uCz ms_a3uCB) a_a3uCD -> f_a3uCA ((⧺) ns_a3uCz ms_a3uCB) a_a3uCD -> f_a3uCA ((⧺) ns_a3uCz ms_a3uCB) a_a3uCD)
+adfbValL :: forall (ns_a3uCz :: [𝐍]) (f_a3uCA :: [𝐍] -> Type -> Type) (ms_a3uCB :: [𝐍]) (a_a3uCD :: Type). (⟢) (ADFB ns_a3uCz f_a3uCA ms_a3uCB a_a3uCD) (f_a3uCA ((⧺) ns_a3uCz ms_a3uCB) a_a3uCD)
 constADFB :: f (ns ⧺ ms) a -> ADFB ns f ms a
 sensADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB ns f ms a
 plusADFB :: Plus (f (ns ⧺ ms) a) => ADFB ns f ms a -> ADFB ns f ms a -> ADFB ns f ms a
@@ -4534,19 +4538,19 @@ PreParserToken :: t -> 𝔹 -> ParserContext -> PreParserToken t
 [preParserTokenValue] :: PreParserToken t -> t
 [preParserTokenSkip] :: PreParserToken t -> 𝔹
 [preParserTokenContext] :: PreParserToken t -> ParserContext
-preParserTokenContextL :: forall (t_a3JLo :: Type). (⟢) (PreParserToken t_a3JLo) ParserContext
-preParserTokenSkipL :: forall (t_a3JLo :: Type). (⟢) (PreParserToken t_a3JLo) 𝔹
-preParserTokenValueL :: forall (t_a3JLo :: Type). (⟢) (PreParserToken t_a3JLo) t_a3JLo
+preParserTokenContextL :: forall (t_a3JZK :: Type). (⟢) (PreParserToken t_a3JZK) ParserContext
+preParserTokenSkipL :: forall (t_a3JZK :: Type). (⟢) (PreParserToken t_a3JZK) 𝔹
+preParserTokenValueL :: forall (t_a3JZK :: Type). (⟢) (PreParserToken t_a3JZK) t_a3JZK
 data ParserToken t
 ParserToken :: t -> 𝔹 -> ParserContext -> WindowL Doc Doc -> ParserToken t
 [parserTokenValue] :: ParserToken t -> t
 [parserTokenSkip] :: ParserToken t -> 𝔹
 [parserTokenContext] :: ParserToken t -> ParserContext
 [parserTokenSuffix] :: ParserToken t -> WindowL Doc Doc
-parserTokenSuffixL :: forall (t_a3JOx :: Type). (⟢) (ParserToken t_a3JOx) (WindowL Doc Doc)
-parserTokenContextL :: forall (t_a3JOx :: Type). (⟢) (ParserToken t_a3JOx) ParserContext
-parserTokenSkipL :: forall (t_a3JOx :: Type). (⟢) (ParserToken t_a3JOx) 𝔹
-parserTokenValueL :: forall (t_a3JOx :: Type). (⟢) (ParserToken t_a3JOx) t_a3JOx
+parserTokenSuffixL :: forall (t_a3K1Q :: Type). (⟢) (ParserToken t_a3K1Q) (WindowL Doc Doc)
+parserTokenContextL :: forall (t_a3K1Q :: Type). (⟢) (ParserToken t_a3K1Q) ParserContext
+parserTokenSkipL :: forall (t_a3K1Q :: Type). (⟢) (ParserToken t_a3K1Q) 𝔹
+parserTokenValueL :: forall (t_a3K1Q :: Type). (⟢) (ParserToken t_a3K1Q) t_a3K1Q
 renderNLDisplay :: Doc
 renderNLError :: Doc
 renderEOFDisplay :: Doc
@@ -4618,11 +4622,11 @@ RegexState :: ℕ64 -> (Regex c t o u ⇰ ℕ64) -> ((t ∨ c) ⇰ (ℕ64 ⇰ �
 [regexStateTransitions] :: RegexState c t o u -> (t ∨ c) ⇰ (ℕ64 ⇰ ℕ64)
 [regexStateResults] :: RegexState c t o u -> ℕ64 ⇰ 𝑂 (RegexResult o u)
 [regexStateDead] :: RegexState c t o u -> ℕ64 ⇰ 𝔹
-regexStateDeadL :: forall (c_a3ODk :: Type) (t_a3ODl :: Type) (o_a3ODm :: Type) (u_a3ODn :: Type). (⟢) (RegexState c_a3ODk t_a3ODl o_a3ODm u_a3ODn) ((⇰) ℕ64 𝔹)
-regexStateResultsL :: forall (c_a3ODk :: Type) (t_a3ODl :: Type) (o_a3ODm :: Type) (u_a3ODn :: Type). (⟢) (RegexState c_a3ODk t_a3ODl o_a3ODm u_a3ODn) ((⇰) ℕ64 (𝑂 (RegexResult o_a3ODm u_a3ODn)))
-regexStateTransitionsL :: forall (c_a3ODk :: Type) (t_a3ODl :: Type) (o_a3ODm :: Type) (u_a3ODn :: Type). (⟢) (RegexState c_a3ODk t_a3ODl o_a3ODm u_a3ODn) ((⇰) ((∨) t_a3ODl c_a3ODk) ((⇰) ℕ64 ℕ64))
-regexStateMapL :: forall (c_a3ODk :: Type) (t_a3ODl :: Type) (o_a3ODm :: Type) (u_a3ODn :: Type). (⟢) (RegexState c_a3ODk t_a3ODl o_a3ODm u_a3ODn) ((⇰) (Regex c_a3ODk t_a3ODl o_a3ODm u_a3ODn) ℕ64)
-regexStateNextIDL :: forall (c_a3ODk :: Type) (t_a3ODl :: Type) (o_a3ODm :: Type) (u_a3ODn :: Type). (⟢) (RegexState c_a3ODk t_a3ODl o_a3ODm u_a3ODn) ℕ64
+regexStateDeadL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ((⇰) ℕ64 𝔹)
+regexStateResultsL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ((⇰) ℕ64 (𝑂 (RegexResult o_a3Rwd u_a3Rwe)))
+regexStateTransitionsL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ((⇰) ((∨) t_a3Rwc c_a3Rwb) ((⇰) ℕ64 ℕ64))
+regexStateMapL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ((⇰) (Regex c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ℕ64)
+regexStateNextIDL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ℕ64
 regexState₀ :: RegexState c t o u
 data DFA c t o u
 DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult o u)) -> 𝕍 𝔹 -> DFA c t o u
@@ -4863,12 +4867,12 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateEndPos] :: ParserState t -> AddBT Loc
 [parserStateInput] :: ParserState t -> 𝑆 (ParserToken t)
-parserStateInputL :: forall (t_a3MZ6 :: Type). (⟢) (ParserState t_a3MZ6) (𝑆 (ParserToken t_a3MZ6))
-parserStateEndPosL :: forall (t_a3MZ6 :: Type). (⟢) (ParserState t_a3MZ6) (AddBT Loc)
-parserStateSuffixL :: forall (t_a3MZ6 :: Type). (⟢) (ParserState t_a3MZ6) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a3MZ6 :: Type). (⟢) (ParserState t_a3MZ6) ParserContext
-parserStateSkipContextL :: forall (t_a3MZ6 :: Type). (⟢) (ParserState t_a3MZ6) ParserContext
-parserStatePrefixL :: forall (t_a3MZ6 :: Type). (⟢) (ParserState t_a3MZ6) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) (𝑆 (ParserToken t_a3M4A))
+parserStateEndPosL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) (AddBT Loc)
+parserStateSuffixL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) ParserContext
+parserStateSkipContextL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) ParserContext
+parserStatePrefixL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) (WindowR Doc Doc)
 parserState₀ :: 𝑆 (ParserToken t) -> ParserState t
 newtype Parser t a
 Parser :: ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a
@@ -5130,8 +5134,8 @@ data SubstElem s e
 SubstElem :: (s ⇰ ℕ64) -> (() -> 𝑂 e) -> SubstElem s e
 [substElemIntro] :: SubstElem s e -> s ⇰ ℕ64
 [substElemValue] :: SubstElem s e -> () -> 𝑂 e
-substElemValueL :: forall (s_a4Tyw :: Type) (e_a4Tyx :: Type). (⟢) (SubstElem s_a4Tyw e_a4Tyx) (() -> 𝑂 e_a4Tyx)
-substElemIntroL :: forall (s_a4Tyw :: Type) (e_a4Tyx :: Type). (⟢) (SubstElem s_a4Tyw e_a4Tyx) ((⇰) s_a4Tyw ℕ64)
+substElemValueL :: forall (s_a4GcA :: Type) (e_a4GcB :: Type). (⟢) (SubstElem s_a4GcA e_a4GcB) (() -> 𝑂 e_a4GcB)
+substElemIntroL :: forall (s_a4GcA :: Type) (e_a4GcB :: Type). (⟢) (SubstElem s_a4GcA e_a4GcB) ((⇰) s_a4GcA ℕ64)
 introSubstElem :: Ord s => (s ⇰ ℕ64) -> SubstElem s e -> SubstElem s e
 subSubstElem :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> SubstElem s e
 data SSubstElem s e
@@ -5144,9 +5148,9 @@ DSubst :: ℕ64 -> 𝕍 (SSubstElem s e) -> ℤ64 -> DSubst s e
 [dsubstShift] :: DSubst s e -> ℕ64
 [dsubstElems] :: DSubst s e -> 𝕍 (SSubstElem s e)
 [dsubstIntro] :: DSubst s e -> ℤ64
-dsubstIntroL :: forall (s_a4TEA :: Type) (e_a4TEB :: Type). (⟢) (DSubst s_a4TEA e_a4TEB) ℤ64
-dsubstElemsL :: forall (s_a4TEA :: Type) (e_a4TEB :: Type). (⟢) (DSubst s_a4TEA e_a4TEB) (𝕍 (SSubstElem s_a4TEA e_a4TEB))
-dsubstShiftL :: forall (s_a4TEA :: Type) (e_a4TEB :: Type). (⟢) (DSubst s_a4TEA e_a4TEB) ℕ64
+dsubstIntroL :: forall (s_a4GyR :: Type) (e_a4GyS :: Type). (⟢) (DSubst s_a4GyR e_a4GyS) ℤ64
+dsubstElemsL :: forall (s_a4GyR :: Type) (e_a4GyS :: Type). (⟢) (DSubst s_a4GyR e_a4GyS) (𝕍 (SSubstElem s_a4GyR e_a4GyS))
+dsubstShiftL :: forall (s_a4GyR :: Type) (e_a4GyS :: Type). (⟢) (DSubst s_a4GyR e_a4GyS) ℕ64
 isNullDSubst :: DSubst s e -> 𝔹
 dsubstVar :: DSubst 𝑠 e -> ℕ64 -> SSubstElem 𝑠 e
 data GSubst s₁ s₂ e
@@ -5154,9 +5158,9 @@ GSubst :: (s₁ ⇰ SubstElem s₂ e) -> (s₁ ⇰ SubstElem s₂ e) -> (s₂ �
 [gsubstGVars] :: GSubst s₁ s₂ e -> s₁ ⇰ SubstElem s₂ e
 [gsubstMetas] :: GSubst s₁ s₂ e -> s₁ ⇰ SubstElem s₂ e
 [gsubstSubst] :: GSubst s₁ s₂ e -> s₂ ⇰ DSubst s₂ e
-gsubstSubstL :: forall (s₁_a4U0E :: Type) (s₂_a4U0F :: Type) (e_a4U0G :: Type). (⟢) (GSubst s₁_a4U0E s₂_a4U0F e_a4U0G) ((⇰) s₂_a4U0F (DSubst s₂_a4U0F e_a4U0G))
-gsubstMetasL :: forall (s₁_a4U0E :: Type) (s₂_a4U0F :: Type) (e_a4U0G :: Type). (⟢) (GSubst s₁_a4U0E s₂_a4U0F e_a4U0G) ((⇰) s₁_a4U0E (SubstElem s₂_a4U0F e_a4U0G))
-gsubstGVarsL :: forall (s₁_a4U0E :: Type) (s₂_a4U0F :: Type) (e_a4U0G :: Type). (⟢) (GSubst s₁_a4U0E s₂_a4U0F e_a4U0G) ((⇰) s₁_a4U0E (SubstElem s₂_a4U0F e_a4U0G))
+gsubstSubstL :: forall (s₁_a4HpI :: Type) (s₂_a4HpJ :: Type) (e_a4HpK :: Type). (⟢) (GSubst s₁_a4HpI s₂_a4HpJ e_a4HpK) ((⇰) s₂_a4HpJ (DSubst s₂_a4HpJ e_a4HpK))
+gsubstMetasL :: forall (s₁_a4HpI :: Type) (s₂_a4HpJ :: Type) (e_a4HpK :: Type). (⟢) (GSubst s₁_a4HpI s₂_a4HpJ e_a4HpK) ((⇰) s₁_a4HpI (SubstElem s₂_a4HpJ e_a4HpK))
+gsubstGVarsL :: forall (s₁_a4HpI :: Type) (s₂_a4HpJ :: Type) (e_a4HpK :: Type). (⟢) (GSubst s₁_a4HpI s₂_a4HpJ e_a4HpK) ((⇰) s₁_a4HpI (SubstElem s₂_a4HpJ e_a4HpK))
 𝓈shiftG :: Ord s₂ => (s₂ ⇰ ℕ64) -> GSubst s₁ s₂ e -> GSubst s₁ s₂ e
 𝓈introG :: (s₂ ⇰ ℕ64) -> GSubst s₁ s₂ e
 𝓈sbindsG :: (s₂ ⇰ 𝕍 e) -> GSubst s₁ s₂ e
@@ -5166,24 +5170,24 @@ appendGSubst :: (Ord s₁, Ord s₂) => (GSubst s₁ s₂ e -> e -> 𝑂 e) -> G
 newtype Subst s e
 Subst :: GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e -> Subst s e
 [unSubst] :: Subst s e -> GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e
-unSubstL :: forall (s_a4UeE :: Type) (e_a4UeF :: Type). (⟢) (Subst s_a4UeE e_a4UeF) (GSubst ((∧) s_a4UeE 𝕏) ((∧) s_a4UeE (𝑂 𝕏)) e_a4UeF)
+unSubstL :: forall (s_a4HDI :: Type) (e_a4HDJ :: Type). (⟢) (Subst s_a4HDI e_a4HDJ) (GSubst ((∧) s_a4HDI 𝕏) ((∧) s_a4HDI (𝑂 𝕏)) e_a4HDJ)
 data FreeVarsAction s
 FreeVarsAction :: (s -> 𝕐 -> 𝔹) -> ((s ∧ 𝑂 𝕏) ⇰ ℕ64) -> FreeVarsAction s
 [freeVarsActionFilter] :: FreeVarsAction s -> s -> 𝕐 -> 𝔹
 [freeVarsActionScope] :: FreeVarsAction s -> (s ∧ 𝑂 𝕏) ⇰ ℕ64
-freeVarsActionScopeL :: forall (s_a4UHh :: Type). (⟢) (FreeVarsAction s_a4UHh) ((⇰) ((∧) s_a4UHh (𝑂 𝕏)) ℕ64)
-freeVarsActionFilterL :: forall (s_a4UHh :: Type). (⟢) (FreeVarsAction s_a4UHh) (s_a4UHh -> 𝕐 -> 𝔹)
+freeVarsActionScopeL :: forall (s_a4Ijj :: Type). (⟢) (FreeVarsAction s_a4Ijj) ((⇰) ((∧) s_a4Ijj (𝑂 𝕏)) ℕ64)
+freeVarsActionFilterL :: forall (s_a4Ijj :: Type). (⟢) (FreeVarsAction s_a4Ijj) (s_a4Ijj -> 𝕐 -> 𝔹)
 data SubstAction s e
 SubstAction :: 𝑂 𝔹 -> Subst s e -> SubstAction s e
 [substActionReBdr] :: SubstAction s e -> 𝑂 𝔹
 [substActionSubst] :: SubstAction s e -> Subst s e
-substActionSubstL :: forall (s_a4UID :: Type) (e_a4UIE :: Type). (⟢) (SubstAction s_a4UID e_a4UIE) (Subst s_a4UID e_a4UIE)
-substActionReBdrL :: forall (s_a4UID :: Type) (e_a4UIE :: Type). (⟢) (SubstAction s_a4UID e_a4UIE) (𝑂 𝔹)
+substActionSubstL :: forall (s_a4Ilb :: Type) (e_a4Ilc :: Type). (⟢) (SubstAction s_a4Ilb e_a4Ilc) (Subst s_a4Ilb e_a4Ilc)
+substActionReBdrL :: forall (s_a4Ilb :: Type) (e_a4Ilc :: Type). (⟢) (SubstAction s_a4Ilb e_a4Ilc) (𝑂 𝔹)
 data SubstEnv s e
 FVsSubstEnv :: FreeVarsAction s -> SubstEnv s e
 SubSubstEnv :: SubstAction s e -> SubstEnv s e
-subSubstEnvL :: forall (s_a4UKb :: Type) (e_a4UKc :: Type). (⌲) (SubstEnv s_a4UKb e_a4UKc) (SubstAction s_a4UKb e_a4UKc)
-fVsSubstEnvL :: forall (s_a4UKb :: Type) (e_a4UKc :: Type). (⌲) (SubstEnv s_a4UKb e_a4UKc) (FreeVarsAction s_a4UKb)
+subSubstEnvL :: forall (s_a4Ine :: Type) (e_a4Inf :: Type). (⌲) (SubstEnv s_a4Ine e_a4Inf) (SubstAction s_a4Ine e_a4Inf)
+fVsSubstEnvL :: forall (s_a4Ine :: Type) (e_a4Inf :: Type). (⌲) (SubstEnv s_a4Ine e_a4Inf) (FreeVarsAction s_a4Ine)
 newtype SubstM s e a
 SubstM :: UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 𝕐) ID))) a -> SubstM s e a
 [unSubstM] :: SubstM s e a -> UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 𝕐) ID))) a
