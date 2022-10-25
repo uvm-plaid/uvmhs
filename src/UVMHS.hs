@@ -9,6 +9,7 @@ module UVMHS
   , module UVMHS.Lib.MMSP
   , module UVMHS.Lib.Options
   , module UVMHS.Lib.Parser
+  , module UVMHS.Lib.Pipeline
   , module UVMHS.Lib.Pretty
   , module UVMHS.Lib.Rand
   , module UVMHS.Lib.Substitution
@@ -29,6 +30,7 @@ import UVMHS.Lib.Logging
 import UVMHS.Lib.MMSP
 import UVMHS.Lib.Options
 import UVMHS.Lib.Parser
+import UVMHS.Lib.Pipeline
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Substitution
