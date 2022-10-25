@@ -1341,11 +1341,12 @@ instance (Monad m,MonadTop m) ⇒ MonadTop (UContT m) where
 
 newtype RWST r o s m a = RWST { unRWST ∷ ReaderT r (WriterT o (StateT s m)) a }
   deriving
-  (Functor,Return,Bind,Monad
-  ,MonadIO
-  ,MonadReader r,MonadWriter o,MonadState s
-  ,MonadFail,MonadError e
-  ,MonadNondet,MonadTop
+  ( Functor,Return,Bind,Monad
+  , MonadIO
+  , MonadReader r,MonadWriter o,MonadState s
+  , MonadFail,MonadError e
+  , MonadDelay
+  , MonadNondet,MonadTop
   )
 
 mkRWST ∷ ∀ r o s m a. (Monad m) ⇒ (r → s → m (s ∧ o ∧ a)) → RWST r o s m a
