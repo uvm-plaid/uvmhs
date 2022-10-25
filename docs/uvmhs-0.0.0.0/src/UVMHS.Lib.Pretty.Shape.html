@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621680343951"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHS.Lib.Pretty.Shape</span><span> </span><span class="hs-keyword">where</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621680360096"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHS.Lib.Pretty.Shape</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-2"></span><span>
 </span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Core.html"><span class="hs-identifier">UVMHS.Core</span></a></span><span>
 </span><span id="line-4"></span><span>
@@ -48,7 +48,7 @@
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeMLastLength"><span class="hs-identifier hs-var hs-var">shapeMLastLength</span></a></span></span><span>   </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
 </span><span id="line-46"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="shapeMNewlines"><span class="annot"><span class="annottext">ShapeM -&gt; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeMNewlines"><span class="hs-identifier hs-var hs-var">shapeMNewlines</span></a></span></span><span>     </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
-</span><span id="line-47"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680343925"><span id="local-6989586621680343931"><span class="annot"><span class="annottext">ShapeM -&gt; ShapeM -&gt; Bool
+</span><span id="line-47"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680360070"><span id="local-6989586621680360076"><span class="annot"><span class="annottext">ShapeM -&gt; ShapeM -&gt; Bool
 (ShapeM -&gt; ShapeM -&gt; Bool)
 -&gt; (ShapeM -&gt; ShapeM -&gt; Bool) -&gt; Eq ShapeM
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
@@ -56,7 +56,7 @@ forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 $c/= :: ShapeM -&gt; ShapeM -&gt; Bool
 == :: ShapeM -&gt; ShapeM -&gt; Bool
 $c== :: ShapeM -&gt; ShapeM -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680343896"><span id="local-6989586621680343898"><span id="local-6989586621680343901"><span id="local-6989586621680343904"><span id="local-6989586621680343907"><span id="local-6989586621680343913"><span id="local-6989586621680343920"><span class="annot"><span class="annottext">Eq ShapeM
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680360041"><span id="local-6989586621680360043"><span id="local-6989586621680360046"><span id="local-6989586621680360049"><span id="local-6989586621680360052"><span id="local-6989586621680360058"><span id="local-6989586621680360065"><span class="annot"><span class="annottext">Eq ShapeM
 Eq ShapeM
 -&gt; (ShapeM -&gt; ShapeM -&gt; Ordering)
 -&gt; (ShapeM -&gt; ShapeM -&gt; Bool)
@@ -93,7 +93,7 @@ $c&lt;= :: ShapeM -&gt; ShapeM -&gt; Bool
 $c&lt; :: ShapeM -&gt; ShapeM -&gt; Bool
 compare :: ShapeM -&gt; ShapeM -&gt; Ordering
 $ccompare :: ShapeM -&gt; ShapeM -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680343882"><span id="local-6989586621680343884"><span id="local-6989586621680343893"><span class="annot"><span class="annottext">Int -&gt; ShapeM -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680360027"><span id="local-6989586621680360029"><span id="local-6989586621680360038"><span class="annot"><span class="annottext">Int -&gt; ShapeM -&gt; ShowS
 [ShapeM] -&gt; ShowS
 ShapeM -&gt; String
 (Int -&gt; ShapeM -&gt; ShowS)
@@ -112,14 +112,14 @@ $cshowsPrec :: Int -&gt; ShapeM -&gt; ShowS
 </span><span id="line-50"></span><span class="hs-keyword">data</span><span> </span><span id="Shape"><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-var">Shape</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
 </span><span id="line-51"></span><span>    </span><span id="SingleLine"><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-var">SingleLine</span></a></span></span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span>
 </span><span id="line-52"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="MultiLine"><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-var">MultiLine</span></a></span></span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span>
-</span><span id="line-53"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680343860"><span id="local-6989586621680343864"><span class="annot"><span class="annottext">Shape -&gt; Shape -&gt; Bool
+</span><span id="line-53"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680360005"><span id="local-6989586621680360009"><span class="annot"><span class="annottext">Shape -&gt; Shape -&gt; Bool
 (Shape -&gt; Shape -&gt; Bool) -&gt; (Shape -&gt; Shape -&gt; Bool) -&gt; Eq Shape
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: Shape -&gt; Shape -&gt; Bool
 $c/= :: Shape -&gt; Shape -&gt; Bool
 == :: Shape -&gt; Shape -&gt; Bool
 $c== :: Shape -&gt; Shape -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680343837"><span id="local-6989586621680343839"><span id="local-6989586621680343842"><span id="local-6989586621680343845"><span id="local-6989586621680343848"><span id="local-6989586621680343852"><span id="local-6989586621680343856"><span class="annot"><span class="annottext">Eq Shape
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680359982"><span id="local-6989586621680359984"><span id="local-6989586621680359987"><span id="local-6989586621680359990"><span id="local-6989586621680359993"><span id="local-6989586621680359997"><span id="local-6989586621680360001"><span class="annot"><span class="annottext">Eq Shape
 Eq Shape
 -&gt; (Shape -&gt; Shape -&gt; Ordering)
 -&gt; (Shape -&gt; Shape -&gt; Bool)
@@ -156,7 +156,7 @@ $c&lt;= :: Shape -&gt; Shape -&gt; Bool
 $c&lt; :: Shape -&gt; Shape -&gt; Bool
 compare :: Shape -&gt; Shape -&gt; Ordering
 $ccompare :: Shape -&gt; Shape -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680343827"><span id="local-6989586621680343829"><span id="local-6989586621680343835"><span class="annot"><span class="annottext">Int -&gt; Shape -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680359972"><span id="local-6989586621680359974"><span id="local-6989586621680359980"><span class="annot"><span class="annottext">Int -&gt; Shape -&gt; ShowS
 [Shape] -&gt; ShowS
 Shape -&gt; String
 (Int -&gt; Shape -&gt; ShowS)
@@ -175,24 +175,24 @@ $cshowsPrec :: Int -&gt; Shape -&gt; ShowS
 </span><span id="line-56"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#shapeFirstLength"><span class="hs-identifier hs-type">shapeFirstLength</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
 </span><span id="line-57"></span><span id="shapeFirstLength"><span class="annot"><span class="annottext">shapeFirstLength :: Shape -&gt; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeFirstLength"><span class="hs-identifier hs-var hs-var">shapeFirstLength</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-58"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343816"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343816"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343816"><span class="hs-identifier hs-var">n</span></a></span><span>
-</span><span id="line-59"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span id="local-6989586621680343815"><span class="annot"><span class="annottext">ShapeM
-</span><a href="#local-6989586621680343815"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; &#8469;64
+</span><span id="line-58"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359961"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359961"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359961"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-59"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span id="local-6989586621680359960"><span class="annot"><span class="annottext">ShapeM
+</span><a href="#local-6989586621680359960"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeMFirstLength"><span class="hs-identifier hs-var hs-var">shapeMFirstLength</span></a></span><span> </span><span class="annot"><span class="annottext">ShapeM
-</span><a href="#local-6989586621680343815"><span class="hs-identifier hs-var">sh</span></a></span><span>
+</span><a href="#local-6989586621680359960"><span class="hs-identifier hs-var">sh</span></a></span><span>
 </span><span id="line-60"></span><span>
 </span><span id="line-61"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#shapeLastLength"><span class="hs-identifier hs-type">shapeLastLength</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
 </span><span id="line-62"></span><span id="shapeLastLength"><span class="annot"><span class="annottext">shapeLastLength :: Shape -&gt; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeLastLength"><span class="hs-identifier hs-var hs-var">shapeLastLength</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-63"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343813"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343813"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343813"><span class="hs-identifier hs-var">n</span></a></span><span>
-</span><span id="line-64"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span id="local-6989586621680343812"><span class="annot"><span class="annottext">ShapeM
-</span><a href="#local-6989586621680343812"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; &#8469;64
+</span><span id="line-63"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359958"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359958"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359958"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-64"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span id="local-6989586621680359957"><span class="annot"><span class="annottext">ShapeM
+</span><a href="#local-6989586621680359957"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeMLastLength"><span class="hs-identifier hs-var hs-var">shapeMLastLength</span></a></span><span> </span><span class="annot"><span class="annottext">ShapeM
-</span><a href="#local-6989586621680343812"><span class="hs-identifier hs-var">sh</span></a></span><span>
+</span><a href="#local-6989586621680359957"><span class="hs-identifier hs-var">sh</span></a></span><span>
 </span><span id="line-65"></span><span>
 </span><span id="line-66"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#newlineShapeM"><span class="hs-identifier hs-type">newlineShapeM</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span>
 </span><span id="line-67"></span><span id="newlineShapeM"><span class="annot"><span class="annottext">newlineShapeM :: ShapeM
@@ -215,46 +215,46 @@ forall a. One a =&gt; a
 </span><span id="line-71"></span><span>
 </span><span id="line-72"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#boxShape"><span class="hs-identifier hs-type">boxShape</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span>
 </span><span id="line-73"></span><span id="boxShape"><span class="annot"><span class="annottext">boxShape :: &#8469;64 -&gt; &#8469;64 -&gt; Shape
-</span><a href="UVMHS.Lib.Pretty.Shape.html#boxShape"><span class="hs-identifier hs-var hs-var">boxShape</span></a></span></span><span> </span><span id="local-6989586621680343806"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343806"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621680343805"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343805"><span class="hs-identifier hs-var">nls</span></a></span></span><span> </span><span>
+</span><a href="UVMHS.Lib.Pretty.Shape.html#boxShape"><span class="hs-identifier hs-var hs-var">boxShape</span></a></span></span><span> </span><span id="local-6989586621680359951"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359951"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621680359950"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359950"><span class="hs-identifier hs-var">nls</span></a></span></span><span> </span><span>
 </span><span id="line-74"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343805"><span class="hs-identifier hs-var">nls</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; Bool
+</span><a href="#local-6989586621680359950"><span class="hs-identifier hs-var">nls</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; Bool
 forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
 forall a. Zero a =&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-var">SingleLine</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343806"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621680359951"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-75"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-var">MultiLine</span></a></span><span> </span><span class="annot"><span class="annottext">(ShapeM -&gt; Shape) -&gt; ShapeM -&gt; Shape
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343806"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343806"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343806"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343805"><span class="hs-identifier hs-var">nls</span></a></span><span>
+</span><a href="#local-6989586621680359951"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359951"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359951"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359950"><span class="hs-identifier hs-var">nls</span></a></span><span>
 </span><span id="line-76"></span><span>
 </span><span id="line-77"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#shapeWidth"><span class="hs-identifier hs-type">shapeWidth</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
 </span><span id="line-78"></span><span id="shapeWidth"><span class="annot"><span class="annottext">shapeWidth :: Shape -&gt; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeWidth"><span class="hs-identifier hs-var hs-var">shapeWidth</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-79"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343801"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343801"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343801"><span class="hs-identifier hs-var">n</span></a></span><span>
-</span><span id="line-80"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343800"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343800"><span class="hs-identifier hs-var">fl</span></a></span></span><span> </span><span id="local-6989586621680343799"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343799"><span class="hs-identifier hs-var">mml</span></a></span></span><span> </span><span id="local-6989586621680343798"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343798"><span class="hs-identifier hs-var">ll</span></a></span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span id="line-79"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359946"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359946"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359946"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-80"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359945"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359945"><span class="hs-identifier hs-var">fl</span></a></span></span><span> </span><span id="local-6989586621680359944"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359944"><span class="hs-identifier hs-var">mml</span></a></span></span><span> </span><span id="local-6989586621680359943"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359943"><span class="hs-identifier hs-var">ll</span></a></span></span><span> </span><span class="annot"><span class="annottext">&#8469;64
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343800"><span class="hs-identifier hs-var">fl</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359945"><span class="hs-identifier hs-var">fl</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343799"><span class="hs-identifier hs-var">mml</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359944"><span class="hs-identifier hs-var">mml</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343798"><span class="hs-identifier hs-var">ll</span></a></span><span>
+</span><a href="#local-6989586621680359943"><span class="hs-identifier hs-var">ll</span></a></span><span>
 </span><span id="line-81"></span><span>
 </span><span id="line-82"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#shapeNewlines"><span class="hs-identifier hs-type">shapeNewlines</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
 </span><span id="line-83"></span><span id="shapeNewlines"><span class="annot"><span class="annottext">shapeNewlines :: Shape -&gt; &#8469;64
@@ -263,36 +263,36 @@ forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 forall a. Zero a =&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
-</span><span id="line-85"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span id="local-6989586621680343795"><span class="annot"><span class="annottext">ShapeM
-</span><a href="#local-6989586621680343795"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; &#8469;64
+</span><span id="line-85"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span id="local-6989586621680359940"><span class="annot"><span class="annottext">ShapeM
+</span><a href="#local-6989586621680359940"><span class="hs-identifier hs-var">sh</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeMNewlines"><span class="hs-identifier hs-var hs-var">shapeMNewlines</span></a></span><span> </span><span class="annot"><span class="annottext">ShapeM
-</span><a href="#local-6989586621680343795"><span class="hs-identifier hs-var">sh</span></a></span><span>
+</span><a href="#local-6989586621680359940"><span class="hs-identifier hs-var">sh</span></a></span><span>
 </span><span id="line-86"></span><span>
-</span><span id="line-87"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680343790"><span class="annot"><span class="annottext">null :: Shape
+</span><span id="line-87"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680359935"><span class="annot"><span class="annottext">null :: Shape
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-var">SingleLine</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
 forall a. Zero a =&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
 </span><span id="line-88"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-89"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343776"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343776"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343775"><span class="annot"><span class="annottext">&#10746; :: Shape -&gt; Shape -&gt; Shape
-</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343773"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343773"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><span id="line-89"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359921"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359921"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359920"><span class="annot"><span class="annottext">&#10746; :: Shape -&gt; Shape -&gt; Shape
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359918"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359918"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
 </span><span id="line-90"></span><span>    </span><span class="hs-comment">-- AAA &#10746; XXX = AAAXXX</span><span>
 </span><span id="line-91"></span><span>    </span><span class="annot"><span class="annottext">&#8469;64 -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-var">SingleLine</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; Shape) -&gt; &#8469;64 -&gt; Shape
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343776"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359921"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343773"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span>
-</span><span id="line-92"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343772"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343772"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343771"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343771"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343770"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343770"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343769"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343769"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343768"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343768"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621680359918"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span>
+</span><span id="line-92"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359917"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359917"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359916"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359916"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359915"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359915"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359914"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359914"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359913"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359913"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-93"></span><span>    </span><span class="hs-comment">-- AAA  &#10746;  &#9633;&#9633;&#9633;&#9633;XXX  =  &#9633;&#9633;&#9633;&#9633;AAAXXX</span><span>
 </span><span id="line-94"></span><span>    </span><span class="hs-comment">--         YY          YY</span><span>
 </span><span id="line-95"></span><span>    </span><span class="hs-comment">--         ZZZZ        ZZZZ</span><span>
@@ -301,19 +301,19 @@ forall a. Append a =&gt; a -&gt; a -&gt; a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343772"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359917"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343771"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343770"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343769"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343768"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
-</span><span id="line-97"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343766"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343766"><span class="hs-identifier hs-var">fl&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343765"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343765"><span class="hs-identifier hs-var">mml&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343764"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343764"><span class="hs-identifier hs-var">ll&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343763"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343763"><span class="hs-identifier hs-var">nls&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343762"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343762"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><a href="#local-6989586621680359916"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359915"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359914"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359913"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
+</span><span id="line-97"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359911"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359911"><span class="hs-identifier hs-var">fl&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359910"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359910"><span class="hs-identifier hs-var">mml&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359909"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359909"><span class="hs-identifier hs-var">ll&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359908"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359908"><span class="hs-identifier hs-var">nls&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359907"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359907"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
 </span><span id="line-98"></span><span>    </span><span class="hs-comment">-- &#9633;&#9633;&#9633;&#9633;XXX  &#10746;  AAA  =  &#9633;&#9633;&#9633;&#9633;XXX</span><span>
 </span><span id="line-99"></span><span>    </span><span class="hs-comment">-- YY                  YY</span><span>
 </span><span id="line-100"></span><span>    </span><span class="hs-comment">-- ZZZZ                ZZZZAAA</span><span>
@@ -322,22 +322,22 @@ forall a. Plus a =&gt; a -&gt; a -&gt; a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343766"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343765"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343764"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359911"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359910"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359909"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343762"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343763"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span>
-</span><span id="line-102"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343761"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343761"><span class="hs-identifier hs-var">fl&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343760"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343760"><span class="hs-identifier hs-var">mml&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343759"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343759"><span class="hs-identifier hs-var">ll&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343758"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343758"><span class="hs-identifier hs-var">nls&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343757"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343757"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343756"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343756"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343755"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343755"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343754"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343754"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="#local-6989586621680359907"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359908"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span>
+</span><span id="line-102"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359906"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359906"><span class="hs-identifier hs-var">fl&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359905"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359905"><span class="hs-identifier hs-var">mml&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359904"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359904"><span class="hs-identifier hs-var">ll&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359903"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359903"><span class="hs-identifier hs-var">nls&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359902"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359902"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359901"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359901"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359900"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359900"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359899"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359899"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-103"></span><span>    </span><span class="hs-comment">-- &#9633;&#9633;&#9633;&#9633;XXX  &#10746;  &#9633;&#9633;&#9633;&#9633;AAA  =  &#9633;&#9633;&#9633;&#9633;XXX</span><span>
 </span><span id="line-104"></span><span>    </span><span class="hs-comment">-- YY          BB          YY</span><span>
 </span><span id="line-105"></span><span>    </span><span class="hs-comment">-- ZZZZ        CCCC        ZZZZAAA</span><span>
@@ -348,156 +348,156 @@ forall a. Plus a =&gt; a -&gt; a -&gt; a
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343761"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343760"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359906"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359905"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343759"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359904"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343757"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359902"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343756"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343755"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; ShapeM) -&gt; &#8469;64 -&gt; ShapeM
+</span><a href="#local-6989586621680359901"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359900"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; ShapeM) -&gt; &#8469;64 -&gt; ShapeM
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343758"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359903"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343754"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
+</span><a href="#local-6989586621680359899"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
 </span><span id="line-109"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span>
 </span><span id="line-110"></span><span>
-</span><span id="line-111"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#Bot"><span class="hs-identifier hs-type">Bot</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680343743"><span class="annot"><span class="annottext">bot :: Shape
+</span><span id="line-111"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#Bot"><span class="hs-identifier hs-type">Bot</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680359888"><span class="annot"><span class="annottext">bot :: Shape
 </span><a href="UVMHS.Core.Classes.Lattice.html#bot"><span class="hs-identifier hs-var hs-var hs-var hs-var">bot</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-var">SingleLine</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
 forall a. Zero a =&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
 </span><span id="line-112"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#Join"><span class="hs-identifier hs-type">Join</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-113"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343723"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343723"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343722"><span class="annot"><span class="annottext">&#8852; :: Shape -&gt; Shape -&gt; Shape
-</span><a href="#local-6989586621680343722"><span class="hs-operator hs-var hs-var hs-var hs-var">&#8852;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343721"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343721"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; Shape
+</span><span id="line-113"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359868"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359868"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359867"><span class="annot"><span class="annottext">&#8852; :: Shape -&gt; Shape -&gt; Shape
+</span><a href="#local-6989586621680359867"><span class="hs-operator hs-var hs-var hs-var hs-var">&#8852;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359866"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359866"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-var">SingleLine</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; Shape) -&gt; &#8469;64 -&gt; Shape
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343723"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359868"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343721"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span>
-</span><span id="line-114"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343720"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343720"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343719"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343719"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343718"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343718"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343717"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343717"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343716"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343716"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><a href="#local-6989586621680359866"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span>
+</span><span id="line-114"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359865"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359865"><span class="hs-identifier hs-var">l&#8321;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359864"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359864"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359863"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359863"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359862"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359862"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359861"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359861"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span>
 </span><span id="line-115"></span><span>    </span><span class="annot"><span class="annottext">ShapeM -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-var">MultiLine</span></a></span><span> </span><span class="annot"><span class="annottext">(ShapeM -&gt; Shape) -&gt; ShapeM -&gt; Shape
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343720"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359865"><span class="hs-identifier hs-var">l&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343719"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343718"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343717"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343716"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
-</span><span id="line-116"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343715"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343715"><span class="hs-identifier hs-var">fl&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343714"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343714"><span class="hs-identifier hs-var">mml&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343713"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343713"><span class="hs-identifier hs-var">ll&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343712"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343712"><span class="hs-identifier hs-var">nls&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680343711"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343711"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><a href="#local-6989586621680359864"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359863"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359862"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359861"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
+</span><span id="line-116"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359860"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359860"><span class="hs-identifier hs-var">fl&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359859"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359859"><span class="hs-identifier hs-var">mml&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359858"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359858"><span class="hs-identifier hs-var">ll&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359857"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359857"><span class="hs-identifier hs-var">nls&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#SingleLine"><span class="hs-identifier hs-type">SingleLine</span></a></span><span> </span><span id="local-6989586621680359856"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359856"><span class="hs-identifier hs-var">l&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
 </span><span id="line-117"></span><span>    </span><span class="annot"><span class="annottext">ShapeM -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-var">MultiLine</span></a></span><span> </span><span class="annot"><span class="annottext">(ShapeM -&gt; Shape) -&gt; ShapeM -&gt; Shape
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343711"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359856"><span class="hs-identifier hs-var">l&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343715"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343714"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343713"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343712"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span>
-</span><span id="line-118"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343710"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343710"><span class="hs-identifier hs-var">fl&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343709"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343709"><span class="hs-identifier hs-var">mml&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343708"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343708"><span class="hs-identifier hs-var">ll&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343707"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343707"><span class="hs-identifier hs-var">nls&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343706"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343706"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343705"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343705"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343704"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343704"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343703"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343703"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span>
+</span><a href="#local-6989586621680359860"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359859"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359858"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359857"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span>
+</span><span id="line-118"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359855"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359855"><span class="hs-identifier hs-var">fl&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359854"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359854"><span class="hs-identifier hs-var">mml&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359853"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359853"><span class="hs-identifier hs-var">ll&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359852"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359852"><span class="hs-identifier hs-var">nls&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359851"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359851"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359850"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359850"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359849"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359849"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359848"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359848"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span>
 </span><span id="line-119"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343707"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; Bool
+</span><a href="#local-6989586621680359852"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><a href="UVMHS.Core.Classes.Order.html#%3E"><span class="hs-operator hs-var">&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343703"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; Shape
+</span><a href="#local-6989586621680359848"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-var">MultiLine</span></a></span><span> </span><span class="annot"><span class="annottext">(ShapeM -&gt; Shape) -&gt; ShapeM -&gt; Shape
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343710"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359855"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343706"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343709"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359851"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359854"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343705"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359850"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343704"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343708"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343707"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span>
+</span><a href="#local-6989586621680359849"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359853"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359852"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span>
 </span><span id="line-120"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343707"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; Bool
+</span><a href="#local-6989586621680359852"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; Bool
 forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><a href="UVMHS.Core.Classes.Order.html#%3C"><span class="hs-operator hs-var">&lt;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343703"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; Shape
+</span><a href="#local-6989586621680359848"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-var">MultiLine</span></a></span><span> </span><span class="annot"><span class="annottext">(ShapeM -&gt; Shape) -&gt; ShapeM -&gt; Shape
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343710"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359855"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343706"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343709"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359851"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359854"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343705"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359850"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343708"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343704"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343703"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
+</span><a href="#local-6989586621680359853"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359849"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359848"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
 </span><span id="line-121"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-var">MultiLine</span></a></span><span> </span><span class="annot"><span class="annottext">(ShapeM -&gt; Shape) -&gt; ShapeM -&gt; Shape
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343710"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359855"><span class="hs-identifier hs-var">fl&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343706"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343709"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359851"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359854"><span class="hs-identifier hs-var">mml&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343705"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343708"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359850"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359853"><span class="hs-identifier hs-var">ll&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343704"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; ShapeM) -&gt; &#8469;64 -&gt; ShapeM
+</span><a href="#local-6989586621680359849"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; ShapeM) -&gt; &#8469;64 -&gt; ShapeM
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343707"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359852"><span class="hs-identifier hs-var">nls&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#%2294"><span class="hs-operator hs-var">&#8852;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343703"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
+</span><a href="#local-6989586621680359848"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
 </span><span id="line-122"></span><span>
 </span><span id="line-123"></span><span class="hs-comment">------------</span><span>
 </span><span id="line-124"></span><span class="hs-comment">-- ShapeA --</span><span>
@@ -531,7 +531,7 @@ forall a. Join a =&gt; a -&gt; a -&gt; a
 </span><span id="line-151"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="shapeIShape"><span class="annot"><span class="annottext">ShapeA -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeIShape"><span class="hs-identifier hs-var hs-var">shapeIShape</span></a></span></span><span>   </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#Shape"><span class="hs-identifier hs-type">Shape</span></a></span><span>
 </span><span id="line-152"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-153"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680343690"><span id="local-6989586621680343695"><span class="annot"><span class="annottext">ShapeA -&gt; ShapeA -&gt; Bool
+</span><span id="line-153"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680359835"><span id="local-6989586621680359840"><span class="annot"><span class="annottext">ShapeA -&gt; ShapeA -&gt; Bool
 (ShapeA -&gt; ShapeA -&gt; Bool)
 -&gt; (ShapeA -&gt; ShapeA -&gt; Bool) -&gt; Eq ShapeA
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
@@ -539,7 +539,7 @@ forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 $c/= :: ShapeA -&gt; ShapeA -&gt; Bool
 == :: ShapeA -&gt; ShapeA -&gt; Bool
 $c== :: ShapeA -&gt; ShapeA -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680343666"><span id="local-6989586621680343668"><span id="local-6989586621680343671"><span id="local-6989586621680343674"><span id="local-6989586621680343677"><span id="local-6989586621680343681"><span id="local-6989586621680343686"><span class="annot"><span class="annottext">Eq ShapeA
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680359811"><span id="local-6989586621680359813"><span id="local-6989586621680359816"><span id="local-6989586621680359819"><span id="local-6989586621680359822"><span id="local-6989586621680359826"><span id="local-6989586621680359831"><span class="annot"><span class="annottext">Eq ShapeA
 Eq ShapeA
 -&gt; (ShapeA -&gt; ShapeA -&gt; Ordering)
 -&gt; (ShapeA -&gt; ShapeA -&gt; Bool)
@@ -576,7 +576,7 @@ $c&lt;= :: ShapeA -&gt; ShapeA -&gt; Bool
 $c&lt; :: ShapeA -&gt; ShapeA -&gt; Bool
 compare :: ShapeA -&gt; ShapeA -&gt; Ordering
 $ccompare :: ShapeA -&gt; ShapeA -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680343656"><span id="local-6989586621680343658"><span id="local-6989586621680343664"><span class="annot"><span class="annottext">Int -&gt; ShapeA -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680359801"><span id="local-6989586621680359803"><span id="local-6989586621680359809"><span class="annot"><span class="annottext">Int -&gt; ShapeA -&gt; ShowS
 [ShapeA] -&gt; ShowS
 ShapeA -&gt; String
 (Int -&gt; ShapeA -&gt; ShowS)
@@ -592,24 +592,24 @@ $cshowsPrec :: Int -&gt; ShapeA -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
 </span><span id="line-154"></span><span id="shapeIShapeL"><span id="shapeIAlignedL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ShapeA</span></span></span><span>
 </span><span id="line-155"></span><span>
-</span><span id="line-156"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680343646"><span class="annot"><span class="annottext">null :: ShapeA
-</span><a href="#local-6989586621680343646"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Shape -&gt; ShapeA
+</span><span id="line-156"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680359791"><span class="annot"><span class="annottext">null :: ShapeA
+</span><a href="#local-6989586621680359791"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Shape -&gt; ShapeA
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-var">ShapeA</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="annot"><span class="annottext">Shape
 forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
 </span><span id="line-157"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-158"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span id="local-6989586621680343640"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680343640"><span class="hs-identifier hs-var">a&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343639"><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343639"><span class="hs-identifier hs-var">sh&#8321;</span></a></span></span><span> </span><span id="local-6989586621680343638"><span class="annot"><span class="annottext">&#10746; :: ShapeA -&gt; ShapeA -&gt; ShapeA
-</span><a href="#local-6989586621680343638"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span id="local-6989586621680343637"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680343637"><span class="hs-identifier hs-var">a&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343636"><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343636"><span class="hs-identifier hs-var">sh&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-159"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680343635"><span class="annot"><span class="annottext">sh&#8322;' :: Shape
-</span><a href="#local-6989586621680343635"><span class="hs-identifier hs-var hs-var">sh&#8322;'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-158"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span id="local-6989586621680359785"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680359785"><span class="hs-identifier hs-var">a&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359784"><span class="annot"><span class="annottext">Shape
+</span><a href="#local-6989586621680359784"><span class="hs-identifier hs-var">sh&#8321;</span></a></span></span><span> </span><span id="local-6989586621680359783"><span class="annot"><span class="annottext">&#10746; :: ShapeA -&gt; ShapeA -&gt; ShapeA
+</span><a href="#local-6989586621680359783"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span id="local-6989586621680359782"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680359782"><span class="hs-identifier hs-var">a&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359781"><span class="annot"><span class="annottext">Shape
+</span><a href="#local-6989586621680359781"><span class="hs-identifier hs-var">sh&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-159"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680359780"><span class="annot"><span class="annottext">sh&#8322;' :: Shape
+</span><a href="#local-6989586621680359780"><span class="hs-identifier hs-var hs-var">sh&#8322;'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-160"></span><span>          </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool
 </span><a href="UVMHS.Core.Init.html#not"><span class="hs-identifier hs-var">not</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680343637"><span class="hs-identifier hs-var">a&#8322;</span></a></span><span>
+</span><a href="#local-6989586621680359782"><span class="hs-identifier hs-var">a&#8322;</span></a></span><span>
 </span><span id="line-161"></span><span>          </span><span class="hs-comment">-- &#8227; sh&#8321; is single-line</span><span>
 </span><span id="line-162"></span><span>          </span><span class="hs-comment">-- &#8227; sh&#8322; is single-line </span><span>
 </span><span id="line-163"></span><span>          </span><span class="hs-comment">--</span><span>
@@ -654,7 +654,7 @@ forall a. Null a =&gt; a
 </span><span id="line-202"></span><span>          </span><span class="hs-comment">--                              &#8901;&#8901;&#8901;&#8901;CCCC</span><span>
 </span><span id="line-203"></span><span>          </span><span class="hs-comment">--</span><span>
 </span><span id="line-204"></span><span>          </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343636"><span class="hs-identifier hs-var">sh&#8322;</span></a></span><span>
+</span><a href="#local-6989586621680359781"><span class="hs-identifier hs-var">sh&#8322;</span></a></span><span>
 </span><span id="line-205"></span><span>          </span><span class="hs-comment">-- &#8227; sh&#8321; is single-lined</span><span>
 </span><span id="line-206"></span><span>          </span><span class="hs-comment">-- &#8227; sh&#8322; is multiline aligned</span><span>
 </span><span id="line-207"></span><span>          </span><span class="hs-comment">--</span><span>
@@ -681,63 +681,63 @@ forall a. Null a =&gt; a
 </span><span id="line-228"></span><span>          </span><span class="hs-comment">--                               &#8901;&#8901;&#8901;&#8901;&#9251;&#9251;&#9251;&#9251;CCCC</span><span>
 </span><span id="line-229"></span><span>          </span><span class="hs-comment">--</span><span>
 </span><span id="line-230"></span><span>          </span><span class="hs-keyword">else</span><span> </span><span>
-</span><span id="line-231"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680343633"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343633"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343632"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343632"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343631"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343631"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680343630"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343630"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343636"><span class="hs-identifier hs-var">sh&#8322;</span></a></span><span>
+</span><span id="line-231"></span><span>            </span><span class="hs-keyword">let</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-type">MultiLine</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-type">ShapeM</span></a></span><span> </span><span id="local-6989586621680359778"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359778"><span class="hs-identifier hs-var">fl&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359777"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359777"><span class="hs-identifier hs-var">mml&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359776"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359776"><span class="hs-identifier hs-var">ll&#8322;</span></a></span></span><span> </span><span id="local-6989586621680359775"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359775"><span class="hs-identifier hs-var">nls&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Shape
+</span><a href="#local-6989586621680359781"><span class="hs-identifier hs-var">sh&#8322;</span></a></span><span>
 </span><span id="line-232"></span><span>            </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">ShapeM -&gt; Shape
 </span><a href="UVMHS.Lib.Pretty.Shape.html#MultiLine"><span class="hs-identifier hs-var">MultiLine</span></a></span><span> </span><span class="annot"><span class="annottext">(ShapeM -&gt; Shape) -&gt; ShapeM -&gt; Shape
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 -&gt; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeM"><span class="hs-identifier hs-var">ShapeM</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343633"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Shape -&gt; &#8469;64
+</span><a href="#local-6989586621680359778"><span class="hs-identifier hs-var">fl&#8322;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Shape -&gt; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeLastLength"><span class="hs-identifier hs-var">shapeLastLength</span></a></span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343639"><span class="hs-identifier hs-var">sh&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359784"><span class="hs-identifier hs-var">sh&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343632"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Shape -&gt; &#8469;64
+</span><a href="#local-6989586621680359777"><span class="hs-identifier hs-var">mml&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Shape -&gt; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#shapeLastLength"><span class="hs-identifier hs-var">shapeLastLength</span></a></span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343639"><span class="hs-identifier hs-var">sh&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+</span><a href="#local-6989586621680359784"><span class="hs-identifier hs-var">sh&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
 forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343631"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680343630"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
+</span><a href="#local-6989586621680359776"><span class="hs-identifier hs-var">ll&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680359775"><span class="hs-identifier hs-var">nls&#8322;</span></a></span><span>
 </span><span id="line-233"></span><span>    </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Shape -&gt; ShapeA
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-var">ShapeA</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680343640"><span class="hs-identifier hs-var">a&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621680359785"><span class="hs-identifier hs-var">a&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><a href="UVMHS.Core.Init.html#%2A54"><span class="hs-operator hs-var">&#10836;</span></a></span><span> </span><span class="annot"><span class="annottext">(Shape &#9010; &#8469;64) -&gt; Shape -&gt; Bool
 forall a b. (a &#9010; b) -&gt; a -&gt; Bool
 </span><a href="UVMHS.Core.Data.Lens.html#shape"><span class="hs-identifier hs-var">shape</span></a></span><span> </span><span class="annot"><span class="annottext">Shape &#9010; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.Shape.html#singleLineL"><span class="hs-identifier hs-var">singleLineL</span></a></span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343639"><span class="hs-identifier hs-var">sh&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621680359784"><span class="hs-identifier hs-var">sh&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><a href="UVMHS.Core.Init.html#%2A53"><span class="hs-operator hs-var">&#10835;</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680343637"><span class="hs-identifier hs-var">a&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Shape -&gt; ShapeA) -&gt; Shape -&gt; ShapeA
+</span><a href="#local-6989586621680359782"><span class="hs-identifier hs-var">a&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Shape -&gt; ShapeA) -&gt; Shape -&gt; ShapeA
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343639"><span class="hs-identifier hs-var">sh&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">Shape -&gt; Shape -&gt; Shape
+</span><a href="#local-6989586621680359784"><span class="hs-identifier hs-var">sh&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">Shape -&gt; Shape -&gt; Shape
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343635"><span class="hs-identifier hs-var">sh&#8322;'</span></a></span><span>
+</span><a href="#local-6989586621680359780"><span class="hs-identifier hs-var">sh&#8322;'</span></a></span><span>
 </span><span id="line-234"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span>
 </span><span id="line-235"></span><span>
 </span><span id="line-236"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#alignShapeA"><span class="hs-identifier hs-type">alignShapeA</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span>
 </span><span id="line-237"></span><span id="alignShapeA"><span class="annot"><span class="annottext">alignShapeA :: ShapeA -&gt; ShapeA
-</span><a href="UVMHS.Lib.Pretty.Shape.html#alignShapeA"><span class="hs-identifier hs-var hs-var">alignShapeA</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span id="local-6989586621680343620"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680343620"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span id="local-6989586621680343619"><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343619"><span class="hs-identifier hs-var">sh</span></a></span></span><span class="hs-special">)</span><span>
+</span><a href="UVMHS.Lib.Pretty.Shape.html#alignShapeA"><span class="hs-identifier hs-var hs-var">alignShapeA</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-type">ShapeA</span></a></span><span> </span><span id="local-6989586621680359765"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680359765"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span id="local-6989586621680359764"><span class="annot"><span class="annottext">Shape
+</span><a href="#local-6989586621680359764"><span class="hs-identifier hs-var">sh</span></a></span></span><span class="hs-special">)</span><span>
 </span><span id="line-238"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">(Shape &#9010; ShapeM) -&gt; Shape -&gt; Bool
 forall a b. (a &#9010; b) -&gt; a -&gt; Bool
 </span><a href="UVMHS.Core.Data.Lens.html#shape"><span class="hs-identifier hs-var">shape</span></a></span><span> </span><span class="annot"><span class="annottext">Shape &#9010; ShapeM
 </span><a href="UVMHS.Lib.Pretty.Shape.html#multiLineL"><span class="hs-identifier hs-var">multiLineL</span></a></span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343619"><span class="hs-identifier hs-var">sh</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Shape -&gt; ShapeA
+</span><a href="#local-6989586621680359764"><span class="hs-identifier hs-var">sh</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Shape -&gt; ShapeA
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-var">ShapeA</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343619"><span class="hs-identifier hs-var">sh</span></a></span><span>
+</span><a href="#local-6989586621680359764"><span class="hs-identifier hs-var">sh</span></a></span><span>
 </span><span id="line-239"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Shape -&gt; ShapeA
 </span><a href="UVMHS.Lib.Pretty.Shape.html#ShapeA"><span class="hs-identifier hs-var">ShapeA</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680343620"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Shape
-</span><a href="#local-6989586621680343619"><span class="hs-identifier hs-var">sh</span></a></span><span>
+</span><a href="#local-6989586621680359765"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Shape
+</span><a href="#local-6989586621680359764"><span class="hs-identifier hs-var">sh</span></a></span><span>
 </span><span id="line-240"></span></pre></body></html>

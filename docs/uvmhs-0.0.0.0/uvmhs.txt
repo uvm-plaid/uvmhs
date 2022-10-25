@@ -2590,26 +2590,6 @@ instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core
 instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftNondet t₁, UVMHS.Core.Effects.LiftNondet t₂) => UVMHS.Core.Effects.LiftNondet (t₁ UVMHS.Core.Transformers.⊡ t₂)
 instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftTop t₁, UVMHS.Core.Effects.LiftTop t₂) => UVMHS.Core.Effects.LiftTop (t₁ UVMHS.Core.Transformers.⊡ t₂)
 instance (forall (m' :: * -> *). UVMHS.Core.Classes.Monad.Monad m' => UVMHS.Core.Classes.Monad.Monad (t₂ m'), UVMHS.Core.Effects.LiftCont t₁, UVMHS.Core.Effects.LiftCont t₂) => UVMHS.Core.Effects.LiftCont (t₁ UVMHS.Core.Transformers.⊡ t₂)
-instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m, UVMHS.Core.Effects.LiftIO t) => UVMHS.Core.Effects.MonadIO (t m)
-instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m, UVMHS.Core.Effects.LiftReader t) => UVMHS.Core.Effects.MonadReader r (t m)
-instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadWriter o m, UVMHS.Core.Effects.LiftWriter t) => UVMHS.Core.Effects.MonadWriter o (t m)
-instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m, UVMHS.Core.Effects.LiftState t) => UVMHS.Core.Effects.MonadState s (t m)
-instance forall k (m :: * -> *) (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadFail m, UVMHS.Core.Effects.LiftFail t) => UVMHS.Core.Effects.MonadFail (t m)
-instance forall k (m :: * -> *) e (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadError e m, UVMHS.Core.Effects.LiftError t) => UVMHS.Core.Effects.MonadError e (t m)
-instance forall k (m :: * -> *) (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadDelay m, UVMHS.Core.Effects.LiftDelay t) => UVMHS.Core.Effects.MonadDelay (t m)
-instance forall k (m :: * -> *) (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadNondet m, UVMHS.Core.Effects.LiftNondet t) => UVMHS.Core.Effects.MonadNondet (t m)
-instance forall k (m :: * -> *) (t :: (* -> *) -> k -> *). (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadTop m, UVMHS.Core.Effects.LiftTop t) => UVMHS.Core.Effects.MonadTop (t m)
-instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadCont r m, UVMHS.Core.Effects.LiftCont t) => UVMHS.Core.Effects.MonadCont r (t m)
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftIO t₂) => UVMHS.Core.Effects.LiftIO t₁
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftReader t₂) => UVMHS.Core.Effects.LiftReader t₁
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftWriter t₂) => UVMHS.Core.Effects.LiftWriter t₁
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftState t₂) => UVMHS.Core.Effects.LiftState t₁
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftFail t₂) => UVMHS.Core.Effects.LiftFail t₁
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftError t₂) => UVMHS.Core.Effects.LiftError t₁
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftDelay t₂) => UVMHS.Core.Effects.LiftDelay t₁
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftNondet t₂) => UVMHS.Core.Effects.LiftNondet t₁
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftTop t₂) => UVMHS.Core.Effects.LiftTop t₁
-instance (t₁ UVMHS.Core.Classes.Morphism.⇄⁼ t₂, UVMHS.Core.Effects.LiftCont t₂) => UVMHS.Core.Effects.LiftCont t₁
 
 module UVMHS.Core.Monads
 newtype MU m
@@ -2709,6 +2689,7 @@ instance forall k (m :: k -> *) a. (forall (a' :: k). UVMHS.Core.Classes.Monoid.
 instance forall k (m :: k -> *) a. (forall (a' :: k). UVMHS.Core.Classes.Monoid.Monoid (m a')) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.UContT m a)
 instance UVMHS.Core.Classes.Monad.Transformer UVMHS.Core.Monads.UContT
 instance UVMHS.Core.Effects.LiftIO UVMHS.Core.Monads.UContT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m) => UVMHS.Core.Effects.MonadIO (UVMHS.Core.Monads.UContT m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m) => UVMHS.Core.Effects.MonadReader r (UVMHS.Core.Monads.UContT m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Classes.Monoid.Monoid o, UVMHS.Core.Effects.MonadWriter o m) => UVMHS.Core.Effects.MonadWriter o (UVMHS.Core.Monads.UContT m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m) => UVMHS.Core.Effects.MonadState s (UVMHS.Core.Monads.UContT m)
@@ -2728,6 +2709,7 @@ instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.M
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid u) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.ContT u m a)
 instance UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.ContT u)
 instance UVMHS.Core.Effects.LiftIO (UVMHS.Core.Monads.ContT u)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m) => UVMHS.Core.Effects.MonadIO (UVMHS.Core.Monads.ContT u m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m) => UVMHS.Core.Effects.MonadReader r (UVMHS.Core.Monads.ContT u m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Classes.Monoid.Monoid o, UVMHS.Core.Effects.MonadWriter o m) => UVMHS.Core.Effects.MonadWriter o (UVMHS.Core.Monads.ContT (o UVMHS.Core.Init.∧ r) m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m) => UVMHS.Core.Effects.MonadState s (UVMHS.Core.Monads.ContT u m)
@@ -2743,14 +2725,22 @@ instance (UVMHS.Core.Classes.Monad.Monad m, forall a'. UVMHS.Core.Classes.Monoid
 instance (forall a'. UVMHS.Core.Classes.Monoid.Monoid a' => UVMHS.Core.Classes.Monoid.Monoid (m a')) => UVMHS.Core.Effects.MonadNondet (UVMHS.Core.Monads.NondetT m)
 instance UVMHS.Core.Classes.Monad.Transformer UVMHS.Core.Monads.NondetT
 instance UVMHS.Core.Effects.LiftIO UVMHS.Core.Monads.NondetT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m) => UVMHS.Core.Effects.MonadIO (UVMHS.Core.Monads.NondetT m)
 instance UVMHS.Core.Effects.LiftReader UVMHS.Core.Monads.NondetT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m) => UVMHS.Core.Effects.MonadReader r (UVMHS.Core.Monads.NondetT m)
 instance UVMHS.Core.Effects.LiftWriter UVMHS.Core.Monads.NondetT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadWriter o m) => UVMHS.Core.Effects.MonadWriter o (UVMHS.Core.Monads.NondetT m)
 instance UVMHS.Core.Effects.LiftState UVMHS.Core.Monads.NondetT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m) => UVMHS.Core.Effects.MonadState s (UVMHS.Core.Monads.NondetT m)
 instance UVMHS.Core.Effects.LiftFail UVMHS.Core.Monads.NondetT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadFail m) => UVMHS.Core.Effects.MonadFail (UVMHS.Core.Monads.NondetT m)
 instance UVMHS.Core.Effects.LiftError UVMHS.Core.Monads.NondetT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadError e m) => UVMHS.Core.Effects.MonadError e (UVMHS.Core.Monads.NondetT m)
 instance UVMHS.Core.Effects.LiftDelay UVMHS.Core.Monads.NondetT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadDelay m) => UVMHS.Core.Effects.MonadDelay (UVMHS.Core.Monads.NondetT m)
 instance UVMHS.Core.Effects.LiftNondet UVMHS.Core.Monads.NondetT
 instance UVMHS.Core.Effects.LiftTop UVMHS.Core.Monads.NondetT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadTop m) => UVMHS.Core.Effects.MonadTop (UVMHS.Core.Monads.NondetT m)
 instance (UVMHS.Core.Classes.Monad.Monad m, forall a'. UVMHS.Core.Classes.Monoid.Monoid a' => UVMHS.Core.Classes.Monoid.Monoid (m a'), UVMHS.Core.Effects.MonadCont (UVMHS.Core.Init.𝑄 r) m) => UVMHS.Core.Effects.MonadCont r (UVMHS.Core.Monads.NondetT m)
 instance UVMHS.Core.Classes.Functor.Functor m => UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Monads.DelayT m)
 instance UVMHS.Core.Classes.Monad.Return m => UVMHS.Core.Classes.Monad.Return (UVMHS.Core.Monads.DelayT m)
@@ -2762,6 +2752,25 @@ instance forall k (m :: k -> *) (a :: k). (forall (a' :: k). UVMHS.Core.Classes.
 instance forall k (m :: k -> *) (a :: k). (forall (a' :: k). UVMHS.Core.Classes.Monoid.Append (m a')) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Core.Monads.DelayT m a)
 instance forall k (m :: k -> *) (a :: k). (forall (a' :: k). UVMHS.Core.Classes.Monoid.Null (m a'), forall (a' :: k). UVMHS.Core.Classes.Monoid.Append (m a')) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.DelayT m a)
 instance UVMHS.Core.Classes.Monad.Transformer UVMHS.Core.Monads.DelayT
+instance UVMHS.Core.Effects.LiftIO UVMHS.Core.Monads.DelayT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m) => UVMHS.Core.Effects.MonadIO (UVMHS.Core.Monads.DelayT m)
+instance UVMHS.Core.Effects.LiftReader UVMHS.Core.Monads.DelayT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m) => UVMHS.Core.Effects.MonadReader r (UVMHS.Core.Monads.DelayT m)
+instance UVMHS.Core.Effects.LiftWriter UVMHS.Core.Monads.DelayT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadWriter o m) => UVMHS.Core.Effects.MonadWriter o (UVMHS.Core.Monads.DelayT m)
+instance UVMHS.Core.Effects.LiftState UVMHS.Core.Monads.DelayT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m) => UVMHS.Core.Effects.MonadState s (UVMHS.Core.Monads.DelayT m)
+instance UVMHS.Core.Effects.LiftFail UVMHS.Core.Monads.DelayT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadFail m) => UVMHS.Core.Effects.MonadFail (UVMHS.Core.Monads.DelayT m)
+instance UVMHS.Core.Effects.LiftError UVMHS.Core.Monads.DelayT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadError e m) => UVMHS.Core.Effects.MonadError e (UVMHS.Core.Monads.DelayT m)
+instance UVMHS.Core.Effects.LiftDelay UVMHS.Core.Monads.DelayT
+instance UVMHS.Core.Effects.LiftNondet UVMHS.Core.Monads.DelayT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadNondet m) => UVMHS.Core.Effects.MonadNondet (UVMHS.Core.Monads.DelayT m)
+instance UVMHS.Core.Effects.LiftTop UVMHS.Core.Monads.DelayT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadTop m) => UVMHS.Core.Effects.MonadTop (UVMHS.Core.Monads.DelayT m)
+instance UVMHS.Core.Effects.MonadCont r m => UVMHS.Core.Effects.MonadCont r (UVMHS.Core.Monads.DelayT m)
+instance UVMHS.Core.Effects.MonadUCont m => UVMHS.Core.Effects.MonadUCont (UVMHS.Core.Monads.DelayT m)
 instance UVMHS.Core.Classes.Functor.Functor m => UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Classes.Monad.Return m => UVMHS.Core.Classes.Monad.Return (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Classes.Monad.Monad m => UVMHS.Core.Classes.Monad.Bind (UVMHS.Core.Monads.ErrorT e m)
@@ -2773,14 +2782,22 @@ instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.M
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Append e, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.ErrorT e m a)
 instance UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.ErrorT e)
 instance UVMHS.Core.Effects.LiftIO (UVMHS.Core.Monads.ErrorT e)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m) => UVMHS.Core.Effects.MonadIO (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Effects.LiftReader (UVMHS.Core.Monads.ErrorT e)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m) => UVMHS.Core.Effects.MonadReader r (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Effects.LiftWriter (UVMHS.Core.Monads.ErrorT e)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadWriter o m) => UVMHS.Core.Effects.MonadWriter o (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Effects.LiftState (UVMHS.Core.Monads.ErrorT e)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m) => UVMHS.Core.Effects.MonadState s (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Effects.LiftFail (UVMHS.Core.Monads.ErrorT e)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadFail m) => UVMHS.Core.Effects.MonadFail (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Effects.LiftError (UVMHS.Core.Monads.ErrorT e)
 instance UVMHS.Core.Effects.LiftDelay (UVMHS.Core.Monads.ErrorT e)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadDelay m) => UVMHS.Core.Effects.MonadDelay (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Effects.LiftNondet (UVMHS.Core.Monads.ErrorT e)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadNondet m) => UVMHS.Core.Effects.MonadNondet (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Effects.LiftTop (UVMHS.Core.Monads.ErrorT e)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadTop m) => UVMHS.Core.Effects.MonadTop (UVMHS.Core.Monads.ErrorT e m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadCont (e UVMHS.Core.Init.∨ r) m) => UVMHS.Core.Effects.MonadCont r (UVMHS.Core.Monads.ErrorT e m)
 instance UVMHS.Core.Classes.Functor.Functor m => UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Monads.FailT m)
 instance UVMHS.Core.Classes.Monad.Return m => UVMHS.Core.Classes.Monad.Return (UVMHS.Core.Monads.FailT m)
@@ -2793,14 +2810,22 @@ instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.M
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.FailT m a)
 instance UVMHS.Core.Classes.Monad.Transformer UVMHS.Core.Monads.FailT
 instance UVMHS.Core.Effects.LiftIO UVMHS.Core.Monads.FailT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m) => UVMHS.Core.Effects.MonadIO (UVMHS.Core.Monads.FailT m)
 instance UVMHS.Core.Effects.LiftReader UVMHS.Core.Monads.FailT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m) => UVMHS.Core.Effects.MonadReader r (UVMHS.Core.Monads.FailT m)
 instance UVMHS.Core.Effects.LiftWriter UVMHS.Core.Monads.FailT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadWriter o m) => UVMHS.Core.Effects.MonadWriter o (UVMHS.Core.Monads.FailT m)
 instance UVMHS.Core.Effects.LiftState UVMHS.Core.Monads.FailT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m) => UVMHS.Core.Effects.MonadState s (UVMHS.Core.Monads.FailT m)
 instance UVMHS.Core.Effects.LiftFail UVMHS.Core.Monads.FailT
 instance UVMHS.Core.Effects.LiftError UVMHS.Core.Monads.FailT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadError e m) => UVMHS.Core.Effects.MonadError e (UVMHS.Core.Monads.FailT m)
 instance UVMHS.Core.Effects.LiftDelay UVMHS.Core.Monads.FailT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadDelay m) => UVMHS.Core.Effects.MonadDelay (UVMHS.Core.Monads.FailT m)
 instance UVMHS.Core.Effects.LiftNondet UVMHS.Core.Monads.FailT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadNondet m) => UVMHS.Core.Effects.MonadNondet (UVMHS.Core.Monads.FailT m)
 instance UVMHS.Core.Effects.LiftTop UVMHS.Core.Monads.FailT
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadTop m) => UVMHS.Core.Effects.MonadTop (UVMHS.Core.Monads.FailT m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadCont (UVMHS.Core.Init.𝑂 r) m) => UVMHS.Core.Effects.MonadCont r (UVMHS.Core.Monads.FailT m)
 instance UVMHS.Core.Classes.Functor.Functor m => UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Monads.StateT s m)
 instance UVMHS.Core.Classes.Monad.Return m => UVMHS.Core.Classes.Monad.Return (UVMHS.Core.Monads.StateT s m)
@@ -2813,14 +2838,22 @@ instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.M
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid s, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.StateT s m a)
 instance UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.StateT s)
 instance UVMHS.Core.Effects.LiftIO (UVMHS.Core.Monads.StateT s)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m) => UVMHS.Core.Effects.MonadIO (UVMHS.Core.Monads.StateT s m)
 instance UVMHS.Core.Effects.LiftReader (UVMHS.Core.Monads.StateT s)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m) => UVMHS.Core.Effects.MonadReader r (UVMHS.Core.Monads.StateT s m)
 instance UVMHS.Core.Effects.LiftWriter (UVMHS.Core.Monads.StateT s)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadWriter o m) => UVMHS.Core.Effects.MonadWriter o (UVMHS.Core.Monads.StateT s m)
 instance UVMHS.Core.Effects.LiftState (UVMHS.Core.Monads.StateT s)
 instance UVMHS.Core.Effects.LiftFail (UVMHS.Core.Monads.StateT s)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadFail m) => UVMHS.Core.Effects.MonadFail (UVMHS.Core.Monads.StateT s m)
 instance UVMHS.Core.Effects.LiftError (UVMHS.Core.Monads.StateT s)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadError e m) => UVMHS.Core.Effects.MonadError e (UVMHS.Core.Monads.StateT s m)
 instance UVMHS.Core.Effects.LiftDelay (UVMHS.Core.Monads.StateT s)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadDelay m) => UVMHS.Core.Effects.MonadDelay (UVMHS.Core.Monads.StateT s m)
 instance UVMHS.Core.Effects.LiftNondet (UVMHS.Core.Monads.StateT s)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadNondet m) => UVMHS.Core.Effects.MonadNondet (UVMHS.Core.Monads.StateT s m)
 instance UVMHS.Core.Effects.LiftTop (UVMHS.Core.Monads.StateT s)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadTop m) => UVMHS.Core.Effects.MonadTop (UVMHS.Core.Monads.StateT s m)
 instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadCont (s UVMHS.Core.Init.∧ u) m) => UVMHS.Core.Effects.MonadCont u (UVMHS.Core.Monads.StateT s m)
 instance UVMHS.Core.Classes.Functor.Functor m => UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Monads.WriterT o m)
 instance (UVMHS.Core.Classes.Monad.Return m, UVMHS.Core.Classes.Monoid.Null o) => UVMHS.Core.Classes.Monad.Return (UVMHS.Core.Monads.WriterT o m)
@@ -2833,14 +2866,22 @@ instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.M
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid o, UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.WriterT o m a)
 instance UVMHS.Core.Classes.Monoid.Null o => UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.WriterT o)
 instance UVMHS.Core.Classes.Monoid.Null o => UVMHS.Core.Effects.LiftIO (UVMHS.Core.Monads.WriterT o)
+instance (UVMHS.Core.Classes.Monoid.Null o, UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m) => UVMHS.Core.Effects.MonadIO (UVMHS.Core.Monads.WriterT o m)
 instance UVMHS.Core.Classes.Monoid.Null o => UVMHS.Core.Effects.LiftReader (UVMHS.Core.Monads.WriterT o)
+instance (UVMHS.Core.Classes.Monoid.Null o, UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadReader r m) => UVMHS.Core.Effects.MonadReader r (UVMHS.Core.Monads.WriterT o m)
 instance UVMHS.Core.Classes.Monoid.Null o => UVMHS.Core.Effects.LiftWriter (UVMHS.Core.Monads.WriterT o)
 instance UVMHS.Core.Classes.Monoid.Null o => UVMHS.Core.Effects.LiftState (UVMHS.Core.Monads.WriterT o)
+instance (UVMHS.Core.Classes.Monoid.Null o, UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m) => UVMHS.Core.Effects.MonadState s (UVMHS.Core.Monads.WriterT o m)
 instance UVMHS.Core.Effects.LiftFail (UVMHS.Core.Monads.WriterT o)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadFail m) => UVMHS.Core.Effects.MonadFail (UVMHS.Core.Monads.WriterT o m)
 instance UVMHS.Core.Effects.LiftError (UVMHS.Core.Monads.WriterT o)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadError e m) => UVMHS.Core.Effects.MonadError e (UVMHS.Core.Monads.WriterT o m)
 instance UVMHS.Core.Effects.LiftDelay (UVMHS.Core.Monads.WriterT o)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadDelay m) => UVMHS.Core.Effects.MonadDelay (UVMHS.Core.Monads.WriterT o m)
 instance UVMHS.Core.Effects.LiftNondet (UVMHS.Core.Monads.WriterT o)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadNondet m) => UVMHS.Core.Effects.MonadNondet (UVMHS.Core.Monads.WriterT o m)
 instance UVMHS.Core.Effects.LiftTop (UVMHS.Core.Monads.WriterT o)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadTop m) => UVMHS.Core.Effects.MonadTop (UVMHS.Core.Monads.WriterT o m)
 instance (UVMHS.Core.Classes.Monoid.Monoid o, UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadCont (o UVMHS.Core.Init.∧ r) m) => UVMHS.Core.Effects.MonadCont r (UVMHS.Core.Monads.WriterT o m)
 instance UVMHS.Core.Classes.Functor.Functor m => UVMHS.Core.Classes.Functor.Functor (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Classes.Monad.Return m => UVMHS.Core.Classes.Monad.Return (UVMHS.Core.Monads.ReaderT r m)
@@ -2853,15 +2894,24 @@ instance (forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.M
 instance (forall a'. UVMHS.Core.Classes.Monoid.Null a' => UVMHS.Core.Classes.Monoid.Null (m a'), forall a'. UVMHS.Core.Classes.Monoid.Append a' => UVMHS.Core.Classes.Monoid.Append (m a'), UVMHS.Core.Classes.Monoid.Monoid a) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Core.Monads.ReaderT r m a)
 instance UVMHS.Core.Classes.Monad.Transformer (UVMHS.Core.Monads.ReaderT r)
 instance UVMHS.Core.Effects.LiftIO (UVMHS.Core.Monads.ReaderT r)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadIO m) => UVMHS.Core.Effects.MonadIO (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Effects.LiftReader (UVMHS.Core.Monads.ReaderT r)
 instance UVMHS.Core.Effects.LiftWriter (UVMHS.Core.Monads.ReaderT r)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadWriter o m) => UVMHS.Core.Effects.MonadWriter o (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Effects.LiftState (UVMHS.Core.Monads.ReaderT r)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadState s m) => UVMHS.Core.Effects.MonadState s (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Effects.LiftFail (UVMHS.Core.Monads.ReaderT r)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadFail m) => UVMHS.Core.Effects.MonadFail (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Effects.LiftError (UVMHS.Core.Monads.ReaderT r)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadError e m) => UVMHS.Core.Effects.MonadError e (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Effects.LiftDelay (UVMHS.Core.Monads.ReaderT r)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadDelay m) => UVMHS.Core.Effects.MonadDelay (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Effects.LiftNondet (UVMHS.Core.Monads.ReaderT r)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadNondet m) => UVMHS.Core.Effects.MonadNondet (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Effects.LiftTop (UVMHS.Core.Monads.ReaderT r)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadTop m) => UVMHS.Core.Effects.MonadTop (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Effects.LiftCont (UVMHS.Core.Monads.ReaderT r)
+instance (UVMHS.Core.Classes.Monad.Monad m, UVMHS.Core.Effects.MonadCont r' m) => UVMHS.Core.Effects.MonadCont r' (UVMHS.Core.Monads.ReaderT r m)
 instance UVMHS.Core.Classes.Functor.Functor UVMHS.Core.Monads.ID
 instance UVMHS.Core.Classes.Monad.Return UVMHS.Core.Monads.ID
 instance UVMHS.Core.Classes.Monad.Bind UVMHS.Core.Monads.ID
@@ -2989,8 +3039,8 @@ data 𝐼A a
 𝐼A :: ℕ64 -> 𝐼 a -> 𝐼A a
 [𝑖aSize] :: 𝐼A a -> ℕ64
 [𝑖aIter] :: 𝐼A a -> 𝐼 a
-𝑖aIterL :: forall (a_a23Cn :: Type). (⟢) (𝐼A a_a23Cn) (𝐼 a_a23Cn)
-𝑖aSizeL :: forall (a_a23Cn :: Type). (⟢) (𝐼A a_a23Cn) ℕ64
+𝑖aIterL :: forall (a_a27Ei :: Type). (⟢) (𝐼A a_a27Ei) (𝐼 a_a27Ei)
+𝑖aSizeL :: forall (a_a27Ei :: Type). (⟢) (𝐼A a_a27Ei) ℕ64
 class ToIterA a t | t -> a
 iterA :: ToIterA a t => t -> 𝐼A a
 iterAI :: (ToIter a t, ASized a) => t -> 𝐼A a
@@ -2998,8 +3048,8 @@ data 𝐼C a
 𝐼C :: ℕ64 -> 𝐼 a -> 𝐼C a
 [𝑖cSize] :: 𝐼C a -> ℕ64
 [𝑖cIter] :: 𝐼C a -> 𝐼 a
-𝑖cIterL :: forall (a_a23Ha :: Type). (⟢) (𝐼C a_a23Ha) (𝐼 a_a23Ha)
-𝑖cSizeL :: forall (a_a23Ha :: Type). (⟢) (𝐼C a_a23Ha) ℕ64
+𝑖cIterL :: forall (a_a27J5 :: Type). (⟢) (𝐼C a_a27J5) (𝐼 a_a27J5)
+𝑖cSizeL :: forall (a_a27J5 :: Type). (⟢) (𝐼C a_a27J5) ℕ64
 class ToIterC a t | t -> a
 iterC :: ToIterC a t => t -> 𝐼C a
 iterCI :: ToIter a t => t -> 𝐼C a
@@ -3008,9 +3058,9 @@ data 𝐼AC a
 [𝑖acSize] :: 𝐼AC a -> ℕ64
 [𝑖acCSize] :: 𝐼AC a -> ℕ64
 [𝑖acIter] :: 𝐼AC a -> 𝐼 a
-𝑖acIterL :: forall (a_a23OP :: Type). (⟢) (𝐼AC a_a23OP) (𝐼 a_a23OP)
-𝑖acCSizeL :: forall (a_a23OP :: Type). (⟢) (𝐼AC a_a23OP) ℕ64
-𝑖acSizeL :: forall (a_a23OP :: Type). (⟢) (𝐼AC a_a23OP) ℕ64
+𝑖acIterL :: forall (a_a27QK :: Type). (⟢) (𝐼AC a_a27QK) (𝐼 a_a27QK)
+𝑖acCSizeL :: forall (a_a27QK :: Type). (⟢) (𝐼AC a_a27QK) ℕ64
+𝑖acSizeL :: forall (a_a27QK :: Type). (⟢) (𝐼AC a_a27QK) ℕ64
 class ToIterAC a t | t -> a
 iterAC :: ToIterAC a t => t -> 𝐼AC a
 iterACI :: (ToIter a t, ASized a) => t -> 𝐼AC a
@@ -4306,8 +4356,8 @@ data 𝐴 e a
 𝐴 :: e -> a -> 𝐴 e a
 [atag] :: 𝐴 e a -> e
 [aval] :: 𝐴 e a -> a
-avalL :: forall (e_a3xbJ :: Type) (a_a3xbK :: Type). (⟢) (𝐴 e_a3xbJ a_a3xbK) a_a3xbK
-atagL :: forall (e_a3xbJ :: Type) (a_a3xbK :: Type). (⟢) (𝐴 e_a3xbJ a_a3xbK) e_a3xbJ
+avalL :: forall (e_a3pti :: Type) (a_a3ptj :: Type). (⟢) (𝐴 e_a3pti a_a3ptj) a_a3ptj
+atagL :: forall (e_a3pti :: Type) (a_a3ptj :: Type). (⟢) (𝐴 e_a3pti a_a3ptj) e_a3pti
 map𝐴 :: (e -> e') -> (a -> b) -> 𝐴 e a -> 𝐴 e' b
 mapATag :: (e -> e') -> 𝐴 e a -> 𝐴 e' a
 mapAVal :: (a -> b) -> 𝐴 e a -> 𝐴 e b
@@ -4334,8 +4384,8 @@ data ADF a
 ADF :: a -> a -> ADF a
 [adfVal] :: ADF a -> a
 [adfDer] :: ADF a -> a
-adfDerL :: forall (a_a3u8T :: Type). (⟢) (ADF a_a3u8T) a_a3u8T
-adfValL :: forall (a_a3u8T :: Type). (⟢) (ADF a_a3u8T) a_a3u8T
+adfDerL :: forall (a_a3mHu :: Type). (⟢) (ADF a_a3mHu) a_a3mHu
+adfValL :: forall (a_a3mHu :: Type). (⟢) (ADF a_a3mHu) a_a3mHu
 constADF :: Zero a => a -> ADF a
 sensADF :: a -> a -> ADF a
 plusADF :: Plus a => ADF a -> ADF a -> ADF a
@@ -4344,8 +4394,8 @@ data ADB a
 ADB :: a -> (a -> a -> a) -> ADB a
 [adbVal] :: ADB a -> a
 [adbDer] :: ADB a -> a -> a -> a
-adbDerL :: forall (a_a3ulw :: Type). (⟢) (ADB a_a3ulw) (a_a3ulw -> a_a3ulw -> a_a3ulw)
-adbValL :: forall (a_a3ulw :: Type). (⟢) (ADB a_a3ulw) a_a3ulw
+adbDerL :: forall (a_a3mQS :: Type). (⟢) (ADB a_a3mQS) (a_a3mQS -> a_a3mQS -> a_a3mQS)
+adbValL :: forall (a_a3mQS :: Type). (⟢) (ADB a_a3mQS) a_a3mQS
 constADB :: Zero a => a -> ADB a
 sensADB :: a -> (a -> a -> a) -> ADB a
 plusADB :: Plus a => ADB a -> ADB a -> ADB a
@@ -4354,8 +4404,8 @@ data ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adffVal] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adffDer] :: ADFF (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
-adffDerL :: forall (ns_a3utV :: [𝐍]) (f_a3utW :: [𝐍] -> Type -> Type) (ms_a3utX :: [𝐍]) (a_a3utY :: Type). (⟢) (ADFF ns_a3utV f_a3utW ms_a3utX a_a3utY) (f_a3utW ((⧺) ns_a3utV ms_a3utX) a_a3utY)
-adffValL :: forall (ns_a3utV :: [𝐍]) (f_a3utW :: [𝐍] -> Type -> Type) (ms_a3utX :: [𝐍]) (a_a3utY :: Type). (⟢) (ADFF ns_a3utV f_a3utW ms_a3utX a_a3utY) (f_a3utW ((⧺) ns_a3utV ms_a3utX) a_a3utY)
+adffDerL :: forall (ns_a3mXR :: [𝐍]) (f_a3mXT :: [𝐍] -> Type -> Type) (ms_a3mXU :: [𝐍]) (a_a3mXV :: Type). (⟢) (ADFF ns_a3mXR f_a3mXT ms_a3mXU a_a3mXV) (f_a3mXT ((⧺) ns_a3mXR ms_a3mXU) a_a3mXV)
+adffValL :: forall (ns_a3mXR :: [𝐍]) (f_a3mXT :: [𝐍] -> Type -> Type) (ms_a3mXU :: [𝐍]) (a_a3mXV :: Type). (⟢) (ADFF ns_a3mXR f_a3mXT ms_a3mXU a_a3mXV) (f_a3mXT ((⧺) ns_a3mXR ms_a3mXU) a_a3mXV)
 constADFF :: Zero (f (ns ⧺ ms) a) => f (ns ⧺ ms) a -> ADFF ns f ms a
 sensADFF :: f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> ADFF ns f ms a
 plusADFF :: Plus (f (ns ⧺ ms) a) => ADFF ns f ms a -> ADFF ns f ms a -> ADFF ns f ms a
@@ -4364,8 +4414,8 @@ data ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 ADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★)
 [adfbVal] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a
 [adfbDer] :: ADFB (ns :: [𝐍]) (f :: [𝐍] -> ★ -> ★) (ms :: [𝐍]) (a :: ★) -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a
-adfbDerL :: forall (ns_a3uCz :: [𝐍]) (f_a3uCA :: [𝐍] -> Type -> Type) (ms_a3uCB :: [𝐍]) (a_a3uCD :: Type). (⟢) (ADFB ns_a3uCz f_a3uCA ms_a3uCB a_a3uCD) (f_a3uCA ((⧺) ns_a3uCz ms_a3uCB) a_a3uCD -> f_a3uCA ((⧺) ns_a3uCz ms_a3uCB) a_a3uCD -> f_a3uCA ((⧺) ns_a3uCz ms_a3uCB) a_a3uCD)
-adfbValL :: forall (ns_a3uCz :: [𝐍]) (f_a3uCA :: [𝐍] -> Type -> Type) (ms_a3uCB :: [𝐍]) (a_a3uCD :: Type). (⟢) (ADFB ns_a3uCz f_a3uCA ms_a3uCB a_a3uCD) (f_a3uCA ((⧺) ns_a3uCz ms_a3uCB) a_a3uCD)
+adfbDerL :: forall (ns_a3n6Z :: [𝐍]) (f_a3n70 :: [𝐍] -> Type -> Type) (ms_a3n71 :: [𝐍]) (a_a3n72 :: Type). (⟢) (ADFB ns_a3n6Z f_a3n70 ms_a3n71 a_a3n72) (f_a3n70 ((⧺) ns_a3n6Z ms_a3n71) a_a3n72 -> f_a3n70 ((⧺) ns_a3n6Z ms_a3n71) a_a3n72 -> f_a3n70 ((⧺) ns_a3n6Z ms_a3n71) a_a3n72)
+adfbValL :: forall (ns_a3n6Z :: [𝐍]) (f_a3n70 :: [𝐍] -> Type -> Type) (ms_a3n71 :: [𝐍]) (a_a3n72 :: Type). (⟢) (ADFB ns_a3n6Z f_a3n70 ms_a3n71 a_a3n72) (f_a3n70 ((⧺) ns_a3n6Z ms_a3n71) a_a3n72)
 constADFB :: f (ns ⧺ ms) a -> ADFB ns f ms a
 sensADFB :: f (ns ⧺ ms) a -> (f (ns ⧺ ms) a -> f (ns ⧺ ms) a -> f (ns ⧺ ms) a) -> ADFB ns f ms a
 plusADFB :: Plus (f (ns ⧺ ms) a) => ADFB ns f ms a -> ADFB ns f ms a -> ADFB ns f ms a
@@ -4538,19 +4588,19 @@ PreParserToken :: t -> 𝔹 -> ParserContext -> PreParserToken t
 [preParserTokenValue] :: PreParserToken t -> t
 [preParserTokenSkip] :: PreParserToken t -> 𝔹
 [preParserTokenContext] :: PreParserToken t -> ParserContext
-preParserTokenContextL :: forall (t_a3JZK :: Type). (⟢) (PreParserToken t_a3JZK) ParserContext
-preParserTokenSkipL :: forall (t_a3JZK :: Type). (⟢) (PreParserToken t_a3JZK) 𝔹
-preParserTokenValueL :: forall (t_a3JZK :: Type). (⟢) (PreParserToken t_a3JZK) t_a3JZK
+preParserTokenContextL :: forall (t_a3O1g :: Type). (⟢) (PreParserToken t_a3O1g) ParserContext
+preParserTokenSkipL :: forall (t_a3O1g :: Type). (⟢) (PreParserToken t_a3O1g) 𝔹
+preParserTokenValueL :: forall (t_a3O1g :: Type). (⟢) (PreParserToken t_a3O1g) t_a3O1g
 data ParserToken t
 ParserToken :: t -> 𝔹 -> ParserContext -> WindowL Doc Doc -> ParserToken t
 [parserTokenValue] :: ParserToken t -> t
 [parserTokenSkip] :: ParserToken t -> 𝔹
 [parserTokenContext] :: ParserToken t -> ParserContext
 [parserTokenSuffix] :: ParserToken t -> WindowL Doc Doc
-parserTokenSuffixL :: forall (t_a3K1Q :: Type). (⟢) (ParserToken t_a3K1Q) (WindowL Doc Doc)
-parserTokenContextL :: forall (t_a3K1Q :: Type). (⟢) (ParserToken t_a3K1Q) ParserContext
-parserTokenSkipL :: forall (t_a3K1Q :: Type). (⟢) (ParserToken t_a3K1Q) 𝔹
-parserTokenValueL :: forall (t_a3K1Q :: Type). (⟢) (ParserToken t_a3K1Q) t_a3K1Q
+parserTokenSuffixL :: forall (t_a3O4p :: Type). (⟢) (ParserToken t_a3O4p) (WindowL Doc Doc)
+parserTokenContextL :: forall (t_a3O4p :: Type). (⟢) (ParserToken t_a3O4p) ParserContext
+parserTokenSkipL :: forall (t_a3O4p :: Type). (⟢) (ParserToken t_a3O4p) 𝔹
+parserTokenValueL :: forall (t_a3O4p :: Type). (⟢) (ParserToken t_a3O4p) t_a3O4p
 renderNLDisplay :: Doc
 renderNLError :: Doc
 renderEOFDisplay :: Doc
@@ -4622,11 +4672,11 @@ RegexState :: ℕ64 -> (Regex c t o u ⇰ ℕ64) -> ((t ∨ c) ⇰ (ℕ64 ⇰ �
 [regexStateTransitions] :: RegexState c t o u -> (t ∨ c) ⇰ (ℕ64 ⇰ ℕ64)
 [regexStateResults] :: RegexState c t o u -> ℕ64 ⇰ 𝑂 (RegexResult o u)
 [regexStateDead] :: RegexState c t o u -> ℕ64 ⇰ 𝔹
-regexStateDeadL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ((⇰) ℕ64 𝔹)
-regexStateResultsL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ((⇰) ℕ64 (𝑂 (RegexResult o_a3Rwd u_a3Rwe)))
-regexStateTransitionsL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ((⇰) ((∨) t_a3Rwc c_a3Rwb) ((⇰) ℕ64 ℕ64))
-regexStateMapL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ((⇰) (Regex c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ℕ64)
-regexStateNextIDL :: forall (c_a3Rwb :: Type) (t_a3Rwc :: Type) (o_a3Rwd :: Type) (u_a3Rwe :: Type). (⟢) (RegexState c_a3Rwb t_a3Rwc o_a3Rwd u_a3Rwe) ℕ64
+regexStateDeadL :: forall (c_a3STa :: Type) (t_a3STb :: Type) (o_a3STc :: Type) (u_a3STd :: Type). (⟢) (RegexState c_a3STa t_a3STb o_a3STc u_a3STd) ((⇰) ℕ64 𝔹)
+regexStateResultsL :: forall (c_a3STa :: Type) (t_a3STb :: Type) (o_a3STc :: Type) (u_a3STd :: Type). (⟢) (RegexState c_a3STa t_a3STb o_a3STc u_a3STd) ((⇰) ℕ64 (𝑂 (RegexResult o_a3STc u_a3STd)))
+regexStateTransitionsL :: forall (c_a3STa :: Type) (t_a3STb :: Type) (o_a3STc :: Type) (u_a3STd :: Type). (⟢) (RegexState c_a3STa t_a3STb o_a3STc u_a3STd) ((⇰) ((∨) t_a3STb c_a3STa) ((⇰) ℕ64 ℕ64))
+regexStateMapL :: forall (c_a3STa :: Type) (t_a3STb :: Type) (o_a3STc :: Type) (u_a3STd :: Type). (⟢) (RegexState c_a3STa t_a3STb o_a3STc u_a3STd) ((⇰) (Regex c_a3STa t_a3STb o_a3STc u_a3STd) ℕ64)
+regexStateNextIDL :: forall (c_a3STa :: Type) (t_a3STb :: Type) (o_a3STc :: Type) (u_a3STd :: Type). (⟢) (RegexState c_a3STa t_a3STb o_a3STc u_a3STd) ℕ64
 regexState₀ :: RegexState c t o u
 data DFA c t o u
 DFA :: 𝑃 t -> ℕ64 -> ((t ∨ c) ⇰ 𝕍 ℕ64) -> 𝕍 (𝑂 (RegexResult o u)) -> 𝕍 𝔹 -> DFA c t o u
@@ -4867,12 +4917,12 @@ ParserState :: WindowR Doc Doc -> ParserContext -> ParserContext -> WindowL Doc 
 [parserStateSuffix] :: ParserState t -> WindowL Doc Doc
 [parserStateEndPos] :: ParserState t -> AddBT Loc
 [parserStateInput] :: ParserState t -> 𝑆 (ParserToken t)
-parserStateInputL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) (𝑆 (ParserToken t_a3M4A))
-parserStateEndPosL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) (AddBT Loc)
-parserStateSuffixL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) (WindowL Doc Doc)
-parserStateContextL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) ParserContext
-parserStateSkipContextL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) ParserContext
-parserStatePrefixL :: forall (t_a3M4A :: Type). (⟢) (ParserState t_a3M4A) (WindowR Doc Doc)
+parserStateInputL :: forall (t_a3RfY :: Type). (⟢) (ParserState t_a3RfY) (𝑆 (ParserToken t_a3RfY))
+parserStateEndPosL :: forall (t_a3RfY :: Type). (⟢) (ParserState t_a3RfY) (AddBT Loc)
+parserStateSuffixL :: forall (t_a3RfY :: Type). (⟢) (ParserState t_a3RfY) (WindowL Doc Doc)
+parserStateContextL :: forall (t_a3RfY :: Type). (⟢) (ParserState t_a3RfY) ParserContext
+parserStateSkipContextL :: forall (t_a3RfY :: Type). (⟢) (ParserState t_a3RfY) ParserContext
+parserStatePrefixL :: forall (t_a3RfY :: Type). (⟢) (ParserState t_a3RfY) (WindowR Doc Doc)
 parserState₀ :: 𝑆 (ParserToken t) -> ParserState t
 newtype Parser t a
 Parser :: ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a -> Parser t a
@@ -5134,8 +5184,8 @@ data SubstElem s e
 SubstElem :: (s ⇰ ℕ64) -> (() -> 𝑂 e) -> SubstElem s e
 [substElemIntro] :: SubstElem s e -> s ⇰ ℕ64
 [substElemValue] :: SubstElem s e -> () -> 𝑂 e
-substElemValueL :: forall (s_a4GcA :: Type) (e_a4GcB :: Type). (⟢) (SubstElem s_a4GcA e_a4GcB) (() -> 𝑂 e_a4GcB)
-substElemIntroL :: forall (s_a4GcA :: Type) (e_a4GcB :: Type). (⟢) (SubstElem s_a4GcA e_a4GcB) ((⇰) s_a4GcA ℕ64)
+substElemValueL :: forall (s_a4Ke3 :: Type) (e_a4Ke4 :: Type). (⟢) (SubstElem s_a4Ke3 e_a4Ke4) (() -> 𝑂 e_a4Ke4)
+substElemIntroL :: forall (s_a4Ke3 :: Type) (e_a4Ke4 :: Type). (⟢) (SubstElem s_a4Ke3 e_a4Ke4) ((⇰) s_a4Ke3 ℕ64)
 introSubstElem :: Ord s => (s ⇰ ℕ64) -> SubstElem s e -> SubstElem s e
 subSubstElem :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> SubstElem s e
 data SSubstElem s e
@@ -5148,9 +5198,9 @@ DSubst :: ℕ64 -> 𝕍 (SSubstElem s e) -> ℤ64 -> DSubst s e
 [dsubstShift] :: DSubst s e -> ℕ64
 [dsubstElems] :: DSubst s e -> 𝕍 (SSubstElem s e)
 [dsubstIntro] :: DSubst s e -> ℤ64
-dsubstIntroL :: forall (s_a4GyR :: Type) (e_a4GyS :: Type). (⟢) (DSubst s_a4GyR e_a4GyS) ℤ64
-dsubstElemsL :: forall (s_a4GyR :: Type) (e_a4GyS :: Type). (⟢) (DSubst s_a4GyR e_a4GyS) (𝕍 (SSubstElem s_a4GyR e_a4GyS))
-dsubstShiftL :: forall (s_a4GyR :: Type) (e_a4GyS :: Type). (⟢) (DSubst s_a4GyR e_a4GyS) ℕ64
+dsubstIntroL :: forall (s_a4KAb :: Type) (e_a4KAc :: Type). (⟢) (DSubst s_a4KAb e_a4KAc) ℤ64
+dsubstElemsL :: forall (s_a4KAb :: Type) (e_a4KAc :: Type). (⟢) (DSubst s_a4KAb e_a4KAc) (𝕍 (SSubstElem s_a4KAb e_a4KAc))
+dsubstShiftL :: forall (s_a4KAb :: Type) (e_a4KAc :: Type). (⟢) (DSubst s_a4KAb e_a4KAc) ℕ64
 isNullDSubst :: DSubst s e -> 𝔹
 dsubstVar :: DSubst 𝑠 e -> ℕ64 -> SSubstElem 𝑠 e
 data GSubst s₁ s₂ e
@@ -5158,9 +5208,9 @@ GSubst :: (s₁ ⇰ SubstElem s₂ e) -> (s₁ ⇰ SubstElem s₂ e) -> (s₂ �
 [gsubstGVars] :: GSubst s₁ s₂ e -> s₁ ⇰ SubstElem s₂ e
 [gsubstMetas] :: GSubst s₁ s₂ e -> s₁ ⇰ SubstElem s₂ e
 [gsubstSubst] :: GSubst s₁ s₂ e -> s₂ ⇰ DSubst s₂ e
-gsubstSubstL :: forall (s₁_a4HpI :: Type) (s₂_a4HpJ :: Type) (e_a4HpK :: Type). (⟢) (GSubst s₁_a4HpI s₂_a4HpJ e_a4HpK) ((⇰) s₂_a4HpJ (DSubst s₂_a4HpJ e_a4HpK))
-gsubstMetasL :: forall (s₁_a4HpI :: Type) (s₂_a4HpJ :: Type) (e_a4HpK :: Type). (⟢) (GSubst s₁_a4HpI s₂_a4HpJ e_a4HpK) ((⇰) s₁_a4HpI (SubstElem s₂_a4HpJ e_a4HpK))
-gsubstGVarsL :: forall (s₁_a4HpI :: Type) (s₂_a4HpJ :: Type) (e_a4HpK :: Type). (⟢) (GSubst s₁_a4HpI s₂_a4HpJ e_a4HpK) ((⇰) s₁_a4HpI (SubstElem s₂_a4HpJ e_a4HpK))
+gsubstSubstL :: forall (s₁_a4Lra :: Type) (s₂_a4Lrb :: Type) (e_a4Lrc :: Type). (⟢) (GSubst s₁_a4Lra s₂_a4Lrb e_a4Lrc) ((⇰) s₂_a4Lrb (DSubst s₂_a4Lrb e_a4Lrc))
+gsubstMetasL :: forall (s₁_a4Lra :: Type) (s₂_a4Lrb :: Type) (e_a4Lrc :: Type). (⟢) (GSubst s₁_a4Lra s₂_a4Lrb e_a4Lrc) ((⇰) s₁_a4Lra (SubstElem s₂_a4Lrb e_a4Lrc))
+gsubstGVarsL :: forall (s₁_a4Lra :: Type) (s₂_a4Lrb :: Type) (e_a4Lrc :: Type). (⟢) (GSubst s₁_a4Lra s₂_a4Lrb e_a4Lrc) ((⇰) s₁_a4Lra (SubstElem s₂_a4Lrb e_a4Lrc))
 𝓈shiftG :: Ord s₂ => (s₂ ⇰ ℕ64) -> GSubst s₁ s₂ e -> GSubst s₁ s₂ e
 𝓈introG :: (s₂ ⇰ ℕ64) -> GSubst s₁ s₂ e
 𝓈sbindsG :: (s₂ ⇰ 𝕍 e) -> GSubst s₁ s₂ e
@@ -5170,24 +5220,24 @@ appendGSubst :: (Ord s₁, Ord s₂) => (GSubst s₁ s₂ e -> e -> 𝑂 e) -> G
 newtype Subst s e
 Subst :: GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e -> Subst s e
 [unSubst] :: Subst s e -> GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e
-unSubstL :: forall (s_a4HDI :: Type) (e_a4HDJ :: Type). (⟢) (Subst s_a4HDI e_a4HDJ) (GSubst ((∧) s_a4HDI 𝕏) ((∧) s_a4HDI (𝑂 𝕏)) e_a4HDJ)
+unSubstL :: forall (s_a4LFa :: Type) (e_a4LFb :: Type). (⟢) (Subst s_a4LFa e_a4LFb) (GSubst ((∧) s_a4LFa 𝕏) ((∧) s_a4LFa (𝑂 𝕏)) e_a4LFb)
 data FreeVarsAction s
 FreeVarsAction :: (s -> 𝕐 -> 𝔹) -> ((s ∧ 𝑂 𝕏) ⇰ ℕ64) -> FreeVarsAction s
 [freeVarsActionFilter] :: FreeVarsAction s -> s -> 𝕐 -> 𝔹
 [freeVarsActionScope] :: FreeVarsAction s -> (s ∧ 𝑂 𝕏) ⇰ ℕ64
-freeVarsActionScopeL :: forall (s_a4Ijj :: Type). (⟢) (FreeVarsAction s_a4Ijj) ((⇰) ((∧) s_a4Ijj (𝑂 𝕏)) ℕ64)
-freeVarsActionFilterL :: forall (s_a4Ijj :: Type). (⟢) (FreeVarsAction s_a4Ijj) (s_a4Ijj -> 𝕐 -> 𝔹)
+freeVarsActionScopeL :: forall (s_a4MjG :: Type). (⟢) (FreeVarsAction s_a4MjG) ((⇰) ((∧) s_a4MjG (𝑂 𝕏)) ℕ64)
+freeVarsActionFilterL :: forall (s_a4MjG :: Type). (⟢) (FreeVarsAction s_a4MjG) (s_a4MjG -> 𝕐 -> 𝔹)
 data SubstAction s e
 SubstAction :: 𝑂 𝔹 -> Subst s e -> SubstAction s e
 [substActionReBdr] :: SubstAction s e -> 𝑂 𝔹
 [substActionSubst] :: SubstAction s e -> Subst s e
-substActionSubstL :: forall (s_a4Ilb :: Type) (e_a4Ilc :: Type). (⟢) (SubstAction s_a4Ilb e_a4Ilc) (Subst s_a4Ilb e_a4Ilc)
-substActionReBdrL :: forall (s_a4Ilb :: Type) (e_a4Ilc :: Type). (⟢) (SubstAction s_a4Ilb e_a4Ilc) (𝑂 𝔹)
+substActionSubstL :: forall (s_a4Mmh :: Type) (e_a4Mmi :: Type). (⟢) (SubstAction s_a4Mmh e_a4Mmi) (Subst s_a4Mmh e_a4Mmi)
+substActionReBdrL :: forall (s_a4Mmh :: Type) (e_a4Mmi :: Type). (⟢) (SubstAction s_a4Mmh e_a4Mmi) (𝑂 𝔹)
 data SubstEnv s e
 FVsSubstEnv :: FreeVarsAction s -> SubstEnv s e
 SubSubstEnv :: SubstAction s e -> SubstEnv s e
-subSubstEnvL :: forall (s_a4Ine :: Type) (e_a4Inf :: Type). (⌲) (SubstEnv s_a4Ine e_a4Inf) (SubstAction s_a4Ine e_a4Inf)
-fVsSubstEnvL :: forall (s_a4Ine :: Type) (e_a4Inf :: Type). (⌲) (SubstEnv s_a4Ine e_a4Inf) (FreeVarsAction s_a4Ine)
+subSubstEnvL :: forall (s_a4Mob :: Type) (e_a4Moc :: Type). (⌲) (SubstEnv s_a4Mob e_a4Moc) (SubstAction s_a4Mob e_a4Moc)
+fVsSubstEnvL :: forall (s_a4Mob :: Type) (e_a4Moc :: Type). (⌲) (SubstEnv s_a4Mob e_a4Moc) (FreeVarsAction s_a4Mob)
 newtype SubstM s e a
 SubstM :: UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 𝕐) ID))) a -> SubstM s e a
 [unSubstM] :: SubstM s e a -> UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 𝕐) ID))) a

@@ -344,6 +344,7 @@ instance Functor2 DelayT where
   map2 ∷ ∀ m₁ m₂. (∀ a. m₁ a → m₂ a) → (∀ a. DelayT m₁ a → DelayT m₂ a)
   map2 f = DelayT ∘ map f ∘ unDelayT
 
+
 instance MonadDelay (DelayT m) where
   delay xMU = DelayT $ \ () → runDelayT $ xMU ()
 
@@ -512,6 +513,8 @@ instance Transformer UContT where
 instance LiftIO (ReaderT r) where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → ReaderT r m a)
   liftIO ioM xM = ReaderT $ \ _ → ioM xM
+instance (Monad m,MonadIO m) ⇒ MonadIO (ReaderT r m) where 
+  io = liftIO io
 
 instance LiftReader (ReaderT r) where
   liftAskL ∷ ∀ m r'. (Monad m) ⇒ (∀ r''. r' ⟢ r'' → m r'') → (∀ r''. r' ⟢ r'' → ReaderT r m r'')
@@ -526,6 +529,9 @@ instance LiftWriter (ReaderT r) where
 
   liftHijack ∷ ∀ m o. (Monad m) ⇒ (∀ a. m a → m (o ∧ a)) → (∀ a. ReaderT r m a → ReaderT r m (o ∧ a))
   liftHijack hijackM xM = ReaderT $ \ r → hijackM $ unReaderT xM r
+instance (Monad m,MonadWriter o m) ⇒ MonadWriter o (ReaderT r m) where 
+  tell = liftTell tell
+  hijack = liftHijack hijack
 
 instance LiftState (ReaderT r) where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → ReaderT r m s
@@ -533,6 +539,9 @@ instance LiftState (ReaderT r) where
 
   liftPut ∷ ∀ m s. (Monad m) ⇒ (s → m ()) → (s → ReaderT r m ())
   liftPut putM s = ReaderT $ \ _ → putM s
+instance (Monad m,MonadState s m) ⇒ MonadState s (ReaderT r m) where
+  get = liftGet get
+  put = liftPut put
 
 instance LiftFail (ReaderT r) where
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ReaderT r m a)
@@ -540,6 +549,9 @@ instance LiftFail (ReaderT r) where
 
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. ReaderT r m a → ReaderT r m a → ReaderT r m a)
   liftTry tryM xM₁ xM₂ = ReaderT $ \ r → tryM (unReaderT xM₁ r) (unReaderT xM₂ r)
+instance (Monad m,MonadFail m) ⇒ MonadFail (ReaderT r m) where
+  abort = liftAbort abort
+  (⎅) = liftTry (⎅)
 
 instance LiftError (ReaderT r) where
   liftThrow ∷ ∀ m e. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → ReaderT r m a)
@@ -547,9 +559,14 @@ instance LiftError (ReaderT r) where
 
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. ReaderT r m a → (e → ReaderT r m a) → ReaderT r m a)
   liftCatch catchM xM k = ReaderT $ \ r → catchM (unReaderT xM r) (\ e → unReaderT (k e) r)
+instance (Monad m,MonadError e m) ⇒ MonadError e (ReaderT r m) where
+  throw = liftThrow throw
+  catch = liftCatch catch
 
 instance LiftDelay (ReaderT r) where
   liftDelay delayM xMU = ReaderT $ \ r → delayM $ \ () → runReaderT r $ xMU ()
+instance (Monad m,MonadDelay m) ⇒ MonadDelay (ReaderT r m) where
+  delay = liftDelay delay
 
 instance LiftNondet (ReaderT r) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ReaderT r m a)
@@ -557,10 +574,15 @@ instance LiftNondet (ReaderT r) where
 
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. ReaderT r m a → ReaderT r m a → ReaderT r m a)
   liftMplus mplusM xM₁ xM₂ = ReaderT $ \ r → mplusM (unReaderT xM₁ r) (unReaderT xM₂ r)
+instance (Monad m,MonadNondet m) ⇒ MonadNondet (ReaderT r m) where
+  mzero = liftMzero mzero
+  (⊞) = liftMplus (⊞)
     
 instance LiftTop (ReaderT r) where
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ReaderT r m a)
   liftMtop mtopM = ReaderT $ \ _ → mtopM
+instance (Monad m,MonadTop m) ⇒ MonadTop (ReaderT r m) where
+  mtop = liftMtop mtop
 
 instance LiftCont (ReaderT r) where
   liftCallCC ∷ ∀ m r'. (Monad m) ⇒ (∀ a. ((a → m r') → m r') → m a) → (∀ a. ((a → ReaderT r m r') → ReaderT r m r') → ReaderT r m a)
@@ -572,6 +594,9 @@ instance LiftCont (ReaderT r) where
   liftWithC ∷ ∀ m r'. (Monad m) ⇒ (∀ a. (a → m r') → m a → m r') → (∀ a. (a → ReaderT r m r') → ReaderT r m a → ReaderT r m r')
   liftWithC withCM k xM = ReaderT $ \ r →
     flip withCM (runReaderT r xM) $ \ x → runReaderT r $ k x
+instance (Monad m,MonadCont r' m) ⇒ MonadCont r' (ReaderT r m) where
+  callCC = liftCallCC callCC
+  withC = liftWithC withC
 
 ------------
 -- WRITER --
@@ -582,6 +607,8 @@ instance (Null o) ⇒ LiftIO (WriterT o) where
   liftIO ioM xM = WriterT $ do
     x ← ioM xM
     return (null :* x)
+instance (Null o,Monad m,MonadIO m) ⇒ MonadIO (WriterT o m) where
+  io = liftIO io
 
 instance (Null o) ⇒ LiftReader (WriterT o) where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → WriterT o m r')
@@ -591,6 +618,9 @@ instance (Null o) ⇒ LiftReader (WriterT o) where
 
   liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → WriterT o m a → WriterT o m a)
   liftLocalL localLM ℓ r xM = WriterT $ localLM ℓ r $ unWriterT xM
+instance (Null o,Monad m,MonadReader r m) ⇒ MonadReader r (WriterT o m) where
+  askL = liftAskL askL
+  localL = liftLocalL localL
     
 instance (Null o) ⇒ LiftWriter (WriterT o) where
   liftTell ∷ ∀ m o'. (Monad m) ⇒ (o' → m ()) → (o' → WriterT o m ())
@@ -613,6 +643,9 @@ instance (Null o) ⇒ LiftState (WriterT o) where
   liftPut putM s = WriterT $ do
     putM s
     return (null :* ())
+instance (Null o,Monad m,MonadState s m) ⇒ MonadState s (WriterT o m) where
+  get = liftGet get
+  put = liftPut put
 
 instance LiftFail (WriterT o) where
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. WriterT o m a)
@@ -620,6 +653,9 @@ instance LiftFail (WriterT o) where
 
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. WriterT o m a → WriterT o m a → WriterT o m a)
   liftTry tryM xM₁ xM₂ = WriterT $ tryM (unWriterT xM₁) (unWriterT xM₂)
+instance (Monad m,MonadFail m) ⇒ MonadFail (WriterT o m) where
+  abort = liftAbort abort
+  (⎅) = liftTry (⎅)
 
 instance LiftError (WriterT o) where
   liftThrow ∷ ∀ m e. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → WriterT o m a)
@@ -627,9 +663,14 @@ instance LiftError (WriterT o) where
 
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. WriterT o m a → (e → WriterT o m a) → WriterT o m a)
   liftCatch catchM xM k = WriterT $ catchM (unWriterT xM) $ \ e → unWriterT $ k e
+instance (Monad m,MonadError e m) ⇒ MonadError e (WriterT o m) where
+  throw = liftThrow throw
+  catch = liftCatch catch
 
 instance LiftDelay (WriterT o) where
   liftDelay delayM xMU = WriterT $ delayM $ \ () → unWriterT $ xMU ()
+instance (Monad m,MonadDelay m) ⇒ MonadDelay (WriterT o m) where
+  delay = liftDelay delay
 
 instance LiftNondet (WriterT o) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. WriterT o m a)
@@ -637,10 +678,15 @@ instance LiftNondet (WriterT o) where
 
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. WriterT o m a → WriterT o m a → WriterT o m a)
   liftMplus mplusM xM₁ xM₂ = WriterT $ mplusM (unWriterT xM₁) (unWriterT xM₂)
+instance (Monad m,MonadNondet m) ⇒ MonadNondet (WriterT o m) where
+  mzero = liftMzero mzero
+  (⊞) = liftMplus (⊞)
 
 instance LiftTop (WriterT o) where
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. WriterT o m a)
   liftMtop mtopM = WriterT mtopM
+instance (Monad m,MonadTop m) ⇒ MonadTop (WriterT o m) where
+  mtop = liftMtop mtop
 
 instance (Monoid o,Monad m,MonadCont (o ∧ r) m) ⇒ MonadCont r (WriterT o m) where
   callCC ∷ ∀ a. ((a → WriterT o m r) → WriterT o m r) → WriterT o m a
@@ -663,6 +709,8 @@ instance LiftIO (StateT s) where
   liftIO ioM xM = StateT $ \ s → do
     x ← ioM xM
     return (s :* x)
+instance (Monad m,MonadIO m) ⇒ MonadIO (StateT s m) where
+  io = liftIO io
 
 instance LiftReader (StateT s) where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → StateT s m r')
@@ -672,6 +720,9 @@ instance LiftReader (StateT s) where
 
   liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → StateT s m a → StateT s m a)
   liftLocalL localLM ℓ r xM = StateT $ \ s → localLM ℓ r $ unStateT xM s
+instance (Monad m,MonadReader r m) ⇒ MonadReader r (StateT s m) where
+  askL = liftAskL askL
+  localL = liftLocalL localL
 
 instance LiftWriter (StateT s) where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → StateT s m ())
@@ -683,6 +734,9 @@ instance LiftWriter (StateT s) where
   liftHijack hijackM xM = StateT $ \ s → do
     (o :* (s' :* x)) ← hijackM $ unStateT xM s
     return (s' :* (o :* x))
+instance (Monad m,MonadWriter o m) ⇒ MonadWriter o (StateT s m) where
+  tell = liftTell tell
+  hijack = liftHijack hijack
 
 instance LiftState (StateT s) where
   liftGet ∷ ∀ m s'. (Monad m) ⇒ m s' → StateT s m s'
@@ -701,6 +755,9 @@ instance LiftFail (StateT s) where
 
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. StateT s m a → StateT s m a → StateT s m a)
   liftTry tryM xM₁ xM₂ = StateT $ \ s → tryM (unStateT xM₁ s) (unStateT xM₂ s)
+instance (Monad m,MonadFail m) ⇒ MonadFail (StateT s m) where
+  abort = liftAbort abort
+  (⎅) = liftTry (⎅)
 
 instance LiftError (StateT s) where
   liftThrow ∷ ∀ m e. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → StateT s m a)
@@ -708,9 +765,14 @@ instance LiftError (StateT s) where
 
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. StateT s m a → (e → StateT s m a) → StateT s m a)
   liftCatch catchM xM k = StateT $ \ s → catchM (unStateT xM s) (\ e → unStateT (k e) s)
+instance (Monad m,MonadError e m) ⇒ MonadError e (StateT s m) where
+  throw = liftThrow throw
+  catch = liftCatch catch
 
 instance LiftDelay (StateT s) where
   liftDelay delayM xMU = StateT $ \ s → delayM $ \ () → runStateT s $ xMU ()
+instance (Monad m,MonadDelay m) ⇒ MonadDelay (StateT s m) where
+  delay = liftDelay delay
 
 instance LiftNondet (StateT s) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. StateT s m a)
@@ -718,10 +780,15 @@ instance LiftNondet (StateT s) where
 
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. StateT s m a → StateT s m a → StateT s m a)
   liftMplus mplusM xM₁ xM₂ = StateT $ \ s → mplusM (unStateT xM₁ s) (unStateT xM₂ s)
+instance (Monad m,MonadNondet m) ⇒ MonadNondet (StateT s m) where
+  mzero = liftMzero mzero
+  (⊞) = liftMplus (⊞)
 
 instance LiftTop (StateT s) where
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. StateT s m a)
   liftMtop mtopM = StateT $ \ _ → mtopM
+instance (Monad m,MonadTop m) ⇒ MonadTop (StateT s m) where
+  mtop = liftMtop mtop
 
 instance (Monad m,MonadCont (s ∧ u) m) ⇒ MonadCont u (StateT s m) where
   callCC ∷ ∀ a. ((a → StateT s m u) → StateT s m u) → StateT s m a
@@ -745,6 +812,8 @@ instance LiftIO FailT where
   liftIO ioM xM = FailT $ do
     x ← ioM xM
     return $ Some x
+instance (Monad m,MonadIO m) ⇒ MonadIO (FailT m) where
+  io = liftIO io
 
 instance LiftReader FailT where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → FailT m r')
@@ -754,6 +823,9 @@ instance LiftReader FailT where
 
   liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → FailT m a → FailT m a)
   liftLocalL localLM ℓ r xM = FailT $ localLM ℓ r $ unFailT xM
+instance (Monad m,MonadReader r m) ⇒ MonadReader r (FailT m) where
+  askL = liftAskL askL
+  localL = liftLocalL localL
 
 instance LiftWriter FailT where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → FailT m ())
@@ -767,6 +839,9 @@ instance LiftWriter FailT where
     case xO of
       None → return None
       Some x → return $ Some (o :* x)
+instance (Monad m,MonadWriter o m) ⇒ MonadWriter o (FailT m) where
+  tell = liftTell tell
+  hijack = liftHijack hijack
 
 instance LiftState FailT where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → FailT m s
@@ -778,6 +853,9 @@ instance LiftState FailT where
   liftPut putM s = FailT $ do
     putM s
     return $ Some ()
+instance (Monad m,MonadState s m) ⇒ MonadState s (FailT m) where
+  get = liftGet get
+  put = liftPut put
 
 instance LiftFail FailT where
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. FailT m a)
@@ -792,9 +870,14 @@ instance LiftError FailT where
     
   liftCatch ∷ ∀ e m. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. FailT m a → (e → FailT m a) → FailT m a)
   liftCatch catchM xM k = FailT $ catchM (unFailT xM) $ \ e → unFailT $ k e
+instance (Monad m,MonadError e m) ⇒ MonadError e (FailT m) where
+  throw = liftThrow throw
+  catch = liftCatch catch
 
 instance LiftDelay FailT where
   liftDelay delayM xMU = FailT $ delayM $ \ () → unFailT $ xMU ()
+instance (Monad m,MonadDelay m) ⇒ MonadDelay (FailT m) where
+  delay = liftDelay delay
 
 instance LiftNondet FailT where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. FailT m a)
@@ -802,10 +885,15 @@ instance LiftNondet FailT where
 
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. FailT m a → FailT m a → FailT m a)
   liftMplus mplusM xM₁ xM₂ = FailT $ mplusM (unFailT xM₁) (unFailT xM₂)
+instance (Monad m,MonadNondet m) ⇒ MonadNondet (FailT m) where
+  mzero = liftMzero mzero
+  (⊞) = liftMplus (⊞)
 
 instance LiftTop FailT where
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. FailT m a)
   liftMtop mtopM = FailT $ mtopM
+instance (Monad m,MonadTop m) ⇒ MonadTop (FailT m) where
+  mtop = liftMtop mtop
 
 instance (Monad m,MonadCont (𝑂 r) m) ⇒ MonadCont r (FailT m) where
   callCC ∷ ∀ a. ((a → FailT m r) → FailT m r) → FailT m a
@@ -829,6 +917,8 @@ instance LiftIO (ErrorT e) where
   liftIO ioM xM = ErrorT $ do
     x ← ioM xM
     return $ Inr x
+instance (Monad m,MonadIO m) ⇒ MonadIO (ErrorT e m) where 
+  io = liftIO io
 
 instance LiftReader (ErrorT e) where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → ErrorT e m r')
@@ -838,6 +928,9 @@ instance LiftReader (ErrorT e) where
 
   liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → ErrorT e m a → ErrorT e m a)
   liftLocalL localLM ℓ r xM = ErrorT $ localLM ℓ r $ unErrorT xM
+instance (Monad m,MonadReader r m) ⇒ MonadReader r (ErrorT e m) where
+  askL = liftAskL askL
+  localL = liftLocalL localL
 
 instance LiftWriter (ErrorT e) where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → ErrorT e m ())
@@ -851,6 +944,9 @@ instance LiftWriter (ErrorT e) where
     case xE of
       Inl e → return $ Inl e
       Inr x → return $ Inr (o :* x)
+instance (Monad m,MonadWriter o m) ⇒ MonadWriter o (ErrorT e m) where 
+  tell = liftTell tell
+  hijack = liftHijack hijack
 
 instance LiftState (ErrorT e) where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → ErrorT e m s
@@ -862,6 +958,9 @@ instance LiftState (ErrorT e) where
   liftPut putM s = ErrorT $ do
     putM s
     return $ Inr ()
+instance (Monad m,MonadState s m) ⇒ MonadState s (ErrorT e m) where
+  get = liftGet get
+  put = liftPut put
 
 instance LiftFail (ErrorT e) where
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ErrorT e m a)
@@ -869,6 +968,9 @@ instance LiftFail (ErrorT e) where
 
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. ErrorT e m a → ErrorT e m a → ErrorT e m a)
   liftTry tryM xM₁ xM₂ = ErrorT $ tryM (unErrorT xM₁) (unErrorT xM₂)
+instance (Monad m,MonadFail m) ⇒ MonadFail (ErrorT e m) where
+  abort = liftAbort abort
+  (⎅) = liftTry (⎅)
 
 instance LiftError (ErrorT e) where
   liftThrow ∷ ∀ e' m. (Monad m) ⇒ (∀ a. e' → m a) → (∀ a. e' → ErrorT e m a)
@@ -879,6 +981,8 @@ instance LiftError (ErrorT e) where
 
 instance LiftDelay (ErrorT e) where
   liftDelay delayM xMU = ErrorT $ delayM $ \ () → unErrorT $ xMU ()
+instance (Monad m,MonadDelay m) ⇒ MonadDelay (ErrorT e m) where
+  delay = liftDelay delay
 
 instance LiftNondet (ErrorT e) where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ErrorT e m a)
@@ -886,10 +990,15 @@ instance LiftNondet (ErrorT e) where
 
   liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. ErrorT e m a → ErrorT e m a → ErrorT e m a)
   liftMplus mplusM xM₁ xM₂ = ErrorT $ mplusM (unErrorT xM₁) (unErrorT xM₂)
+instance (Monad m,MonadNondet m) ⇒ MonadNondet (ErrorT e m) where
+  mzero = liftMzero mzero
+  (⊞) = liftMplus (⊞)
 
 instance LiftTop (ErrorT e) where
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. ErrorT e m a)
   liftMtop mtopM = ErrorT $ mtopM
+instance (Monad m,MonadTop m) ⇒ MonadTop (ErrorT e m) where
+  mtop = liftMtop mtop
 
 instance (Monad m,MonadCont (e ∨ r) m) ⇒ MonadCont r (ErrorT e m) where
   callCC ∷ ∀ a. ((a → ErrorT e m r) → ErrorT e m r) → ErrorT e m a
@@ -906,6 +1015,70 @@ instance (Monad m,MonadCont (e ∨ r) m) ⇒ MonadCont r (ErrorT e m) where
          Inr x → unErrorT $ k x)
     (unErrorT xM)
 
+-----------
+-- DELAY --
+-----------
+
+instance LiftIO DelayT where
+  liftIO ioM xM = DelayT $ \ () → ioM xM
+instance (Monad m,MonadIO m) ⇒ MonadIO (DelayT m) where 
+  io = liftIO io
+instance LiftReader DelayT where
+  liftAskL askLM ℓ = DelayT $ \ () → askLM ℓ
+  liftLocalL localLM ℓ r xM = DelayT $ \ () → localLM ℓ r $ runDelayT xM
+instance (Monad m,MonadReader r m) ⇒ MonadReader r (DelayT m) where
+  askL = liftAskL askL
+  localL = liftLocalL localL
+instance LiftWriter DelayT where
+  liftTell tellM o = DelayT $ \ () → tellM o
+  liftHijack hijackM xM = DelayT $ \ () → hijackM $ runDelayT xM
+instance (Monad m,MonadWriter o m) ⇒ MonadWriter o (DelayT m) where 
+  tell = liftTell tell
+  hijack = liftHijack hijack
+instance LiftState DelayT where
+  liftGet getM = DelayT $ \ () → getM
+  liftPut putM s = DelayT $ \ () → putM s
+instance (Monad m,MonadState s m) ⇒ MonadState s (DelayT m) where
+  get = liftGet get
+  put = liftPut put
+instance LiftFail DelayT where
+  liftAbort abortM = DelayT $ \ () → abortM
+  liftTry tryM xM₁ xM₂ = DelayT $ \ () → tryM (runDelayT xM₁) $ runDelayT xM₂
+instance (Monad m,MonadFail m) ⇒ MonadFail (DelayT m) where
+  abort = liftAbort abort
+  (⎅) = liftTry (⎅)
+instance LiftError DelayT where
+  liftThrow throwM e = DelayT $ \ () → throwM e
+  liftCatch catchM xM f = DelayT $ \ () → catchM (runDelayT xM) $ runDelayT ∘ f
+instance (Monad m,MonadError e m) ⇒ MonadError e (DelayT m) where
+  throw = liftThrow throw
+  catch = liftCatch catch
+instance LiftDelay DelayT where
+  liftDelay ∷ ∀ m. (Monad m) ⇒ (∀ a. (() → m a) → m a) → (∀ a. (() → DelayT m a) → DelayT m a)
+  liftDelay delayM xMU = DelayT $ \ () → delayM $ \ () → runDelayT $ xMU ()
+instance LiftNondet DelayT where
+  liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. DelayT m a)
+  liftMzero mzeroM = DelayT $ const mzeroM
+
+  liftMplus ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. DelayT m a → DelayT m a → DelayT m a)
+  liftMplus mplusM xM yM = DelayT $ \ () → mplusM (runDelayT xM) $ runDelayT yM
+instance (Monad m,MonadNondet m) ⇒ MonadNondet (DelayT m) where
+  mzero = liftMzero mzero
+  (⊞) = liftMplus (⊞)
+instance LiftTop DelayT where
+  liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. DelayT m a)
+  liftMtop mtopM = DelayT $ const mtopM
+instance (Monad m,MonadTop m) ⇒ MonadTop (DelayT m) where
+  mtop = liftMtop mtop
+instance (MonadCont r m) ⇒ MonadCont r (DelayT m) where
+  callCC 𝓀𝓀 = DelayT $ \ () → 
+    callCC $ \ 𝓀 → runDelayT $ 𝓀𝓀 $ \ x → DelayT $ \ () → 𝓀 x
+  withC 𝓀 xM = DelayT $ \ () → withC (runDelayT ∘ 𝓀) $ runDelayT xM
+instance (MonadUCont m) ⇒ MonadUCont (DelayT m) where
+  ucallCC 𝓀𝓀 = DelayT $ \ () → 
+    ucallCC (\ 𝓀 → runDelayT $ 𝓀𝓀 $ \ x → DelayT $ \ () → 𝓀 x)
+  uwithC 𝓀 xM = DelayT $ \ () → uwithC (runDelayT ∘ 𝓀) $ runDelayT xM
+
 ------------
 -- NONDET --
 ------------
@@ -915,6 +1088,8 @@ instance LiftIO NondetT where
   liftIO ioM xM = NondetT $ do
     x ← ioM xM
     return $ single x
+instance (Monad m,MonadIO m) ⇒ MonadIO (NondetT m) where
+  io = liftIO io
 
 instance LiftReader NondetT where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → NondetT m r')
@@ -924,6 +1099,9 @@ instance LiftReader NondetT where
 
   liftLocalL ∷ ∀ m r. (Monad m) ⇒ (∀ r' a. r ⟢ r' → r' → m a → m a) → (∀ r' a. r ⟢ r' → r' → NondetT m a → NondetT m a)
   liftLocalL localLM ℓ r xM = NondetT $ localLM ℓ r $ unNondetT xM
+instance (Monad m,MonadReader r m) ⇒ MonadReader r (NondetT m) where
+  askL = liftAskL askL
+  localL = liftLocalL localL
     
 instance LiftWriter NondetT where
   liftTell ∷ ∀ m o. (Monad m) ⇒ (o → m ()) → (o → NondetT m ())
@@ -935,6 +1113,9 @@ instance LiftWriter NondetT where
   liftHijack hijackM xM = NondetT $ do
     (o :* xs) ← hijackM $ unNondetT xM
     return $ map (o :* ) xs
+instance (Monad m,MonadWriter o m) ⇒ MonadWriter o (NondetT m) where
+  tell = liftTell tell
+  hijack = liftHijack hijack
 
 instance LiftState NondetT where
   liftGet ∷ ∀ m s. (Monad m) ⇒ m s → NondetT m s
@@ -946,6 +1127,9 @@ instance LiftState NondetT where
   liftPut putM s = NondetT $ do
     putM s
     return $ single ()
+instance (Monad m,MonadState s m) ⇒ MonadState s (NondetT m) where
+  get = liftGet get
+  put = liftPut put
 
 instance LiftFail NondetT where
   liftAbort ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. NondetT m a)
@@ -953,6 +1137,9 @@ instance LiftFail NondetT where
 
   liftTry ∷ ∀ m. (Monad m) ⇒ (∀ a. m a → m a → m a) → (∀ a. NondetT m a → NondetT m a → NondetT m a)
   liftTry tryM xM₁ xM₂ = NondetT $ tryM (unNondetT xM₁) (unNondetT xM₂)
+instance (Monad m,MonadFail m) ⇒ MonadFail (NondetT m) where
+  abort = liftAbort abort
+  (⎅) = liftTry (⎅)
 
 instance LiftError NondetT where
   liftThrow ∷ ∀ m e. (Monad m) ⇒ (∀ a. e → m a) → (∀ a. e → NondetT m a)
@@ -960,9 +1147,14 @@ instance LiftError NondetT where
 
   liftCatch ∷ ∀ m e. (Monad m) ⇒ (∀ a. m a → (e → m a) → m a) → (∀ a. NondetT m a → (e → NondetT m a) → NondetT m a)
   liftCatch catchM xM k = NondetT $ catchM (unNondetT xM) $ \ e → unNondetT $ k e
+instance (Monad m,MonadError e m) ⇒ MonadError e (NondetT m) where
+  throw = liftThrow throw
+  catch = liftCatch catch
 
 instance LiftDelay NondetT where
   liftDelay delayM xMU = NondetT $ delayM $ \ () → unNondetT $ xMU ()
+instance (Monad m,MonadDelay m) ⇒ MonadDelay (NondetT m) where
+  delay = liftDelay delay
 
 instance LiftNondet NondetT where
   liftMzero ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. NondetT m a)
@@ -974,6 +1166,8 @@ instance LiftNondet NondetT where
 instance LiftTop NondetT where
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. NondetT m a)
   liftMtop mtopM = NondetT $ mtopM
+instance (Monad m,MonadTop m) ⇒ MonadTop (NondetT m) where
+  mtop = liftMtop mtop
 
 instance (Monad m,∀ a'. Monoid a' ⇒ Monoid (m a'),MonadCont (𝑄 r) m) ⇒ MonadCont r (NondetT m) where
   callCC ∷ ∀ a. ((a → NondetT m r) → NondetT m r) → NondetT m a
@@ -997,6 +1191,8 @@ instance LiftIO (ContT u) where
   liftIO ioM xM = ContT $ \ (k ∷ a → m r) → do
     x ← ioM xM
     k x
+instance (Monad m,MonadIO m) ⇒ MonadIO (ContT u m) where
+  io = liftIO io
 
 instance (Monad m,MonadReader r m) ⇒ MonadReader r (ContT u m) where
   askL ∷ ∀ r'. r ⟢ r' → ContT u m r'
@@ -1072,6 +1268,8 @@ instance (Monad m,MonadTop m) ⇒ MonadTop (ContT u m) where
 instance LiftIO UContT where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → UContT m a)
   liftIO ioM xM = UContT HS.$ \ (𝓀 ∷ a → m u) → 𝓀 *$ ioM xM
+instance (Monad m,MonadIO m) ⇒ MonadIO (UContT m) where
+  io = liftIO io
 
 instance (Monad m,MonadReader r m) ⇒ MonadReader r (UContT m) where
   askL ∷ ∀ r'. r ⟢ r' → UContT m r'

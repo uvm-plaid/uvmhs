@@ -97,33 +97,33 @@ instance (∀ m'. Monad m' ⇒ Monad (t₂ m'),LiftCont t₁,LiftCont t₂) ⇒ 
 -- LIFTING --
 -------------
 
-instance {-# OVERLAPPABLE #-} (Monad m,MonadIO m,LiftIO t) ⇒ MonadIO (t m) where
-  io = liftIO io
-instance {-# OVERLAPPABLE #-} (Monad m,MonadReader r m,LiftReader t) ⇒ MonadReader r (t m) where
-  askL = liftAskL askL
-  localL = liftLocalL localL
-instance {-# OVERLAPPABLE #-} (Monad m,MonadWriter o m,LiftWriter t) ⇒ MonadWriter o (t m) where
-  tell = liftTell tell
-  hijack = liftHijack hijack
-instance {-# OVERLAPPABLE #-} (Monad m,MonadState s m,LiftState t) ⇒ MonadState s (t m) where
-  get = liftGet get
-  put = liftPut put
-instance {-# OVERLAPPABLE #-} (Monad m,MonadFail m,LiftFail t) ⇒ MonadFail (t m) where
-  abort = liftAbort abort
-  (⎅) = liftTry (⎅)
-instance {-# OVERLAPPABLE #-} (Monad m,MonadError e m,LiftError t) ⇒ MonadError e (t m) where
-  throw = liftThrow throw
-  catch = liftCatch catch
-instance {-# OVERLAPPABLE #-} (Monad m,MonadDelay m,LiftDelay t) ⇒ MonadDelay (t m) where
-  delay = liftDelay delay
-instance {-# OVERLAPPABLE #-} (Monad m,MonadNondet m,LiftNondet t) ⇒ MonadNondet (t m) where
-  mzero = liftMzero mzero
-  (⊞) = liftMplus (⊞)
-instance {-# OVERLAPPABLE #-} (Monad m,MonadTop m,LiftTop t) ⇒ MonadTop (t m) where
-  mtop = liftMtop mtop
-instance {-# OVERLAPPABLE #-} (Monad m,MonadCont r m,LiftCont t) ⇒ MonadCont r (t m) where
-  callCC = liftCallCC callCC
-  withC = liftWithC withC
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadIO m,LiftIO t) ⇒ MonadIO (t m) where
+--   io = liftIO io
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadReader r m,LiftReader t) ⇒ MonadReader r (t m) where
+--   askL = liftAskL askL
+--   localL = liftLocalL localL
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadWriter o m,LiftWriter t) ⇒ MonadWriter o (t m) where
+--   tell = liftTell tell
+--   hijack = liftHijack hijack
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadState s m,LiftState t) ⇒ MonadState s (t m) where
+--   get = liftGet get
+--   put = liftPut put
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadFail m,LiftFail t) ⇒ MonadFail (t m) where
+--   abort = liftAbort abort
+--   (⎅) = liftTry (⎅)
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadError e m,LiftError t) ⇒ MonadError e (t m) where
+--   throw = liftThrow throw
+--   catch = liftCatch catch
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadDelay m,LiftDelay t) ⇒ MonadDelay (t m) where
+--   delay = liftDelay delay
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadNondet m,LiftNondet t) ⇒ MonadNondet (t m) where
+--   mzero = liftMzero mzero
+--   (⊞) = liftMplus (⊞)
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadTop m,LiftTop t) ⇒ MonadTop (t m) where
+--   mtop = liftMtop mtop
+-- instance {-# OVERLAPPABLE #-} (Monad m,MonadCont r m,LiftCont t) ⇒ MonadCont r (t m) where
+--   callCC = liftCallCC callCC
+--   withC = liftWithC withC
 
 --------------
 -- DERIVING --
@@ -180,30 +180,30 @@ deriveLiftCallCC callCCM kk = isofr3 $ liftCallCC callCCM $ \ (k ∷ a → t₂ 
 deriveLiftWithC ∷ ∀ t₁ t₂ m r. (Monad m,t₁ ⇄⁼ t₂,LiftCont t₂) ⇒ (∀ a. (a → m r) → m a → m r) → (∀ a. (a → t₁ m r) → t₁ m a → t₁ m r)
 deriveLiftWithC withCM k xM = isofr3 $ liftWithC withCM (isoto3 ∘ k) (isoto3 xM)
 
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftIO t₂) ⇒ LiftIO t₁ where
-  liftIO = deriveLiftIO
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftReader t₂) ⇒ LiftReader t₁ where
-  liftAskL = deriveLiftAskL
-  liftLocalL = deriveLiftLocalL
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftWriter t₂) ⇒ LiftWriter t₁ where
-  liftTell = deriveLiftTell
-  liftHijack = deriveLiftHijack
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftState t₂) ⇒ LiftState t₁ where
-  liftGet = deriveLiftGet
-  liftPut = deriveLiftPut
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftFail t₂) ⇒ LiftFail t₁ where
-  liftAbort = deriveLiftAbort
-  liftTry = deriveLiftTry
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftError t₂) ⇒ LiftError t₁ where
-  liftThrow = deriveLiftThrow
-  liftCatch = deriveLiftCatch
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftDelay t₂) ⇒ LiftDelay t₁ where
-  liftDelay = deriveLiftDelay
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftNondet t₂) ⇒ LiftNondet t₁ where
-  liftMzero = deriveLiftMzero
-  liftMplus = deriveLiftMplus
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftTop t₂) ⇒ LiftTop t₁ where
-  liftMtop = deriveLiftMtop
-instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftCont t₂) ⇒ LiftCont t₁ where
-  liftCallCC = deriveLiftCallCC
-  liftWithC = deriveLiftWithC
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftIO t₂) ⇒ LiftIO t₁ where
+--   liftIO = deriveLiftIO
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftReader t₂) ⇒ LiftReader t₁ where
+--   liftAskL = deriveLiftAskL
+--   liftLocalL = deriveLiftLocalL
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftWriter t₂) ⇒ LiftWriter t₁ where
+--   liftTell = deriveLiftTell
+--   liftHijack = deriveLiftHijack
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftState t₂) ⇒ LiftState t₁ where
+--   liftGet = deriveLiftGet
+--   liftPut = deriveLiftPut
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftFail t₂) ⇒ LiftFail t₁ where
+--   liftAbort = deriveLiftAbort
+--   liftTry = deriveLiftTry
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftError t₂) ⇒ LiftError t₁ where
+--   liftThrow = deriveLiftThrow
+--   liftCatch = deriveLiftCatch
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftDelay t₂) ⇒ LiftDelay t₁ where
+--   liftDelay = deriveLiftDelay
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftNondet t₂) ⇒ LiftNondet t₁ where
+--   liftMzero = deriveLiftMzero
+--   liftMplus = deriveLiftMplus
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftTop t₂) ⇒ LiftTop t₁ where
+--   liftMtop = deriveLiftMtop
+-- instance {-# OVERLAPPABLE #-} (t₁ ⇄⁼ t₂,LiftCont t₂) ⇒ LiftCont t₁ where
+--   liftCallCC = deriveLiftCallCC
+--   liftWithC = deriveLiftWithC
