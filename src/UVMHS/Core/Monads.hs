@@ -1248,6 +1248,8 @@ instance (Monad m,MonadError e m) ⇒ MonadError e (ContT u m) where
 
 instance LiftDelay (ContT u) where
   liftDelay delayM xMU = ContT $ \ 𝓀 → delayM $ \ () → runContT 𝓀 $ xMU ()
+instance (Monad m,MonadDelay m) ⇒ MonadDelay (ContT u m) where
+  delay = liftDelay delay
 
 instance (Monad m,MonadNondet m) ⇒ MonadNondet (ContT u m) where
   mzero ∷ ∀ a. ContT u m a
@@ -1314,6 +1316,8 @@ instance (Monad m,MonadError e m) ⇒ MonadError e (UContT m) where
 
 instance LiftDelay UContT where
   liftDelay delayM xMU = UContT (\ 𝓀 → delayM $ \ () → runUContT 𝓀 $ xMU ())
+instance (Monad m,MonadDelay m) ⇒ MonadDelay (UContT m) where
+  delay = liftDelay delay
 
 instance (Monad m,MonadNondet m) ⇒ MonadNondet (UContT m) where
   mzero ∷ ∀ a. UContT m a
