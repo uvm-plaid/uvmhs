@@ -112,7 +112,7 @@ pWithContext aM = do
 
 pFail ∷ ParserContext → WindowL Doc Doc → Parser t a
 pFail tc ps = do
-  whenM (askL parserEnvReportErrorsL) $ do
+  whenM (askL parserEnvReportErrorsL) $ \ () → do
     let l = locRangeEnd $ parserContextLocRange tc
         d = parserContextError tc
     e :* es ← askL parserEnvErrorStackL

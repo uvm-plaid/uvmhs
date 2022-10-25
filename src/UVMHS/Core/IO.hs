@@ -9,6 +9,7 @@ import UVMHS.Core.Classes
 import UVMHS.Core.Data
 import UVMHS.Core.Monads ()
 import UVMHS.Core.Time
+import UVMHS.Core.FilePath
 
 import System.Exit     (ExitCode)
 import System.IO.Error (IOError)
@@ -152,50 +153,50 @@ cleanExit xM = HS.catch xM (\ (c ∷ ExitCode) → shout c ≫ exitIO)
 -- Files --
 -----------
 
-fread ∷ 𝕊 → IO 𝕊
-fread = Text.decodeUtf8 ^∘ BS.readFile ∘ tohsChars
+fread ∷ ℙ → IO 𝕊
+fread = Text.decodeUtf8 ^∘ BS.readFile ∘ tohsChars ∘ unℙ
 
-fwrite ∷ 𝕊 → 𝕊 → IO ()
-fwrite file = BS.writeFile (tohsChars file) ∘ Text.encodeUtf8
+fwrite ∷ ℙ → 𝕊 → IO ()
+fwrite file = BS.writeFile (tohsChars $ unℙ file) ∘ Text.encodeUtf8
 
-fappend ∷ 𝕊 → 𝕊 → IO ()
-fappend fn = BS.appendFile (tohsChars fn) ∘ Text.encodeUtf8
+fappend ∷ ℙ → 𝕊 → IO ()
+fappend fn = BS.appendFile (tohsChars $ unℙ fn) ∘ Text.encodeUtf8
 
-fcopy ∷ 𝕊 → 𝕊 → IO ()
-fcopy fr to = Dir.copyFile (tohsChars fr) $ tohsChars to
+fcopy ∷ ℙ → ℙ → IO ()
+fcopy fr to = Dir.copyFile (tohsChars $ unℙ fr) $ tohsChars $ unℙ to
 
 -----------------
 -- Directories --
 -----------------
 
-dfilesAll ∷ IO (𝐿 𝕊)
-dfilesAll = sort ∘ list ∘ map string ^$ Dir.listDirectory $ tohsChars "."
+dfilesAll ∷ IO (𝐿 ℙ)
+dfilesAll = sort ∘ list ∘ map (ℙ ∘ string) ^$ Dir.listDirectory $ tohsChars "."
 
-dfiles ∷ IO (𝐿 𝕊)
+dfiles ∷ IO (𝐿 ℙ)
 dfiles = do
   files ← dfilesAll
-  return $ list $ filterOn files $ \ f → case firstElem f of
+  return $ list $ filterOn files $ \ f → case firstElem $ unℙ f of
     None → False
     Some c → c ≢ '.'
 
-din ∷ 𝕊 → IO a → IO a
-din = Dir.withCurrentDirectory ∘ tohsChars
+din ∷ ℙ → IO a → IO a
+din = Dir.withCurrentDirectory ∘ tohsChars ∘ unℙ
 
-dtouch ∷ 𝕊 → IO ()
-dtouch = Dir.createDirectoryIfMissing True ∘ tohsChars
+dtouch ∷ ℙ → IO ()
+dtouch = Dir.createDirectoryIfMissing True ∘ tohsChars ∘ unℙ
 
-drremove ∷ 𝕊 → IO ()
-drremove = Dir.removeDirectoryRecursive ∘ tohsChars
+drremove ∷ ℙ → IO ()
+drremove = Dir.removeDirectoryRecursive ∘ tohsChars ∘ unℙ
 
-dcurrent ∷ IO 𝕊
-dcurrent = string ^$ HS.getCurrentDirectory
+dcurrent ∷ IO ℙ
+dcurrent = ℙ ∘ string ^$ HS.getCurrentDirectory
 
 -----------
 -- Paths --
 -----------
 
-pexists ∷ 𝕊 → IO 𝔹
-pexists = Dir.doesPathExist ∘ tohsChars
+pexists ∷ ℙ → IO 𝔹
+pexists = Dir.doesPathExist ∘ tohsChars ∘ unℙ
 
 -----------
 -- Shell --

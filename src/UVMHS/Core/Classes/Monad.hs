@@ -62,8 +62,8 @@ when b f
   | b = f ()
   | otherwise = skip
 
-whenM ∷ (Monad m) ⇒ m 𝔹 → m () → m ()
-whenM bM xM = do b ← bM ; when b $ const xM
+whenM ∷ (Monad m) ⇒ m 𝔹 → (() → m ()) → m ()
+whenM bM xM = do b ← bM ; when b xM
 
 -- Compat --
 
