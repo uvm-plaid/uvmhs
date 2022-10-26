@@ -147,23 +147,32 @@ execRenderANSIWith f = evalRWS ansiEnv₀ () ∘ retOut ∘ f ∘ compileOTree
 execRenderANSI ∷ TreeO → 𝐼A 𝕊
 execRenderANSI = execRenderANSIWith id
 
+gv_PPRINT_COLOR ∷ IORef 𝔹
+gv_PPRINT_COLOR = io_UNSAFE $ IORef.newIORef True
+
 ppRenderWith ∷ (RenderANSIM () → RenderANSIM ()) 
              → (DocAM () → DocAM ())
              → (DocM () → DocM ())
              → Doc → 𝕊
-ppRenderWith f₁ f₃ f₄ =
-  stringSS
-  ∘ execRenderANSIWith f₁
-  ∘ summaryOContents
-  ∘ execRenderUT
-  ∘ execDocAWith f₃
-  ∘ execDocWith f₄
+ppRenderWith f₁ f₃ f₄ d = io_UNSAFE $ do
+  b ← IORef.readIORef gv_PPRINT_COLOR
+  let f₁' = appto f₁ $ if b then id else (∘) $ localL ansiEnvDoFormatL False
+  return $ appto d $
+    stringSS
+    ∘ execRenderANSIWith f₁'
+    ∘ summaryOContents
+    ∘ execRenderUT
+    ∘ execDocAWith f₃
+    ∘ execDocWith f₄
 
 ppRender ∷ Doc → 𝕊
 ppRender = ppRenderWith id id id
 
-ppRenderNofmt ∷ Doc → 𝕊
-ppRenderNofmt = ppRenderWith (localL ansiEnvDoFormatL False) id id
+ppRenderNoFmt ∷ Doc → 𝕊
+ppRenderNoFmt = ppRenderWith (localL ansiEnvDoFormatL False) id id
+
+ppRenderYesFmt ∷ Doc → 𝕊
+ppRenderYesFmt = ppRenderWith (localL ansiEnvDoFormatL True) id id
 
 ppRenderWide ∷ Doc → 𝕊
 ppRenderWide = 
@@ -179,31 +188,24 @@ ppRenderNarrow =
                 ∘ localL docAEnvMaxRibbonWidthL (Some zero)) 
                id
 
-ppRenderNofmtWide ∷ Doc → 𝕊
-ppRenderNofmtWide = 
+ppRenderNoFmtWide ∷ Doc → 𝕊
+ppRenderNoFmtWide = 
   ppRenderWith (localL ansiEnvDoFormatL False) 
                (localL docAEnvMaxLineWidthL None ∘ localL docAEnvMaxRibbonWidthL None)
                id
 
-ppRenderNofmtNarrow ∷ Doc → 𝕊
-ppRenderNofmtNarrow = 
+ppRenderNoFmtNarrow ∷ Doc → 𝕊
+ppRenderNoFmtNarrow = 
   ppRenderWith (localL ansiEnvDoFormatL False) 
                (localL docAEnvMaxLineWidthL (Some zero) 
                 ∘ localL docAEnvMaxRibbonWidthL (Some zero))
                id
 
 ppshow ∷ (Pretty a) ⇒ a → 𝕊
-ppshow = ppRenderNofmtWide ∘ pretty
-
-gv_PPRINT_COLOR ∷ IORef 𝔹
-gv_PPRINT_COLOR = io_UNSAFE $ IORef.newIORef True
+ppshow = ppRenderNoFmtWide ∘ pretty
 
 pprint ∷ (Pretty a) ⇒ a → IO ()
-pprint x = do
-  b ← IORef.readIORef gv_PPRINT_COLOR
-  if b
-     then out $ ppRender $ ppGroup $ pretty x
-     else out $ ppRenderNofmt $ ppGroup $ pretty x
+pprint x = out $ ppRender $ ppGroup $ pretty x
 
 ppColorOn ∷ IO ()
 ppColorOn = IORef.writeIORef gv_PPRINT_COLOR True

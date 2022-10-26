@@ -93,7 +93,7 @@ ulc = TH.QuasiQuoter qe qp qt qd
       let eC = parse pULCExp sourceName ts
       case eC of
         Inl r → do
-          TH.reportError $ tohsChars $ ppRenderNofmt r
+          TH.reportError $ tohsChars $ ppRenderNoFmt r
           HS.fail "Parse Failure"
         Inr e → [| e |]
     qp = const $ HS.fail "quoting patterns not supported"

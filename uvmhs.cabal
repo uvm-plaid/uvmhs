@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -119,6 +119,8 @@ library
       UVMHSMain
   other-modules:
       Paths_uvmhs
+  autogen-modules:
+      Paths_uvmhs
   hs-source-dirs:
       src
   default-extensions:
@@ -175,13 +177,15 @@ library
     , text
     , time
     , vector
+  default-language: Haskell2010
   if (flag(uvmhs-tests))
     cpp-options: -DUVMHS_TESTS
-  default-language: Haskell2010
 
 executable uvmhs
   main-is: Main.hs
   other-modules:
+      Paths_uvmhs
+  autogen-modules:
       Paths_uvmhs
   hs-source-dirs:
       main
