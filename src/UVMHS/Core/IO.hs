@@ -269,18 +269,27 @@ rtimeIO s xM = do
   do out $ "RESULT: " ⧺ show𝕊 t ; oflush
   return x
 
-profile ∷ IO a → IO (a ∧ TimeD ∧ 𝔻)
+profile ∷ IO a → IO (a ∧ 𝔻 ∧ 𝔻)
 profile xM = do
   gc
   s₁ ← Stat.getRTSStats
-  let (n₁,u₁) = (Stat.major_gcs s₁,Stat.cumulative_live_bytes s₁)
-  t₁ ← now
   x ← xM
-  t₂ ← now
   gc
   s₂ ← Stat.getRTSStats
-  let (n₂,u₂) = (Stat.major_gcs s₂,Stat.cumulative_live_bytes s₂)
-      t'      = t₂ ⨺ t₁
-      m       = dbl (HS.fromIntegral u₂ - HS.fromIntegral u₁ ∷ ℕ) 
-                / dbl (HS.fromIntegral n₂ - HS.fromIntegral n₁ ∷ ℕ)
+  let -- total number of major GCs
+      n₁ = Stat.major_gcs s₁
+      -- sum of live bytes across all major GCs
+      u₁ = Stat.cumulative_live_bytes s₁
+      -- total CPU time at previous GC in nanoseconds
+      t₁ = Stat.cpu_ns s₁
+      -- 
+      n₂ = Stat.major_gcs s₂
+      u₂ = Stat.cumulative_live_bytes s₂
+      t₂ = Stat.cpu_ns s₂
+      --
+      -- elapsed CPU time in seconds
+      t' = dbl (t₂ - t₁) / 1000000000.0 
+      -- average live data across GCs
+      m  = dbl (u₂ - u₁) / dbl (n₂ - n₁)
   return $ x :* t' :* m
+

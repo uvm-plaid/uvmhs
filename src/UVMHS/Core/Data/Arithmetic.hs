@@ -121,6 +121,7 @@ instance Pow    ℕ64 where (^)  = (HS.^)
 
 instance Bot    ℕ64 where bot  = zero
 instance Join   ℕ64 where (⊔)  = (⩏)
+instance Top    ℕ64 where top  = HS.maxBound
 instance Meet   ℕ64 where (⊓)  = (⩎)
 instance Null   ℕ64 where null = zero
 instance Append ℕ64 where (⧺)  = (+)
@@ -128,6 +129,7 @@ instance Append ℕ64 where (⧺)  = (+)
 instance Additive       ℕ64
 instance Multiplicative ℕ64
 instance JoinLattice    ℕ64
+instance MeetLattice    ℕ64
 instance Monoid         ℕ64
 
 instance ToNat   ℕ64 where nat   = HS.fromIntegral
@@ -183,6 +185,7 @@ instance Pow    ℕ32 where (^)  = (HS.^)
 
 instance Bot    ℕ32 where bot  = 𝕟32 0
 instance Join   ℕ32 where (⊔)  = (⩏)
+instance Top    ℕ32 where top  = HS.maxBound
 instance Meet   ℕ32 where (⊓)  = (⩎)
 instance Null   ℕ32 where null = zero
 instance Append ℕ32 where (⧺)  = (+)
@@ -190,6 +193,7 @@ instance Append ℕ32 where (⧺)  = (+)
 instance Additive       ℕ32
 instance Multiplicative ℕ32
 instance JoinLattice    ℕ32
+instance MeetLattice    ℕ32
 instance Monoid         ℕ32
 
 instance ToNat    ℕ32 where nat   = HS.fromIntegral
@@ -239,6 +243,7 @@ instance Pow    ℕ16 where (^)  = (HS.^)
 
 instance Bot    ℕ16 where bot  = 𝕟16 0
 instance Join   ℕ16 where (⊔)  = (⩏)
+instance Top    ℕ16 where top  = HS.maxBound
 instance Meet   ℕ16 where (⊓)  = (⩎)
 instance Null   ℕ16 where null = zero
 instance Append ℕ16 where (⧺)  = (+)
@@ -246,6 +251,7 @@ instance Append ℕ16 where (⧺)  = (+)
 instance Additive       ℕ16
 instance Multiplicative ℕ16
 instance JoinLattice    ℕ16
+instance MeetLattice    ℕ16
 instance Monoid         ℕ16
 
 instance ToNat   ℕ16 where nat   = HS.fromIntegral
@@ -289,6 +295,7 @@ instance Pow    ℕ8 where (^)  = (HS.^)
 
 instance Bot    ℕ8 where bot  = 𝕟8 0
 instance Join   ℕ8 where (⊔)  = (⩏)
+instance Top    ℕ8 where top  = HS.maxBound
 instance Meet   ℕ8 where (⊓)  = (⩎)
 instance Null   ℕ8 where null = zero
 instance Append ℕ8 where (⧺)  = (+)
@@ -296,6 +303,7 @@ instance Append ℕ8 where (⧺)  = (+)
 instance Additive       ℕ8
 instance Multiplicative ℕ8
 instance JoinLattice    ℕ8
+instance MeetLattice    ℕ8
 instance Monoid         ℕ8
 
 instance ToNat   ℕ8 where nat   = HS.fromIntegral
@@ -330,7 +338,6 @@ instance Times  ℤ where (×)  = (HS.*)
 instance DivMod ℤ where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ where (^^) = (HS.^)
 
-instance Bot    ℤ where bot  = 𝕫 0
 instance Join   ℤ where (⊔)  = (⩏)
 instance Meet   ℤ where (⊓)  = (⩎)
 instance Null   ℤ where null = zero
@@ -338,7 +345,6 @@ instance Append ℤ where (⧺)  = (+)
 
 instance Additive       ℤ
 instance Multiplicative ℤ
-instance JoinLattice    ℤ
 instance Monoid         ℤ
 
 instance ToNatO ℤ where 
@@ -416,15 +422,17 @@ instance Times  ℤ64 where (×)  = (HS.*)
 instance DivMod ℤ64 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ64 where (^^) = (HS.^)
 
-instance Bot    ℤ64 where bot  = 𝕫64 0
+instance Bot    ℤ64 where bot  = HS.minBound
 instance Join   ℤ64 where (⊔)  = (⩏)
+instance Top    ℤ64 where top  = HS.maxBound
 instance Meet   ℤ64 where (⊓)  = (⩎)
 instance Null   ℤ64 where null = zero
 instance Append ℤ64 where (⧺)  = (+)
 
-instance JoinLattice    ℤ64
 instance Additive       ℤ64
 instance Multiplicative ℤ64
+instance JoinLattice    ℤ64
+instance MeetLattice    ℤ64
 instance Monoid         ℤ64
 
 instance ToNatO ℤ64 where 
@@ -497,8 +505,9 @@ instance Times  ℤ32 where (×)  = (HS.*)
 instance DivMod ℤ32 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ32 where (^^) = (HS.^)
 
-instance Bot    ℤ32 where bot  = 𝕫32 0
+instance Bot    ℤ32 where bot  = HS.minBound
 instance Join   ℤ32 where (⊔)  = (⩏)
+instance Top    ℤ32 where top  = HS.maxBound
 instance Meet   ℤ32 where (⊓)  = (⩎)
 instance Null   ℤ32 where null = zero
 instance Append ℤ32 where (⧺)  = (+)
@@ -506,6 +515,7 @@ instance Append ℤ32 where (⧺)  = (+)
 instance Additive       ℤ32
 instance Multiplicative ℤ32
 instance JoinLattice    ℤ32
+instance MeetLattice    ℤ32
 instance Monoid         ℤ32
 
 instance ToNatO ℤ32 where
@@ -573,8 +583,9 @@ instance Times  ℤ16 where (×)  = (HS.*)
 instance DivMod ℤ16 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ16 where (^^) = (HS.^)
 
-instance Bot    ℤ16 where bot  = 𝕫16 0
+instance Bot    ℤ16 where bot  = HS.minBound
 instance Join   ℤ16 where (⊔)  = (⩏)
+instance Top    ℤ16 where top  = HS.maxBound
 instance Meet   ℤ16 where (⊓)  = (⩎)
 instance Null   ℤ16 where null = zero
 instance Append ℤ16 where (⧺)  = (+)
@@ -582,6 +593,7 @@ instance Append ℤ16 where (⧺)  = (+)
 instance Additive       ℤ16
 instance Multiplicative ℤ16
 instance JoinLattice    ℤ16
+instance MeetLattice    ℤ16
 instance Monoid         ℤ16
 
 instance ToNatO ℤ16 where 
@@ -644,8 +656,9 @@ instance Times  ℤ8 where (×)  = (HS.*)
 instance DivMod ℤ8 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ8 where (^^) = (HS.^)
 
-instance Bot    ℤ8 where bot  = 𝕫8 0
+instance Bot    ℤ8 where bot  = HS.minBound
 instance Join   ℤ8 where (⊔)  = (⩏)
+instance Top    ℤ8 where top  = HS.maxBound
 instance Meet   ℤ8 where (⊓)  = (⩎)
 instance Null   ℤ8 where null = zero
 instance Append ℤ8 where (⧺)  = (+)
@@ -653,6 +666,7 @@ instance Append ℤ8 where (⧺)  = (+)
 instance Additive       ℤ8
 instance Multiplicative ℤ8
 instance JoinLattice    ℤ8
+instance MeetLattice    ℤ8
 instance Monoid         ℤ8
 
 instance ToNatO ℤ8 where

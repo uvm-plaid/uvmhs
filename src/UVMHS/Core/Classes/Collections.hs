@@ -19,3 +19,6 @@ lup = flip (⋕?)
 kvs ⋕! k = case kvs ⋕? k of
   Some v → v
   None → error "failed ⋕! lookup"
+
+lupΩ ∷ (Lookup k v t) ⇒ k → t → v
+lupΩ = flip (⋕!)

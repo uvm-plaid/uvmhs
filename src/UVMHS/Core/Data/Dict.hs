@@ -163,6 +163,12 @@ interWith f kvs₁ kvs₂ = 𝐷 $ Map.intersectionWith f (un𝐷 kvs₁) (un�
 interWithOn ∷ (Ord k) ⇒ k ⇰ v₁ → k ⇰ v₂ → (v₁ → v₂ → v₃) → k ⇰ v₃
 interWithOn = rotateL interWith
 
+interWithM ∷ (Monad m,Ord k) ⇒ (v₁ → v₂ → m v₃) → k ⇰ v₁ → k ⇰ v₂ → m (k ⇰ v₃)
+interWithM f kvs₁ kvs₂ = exchange $ interWith f kvs₁ kvs₂
+
+interWithMOn ∷ (Monad m,Ord k) ⇒ k ⇰ v₁ → k ⇰ v₂ → (v₁ → v₂ → m v₃) → m (k ⇰ v₃)
+interWithMOn = rotateL interWithM
+
 diffWith ∷ (Ord k) ⇒ (v → v → v) → k ⇰ v → k ⇰ v → k ⇰ v
 diffWith f kvs₁ kvs₂ = 𝐷 $ Map.differenceWith (\ x y → HS.Just $ f x y) (un𝐷 kvs₁) $ un𝐷 kvs₂
 

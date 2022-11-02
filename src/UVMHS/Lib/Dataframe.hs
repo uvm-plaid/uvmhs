@@ -11,169 +11,334 @@ import qualified Data.Text.Encoding   as Text
 import qualified Prelude              as HS
 import qualified Text.Read            as HS
 
-data 𝐹Type =
-    U_𝐹T
-  | B_𝐹T
-  | N_𝐹T
-  | Z_𝐹T
-  | D_𝐹T
-  | S_𝐹T
+data FrameType =
+    B_FT
+  | N_FT
+  | Z_FT
+  | D_FT
+  | S_FT
+  deriving (Eq,Ord,Show)
+makePrisms ''FrameType
+
+frameTypeCode ∷ FrameType → 𝕊
+frameTypeCode = \case
+  B_FT → "bool"
+  N_FT → "nat"
+  Z_FT → "int"
+  D_FT → "dbl"
+  S_FT → "str"
+
+data FrameVal = 
+    B_FV 𝔹
+  | N_FV ℕ64
+  | Z_FV ℤ64
+  | D_FV 𝔻
+  | S_FV 𝕊
+  deriving (Eq,Ord,Show)
+makePrisms ''FrameVal
+makePrettyUnion ''FrameVal
+
+data FrameCol =
+    B_FC (𝕌 𝔹)
+  | N_FC (𝕌 ℕ64)
+  | Z_FC (𝕌 ℤ64)
+  | D_FC (𝕌 𝔻)
+  | S_FC (𝕍 𝕊)
+  deriving (Eq,Ord,Show)
+makePrisms ''FrameCol
+
+frameColType ∷ FrameCol → FrameType
+frameColType = \case
+  B_FC _ → B_FT
+  N_FC _ → N_FT
+  Z_FC _ → Z_FT
+  D_FC _ → D_FT
+  S_FC _ → S_FT
+
+frameColPack ∷ FrameType → 𝐼C FrameVal → 𝑂 FrameCol
+frameColPack t vs = case t of
+  B_FT → map (B_FC ∘ uvecC) $ exchange $ map (view b_FVL) vs
+  N_FT → map (N_FC ∘ uvecC) $ exchange $ map (view n_FVL) vs
+  Z_FT → map (Z_FC ∘ uvecC) $ exchange $ map (view z_FVL) vs
+  D_FT → map (D_FC ∘ uvecC) $ exchange $ map (view d_FVL) vs
+  S_FT → map (S_FC ∘ vecC) $ exchange $ map (view s_FVL) vs
+
+frameColUnpack ∷ FrameCol → 𝐼C FrameVal
+frameColUnpack = \case
+  B_FC vs → B_FV ^$ iterC vs
+  N_FC vs → N_FV ^$ iterC vs
+  Z_FC vs → Z_FV ^$ iterC vs
+  D_FC vs → D_FV ^$ iterC vs
+  S_FC vs → S_FV ^$ iterC vs
+
+frameColIndex ∷ ℕ64 → FrameCol → 𝑂 FrameVal
+frameColIndex n = \case
+  B_FC vs → B_FV ^$ vs ⋕? n
+  N_FC vs → N_FV ^$ vs ⋕? n
+  Z_FC vs → Z_FV ^$ vs ⋕? n
+  D_FC vs → D_FV ^$ vs ⋕? n
+  S_FC vs → S_FV ^$ vs ⋕? n
+
+data FrameGrouping v =
+    B_FG (𝔹 ⇰ v)
+  | N_FG (ℕ64 ⇰ v)
+  | Z_FG (ℤ64 ⇰ v)
+  | D_FG (𝔻 ⇰ v)
+  | S_FG (𝕊 ⇰ v)
+  deriving (Eq,Ord,Show)
+makePrettyUnion ''FrameGrouping
+
+instance Functor FrameGrouping where
+  map f = \case
+   B_FG kvs → B_FG $ map f kvs
+   N_FG kvs → N_FG $ map f kvs
+   Z_FG kvs → Z_FG $ map f kvs
+   D_FG kvs → D_FG $ map f kvs
+   S_FG kvs → S_FG $ map f kvs
+
+instance FunctorM FrameGrouping where
+  mapM f = \case
+   B_FG kvs → B_FG ^$ mapM f kvs
+   N_FG kvs → N_FG ^$ mapM f kvs
+   Z_FG kvs → Z_FG ^$ mapM f kvs
+   D_FG kvs → D_FG ^$ mapM f kvs
+   S_FG kvs → S_FG ^$ mapM f kvs
+
+frameGroupingInterWithM
+  ∷ (Monad m,MonadFail m) 
+  ⇒ (v₁ → v₂ → m v₃) 
+  → FrameGrouping v₁ 
+  → FrameGrouping v₂ 
+  → m (FrameGrouping v₃)
+frameGroupingInterWithM f vs₁ vs₂ = case (vs₁,vs₂) of
+  (B_FG kvs₁,B_FG kvs₂) → B_FG ^$ interWithM f kvs₁ kvs₂
+  (N_FG kvs₁,N_FG kvs₂) → N_FG ^$ interWithM f kvs₁ kvs₂
+  (Z_FG kvs₁,Z_FG kvs₂) → Z_FG ^$ interWithM f kvs₁ kvs₂
+  (D_FG kvs₁,D_FG kvs₂) → D_FG ^$ interWithM f kvs₁ kvs₂
+  (S_FG kvs₁,S_FG kvs₂) → S_FG ^$ interWithM f kvs₁ kvs₂
+  _ → abort
+
+data FrameData =
+    Vec_FD ℕ64 (𝕊 ⇰ FrameCol)
+  | Grp_FD 𝕊 (FrameGrouping FrameData)
   deriving (Eq,Ord,Show)
 
-makePrisms ''𝐹Type
-
-data 𝐹Val =
-    U_𝐹V
-  | B_𝐹V 𝔹
-  | N_𝐹V ℕ64
-  | Z_𝐹V ℤ64
-  | D_𝐹V 𝔻
-  | S_𝐹V 𝕊
-  deriving (Eq,Ord,Show)
-
-makePrisms ''𝐹Val
-
-data 𝐹GR = 𝐹GR
-  { dataFrameGRRows ∷ ℕ64
-  , dataFrameGRColP ∷ 𝑃 𝕊
-  , dataFrameGRColV ∷ 𝕍 𝕊
-  , dataFrameGRKeys ∷ 𝑃 𝕊
-  , dataFrameGRData ∷ 𝐹Val ⇰ 𝕍 (𝕊 ⇰ 𝐹Val)
+data Frame = Frame
+  { frameColP ∷ 𝑃 𝕊
+  , frameColV ∷ 𝕍 𝕊
+  , frameColT ∷ 𝕊 ⇰ FrameType
+  , frameGrpT ∷ 𝕊 ⇰ FrameType
+  , frameData ∷ (𝕊 ⇰ FrameVal) ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
   } deriving (Eq,Ord,Show)
 
-data 𝐹R = 𝐹R
-  { dataFrameRRows ∷ ℕ64
-  , dataFrameRColP ∷ 𝑃 𝕊
-  , dataFrameRColV ∷ 𝕍 𝕊
-  , dataFrameRData ∷ 𝕍 (𝕊 ⇰ 𝐹Val)
-  } deriving (Eq,Ord,Show)
-
--- 𝐹GR --
-
-product𝐹GR ∷ 𝐹GR → 𝐹GR → 𝑂 𝐹GR
-product𝐹GR (𝐹GR _rows₁ colp₁ colv₁ ss₁ vsvss₁) (𝐹GR _rows₂ colp₂ colv₂ ss₂ vsvss₂) =
-  let colp₁' = pow $ mapOn (iter colp₁) $ flip (⧺) "_L"
+frameProduct ∷ Frame → Frame → 𝑂 Frame
+frameProduct fr₁ fr₂ = do
+  let Frame colp₁ colv₁ colt₁ grpt₁ data₁ = fr₁
+      Frame colp₂ colv₂ colt₂ grpt₂ data₂ = fr₂
+      colp₁' ∷ 𝑃 𝕊
+      colp₁' = pow $ mapOn (iter colp₁) $ flip (⧺) "_L"
+      colp₂' ∷ 𝑃 𝕊
       colp₂' = pow $ mapOn (iter colp₂) $ flip (⧺) "_R"
+      colv₁' ∷ 𝕍 𝕊
       colv₁' = mapOn colv₁ $ flip (⧺) "_L"
+      colv₂' ∷ 𝕍 𝕊
       colv₂' = mapOn colv₂ $ flip (⧺) "_R"
-  in
-  if not $ isEmpty $ colp₁' ∩ colp₂'
-  then None
-  else Some $
-    let colp = colp₁' ∪ colp₂'
-        colv = colv₁' ⧺ colv₂'
-        ss   = ss₁ ∪ ss₂
-        vsvss = interWithOn vsvss₁ vsvss₂ $ \ svss₁ svss₂ → vec $ do
-          svs₁ ← iter svss₁
-          svs₂ ← iter svss₂
-          return $ assoc $ concat
-            [ mapOn (iter svs₁) $ \ (s :* v) → (s ⧺ "_L") :* v
-            , mapOn (iter svs₂) $ \ (s :* v) → (s ⧺ "_R") :* v
-            ]
-        rows = sum $ map csize $ values vsvss
-    in 𝐹GR rows colp colv ss vsvss
+      colt₁' ∷ 𝕊 ⇰ FrameType
+      colt₁' = assoc $ mapOn (iter colt₁) $ mapFst $ flip (⧺) "_L"
+      colt₂' ∷ 𝕊 ⇰ FrameType
+      colt₂' = assoc $ mapOn (iter colt₂) $ mapFst $ flip (⧺) "_R"
+      colp'  ∷ 𝑃 𝕊
+      colp'  = colp₁' ∪ colp₂'
+      colv'  ∷ 𝕍 𝕊
+      colv'  = colv₁' ⧺ colv₂'
+      colt'  ∷ 𝕊 ⇰ FrameType
+      colt'  = colt₁' ⩌ colt₂'
+  grpt' ∷ 𝕊 ⇰ FrameType
+        ← interWithM (\ τ₁ τ₂ → do guard $ τ₁ ≡ τ₂ ; return τ₁) grpt₁ grpt₂
+  let data' = interWithOn data₁ data₂ $ \ (n₁ :* svss₁) (n₂ :* svss₂) → 
+        let svss₁'₁ ∷ 𝕊 ⇰ FrameCol
+            svss₁'₁ = assoc $ mapOn (iter svss₁) $ mapFst $ flip (⧺) "_L"
+            svss₂'₁ ∷ 𝕊 ⇰ FrameCol
 
--- 𝐹R --
+            svss₂'₁ = assoc $ mapOn (iter svss₂) $ mapFst $ flip (⧺) "_R"
+            svss₁'₂ ∷ 𝐼C (𝕊 ⇰ FrameVal)
+            svss₁'₂ = mapOn (uptoC n₁) $ \ n → mapOn svss₁'₁ $ viewΩ someL ∘ frameColIndex n
+            svss₂'₂ ∷ 𝐼C (𝕊 ⇰ FrameVal)
+            svss₂'₂ = mapOn (uptoC n₂) $ \ n → mapOn svss₂'₁ $ viewΩ someL ∘ frameColIndex n
+            svss'₁ ∷ 𝕍 (𝕊 ⇰ FrameVal)
+            svss'₁ = vecC $ prodWith𝐼C (⩌) svss₁'₂ svss₂'₂
+            svss'₂ ∷ 𝕊 ⇰ FrameCol
 
-group𝐹R ∷ 𝕊 → 𝐹R → 𝑂 𝐹GR
-group𝐹R s (𝐹R rows colp colv svss)
-  | s ∉ colp = None
-  | otherwise = Some $
-    let vsvss = map vec $ concat $ mapOn (iter svss) $ \ svs →
-          (svs ⋕! s) ↦ single𝐼 (without (single s) svs)
-        colp' = colp ∖ single s
-        colv' = vec $ filter (≢ s) colv
-        ss  = single s
-    in 𝐹GR rows colp' colv' ss vsvss
+            rows = csize svss'₁
 
-ungroup𝐹R ∷ 𝐹GR → 𝐹R
-ungroup𝐹R (𝐹GR rows colp colv ss vsvss) =
-  let svss = vec $ do
-        v :* svs ← iter vsvss
-        iter $ mapOn svs $ (⩌) $ assoc $ mapOn (iter ss) $ \ s → s :* v
-      colp' = colp ∪ ss
-      colv' = vec ss ⧺ colv 
-  in 𝐹R rows colp' colv' svss
+            svss'₂ = mapWithKeyOn colt' $ \ s τ → 
+              viewΩ someL $ frameColPack τ $ mapOn (iterC svss'₁) $ lupΩ s
+        in rows :* svss'₂
+  return $ Frame colp' colv' colt' grpt' data'
 
-innerJoin𝐹R ∷ 𝕊 → 𝕊 → 𝐹R → 𝐹R → 𝑂 𝐹R
-innerJoin𝐹R lid rid 𝑓₁ 𝑓₂ = do
-  𝑓g₁ ← group𝐹R lid 𝑓₁
-  𝑓g₂ ← group𝐹R rid 𝑓₂
-  𝑓g₃ ← product𝐹GR 𝑓g₁ 𝑓g₂
-  return $ ungroup𝐹R 𝑓g₃
+frameGroup ∷ 𝕊 → 𝕊 → Frame → 𝑂 Frame
+frameGroup col s₀ (Frame colp colv colt grpt data') = do
+  guard $ col ∈ colp
+  guard $ not $ s₀ ⋵ grpt
+  return $
+    let colp' ∷ 𝑃 𝕊
+        colp' = colp ∖ single col
+        colv' ∷ 𝕍 𝕊
+        colv' = vec $ filter (≢ col) colv
+        colt' ∷ 𝕊 ⇰ FrameType
+        colt' = without (single col) colt 
+        grpt' ∷ 𝕊 ⇰ FrameType
+        grpt' = dict [s₀ ↦ colt ⋕! col,grpt]
+        data'₁ ∷ (𝕊 ⇰ FrameVal) ⇰ FrameVal ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
+        data'₁ = mapOn data' $ \ (n :* svss) →
+          let svs ∷ FrameCol
+              svs = svss ⋕! col
+              svss'₁ ∷ 𝕊 ⇰ FrameCol
+              svss'₁ = without (single col) svss
+              svss'₂ ∷ FrameVal ⇰ 𝐼C (𝕊 ⇰ FrameVal)
+              svss'₂ = concat $ mapOn (upto n) $ \ nᵢ → 
+                let vᵢ   = viewΩ someL $ frameColIndex nᵢ svs
+                    svsᵢ = mapOn svss'₁ $ viewΩ someL ∘ frameColIndex nᵢ
+                in vᵢ ↦ single svsᵢ
+              svss'₃ ∷ FrameVal ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
+              svss'₃ = mapOn svss'₂ $ \ svssᵢ →
+                let rows = csize svssᵢ
+                    svsᵢ = mapWithKeyOn colt' $ \ s τ → 
+                      viewΩ someL $ frameColPack τ $ mapOn svssᵢ $ lupΩ s
+                in rows :* svsᵢ
+          in svss'₃
+        data'₂ ∷ (𝕊 ⇰ FrameVal) ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
+        data'₂ = assoc $ do
+          svs :* vnsvss ← iter data'₁
+          v :* nsvss ← iter vnsvss
+          return $ dict [s₀ ↦ v,svs] :* nsvss
+    in
+    Frame colp' colv' colt' grpt' data'₂
 
-parse𝐹Val ∷ 𝕊 → 𝐹Type → IO 𝐹Val
-parse𝐹Val s = \case
-  U_𝐹T → do
-    if | s ≡ "()" → return U_𝐹V
-       | otherwise → failIO $ "fail parse (unit):" ⧺ s
-  B_𝐹T → do
-    if | s ≡ "true"  → return $ B_𝐹V True
-       | s ≡ "false" → return $ B_𝐹V False
+frameUngroup ∷ 𝕊 → 𝕊 → Frame → 𝑂 Frame
+frameUngroup grp s₀ (Frame colp colv colt grpt data') = do
+  guard $ grp ⋵ grpt
+  guard $ not $ s₀ ∈ colp
+  return $
+    let colp' ∷ 𝑃 𝕊
+        colp' = single s₀ ∪ colp
+        colv' ∷ 𝕍 𝕊
+        colv' = single s₀ ⧺ colv
+        colt' ∷ 𝕊 ⇰ FrameType
+        colt' = dict [s₀ ↦ grpt ⋕! grp,colt]
+        grpt' ∷ 𝕊 ⇰ FrameType
+        grpt' = without (single grp) grpt
+        data'₁ ∷ (𝕊 ⇰ FrameVal) ⇰ ℕ64 ∧ (𝕊 ⇰ 𝐼C FrameVal)
+        data'₁ = concat $ mapOn (iter data') $ \ (svs :* (n :* svss)) → 
+          let svs' ∷ 𝕊 ⇰ FrameVal
+              svs' = without (single grp) svs 
+              v ∷ FrameVal
+              v = svs ⋕! grp
+              svss' ∷ 𝕊 ⇰ 𝐼C FrameVal
+              svss' = dict
+                [ (↦) s₀ $ mapOn (uptoC n) $ const v
+                , map frameColUnpack svss
+                ]
+          in
+          svs' ↦ n :* svss'
+        data'₂ ∷ (𝕊 ⇰ FrameVal) ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
+        data'₂ = mapOn data'₁ $ \ (n :* svss) → 
+          let svss' ∷ 𝕊 ⇰ FrameCol
+              svss' = mapWithKeyOn svss $ \ s vs →
+                let τ ∷ FrameType
+                    τ = colt' ⋕! s
+                    vs' ∷ FrameCol
+                    vs' = viewΩ someL $ frameColPack τ vs
+                in vs'
+          in
+          n :* svss'
+    in
+    Frame colp' colv' colt' grpt' data'₂
+
+frameValParse ∷ 𝕊 → FrameType → IO FrameVal
+frameValParse s = \case
+  B_FT → do
+    if | s ≡ "true"  → return $ B_FV True
+       | s ≡ "false" → return $ B_FV False
        | otherwise   → failIO $ "fail parse (bool): " ⧺ s
-  N_𝐹T → do
+  N_FT → do
     case HS.readMaybe $ lazyList s of
-      HS.Just n  → return $ N_𝐹V n
+      HS.Just n  → return $ N_FV n
       HS.Nothing → failIO $ "fail parse (nat): " ⧺ s
-  Z_𝐹T → do
+  Z_FT → do
     case HS.readMaybe $ lazyList s of
-      HS.Just i  → return $ Z_𝐹V i
+      HS.Just i  → return $ Z_FV i
       HS.Nothing → failIO $ "fail parse (int): " ⧺ s
-  D_𝐹T → do
+  D_FT → do
     case HS.readMaybe $ lazyList s of
-      HS.Just d  → return $ D_𝐹V d
+      HS.Just d  → return $ D_FV d
       HS.Nothing → failIO $ "fail parse (dbl) " ⧺ s
-  S_𝐹T → return $ S_𝐹V s
+  S_FT → return $ S_FV s
 
-parseDataFrame ∷ 𝕊 → IO 𝐹R
-parseDataFrame s = do
-  sss ∷ 𝕍 (𝕍 𝕊) ← elimChoice (failIO ∘ string) (return ∘ map (map (Text.decodeUtf8 ∘ BSL.toStrict) ∘ 𝕍) ∘ 𝕍) $ frhs $ 
-    CSV.decode @(Vector.Vector BSL.ByteString) CSV.NoHeader $ BSL.fromStrict $ Text.encodeUtf8 s
-  cols ← ifNoneM (failIO "bad1") $ list ^$ sss ⋕? 0
-  typs ← ifNoneM (failIO "bad2") $ list ^$ sss ⋕? 1
-  let sss' = vecF (csize sss - 2) $ \ i → sss ⋕! (i + 2)
+frameParse ∷ 𝕊 → IO Frame
+frameParse s = do
+  sss ∷ 𝕍 (𝕍 𝕊) ← 
+    elimChoice (failIO ∘ string) (return ∘ map (map (Text.decodeUtf8 ∘ BSL.toStrict) ∘ 𝕍) ∘ 𝕍) $ 
+      frhs $ CSV.decode @(Vector.Vector BSL.ByteString) CSV.NoHeader $ 
+        BSL.fromStrict $ Text.encodeUtf8 s
+  cols ∷ 𝐿 𝕊 ← ifNoneM (failIO "bad1") $ list ^$ sss ⋕? 0
+  typs ∷ 𝐿 𝕊 ← ifNoneM (failIO "bad2") $ list ^$ sss ⋕? 1
+  let sss' ∷ 𝕍 (𝕍 𝕊)
+      sss' = vecF (csize sss - 2) $ \ i → sss ⋕! (i + 2)
+      rows ∷ ℕ64
       rows = csize sss'
-  typs' ← ifNoneM (failIO "bad3") $ mapMOn typs $ flip lup $ dict
-    [ "bool"   ↦ B_𝐹T
-    , "nat"    ↦ N_𝐹T
-    , "int"    ↦ Z_𝐹T
-    , "dbl" ↦ D_𝐹T
-    , "string" ↦ S_𝐹T
+  typs' ∷ 𝐿 FrameType ← ifNoneM (failIO "bad3") $ mapMOn typs $ flip lup $ dict
+    [ frameTypeCode B_FT ↦ B_FT
+    , frameTypeCode N_FT ↦ N_FT
+    , frameTypeCode Z_FT ↦ Z_FT
+    , frameTypeCode D_FT ↦ D_FT
+    , frameTypeCode S_FT ↦ S_FT
     ]
-  coltyps ← ifNoneM (failIO "bad4") $ zipSameLength cols typs'
-  svss ← mapMOn sss' $ \ ss → do
+  coltyps ∷ 𝐿 (𝕊 ∧ FrameType) ← ifNoneM (failIO "bad4") $ zipSameLength cols typs'
+  let coltyps' ∷ 𝕊 ⇰ FrameType
+      coltyps' = assoc coltyps
+  svss ∷ 𝕍 (𝕊 ⇰ FrameVal) ← mapMOn sss' $ \ ss → do
     stss ← ifNoneM (failIO "unexpected row") $ zipSameLength coltyps $ list ss
     assoc ^$ mapMOn stss $ \ ((key :* t) :* sᵢ) → do
-      v ← parse𝐹Val sᵢ t
+      v ← frameValParse sᵢ t
       return $ key :* v
-  return $ 𝐹R rows (pow cols) (vec cols) svss
+  let svss' ∷ 𝕊 ⇰ FrameCol
+      svss' = mapWithKeyOn coltyps' $ \ sᵢ τ → 
+        viewΩ someL $ frameColPack τ $ mapOn (iterC svss) $ lupΩ sᵢ
+  return $ Frame (pow cols) (vec cols) (assoc coltyps) null $ null ↦ (rows :* svss')
 
-instance Pretty 𝐹Val where
-  pretty = \case
-    U_𝐹V → pretty ()
-    B_𝐹V b → pretty b
-    N_𝐹V n → pretty n
-    Z_𝐹V i → pretty i
-    D_𝐹V d → pretty d
-    S_𝐹V s → ppString s
-
-instance Pretty 𝐹GR where
-  pretty (𝐹GR _rows colp colv _ss vsvss) = ppRecord (ppPun "↦") $ mapOn (iter vsvss) $ \ (v :* svss) → do
-    (:*) (ppLitFmt $ pretty v) $ pretty $ 𝐹R (csize svss) colp colv svss
-
-instance Pretty 𝐹R where
-  pretty (𝐹R rows _colp colv svss) =
-    let svss' = mapp ppshow svss
-        colWidths = mapOn colv $ \ col → 
-          (:*) col $ joins 
-            [ csize col
-            , joins $ mapOn svss' $ \ svs → csize $ svs ⋕! col
+instance Pretty Frame where
+  pretty (Frame _colp colv colt grps data') = 
+    let data'' = mapOn data' $ \ (rows :* svss) → 
+          let svss' ∷ 𝕊 ⇰ 𝕍 𝕊
+              svss' = map (vecC ∘ map ppshow ∘ frameColUnpack) svss
+              colWidths ∷ 𝕍 (𝕊 ∧ ℕ64)
+              colWidths = mapOn colv $ \ col → 
+                (:*) col $ joins
+                  [ csize col
+                  , csize $ frameTypeCode $ colt ⋕! col
+                  , joins $ map csize $ svss' ⋕! col
+                  ]
+          in 
+          concat
+            [ ppForceBreak
+            , ppVertical
+                [ ppHorizontal $ inbetween (ppComment "|") $ mapOn colWidths $ \ (col :* width) → 
+                    ppCon $ alignLeft (nat width) col
+                , ppComment $ string $ 
+                    replicate (sum [sum $ map snd colWidths,(count colWidths ⊔ 1 - 1) × 3]) '-'
+                , ppHorizontal $ inbetween (ppComment "|") $ mapOn colWidths $ \ (col :* width) →
+                    ppComment $ alignLeft (nat width) $ frameTypeCode $ colt ⋕! col
+                , ppComment $ string $ 
+                    replicate (sum [sum $ map snd colWidths,(count colWidths ⊔ 1 - 1) × 3]) '-'
+                , ppVertical $ mapOn (upto rows) $ \ n →
+                    ppHorizontal $ inbetween (ppComment "|") $ mapOn colWidths $ \ (col :* width) →
+                      ppLit $ alignLeft (nat width) $ (svss' ⋕! col) ⋕! n
+                , ppComment $ "⇈ ROWS: " ⧺ show𝕊 rows
+                ]
             ]
     in 
-    ppVertical
-      [ ppHorizontal $ inbetween (ppComment "|") $ mapOn colWidths $ \ (col :* width) → ppCon $ alignLeft (nat width) col
-      , ppComment $ string $ replicate (sum [sum $ map snd colWidths,((count colWidths ⊔ 1) - 1) × 3]) '-'
-      , ppVertical $ mapOn svss' $ \ svs → 
-          ppHorizontal $ inbetween (ppComment "|") $ mapOn (colWidths) $ \ (col :* width) → ppLit $ alignLeft (nat width) $ svs ⋕! col
-      , concat [ppForceBreak,ppComment $ "⇈ ROWS: " ⧺ show𝕊 rows]
-      ]
+    if
+    | isEmpty grps → pretty $ data'' ⋕! null
+    | otherwise    → pretty data''
+

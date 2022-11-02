@@ -188,6 +188,21 @@ instance (Storable a) ⇒ ToIter a (𝕌 a)     where iter   = iter𝕌
 instance (Storable a,Show a) ⇒ Show (𝕌 a)  where show   = tohsChars ∘ show𝕌
 instance (Storable a) ⇒ Lookup ℕ64 a (𝕌 a) where (⋕?)   = flip idx𝕌
 
+instance (Storable a) ⇒ CSized    (𝕌 a) where csize = csize𝕌
+instance (Storable a) ⇒ ToIterC a (𝕌 a) where iterC xs = 𝐼C (csize xs) $ iter xs
+
+instance (Storable a,Join a) ⇒ Join (𝕌 a) where (⊔) = zipWith𝕌 (⊔)
+instance (Storable a,Meet a) ⇒ Meet (𝕌 a) where (⊓) = zipWith𝕌 (⊓)
+instance (Storable a,Plus a) ⇒ Plus (𝕌 a) where (+) = zipWith𝕌 (+)
+instance (Storable a,Minus a) ⇒ Minus (𝕌 a) where (-) = zipWith𝕌 (-)
+instance (Storable a,Times a) ⇒ Times (𝕌 a) where (×) = zipWith𝕌 (×)
+instance (Storable a,Divide a) ⇒ Divide (𝕌 a) where (/) = zipWith𝕌 (/)
+instance (Storable a,DivMod a) ⇒ DivMod (𝕌 a) where {(⌿) = zipWith𝕌 (⌿);(÷) = zipWith𝕌 (÷)}
+instance (Storable a,Pow a) ⇒ Pow (𝕌 a) where (^) = zipWith𝕌 (^)
+instance (Storable a,Pon a) ⇒ Pon (𝕌 a) where xs ^^ y = map𝕌 (^^ y) xs
+
+instance (Storable a,Root a) ⇒ Root (𝕌 a) where root = map𝕌 root
+
 uvec ∷ (Storable a,ToIter a t) ⇒ t → 𝕌 a
 uvec = 𝕌 ∘ VU.fromList ∘ lazyList
 
@@ -210,6 +225,9 @@ iter𝕌 xs = iterLL $ VU.toList $ un𝕌 xs
 show𝕌 ∷ (Storable a,Show a) ⇒ 𝕌 a → 𝕊
 show𝕌 = showCollection "𝕌[" "]" "," show𝕊 ∘ iter
 
+csize𝕌 ∷ (Storable a) ⇒ 𝕌 a → ℕ64
+csize𝕌 = natΩ64 ∘ frhs ∘ VU.length ∘ un𝕌
+
 idx𝕌 ∷ (Storable a) ⇒ ℕ64 → 𝕌 a → 𝑂 a
 idx𝕌 i xs = frhs $ un𝕌 xs VU.!? tohs (intΩ64 i)
 
@@ -227,3 +245,10 @@ mapM𝕌 f = with (tohsMonad @m) HS.$ 𝕌 ^∘ VU.mapM f ∘ un𝕌
 
 null𝕌 ∷ (Storable a,Null a) ⇒ ℕ64 → 𝕌 a
 null𝕌 n = uvecF n $ const null
+
+zipWith𝕌 ∷ (Storable a,Storable b,Storable c) ⇒ (a → b → c) → 𝕌 a → 𝕌 b → 𝕌 c
+zipWith𝕌 f (𝕌 xs) (𝕌 ys) = 𝕌 $ VU.zipWith f xs ys
+
+zipWithOn𝕌 ∷ (Storable a,Storable b,Storable c) ⇒ 𝕌 a → 𝕌 b → (a → b → c) → 𝕌 c
+zipWithOn𝕌 = rotateL zipWith𝕌
+

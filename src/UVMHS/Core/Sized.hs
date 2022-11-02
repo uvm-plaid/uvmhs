@@ -127,3 +127,9 @@ zipWithC f (iterC → 𝐼C n₁ xs) (iterC → 𝐼C n₂ ys) = 𝐼C (n₁ ⊓
 
 zipC ∷ (ToIterC a t₁,ToIterC b t₂) ⇒ t₁ → t₂ → 𝐼C (a ∧ b)
 zipC = zipWithC (:*)
+
+prodWith𝐼C ∷ (a → b → c) → 𝐼C a → 𝐼C b → 𝐼C c
+prodWith𝐼C f (𝐼C n₁ xs) (𝐼C n₂ ys) = 𝐼C (n₁ × n₂) $ do
+  x ← xs
+  y ← ys
+  return $ f x y

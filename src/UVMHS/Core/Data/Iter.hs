@@ -67,11 +67,17 @@ append𝐼 xs ys = 𝐼 HS.$ \ f i 𝓀 →
   un𝐼 xs f i $ \ i' →
   un𝐼 ys f i' 𝓀
 
-mjoin𝐼 ∷ 𝐼 (𝐼 a) → 𝐼 a
-mjoin𝐼 = fold𝐼 empty𝐼 $ flip append𝐼
+bind𝐼 ∷ ∀ a b. 𝐼 a → (a → 𝐼 b) → 𝐼 b
+bind𝐼 xs f =
+  𝐼 (
+    \ (g ∷ b → c → (c → c) → c) (i₀ ∷ c) (k₀ ∷ c → c) →
+        un𝐼 xs (\ (x ∷ a) (i ∷ c) (k ∷ c → c) →
+          un𝐼 (f x) g i k)
+        i₀ k₀
+  )
 
-bind𝐼 ∷ 𝐼 a → (a → 𝐼 b) → 𝐼 b
-bind𝐼 xs f = mjoin𝐼 $ map𝐼 f xs
+mjoin𝐼 ∷ ∀ a. 𝐼 (𝐼 a) → 𝐼 a
+mjoin𝐼 xss = bind𝐼 xss id
 
 mapM𝐼 ∷ (Monad m) ⇒ (a → m b) → 𝐼 a → m (𝐼 b)
 mapM𝐼 f = fold𝐼 (return empty𝐼) $ \ x ysM → do

@@ -462,6 +462,12 @@ umodifyEnvL ℓ f = do
   r ← askL ℓ
   uputEnvL ℓ $ f r
 
+unextEnvL ∷ (Monad m,MonadReader r m,MonadUCont m,Zero a,One a,Plus a) ⇒ r ⟢ a → m a
+unextEnvL ℓ = do
+  x ← askL ℓ
+  uputEnvL ℓ $ succ x
+  return x
+
 --------------
 -- DERIVING --
 --------------
