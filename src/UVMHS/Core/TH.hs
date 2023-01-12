@@ -36,8 +36,8 @@ instance Tup TH.Exp where
 
 instance Tup TH.Pat where 
   tup ps = case list ps of
-    Nil → TH.ConP '() []
-    p :& ps' → foldOnFrom ps' p $ \ p' pᵢ → TH.ConP '(:*) [pᵢ,p']
+    Nil → TH.ConP '() [] []
+    p :& ps' → foldOnFrom ps' p $ \ p' pᵢ → TH.ConP '(:*) [] [pᵢ,p']
 
 instance Tup TH.Type where 
   tup ts = case list ts of

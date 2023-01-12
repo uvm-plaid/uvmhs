@@ -36,7 +36,7 @@ makePrettySumLogic cx ty tyargs concontys = do
         let conString = thString $ string $ TH.nameBase con
             prettyCon = TH.VarE 'ppCon ⊙ conString
             prettyXs = mapOn tmpˣˢ $ \ x → TH.VarE 'pretty ⊙ TH.VarE x
-        in thSingleClause (single $ TH.ConP con $ tohs $ map TH.VarP tmpˣˢ) $ TH.VarE 'ppApp ⊙ prettyCon ⊙$ TH.VarE 'list ⊙$ TH.ListE (tohs prettyXs)
+        in thSingleClause (single $ TH.ConP con [] $ tohs $ map TH.VarP tmpˣˢ) $ TH.VarE 'ppApp ⊙ prettyCon ⊙$ TH.VarE 'list ⊙$ TH.ListE (tohs prettyXs)
   return $ single $ TH.InstanceD (tohs None) (tohs instanceCx) instanceTy $ single instanceDec
 
 makePrettySum ∷ TH.Name → TH.Q [TH.Dec]
@@ -66,7 +66,7 @@ makePrettyUnionLogic cx ty tyargs concontys = do
       instanceTy = TH.ConT ''Pretty ⊙ (TH.ConT ty ⊙⋆ tyargVars)
       instanceDec ∷ TH.Dec
       instanceDec = TH.FunD 'pretty $ tohs $ mapOn conxs $ \ (con :* tmpˣˢ) → 
-        thSingleClause (single $ TH.ConP con $ tohs $ map TH.VarP tmpˣˢ) $  case tmpˣˢ of
+        thSingleClause (single $ TH.ConP con [] $ tohs $ map TH.VarP tmpˣˢ) $  case tmpˣˢ of
           Nil → TH.VarE 'pretty ⊙ TH.ConE '()
           x :& Nil → TH.VarE 'pretty ⊙ TH.VarE x
           _ → 

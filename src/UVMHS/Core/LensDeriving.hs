@@ -67,7 +67,7 @@ makePrismLogic cx ty tyargs con fieldtys numcons = do
         ⊙ (TH.LamE [tup $ map TH.VarP tmpˣˢ] $ TH.ConE con ⊙⋆ map TH.VarE tmpˣˢ)
         ⊙ (TH.LamE [TH.VarP tmpˣ] $ 
             TH.CaseE (TH.VarE tmpˣ) $ concat
-              [ single $ thSingleMatch (TH.ConP con $ tohs (map TH.VarP tmpˣˢ)) $ 
+              [ single $ thSingleMatch (TH.ConP con [] $ tohs (map TH.VarP tmpˣˢ)) $ 
                   TH.ConE 'Some ⊙ tup (map TH.VarE tmpˣˢ)
               , case numcons ≤ 1 of
                   -- avoids generating code that has a dead branch
