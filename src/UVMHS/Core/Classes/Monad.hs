@@ -77,7 +77,6 @@ instance (Monad m) ⇒ HS.Applicative (ToHSM m) where
   fM <*> xM = ToHSM $ unToHSM fM ⊡ unToHSM xM
 
 instance (Monad m) ⇒ HS.Monad (ToHSM m) where
-  return = ToHSM ∘ return
   xM >>= f = ToHSM $ do
     x ← unToHSM xM
     unToHSM $ f x

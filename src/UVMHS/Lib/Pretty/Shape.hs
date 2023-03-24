@@ -228,8 +228,10 @@ instance Append ShapeA where
           --                               ⋅⋅⋅⋅␣␣␣␣CCCC
           --
           else 
-            let MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) = sh₂
-            in MultiLine $ ShapeM fl₂ (shapeLastLength sh₁ + mml₂) (shapeLastLength sh₁ + ll₂) nls₂
+            case sh₂ of
+              MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) →
+                MultiLine $ ShapeM fl₂ (shapeLastLength sh₁ + mml₂) (shapeLastLength sh₁ + ll₂) nls₂
+              _ → error "internal error"
     in ShapeA (a₁ ⩔ shape singleLineL sh₁ ⩓ a₂) $ sh₁ ⧺ sh₂'
 instance Monoid ShapeA
 
