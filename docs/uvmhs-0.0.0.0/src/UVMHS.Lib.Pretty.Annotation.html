@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621680388530"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHS.Lib.Pretty.Annotation</span><span> </span><span class="hs-keyword">where</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHS.Lib.Pretty.Annotation</span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-2"></span><span>
 </span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Core.html"><span class="hs-identifier">UVMHS.Core</span></a></span><span>
 </span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Color.html"><span class="hs-identifier">UVMHS.Lib.Pretty.Color</span></a></span><span>
@@ -18,24 +18,13 @@
 </span><span id="line-18"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="NOBD"><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#NOBD"><span class="hs-identifier hs-var">NOBD</span></a></span></span><span>
 </span><span id="line-19"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="IT"><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#IT"><span class="hs-identifier hs-var">IT</span></a></span></span><span>
 </span><span id="line-20"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="NOIT"><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#NOIT"><span class="hs-identifier hs-var">NOIT</span></a></span></span><span>
-</span><span id="line-21"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680388509"><span id="local-6989586621680388514"><span class="annot"><span class="annottext">Format -&gt; Format -&gt; Bool
-(Format -&gt; Format -&gt; Bool)
--&gt; (Format -&gt; Format -&gt; Bool) -&gt; Eq Format
+</span><span id="line-21"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680511716"><span id="local-6989586621680511721"><span class="annot"><span class="annottext">Format -&gt; Format -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: Format -&gt; Format -&gt; Bool
 $c/= :: Format -&gt; Format -&gt; Bool
 == :: Format -&gt; Format -&gt; Bool
 $c== :: Format -&gt; Format -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680388489"><span id="local-6989586621680388491"><span id="local-6989586621680388493"><span id="local-6989586621680388495"><span id="local-6989586621680388497"><span id="local-6989586621680388499"><span id="local-6989586621680388504"><span class="annot"><span class="annottext">Eq Format
-Eq Format
--&gt; (Format -&gt; Format -&gt; Ordering)
--&gt; (Format -&gt; Format -&gt; Bool)
--&gt; (Format -&gt; Format -&gt; Bool)
--&gt; (Format -&gt; Format -&gt; Bool)
--&gt; (Format -&gt; Format -&gt; Bool)
--&gt; (Format -&gt; Format -&gt; Format)
--&gt; (Format -&gt; Format -&gt; Format)
--&gt; Ord Format
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680511696"><span id="local-6989586621680511698"><span id="local-6989586621680511700"><span id="local-6989586621680511702"><span id="local-6989586621680511704"><span id="local-6989586621680511706"><span id="local-6989586621680511711"><span class="annot"><span class="annottext">Eq Format
 Format -&gt; Format -&gt; Bool
 Format -&gt; Format -&gt; Ordering
 Format -&gt; Format -&gt; Format
@@ -63,11 +52,9 @@ $c&lt;= :: Format -&gt; Format -&gt; Bool
 $c&lt; :: Format -&gt; Format -&gt; Bool
 compare :: Format -&gt; Format -&gt; Ordering
 $ccompare :: Format -&gt; Format -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680388476"><span id="local-6989586621680388478"><span id="local-6989586621680388486"><span class="annot"><span class="annottext">Int -&gt; Format -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680511683"><span id="local-6989586621680511685"><span id="local-6989586621680511693"><span class="annot"><span class="annottext">Int -&gt; Format -&gt; ShowS
 [Format] -&gt; ShowS
 Format -&gt; String
-(Int -&gt; Format -&gt; ShowS)
--&gt; (Format -&gt; String) -&gt; ([Format] -&gt; ShowS) -&gt; Show Format
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
 showList :: [Format] -&gt; ShowS
@@ -89,24 +76,13 @@ $cshowsPrec :: Int -&gt; Format -&gt; ShowS
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#bdFormats"><span class="hs-identifier hs-var hs-var">bdFormats</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D442"><span class="hs-identifier hs-type">&#119874;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span>
 </span><span id="line-28"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="itFormats"><span class="annot"><span class="annottext">Formats -&gt; &#119874; Bool
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#itFormats"><span class="hs-identifier hs-var hs-var">itFormats</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D442"><span class="hs-identifier hs-type">&#119874;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span>
-</span><span id="line-29"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680388456"><span id="local-6989586621680388466"><span class="annot"><span class="annottext">Formats -&gt; Formats -&gt; Bool
-(Formats -&gt; Formats -&gt; Bool)
--&gt; (Formats -&gt; Formats -&gt; Bool) -&gt; Eq Formats
+</span><span id="line-29"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680511663"><span id="local-6989586621680511673"><span class="annot"><span class="annottext">Formats -&gt; Formats -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: Formats -&gt; Formats -&gt; Bool
 $c/= :: Formats -&gt; Formats -&gt; Bool
 == :: Formats -&gt; Formats -&gt; Bool
 $c== :: Formats -&gt; Formats -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680388421"><span id="local-6989586621680388423"><span id="local-6989586621680388426"><span id="local-6989586621680388429"><span id="local-6989586621680388432"><span id="local-6989586621680388441"><span id="local-6989586621680388451"><span class="annot"><span class="annottext">Eq Formats
-Eq Formats
--&gt; (Formats -&gt; Formats -&gt; Ordering)
--&gt; (Formats -&gt; Formats -&gt; Bool)
--&gt; (Formats -&gt; Formats -&gt; Bool)
--&gt; (Formats -&gt; Formats -&gt; Bool)
--&gt; (Formats -&gt; Formats -&gt; Bool)
--&gt; (Formats -&gt; Formats -&gt; Formats)
--&gt; (Formats -&gt; Formats -&gt; Formats)
--&gt; Ord Formats
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680511628"><span id="local-6989586621680511630"><span id="local-6989586621680511633"><span id="local-6989586621680511636"><span id="local-6989586621680511639"><span id="local-6989586621680511648"><span id="local-6989586621680511658"><span class="annot"><span class="annottext">Eq Formats
 Formats -&gt; Formats -&gt; Bool
 Formats -&gt; Formats -&gt; Ordering
 Formats -&gt; Formats -&gt; Formats
@@ -134,11 +110,9 @@ $c&lt;= :: Formats -&gt; Formats -&gt; Bool
 $c&lt; :: Formats -&gt; Formats -&gt; Bool
 compare :: Formats -&gt; Formats -&gt; Ordering
 $ccompare :: Formats -&gt; Formats -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680388405"><span id="local-6989586621680388407"><span id="local-6989586621680388418"><span class="annot"><span class="annottext">Int -&gt; Formats -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680511612"><span id="local-6989586621680511614"><span id="local-6989586621680511625"><span class="annot"><span class="annottext">Int -&gt; Formats -&gt; ShowS
 [Formats] -&gt; ShowS
 Formats -&gt; String
-(Int -&gt; Formats -&gt; ShowS)
--&gt; (Formats -&gt; String) -&gt; ([Formats] -&gt; ShowS) -&gt; Show Formats
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
 showList :: [Formats] -&gt; ShowS
@@ -148,221 +122,154 @@ $cshow :: Formats -&gt; String
 showsPrec :: Int -&gt; Formats -&gt; ShowS
 $cshowsPrec :: Int -&gt; Formats -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-30"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680388401"><span class="annot"><span class="annottext">null :: Formats
+</span><span id="line-30"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680511608"><span class="annot"><span class="annottext">null :: Formats
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-31"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-32"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span id="local-6989586621680388395"><span class="annot"><span class="annottext">&#119874; Color
-</span><a href="#local-6989586621680388395"><span class="hs-identifier hs-var">fg&#8321;</span></a></span></span><span> </span><span id="local-6989586621680388394"><span class="annot"><span class="annottext">&#119874; Color
-</span><a href="#local-6989586621680388394"><span class="hs-identifier hs-var">bg&#8321;</span></a></span></span><span> </span><span id="local-6989586621680388393"><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388393"><span class="hs-identifier hs-var">ul&#8321;</span></a></span></span><span> </span><span id="local-6989586621680388392"><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388392"><span class="hs-identifier hs-var">bd&#8321;</span></a></span></span><span> </span><span id="local-6989586621680388391"><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388391"><span class="hs-identifier hs-var">it&#8321;</span></a></span></span><span> </span><span id="local-6989586621680388390"><span class="annot"><span class="annottext">&#10746; :: Formats -&gt; Formats -&gt; Formats
-</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span id="local-6989586621680388388"><span class="annot"><span class="annottext">&#119874; Color
-</span><a href="#local-6989586621680388388"><span class="hs-identifier hs-var">fg&#8322;</span></a></span></span><span> </span><span id="local-6989586621680388387"><span class="annot"><span class="annottext">&#119874; Color
-</span><a href="#local-6989586621680388387"><span class="hs-identifier hs-var">bg&#8322;</span></a></span></span><span> </span><span id="local-6989586621680388386"><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388386"><span class="hs-identifier hs-var">ul&#8322;</span></a></span></span><span> </span><span id="local-6989586621680388385"><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388385"><span class="hs-identifier hs-var">bd&#8322;</span></a></span></span><span> </span><span id="local-6989586621680388384"><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388384"><span class="hs-identifier hs-var">it&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><span id="line-32"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span id="local-6989586621680511602"><span class="annot"><span class="annottext">&#119874; Color
+</span><a href="#local-6989586621680511602"><span class="hs-identifier hs-var">fg&#8321;</span></a></span></span><span> </span><span id="local-6989586621680511601"><span class="annot"><span class="annottext">&#119874; Color
+</span><a href="#local-6989586621680511601"><span class="hs-identifier hs-var">bg&#8321;</span></a></span></span><span> </span><span id="local-6989586621680511600"><span class="annot"><span class="annottext">&#119874; Bool
+</span><a href="#local-6989586621680511600"><span class="hs-identifier hs-var">ul&#8321;</span></a></span></span><span> </span><span id="local-6989586621680511599"><span class="annot"><span class="annottext">&#119874; Bool
+</span><a href="#local-6989586621680511599"><span class="hs-identifier hs-var">bd&#8321;</span></a></span></span><span> </span><span id="local-6989586621680511598"><span class="annot"><span class="annottext">&#119874; Bool
+</span><a href="#local-6989586621680511598"><span class="hs-identifier hs-var">it&#8321;</span></a></span></span><span> </span><span id="local-6989586621680511597"><span class="annot"><span class="annottext">&#10746; :: Formats -&gt; Formats -&gt; Formats
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span id="local-6989586621680511595"><span class="annot"><span class="annottext">&#119874; Color
+</span><a href="#local-6989586621680511595"><span class="hs-identifier hs-var">fg&#8322;</span></a></span></span><span> </span><span id="local-6989586621680511594"><span class="annot"><span class="annottext">&#119874; Color
+</span><a href="#local-6989586621680511594"><span class="hs-identifier hs-var">bg&#8322;</span></a></span></span><span> </span><span id="local-6989586621680511593"><span class="annot"><span class="annottext">&#119874; Bool
+</span><a href="#local-6989586621680511593"><span class="hs-identifier hs-var">ul&#8322;</span></a></span></span><span> </span><span id="local-6989586621680511592"><span class="annot"><span class="annottext">&#119874; Bool
+</span><a href="#local-6989586621680511592"><span class="hs-identifier hs-var">bd&#8322;</span></a></span></span><span> </span><span id="local-6989586621680511591"><span class="annot"><span class="annottext">&#119874; Bool
+</span><a href="#local-6989586621680511591"><span class="hs-identifier hs-var">it&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
 </span><span id="line-33"></span><span>    </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Color
-forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Data.Option.html#first"><span class="hs-identifier hs-var">first</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-</span><a href="#local-6989586621680388395"><span class="hs-identifier hs-var">fg&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-</span><a href="#local-6989586621680388388"><span class="hs-identifier hs-var">fg&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Color
-forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
+</span><a href="#local-6989586621680511602"><span class="hs-identifier hs-var">fg&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
+</span><a href="#local-6989586621680511595"><span class="hs-identifier hs-var">fg&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Data.Option.html#first"><span class="hs-identifier hs-var">first</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-</span><a href="#local-6989586621680388394"><span class="hs-identifier hs-var">bg&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-</span><a href="#local-6989586621680388387"><span class="hs-identifier hs-var">bg&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool
-forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
+</span><a href="#local-6989586621680511601"><span class="hs-identifier hs-var">bg&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
+</span><a href="#local-6989586621680511594"><span class="hs-identifier hs-var">bg&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Data.Option.html#first"><span class="hs-identifier hs-var">first</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388393"><span class="hs-identifier hs-var">ul&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388386"><span class="hs-identifier hs-var">ul&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool
-forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
+</span><a href="#local-6989586621680511600"><span class="hs-identifier hs-var">ul&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
+</span><a href="#local-6989586621680511593"><span class="hs-identifier hs-var">ul&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Data.Option.html#first"><span class="hs-identifier hs-var">first</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388392"><span class="hs-identifier hs-var">bd&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388385"><span class="hs-identifier hs-var">bd&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool
-forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
+</span><a href="#local-6989586621680511599"><span class="hs-identifier hs-var">bd&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
+</span><a href="#local-6989586621680511592"><span class="hs-identifier hs-var">bd&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Data.Option.html#first"><span class="hs-identifier hs-var">first</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388391"><span class="hs-identifier hs-var">it&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-</span><a href="#local-6989586621680388384"><span class="hs-identifier hs-var">it&#8322;</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680511598"><span class="hs-identifier hs-var">it&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
+</span><a href="#local-6989586621680511591"><span class="hs-identifier hs-var">it&#8322;</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span>
 </span><span id="line-35"></span><span>
 </span><span id="line-36"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-type">format</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Format"><span class="hs-identifier hs-type">Format</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span>
 </span><span id="line-37"></span><span id="format"><span class="annot"><span class="annottext">format :: Format -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var hs-var">format</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#FG"><span class="hs-identifier hs-type">FG</span></a></span><span> </span><span id="local-6989586621680388375"><span class="annot"><span class="annottext">Color
-</span><a href="#local-6989586621680388375"><span class="hs-identifier hs-var">c</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color -&gt; &#119874; Color
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var hs-var">format</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#FG"><span class="hs-identifier hs-type">FG</span></a></span><span> </span><span id="local-6989586621680511582"><span class="annot"><span class="annottext">Color
+</span><a href="#local-6989586621680511582"><span class="hs-identifier hs-var">c</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">Color
-</span><a href="#local-6989586621680388375"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
+</span><a href="#local-6989586621680511582"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-38"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#NOFG"><span class="hs-identifier hs-var">NOFG</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color -&gt; &#119874; Color
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
 </span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
-</span><a href="UVMHS.Lib.Pretty.Color.html#DefaultColor"><span class="hs-identifier hs-var">DefaultColor</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Color.html#DefaultColor"><span class="hs-identifier hs-var">DefaultColor</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
-</span><span id="line-39"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#BG"><span class="hs-identifier hs-type">BG</span></a></span><span> </span><span id="local-6989586621680388371"><span class="annot"><span class="annottext">Color
-</span><a href="#local-6989586621680388371"><span class="hs-identifier hs-var">c</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color -&gt; &#119874; Color
-forall a. a -&gt; &#119874; a
+</span><span id="line-39"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#BG"><span class="hs-identifier hs-type">BG</span></a></span><span> </span><span id="local-6989586621680511578"><span class="annot"><span class="annottext">Color
+</span><a href="#local-6989586621680511578"><span class="hs-identifier hs-var">c</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">Color
-</span><a href="#local-6989586621680388371"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
+</span><a href="#local-6989586621680511578"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-40"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#NOBG"><span class="hs-identifier hs-var">NOBG</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color -&gt; &#119874; Color
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Color3Bit -&gt; Color
 </span><a href="UVMHS.Lib.Pretty.Color.html#Color"><span class="hs-identifier hs-var">Color</span></a></span><span> </span><span class="annot"><span class="annottext">Color3Bit
-</span><a href="UVMHS.Lib.Pretty.Color.html#DefaultColor"><span class="hs-identifier hs-var">DefaultColor</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Color.html#DefaultColor"><span class="hs-identifier hs-var">DefaultColor</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-41"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#UL"><span class="hs-identifier hs-var">UL</span></a></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; &#119874; Bool
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">True</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
+</span><span class="hs-identifier hs-var">True</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-42"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#NOUL"><span class="hs-identifier hs-var">NOUL</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; &#119874; Bool
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
+</span><span class="hs-identifier hs-var">False</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-43"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#BD"><span class="hs-identifier hs-var">BD</span></a></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; &#119874; Bool
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">True</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
+</span><span class="hs-identifier hs-var">True</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-44"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#NOBD"><span class="hs-identifier hs-var">NOBD</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; &#119874; Bool
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
+</span><span class="hs-identifier hs-var">False</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-45"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#IT"><span class="hs-identifier hs-var">IT</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; &#119874; Bool
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span class="hs-special">)</span><span>
 </span><span id="line-46"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#NOIT"><span class="hs-identifier hs-var">NOIT</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; Color -&gt; &#119874; Color -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; &#119874; Bool -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Color
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; Bool
-forall a. &#119874; a
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; &#119874; Bool
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-var">Formats</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span class="hs-special">)</span><span>
 </span><span id="line-47"></span><span>
-</span><span id="line-48"></span><span id="local-6989586621680388589"><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#formats"><span class="hs-identifier hs-type">formats</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Collections.html#ToIter"><span class="hs-identifier hs-type">ToIter</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Format"><span class="hs-identifier hs-type">Format</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680388589"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680388589"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span></span><span>
+</span><span id="line-48"></span><span id="local-6989586621680511795"><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#formats"><span class="hs-identifier hs-type">formats</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Collections.html#ToIter"><span class="hs-identifier hs-type">ToIter</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Format"><span class="hs-identifier hs-type">Format</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680511795"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680511795"><span class="hs-identifier hs-type">t</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span></span><span>
 </span><span id="line-49"></span><span id="formats"><span class="annot"><span class="annottext">formats :: forall t. ToIter Format t =&gt; t -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#formats"><span class="hs-identifier hs-var hs-var">formats</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; Formats -&gt; Formats
-forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
-</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; Formats -&gt; Formats)
--&gt; (&#119868; Format -&gt; &#119868; Formats) -&gt; &#119868; Format -&gt; Formats
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">(Format -&gt; Formats) -&gt; &#119868; Format -&gt; &#119868; Formats
-forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#formats"><span class="hs-identifier hs-var hs-var">formats</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functor.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">Format -&gt; Formats
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; Format -&gt; Formats) -&gt; (t -&gt; &#119868; Format) -&gt; t -&gt; Formats
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">t -&gt; &#119868; Format
-forall a t. ToIter a t =&gt; t -&gt; &#119868; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#format"><span class="hs-identifier hs-var">format</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">forall a t. ToIter a t =&gt; t -&gt; &#119868; a
 </span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span>
 </span><span id="line-50"></span><span>
 </span><span id="line-51"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#override"><span class="hs-identifier hs-type">override</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43F"><span class="hs-identifier hs-type">&#119871;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Format"><span class="hs-identifier hs-type">Format</span></a></span><span>
 </span><span id="line-52"></span><span id="override"><span class="annot"><span class="annottext">override :: &#119871; Format
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#override"><span class="hs-identifier hs-var hs-var">override</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Format] -&gt; &#119871; Format
-forall a t. ToIter a t =&gt; t -&gt; &#119871; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#override"><span class="hs-identifier hs-var hs-var">override</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a t. ToIter a t =&gt; t -&gt; &#119871; a
 </span><a href="UVMHS.Core.Data.Iter.html#list"><span class="hs-identifier hs-var">list</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#NOFG"><span class="hs-identifier hs-var">NOFG</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#NOBG"><span class="hs-identifier hs-var">NOBG</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Format
@@ -379,24 +286,13 @@ forall a t. ToIter a t =&gt; t -&gt; &#119871; a
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#annotationFormats"><span class="hs-identifier hs-var hs-var">annotationFormats</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span>
 </span><span id="line-60"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="annotationUndertag"><span class="annot"><span class="annottext">Annotation -&gt; &#119874; (&#8450; &#8743; Formats)
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#annotationUndertag"><span class="hs-identifier hs-var hs-var">annotationUndertag</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D442"><span class="hs-identifier hs-type">&#119874;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%2102"><span class="hs-identifier hs-type">&#8450;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2227"><span class="hs-operator hs-type">&#8743;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-61"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680388347"><span id="local-6989586621680388352"><span class="annot"><span class="annottext">Annotation -&gt; Annotation -&gt; Bool
-(Annotation -&gt; Annotation -&gt; Bool)
--&gt; (Annotation -&gt; Annotation -&gt; Bool) -&gt; Eq Annotation
+</span><span id="line-61"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680511554"><span id="local-6989586621680511559"><span class="annot"><span class="annottext">Annotation -&gt; Annotation -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: Annotation -&gt; Annotation -&gt; Bool
 $c/= :: Annotation -&gt; Annotation -&gt; Bool
 == :: Annotation -&gt; Annotation -&gt; Bool
 $c== :: Annotation -&gt; Annotation -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680388319"><span id="local-6989586621680388321"><span id="local-6989586621680388324"><span id="local-6989586621680388327"><span id="local-6989586621680388330"><span id="local-6989586621680388335"><span id="local-6989586621680388340"><span class="annot"><span class="annottext">Eq Annotation
-Eq Annotation
--&gt; (Annotation -&gt; Annotation -&gt; Ordering)
--&gt; (Annotation -&gt; Annotation -&gt; Bool)
--&gt; (Annotation -&gt; Annotation -&gt; Bool)
--&gt; (Annotation -&gt; Annotation -&gt; Bool)
--&gt; (Annotation -&gt; Annotation -&gt; Bool)
--&gt; (Annotation -&gt; Annotation -&gt; Annotation)
--&gt; (Annotation -&gt; Annotation -&gt; Annotation)
--&gt; Ord Annotation
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680511526"><span id="local-6989586621680511528"><span id="local-6989586621680511531"><span id="local-6989586621680511534"><span id="local-6989586621680511537"><span id="local-6989586621680511542"><span id="local-6989586621680511547"><span class="annot"><span class="annottext">Eq Annotation
 Annotation -&gt; Annotation -&gt; Bool
 Annotation -&gt; Annotation -&gt; Ordering
 Annotation -&gt; Annotation -&gt; Annotation
@@ -424,13 +320,9 @@ $c&lt;= :: Annotation -&gt; Annotation -&gt; Bool
 $c&lt; :: Annotation -&gt; Annotation -&gt; Bool
 compare :: Annotation -&gt; Annotation -&gt; Ordering
 $ccompare :: Annotation -&gt; Annotation -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680388305"><span id="local-6989586621680388307"><span id="local-6989586621680388313"><span class="annot"><span class="annottext">Int -&gt; Annotation -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680511512"><span id="local-6989586621680511514"><span id="local-6989586621680511520"><span class="annot"><span class="annottext">Int -&gt; Annotation -&gt; ShowS
 [Annotation] -&gt; ShowS
 Annotation -&gt; String
-(Int -&gt; Annotation -&gt; ShowS)
--&gt; (Annotation -&gt; String)
--&gt; ([Annotation] -&gt; ShowS)
--&gt; Show Annotation
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
 showList :: [Annotation] -&gt; ShowS
@@ -442,54 +334,45 @@ $cshowsPrec :: Int -&gt; Annotation -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
 </span><span id="line-62"></span><span>
 </span><span id="line-63"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-64"></span><span>  </span><span id="local-6989586621680388298"><span class="annot"><span class="annottext">null :: Annotation
-</span><a href="#local-6989586621680388298"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; Annotation
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-var">Annotation</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-forall a. Null a =&gt; a
-</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-forall a. &#119874; a
+</span><span id="line-64"></span><span>  </span><span id="local-6989586621680511505"><span class="annot"><span class="annottext">null :: Annotation
+</span><a href="#local-6989586621680511505"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; Annotation
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-var">Annotation</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-65"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-66"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span> </span><span id="local-6989586621680388294"><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680388294"><span class="hs-identifier hs-var">a&#8321;</span></a></span></span><span> </span><span id="local-6989586621680388293"><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-</span><a href="#local-6989586621680388293"><span class="hs-identifier hs-var">u&#8321;</span></a></span></span><span> </span><span id="local-6989586621680388292"><span class="annot"><span class="annottext">&#10746; :: Annotation -&gt; Annotation -&gt; Annotation
-</span><a href="#local-6989586621680388292"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span> </span><span id="local-6989586621680388291"><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680388291"><span class="hs-identifier hs-var">a&#8322;</span></a></span></span><span> </span><span id="local-6989586621680388290"><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-</span><a href="#local-6989586621680388290"><span class="hs-identifier hs-var">u&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; Annotation
+</span><span id="line-66"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span> </span><span id="local-6989586621680511501"><span class="annot"><span class="annottext">Formats
+</span><a href="#local-6989586621680511501"><span class="hs-identifier hs-var">a&#8321;</span></a></span></span><span> </span><span id="local-6989586621680511500"><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
+</span><a href="#local-6989586621680511500"><span class="hs-identifier hs-var">u&#8321;</span></a></span></span><span> </span><span id="local-6989586621680511499"><span class="annot"><span class="annottext">&#10746; :: Annotation -&gt; Annotation -&gt; Annotation
+</span><a href="#local-6989586621680511499"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span> </span><span id="local-6989586621680511498"><span class="annot"><span class="annottext">Formats
+</span><a href="#local-6989586621680511498"><span class="hs-identifier hs-var">a&#8322;</span></a></span></span><span> </span><span id="local-6989586621680511497"><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
+</span><a href="#local-6989586621680511497"><span class="hs-identifier hs-var">u&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; Annotation
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-var">Annotation</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680388294"><span class="hs-identifier hs-var">a&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">Formats -&gt; Formats -&gt; Formats
-forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680511501"><span class="hs-identifier hs-var">a&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680388291"><span class="hs-identifier hs-var">a&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats) -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; &#119874; (&#8450; &#8743; Formats)
-forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
+</span><a href="#local-6989586621680511498"><span class="hs-identifier hs-var">a&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Data.Option.html#last"><span class="hs-identifier hs-var">last</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-</span><a href="#local-6989586621680388293"><span class="hs-identifier hs-var">u&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-</span><a href="#local-6989586621680388290"><span class="hs-identifier hs-var">u&#8322;</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680511500"><span class="hs-identifier hs-var">u&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
+</span><a href="#local-6989586621680511497"><span class="hs-identifier hs-var">u&#8322;</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-67"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span>
 </span><span id="line-68"></span><span>
 </span><span id="line-69"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#formatAnnotation"><span class="hs-identifier hs-type">formatAnnotation</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span>
 </span><span id="line-70"></span><span id="formatAnnotation"><span class="annot"><span class="annottext">formatAnnotation :: Formats -&gt; Annotation
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#formatAnnotation"><span class="hs-identifier hs-var hs-var">formatAnnotation</span></a></span></span><span> </span><span id="local-6989586621680388282"><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680388282"><span class="hs-identifier hs-var">fm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; Annotation
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#formatAnnotation"><span class="hs-identifier hs-var hs-var">formatAnnotation</span></a></span></span><span> </span><span id="local-6989586621680511489"><span class="annot"><span class="annottext">Formats
+</span><a href="#local-6989586621680511489"><span class="hs-identifier hs-var">fm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; Annotation
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-var">Annotation</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680388282"><span class="hs-identifier hs-var">fm</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-forall a. &#119874; a
+</span><a href="#local-6989586621680511489"><span class="hs-identifier hs-var">fm</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
 </span><span id="line-71"></span><span>
 </span><span id="line-72"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#undertagAnnotation"><span class="hs-identifier hs-type">undertagAnnotation</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2102"><span class="hs-identifier hs-type">&#8450;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Formats"><span class="hs-identifier hs-type">Formats</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span>
 </span><span id="line-73"></span><span id="undertagAnnotation"><span class="annot"><span class="annottext">undertagAnnotation :: &#8450; -&gt; Formats -&gt; Annotation
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#undertagAnnotation"><span class="hs-identifier hs-var hs-var">undertagAnnotation</span></a></span></span><span> </span><span id="local-6989586621680388280"><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680388280"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621680388279"><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680388279"><span class="hs-identifier hs-var">fm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; Annotation
-</span><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-var">Annotation</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-forall a. Null a =&gt; a
-</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119874; (&#8450; &#8743; Formats) -&gt; Annotation) -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; Annotation
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8450; &#8743; Formats) -&gt; &#119874; (&#8450; &#8743; Formats)
-forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#undertagAnnotation"><span class="hs-identifier hs-var hs-var">undertagAnnotation</span></a></span></span><span> </span><span id="local-6989586621680511487"><span class="annot"><span class="annottext">&#8450;
+</span><a href="#local-6989586621680511487"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621680511486"><span class="annot"><span class="annottext">Formats
+</span><a href="#local-6989586621680511486"><span class="hs-identifier hs-var">fm</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; Annotation
+</span><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-var">Annotation</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680388280"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; Formats -&gt; &#8450; &#8743; Formats
-forall a b. a -&gt; b -&gt; a &#8743; b
+</span><a href="#local-6989586621680511487"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680388279"><span class="hs-identifier hs-var">fm</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680511486"><span class="hs-identifier hs-var">fm</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-74"></span></pre></body></html>

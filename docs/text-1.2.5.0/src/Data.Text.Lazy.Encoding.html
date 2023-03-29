@@ -89,105 +89,97 @@
 </span><span id="line-87"></span><span class="hs-comment">-- | Decode a 'ByteString' containing Latin-1 (aka ISO-8859-1) encoded text.</span><span>
 </span><span id="line-88"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeLatin1"><span class="hs-identifier hs-type">decodeLatin1</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span>
 </span><span id="line-89"></span><span id="decodeLatin1"><span class="annot"><span class="annottext">decodeLatin1 :: ByteString -&gt; Text
-</span><a href="Data.Text.Lazy.Encoding.html#decodeLatin1"><span class="hs-identifier hs-var hs-var">decodeLatin1</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; Text -&gt; Text) -&gt; Text -&gt; [ByteString] -&gt; Text
-forall (t :: * -&gt; *) a b.
+</span><a href="Data.Text.Lazy.Encoding.html#decodeLatin1"><span class="hs-identifier hs-var hs-var">decodeLatin1</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a b.
 Foldable t =&gt;
 (a -&gt; b -&gt; b) -&gt; b -&gt; t a -&gt; b
 </span><a href="../../base/src/Data.Foldable.html#foldr"><span class="hs-identifier hs-var">foldr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
-</span><a href="Data.Text.Internal.Lazy.html#chunk"><span class="hs-identifier hs-var">chunk</span></a></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Text -&gt; Text)
--&gt; (ByteString -&gt; Text) -&gt; ByteString -&gt; Text -&gt; Text
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Data.Text.Internal.Lazy.html#chunk"><span class="hs-identifier hs-var">chunk</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="../../base/src/GHC.Base.html#."><span class="hs-operator hs-var">.</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Text
 </span><a href="Data.Text.Encoding.html#decodeLatin1"><span class="hs-identifier hs-var">TE.decodeLatin1</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="Data.Text.Internal.Lazy.html#empty"><span class="hs-identifier hs-var">empty</span></a></span><span> </span><span class="annot"><span class="annottext">([ByteString] -&gt; Text)
--&gt; (ByteString -&gt; [ByteString]) -&gt; ByteString -&gt; Text
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Data.Text.Internal.Lazy.html#empty"><span class="hs-identifier hs-var">empty</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="../../base/src/GHC.Base.html#."><span class="hs-operator hs-var">.</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; [ByteString]
 </span><a href="../../bytestring/src/Data.ByteString.Lazy.html#toChunks"><span class="hs-identifier hs-var">B.toChunks</span></a></span><span>
 </span><span id="line-90"></span><span>
 </span><span id="line-91"></span><span class="hs-comment">-- | Decode a 'ByteString' containing UTF-8 encoded text.</span><span>
 </span><span id="line-92"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf8With"><span class="hs-identifier hs-type">decodeUtf8With</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Encoding.Error.html#OnDecodeError"><span class="hs-identifier hs-type">OnDecodeError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span>
 </span><span id="line-93"></span><span id="decodeUtf8With"><span class="annot"><span class="annottext">decodeUtf8With :: OnDecodeError -&gt; ByteString -&gt; Text
-</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf8With"><span class="hs-identifier hs-var hs-var">decodeUtf8With</span></a></span></span><span> </span><span id="local-6989586621679112249"><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112249"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#Chunk"><span class="hs-identifier hs-type">B.Chunk</span></a></span><span> </span><span id="local-6989586621679112247"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112247"><span class="hs-identifier hs-var">b0</span></a></span></span><span> </span><span id="local-6989586621679112246"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112246"><span class="hs-identifier hs-var">bs0</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf8With"><span class="hs-identifier hs-var hs-var">decodeUtf8With</span></a></span></span><span> </span><span id="local-6989586621679108314"><span class="annot"><span class="annottext">OnDecodeError
+</span><a href="#local-6989586621679108314"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#Chunk"><span class="hs-identifier hs-type">B.Chunk</span></a></span><span> </span><span id="local-6989586621679108312"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108312"><span class="hs-identifier hs-var">b0</span></a></span></span><span> </span><span id="local-6989586621679108311"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108311"><span class="hs-identifier hs-var">bs0</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-94"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">OnDecodeError -&gt; ByteString -&gt; Decoding
 </span><a href="Data.Text.Encoding.html#streamDecodeUtf8With"><span class="hs-identifier hs-var">TE.streamDecodeUtf8With</span></a></span><span> </span><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112249"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112247"><span class="hs-identifier hs-var">b0</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-95"></span><span>      </span><span class="annot"><a href="Data.Text.Encoding.html#Some"><span class="hs-identifier hs-type">TE.Some</span></a></span><span> </span><span id="local-6989586621679112243"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112243"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679112242"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112242"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621679112241"><span class="annot"><span class="annottext">ByteString -&gt; Decoding
-</span><a href="#local-6989586621679112241"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
+</span><a href="#local-6989586621679108314"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108312"><span class="hs-identifier hs-var">b0</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-95"></span><span>      </span><span class="annot"><a href="Data.Text.Encoding.html#Some"><span class="hs-identifier hs-type">TE.Some</span></a></span><span> </span><span id="local-6989586621679108308"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108308"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679108307"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108307"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621679108306"><span class="annot"><span class="annottext">ByteString -&gt; Decoding
+</span><a href="#local-6989586621679108306"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 </span><a href="Data.Text.Internal.Lazy.html#chunk"><span class="hs-identifier hs-var">chunk</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112243"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(ByteString -&gt; Decoding) -&gt; ByteString -&gt; ByteString -&gt; Text
-</span><a href="#local-6989586621679112240"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Decoding
-</span><a href="#local-6989586621679112241"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112242"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112246"><span class="hs-identifier hs-var">bs0</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108308"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(ByteString -&gt; Decoding) -&gt; ByteString -&gt; ByteString -&gt; Text
+</span><a href="#local-6989586621679108305"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Decoding
+</span><a href="#local-6989586621679108306"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108307"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108311"><span class="hs-identifier hs-var">bs0</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-96"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-97"></span><span>    </span><span id="local-6989586621679112240"><span class="annot"><span class="annottext">go :: (ByteString -&gt; Decoding) -&gt; ByteString -&gt; ByteString -&gt; Text
-</span><a href="#local-6989586621679112240"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679112239"><span class="annot"><span class="annottext">ByteString -&gt; Decoding
-</span><a href="#local-6989586621679112239"><span class="hs-identifier hs-var">f0</span></a></span></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#Chunk"><span class="hs-identifier hs-type">B.Chunk</span></a></span><span> </span><span id="local-6989586621679112238"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112238"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span id="local-6989586621679112237"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112237"><span class="hs-identifier hs-var">bs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-97"></span><span>    </span><span id="local-6989586621679108305"><span class="annot"><span class="annottext">go :: (ByteString -&gt; Decoding) -&gt; ByteString -&gt; ByteString -&gt; Text
+</span><a href="#local-6989586621679108305"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679108304"><span class="annot"><span class="annottext">ByteString -&gt; Decoding
+</span><a href="#local-6989586621679108304"><span class="hs-identifier hs-var">f0</span></a></span></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#Chunk"><span class="hs-identifier hs-type">B.Chunk</span></a></span><span> </span><span id="local-6989586621679108303"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108303"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span id="local-6989586621679108302"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108302"><span class="hs-identifier hs-var">bs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-98"></span><span>      </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Decoding
-</span><a href="#local-6989586621679112239"><span class="hs-identifier hs-var">f0</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112238"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-99"></span><span>        </span><span class="annot"><a href="Data.Text.Encoding.html#Some"><span class="hs-identifier hs-type">TE.Some</span></a></span><span> </span><span id="local-6989586621679112236"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112236"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679112235"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112235"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621679112234"><span class="annot"><span class="annottext">ByteString -&gt; Decoding
-</span><a href="#local-6989586621679112234"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
+</span><a href="#local-6989586621679108304"><span class="hs-identifier hs-var">f0</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108303"><span class="hs-identifier hs-var">b</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-99"></span><span>        </span><span class="annot"><a href="Data.Text.Encoding.html#Some"><span class="hs-identifier hs-type">TE.Some</span></a></span><span> </span><span id="local-6989586621679108301"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108301"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span id="local-6989586621679108300"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108300"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621679108299"><span class="annot"><span class="annottext">ByteString -&gt; Decoding
+</span><a href="#local-6989586621679108299"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 </span><a href="Data.Text.Internal.Lazy.html#chunk"><span class="hs-identifier hs-var">chunk</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112236"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(ByteString -&gt; Decoding) -&gt; ByteString -&gt; ByteString -&gt; Text
-</span><a href="#local-6989586621679112240"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Decoding
-</span><a href="#local-6989586621679112234"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112235"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112237"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-100"></span><span>    </span><span class="annot"><a href="#local-6989586621679112240"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Decoding
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679112233"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112233"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108301"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(ByteString -&gt; Decoding) -&gt; ByteString -&gt; ByteString -&gt; Text
+</span><a href="#local-6989586621679108305"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Decoding
+</span><a href="#local-6989586621679108299"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108300"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108302"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-100"></span><span>    </span><span class="annot"><a href="#local-6989586621679108305"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Decoding
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679108298"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108298"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="annot"><span class="annottext">ByteString
 </span><span class="hs-identifier">_</span></span><span>
 </span><span id="line-101"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Bool
 </span><a href="../../bytestring/src/Data.ByteString.html#null"><span class="hs-identifier hs-var">S.null</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112233"><span class="hs-identifier hs-var">l</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108298"><span class="hs-identifier hs-var">l</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
 </span><a href="Data.Text.Internal.Lazy.html#empty"><span class="hs-identifier hs-var">empty</span></a></span><span>
 </span><span id="line-102"></span><span>      </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><a href="../../base/src/GHC.Base.html#otherwise"><span class="hs-identifier hs-var">otherwise</span></a></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-103"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679112231"><span class="annot"><span class="annottext">t :: Text
-</span><a href="#local-6989586621679112231"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Text
+</span><span id="line-103"></span><span>        </span><span class="hs-keyword">let</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679108296"><span class="annot"><span class="annottext">t :: Text
+</span><a href="#local-6989586621679108296"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Text
 </span><a href="Data.Text.html#pack"><span class="hs-identifier hs-var">T.pack</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString -&gt; String
-</span><a href="#local-6989586621679112229"><span class="hs-identifier hs-var">skipBytes</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112233"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-104"></span><span>            </span><span id="local-6989586621679112229"><span class="annot"><span class="annottext">skipBytes :: ByteString -&gt; String
-</span><a href="#local-6989586621679112229"><span class="hs-identifier hs-var hs-var">skipBytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Word8 -&gt; String -&gt; String) -&gt; String -&gt; ByteString -&gt; String
-forall a. (Word8 -&gt; a -&gt; a) -&gt; a -&gt; ByteString -&gt; a
-</span><a href="../../bytestring/src/Data.ByteString.html#foldr"><span class="hs-identifier hs-var">S.foldr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679112227"><span class="annot"><span class="annottext">Word8
-</span><a href="#local-6989586621679112227"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679112226"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679112226"><span class="hs-identifier hs-var">s'</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><a href="#local-6989586621679108294"><span class="hs-identifier hs-var">skipBytes</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108298"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-104"></span><span>            </span><span id="local-6989586621679108294"><span class="annot"><span class="annottext">skipBytes :: ByteString -&gt; String
+</span><a href="#local-6989586621679108294"><span class="hs-identifier hs-var hs-var">skipBytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. (Word8 -&gt; a -&gt; a) -&gt; a -&gt; ByteString -&gt; a
+</span><a href="../../bytestring/src/Data.ByteString.html#foldr"><span class="hs-identifier hs-var">S.foldr</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679108292"><span class="annot"><span class="annottext">Word8
+</span><a href="#local-6989586621679108292"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621679108291"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679108291"><span class="hs-identifier hs-var">s'</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-105"></span><span>                  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112249"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679112225"><span class="hs-identifier hs-var">desc</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word8 -&gt; Maybe Word8
-forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679108314"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679108290"><span class="hs-identifier hs-var">desc</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><a href="../../base/src/GHC.Maybe.html#Just"><span class="hs-identifier hs-var">Just</span></a></span><span> </span><span class="annot"><span class="annottext">Word8
-</span><a href="#local-6989586621679112227"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-106"></span><span>                    </span><span class="annot"><a href="../../base/src/GHC.Maybe.html#Just"><span class="hs-identifier hs-type">Just</span></a></span><span> </span><span id="local-6989586621679112224"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679112224"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679112224"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; String -&gt; String
-forall a. a -&gt; [a] -&gt; [a]
+</span><a href="#local-6989586621679108292"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-106"></span><span>                    </span><span class="annot"><a href="../../base/src/GHC.Maybe.html#Just"><span class="hs-identifier hs-type">Just</span></a></span><span> </span><span id="local-6989586621679108289"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679108289"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679108289"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; [a] -&gt; [a]
 </span><a href="../../ghc-prim/src/GHC.Types.html#%3A"><span class="hs-glyph hs-var">:</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679112226"><span class="hs-identifier hs-var">s'</span></a></span><span>
+</span><a href="#local-6989586621679108291"><span class="hs-identifier hs-var">s'</span></a></span><span>
 </span><span id="line-107"></span><span>                    </span><span class="annot"><span class="annottext">Maybe Char
 </span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679112226"><span class="hs-identifier hs-var">s'</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-keyword">in</span><span>
+</span><a href="#local-6989586621679108291"><span class="hs-identifier hs-var">s'</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-keyword">in</span><span>
 </span><span id="line-108"></span><span>        </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Text
 </span><a href="Data.Text.Internal.Lazy.html#Chunk"><span class="hs-identifier hs-var">Chunk</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112231"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108296"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><a href="Data.Text.Internal.Lazy.html#Empty"><span class="hs-identifier hs-var">Empty</span></a></span><span>
-</span><span id="line-109"></span><span>    </span><span id="local-6989586621679112225"><span class="annot"><span class="annottext">desc :: String
-</span><a href="#local-6989586621679112225"><span class="hs-identifier hs-var hs-var">desc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><span id="line-109"></span><span>    </span><span id="local-6989586621679108290"><span class="annot"><span class="annottext">desc :: String
+</span><a href="#local-6989586621679108290"><span class="hs-identifier hs-var hs-var">desc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;Data.Text.Lazy.Encoding.decodeUtf8With: Invalid UTF-8 stream&quot;</span></span><span>
 </span><span id="line-110"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf8With"><span class="hs-identifier hs-var">decodeUtf8With</span></a></span><span> </span><span class="annot"><span class="annottext">OnDecodeError
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">ByteString
@@ -222,36 +214,30 @@ forall a. a -&gt; [a] -&gt; [a]
 </span><span id="line-134"></span><span class="hs-comment">-- decoding, use 'decodeUtf8With' in lenient mode.</span><span>
 </span><span id="line-135"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf8%27"><span class="hs-identifier hs-type">decodeUtf8'</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/Data.Either.html#Either"><span class="hs-identifier hs-type">Either</span></a></span><span> </span><span class="annot"><a href="Data.Text.Encoding.Error.html#UnicodeException"><span class="hs-identifier hs-type">UnicodeException</span></a></span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span>
 </span><span id="line-136"></span><span id="decodeUtf8%27"><span class="annot"><span class="annottext">decodeUtf8' :: ByteString -&gt; Either UnicodeException Text
-</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf8%27"><span class="hs-identifier hs-var hs-var">decodeUtf8'</span></a></span></span><span> </span><span id="local-6989586621679112221"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112221"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO (Either UnicodeException Text) -&gt; Either UnicodeException Text
-forall a. IO a -&gt; a
-</span><a href="../../base/src/GHC.IO.Unsafe.html#unsafeDupablePerformIO"><span class="hs-identifier hs-var">unsafeDupablePerformIO</span></a></span><span> </span><span class="annot"><span class="annottext">(IO (Either UnicodeException Text) -&gt; Either UnicodeException Text)
--&gt; IO (Either UnicodeException Text)
--&gt; Either UnicodeException Text
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf8%27"><span class="hs-identifier hs-var hs-var">decodeUtf8'</span></a></span></span><span> </span><span id="local-6989586621679108286"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108286"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. IO a -&gt; a
+</span><a href="../../base/src/GHC.IO.Unsafe.html#unsafeDupablePerformIO"><span class="hs-identifier hs-var">unsafeDupablePerformIO</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-137"></span><span>                   </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679112220"><span class="annot"><span class="annottext">t :: Text
-</span><a href="#local-6989586621679112220"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Text
+</span><span id="line-137"></span><span>                   </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679108285"><span class="annot"><span class="annottext">t :: Text
+</span><a href="#local-6989586621679108285"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; Text
 </span><a href="Data.Text.Lazy.Encoding.html#decodeUtf8"><span class="hs-identifier hs-var">decodeUtf8</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112221"><span class="hs-identifier hs-var">bs</span></a></span><span>
-</span><span id="line-138"></span><span>                   </span><span class="annot"><span class="annottext">IO Text -&gt; IO (Either UnicodeException Text)
-forall e a. Exception e =&gt; IO a -&gt; IO (Either e a)
-</span><a href="../../base/src/Control.Exception.Base.html#try"><span class="hs-identifier hs-var">try</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; IO Text
-forall a. a -&gt; IO a
+</span><a href="#local-6989586621679108286"><span class="hs-identifier hs-var">bs</span></a></span><span>
+</span><span id="line-138"></span><span>                   </span><span class="annot"><span class="annottext">forall e a. Exception e =&gt; IO a -&gt; IO (Either e a)
+</span><a href="../../base/src/Control.Exception.Base.html#try"><span class="hs-identifier hs-var">try</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; IO a
 </span><a href="../../base/src/GHC.IO.html#evaluate"><span class="hs-identifier hs-var">evaluate</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; ()
-</span><a href="#local-6989586621679112219"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112220"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">() -&gt; Text -&gt; Text
-</span><a href="../../ghc-prim/src/GHC.Prim.html#seq"><span class="hs-operator hs-var">`seq`</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112220"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108284"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108285"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">seq :: forall a b. a -&gt; b -&gt; b
+</span><a href="../../ghc-prim/src/GHC.Prim.html#seq"><span class="hs-operator hs-type">`seq`</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108285"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-139"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-140"></span><span>    </span><span id="local-6989586621679112219"><span class="annot"><span class="annottext">rnf :: Text -&gt; ()
-</span><a href="#local-6989586621679112219"><span class="hs-identifier hs-var hs-var">rnf</span></a></span></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span id="line-140"></span><span>    </span><span id="local-6989586621679108284"><span class="annot"><span class="annottext">rnf :: Text -&gt; ()
+</span><a href="#local-6989586621679108284"><span class="hs-identifier hs-var hs-var">rnf</span></a></span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><a href="Data.Text.Internal.Lazy.html#Empty"><span class="hs-identifier hs-var">Empty</span></a></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-141"></span><span>    </span><span class="annot"><a href="#local-6989586621679112219"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Chunk"><span class="hs-identifier hs-type">Chunk</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679112218"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112218"><span class="hs-identifier hs-var">ts</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; ()
-</span><a href="#local-6989586621679112219"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112218"><span class="hs-identifier hs-var">ts</span></a></span><span>
+</span><span id="line-141"></span><span>    </span><span class="annot"><a href="#local-6989586621679108284"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Chunk"><span class="hs-identifier hs-type">Chunk</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679108283"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108283"><span class="hs-identifier hs-var">ts</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; ()
+</span><a href="#local-6989586621679108284"><span class="hs-identifier hs-var">rnf</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108283"><span class="hs-identifier hs-var">ts</span></a></span><span>
 </span><span id="line-142"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf8%27"><span class="hs-pragma hs-type">decodeUtf8'</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-143"></span><span>
 </span><span id="line-144"></span><span class="hs-comment">-- | Encode text using UTF-8 encoding.</span><span>
@@ -260,41 +246,37 @@ forall a. a -&gt; IO a
 </span><a href="Data.Text.Lazy.Encoding.html#encodeUtf8"><span class="hs-identifier hs-var hs-var">encodeUtf8</span></a></span></span><span>    </span><span class="annot"><span class="annottext">Text
 </span><a href="Data.Text.Internal.Lazy.html#Empty"><span class="hs-identifier hs-var">Empty</span></a></span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString
 </span><a href="../../bytestring/src/Data.ByteString.Lazy.html#empty"><span class="hs-identifier hs-var">B.empty</span></a></span><span>
-</span><span id="line-147"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf8"><span class="hs-identifier hs-var">encodeUtf8</span></a></span><span> </span><span id="local-6989586621679112216"><span class="annot"><span class="annottext">lt :: Text
-</span><a href="#local-6989586621679112216"><span class="hs-identifier hs-var">lt</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Chunk"><span class="hs-identifier hs-type">Chunk</span></a></span><span> </span><span id="local-6989586621679112215"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112215"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span id="line-147"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf8"><span class="hs-identifier hs-var">encodeUtf8</span></a></span><span> </span><span id="local-6989586621679108281"><span class="annot"><span class="annottext">lt :: Text
+</span><a href="#local-6989586621679108281"><span class="hs-identifier hs-var">lt</span></a></span></span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Chunk"><span class="hs-identifier hs-type">Chunk</span></a></span><span> </span><span id="local-6989586621679108280"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108280"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-148"></span><span>    </span><span class="annot"><span class="annottext">AllocationStrategy -&gt; ByteString -&gt; Builder -&gt; ByteString
 </span><a href="../../bytestring/src/Data.ByteString.Builder.Internal.html#toLazyByteStringWith"><span class="hs-identifier hs-var">B.toLazyByteStringWith</span></a></span><span> </span><span class="annot"><span class="annottext">AllocationStrategy
-</span><a href="#local-6989586621679112214"><span class="hs-identifier hs-var">strategy</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#empty"><span class="hs-identifier hs-var">B.empty</span></a></span><span> </span><span class="annot"><span class="annottext">(Builder -&gt; ByteString) -&gt; Builder -&gt; ByteString
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679108279"><span class="hs-identifier hs-var">strategy</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#empty"><span class="hs-identifier hs-var">B.empty</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Builder
 </span><a href="Data.Text.Lazy.Encoding.html#encodeUtf8Builder"><span class="hs-identifier hs-var">encodeUtf8Builder</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112216"><span class="hs-identifier hs-var">lt</span></a></span><span>
+</span><a href="#local-6989586621679108281"><span class="hs-identifier hs-var">lt</span></a></span><span>
 </span><span id="line-149"></span><span>  </span><span class="hs-keyword">where</span><span>
 </span><span id="line-150"></span><span>    </span><span class="hs-comment">-- To improve our small string performance, we use a strategy that</span><span>
 </span><span id="line-151"></span><span>    </span><span class="hs-comment">-- allocates a buffer that is guaranteed to be large enough for the</span><span>
 </span><span id="line-152"></span><span>    </span><span class="hs-comment">-- encoding of the first chunk, but not larger than the default</span><span>
 </span><span id="line-153"></span><span>    </span><span class="hs-comment">-- B.smallChunkSize. We clamp the firstChunkSize to ensure that we don't</span><span>
 </span><span id="line-154"></span><span>    </span><span class="hs-comment">-- generate too large buffers which hamper streaming.</span><span>
-</span><span id="line-155"></span><span>    </span><span id="local-6989586621679112206"><span class="annot"><span class="annottext">firstChunkSize :: Int
-</span><a href="#local-6989586621679112206"><span class="hs-identifier hs-var hs-var">firstChunkSize</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Ord a =&gt; a -&gt; a -&gt; a
+</span><span id="line-155"></span><span>    </span><span id="local-6989586621679108271"><span class="annot"><span class="annottext">firstChunkSize :: Int
+</span><a href="#local-6989586621679108271"><span class="hs-identifier hs-var hs-var">firstChunkSize</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; a
 </span><a href="../../ghc-prim/src/GHC.Classes.html#min"><span class="hs-identifier hs-var">min</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#smallChunkSize"><span class="hs-identifier hs-var">B.smallChunkSize</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">4</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-number">4</span></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2A"><span class="hs-operator hs-var">*</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Text -&gt; Int
 </span><a href="Data.Text.html#length"><span class="hs-identifier hs-var">T.length</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112215"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679108280"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-156"></span><span>    </span><span id="local-6989586621679112214"><span class="annot"><span class="annottext">strategy :: AllocationStrategy
-</span><a href="#local-6989586621679112214"><span class="hs-identifier hs-var hs-var">strategy</span></a></span></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; AllocationStrategy
+</span><span id="line-156"></span><span>    </span><span id="local-6989586621679108279"><span class="annot"><span class="annottext">strategy :: AllocationStrategy
+</span><a href="#local-6989586621679108279"><span class="hs-identifier hs-var hs-var">strategy</span></a></span></span><span>        </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; AllocationStrategy
 </span><a href="../../bytestring/src/Data.ByteString.Builder.Internal.html#safeStrategy"><span class="hs-identifier hs-var">B.safeStrategy</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679112206"><span class="hs-identifier hs-var">firstChunkSize</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679108271"><span class="hs-identifier hs-var">firstChunkSize</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#defaultChunkSize"><span class="hs-identifier hs-var">B.defaultChunkSize</span></a></span><span>
 </span><span id="line-157"></span><span>
 </span><span id="line-158"></span><span class="hs-comment">-- | Encode text to a ByteString 'B.Builder' using UTF-8 encoding.</span><span>
@@ -303,17 +285,14 @@ forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span id="line-161"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf8Builder"><span class="hs-identifier hs-type">encodeUtf8Builder</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Builder.Internal.html#Builder"><span class="hs-identifier hs-type">B.Builder</span></a></span><span>
 </span><span id="line-162"></span><span id="encodeUtf8Builder"><span class="annot"><span class="annottext">encodeUtf8Builder :: Text -&gt; Builder
 </span><a href="Data.Text.Lazy.Encoding.html#encodeUtf8Builder"><span class="hs-identifier hs-var hs-var">encodeUtf8Builder</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-163"></span><span>    </span><span class="annot"><span class="annottext">(Text -&gt; Builder -&gt; Builder) -&gt; Builder -&gt; Text -&gt; Builder
-forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
-</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679112199"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112199"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621679112198"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679112198"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Builder
+</span><span id="line-163"></span><span>    </span><span class="annot"><span class="annottext">forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
+</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679108264"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108264"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621679108263"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679108263"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Builder
 </span><a href="Data.Text.Encoding.html#encodeUtf8Builder"><span class="hs-identifier hs-var">TE.encodeUtf8Builder</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112199"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
-forall a. Monoid a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679108264"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Base.html#mappend"><span class="hs-operator hs-var">`mappend`</span></a></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679112198"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Builder
-forall a. Monoid a =&gt; a
+</span><a href="#local-6989586621679108263"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><a href="../../base/src/GHC.Base.html#mempty"><span class="hs-identifier hs-var">Data.Monoid.mempty</span></a></span><span>
 </span><span id="line-164"></span><span>
 </span><span id="line-165"></span><span class="hs-comment">-- | Encode text using UTF-8 encoding and escape the ASCII characters using</span><span>
@@ -326,32 +305,29 @@ forall a. Monoid a =&gt; a
 </span><span id="line-172"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf8BuilderEscaped"><span class="hs-pragma hs-type">encodeUtf8BuilderEscaped</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-173"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf8BuilderEscaped"><span class="hs-identifier hs-type">encodeUtf8BuilderEscaped</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Builder.Prim.Internal.html#BoundedPrim"><span class="hs-identifier hs-type">BP.BoundedPrim</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Word.html#Word8"><span class="hs-identifier hs-type">Word8</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Builder.Internal.html#Builder"><span class="hs-identifier hs-type">B.Builder</span></a></span><span>
 </span><span id="line-174"></span><span id="encodeUtf8BuilderEscaped"><span class="annot"><span class="annottext">encodeUtf8BuilderEscaped :: BoundedPrim Word8 -&gt; Text -&gt; Builder
-</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf8BuilderEscaped"><span class="hs-identifier hs-var hs-var">encodeUtf8BuilderEscaped</span></a></span></span><span> </span><span id="local-6989586621679112196"><span class="annot"><span class="annottext">BoundedPrim Word8
-</span><a href="#local-6989586621679112196"><span class="hs-keyword hs-var">prim</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-175"></span><span>    </span><span class="annot"><span class="annottext">(Text -&gt; Builder -&gt; Builder) -&gt; Builder -&gt; Text -&gt; Builder
-forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
-</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679112195"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112195"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621679112194"><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679112194"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">BoundedPrim Word8 -&gt; Text -&gt; Builder
+</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf8BuilderEscaped"><span class="hs-identifier hs-var hs-var">encodeUtf8BuilderEscaped</span></a></span></span><span> </span><span id="local-6989586621679108261"><span class="annot"><span class="annottext">BoundedPrim Word8
+</span><a href="#local-6989586621679108261"><span class="hs-keyword hs-var">prim</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-175"></span><span>    </span><span class="annot"><span class="annottext">forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
+</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679108260"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108260"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span id="local-6989586621679108259"><span class="annot"><span class="annottext">Builder
+</span><a href="#local-6989586621679108259"><span class="hs-identifier hs-var">b</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">BoundedPrim Word8 -&gt; Text -&gt; Builder
 </span><a href="Data.Text.Encoding.html#encodeUtf8BuilderEscaped"><span class="hs-identifier hs-var">TE.encodeUtf8BuilderEscaped</span></a></span><span> </span><span class="annot"><span class="annottext">BoundedPrim Word8
-</span><a href="#local-6989586621679112196"><span class="hs-keyword hs-var">prim</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112195"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Builder -&gt; Builder -&gt; Builder
-forall a. Monoid a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679108261"><span class="hs-keyword hs-var">prim</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108260"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Base.html#mappend"><span class="hs-operator hs-var">`mappend`</span></a></span><span> </span><span class="annot"><span class="annottext">Builder
-</span><a href="#local-6989586621679112194"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Builder
-forall a. Monoid a =&gt; a
+</span><a href="#local-6989586621679108259"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><a href="../../base/src/GHC.Base.html#mempty"><span class="hs-identifier hs-var">mempty</span></a></span><span>
 </span><span id="line-176"></span><span>
 </span><span id="line-177"></span><span class="hs-comment">-- | Decode text from little endian UTF-16 encoding.</span><span>
 </span><span id="line-178"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf16LEWith"><span class="hs-identifier hs-type">decodeUtf16LEWith</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Encoding.Error.html#OnDecodeError"><span class="hs-identifier hs-type">OnDecodeError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span>
 </span><span id="line-179"></span><span id="decodeUtf16LEWith"><span class="annot"><span class="annottext">decodeUtf16LEWith :: OnDecodeError -&gt; ByteString -&gt; Text
-</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf16LEWith"><span class="hs-identifier hs-var hs-var">decodeUtf16LEWith</span></a></span></span><span> </span><span id="local-6989586621679112192"><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112192"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span id="local-6989586621679112191"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112191"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Stream Char -&gt; Text
+</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf16LEWith"><span class="hs-identifier hs-var hs-var">decodeUtf16LEWith</span></a></span></span><span> </span><span id="local-6989586621679108257"><span class="annot"><span class="annottext">OnDecodeError
+</span><a href="#local-6989586621679108257"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span id="local-6989586621679108256"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108256"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Stream Char -&gt; Text
 </span><a href="Data.Text.Internal.Lazy.Fusion.html#unstream"><span class="hs-identifier hs-var">F.unstream</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OnDecodeError -&gt; ByteString -&gt; Stream Char
 </span><a href="Data.Text.Internal.Lazy.Encoding.Fusion.html#streamUtf16LE"><span class="hs-identifier hs-var">E.streamUtf16LE</span></a></span><span> </span><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112192"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112191"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108257"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108256"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-180"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf16LEWith"><span class="hs-pragma hs-type">decodeUtf16LEWith</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-181"></span><span>
 </span><span id="line-182"></span><span class="hs-comment">-- | Decode text from little endian UTF-16 encoding.</span><span>
@@ -369,13 +345,13 @@ forall a. Monoid a =&gt; a
 </span><span id="line-191"></span><span class="hs-comment">-- | Decode text from big endian UTF-16 encoding.</span><span>
 </span><span id="line-192"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf16BEWith"><span class="hs-identifier hs-type">decodeUtf16BEWith</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Encoding.Error.html#OnDecodeError"><span class="hs-identifier hs-type">OnDecodeError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span>
 </span><span id="line-193"></span><span id="decodeUtf16BEWith"><span class="annot"><span class="annottext">decodeUtf16BEWith :: OnDecodeError -&gt; ByteString -&gt; Text
-</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf16BEWith"><span class="hs-identifier hs-var hs-var">decodeUtf16BEWith</span></a></span></span><span> </span><span id="local-6989586621679112188"><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112188"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span id="local-6989586621679112187"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112187"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Stream Char -&gt; Text
+</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf16BEWith"><span class="hs-identifier hs-var hs-var">decodeUtf16BEWith</span></a></span></span><span> </span><span id="local-6989586621679108253"><span class="annot"><span class="annottext">OnDecodeError
+</span><a href="#local-6989586621679108253"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span id="local-6989586621679108252"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108252"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Stream Char -&gt; Text
 </span><a href="Data.Text.Internal.Lazy.Fusion.html#unstream"><span class="hs-identifier hs-var">F.unstream</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OnDecodeError -&gt; ByteString -&gt; Stream Char
 </span><a href="Data.Text.Internal.Lazy.Encoding.Fusion.html#streamUtf16BE"><span class="hs-identifier hs-var">E.streamUtf16BE</span></a></span><span> </span><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112188"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112187"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108253"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108252"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-194"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf16BEWith"><span class="hs-pragma hs-type">decodeUtf16BEWith</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-195"></span><span>
 </span><span id="line-196"></span><span class="hs-comment">-- | Decode text from big endian UTF-16 encoding.</span><span>
@@ -393,45 +369,37 @@ forall a. Monoid a =&gt; a
 </span><span id="line-205"></span><span class="hs-comment">-- | Encode text using little endian UTF-16 encoding.</span><span>
 </span><span id="line-206"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf16LE"><span class="hs-identifier hs-type">encodeUtf16LE</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span>
 </span><span id="line-207"></span><span id="encodeUtf16LE"><span class="annot"><span class="annottext">encodeUtf16LE :: Text -&gt; ByteString
-</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf16LE"><span class="hs-identifier hs-var hs-var">encodeUtf16LE</span></a></span></span><span> </span><span id="local-6989586621679112185"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112185"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
-</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#fromChunks"><span class="hs-identifier hs-var">B.fromChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Text -&gt; [ByteString] -&gt; [ByteString])
--&gt; [ByteString] -&gt; Text -&gt; [ByteString]
-forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
-</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; [ByteString] -&gt; [ByteString])
--&gt; (Text -&gt; ByteString) -&gt; Text -&gt; [ByteString] -&gt; [ByteString]
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf16LE"><span class="hs-identifier hs-var hs-var">encodeUtf16LE</span></a></span></span><span> </span><span id="local-6989586621679108250"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108250"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
+</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#fromChunks"><span class="hs-identifier hs-var">B.fromChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
+</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="../../base/src/GHC.Base.html#."><span class="hs-operator hs-var">.</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; ByteString
 </span><a href="Data.Text.Encoding.html#encodeUtf16LE"><span class="hs-identifier hs-var">TE.encodeUtf16LE</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112185"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108250"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-208"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf16LE"><span class="hs-pragma hs-type">encodeUtf16LE</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-209"></span><span>
 </span><span id="line-210"></span><span class="hs-comment">-- | Encode text using big endian UTF-16 encoding.</span><span>
 </span><span id="line-211"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf16BE"><span class="hs-identifier hs-type">encodeUtf16BE</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span>
 </span><span id="line-212"></span><span id="encodeUtf16BE"><span class="annot"><span class="annottext">encodeUtf16BE :: Text -&gt; ByteString
-</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf16BE"><span class="hs-identifier hs-var hs-var">encodeUtf16BE</span></a></span></span><span> </span><span id="local-6989586621679112182"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112182"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
-</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#fromChunks"><span class="hs-identifier hs-var">B.fromChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Text -&gt; [ByteString] -&gt; [ByteString])
--&gt; [ByteString] -&gt; Text -&gt; [ByteString]
-forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
-</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; [ByteString] -&gt; [ByteString])
--&gt; (Text -&gt; ByteString) -&gt; Text -&gt; [ByteString] -&gt; [ByteString]
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf16BE"><span class="hs-identifier hs-var hs-var">encodeUtf16BE</span></a></span></span><span> </span><span id="local-6989586621679108247"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108247"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
+</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#fromChunks"><span class="hs-identifier hs-var">B.fromChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
+</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="../../base/src/GHC.Base.html#."><span class="hs-operator hs-var">.</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; ByteString
 </span><a href="Data.Text.Encoding.html#encodeUtf16BE"><span class="hs-identifier hs-var">TE.encodeUtf16BE</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112182"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108247"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-213"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf16BE"><span class="hs-pragma hs-type">encodeUtf16BE</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-214"></span><span>
 </span><span id="line-215"></span><span class="hs-comment">-- | Decode text from little endian UTF-32 encoding.</span><span>
 </span><span id="line-216"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf32LEWith"><span class="hs-identifier hs-type">decodeUtf32LEWith</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Encoding.Error.html#OnDecodeError"><span class="hs-identifier hs-type">OnDecodeError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span>
 </span><span id="line-217"></span><span id="decodeUtf32LEWith"><span class="annot"><span class="annottext">decodeUtf32LEWith :: OnDecodeError -&gt; ByteString -&gt; Text
-</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf32LEWith"><span class="hs-identifier hs-var hs-var">decodeUtf32LEWith</span></a></span></span><span> </span><span id="local-6989586621679112180"><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112180"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span id="local-6989586621679112179"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112179"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Stream Char -&gt; Text
+</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf32LEWith"><span class="hs-identifier hs-var hs-var">decodeUtf32LEWith</span></a></span></span><span> </span><span id="local-6989586621679108245"><span class="annot"><span class="annottext">OnDecodeError
+</span><a href="#local-6989586621679108245"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span id="local-6989586621679108244"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108244"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Stream Char -&gt; Text
 </span><a href="Data.Text.Internal.Lazy.Fusion.html#unstream"><span class="hs-identifier hs-var">F.unstream</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OnDecodeError -&gt; ByteString -&gt; Stream Char
 </span><a href="Data.Text.Internal.Lazy.Encoding.Fusion.html#streamUtf32LE"><span class="hs-identifier hs-var">E.streamUtf32LE</span></a></span><span> </span><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112180"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112179"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108245"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108244"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-218"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf32LEWith"><span class="hs-pragma hs-type">decodeUtf32LEWith</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-219"></span><span>
 </span><span id="line-220"></span><span class="hs-comment">-- | Decode text from little endian UTF-32 encoding.</span><span>
@@ -449,13 +417,13 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span id="line-229"></span><span class="hs-comment">-- | Decode text from big endian UTF-32 encoding.</span><span>
 </span><span id="line-230"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf32BEWith"><span class="hs-identifier hs-type">decodeUtf32BEWith</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Encoding.Error.html#OnDecodeError"><span class="hs-identifier hs-type">OnDecodeError</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span>
 </span><span id="line-231"></span><span id="decodeUtf32BEWith"><span class="annot"><span class="annottext">decodeUtf32BEWith :: OnDecodeError -&gt; ByteString -&gt; Text
-</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf32BEWith"><span class="hs-identifier hs-var hs-var">decodeUtf32BEWith</span></a></span></span><span> </span><span id="local-6989586621679112177"><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112177"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span id="local-6989586621679112176"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112176"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Stream Char -&gt; Text
+</span><a href="Data.Text.Lazy.Encoding.html#decodeUtf32BEWith"><span class="hs-identifier hs-var hs-var">decodeUtf32BEWith</span></a></span></span><span> </span><span id="local-6989586621679108242"><span class="annot"><span class="annottext">OnDecodeError
+</span><a href="#local-6989586621679108242"><span class="hs-identifier hs-var">onErr</span></a></span></span><span> </span><span id="local-6989586621679108241"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108241"><span class="hs-identifier hs-var">bs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Stream Char -&gt; Text
 </span><a href="Data.Text.Internal.Lazy.Fusion.html#unstream"><span class="hs-identifier hs-var">F.unstream</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">OnDecodeError -&gt; ByteString -&gt; Stream Char
 </span><a href="Data.Text.Internal.Lazy.Encoding.Fusion.html#streamUtf32BE"><span class="hs-identifier hs-var">E.streamUtf32BE</span></a></span><span> </span><span class="annot"><span class="annottext">OnDecodeError
-</span><a href="#local-6989586621679112177"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679112176"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108242"><span class="hs-identifier hs-var">onErr</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679108241"><span class="hs-identifier hs-var">bs</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-232"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#decodeUtf32BEWith"><span class="hs-pragma hs-type">decodeUtf32BEWith</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-233"></span><span>
 </span><span id="line-234"></span><span class="hs-comment">-- | Decode text from big endian UTF-32 encoding.</span><span>
@@ -473,32 +441,24 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span id="line-243"></span><span class="hs-comment">-- | Encode text using little endian UTF-32 encoding.</span><span>
 </span><span id="line-244"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf32LE"><span class="hs-identifier hs-type">encodeUtf32LE</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span>
 </span><span id="line-245"></span><span id="encodeUtf32LE"><span class="annot"><span class="annottext">encodeUtf32LE :: Text -&gt; ByteString
-</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf32LE"><span class="hs-identifier hs-var hs-var">encodeUtf32LE</span></a></span></span><span> </span><span id="local-6989586621679112174"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112174"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
-</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#fromChunks"><span class="hs-identifier hs-var">B.fromChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Text -&gt; [ByteString] -&gt; [ByteString])
--&gt; [ByteString] -&gt; Text -&gt; [ByteString]
-forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
-</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; [ByteString] -&gt; [ByteString])
--&gt; (Text -&gt; ByteString) -&gt; Text -&gt; [ByteString] -&gt; [ByteString]
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf32LE"><span class="hs-identifier hs-var hs-var">encodeUtf32LE</span></a></span></span><span> </span><span id="local-6989586621679108239"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108239"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
+</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#fromChunks"><span class="hs-identifier hs-var">B.fromChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
+</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="../../base/src/GHC.Base.html#."><span class="hs-operator hs-var">.</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; ByteString
 </span><a href="Data.Text.Encoding.html#encodeUtf32LE"><span class="hs-identifier hs-var">TE.encodeUtf32LE</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112174"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108239"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-246"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf32LE"><span class="hs-pragma hs-type">encodeUtf32LE</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-247"></span><span>
 </span><span id="line-248"></span><span class="hs-comment">-- | Encode text using big endian UTF-32 encoding.</span><span>
 </span><span id="line-249"></span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf32BE"><span class="hs-identifier hs-type">encodeUtf32BE</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Lazy.Internal.html#ByteString"><span class="hs-identifier hs-type">B.ByteString</span></a></span><span>
 </span><span id="line-250"></span><span id="encodeUtf32BE"><span class="annot"><span class="annottext">encodeUtf32BE :: Text -&gt; ByteString
-</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf32BE"><span class="hs-identifier hs-var hs-var">encodeUtf32BE</span></a></span></span><span> </span><span id="local-6989586621679112172"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112172"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
-</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#fromChunks"><span class="hs-identifier hs-var">B.fromChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Text -&gt; [ByteString] -&gt; [ByteString])
--&gt; [ByteString] -&gt; Text -&gt; [ByteString]
-forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
-</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(ByteString -&gt; [ByteString] -&gt; [ByteString])
--&gt; (Text -&gt; ByteString) -&gt; Text -&gt; [ByteString] -&gt; [ByteString]
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Data.Text.Lazy.Encoding.html#encodeUtf32BE"><span class="hs-identifier hs-var hs-var">encodeUtf32BE</span></a></span></span><span> </span><span id="local-6989586621679108237"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679108237"><span class="hs-identifier hs-var">txt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[ByteString] -&gt; ByteString
+</span><a href="../../bytestring/src/Data.ByteString.Lazy.html#fromChunks"><span class="hs-identifier hs-var">B.fromChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. (Text -&gt; a -&gt; a) -&gt; a -&gt; Text -&gt; a
+</span><a href="Data.Text.Internal.Lazy.html#foldrChunks"><span class="hs-identifier hs-var">foldrChunks</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">:</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="../../base/src/GHC.Base.html#."><span class="hs-operator hs-var">.</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; ByteString
 </span><a href="Data.Text.Encoding.html#encodeUtf32BE"><span class="hs-identifier hs-var">TE.encodeUtf32BE</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679112172"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679108237"><span class="hs-identifier hs-var">txt</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-251"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Encoding.html#encodeUtf32BE"><span class="hs-pragma hs-type">encodeUtf32BE</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-252"></span></pre></body></html>

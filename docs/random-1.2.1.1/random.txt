@@ -545,7 +545,7 @@ class StatefulGen (MutableGen f m) m => FrozenGen f m where {
     
     -- | Represents the state of the pseudo-random number generator for use
     --   with <a>thawGen</a> and <a>freezeGen</a>.
-    type family MutableGen f m = (g :: Type) | g -> f;
+    type MutableGen f m = (g :: Type) | g -> f;
 }
 
 -- | Saves the state of the pseudo-random number generator as a frozen

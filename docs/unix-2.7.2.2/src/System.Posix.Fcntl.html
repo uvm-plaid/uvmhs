@@ -54,9 +54,7 @@
 </span><span id="line-52"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="AdviceWillNeed"><span class="annot"><a href="System.Posix.Fcntl.html#AdviceWillNeed"><span class="hs-identifier hs-var">AdviceWillNeed</span></a></span></span><span>
 </span><span id="line-53"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="AdviceDontNeed"><span class="annot"><a href="System.Posix.Fcntl.html#AdviceDontNeed"><span class="hs-identifier hs-var">AdviceDontNeed</span></a></span></span><span>
 </span><span id="line-54"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="AdviceNoReuse"><span class="annot"><a href="System.Posix.Fcntl.html#AdviceNoReuse"><span class="hs-identifier hs-var">AdviceNoReuse</span></a></span></span><span>
-</span><span id="line-55"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621679058716"><span id="local-6989586621679058718"><span class="annot"><span class="annottext">Advice -&gt; Advice -&gt; Bool
-(Advice -&gt; Advice -&gt; Bool)
--&gt; (Advice -&gt; Advice -&gt; Bool) -&gt; Eq Advice
+</span><span id="line-55"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span id="local-6989586621679063762"><span id="local-6989586621679063764"><span class="annot"><span class="annottext">Advice -&gt; Advice -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: Advice -&gt; Advice -&gt; Bool
 $c/= :: Advice -&gt; Advice -&gt; Bool
@@ -80,8 +78,7 @@ $c== :: Advice -&gt; Advice -&gt; Bool
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">FileOffset
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">FileOffset
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Advice
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">() -&gt; IO ()
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-82"></span><span>
 </span><span id="line-83"></span><span class="hs-pragma">{-# LINE 83 &quot;libraries/unix/System/Posix/Fcntl.hsc&quot; #-}</span><span>
@@ -103,8 +100,7 @@ forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="System.Posix.Fcntl.html#fileAllocate"><span class="hs-identifier hs-var hs-var">fileAllocate</span></a></span></span><span> </span><span class="annot"><span class="annottext">Fd
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">FileOffset
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">FileOffset
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IOError -&gt; IO ()
-forall a. IOError -&gt; IO a
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. IOError -&gt; IO a
 </span><a href="../../base/src/GHC.IO.Exception.html#ioError"><span class="hs-identifier hs-var">ioError</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IOError -&gt; String -&gt; IOError
 </span><a href="../../base/src/System.IO.Error.html#ioeSetLocation"><span class="hs-identifier hs-var">ioeSetLocation</span></a></span><span> </span><span class="annot"><span class="annottext">IOError
 </span><a href="../../base/src/GHC.IO.Exception.html#unsupportedOperation"><span class="hs-identifier hs-var">unsupportedOperation</span></a></span><span>

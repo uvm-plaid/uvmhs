@@ -70,24 +70,21 @@
 </span><span id="line-66"></span><span class="hs-comment">--  @mode@.</span><span>
 </span><span id="line-67"></span><span class="annot"><a href="System.Posix.Directory.ByteString.html#createDirectory"><span class="hs-identifier hs-type">createDirectory</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="System.Posix.ByteString.FilePath.html#RawFilePath"><span class="hs-identifier hs-type">RawFilePath</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#FileMode"><span class="hs-identifier hs-type">FileMode</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-68"></span><span id="createDirectory"><span class="annot"><span class="annottext">createDirectory :: RawFilePath -&gt; FileMode -&gt; IO ()
-</span><a href="System.Posix.Directory.ByteString.html#createDirectory"><span class="hs-identifier hs-var hs-var">createDirectory</span></a></span></span><span> </span><span id="local-6989586621679057659"><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057659"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679057658"><span class="annot"><span class="annottext">FileMode
-</span><a href="#local-6989586621679057658"><span class="hs-identifier hs-var">mode</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-69"></span><span>  </span><span class="annot"><span class="annottext">RawFilePath -&gt; (CString -&gt; IO ()) -&gt; IO ()
-forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
+</span><a href="System.Posix.Directory.ByteString.html#createDirectory"><span class="hs-identifier hs-var hs-var">createDirectory</span></a></span></span><span> </span><span id="local-6989586621679062704"><span class="annot"><span class="annottext">RawFilePath
+</span><a href="#local-6989586621679062704"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span id="local-6989586621679062703"><span class="annot"><span class="annottext">FileMode
+</span><a href="#local-6989586621679062703"><span class="hs-identifier hs-var">mode</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-69"></span><span>  </span><span class="annot"><span class="annottext">forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
 </span><a href="System.Posix.ByteString.FilePath.html#withFilePath"><span class="hs-identifier hs-var">withFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057659"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">((CString -&gt; IO ()) -&gt; IO ()) -&gt; (CString -&gt; IO ()) -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679057656"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057656"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-70"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; RawFilePath -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; RawFilePath -&gt; IO a -&gt; IO ()
+</span><a href="#local-6989586621679062704"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679062701"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679062701"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-70"></span><span>    </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; RawFilePath -&gt; IO a -&gt; IO ()
 </span><a href="System.Posix.ByteString.FilePath.html#throwErrnoPathIfMinus1Retry_"><span class="hs-identifier hs-var">throwErrnoPathIfMinus1Retry_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;createDirectory&quot;</span></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057659"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CString -&gt; FileMode -&gt; IO CInt
+</span><a href="#local-6989586621679062704"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CString -&gt; FileMode -&gt; IO CInt
 </span><a href="System.Posix.Directory.ByteString.html#c_mkdir"><span class="hs-identifier hs-var">c_mkdir</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057656"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">FileMode
-</span><a href="#local-6989586621679057658"><span class="hs-identifier hs-var">mode</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679062701"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">FileMode
+</span><a href="#local-6989586621679062703"><span class="hs-identifier hs-var">mode</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-71"></span><span>    </span><span class="hs-comment">-- POSIX doesn't allow mkdir() to return EINTR, but it does on</span><span>
 </span><span id="line-72"></span><span>    </span><span class="hs-comment">-- OS X (#5184), so we need the Retry variant here.</span><span>
 </span><span id="line-73"></span><span>
@@ -98,31 +95,25 @@ forall a. (Eq a, Num a) =&gt; String -&gt; RawFilePath -&gt; IO a -&gt; IO ()
 </span><span id="line-78"></span><span class="hs-comment">--   directory stream for @dir@.</span><span>
 </span><span id="line-79"></span><span class="annot"><a href="System.Posix.Directory.ByteString.html#openDirStream"><span class="hs-identifier hs-type">openDirStream</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="System.Posix.ByteString.FilePath.html#RawFilePath"><span class="hs-identifier hs-type">RawFilePath</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Posix.Directory.Common.html#DirStream"><span class="hs-identifier hs-type">DirStream</span></a></span><span>
 </span><span id="line-80"></span><span id="openDirStream"><span class="annot"><span class="annottext">openDirStream :: RawFilePath -&gt; IO DirStream
-</span><a href="System.Posix.Directory.ByteString.html#openDirStream"><span class="hs-identifier hs-var hs-var">openDirStream</span></a></span></span><span> </span><span id="local-6989586621679057652"><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057652"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-81"></span><span>  </span><span class="annot"><span class="annottext">RawFilePath -&gt; (CString -&gt; IO DirStream) -&gt; IO DirStream
-forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
+</span><a href="System.Posix.Directory.ByteString.html#openDirStream"><span class="hs-identifier hs-var hs-var">openDirStream</span></a></span></span><span> </span><span id="local-6989586621679062697"><span class="annot"><span class="annottext">RawFilePath
+</span><a href="#local-6989586621679062697"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-81"></span><span>  </span><span class="annot"><span class="annottext">forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
 </span><a href="System.Posix.ByteString.FilePath.html#withFilePath"><span class="hs-identifier hs-var">withFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057652"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">((CString -&gt; IO DirStream) -&gt; IO DirStream)
--&gt; (CString -&gt; IO DirStream) -&gt; IO DirStream
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679057651"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057651"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-82"></span><span>    </span><span id="local-6989586621679057650"><span class="annot"><span class="annottext">Ptr CDir
-</span><a href="#local-6989586621679057650"><span class="hs-identifier hs-var">dirp</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; RawFilePath -&gt; IO (Ptr CDir) -&gt; IO (Ptr CDir)
-forall a. String -&gt; RawFilePath -&gt; IO (Ptr a) -&gt; IO (Ptr a)
+</span><a href="#local-6989586621679062697"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679062696"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679062696"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-82"></span><span>    </span><span id="local-6989586621679062695"><span class="annot"><span class="annottext">Ptr CDir
+</span><a href="#local-6989586621679062695"><span class="hs-identifier hs-var">dirp</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; RawFilePath -&gt; IO (Ptr a) -&gt; IO (Ptr a)
 </span><a href="System.Posix.ByteString.FilePath.html#throwErrnoPathIfNullRetry"><span class="hs-identifier hs-var">throwErrnoPathIfNullRetry</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;openDirStream&quot;</span></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057652"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">(IO (Ptr CDir) -&gt; IO (Ptr CDir)) -&gt; IO (Ptr CDir) -&gt; IO (Ptr CDir)
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679062697"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO (Ptr CDir)
 </span><a href="System.Posix.Directory.ByteString.html#c_opendir"><span class="hs-identifier hs-var">c_opendir</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057651"><span class="hs-identifier hs-var">s</span></a></span><span>
-</span><span id="line-83"></span><span>    </span><span class="annot"><span class="annottext">DirStream -&gt; IO DirStream
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679062696"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-83"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CDir -&gt; DirStream
 </span><a href="System.Posix.Directory.Common.html#DirStream"><span class="hs-identifier hs-var">DirStream</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CDir
-</span><a href="#local-6989586621679057650"><span class="hs-identifier hs-var">dirp</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679062695"><span class="hs-identifier hs-var">dirp</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-84"></span><span>
 </span><span id="line-85"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">capi</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;HsUnix.h opendir&quot;</span></span><span>
 </span><span id="line-86"></span><span>   </span><span id="c_opendir"><span class="annot"><a href="System.Posix.Directory.ByteString.html#c_opendir"><span class="hs-identifier hs-var">c_opendir</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.String.html#CString"><span class="hs-identifier hs-type">CString</span></a></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="System.Posix.Directory.Common.html#CDir"><span class="hs-identifier hs-type">CDir</span></a></span><span class="hs-special">)</span><span>
@@ -133,87 +124,73 @@ forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span id="line-91"></span><span class="hs-comment">--  structure.</span><span>
 </span><span id="line-92"></span><span class="annot"><a href="System.Posix.Directory.ByteString.html#readDirStream"><span class="hs-identifier hs-type">readDirStream</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="System.Posix.Directory.Common.html#DirStream"><span class="hs-identifier hs-type">DirStream</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Posix.ByteString.FilePath.html#RawFilePath"><span class="hs-identifier hs-type">RawFilePath</span></a></span><span>
 </span><span id="line-93"></span><span id="readDirStream"><span class="annot"><span class="annottext">readDirStream :: DirStream -&gt; IO RawFilePath
-</span><a href="System.Posix.Directory.ByteString.html#readDirStream"><span class="hs-identifier hs-var hs-var">readDirStream</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="System.Posix.Directory.Common.html#DirStream"><span class="hs-identifier hs-type">DirStream</span></a></span><span> </span><span id="local-6989586621679057646"><span class="annot"><span class="annottext">Ptr CDir
-</span><a href="#local-6989586621679057646"><span class="hs-identifier hs-var">dirp</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-94"></span><span>  </span><span class="annot"><span class="annottext">(Ptr (Ptr CDirent) -&gt; IO RawFilePath) -&gt; IO RawFilePath
-forall a b. Storable a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
-</span><a href="../../base/src/Foreign.Marshal.Alloc.html#alloca"><span class="hs-identifier hs-var">alloca</span></a></span><span> </span><span class="annot"><span class="annottext">((Ptr (Ptr CDirent) -&gt; IO RawFilePath) -&gt; IO RawFilePath)
--&gt; (Ptr (Ptr CDirent) -&gt; IO RawFilePath) -&gt; IO RawFilePath
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679057644"><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
-</span><a href="#local-6989586621679057644"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent) -&gt; IO RawFilePath
-</span><a href="#local-6989586621679057643"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
-</span><a href="#local-6989586621679057644"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span><span>
+</span><a href="System.Posix.Directory.ByteString.html#readDirStream"><span class="hs-identifier hs-var hs-var">readDirStream</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="System.Posix.Directory.Common.html#DirStream"><span class="hs-identifier hs-type">DirStream</span></a></span><span> </span><span id="local-6989586621679062691"><span class="annot"><span class="annottext">Ptr CDir
+</span><a href="#local-6989586621679062691"><span class="hs-identifier hs-var">dirp</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-94"></span><span>  </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="../../base/src/Foreign.Marshal.Alloc.html#alloca"><span class="hs-identifier hs-var">alloca</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679062689"><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
+</span><a href="#local-6989586621679062689"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent) -&gt; IO RawFilePath
+</span><a href="#local-6989586621679062688"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
+</span><a href="#local-6989586621679062689"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span><span>
 </span><span id="line-95"></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-96"></span><span>  </span><span id="local-6989586621679057643"><span class="annot"><span class="annottext">loop :: Ptr (Ptr CDirent) -&gt; IO RawFilePath
-</span><a href="#local-6989586621679057643"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span id="local-6989586621679057623"><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
-</span><a href="#local-6989586621679057623"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-96"></span><span>  </span><span id="local-6989586621679062688"><span class="annot"><span class="annottext">loop :: Ptr (Ptr CDirent) -&gt; IO RawFilePath
+</span><a href="#local-6989586621679062688"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span id="local-6989586621679062668"><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
+</span><a href="#local-6989586621679062668"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-97"></span><span>    </span><span class="annot"><span class="annottext">IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#resetErrno"><span class="hs-identifier hs-var">resetErrno</span></a></span><span>
-</span><span id="line-98"></span><span>    </span><span id="local-6989586621679057621"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679057621"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CDir -&gt; Ptr (Ptr CDirent) -&gt; IO CInt
+</span><span id="line-98"></span><span>    </span><span id="local-6989586621679062666"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679062666"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CDir -&gt; Ptr (Ptr CDirent) -&gt; IO CInt
 </span><a href="System.Posix.Directory.ByteString.html#c_readdir"><span class="hs-identifier hs-var">c_readdir</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CDir
-</span><a href="#local-6989586621679057646"><span class="hs-identifier hs-var">dirp</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
-</span><a href="#local-6989586621679057623"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span><span>
+</span><a href="#local-6989586621679062691"><span class="hs-identifier hs-var">dirp</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
+</span><a href="#local-6989586621679062668"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span><span>
 </span><span id="line-99"></span><span>    </span><span class="hs-keyword">if</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679057621"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679062666"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">CInt
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span>
-</span><span id="line-100"></span><span>         </span><span class="hs-keyword">then</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679057619"><span class="annot"><span class="annottext">Ptr CDirent
-</span><a href="#local-6989586621679057619"><span class="hs-identifier hs-var">dEnt</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent) -&gt; IO (Ptr CDirent)
-forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><span id="line-100"></span><span>         </span><span class="hs-keyword">then</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679062664"><span class="annot"><span class="annottext">Ptr CDirent
+</span><a href="#local-6989586621679062664"><span class="hs-identifier hs-var">dEnt</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Storable a =&gt; Ptr a -&gt; IO a
 </span><a href="../../base/src/Foreign.Storable.html#peek"><span class="hs-identifier hs-var">peek</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
-</span><a href="#local-6989586621679057623"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span><span>
+</span><a href="#local-6989586621679062668"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span><span>
 </span><span id="line-101"></span><span>                 </span><span class="hs-keyword">if</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CDirent
-</span><a href="#local-6989586621679057619"><span class="hs-identifier hs-var">dEnt</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CDirent -&gt; Ptr CDirent -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
-</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Ptr CDirent
-forall a. Ptr a
+</span><a href="#local-6989586621679062664"><span class="hs-identifier hs-var">dEnt</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">forall a. Ptr a
 </span><a href="../../base/src/GHC.Ptr.html#nullPtr"><span class="hs-identifier hs-var">nullPtr</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-102"></span><span>                    </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">RawFilePath -&gt; IO RawFilePath
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span id="line-102"></span><span>                    </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="../../bytestring/src/Data.ByteString.html#empty"><span class="hs-identifier hs-var">BC.empty</span></a></span><span>
+</span><a href="../../bytestring/src/Data.ByteString.Internal.html#empty"><span class="hs-identifier hs-var">BC.empty</span></a></span><span>
 </span><span id="line-103"></span><span>                    </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-104"></span><span>                     </span><span id="local-6989586621679057615"><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057615"><span class="hs-identifier hs-var">entry</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CDirent -&gt; IO CString
+</span><span id="line-104"></span><span>                     </span><span id="local-6989586621679062660"><span class="annot"><span class="annottext">RawFilePath
+</span><a href="#local-6989586621679062660"><span class="hs-identifier hs-var">entry</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr CDirent -&gt; IO CString
 </span><a href="System.Posix.Directory.ByteString.html#d_name"><span class="hs-identifier hs-var">d_name</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CDirent
-</span><a href="#local-6989586621679057619"><span class="hs-identifier hs-var">dEnt</span></a></span><span> </span><span class="annot"><span class="annottext">IO CString -&gt; (CString -&gt; IO RawFilePath) -&gt; IO RawFilePath
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621679062664"><span class="hs-identifier hs-var">dEnt</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><a href="../../base/src/GHC.Base.html#%3E%3E%3D"><span class="hs-operator hs-var">&gt;&gt;=</span></a></span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO RawFilePath
 </span><a href="System.Posix.ByteString.FilePath.html#peekFilePath"><span class="hs-identifier hs-var">peekFilePath</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-105"></span><span>                     </span><span class="annot"><span class="annottext">Ptr CDirent -&gt; IO ()
 </span><a href="System.Posix.Directory.ByteString.html#c_freeDirEnt"><span class="hs-identifier hs-var">c_freeDirEnt</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CDirent
-</span><a href="#local-6989586621679057619"><span class="hs-identifier hs-var">dEnt</span></a></span><span>
-</span><span id="line-106"></span><span>                     </span><span class="annot"><span class="annottext">RawFilePath -&gt; IO RawFilePath
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679062664"><span class="hs-identifier hs-var">dEnt</span></a></span><span>
+</span><span id="line-106"></span><span>                     </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057615"><span class="hs-identifier hs-var">entry</span></a></span><span>
-</span><span id="line-107"></span><span>         </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679057611"><span class="annot"><span class="annottext">Errno
-</span><a href="#local-6989586621679057611"><span class="hs-identifier hs-var">errno</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Errno
+</span><a href="#local-6989586621679062660"><span class="hs-identifier hs-var">entry</span></a></span><span>
+</span><span id="line-107"></span><span>         </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679062656"><span class="annot"><span class="annottext">Errno
+</span><a href="#local-6989586621679062656"><span class="hs-identifier hs-var">errno</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Errno
 </span><a href="../../base/src/Foreign.C.Error.html#getErrno"><span class="hs-identifier hs-var">getErrno</span></a></span><span>
 </span><span id="line-108"></span><span>                 </span><span class="hs-keyword">if</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Errno
-</span><a href="#local-6989586621679057611"><span class="hs-identifier hs-var">errno</span></a></span><span> </span><span class="annot"><span class="annottext">Errno -&gt; Errno -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679062656"><span class="hs-identifier hs-var">errno</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Errno
 </span><a href="../../base/src/Foreign.C.Error.html#eINTR"><span class="hs-identifier hs-var">eINTR</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent) -&gt; IO RawFilePath
-</span><a href="#local-6989586621679057643"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
-</span><a href="#local-6989586621679057623"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-109"></span><span>                 </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/Foreign.C.Error.html#Errno"><span class="hs-identifier hs-type">Errno</span></a></span><span> </span><span id="local-6989586621679057607"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679057607"><span class="hs-identifier hs-var">eo</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Errno
-</span><a href="#local-6989586621679057611"><span class="hs-identifier hs-var">errno</span></a></span><span>
+</span><a href="#local-6989586621679062688"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr CDirent)
+</span><a href="#local-6989586621679062668"><span class="hs-identifier hs-var">ptr_dEnt</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-109"></span><span>                 </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/Foreign.C.Error.html#Errno"><span class="hs-identifier hs-type">Errno</span></a></span><span> </span><span id="local-6989586621679062652"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679062652"><span class="hs-identifier hs-var">eo</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Errno
+</span><a href="#local-6989586621679062656"><span class="hs-identifier hs-var">errno</span></a></span><span>
 </span><span id="line-110"></span><span>                 </span><span class="hs-keyword">if</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679057607"><span class="hs-identifier hs-var">eo</span></a></span><span> </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679062652"><span class="hs-identifier hs-var">eo</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">CInt
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span>
-</span><span id="line-111"></span><span>                    </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">RawFilePath -&gt; IO RawFilePath
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span id="line-111"></span><span>                    </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="../../bytestring/src/Data.ByteString.html#empty"><span class="hs-identifier hs-var">BC.empty</span></a></span><span>
-</span><span id="line-112"></span><span>                    </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO RawFilePath
-forall a. String -&gt; IO a
+</span><a href="../../bytestring/src/Data.ByteString.Internal.html#empty"><span class="hs-identifier hs-var">BC.empty</span></a></span><span>
+</span><span id="line-112"></span><span>                    </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrno"><span class="hs-identifier hs-var">throwErrno</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;readDirStream&quot;</span></span><span>
 </span><span id="line-113"></span><span>
@@ -233,79 +210,60 @@ forall a. String -&gt; IO a
 </span><span id="line-127"></span><span class="annot"><a href="System.Posix.Directory.ByteString.html#getWorkingDirectory"><span class="hs-identifier hs-type">getWorkingDirectory</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Posix.ByteString.FilePath.html#RawFilePath"><span class="hs-identifier hs-type">RawFilePath</span></a></span><span>
 </span><span id="line-128"></span><span id="getWorkingDirectory"><span class="annot"><span class="annottext">getWorkingDirectory :: IO RawFilePath
 </span><a href="System.Posix.Directory.ByteString.html#getWorkingDirectory"><span class="hs-identifier hs-var hs-var">getWorkingDirectory</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; IO RawFilePath
-</span><a href="#local-6989586621679057605"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679062650"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1024</span></span><span class="hs-special">)</span><span>
 </span><span id="line-129"></span><span class="hs-pragma">{-# LINE 129 &quot;libraries/unix/System/Posix/Directory/ByteString.hsc&quot; #-}</span><span>
 </span><span id="line-129"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-130"></span><span>    </span><span id="local-6989586621679057605"><span class="annot"><span class="annottext">go :: Int -&gt; IO RawFilePath
-</span><a href="#local-6989586621679057605"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679057588"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679057588"><span class="hs-identifier hs-var">bytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-131"></span><span>        </span><span id="local-6989586621679057587"><span class="annot"><span class="annottext">Maybe RawFilePath
-</span><a href="#local-6989586621679057587"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int
--&gt; (CString -&gt; IO (Maybe RawFilePath)) -&gt; IO (Maybe RawFilePath)
-forall a b. Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span id="line-130"></span><span>    </span><span id="local-6989586621679062650"><span class="annot"><span class="annottext">go :: Int -&gt; IO RawFilePath
+</span><a href="#local-6989586621679062650"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679062633"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679062633"><span class="hs-identifier hs-var">bytes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-131"></span><span>        </span><span id="local-6989586621679062632"><span class="annot"><span class="annottext">Maybe RawFilePath
+</span><a href="#local-6989586621679062632"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a b. Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
 </span><a href="../../base/src/Foreign.Marshal.Alloc.html#allocaBytes"><span class="hs-identifier hs-var">allocaBytes</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679057588"><span class="hs-identifier hs-var">bytes</span></a></span><span> </span><span class="annot"><span class="annottext">((CString -&gt; IO (Maybe RawFilePath)) -&gt; IO (Maybe RawFilePath))
--&gt; (CString -&gt; IO (Maybe RawFilePath)) -&gt; IO (Maybe RawFilePath)
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679057585"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057585"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-132"></span><span>            </span><span id="local-6989586621679057584"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057584"><span class="hs-identifier hs-var">buf'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; CSize -&gt; IO CString
+</span><a href="#local-6989586621679062633"><span class="hs-identifier hs-var">bytes</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679062630"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679062630"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-132"></span><span>            </span><span id="local-6989586621679062629"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679062629"><span class="hs-identifier hs-var">buf'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; CSize -&gt; IO CString
 </span><a href="System.Posix.Directory.ByteString.html#c_getcwd"><span class="hs-identifier hs-var">c_getcwd</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057585"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CSize
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679062630"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679057588"><span class="hs-identifier hs-var">bytes</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679062633"><span class="hs-identifier hs-var">bytes</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-133"></span><span>            </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057584"><span class="hs-identifier hs-var">buf'</span></a></span><span> </span><span class="annot"><span class="annottext">CString -&gt; CString -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
-</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">CString
-forall a. Ptr a
+</span><a href="#local-6989586621679062629"><span class="hs-identifier hs-var">buf'</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">forall a. Ptr a
 </span><a href="../../base/src/GHC.Ptr.html#nullPtr"><span class="hs-identifier hs-var">nullPtr</span></a></span><span>
-</span><span id="line-134"></span><span>                </span><span class="hs-keyword">then</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679057581"><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057581"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO RawFilePath
+</span><span id="line-134"></span><span>                </span><span class="hs-keyword">then</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679062626"><span class="annot"><span class="annottext">RawFilePath
+</span><a href="#local-6989586621679062626"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO RawFilePath
 </span><a href="System.Posix.ByteString.FilePath.html#peekFilePath"><span class="hs-identifier hs-var">peekFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057585"><span class="hs-identifier hs-var">buf</span></a></span><span>
-</span><span id="line-135"></span><span>                        </span><span class="annot"><span class="annottext">Maybe RawFilePath -&gt; IO (Maybe RawFilePath)
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">RawFilePath -&gt; Maybe RawFilePath
-forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679062630"><span class="hs-identifier hs-var">buf</span></a></span><span>
+</span><span id="line-135"></span><span>                        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><a href="../../base/src/GHC.Maybe.html#Just"><span class="hs-identifier hs-var">Just</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057581"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-136"></span><span>                </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679057580"><span class="annot"><span class="annottext">Errno
-</span><a href="#local-6989586621679057580"><span class="hs-identifier hs-var">errno</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Errno
+</span><a href="#local-6989586621679062626"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-136"></span><span>                </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679062625"><span class="annot"><span class="annottext">Errno
+</span><a href="#local-6989586621679062625"><span class="hs-identifier hs-var">errno</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Errno
 </span><a href="../../base/src/Foreign.C.Error.html#getErrno"><span class="hs-identifier hs-var">getErrno</span></a></span><span>
 </span><span id="line-137"></span><span>                        </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Errno
-</span><a href="#local-6989586621679057580"><span class="hs-identifier hs-var">errno</span></a></span><span> </span><span class="annot"><span class="annottext">Errno -&gt; Errno -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679062625"><span class="hs-identifier hs-var">errno</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Errno
 </span><a href="../../base/src/Foreign.C.Error.html#eRANGE"><span class="hs-identifier hs-var">eRANGE</span></a></span><span>
 </span><span id="line-138"></span><span>                            </span><span class="hs-comment">-- we use Nothing to indicate that we should</span><span>
 </span><span id="line-139"></span><span>                            </span><span class="hs-comment">-- try again with a bigger buffer</span><span>
-</span><span id="line-140"></span><span>                            </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Maybe RawFilePath -&gt; IO (Maybe RawFilePath)
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe RawFilePath
-forall a. Maybe a
+</span><span id="line-140"></span><span>                            </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span>
-</span><span id="line-141"></span><span>                            </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO (Maybe RawFilePath)
-forall a. String -&gt; IO a
+</span><span id="line-141"></span><span>                            </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrno"><span class="hs-identifier hs-var">throwErrno</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;getWorkingDirectory&quot;</span></span><span>
-</span><span id="line-142"></span><span>        </span><span class="annot"><span class="annottext">IO RawFilePath
--&gt; (RawFilePath -&gt; IO RawFilePath)
--&gt; Maybe RawFilePath
--&gt; IO RawFilePath
-forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
+</span><span id="line-142"></span><span>        </span><span class="annot"><span class="annottext">forall b a. b -&gt; (a -&gt; b) -&gt; Maybe a -&gt; b
 </span><a href="../../base/src/Data.Maybe.html#maybe"><span class="hs-identifier hs-var">maybe</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; IO RawFilePath
-</span><a href="#local-6989586621679057605"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679062650"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2A"><span class="hs-operator hs-var">*</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679057588"><span class="hs-identifier hs-var">bytes</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">RawFilePath -&gt; IO RawFilePath
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679062633"><span class="hs-identifier hs-var">bytes</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe RawFilePath
-</span><a href="#local-6989586621679057587"><span class="hs-identifier hs-var">r</span></a></span><span>
+</span><a href="#local-6989586621679062632"><span class="hs-identifier hs-var">r</span></a></span><span>
 </span><span id="line-143"></span><span>
 </span><span id="line-144"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;getcwd&quot;</span></span><span>
 </span><span id="line-145"></span><span>   </span><span id="c_getcwd"><span class="annot"><a href="System.Posix.Directory.ByteString.html#c_getcwd"><span class="hs-identifier hs-var">c_getcwd</span></a></span></span><span>   </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CChar"><span class="hs-identifier hs-type">CChar</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CSize"><span class="hs-identifier hs-type">CSize</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CChar"><span class="hs-identifier hs-type">CChar</span></a></span><span class="hs-special">)</span><span>
@@ -314,58 +272,48 @@ forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span id="line-148"></span><span class="hs-comment">--   the current working directory to @dir@.</span><span>
 </span><span id="line-149"></span><span class="annot"><a href="System.Posix.Directory.ByteString.html#changeWorkingDirectory"><span class="hs-identifier hs-type">changeWorkingDirectory</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="System.Posix.ByteString.FilePath.html#RawFilePath"><span class="hs-identifier hs-type">RawFilePath</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-150"></span><span id="changeWorkingDirectory"><span class="annot"><span class="annottext">changeWorkingDirectory :: RawFilePath -&gt; IO ()
-</span><a href="System.Posix.Directory.ByteString.html#changeWorkingDirectory"><span class="hs-identifier hs-var hs-var">changeWorkingDirectory</span></a></span></span><span> </span><span id="local-6989586621679057575"><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057575"><span class="hs-identifier hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-151"></span><span>  </span><span class="annot"><span class="annottext">(IOError -&gt; IOError) -&gt; IO () -&gt; IO ()
-forall a. (IOError -&gt; IOError) -&gt; IO a -&gt; IO a
+</span><a href="System.Posix.Directory.ByteString.html#changeWorkingDirectory"><span class="hs-identifier hs-var hs-var">changeWorkingDirectory</span></a></span></span><span> </span><span id="local-6989586621679062620"><span class="annot"><span class="annottext">RawFilePath
+</span><a href="#local-6989586621679062620"><span class="hs-identifier hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-151"></span><span>  </span><span class="annot"><span class="annottext">forall a. (IOError -&gt; IOError) -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/System.IO.Error.html#modifyIOError"><span class="hs-identifier hs-var">modifyIOError</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IOError -&gt; String -&gt; IOError
 </span><a href="../../base/src/System.IO.Error.html#ioeSetFileName"><span class="hs-operator hs-var">`ioeSetFileName`</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">RawFilePath -&gt; String
 </span><a href="../../bytestring/src/Data.ByteString.Char8.html#unpack"><span class="hs-identifier hs-var">BC.unpack</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057575"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679062620"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
-</span><span id="line-152"></span><span>    </span><span class="annot"><span class="annottext">RawFilePath -&gt; (CString -&gt; IO ()) -&gt; IO ()
-forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
+</span><span id="line-152"></span><span>    </span><span class="annot"><span class="annottext">forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
 </span><a href="System.Posix.ByteString.FilePath.html#withFilePath"><span class="hs-identifier hs-var">withFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057575"><span class="hs-identifier hs-var">path</span></a></span><span> </span><span class="annot"><span class="annottext">((CString -&gt; IO ()) -&gt; IO ()) -&gt; (CString -&gt; IO ()) -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679057571"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057571"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-153"></span><span>       </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="#local-6989586621679062620"><span class="hs-identifier hs-var">path</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679062616"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679062616"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-153"></span><span>       </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1Retry_"><span class="hs-identifier hs-var">throwErrnoIfMinus1Retry_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;changeWorkingDirectory&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CString -&gt; IO CInt
 </span><a href="System.Posix.Directory.ByteString.html#c_chdir"><span class="hs-identifier hs-var">c_chdir</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057571"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679062616"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-154"></span><span>
 </span><span id="line-155"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;chdir&quot;</span></span><span>
 </span><span id="line-156"></span><span>   </span><span id="c_chdir"><span class="annot"><a href="System.Posix.Directory.ByteString.html#c_chdir"><span class="hs-identifier hs-var">c_chdir</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.String.html#CString"><span class="hs-identifier hs-type">CString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span>
 </span><span id="line-157"></span><span>
 </span><span id="line-158"></span><span class="annot"><a href="System.Posix.Directory.ByteString.html#removeDirectory"><span class="hs-identifier hs-type">removeDirectory</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="System.Posix.ByteString.FilePath.html#RawFilePath"><span class="hs-identifier hs-type">RawFilePath</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-159"></span><span id="removeDirectory"><span class="annot"><span class="annottext">removeDirectory :: RawFilePath -&gt; IO ()
-</span><a href="System.Posix.Directory.ByteString.html#removeDirectory"><span class="hs-identifier hs-var hs-var">removeDirectory</span></a></span></span><span> </span><span id="local-6989586621679057568"><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057568"><span class="hs-identifier hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-160"></span><span>  </span><span class="annot"><span class="annottext">(IOError -&gt; IOError) -&gt; IO () -&gt; IO ()
-forall a. (IOError -&gt; IOError) -&gt; IO a -&gt; IO a
+</span><a href="System.Posix.Directory.ByteString.html#removeDirectory"><span class="hs-identifier hs-var hs-var">removeDirectory</span></a></span></span><span> </span><span id="local-6989586621679062613"><span class="annot"><span class="annottext">RawFilePath
+</span><a href="#local-6989586621679062613"><span class="hs-identifier hs-var">path</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-160"></span><span>  </span><span class="annot"><span class="annottext">forall a. (IOError -&gt; IOError) -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/System.IO.Error.html#modifyIOError"><span class="hs-identifier hs-var">modifyIOError</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IOError -&gt; String -&gt; IOError
 </span><a href="../../base/src/System.IO.Error.html#ioeSetFileName"><span class="hs-operator hs-var">`ioeSetFileName`</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath -&gt; String
 </span><a href="../../bytestring/src/Data.ByteString.Char8.html#unpack"><span class="hs-identifier hs-var">BC.unpack</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057568"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679062613"><span class="hs-identifier hs-var">path</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
-</span><span id="line-161"></span><span>    </span><span class="annot"><span class="annottext">RawFilePath -&gt; (CString -&gt; IO ()) -&gt; IO ()
-forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
+</span><span id="line-161"></span><span>    </span><span class="annot"><span class="annottext">forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
 </span><a href="System.Posix.ByteString.FilePath.html#withFilePath"><span class="hs-identifier hs-var">withFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679057568"><span class="hs-identifier hs-var">path</span></a></span><span> </span><span class="annot"><span class="annottext">((CString -&gt; IO ()) -&gt; IO ()) -&gt; (CString -&gt; IO ()) -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679057567"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057567"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-162"></span><span>       </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="#local-6989586621679062613"><span class="hs-identifier hs-var">path</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679062612"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679062612"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-162"></span><span>       </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1Retry_"><span class="hs-identifier hs-var">throwErrnoIfMinus1Retry_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;removeDirectory&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CString -&gt; IO CInt
 </span><a href="System.Posix.Directory.ByteString.html#c_rmdir"><span class="hs-identifier hs-var">c_rmdir</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679057567"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679062612"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-163"></span><span>
 </span><span id="line-164"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;rmdir&quot;</span></span><span>
 </span><span id="line-165"></span><span>   </span><span id="c_rmdir"><span class="annot"><a href="System.Posix.Directory.ByteString.html#c_rmdir"><span class="hs-identifier hs-var">c_rmdir</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.String.html#CString"><span class="hs-identifier hs-type">CString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span>

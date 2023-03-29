@@ -64,4 +64,4 @@ numberTree (Node x t1 t2)
 numTree t = evalState (numberTree t) []</pre><pre>testTree = Node &quot;Zero&quot; (Node &quot;One&quot; (Node &quot;Two&quot; Nil Nil) (Node &quot;One&quot; (Node &quot;Zero&quot; Nil Nil) Nil)) Nil
 numTree testTree =&gt; Node 0 (Node 1 (Node 2 Nil Nil) (Node 1 (Node 0 Nil Nil) Nil)) Nil</pre><p>sumTree is a little helper function that does not use the State monad:</p><pre>sumTree :: (Num a) =&gt; Tree a -&gt; a
 sumTree Nil = 0
-sumTree (Node e t1 t2) = e + (sumTree t1) + (sumTree t2)</pre></div></div></div><div id="footer"><p>Produced by <a href="http://www.haskell.org/haddock/">Haddock</a> version 2.25.1</p></div></body></html>
+sumTree (Node e t1 t2) = e + (sumTree t1) + (sumTree t2)</pre></div></div></div><div id="footer"><p>Produced by <a href="http://www.haskell.org/haddock/">Haddock</a> version 2.26.0</p></div></body></html>

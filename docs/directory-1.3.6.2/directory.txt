@@ -166,6 +166,26 @@ bracket_ :: IO a -> IO b -> IO c -> IO c
 --   <pre>
 --   withFile name mode = bracket (openFile name mode) hClose
 --   </pre>
+--   
+--   Bracket wraps the release action with <a>mask</a>, which is sufficient
+--   to ensure that the release action executes to completion when it does
+--   not invoke any interruptible actions, even in the presence of
+--   asynchronous exceptions. For example, <tt>hClose</tt> is
+--   uninterruptible when it is not racing other uses of the handle.
+--   Similarly, closing a socket (from "network" package) is also
+--   uninterruptible under similar conditions. An example of an
+--   interruptible action is <a>killThread</a>. Completion of interruptible
+--   release actions can be ensured by wrapping them in in
+--   <a>uninterruptibleMask_</a>, but this risks making the program
+--   non-responsive to <tt>Control-C</tt>, or timeouts. Another option is
+--   to run the release action asynchronously in its own thread:
+--   
+--   <pre>
+--   void $ uninterruptibleMask_ $ forkIO $ do { ... }
+--   </pre>
+--   
+--   The resource will be released as soon as possible, but the thread that
+--   invoked bracket will not block in an uninterruptible state.
 bracket :: IO a -> (a -> IO b) -> (a -> IO c) -> IO c
 
 -- | A variant of <a>throw</a> that can only be used within the <a>IO</a>
@@ -266,7 +286,7 @@ mask :: ((forall a. () => IO a -> IO a) -> IO b) -> IO b
 --   Int -&gt; (ArithException -&gt; IO Int) -&gt; IO Int</tt> then the
 --   handler may get run with <tt>DivideByZero</tt> as an argument, or an
 --   <tt>ErrorCall "urk"</tt> exception may be propagated further up. If
---   you call it again, you might get a the opposite behaviour. This is ok,
+--   you call it again, you might get the opposite behaviour. This is ok,
 --   because <a>catch</a> is an <a>IO</a> computation.
 catch :: Exception e => IO a -> (e -> IO a) -> IO a
 
@@ -279,6 +299,15 @@ data SomeException
 unless :: Applicative f => Bool -> f () -> f ()
 
 -- | Like <a>replicateM</a>, but discards the result.
+--   
+--   <h4><b>Examples</b></h4>
+--   
+--   <pre>
+--   &gt;&gt;&gt; replicateM_ 3 (putStrLn "a")
+--   a
+--   a
+--   a
+--   </pre>
 replicateM_ :: Applicative m => Int -> m a -> m ()
 
 -- | <tt><a>replicateM</a> n act</tt> performs the action <tt>act</tt>
@@ -287,10 +316,10 @@ replicateM_ :: Applicative m => Int -> m a -> m ()
 --   <h4><b>Examples</b></h4>
 --   
 --   <pre>
---   &gt;&gt;&gt; replicateM 3 (putStrLn "a")
---   a
---   a
---   a
+--   &gt;&gt;&gt; import Control.Monad.State
+--   
+--   &gt;&gt;&gt; runState (replicateM 3 $ state $ \s -&gt; (s, s + 1)) 1
+--   ([1,2,3],4)
 --   </pre>
 replicateM :: Applicative m => Int -> m a -> m [a]
 
@@ -589,6 +618,16 @@ with :: Storable a => a -> (Ptr a -> IO b) -> IO b
 --   wrapped into a <a>Maybe</a>, using <a>nullPtr</a> to represent
 --   <a>Nothing</a>.
 maybeWith :: (a -> (Ptr b -> IO c) -> IO c) -> Maybe a -> (Ptr b -> IO c) -> IO c
+
+-- | <tt><a>allocaBytesAligned</a> size align f</tt> executes the
+--   computation <tt>f</tt>, passing as argument a pointer to a temporarily
+--   allocated block of memory of <tt>size</tt> bytes and aligned to
+--   <tt>align</tt> bytes. The value of <tt>align</tt> must be a power of
+--   two.
+--   
+--   The memory is freed when <tt>f</tt> terminates (either normally or via
+--   an exception), so the pointer passed to <tt>f</tt> must <i>not</i> be
+--   used after this.
 allocaBytesAligned :: Int -> Int -> (Ptr a -> IO b) -> IO b
 
 -- | <tt><a>allocaBytes</a> n f</tt> executes the computation <tt>f</tt>,
@@ -644,7 +683,9 @@ sizeOf :: Storable a => a -> Int
 
 -- | Computes the alignment constraint of the argument. An alignment
 --   constraint <tt>x</tt> is fulfilled by any address divisible by
---   <tt>x</tt>. The value of the argument is not used.
+--   <tt>x</tt>. The alignment must be a power of two if this instance is
+--   to be used with <tt>alloca</tt> or <tt>allocaArray</tt>. The value of
+--   the argument is not used.
 alignment :: Storable a => a -> Int
 
 -- | Read a value from a memory area regarded as an array of values of the
@@ -710,7 +751,7 @@ nullPtr :: Ptr a
 --   when appropriate.
 throwErrnoPathIfMinus1_ :: (Eq a, Num a) => String -> FilePath -> IO a -> IO ()
 
--- | Throw an <a>IOError</a> corresponding to the current value of
+-- | Throw an <a>IOException</a> corresponding to the current value of
 --   <a>getErrno</a> if the <a>IO</a> action returns <a>nullPtr</a>.
 throwErrnoIfNull :: String -> IO (Ptr a) -> IO (Ptr a)
 
@@ -807,7 +848,7 @@ CInt :: Int32 -> CInt
 getFileSystemEncoding :: IO TextEncoding
 
 -- | An abstract type that contains a value for each variant of
---   <a>IOError</a>.
+--   <a>IOException</a>.
 data IOErrorType
 OtherError :: IOErrorType
 InvalidArgument :: IOErrorType
@@ -841,13 +882,6 @@ getArgs :: IO [String]
 --   <i>exitfail</i> is implementation-dependent.
 exitFailure :: IO a
 
--- | <tt><a>withBinaryFile</a> name mode act</tt> opens a file using
---   <a>openBinaryFile</a> and passes the resulting handle to the
---   computation <tt>act</tt>. The handle will be closed on exit from
---   <a>withBinaryFile</a>, whether by normal termination or by raising an
---   exception.
-withBinaryFile :: FilePath -> IOMode -> (Handle -> IO r) -> IO r
-
 -- | Like <a>openTempFile</a>, but opens the file in binary mode. See
 --   <a>openBinaryFile</a> for more comments.
 openBinaryTempFile :: FilePath -> String -> IO (FilePath, Handle)
@@ -860,7 +894,13 @@ openBinaryTempFile :: FilePath -> String -> IO (FilePath, Handle)
 --   <a>hClose</a> fails for any reason, any further operations (apart from
 --   <a>hClose</a>) on the handle will still fail as if <tt>hdl</tt> had
 --   been successfully closed.
+--   
+--   <a>hClose</a> is an <i>interruptible operation</i> in the sense
+--   described in <a>Control.Exception</a>. If <a>hClose</a> is interrupted
+--   by an asynchronous exception in the process of flushing its buffers,
+--   then the I/O device (e.g., file) will be closed anyway.
 hClose :: Handle -> IO ()
+withBinaryFile :: FilePath -> IOMode -> (Handle -> IO r) -> IO r
 stderr :: Handle
 
 -- | The same as <a>hPutStr</a>, but adds a newline character.
@@ -976,11 +1016,11 @@ tryIOError :: IO a -> IO (Either IOError a)
 --   sufficient operating system privilege to perform that operation.
 permissionErrorType :: IOErrorType
 
--- | Catch any <a>IOError</a> that occurs in the computation and throw a
---   modified version.
+-- | Catch any <a>IOException</a> that occurs in the computation and throw
+--   a modified version.
 modifyIOError :: (IOError -> IOError) -> IO a -> IO a
 
--- | Construct an <a>IOError</a> of the given type where the second
+-- | Construct an <a>IOException</a> of the given type where the second
 --   argument describes the error location and the third and fourth
 --   argument contain the file handle and file path of the file involved in
 --   the error if applicable.
@@ -1017,12 +1057,12 @@ ioeGetErrorString :: IOError -> String
 illegalOperationErrorType :: IOErrorType
 
 -- | The <a>catchIOError</a> function establishes a handler that receives
---   any <a>IOError</a> raised in the action protected by
---   <a>catchIOError</a>. An <a>IOError</a> is caught by the most recent
---   handler established by one of the exception handling functions. These
---   handlers are not selective: all <a>IOError</a>s are caught. Exception
---   propagation must be explicitly provided in a handler by re-raising any
---   unwanted exceptions. For example, in
+--   any <a>IOException</a> raised in the action protected by
+--   <a>catchIOError</a>. An <a>IOException</a> is caught by the most
+--   recent handler established by one of the exception handling functions.
+--   These handlers are not selective: all <a>IOException</a>s are caught.
+--   Exception propagation must be explicitly provided in a handler by
+--   re-raising any unwanted exceptions. For example, in
 --   
 --   <pre>
 --   f = catchIOError g (\e -&gt; if IO.isEOFError e then return [] else ioError e)
@@ -1033,7 +1073,7 @@ illegalOperationErrorType :: IOErrorType
 --   exception is propagated to the next outer handler.
 --   
 --   When an exception propagates outside the main program, the Haskell
---   system prints the associated <a>IOError</a> value and exits the
+--   system prints the associated <a>IOException</a> value and exits the
 --   program.
 --   
 --   Non-I/O exceptions are not caught by this variant; to catch all
@@ -1041,16 +1081,16 @@ illegalOperationErrorType :: IOErrorType
 catchIOError :: IO a -> (IOError -> IO a) -> IO a
 
 -- | The Haskell 2010 type for exceptions in the <a>IO</a> monad. Any I/O
---   operation may raise an <a>IOError</a> instead of returning a result.
---   For a more general type of exception, including also those that arise
---   in pure code, see <a>Exception</a>.
+--   operation may raise an <a>IOException</a> instead of returning a
+--   result. For a more general type of exception, including also those
+--   that arise in pure code, see <a>Exception</a>.
 --   
 --   In Haskell 2010, this is an opaque type.
 type IOError = IOException
 
--- | Construct an <a>IOError</a> value with a string describing the error.
---   The <tt>fail</tt> method of the <a>IO</a> instance of the <a>Monad</a>
---   class raises a <a>userError</a>, thus:
+-- | Construct an <a>IOException</a> value with a string describing the
+--   error. The <tt>fail</tt> method of the <a>IO</a> instance of the
+--   <a>Monad</a> class raises a <a>userError</a>, thus:
 --   
 --   <pre>
 --   instance Monad IO where
@@ -1309,7 +1349,6 @@ copyGroupFromStatus :: FileStatus -> FilePath -> IO ()
 tryCopyOwnerAndGroupFromStatus :: FileStatus -> FilePath -> IO ()
 copyFileWithMetadataInternal :: (Metadata -> FilePath -> IO ()) -> (Metadata -> FilePath -> IO ()) -> FilePath -> FilePath -> IO ()
 setTimes :: FilePath -> (Maybe POSIXTime, Maybe POSIXTime) -> IO ()
-setFileTimes' :: FilePath -> POSIXTime -> POSIXTime -> IO ()
 
 -- | Get the contents of the <tt>PATH</tt> environment variable.
 getPath :: IO [FilePath]

@@ -100,4 +100,4 @@ the <code><a href="Control-Monad-Trans-Reader.html#v:ReaderT" title="Control.Mon
 catchE = liftCatch (R.liftCatch E.catchE)</pre><p>We could lift <code><a href="../base/System-IO.html#t:IO" title="System.IO">IO</a></code> actions to <code>InterpM</code> using three <code><a href="Control-Monad-Trans-Class.html#v:lift" title="Control.Monad.Trans.Class">lift</a></code>s, but <code>InterpM</code>
 is automatically an instance of <code><a href="../base/Control-Monad-IO-Class.html#v:MonadIO" title="Control.Monad.IO.Class">MonadIO</a></code>,
 so we can use <code><a href="../base/Control-Monad-IO-Class.html#v:liftIO" title="Control.Monad.IO.Class">liftIO</a></code> instead:</p><pre>putStr :: String -&gt; InterpM ()
-putStr s = liftIO (Prelude.putStr s)</pre></div></div></div><div id="footer"><p>Produced by <a href="http://www.haskell.org/haddock/">Haddock</a> version 2.25.1</p></div></body></html>
+putStr s = liftIO (Prelude.putStr s)</pre></div></div></div><div id="footer"><p>Produced by <a href="http://www.haskell.org/haddock/">Haddock</a> version 2.26.0</p></div></body></html>

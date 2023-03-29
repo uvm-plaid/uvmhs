@@ -85,7 +85,7 @@ infixr 6 <>
 
 -- | A common interface for input chunks.
 class Monoid c => Chunk c where {
-    type family ChunkElem c;
+    type ChunkElem c;
 }
 
 -- | Test if the chunk is empty.

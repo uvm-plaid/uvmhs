@@ -9,23 +9,13 @@
 </span><span id="line-9"></span><span class="hs-comment">-- FilePath</span><span>
 </span><span id="line-10"></span><span class="hs-keyword">newtype</span><span> </span><span id="%2119"><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="%2119"><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="un%2119"><span class="annot"><span class="annottext">&#8473; -&gt; &#120138;
 </span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var hs-var">un&#8473;</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-special">}</span><span>
-</span><span id="line-11"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680371470"><span id="local-6989586621680371475"><span class="annot"><span class="annottext">&#8473; -&gt; &#8473; -&gt; Bool
-(&#8473; -&gt; &#8473; -&gt; Bool) -&gt; (&#8473; -&gt; &#8473; -&gt; Bool) -&gt; Eq &#8473;
+</span><span id="line-11"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680494602"><span id="local-6989586621680494607"><span class="annot"><span class="annottext">&#8473; -&gt; &#8473; -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: &#8473; -&gt; &#8473; -&gt; Bool
 $c/= :: &#8473; -&gt; &#8473; -&gt; Bool
 == :: &#8473; -&gt; &#8473; -&gt; Bool
 $c== :: &#8473; -&gt; &#8473; -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680371437"><span id="local-6989586621680371441"><span id="local-6989586621680371445"><span id="local-6989586621680371449"><span id="local-6989586621680371453"><span id="local-6989586621680371457"><span id="local-6989586621680371462"><span class="annot"><span class="annottext">Eq &#8473;
-Eq &#8473;
--&gt; (&#8473; -&gt; &#8473; -&gt; Ordering)
--&gt; (&#8473; -&gt; &#8473; -&gt; Bool)
--&gt; (&#8473; -&gt; &#8473; -&gt; Bool)
--&gt; (&#8473; -&gt; &#8473; -&gt; Bool)
--&gt; (&#8473; -&gt; &#8473; -&gt; Bool)
--&gt; (&#8473; -&gt; &#8473; -&gt; &#8473;)
--&gt; (&#8473; -&gt; &#8473; -&gt; &#8473;)
--&gt; Ord &#8473;
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680494569"><span id="local-6989586621680494573"><span id="local-6989586621680494577"><span id="local-6989586621680494581"><span id="local-6989586621680494585"><span id="local-6989586621680494589"><span id="local-6989586621680494594"><span class="annot"><span class="annottext">Eq &#8473;
 &#8473; -&gt; &#8473; -&gt; Bool
 &#8473; -&gt; &#8473; -&gt; Ordering
 &#8473; -&gt; &#8473; -&gt; &#8473;
@@ -53,10 +43,9 @@ $c&lt;= :: &#8473; -&gt; &#8473; -&gt; Bool
 $c&lt; :: &#8473; -&gt; &#8473; -&gt; Bool
 compare :: &#8473; -&gt; &#8473; -&gt; Ordering
 $ccompare :: &#8473; -&gt; &#8473; -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680371423"><span id="local-6989586621680371425"><span id="local-6989586621680371431"><span class="annot"><span class="annottext">Int -&gt; &#8473; -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680494555"><span id="local-6989586621680494557"><span id="local-6989586621680494563"><span class="annot"><span class="annottext">Int -&gt; &#8473; -&gt; ShowS
 [&#8473;] -&gt; ShowS
 &#8473; -&gt; String
-(Int -&gt; &#8473; -&gt; ShowS) -&gt; (&#8473; -&gt; String) -&gt; ([&#8473;] -&gt; ShowS) -&gt; Show &#8473;
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
 showList :: [&#8473;] -&gt; ShowS
@@ -67,10 +56,10 @@ showsPrec :: Int -&gt; &#8473; -&gt; ShowS
 $cshowsPrec :: Int -&gt; &#8473; -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
 </span><span id="line-12"></span><span>
-</span><span id="line-13"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680371418"><span class="annot"><span class="annottext">null :: &#8473;
+</span><span id="line-13"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680494550"><span class="annot"><span class="annottext">null :: &#8473;
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8473;
 </span><a href="UVMHS.Core.FilePath.html#pnull"><span class="hs-identifier hs-var">pnull</span></a></span><span>
-</span><span id="line-14"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680371412"><span class="annot"><span class="annottext">&#10746; :: &#8473; -&gt; &#8473; -&gt; &#8473;
+</span><span id="line-14"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680494544"><span class="annot"><span class="annottext">&#10746; :: &#8473; -&gt; &#8473; -&gt; &#8473;
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">(&#10746;)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8473; -&gt; &#8473; -&gt; &#8473;
 </span><a href="UVMHS.Core.FilePath.html#pappend"><span class="hs-identifier hs-var">pappend</span></a></span><span>
 </span><span id="line-15"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span>
@@ -83,93 +72,70 @@ $cshowsPrec :: Int -&gt; &#8473; -&gt; ShowS
 </span><span id="line-19"></span><span>
 </span><span id="line-20"></span><span class="annot"><a href="UVMHS.Core.FilePath.html#pappend"><span class="hs-identifier hs-type">pappend</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span>
 </span><span id="line-21"></span><span id="pappend"><span class="annot"><span class="annottext">pappend :: &#8473; -&gt; &#8473; -&gt; &#8473;
-</span><a href="UVMHS.Core.FilePath.html#pappend"><span class="hs-identifier hs-var hs-var">pappend</span></a></span></span><span> </span><span id="local-6989586621680371403"><span class="annot"><span class="annottext">&#8473;
-</span><a href="#local-6989586621680371403"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680371402"><span class="annot"><span class="annottext">&#8473;
-</span><a href="#local-6989586621680371402"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#8473;
-</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#8473;) -&gt; &#120138; -&gt; &#8473;
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; &#120138;
-forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
-</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; &#120138;) -&gt; String -&gt; &#120138;
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.FilePath.html#pappend"><span class="hs-identifier hs-var hs-var">pappend</span></a></span></span><span> </span><span id="local-6989586621680494535"><span class="annot"><span class="annottext">&#8473;
+</span><a href="#local-6989586621680494535"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680494534"><span class="annot"><span class="annottext">&#8473;
+</span><a href="#local-6989586621680494534"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#8473;
+</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
+</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
 </span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8473; -&gt; &#120138;
-</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var hs-var">un&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8473;
-</span><a href="#local-6989586621680371403"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var">un&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8473;
+</span><a href="#local-6989586621680494535"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
 </span><span class="hs-operator hs-var">FP.&lt;/&gt;</span></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
 </span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8473; -&gt; &#120138;
-</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var hs-var">un&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8473;
-</span><a href="#local-6989586621680371402"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span>
+</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var">un&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8473;
+</span><a href="#local-6989586621680494534"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-22"></span><span>
 </span><span id="line-23"></span><span class="annot"><a href="UVMHS.Core.FilePath.html#pfilename"><span class="hs-identifier hs-type">pfilename</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span>
 </span><span id="line-24"></span><span id="pfilename"><span class="annot"><span class="annottext">pfilename :: &#8473; -&gt; &#8473;
 </span><a href="UVMHS.Core.FilePath.html#pfilename"><span class="hs-identifier hs-var hs-var">pfilename</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#8473;
-</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#8473;) -&gt; (String -&gt; &#120138;) -&gt; String -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; &#120138;
-forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
-</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; &#8473;) -&gt; ShowS -&gt; String -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
+</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">ShowS
-</span><span class="hs-identifier hs-var">FP.takeFileName</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; &#8473;) -&gt; (&#120138; -&gt; String) -&gt; &#120138; -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-identifier hs-var">FP.takeFileName</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
-</span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#8473;) -&gt; (&#8473; -&gt; &#120138;) -&gt; &#8473; -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8473; -&gt; &#120138;
-</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var hs-var">un&#8473;</span></a></span><span>
+</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var">un&#8473;</span></a></span><span>
 </span><span id="line-25"></span><span>
 </span><span id="line-26"></span><span class="annot"><a href="UVMHS.Core.FilePath.html#pbasename"><span class="hs-identifier hs-type">pbasename</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span>
 </span><span id="line-27"></span><span id="pbasename"><span class="annot"><span class="annottext">pbasename :: &#8473; -&gt; &#8473;
 </span><a href="UVMHS.Core.FilePath.html#pbasename"><span class="hs-identifier hs-var hs-var">pbasename</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#8473;
-</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#8473;) -&gt; (String -&gt; &#120138;) -&gt; String -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; &#120138;
-forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
-</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; &#8473;) -&gt; ShowS -&gt; String -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
+</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">ShowS
-</span><span class="hs-identifier hs-var">FP.takeBaseName</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; &#8473;) -&gt; (&#120138; -&gt; String) -&gt; &#120138; -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-identifier hs-var">FP.takeBaseName</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
-</span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#8473;) -&gt; (&#8473; -&gt; &#120138;) -&gt; &#8473; -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8473; -&gt; &#120138;
-</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var hs-var">un&#8473;</span></a></span><span>
+</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var">un&#8473;</span></a></span><span>
 </span><span id="line-28"></span><span>
 </span><span id="line-29"></span><span class="annot"><a href="UVMHS.Core.FilePath.html#pdirectory"><span class="hs-identifier hs-type">pdirectory</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span>
 </span><span id="line-30"></span><span id="pdirectory"><span class="annot"><span class="annottext">pdirectory :: &#8473; -&gt; &#8473;
 </span><a href="UVMHS.Core.FilePath.html#pdirectory"><span class="hs-identifier hs-var hs-var">pdirectory</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#8473;
-</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#8473;) -&gt; (String -&gt; &#120138;) -&gt; String -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; &#120138;
-forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
-</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; &#8473;) -&gt; ShowS -&gt; String -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
+</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">ShowS
-</span><span class="hs-identifier hs-var">FP.takeDirectory</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; &#8473;) -&gt; (&#120138; -&gt; String) -&gt; &#120138; -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-identifier hs-var">FP.takeDirectory</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
-</span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#8473;) -&gt; (&#8473; -&gt; &#120138;) -&gt; &#8473; -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8473; -&gt; &#120138;
-</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var hs-var">un&#8473;</span></a></span><span>
+</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var">un&#8473;</span></a></span><span>
 </span><span id="line-31"></span><span>
 </span><span id="line-32"></span><span class="annot"><a href="UVMHS.Core.FilePath.html#pextension"><span class="hs-identifier hs-type">pextension</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-type">&#8473;</span></a></span><span>
 </span><span id="line-33"></span><span id="pextension"><span class="annot"><span class="annottext">pextension :: &#8473; -&gt; &#8473;
 </span><a href="UVMHS.Core.FilePath.html#pextension"><span class="hs-identifier hs-var hs-var">pextension</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#8473;
-</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#8473;) -&gt; (String -&gt; &#120138;) -&gt; String -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; &#120138;
-forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
-</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">(String -&gt; &#8473;) -&gt; ShowS -&gt; String -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.FilePath.html#%2119"><span class="hs-identifier hs-var">&#8473;</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
+</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">ShowS
-</span><span class="hs-identifier hs-var">FP.takeExtension</span></span><span> </span><span class="annot"><span class="annottext">(String -&gt; &#8473;) -&gt; (&#120138; -&gt; String) -&gt; &#120138; -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-identifier hs-var">FP.takeExtension</span></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; String
-</span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#8473;) -&gt; (&#8473; -&gt; &#120138;) -&gt; &#8473; -&gt; &#8473;
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#tohsChars"><span class="hs-identifier hs-var">tohsChars</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8473; -&gt; &#120138;
-</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var hs-var">un&#8473;</span></a></span><span>
+</span><a href="UVMHS.Core.FilePath.html#un%2119"><span class="hs-identifier hs-var">un&#8473;</span></a></span><span>
 </span><span id="line-34"></span></pre></body></html>

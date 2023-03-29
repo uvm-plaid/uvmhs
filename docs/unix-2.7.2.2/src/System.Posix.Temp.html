@@ -46,43 +46,37 @@
 </span><span id="line-46"></span><span class="hs-comment">-- so shouldn't be considered safe.</span><span>
 </span><span id="line-47"></span><span class="annot"><a href="System.Posix.Temp.html#mkstemp"><span class="hs-identifier hs-type">mkstemp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.IO.html#FilePath"><span class="hs-identifier hs-type">FilePath</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="../../base/src/GHC.IO.Handle.Types.html#Handle"><span class="hs-identifier hs-type">Handle</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-48"></span><span id="mkstemp"><span class="annot"><span class="annottext">mkstemp :: String -&gt; IO (String, Handle)
-</span><a href="System.Posix.Temp.html#mkstemp"><span class="hs-identifier hs-var hs-var">mkstemp</span></a></span></span><span> </span><span id="local-6989586621679062225"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679062225"><span class="hs-identifier hs-var">template'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-49"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679062224"><span class="annot"><span class="annottext">template :: String
-</span><a href="#local-6989586621679062224"><span class="hs-identifier hs-var hs-var">template</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679062225"><span class="hs-identifier hs-var">template'</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
-forall a. [a] -&gt; [a] -&gt; [a]
+</span><a href="System.Posix.Temp.html#mkstemp"><span class="hs-identifier hs-var hs-var">mkstemp</span></a></span></span><span> </span><span id="local-6989586621679067282"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679067282"><span class="hs-identifier hs-var">template'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679067281"><span class="annot"><span class="annottext">template :: String
+</span><a href="#local-6989586621679067281"><span class="hs-identifier hs-var hs-var">template</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679067282"><span class="hs-identifier hs-var">template'</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><a href="../../base/src/GHC.Base.html#%2B%2B"><span class="hs-operator hs-var">++</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;XXXXXX&quot;</span></span><span>
-</span><span id="line-50"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; (CString -&gt; IO (String, Handle)) -&gt; IO (String, Handle)
-forall a. String -&gt; (CString -&gt; IO a) -&gt; IO a
+</span><span id="line-50"></span><span>  </span><span class="annot"><span class="annottext">forall a. String -&gt; (CString -&gt; IO a) -&gt; IO a
 </span><a href="../../base/src/System.Posix.Internals.html#withFilePath"><span class="hs-identifier hs-var">withFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679062224"><span class="hs-identifier hs-var">template</span></a></span><span> </span><span class="annot"><span class="annottext">((CString -&gt; IO (String, Handle)) -&gt; IO (String, Handle))
--&gt; (CString -&gt; IO (String, Handle)) -&gt; IO (String, Handle)
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679062223"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679062223"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-51"></span><span>    </span><span id="local-6989586621679062222"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679062222"><span class="hs-identifier hs-var">fd</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO CInt
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><a href="#local-6989586621679067281"><span class="hs-identifier hs-var">template</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679067280"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679067280"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-51"></span><span>    </span><span id="local-6989586621679067279"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679067279"><span class="hs-identifier hs-var">fd</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1"><span class="hs-identifier hs-var">throwErrnoIfMinus1</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;mkstemp&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CString -&gt; IO CInt
 </span><a href="System.Posix.Temp.html#c_mkstemp"><span class="hs-identifier hs-var">c_mkstemp</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679062223"><span class="hs-identifier hs-var">ptr</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-52"></span><span>    </span><span id="local-6989586621679062220"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679062220"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO String
+</span><a href="#local-6989586621679067280"><span class="hs-identifier hs-var">ptr</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-52"></span><span>    </span><span id="local-6989586621679067277"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679067277"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO String
 </span><a href="../../base/src/System.Posix.Internals.html#peekFilePath"><span class="hs-identifier hs-var">peekFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679062223"><span class="hs-identifier hs-var">ptr</span></a></span><span>
-</span><span id="line-53"></span><span>    </span><span id="local-6989586621679062219"><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679062219"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Fd -&gt; IO Handle
+</span><a href="#local-6989586621679067280"><span class="hs-identifier hs-var">ptr</span></a></span><span>
+</span><span id="line-53"></span><span>    </span><span id="local-6989586621679067276"><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679067276"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Fd -&gt; IO Handle
 </span><a href="System.Posix.IO.Common.html#fdToHandle"><span class="hs-identifier hs-var">fdToHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt -&gt; Fd
 </span><a href="../../base/src/System.Posix.Types.html#Fd"><span class="hs-identifier hs-var">Fd</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679062222"><span class="hs-identifier hs-var">fd</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-54"></span><span>    </span><span class="annot"><span class="annottext">(String, Handle) -&gt; IO (String, Handle)
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679067279"><span class="hs-identifier hs-var">fd</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-54"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679062220"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679062219"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679067277"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679067276"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-55"></span><span>
 </span><span id="line-56"></span><span>
 </span><span id="line-57"></span><span class="hs-pragma">{-# LINE 57 &quot;libraries/unix/System/Posix/Temp.hsc&quot; #-}</span><span>
@@ -131,12 +125,11 @@ forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span id="line-95"></span><span class="hs-comment">-- shouldn't be considered safe.</span><span>
 </span><span id="line-96"></span><span class="annot"><a href="System.Posix.Temp.html#mkdtemp"><span class="hs-identifier hs-type">mkdtemp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/GHC.IO.html#FilePath"><span class="hs-identifier hs-type">FilePath</span></a></span><span>
 </span><span id="line-97"></span><span id="mkdtemp"><span class="annot"><span class="annottext">mkdtemp :: String -&gt; IO String
-</span><a href="System.Posix.Temp.html#mkdtemp"><span class="hs-identifier hs-var hs-var">mkdtemp</span></a></span></span><span> </span><span id="local-6989586621679062200"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679062200"><span class="hs-identifier hs-var">template'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-98"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679062199"><span class="annot"><span class="annottext">template :: String
-</span><a href="#local-6989586621679062199"><span class="hs-identifier hs-var hs-var">template</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679062200"><span class="hs-identifier hs-var">template'</span></a></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
-forall a. [a] -&gt; [a] -&gt; [a]
+</span><a href="System.Posix.Temp.html#mkdtemp"><span class="hs-identifier hs-var hs-var">mkdtemp</span></a></span></span><span> </span><span id="local-6989586621679067257"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679067257"><span class="hs-identifier hs-var">template'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679067256"><span class="annot"><span class="annottext">template :: String
+</span><a href="#local-6989586621679067256"><span class="hs-identifier hs-var hs-var">template</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679067257"><span class="hs-identifier hs-var">template'</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><a href="../../base/src/GHC.Base.html#%2B%2B"><span class="hs-operator hs-var">++</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;XXXXXX&quot;</span></span><span>
 </span><span id="line-99"></span><span>

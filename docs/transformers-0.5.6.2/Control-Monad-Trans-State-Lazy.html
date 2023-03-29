@@ -67,4 +67,4 @@ numberTree (Node x t1 t2) = do
                 return (length table)
             Just i -&gt; return i</pre><p>numTree applies numberTree with an initial state:</p><pre>numTree :: (Eq a) =&gt; Tree a -&gt; Tree Int
 numTree t = evalState (numberTree t) []</pre><pre>testTree = Node &quot;Zero&quot; (Node &quot;One&quot; (Node &quot;Two&quot; Nil Nil) (Node &quot;One&quot; (Node &quot;Zero&quot; Nil Nil) Nil)) Nil
-numTree testTree =&gt; Node 0 (Node 1 (Node 2 Nil Nil) (Node 1 (Node 0 Nil Nil) Nil)) Nil</pre></div></div></div><div id="footer"><p>Produced by <a href="http://www.haskell.org/haddock/">Haddock</a> version 2.25.1</p></div></body></html>
+numTree testTree =&gt; Node 0 (Node 1 (Node 2 Nil Nil) (Node 1 (Node 0 Nil Nil) Nil)) Nil</pre></div></div></div><div id="footer"><p>Produced by <a href="http://www.haskell.org/haddock/">Haddock</a> version 2.26.0</p></div></body></html>

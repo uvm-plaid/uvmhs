@@ -74,14 +74,12 @@
 </span><a href="Data.Attoparsec.Text.Buffer.html#_gen"><span class="hs-identifier hs-var hs-var">_gen</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
 </span><span id="line-70"></span><span>    </span><span class="hs-special">}</span><span>
 </span><span id="line-71"></span><span>
-</span><span id="line-72"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679042190"><span id="local-6989586621679042192"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-73"></span><span>    </span><span id="local-6989586621679042186"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; Buffer -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621679042184"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042184"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Text -&gt; ShowS
-forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
+</span><span id="line-72"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679045002"><span id="local-6989586621679045004"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-73"></span><span>    </span><span id="local-6989586621679044998"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; Buffer -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621679044996"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044996"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Show a =&gt; Int -&gt; a -&gt; ShowS
 </span><span class="hs-identifier hs-var">showsPrec</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042184"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; ShowS) -&gt; (Buffer -&gt; Text) -&gt; Buffer -&gt; ShowS
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621679044996"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Buffer -&gt; Text
 </span><a href="Data.Attoparsec.Text.Buffer.html#unbuffer"><span class="hs-identifier hs-var">unbuffer</span></a></span><span>
 </span><span id="line-74"></span><span>
@@ -90,99 +88,93 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span id="line-77"></span><span class="hs-comment">-- to us.</span><span>
 </span><span id="line-78"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#buffer"><span class="hs-identifier hs-type">buffer</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span>
 </span><span id="line-79"></span><span id="buffer"><span class="annot"><span class="annottext">buffer :: Text -&gt; Buffer
-</span><a href="Data.Attoparsec.Text.Buffer.html#buffer"><span class="hs-identifier hs-var hs-var">buffer</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span id="local-6989586621679042181"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042181"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679042180"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042180"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679042179"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042179"><span class="hs-identifier hs-var">len</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Int -&gt; Int -&gt; Int -&gt; Buffer
+</span><a href="Data.Attoparsec.Text.Buffer.html#buffer"><span class="hs-identifier hs-var hs-var">buffer</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span id="local-6989586621679044993"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044993"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679044992"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044992"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679044991"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044991"><span class="hs-identifier hs-var">len</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Int -&gt; Int -&gt; Int -&gt; Buffer
 </span><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-var">Buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042181"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042180"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042179"><span class="hs-identifier hs-var">len</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042179"><span class="hs-identifier hs-var">len</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044993"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044992"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044991"><span class="hs-identifier hs-var">len</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044991"><span class="hs-identifier hs-var">len</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span>
 </span><span id="line-80"></span><span>
 </span><span id="line-81"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#unbuffer"><span class="hs-identifier hs-type">unbuffer</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-82"></span><span id="unbuffer"><span class="annot"><span class="annottext">unbuffer :: Buffer -&gt; Text
-</span><a href="Data.Attoparsec.Text.Buffer.html#unbuffer"><span class="hs-identifier hs-var hs-var">unbuffer</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679042178"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042178"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679042177"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042177"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679042176"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042176"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="Data.Attoparsec.Text.Buffer.html#unbuffer"><span class="hs-identifier hs-var hs-var">unbuffer</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679044990"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044990"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679044989"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044989"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679044988"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044988"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Int -&gt; Text
 </span><span class="hs-identifier hs-var">Text</span></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042178"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042177"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042176"><span class="hs-identifier hs-var">len</span></a></span><span>
+</span><a href="#local-6989586621679044990"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044989"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044988"><span class="hs-identifier hs-var">len</span></a></span><span>
 </span><span id="line-83"></span><span>
 </span><span id="line-84"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#unbufferAt"><span class="hs-identifier hs-type">unbufferAt</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-85"></span><span id="unbufferAt"><span class="annot"><span class="annottext">unbufferAt :: Int -&gt; Buffer -&gt; Text
-</span><a href="Data.Attoparsec.Text.Buffer.html#unbufferAt"><span class="hs-identifier hs-var hs-var">unbufferAt</span></a></span></span><span> </span><span id="local-6989586621679042175"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042175"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679042174"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042174"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679042173"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042173"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679042172"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042172"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="Data.Attoparsec.Text.Buffer.html#unbufferAt"><span class="hs-identifier hs-var hs-var">unbufferAt</span></a></span></span><span> </span><span id="local-6989586621679044987"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044987"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679044986"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044986"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679044985"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044985"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679044984"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044984"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-86"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; Text -&gt; Text
-forall a. (?callStack::CallStack) =&gt; Bool -&gt; a -&gt; a
+</span><span id="line-86"></span><span>  </span><span class="annot"><span class="annottext">forall a. (?callStack::CallStack) =&gt; Bool -&gt; a -&gt; a
 </span><span class="hs-identifier hs-var hs-var">assert</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042175"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044987"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042175"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044987"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042172"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Text) -&gt; Text -&gt; Text
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679044984"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
 </span><span id="line-87"></span><span>  </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Int -&gt; Text
 </span><span class="hs-identifier hs-var">Text</span></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042174"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042173"><span class="hs-identifier hs-var">off</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044986"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044985"><span class="hs-identifier hs-var">off</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042175"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042172"><span class="hs-identifier hs-var">len</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044987"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044984"><span class="hs-identifier hs-var">len</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042175"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679044987"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-88"></span><span>
-</span><span id="line-89"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679042164"><span id="local-6989586621679042166"><span class="annot"><span class="hs-identifier hs-type">Semigroup</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-89"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679044976"><span id="local-6989586621679044978"><span class="annot"><span class="hs-identifier hs-type">Semigroup</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
 </span><span id="line-90"></span><span>    </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679042158"><span class="annot"><span class="annottext">&lt;&gt; :: Buffer -&gt; Buffer -&gt; Buffer
-</span><span class="hs-operator hs-var hs-var hs-var hs-var">&lt;&gt;</span></span></span><span> </span><span id="local-6989586621679042157"><span class="annot"><span class="annottext">Buffer
-</span><a href="#local-6989586621679042157"><span class="hs-identifier hs-var">b</span></a></span></span><span>                     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Buffer
-</span><a href="#local-6989586621679042157"><span class="hs-identifier hs-var">b</span></a></span><span>
-</span><span id="line-91"></span><span>    </span><span id="local-6989586621679042156"><span class="annot"><span class="annottext">Buffer
-</span><a href="#local-6989586621679042156"><span class="hs-identifier hs-var">a</span></a></span></span><span>               </span><span class="annot"><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679044970"><span class="annot"><span class="annottext">&lt;&gt; :: Buffer -&gt; Buffer -&gt; Buffer
+</span><span class="hs-operator hs-var hs-var hs-var hs-var">&lt;&gt;</span></span></span><span> </span><span id="local-6989586621679044969"><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621679044969"><span class="hs-identifier hs-var">b</span></a></span></span><span>                     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621679044969"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-91"></span><span>    </span><span id="local-6989586621679044968"><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621679044968"><span class="hs-identifier hs-var">a</span></a></span></span><span>               </span><span class="annot"><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span>       </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Buffer
-</span><a href="#local-6989586621679042156"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-92"></span><span>    </span><span id="local-6989586621679042155"><span class="annot"><span class="annottext">Buffer
-</span><a href="#local-6989586621679042155"><span class="hs-identifier hs-var">buf</span></a></span></span><span>             </span><span class="annot"><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679042154"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042154"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679042153"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042153"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679042152"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042152"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044968"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-92"></span><span>    </span><span id="local-6989586621679044967"><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621679044967"><span class="hs-identifier hs-var">buf</span></a></span></span><span>             </span><span class="annot"><span class="hs-operator hs-var">&lt;&gt;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679044966"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044966"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679044965"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044965"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679044964"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044964"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Buffer -&gt; Array -&gt; Int -&gt; Int -&gt; Buffer
 </span><a href="Data.Attoparsec.Text.Buffer.html#append"><span class="hs-identifier hs-var">append</span></a></span><span> </span><span class="annot"><span class="annottext">Buffer
-</span><a href="#local-6989586621679042155"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042154"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042153"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042152"><span class="hs-identifier hs-var">len</span></a></span><span>
+</span><a href="#local-6989586621679044967"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044966"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044965"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044964"><span class="hs-identifier hs-var">len</span></a></span><span>
 </span><span id="line-93"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">&lt;&gt;</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-94"></span><span>
 </span><span id="line-95"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Monoid</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-96"></span><span>    </span><span id="local-6989586621679042143"><span class="annot"><span class="annottext">mempty :: Buffer
+</span><span id="line-96"></span><span>    </span><span id="local-6989586621679044955"><span class="annot"><span class="annottext">mempty :: Buffer
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">mempty</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Int -&gt; Int -&gt; Int -&gt; Buffer
 </span><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-var">Buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
 </span><span class="hs-identifier hs-var">A.empty</span></span><span> </span><span class="annot"><span class="annottext">Int
@@ -192,22 +184,18 @@ forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-number">0</span></span><span>
 </span><span id="line-97"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">mempty</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-98"></span><span>
-</span><span id="line-99"></span><span>    </span><span id="local-6989586621679042140"><span class="annot"><span class="annottext">mappend :: Buffer -&gt; Buffer -&gt; Buffer
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">mappend</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Buffer -&gt; Buffer -&gt; Buffer
-forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-99"></span><span>    </span><span id="local-6989586621679044952"><span class="annot"><span class="annottext">mappend :: Buffer -&gt; Buffer -&gt; Buffer
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">mappend</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">(&lt;&gt;)</span></span><span>
 </span><span id="line-100"></span><span>
-</span><span id="line-101"></span><span>    </span><span id="local-6989586621679042137"><span class="annot"><span class="annottext">mconcat :: [Buffer] -&gt; Buffer
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">mconcat</span></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Buffer
-forall a. Monoid a =&gt; a
+</span><span id="line-101"></span><span>    </span><span id="local-6989586621679044949"><span class="annot"><span class="annottext">mconcat :: [Buffer] -&gt; Buffer
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">mconcat</span></span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Monoid a =&gt; a
 </span><span class="hs-identifier hs-var">Mon.mempty</span></span><span>
-</span><span id="line-102"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">mconcat</span></span><span> </span><span id="local-6989586621679042136"><span class="annot"><span class="annottext">[Buffer]
-</span><a href="#local-6989586621679042136"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Buffer -&gt; Buffer -&gt; Buffer) -&gt; [Buffer] -&gt; Buffer
-forall a. (a -&gt; a -&gt; a) -&gt; [a] -&gt; a
-</span><span class="hs-identifier hs-var">foldl1'</span></span><span> </span><span class="annot"><span class="annottext">Buffer -&gt; Buffer -&gt; Buffer
-forall a. Semigroup a =&gt; a -&gt; a -&gt; a
+</span><span id="line-102"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">mconcat</span></span><span> </span><span id="local-6989586621679044948"><span class="annot"><span class="annottext">[Buffer]
+</span><a href="#local-6989586621679044948"><span class="hs-identifier hs-var">xs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. (a -&gt; a -&gt; a) -&gt; [a] -&gt; a
+</span><span class="hs-identifier hs-var">foldl1'</span></span><span> </span><span class="annot"><span class="annottext">forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">(&lt;&gt;)</span></span><span> </span><span class="annot"><span class="annottext">[Buffer]
-</span><a href="#local-6989586621679042136"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><a href="#local-6989586621679044948"><span class="hs-identifier hs-var">xs</span></a></span><span>
 </span><span id="line-103"></span><span>
 </span><span id="line-104"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#pappend"><span class="hs-identifier hs-type">pappend</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span>
 </span><span id="line-105"></span><span id="pappend"><span class="annot"><span class="annottext">pappend :: Buffer -&gt; Text -&gt; Buffer
@@ -216,251 +204,213 @@ forall a. Semigroup a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679042135"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679042135"><span class="hs-identifier hs-var">t</span></a></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Buffer
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679044947"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679044947"><span class="hs-identifier hs-var">t</span></a></span></span><span>      </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Buffer
 </span><a href="Data.Attoparsec.Text.Buffer.html#buffer"><span class="hs-identifier hs-var">buffer</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679042135"><span class="hs-identifier hs-var">t</span></a></span><span>
-</span><span id="line-106"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#pappend"><span class="hs-identifier hs-var">pappend</span></a></span><span> </span><span id="local-6989586621679042134"><span class="annot"><span class="annottext">Buffer
-</span><a href="#local-6989586621679042134"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span id="local-6989586621679042133"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042133"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679042132"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042132"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679042131"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042131"><span class="hs-identifier hs-var">len</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Buffer -&gt; Array -&gt; Int -&gt; Int -&gt; Buffer
+</span><a href="#local-6989586621679044947"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><span id="line-106"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#pappend"><span class="hs-identifier hs-var">pappend</span></a></span><span> </span><span id="local-6989586621679044946"><span class="annot"><span class="annottext">Buffer
+</span><a href="#local-6989586621679044946"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span> </span><span id="local-6989586621679044945"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044945"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679044944"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044944"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679044943"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044943"><span class="hs-identifier hs-var">len</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Buffer -&gt; Array -&gt; Int -&gt; Int -&gt; Buffer
 </span><a href="Data.Attoparsec.Text.Buffer.html#append"><span class="hs-identifier hs-var">append</span></a></span><span> </span><span class="annot"><span class="annottext">Buffer
-</span><a href="#local-6989586621679042134"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042133"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042132"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042131"><span class="hs-identifier hs-var">len</span></a></span><span>
+</span><a href="#local-6989586621679044946"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044945"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044944"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044943"><span class="hs-identifier hs-var">len</span></a></span><span>
 </span><span id="line-107"></span><span>
 </span><span id="line-108"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#append"><span class="hs-identifier hs-type">append</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">A.Array</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span>
 </span><span id="line-109"></span><span id="append"><span class="annot"><span class="annottext">append :: Buffer -&gt; Array -&gt; Int -&gt; Int -&gt; Buffer
-</span><a href="Data.Attoparsec.Text.Buffer.html#append"><span class="hs-identifier hs-var hs-var">append</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679042130"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042130"><span class="hs-identifier hs-var">arr0</span></a></span></span><span> </span><span id="local-6989586621679042129"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042129"><span class="hs-identifier hs-var">off0</span></a></span></span><span> </span><span id="local-6989586621679042128"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042128"><span class="hs-identifier hs-var">len0</span></a></span></span><span> </span><span id="local-6989586621679042127"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042127"><span class="hs-identifier hs-var">cap0</span></a></span></span><span> </span><span id="local-6989586621679042126"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042126"><span class="hs-identifier hs-var">gen0</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679042125"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042125"><span class="hs-identifier hs-var">arr1</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679042124"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042124"><span class="hs-identifier hs-var">off1</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679042123"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042123"><span class="hs-identifier hs-var">len1</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(forall s. ST s Buffer) -&gt; Buffer
-forall a. (forall s. ST s a) -&gt; a
-</span><span class="hs-identifier hs-var">runST</span></span><span> </span><span class="annot"><span class="annottext">((forall s. ST s Buffer) -&gt; Buffer)
--&gt; (forall s. ST s Buffer) -&gt; Buffer
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="Data.Attoparsec.Text.Buffer.html#append"><span class="hs-identifier hs-var hs-var">append</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679044942"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044942"><span class="hs-identifier hs-var">arr0</span></a></span></span><span> </span><span id="local-6989586621679044941"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044941"><span class="hs-identifier hs-var">off0</span></a></span></span><span> </span><span id="local-6989586621679044940"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044940"><span class="hs-identifier hs-var">len0</span></a></span></span><span> </span><span id="local-6989586621679044939"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044939"><span class="hs-identifier hs-var">cap0</span></a></span></span><span> </span><span id="local-6989586621679044938"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044938"><span class="hs-identifier hs-var">gen0</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679044937"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044937"><span class="hs-identifier hs-var">arr1</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679044936"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044936"><span class="hs-identifier hs-var">off1</span></a></span></span><span> </span><span class="hs-glyph">!</span><span id="local-6989586621679044935"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044935"><span class="hs-identifier hs-var">len1</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. (forall s. ST s a) -&gt; a
+</span><span class="hs-identifier hs-var">runST</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-keyword">do</span><span class="hs-cpp">
 #if MIN_VERSION_text(2,0,0)
 </span><span>  </span><span class="hs-keyword">let</span><span> </span><span class="hs-identifier">woff</span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier">sizeOf</span><span> </span><span class="hs-special">(</span><span class="hs-number">0</span><span class="hs-glyph">::</span><span class="hs-identifier">Int</span><span class="hs-special">)</span><span class="hs-cpp">
 #else
-</span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679042098"><span class="annot"><span class="annottext">woff :: Int
-</span><a href="#local-6989586621679042098"><span class="hs-identifier hs-var hs-var">woff</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int
-forall a. Storable a =&gt; a -&gt; Int
+</span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679044910"><span class="annot"><span class="annottext">woff :: Int
+</span><a href="#local-6989586621679044910"><span class="hs-identifier hs-var hs-var">woff</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Storable a =&gt; a -&gt; Int
 </span><span class="hs-identifier hs-var">sizeOf</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">0</span></span><span class="hs-glyph">::</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Bits a =&gt; a -&gt; Int -&gt; a
+</span><span class="hs-number">0</span></span><span class="hs-glyph">::</span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Bits a =&gt; a -&gt; Int -&gt; a
 </span><span class="hs-operator hs-var">`shiftR`</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-cpp">
 #endif
-</span><span>      </span><span id="local-6989586621679042096"><span class="annot"><span class="annottext">newlen :: Int
-</span><a href="#local-6989586621679042096"><span class="hs-identifier hs-var hs-var">newlen</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042128"><span class="hs-identifier hs-var">len0</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span>      </span><span id="local-6989586621679044908"><span class="annot"><span class="annottext">newlen :: Int
+</span><a href="#local-6989586621679044908"><span class="hs-identifier hs-var hs-var">newlen</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044940"><span class="hs-identifier hs-var">len0</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042123"><span class="hs-identifier hs-var">len1</span></a></span><span>
-</span><span id="line-116"></span><span>      </span><span class="hs-glyph">!</span><span id="local-6989586621679042092"><span class="annot"><span class="annottext">gen :: Int
-</span><a href="#local-6989586621679042092"><span class="hs-identifier hs-var hs-var">gen</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042126"><span class="hs-identifier hs-var">gen0</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044935"><span class="hs-identifier hs-var">len1</span></a></span><span>
+</span><span id="line-116"></span><span>      </span><span class="hs-glyph">!</span><span id="local-6989586621679044904"><span class="annot"><span class="annottext">gen :: Int
+</span><a href="#local-6989586621679044904"><span class="hs-identifier hs-var hs-var">gen</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044938"><span class="hs-identifier hs-var">gen0</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int
 </span><a href="Data.Attoparsec.Text.Buffer.html#readGen"><span class="hs-identifier hs-var">readGen</span></a></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042130"><span class="hs-identifier hs-var">arr0</span></a></span><span>
+</span><a href="#local-6989586621679044942"><span class="hs-identifier hs-var">arr0</span></a></span><span>
 </span><span id="line-117"></span><span>  </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042092"><span class="hs-identifier hs-var">gen</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044904"><span class="hs-identifier hs-var">gen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042126"><span class="hs-identifier hs-var">gen0</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
+</span><a href="#local-6989586621679044938"><span class="hs-identifier hs-var">gen0</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042096"><span class="hs-identifier hs-var">newlen</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044908"><span class="hs-identifier hs-var">newlen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042127"><span class="hs-identifier hs-var">cap0</span></a></span><span>
+</span><a href="#local-6989586621679044939"><span class="hs-identifier hs-var">cap0</span></a></span><span>
 </span><span id="line-118"></span><span>    </span><span class="hs-keyword">then</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-119"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679042088"><span class="annot"><span class="annottext">newgen :: Int
-</span><a href="#local-6989586621679042088"><span class="hs-identifier hs-var hs-var">newgen</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042092"><span class="hs-identifier hs-var">gen</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span id="line-119"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679044900"><span class="annot"><span class="annottext">newgen :: Int
+</span><a href="#local-6989586621679044900"><span class="hs-identifier hs-var hs-var">newgen</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044904"><span class="hs-identifier hs-var">gen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span>
-</span><span id="line-120"></span><span>      </span><span id="local-6989586621679042087"><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042087"><span class="hs-identifier hs-var">marr</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Array -&gt; ST s (MArray s)
-forall s. Array -&gt; ST s (MArray s)
+</span><span id="line-120"></span><span>      </span><span id="local-6989586621679044899"><span class="annot"><span class="annottext">MArray s
+</span><a href="#local-6989586621679044899"><span class="hs-identifier hs-var">marr</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s. Array -&gt; ST s (MArray s)
 </span><a href="Data.Attoparsec.Text.Buffer.html#unsafeThaw"><span class="hs-identifier hs-var">unsafeThaw</span></a></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042130"><span class="hs-identifier hs-var">arr0</span></a></span><span>
-</span><span id="line-121"></span><span>      </span><span class="annot"><span class="annottext">MArray s -&gt; Int -&gt; ST s ()
-forall s. MArray s -&gt; Int -&gt; ST s ()
+</span><a href="#local-6989586621679044942"><span class="hs-identifier hs-var">arr0</span></a></span><span>
+</span><span id="line-121"></span><span>      </span><span class="annot"><span class="annottext">forall s. MArray s -&gt; Int -&gt; ST s ()
 </span><a href="Data.Attoparsec.Text.Buffer.html#writeGen"><span class="hs-identifier hs-var">writeGen</span></a></span><span> </span><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042087"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042088"><span class="hs-identifier hs-var">newgen</span></a></span><span class="hs-cpp">
+</span><a href="#local-6989586621679044899"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044900"><span class="hs-identifier hs-var">newgen</span></a></span><span class="hs-cpp">
 #if MIN_VERSION_text(2,0,0)
 </span><span>      </span><span class="hs-identifier">A.copyI</span><span> </span><span class="hs-identifier">len1</span><span> </span><span class="hs-identifier">marr</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">off0</span><span class="hs-operator">+</span><span class="hs-identifier">len0</span><span class="hs-special">)</span><span> </span><span class="hs-identifier">arr1</span><span> </span><span class="hs-identifier">off1</span><span class="hs-cpp">
 #else
-</span><span>      </span><span class="annot"><span class="annottext">MArray s -&gt; Int -&gt; Array -&gt; Int -&gt; Int -&gt; ST s ()
-forall s. MArray s -&gt; Int -&gt; Array -&gt; Int -&gt; Int -&gt; ST s ()
+</span><span>      </span><span class="annot"><span class="annottext">forall s. MArray s -&gt; Int -&gt; Array -&gt; Int -&gt; Int -&gt; ST s ()
 </span><span class="hs-identifier hs-var">A.copyI</span></span><span> </span><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042087"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042129"><span class="hs-identifier hs-var">off0</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044899"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044941"><span class="hs-identifier hs-var">off0</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042128"><span class="hs-identifier hs-var">len0</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042125"><span class="hs-identifier hs-var">arr1</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042124"><span class="hs-identifier hs-var">off1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042129"><span class="hs-identifier hs-var">off0</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044940"><span class="hs-identifier hs-var">len0</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044937"><span class="hs-identifier hs-var">arr1</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044936"><span class="hs-identifier hs-var">off1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044941"><span class="hs-identifier hs-var">off0</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042096"><span class="hs-identifier hs-var">newlen</span></a></span><span class="hs-special">)</span><span class="hs-cpp">
+</span><a href="#local-6989586621679044908"><span class="hs-identifier hs-var">newlen</span></a></span><span class="hs-special">)</span><span class="hs-cpp">
 #endif
-</span><span>      </span><span id="local-6989586621679042083"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042083"><span class="hs-identifier hs-var">arr2</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">MArray s -&gt; ST s Array
-forall s. MArray s -&gt; ST s Array
+</span><span>      </span><span id="local-6989586621679044895"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044895"><span class="hs-identifier hs-var">arr2</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s. MArray s -&gt; ST s Array
 </span><span class="hs-identifier hs-var">A.unsafeFreeze</span></span><span> </span><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042087"><span class="hs-identifier hs-var">marr</span></a></span><span>
-</span><span id="line-128"></span><span>      </span><span class="annot"><span class="annottext">Buffer -&gt; ST s Buffer
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679044899"><span class="hs-identifier hs-var">marr</span></a></span><span>
+</span><span id="line-128"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Int -&gt; Int -&gt; Int -&gt; Buffer
 </span><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-var">Buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042083"><span class="hs-identifier hs-var">arr2</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042129"><span class="hs-identifier hs-var">off0</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042096"><span class="hs-identifier hs-var">newlen</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042127"><span class="hs-identifier hs-var">cap0</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042088"><span class="hs-identifier hs-var">newgen</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679044895"><span class="hs-identifier hs-var">arr2</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044941"><span class="hs-identifier hs-var">off0</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044908"><span class="hs-identifier hs-var">newlen</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044939"><span class="hs-identifier hs-var">cap0</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044900"><span class="hs-identifier hs-var">newgen</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-129"></span><span>    </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-130"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679042079"><span class="annot"><span class="annottext">newcap :: Int
-</span><a href="#local-6989586621679042079"><span class="hs-identifier hs-var hs-var">newcap</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042096"><span class="hs-identifier hs-var">newlen</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span id="line-130"></span><span>      </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679044891"><span class="annot"><span class="annottext">newcap :: Int
+</span><a href="#local-6989586621679044891"><span class="hs-identifier hs-var hs-var">newcap</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044908"><span class="hs-identifier hs-var">newlen</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">*</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">2</span></span><span>
-</span><span id="line-131"></span><span>          </span><span id="local-6989586621679042076"><span class="annot"><span class="annottext">newgen :: Int
-</span><a href="#local-6989586621679042076"><span class="hs-identifier hs-var hs-var">newgen</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><span id="line-131"></span><span>          </span><span id="local-6989586621679044888"><span class="annot"><span class="annottext">newgen :: Int
+</span><a href="#local-6989586621679044888"><span class="hs-identifier hs-var hs-var">newgen</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span>
-</span><span id="line-132"></span><span>      </span><span id="local-6989586621679042075"><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042075"><span class="hs-identifier hs-var">marr</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; ST s (MArray s)
-forall s. Int -&gt; ST s (MArray s)
+</span><span id="line-132"></span><span>      </span><span id="local-6989586621679044887"><span class="annot"><span class="annottext">MArray s
+</span><a href="#local-6989586621679044887"><span class="hs-identifier hs-var">marr</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s. Int -&gt; ST s (MArray s)
 </span><span class="hs-identifier hs-var">A.new</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042079"><span class="hs-identifier hs-var">newcap</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044891"><span class="hs-identifier hs-var">newcap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042098"><span class="hs-identifier hs-var">woff</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-133"></span><span>      </span><span class="annot"><span class="annottext">MArray s -&gt; Int -&gt; ST s ()
-forall s. MArray s -&gt; Int -&gt; ST s ()
+</span><a href="#local-6989586621679044910"><span class="hs-identifier hs-var">woff</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-133"></span><span>      </span><span class="annot"><span class="annottext">forall s. MArray s -&gt; Int -&gt; ST s ()
 </span><a href="Data.Attoparsec.Text.Buffer.html#writeGen"><span class="hs-identifier hs-var">writeGen</span></a></span><span> </span><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042075"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042076"><span class="hs-identifier hs-var">newgen</span></a></span><span class="hs-cpp">
+</span><a href="#local-6989586621679044887"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044888"><span class="hs-identifier hs-var">newgen</span></a></span><span class="hs-cpp">
 #if MIN_VERSION_text(2,0,0)
 </span><span>      </span><span class="hs-identifier">A.copyI</span><span> </span><span class="hs-identifier">len0</span><span> </span><span class="hs-identifier">marr</span><span> </span><span class="hs-identifier">woff</span><span> </span><span class="hs-identifier">arr0</span><span> </span><span class="hs-identifier">off0</span><span>
 </span><span id="line-136"></span><span>      </span><span class="hs-identifier">A.copyI</span><span> </span><span class="hs-identifier">len1</span><span> </span><span class="hs-identifier">marr</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">woff</span><span class="hs-operator">+</span><span class="hs-identifier">len0</span><span class="hs-special">)</span><span> </span><span class="hs-identifier">arr1</span><span> </span><span class="hs-identifier">off1</span><span class="hs-cpp">
 #else
-</span><span>      </span><span class="annot"><span class="annottext">MArray s -&gt; Int -&gt; Array -&gt; Int -&gt; Int -&gt; ST s ()
-forall s. MArray s -&gt; Int -&gt; Array -&gt; Int -&gt; Int -&gt; ST s ()
+</span><span>      </span><span class="annot"><span class="annottext">forall s. MArray s -&gt; Int -&gt; Array -&gt; Int -&gt; Int -&gt; ST s ()
 </span><span class="hs-identifier hs-var">A.copyI</span></span><span> </span><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042075"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042098"><span class="hs-identifier hs-var">woff</span></a></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042130"><span class="hs-identifier hs-var">arr0</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042129"><span class="hs-identifier hs-var">off0</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042098"><span class="hs-identifier hs-var">woff</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044887"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044910"><span class="hs-identifier hs-var">woff</span></a></span><span> </span><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044942"><span class="hs-identifier hs-var">arr0</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044941"><span class="hs-identifier hs-var">off0</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044910"><span class="hs-identifier hs-var">woff</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042128"><span class="hs-identifier hs-var">len0</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-139"></span><span>      </span><span class="annot"><span class="annottext">MArray s -&gt; Int -&gt; Array -&gt; Int -&gt; Int -&gt; ST s ()
-forall s. MArray s -&gt; Int -&gt; Array -&gt; Int -&gt; Int -&gt; ST s ()
+</span><a href="#local-6989586621679044940"><span class="hs-identifier hs-var">len0</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-139"></span><span>      </span><span class="annot"><span class="annottext">forall s. MArray s -&gt; Int -&gt; Array -&gt; Int -&gt; Int -&gt; ST s ()
 </span><span class="hs-identifier hs-var">A.copyI</span></span><span> </span><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042075"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042098"><span class="hs-identifier hs-var">woff</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044887"><span class="hs-identifier hs-var">marr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044910"><span class="hs-identifier hs-var">woff</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042128"><span class="hs-identifier hs-var">len0</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042125"><span class="hs-identifier hs-var">arr1</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042124"><span class="hs-identifier hs-var">off1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042098"><span class="hs-identifier hs-var">woff</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044940"><span class="hs-identifier hs-var">len0</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044937"><span class="hs-identifier hs-var">arr1</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044936"><span class="hs-identifier hs-var">off1</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044910"><span class="hs-identifier hs-var">woff</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042096"><span class="hs-identifier hs-var">newlen</span></a></span><span class="hs-special">)</span><span class="hs-cpp">
+</span><a href="#local-6989586621679044908"><span class="hs-identifier hs-var">newlen</span></a></span><span class="hs-special">)</span><span class="hs-cpp">
 #endif
-</span><span>      </span><span id="local-6989586621679042073"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042073"><span class="hs-identifier hs-var">arr2</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">MArray s -&gt; ST s Array
-forall s. MArray s -&gt; ST s Array
+</span><span>      </span><span id="local-6989586621679044885"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044885"><span class="hs-identifier hs-var">arr2</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall s. MArray s -&gt; ST s Array
 </span><span class="hs-identifier hs-var">A.unsafeFreeze</span></span><span> </span><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042075"><span class="hs-identifier hs-var">marr</span></a></span><span>
-</span><span id="line-142"></span><span>      </span><span class="annot"><span class="annottext">Buffer -&gt; ST s Buffer
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679044887"><span class="hs-identifier hs-var">marr</span></a></span><span>
+</span><span id="line-142"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span class="hs-identifier hs-var">return</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Int -&gt; Int -&gt; Int -&gt; Buffer
 </span><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-var">Buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042073"><span class="hs-identifier hs-var">arr2</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042098"><span class="hs-identifier hs-var">woff</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042096"><span class="hs-identifier hs-var">newlen</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042079"><span class="hs-identifier hs-var">newcap</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042076"><span class="hs-identifier hs-var">newgen</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679044885"><span class="hs-identifier hs-var">arr2</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044910"><span class="hs-identifier hs-var">woff</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044908"><span class="hs-identifier hs-var">newlen</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044891"><span class="hs-identifier hs-var">newcap</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044888"><span class="hs-identifier hs-var">newgen</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-143"></span><span>
 </span><span id="line-144"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#length"><span class="hs-identifier hs-type">length</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
 </span><span id="line-145"></span><span id="length"><span class="annot"><span class="annottext">length :: Buffer -&gt; Int
 </span><a href="Data.Attoparsec.Text.Buffer.html#length"><span class="hs-identifier hs-var hs-var">length</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span class="annot"><span class="annottext">Array
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679042072"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042072"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679044884"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044884"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042072"><span class="hs-identifier hs-var">len</span></a></span><span>
+</span><a href="#local-6989586621679044884"><span class="hs-identifier hs-var">len</span></a></span><span>
 </span><span id="line-146"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#length"><span class="hs-pragma hs-type">length</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-147"></span><span>
 </span><span id="line-148"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#substring"><span class="hs-identifier hs-type">substring</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-149"></span><span id="substring"><span class="annot"><span class="annottext">substring :: Int -&gt; Int -&gt; Buffer -&gt; Text
-</span><a href="Data.Attoparsec.Text.Buffer.html#substring"><span class="hs-identifier hs-var hs-var">substring</span></a></span></span><span> </span><span id="local-6989586621679042071"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042071"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679042070"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042070"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679042069"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042069"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679042068"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042068"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679042067"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042067"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="Data.Attoparsec.Text.Buffer.html#substring"><span class="hs-identifier hs-var hs-var">substring</span></a></span></span><span> </span><span id="local-6989586621679044883"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044883"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621679044882"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044882"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679044881"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044881"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679044880"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044880"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679044879"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044879"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-150"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; Text -&gt; Text
-forall a. (?callStack::CallStack) =&gt; Bool -&gt; a -&gt; a
+</span><span id="line-150"></span><span>  </span><span class="annot"><span class="annottext">forall a. (?callStack::CallStack) =&gt; Bool -&gt; a -&gt; a
 </span><span class="hs-identifier hs-var hs-var">assert</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042071"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044883"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042071"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044883"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042067"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Text) -&gt; (Text -&gt; Text) -&gt; Text -&gt; Text
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="#local-6989586621679044879"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span>
-</span><span id="line-151"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; Text -&gt; Text
-forall a. (?callStack::CallStack) =&gt; Bool -&gt; a -&gt; a
+</span><span id="line-151"></span><span>  </span><span class="annot"><span class="annottext">forall a. (?callStack::CallStack) =&gt; Bool -&gt; a -&gt; a
 </span><span class="hs-identifier hs-var hs-var">assert</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042070"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044882"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042070"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044882"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042067"><span class="hs-identifier hs-var">len</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044879"><span class="hs-identifier hs-var">len</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042071"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Text) -&gt; Text -&gt; Text
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679044883"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
 </span><span id="line-152"></span><span>  </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Int -&gt; Text
 </span><span class="hs-identifier hs-var">Text</span></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042069"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042068"><span class="hs-identifier hs-var">off</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044881"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044880"><span class="hs-identifier hs-var">off</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042071"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042070"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><a href="#local-6989586621679044883"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044882"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-153"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#substring"><span class="hs-pragma hs-type">substring</span></a></span><span> </span><span class="hs-pragma">#-}</span><span class="hs-cpp">
 
 #if MIN_VERSION_text(2,0,0)
@@ -508,38 +458,32 @@ forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span id="line-195"></span><span>
 </span><span id="line-196"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#dropCodeUnits"><span class="hs-identifier hs-type">dropCodeUnits</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Text</span></span><span>
 </span><span id="line-197"></span><span id="dropCodeUnits"><span class="annot"><span class="annottext">dropCodeUnits :: Int -&gt; Buffer -&gt; Text
-</span><a href="Data.Attoparsec.Text.Buffer.html#dropCodeUnits"><span class="hs-identifier hs-var hs-var">dropCodeUnits</span></a></span></span><span> </span><span id="local-6989586621679042066"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042066"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679042065"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042065"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679042064"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042064"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679042063"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042063"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="Data.Attoparsec.Text.Buffer.html#dropCodeUnits"><span class="hs-identifier hs-var hs-var">dropCodeUnits</span></a></span></span><span> </span><span id="local-6989586621679044878"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044878"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679044877"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044877"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679044876"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044876"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span id="local-6989586621679044875"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044875"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-198"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; Text -&gt; Text
-forall a. (?callStack::CallStack) =&gt; Bool -&gt; a -&gt; a
+</span><span id="line-198"></span><span>  </span><span class="annot"><span class="annottext">forall a. (?callStack::CallStack) =&gt; Bool -&gt; a -&gt; a
 </span><span class="hs-identifier hs-var hs-var">assert</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042066"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044878"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042066"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044878"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;=</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042063"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Text) -&gt; Text -&gt; Text
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679044875"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$</span></span><span>
 </span><span id="line-199"></span><span>  </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Int -&gt; Text
 </span><span class="hs-identifier hs-var">Text</span></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042065"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042064"><span class="hs-identifier hs-var">off</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044877"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044876"><span class="hs-identifier hs-var">off</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042066"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042063"><span class="hs-identifier hs-var">len</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044878"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044875"><span class="hs-identifier hs-var">len</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-glyph hs-var">-</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042066"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679044878"><span class="hs-identifier hs-var">s</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-200"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#dropCodeUnits"><span class="hs-pragma hs-type">dropCodeUnits</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-201"></span><span>
 </span><span id="line-202"></span><span class="hs-comment">-- | /O(1)/ Iterate (unsafely) one step forwards through a UTF-16</span><span>
@@ -547,54 +491,50 @@ forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span id="line-204"></span><span class="hs-comment">-- the next offset to iterate at.</span><span>
 </span><span id="line-205"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#iter"><span class="hs-identifier hs-type">iter</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Iter</span></span><span>
 </span><span id="line-206"></span><span id="iter"><span class="annot"><span class="annottext">iter :: Buffer -&gt; Int -&gt; Iter
-</span><a href="Data.Attoparsec.Text.Buffer.html#iter"><span class="hs-identifier hs-var hs-var">iter</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679042062"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042062"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679042061"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042061"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="Data.Attoparsec.Text.Buffer.html#iter"><span class="hs-identifier hs-var hs-var">iter</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679044874"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044874"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679044873"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044873"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679042060"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042060"><span class="hs-identifier hs-var">i</span></a></span></span><span>
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679044872"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044872"><span class="hs-identifier hs-var">i</span></a></span></span><span>
 </span><span id="line-207"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word16
-</span><a href="#local-6989586621679042059"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">Word16 -&gt; Word16 -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044871"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Word16
 </span><span class="hs-number">0xD800</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Word16
-</span><a href="#local-6989586621679042059"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">Word16 -&gt; Word16 -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044871"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;</span></span><span> </span><span class="annot"><span class="annottext">Word16
 </span><span class="hs-number">0xDBFF</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Int -&gt; Iter
 </span><span class="hs-identifier hs-var">Iter</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word16 -&gt; Char
 </span><span class="hs-identifier hs-var">unsafeChr</span></span><span> </span><span class="annot"><span class="annottext">Word16
-</span><a href="#local-6989586621679042059"><span class="hs-identifier hs-var">m</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044871"><span class="hs-identifier hs-var">m</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span>
 </span><span id="line-208"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>                </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Int -&gt; Iter
 </span><span class="hs-identifier hs-var">Iter</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Word16 -&gt; Word16 -&gt; Char
 </span><span class="hs-identifier hs-var">chr2</span></span><span> </span><span class="annot"><span class="annottext">Word16
-</span><a href="#local-6989586621679042059"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">Word16
-</span><a href="#local-6989586621679042054"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044871"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">Word16
+</span><a href="#local-6989586621679044866"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">2</span></span><span>
-</span><span id="line-209"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679042059"><span class="annot"><span class="annottext">m :: Word16
-</span><a href="#local-6989586621679042059"><span class="hs-identifier hs-var hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Word16
+</span><span id="line-209"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679044871"><span class="annot"><span class="annottext">m :: Word16
+</span><a href="#local-6989586621679044871"><span class="hs-identifier hs-var hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Word16
 </span><span class="hs-identifier hs-var">A.unsafeIndex</span></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042062"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042052"><span class="hs-identifier hs-var">j</span></a></span><span>
-</span><span id="line-210"></span><span>        </span><span id="local-6989586621679042054"><span class="annot"><span class="annottext">n :: Word16
-</span><a href="#local-6989586621679042054"><span class="hs-identifier hs-var hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Word16
+</span><a href="#local-6989586621679044874"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044864"><span class="hs-identifier hs-var">j</span></a></span><span>
+</span><span id="line-210"></span><span>        </span><span id="local-6989586621679044866"><span class="annot"><span class="annottext">n :: Word16
+</span><a href="#local-6989586621679044866"><span class="hs-identifier hs-var hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Word16
 </span><span class="hs-identifier hs-var">A.unsafeIndex</span></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042062"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042051"><span class="hs-identifier hs-var">k</span></a></span><span>
-</span><span id="line-211"></span><span>        </span><span id="local-6989586621679042052"><span class="annot"><span class="annottext">j :: Int
-</span><a href="#local-6989586621679042052"><span class="hs-identifier hs-var hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042061"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044874"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044863"><span class="hs-identifier hs-var">k</span></a></span><span>
+</span><span id="line-211"></span><span>        </span><span id="local-6989586621679044864"><span class="annot"><span class="annottext">j :: Int
+</span><a href="#local-6989586621679044864"><span class="hs-identifier hs-var hs-var">j</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044873"><span class="hs-identifier hs-var">off</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042060"><span class="hs-identifier hs-var">i</span></a></span><span>
-</span><span id="line-212"></span><span>        </span><span id="local-6989586621679042051"><span class="annot"><span class="annottext">k :: Int
-</span><a href="#local-6989586621679042051"><span class="hs-identifier hs-var hs-var">k</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042052"><span class="hs-identifier hs-var">j</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044872"><span class="hs-identifier hs-var">i</span></a></span><span>
+</span><span id="line-212"></span><span>        </span><span id="local-6989586621679044863"><span class="annot"><span class="annottext">k :: Int
+</span><a href="#local-6989586621679044863"><span class="hs-identifier hs-var hs-var">k</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044864"><span class="hs-identifier hs-var">j</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span>
 </span><span id="line-213"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#iter"><span class="hs-pragma hs-type">iter</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
@@ -603,90 +543,79 @@ forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span id="line-216"></span><span class="hs-comment">-- delta to add to give the next offset to iterate at.</span><span>
 </span><span id="line-217"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#iter_"><span class="hs-identifier hs-type">iter_</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
 </span><span id="line-218"></span><span id="iter_"><span class="annot"><span class="annottext">iter_ :: Buffer -&gt; Int -&gt; Int
-</span><a href="Data.Attoparsec.Text.Buffer.html#iter_"><span class="hs-identifier hs-var hs-var">iter_</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679042047"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042047"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679042046"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042046"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="Data.Attoparsec.Text.Buffer.html#iter_"><span class="hs-identifier hs-var hs-var">iter_</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#Buf"><span class="hs-identifier hs-type">Buf</span></a></span><span> </span><span id="local-6989586621679044859"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044859"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span id="local-6989586621679044858"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044858"><span class="hs-identifier hs-var">off</span></a></span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679042045"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042045"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word16
-</span><a href="#local-6989586621679042044"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">Word16 -&gt; Word16 -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span id="local-6989586621679044857"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044857"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Word16
+</span><a href="#local-6989586621679044856"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&lt;</span></span><span> </span><span class="annot"><span class="annottext">Word16
 </span><span class="hs-number">0xD800</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">||</span></span><span> </span><span class="annot"><span class="annottext">Word16
-</span><a href="#local-6989586621679042044"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">Word16 -&gt; Word16 -&gt; Bool
-forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679044856"><span class="hs-identifier hs-var">m</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">&gt;</span></span><span> </span><span class="annot"><span class="annottext">Word16
 </span><span class="hs-number">0xDBFF</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span>
 </span><span id="line-219"></span><span>                                </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">otherwise</span></span><span>                </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">2</span></span><span>
-</span><span id="line-220"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679042044"><span class="annot"><span class="annottext">m :: Word16
-</span><a href="#local-6989586621679042044"><span class="hs-identifier hs-var hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Word16
+</span><span id="line-220"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621679044856"><span class="annot"><span class="annottext">m :: Word16
+</span><a href="#local-6989586621679044856"><span class="hs-identifier hs-var hs-var">m</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Array -&gt; Int -&gt; Word16
 </span><span class="hs-identifier hs-var">A.unsafeIndex</span></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042047"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042046"><span class="hs-identifier hs-var">off</span></a></span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679044859"><span class="hs-identifier hs-var">arr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679044858"><span class="hs-identifier hs-var">off</span></a></span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">+</span></span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679042045"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679044857"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-221"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#iter_"><span class="hs-pragma hs-type">iter_</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-222"></span><span>
-</span><span id="line-223"></span><span id="local-6989586621679042287"><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#unsafeThaw"><span class="hs-identifier hs-type">unsafeThaw</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">A.Array</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ST</span></span><span> </span><span class="annot"><a href="#local-6989586621679042287"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">A.MArray</span></span><span> </span><span class="annot"><a href="#local-6989586621679042287"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-223"></span><span id="local-6989586621679045099"><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#unsafeThaw"><span class="hs-identifier hs-type">unsafeThaw</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">A.Array</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ST</span></span><span> </span><span class="annot"><a href="#local-6989586621679045099"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">A.MArray</span></span><span> </span><span class="annot"><a href="#local-6989586621679045099"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-224"></span><span id="unsafeThaw"><span class="annot"><span class="annottext">unsafeThaw :: forall s. Array -&gt; ST s (MArray s)
-</span><a href="Data.Attoparsec.Text.Buffer.html#unsafeThaw"><span class="hs-identifier hs-var hs-var">unsafeThaw</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">A.Array</span></span><span class="hs-special">{</span><span id="local-6989586621679042041"><span class="annot"><span class="annottext">ByteArray#
+</span><a href="Data.Attoparsec.Text.Buffer.html#unsafeThaw"><span class="hs-identifier hs-var hs-var">unsafeThaw</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">A.Array</span></span><span class="hs-special">{</span><span id="local-6989586621679044853"><span class="annot"><span class="annottext">ByteArray#
 aBA :: Array -&gt; ByteArray#
 aBA :: ByteArray#
-</span><span class="hs-glyph hs-var hs-var">..</span></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">STRep s (MArray s) -&gt; ST s (MArray s)
-forall s a. STRep s a -&gt; ST s a
-</span><span class="hs-identifier hs-var">ST</span></span><span> </span><span class="annot"><span class="annottext">(STRep s (MArray s) -&gt; ST s (MArray s))
--&gt; STRep s (MArray s) -&gt; ST s (MArray s)
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679042038"><span class="annot"><span class="annottext">State# s
-</span><a href="#local-6989586621679042038"><span class="hs-identifier hs-var">s#</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span class="hs-glyph hs-var hs-var">..</span></span></span><span class="hs-special">}</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall s a. STRep s a -&gt; ST s a
+</span><span class="hs-identifier hs-var">ST</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679044850"><span class="annot"><span class="annottext">State# s
+</span><a href="#local-6989586621679044850"><span class="hs-identifier hs-var">s#</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-225"></span><span>                          </span><span class="hs-special">(#</span><span> </span><span class="annot"><span class="annottext">State# s
-</span><a href="#local-6989586621679042038"><span class="hs-identifier hs-var">s#</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">MutableByteArray# s -&gt; MArray s
-forall s. MutableByteArray# s -&gt; MArray s
-</span><span class="hs-identifier hs-var">A.MArray</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteArray# -&gt; MutableByteArray# s
-</span><span class="hs-identifier hs-var">unsafeCoerce#</span></span><span> </span><span class="annot"><span class="annottext">ByteArray#
-</span><a href="#local-6989586621679042041"><span class="hs-identifier hs-var">aBA</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">#)</span><span>
+</span><a href="#local-6989586621679044850"><span class="hs-identifier hs-var">s#</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall s. MutableByteArray# s -&gt; MArray s
+</span><span class="hs-identifier hs-var">A.MArray</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">unsafeCoerce# :: forall a b. a -&gt; b
+</span><span class="hs-identifier hs-type">unsafeCoerce#</span></span><span> </span><span class="annot"><span class="annottext">ByteArray#
+</span><a href="#local-6989586621679044853"><span class="hs-identifier hs-var">aBA</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">#)</span><span>
 </span><span id="line-226"></span><span>
 </span><span id="line-227"></span><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#readGen"><span class="hs-identifier hs-type">readGen</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">A.Array</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
 </span><span id="line-228"></span><span id="readGen"><span class="annot"><span class="annottext">readGen :: Array -&gt; Int
-</span><a href="Data.Attoparsec.Text.Buffer.html#readGen"><span class="hs-identifier hs-var hs-var">readGen</span></a></span></span><span> </span><span id="local-6989586621679042036"><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042036"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ByteArray# -&gt; Int# -&gt; Int#
+</span><a href="Data.Attoparsec.Text.Buffer.html#readGen"><span class="hs-identifier hs-var hs-var">readGen</span></a></span></span><span> </span><span id="local-6989586621679044848"><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044848"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">ByteArray# -&gt; Int# -&gt; Int#
 </span><span class="hs-identifier hs-var">indexIntArray#</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Array -&gt; ByteArray#
-</span><span class="hs-identifier hs-var hs-var">A.aBA</span></span><span> </span><span class="annot"><span class="annottext">Array
-</span><a href="#local-6989586621679042036"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int#
-</span><span class="hs-number">0#</span></span><span> </span><span class="hs-keyword">of</span><span> </span><span id="local-6989586621679042035"><span class="annot"><span class="annottext">Int#
-</span><a href="#local-6989586621679042035"><span class="hs-identifier hs-var">r#</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int# -&gt; Int
+</span><span class="hs-identifier hs-var">A.aBA</span></span><span> </span><span class="annot"><span class="annottext">Array
+</span><a href="#local-6989586621679044848"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int#
+</span><span class="hs-number">0#</span></span><span> </span><span class="hs-keyword">of</span><span> </span><span id="local-6989586621679044847"><span class="annot"><span class="annottext">Int#
+</span><a href="#local-6989586621679044847"><span class="hs-identifier hs-var">r#</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Int# -&gt; Int
 </span><span class="hs-identifier hs-var">I#</span></span><span> </span><span class="annot"><span class="annottext">Int#
-</span><a href="#local-6989586621679042035"><span class="hs-identifier hs-var">r#</span></a></span><span>
+</span><a href="#local-6989586621679044847"><span class="hs-identifier hs-var">r#</span></a></span><span>
 </span><span id="line-229"></span><span>
-</span><span id="line-230"></span><span id="local-6989586621679042286"><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#writeGen"><span class="hs-identifier hs-type">writeGen</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">A.MArray</span></span><span> </span><span class="annot"><a href="#local-6989586621679042286"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ST</span></span><span> </span><span class="annot"><a href="#local-6989586621679042286"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
+</span><span id="line-230"></span><span id="local-6989586621679045098"><span class="annot"><a href="Data.Attoparsec.Text.Buffer.html#writeGen"><span class="hs-identifier hs-type">writeGen</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">A.MArray</span></span><span> </span><span class="annot"><a href="#local-6989586621679045098"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">ST</span></span><span> </span><span class="annot"><a href="#local-6989586621679045098"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span></span><span>
 </span><span id="line-231"></span><span id="writeGen"><span class="annot"><span class="annottext">writeGen :: forall s. MArray s -&gt; Int -&gt; ST s ()
-</span><a href="Data.Attoparsec.Text.Buffer.html#writeGen"><span class="hs-identifier hs-var hs-var">writeGen</span></a></span></span><span> </span><span id="local-6989586621679042034"><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042034"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">I#</span></span><span> </span><span id="local-6989586621679042033"><span class="annot"><span class="annottext">Int#
-</span><a href="#local-6989586621679042033"><span class="hs-identifier hs-var">gen#</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">STRep s () -&gt; ST s ()
-forall s a. STRep s a -&gt; ST s a
-</span><span class="hs-identifier hs-var">ST</span></span><span> </span><span class="annot"><span class="annottext">(STRep s () -&gt; ST s ()) -&gt; STRep s () -&gt; ST s ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679042032"><span class="annot"><span class="annottext">State# s
-</span><a href="#local-6989586621679042032"><span class="hs-identifier hs-var">s0#</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-232"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">MutableByteArray# s -&gt; Int# -&gt; Int# -&gt; State# s -&gt; State# s
-forall d.
+</span><a href="Data.Attoparsec.Text.Buffer.html#writeGen"><span class="hs-identifier hs-var hs-var">writeGen</span></a></span></span><span> </span><span id="local-6989586621679044846"><span class="annot"><span class="annottext">MArray s
+</span><a href="#local-6989586621679044846"><span class="hs-identifier hs-var">a</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">I#</span></span><span> </span><span id="local-6989586621679044845"><span class="annot"><span class="annottext">Int#
+</span><a href="#local-6989586621679044845"><span class="hs-identifier hs-var">gen#</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall s a. STRep s a -&gt; ST s a
+</span><span class="hs-identifier hs-var">ST</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-operator hs-var">$</span></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679044844"><span class="annot"><span class="annottext">State# s
+</span><a href="#local-6989586621679044844"><span class="hs-identifier hs-var">s0#</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-232"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">forall d.
 MutableByteArray# d -&gt; Int# -&gt; Int# -&gt; State# d -&gt; State# d
-</span><span class="hs-identifier hs-var">writeIntArray#</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">MArray s -&gt; MutableByteArray# s
-forall s. MArray s -&gt; MutableByteArray# s
-</span><span class="hs-identifier hs-var hs-var">A.maBA</span></span><span> </span><span class="annot"><span class="annottext">MArray s
-</span><a href="#local-6989586621679042034"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int#
+</span><span class="hs-identifier hs-var">writeIntArray#</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall s. MArray s -&gt; MutableByteArray# s
+</span><span class="hs-identifier hs-var">A.maBA</span></span><span> </span><span class="annot"><span class="annottext">MArray s
+</span><a href="#local-6989586621679044846"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Int#
 </span><span class="hs-number">0#</span></span><span> </span><span class="annot"><span class="annottext">Int#
-</span><a href="#local-6989586621679042033"><span class="hs-identifier hs-var">gen#</span></a></span><span> </span><span class="annot"><span class="annottext">State# s
-</span><a href="#local-6989586621679042032"><span class="hs-identifier hs-var">s0#</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-233"></span><span>    </span><span id="local-6989586621679042030"><span class="annot"><span class="annottext">State# s
-</span><a href="#local-6989586621679042030"><span class="hs-identifier hs-var">s1#</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(#</span><span> </span><span class="annot"><span class="annottext">State# s
-</span><a href="#local-6989586621679042030"><span class="hs-identifier hs-var">s1#</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-special">#)</span><span class="hs-cpp">
+</span><a href="#local-6989586621679044845"><span class="hs-identifier hs-var">gen#</span></a></span><span> </span><span class="annot"><span class="annottext">State# s
+</span><a href="#local-6989586621679044844"><span class="hs-identifier hs-var">s0#</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-233"></span><span>    </span><span id="local-6989586621679044842"><span class="annot"><span class="annottext">State# s
+</span><a href="#local-6989586621679044842"><span class="hs-identifier hs-var">s1#</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(#</span><span> </span><span class="annot"><span class="annottext">State# s
+</span><a href="#local-6989586621679044842"><span class="hs-identifier hs-var">s1#</span></a></span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-special">#)</span><span class="hs-cpp">
 
 #endif
 </span></pre></body></html>

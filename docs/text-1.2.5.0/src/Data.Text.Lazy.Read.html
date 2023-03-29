@@ -30,7 +30,7 @@
 </span><span id="line-30"></span><span>
 </span><span id="line-31"></span><span class="hs-comment">-- | Read some text.  If the read succeeds, return its value and the</span><span>
 </span><span id="line-32"></span><span class="hs-comment">-- remaining text, otherwise an error message.</span><span>
-</span><span id="line-33"></span><span class="hs-keyword">type</span><span> </span><span id="Reader"><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-var">Reader</span></a></span></span><span> </span><span id="local-6989586621679113744"><span class="annot"><a href="#local-6989586621679113744"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Data.Text.Internal.Read.html#IReader"><span class="hs-identifier hs-type">IReader</span></a></span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113744"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-33"></span><span class="hs-keyword">type</span><span> </span><span id="Reader"><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-var">Reader</span></a></span></span><span> </span><span id="local-6989586621679109841"><span class="annot"><a href="#local-6989586621679109841"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Data.Text.Internal.Read.html#IReader"><span class="hs-identifier hs-type">IReader</span></a></span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109841"><span class="hs-identifier hs-type">a</span></a></span><span>
 </span><span id="line-34"></span><span class="hs-keyword">type</span><span> </span><span id="Parser"><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-identifier hs-var">Parser</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Data.Text.Internal.Read.html#IParser"><span class="hs-identifier hs-type">IParser</span></a></span><span> </span><span class="annot"><a href="Data.Text.Internal.Lazy.html#Text"><span class="hs-identifier hs-type">Text</span></a></span><span>
 </span><span id="line-35"></span><span>
 </span><span id="line-36"></span><span class="hs-comment">-- | Read a decimal integer.  The input must begin with at least one</span><span>
@@ -44,7 +44,7 @@
 </span><span id="line-44"></span><span class="hs-comment">-- attempt to detect overflow, so a sufficiently long input may give</span><span>
 </span><span id="line-45"></span><span class="hs-comment">-- incorrect results.  If you are worried about overflow, use</span><span>
 </span><span id="line-46"></span><span class="hs-comment">-- 'Integer' for your result type.</span><span>
-</span><span id="line-47"></span><span id="local-6989586621679113868"><span class="annot"><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-identifier hs-type">decimal</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Integral"><span class="hs-identifier hs-type">Integral</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113868"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113868"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-47"></span><span id="local-6989586621679109965"><span class="annot"><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-identifier hs-type">decimal</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Integral"><span class="hs-identifier hs-type">Integral</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109965"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109965"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-48"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-pragma hs-type">decimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Int"><span class="hs-pragma hs-type">Int</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-49"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-pragma hs-type">decimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int8"><span class="hs-pragma hs-type">Int8</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-50"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-pragma hs-type">decimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int16"><span class="hs-pragma hs-type">Int16</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
@@ -57,45 +57,38 @@
 </span><span id="line-57"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-pragma hs-type">decimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Word.html#Word32"><span class="hs-pragma hs-type">Word32</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-58"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-pragma hs-type">decimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Word.html#Word64"><span class="hs-pragma hs-type">Word64</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-59"></span><span id="decimal"><span class="annot"><span class="annottext">decimal :: forall a. Integral a =&gt; Reader a
-</span><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-identifier hs-var hs-var">decimal</span></a></span></span><span> </span><span id="local-6989586621679113735"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113735"><span class="hs-identifier hs-var">txt</span></a></span></span><span>
+</span><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-identifier hs-var hs-var">decimal</span></a></span></span><span> </span><span id="local-6989586621679109832"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109832"><span class="hs-identifier hs-var">txt</span></a></span></span><span>
 </span><span id="line-60"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Bool
 </span><a href="Data.Text.Lazy.html#null"><span class="hs-identifier hs-var">T.null</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113733"><span class="hs-identifier hs-var">h</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String (a, Text)
-forall a b. a -&gt; Either a b
+</span><a href="#local-6989586621679109830"><span class="hs-identifier hs-var">h</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; Either a b
 </span><a href="../../base/src/Data.Either.html#Left"><span class="hs-identifier hs-var">Left</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;input does not start with a digit&quot;</span></span><span>
 </span><span id="line-61"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="../../base/src/GHC.Base.html#otherwise"><span class="hs-identifier hs-var">otherwise</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a, Text) -&gt; Either String (a, Text)
-forall a b. b -&gt; Either a b
-</span><a href="../../base/src/Data.Either.html#Right"><span class="hs-identifier hs-var">Right</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(a -&gt; Char -&gt; a) -&gt; a -&gt; Text -&gt; a
-forall a. (a -&gt; Char -&gt; a) -&gt; a -&gt; Text -&gt; a
-</span><a href="Data.Text.Lazy.html#foldl%27"><span class="hs-identifier hs-var">T.foldl'</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; Char -&gt; a
-forall {a}. Num a =&gt; a -&gt; Char -&gt; a
-</span><a href="#local-6989586621679113731"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="../../base/src/GHC.Base.html#otherwise"><span class="hs-identifier hs-var">otherwise</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><a href="../../base/src/Data.Either.html#Right"><span class="hs-identifier hs-var">Right</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. (a -&gt; Char -&gt; a) -&gt; a -&gt; Text -&gt; a
+</span><a href="Data.Text.Lazy.html#foldl%27"><span class="hs-identifier hs-var">T.foldl'</span></a></span><span> </span><span class="annot"><span class="annottext">forall {a}. Num a =&gt; a -&gt; Char -&gt; a
+</span><a href="#local-6989586621679109828"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113733"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113730"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-62"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679113733"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113733"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679113730"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113730"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Text -&gt; (Text, Text)
+</span><a href="#local-6989586621679109830"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109827"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-62"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679109830"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109830"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679109827"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109827"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Text -&gt; (Text, Text)
 </span><a href="Data.Text.Lazy.html#span"><span class="hs-identifier hs-var">T.span</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><a href="../../base/src/GHC.Unicode.html#isDigit"><span class="hs-identifier hs-var">isDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113735"><span class="hs-identifier hs-var">txt</span></a></span><span>
-</span><span id="line-63"></span><span>        </span><span id="local-6989586621679113731"><span class="annot"><span class="annottext">go :: a -&gt; Char -&gt; a
-</span><a href="#local-6989586621679113731"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679113722"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679113722"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679113721"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113721"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679113722"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679109832"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><span id="line-63"></span><span>        </span><span id="local-6989586621679109828"><span class="annot"><span class="annottext">go :: a -&gt; Char -&gt; a
+</span><a href="#local-6989586621679109828"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679109819"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679109819"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679109818"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109818"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679109819"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2A"><span class="hs-operator hs-var">*</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
-forall a. Num a =&gt; a -&gt; a -&gt; a
-</span><a href="../../base/src/GHC.Num.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; a
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="../../base/src/GHC.Num.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Int
 </span><a href="Data.Text.Internal.Read.html#digitToInt"><span class="hs-identifier hs-var">digitToInt</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113721"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679109818"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-64"></span><span>
 </span><span id="line-65"></span><span class="hs-comment">-- | Read a hexadecimal integer, consisting of an optional leading</span><span>
 </span><span id="line-66"></span><span class="hs-comment">-- @\&quot;0x\&quot;@ followed by at least one hexadecimal digit. Input is</span><span>
@@ -109,38 +102,34 @@ forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span id="line-74"></span><span class="hs-comment">-- attempt to detect overflow, so a sufficiently long input may give</span><span>
 </span><span id="line-75"></span><span class="hs-comment">-- incorrect results.  If you are worried about overflow, use</span><span>
 </span><span id="line-76"></span><span class="hs-comment">-- 'Integer' for your result type.</span><span>
-</span><span id="line-77"></span><span id="local-6989586621679113717"><span class="annot"><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-identifier hs-type">hexadecimal</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Integral"><span class="hs-identifier hs-type">Integral</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113717"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113717"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-77"></span><span id="local-6989586621679109814"><span class="annot"><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-identifier hs-type">hexadecimal</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Integral"><span class="hs-identifier hs-type">Integral</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109814"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109814"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-78"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-pragma hs-type">hexadecimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Int"><span class="hs-pragma hs-type">Int</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-79"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-pragma hs-type">hexadecimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><span class="hs-pragma hs-type">Integer</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-80"></span><span id="hexadecimal"><span class="annot"><span class="annottext">hexadecimal :: forall a. Integral a =&gt; Reader a
-</span><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-identifier hs-var hs-var">hexadecimal</span></a></span></span><span> </span><span id="local-6989586621679113707"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113707"><span class="hs-identifier hs-var">txt</span></a></span></span><span>
+</span><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-identifier hs-var hs-var">hexadecimal</span></a></span></span><span> </span><span id="local-6989586621679109804"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109804"><span class="hs-identifier hs-var">txt</span></a></span></span><span>
 </span><span id="line-81"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113706"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109803"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%7C%7C"><span class="hs-operator hs-var">||</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113706"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Text -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109803"><span class="hs-identifier hs-var">h</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><span class="hs-string">&quot;0X&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Reader a
-forall a. Integral a =&gt; Reader a
+</span><span class="hs-string">&quot;0X&quot;</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Integral a =&gt; Reader a
 </span><a href="Data.Text.Lazy.Read.html#hex"><span class="hs-identifier hs-var">hex</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113703"><span class="hs-identifier hs-var">t</span></a></span><span>
+</span><a href="#local-6989586621679109800"><span class="hs-identifier hs-var">t</span></a></span><span>
 </span><span id="line-82"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="../../base/src/GHC.Base.html#otherwise"><span class="hs-identifier hs-var">otherwise</span></a></span><span>              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Reader a
-forall a. Integral a =&gt; Reader a
+</span><a href="../../base/src/GHC.Base.html#otherwise"><span class="hs-identifier hs-var">otherwise</span></a></span><span>              </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Integral a =&gt; Reader a
 </span><a href="Data.Text.Lazy.Read.html#hex"><span class="hs-identifier hs-var">hex</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113707"><span class="hs-identifier hs-var">txt</span></a></span><span>
-</span><span id="line-83"></span><span> </span><span class="hs-keyword">where</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679113706"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113706"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679113703"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113703"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int64 -&gt; Text -&gt; (Text, Text)
+</span><a href="#local-6989586621679109804"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><span id="line-83"></span><span> </span><span class="hs-keyword">where</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679109803"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109803"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679109800"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109800"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int64 -&gt; Text -&gt; (Text, Text)
 </span><a href="Data.Text.Lazy.html#splitAt"><span class="hs-identifier hs-var">T.splitAt</span></a></span><span> </span><span class="annot"><span class="annottext">Int64
 </span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113707"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><a href="#local-6989586621679109804"><span class="hs-identifier hs-var">txt</span></a></span><span>
 </span><span id="line-84"></span><span>
-</span><span id="line-85"></span><span id="local-6989586621679113700"><span class="annot"><a href="Data.Text.Lazy.Read.html#hex"><span class="hs-identifier hs-type">hex</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Integral"><span class="hs-identifier hs-type">Integral</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113700"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113700"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-85"></span><span id="local-6989586621679109797"><span class="annot"><a href="Data.Text.Lazy.Read.html#hex"><span class="hs-identifier hs-type">hex</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Integral"><span class="hs-identifier hs-type">Integral</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109797"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109797"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-86"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-pragma hs-type">hexadecimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Int"><span class="hs-pragma hs-type">Int</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-87"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-pragma hs-type">hexadecimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int8"><span class="hs-pragma hs-type">Int8</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-88"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-pragma hs-type">hexadecimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int16"><span class="hs-pragma hs-type">Int16</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
@@ -153,60 +142,50 @@ forall a. Integral a =&gt; Reader a
 </span><span id="line-95"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-pragma hs-type">hexadecimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Word.html#Word32"><span class="hs-pragma hs-type">Word32</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-96"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#hexadecimal"><span class="hs-pragma hs-type">hexadecimal</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Word.html#Word64"><span class="hs-pragma hs-type">Word64</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-97"></span><span id="hex"><span class="annot"><span class="annottext">hex :: forall a. Integral a =&gt; Reader a
-</span><a href="Data.Text.Lazy.Read.html#hex"><span class="hs-identifier hs-var hs-var">hex</span></a></span></span><span> </span><span id="local-6989586621679113693"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113693"><span class="hs-identifier hs-var">txt</span></a></span></span><span>
+</span><a href="Data.Text.Lazy.Read.html#hex"><span class="hs-identifier hs-var hs-var">hex</span></a></span></span><span> </span><span id="local-6989586621679109790"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109790"><span class="hs-identifier hs-var">txt</span></a></span></span><span>
 </span><span id="line-98"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Bool
 </span><a href="Data.Text.Lazy.html#null"><span class="hs-identifier hs-var">T.null</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113692"><span class="hs-identifier hs-var">h</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String (a, Text)
-forall a b. a -&gt; Either a b
+</span><a href="#local-6989586621679109789"><span class="hs-identifier hs-var">h</span></a></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; Either a b
 </span><a href="../../base/src/Data.Either.html#Left"><span class="hs-identifier hs-var">Left</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;input does not start with a hexadecimal digit&quot;</span></span><span>
 </span><span id="line-99"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="../../base/src/GHC.Base.html#otherwise"><span class="hs-identifier hs-var">otherwise</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(a, Text) -&gt; Either String (a, Text)
-forall a b. b -&gt; Either a b
-</span><a href="../../base/src/Data.Either.html#Right"><span class="hs-identifier hs-var">Right</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(a -&gt; Char -&gt; a) -&gt; a -&gt; Text -&gt; a
-forall a. (a -&gt; Char -&gt; a) -&gt; a -&gt; Text -&gt; a
-</span><a href="Data.Text.Lazy.html#foldl%27"><span class="hs-identifier hs-var">T.foldl'</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; Char -&gt; a
-forall {a}. Num a =&gt; a -&gt; Char -&gt; a
-</span><a href="#local-6989586621679113691"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="../../base/src/GHC.Base.html#otherwise"><span class="hs-identifier hs-var">otherwise</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
+</span><a href="../../base/src/Data.Either.html#Right"><span class="hs-identifier hs-var">Right</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. (a -&gt; Char -&gt; a) -&gt; a -&gt; Text -&gt; a
+</span><a href="Data.Text.Lazy.html#foldl%27"><span class="hs-identifier hs-var">T.foldl'</span></a></span><span> </span><span class="annot"><span class="annottext">forall {a}. Num a =&gt; a -&gt; Char -&gt; a
+</span><a href="#local-6989586621679109788"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113692"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113690"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-100"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679113692"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113692"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679113690"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113690"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Text -&gt; (Text, Text)
+</span><a href="#local-6989586621679109789"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109787"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-100"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679109789"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109789"><span class="hs-identifier hs-var">h</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679109787"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109787"><span class="hs-identifier hs-var">t</span></a></span></span><span class="hs-special">)</span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Text -&gt; (Text, Text)
 </span><a href="Data.Text.Lazy.html#span"><span class="hs-identifier hs-var">T.span</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><a href="../../base/src/GHC.Unicode.html#isHexDigit"><span class="hs-identifier hs-var">isHexDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113693"><span class="hs-identifier hs-var">txt</span></a></span><span>
-</span><span id="line-101"></span><span>        </span><span id="local-6989586621679113691"><span class="annot"><span class="annottext">go :: a -&gt; Char -&gt; a
-</span><a href="#local-6989586621679113691"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679113683"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679113683"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679113682"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113682"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679113683"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679109790"><span class="hs-identifier hs-var">txt</span></a></span><span>
+</span><span id="line-101"></span><span>        </span><span id="local-6989586621679109788"><span class="annot"><span class="annottext">go :: a -&gt; Char -&gt; a
+</span><a href="#local-6989586621679109788"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679109780"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679109780"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span id="local-6989586621679109779"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109779"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679109780"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2A"><span class="hs-operator hs-var">*</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
-forall a. Num a =&gt; a -&gt; a -&gt; a
-</span><a href="../../base/src/GHC.Num.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; a
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-number">16</span></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="../../base/src/GHC.Num.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Int
 </span><a href="Data.Text.Internal.Read.html#hexDigitToInt"><span class="hs-identifier hs-var">hexDigitToInt</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113682"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679109779"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-102"></span><span>
 </span><span id="line-103"></span><span class="hs-comment">-- | Read an optional leading sign character (@\'-\'@ or @\'+\'@) and</span><span>
 </span><span id="line-104"></span><span class="hs-comment">-- apply it to the result of applying the given reader.</span><span>
-</span><span id="line-105"></span><span id="local-6989586621679113851"><span class="annot"><a href="Data.Text.Lazy.Read.html#signed"><span class="hs-identifier hs-type">signed</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Num.html#Num"><span class="hs-identifier hs-type">Num</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113851"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113851"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113851"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-105"></span><span id="local-6989586621679109948"><span class="annot"><a href="Data.Text.Lazy.Read.html#signed"><span class="hs-identifier hs-type">signed</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Num.html#Num"><span class="hs-identifier hs-type">Num</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109948"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109948"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109948"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-106"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#signed"><span class="hs-pragma hs-type">signed</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-107"></span><span id="signed"><span class="annot"><span class="annottext">signed :: forall a. Num a =&gt; Reader a -&gt; Reader a
-</span><a href="Data.Text.Lazy.Read.html#signed"><span class="hs-identifier hs-var hs-var">signed</span></a></span></span><span> </span><span id="local-6989586621679113678"><span class="annot"><span class="annottext">Reader a
-</span><a href="#local-6989586621679113678"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IParser Text a -&gt; Reader a
-forall t a. IParser t a -&gt; IReader t a
-</span><a href="Data.Text.Internal.Read.html#runP"><span class="hs-identifier hs-var hs-var">runP</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IParser Text a -&gt; IParser Text a
-forall a. Num a =&gt; Parser a -&gt; Parser a
-</span><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-identifier hs-var">signa</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Reader a -&gt; IParser Text a
-forall t a. IReader t a -&gt; IParser t a
+</span><a href="Data.Text.Lazy.Read.html#signed"><span class="hs-identifier hs-var hs-var">signed</span></a></span></span><span> </span><span id="local-6989586621679109775"><span class="annot"><span class="annottext">Reader a
+</span><a href="#local-6989586621679109775"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall t a. IParser t a -&gt; IReader t a
+</span><a href="Data.Text.Internal.Read.html#runP"><span class="hs-identifier hs-var">runP</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Num a =&gt; Parser a -&gt; Parser a
+</span><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-identifier hs-var">signa</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall t a. IReader t a -&gt; IParser t a
 </span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">Reader a
-</span><a href="#local-6989586621679113678"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679109775"><span class="hs-identifier hs-var">f</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-108"></span><span>
 </span><span id="line-109"></span><span class="hs-comment">-- | Read a rational number.</span><span>
 </span><span id="line-110"></span><span class="hs-comment">--</span><span>
@@ -228,35 +207,27 @@ forall t a. IReader t a -&gt; IParser t a
 </span><span id="line-126"></span><span class="hs-comment">--</span><span>
 </span><span id="line-127"></span><span class="hs-comment">-- &gt;rational &quot;3.foo&quot; == Right (3.0, &quot;.foo&quot;)</span><span>
 </span><span id="line-128"></span><span class="hs-comment">-- &gt;rational &quot;3e&quot;    == Right (3.0, &quot;e&quot;)</span><span>
-</span><span id="line-129"></span><span id="local-6989586621679113843"><span class="annot"><a href="Data.Text.Lazy.Read.html#rational"><span class="hs-identifier hs-type">rational</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Fractional"><span class="hs-identifier hs-type">Fractional</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113843"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113843"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-129"></span><span id="local-6989586621679109940"><span class="annot"><a href="Data.Text.Lazy.Read.html#rational"><span class="hs-identifier hs-type">rational</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Fractional"><span class="hs-identifier hs-type">Fractional</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109940"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109940"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-130"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#rational"><span class="hs-pragma hs-type">rational</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-pragma hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Double"><span class="hs-pragma hs-type">Double</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-131"></span><span id="rational"><span class="annot"><span class="annottext">rational :: forall a. Fractional a =&gt; Reader a
-</span><a href="Data.Text.Lazy.Read.html#rational"><span class="hs-identifier hs-var hs-var">rational</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Integer -&gt; a) -&gt; Reader a
-forall a.
+</span><a href="Data.Text.Lazy.Read.html#rational"><span class="hs-identifier hs-var hs-var">rational</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a.
 Fractional a =&gt;
 (Integer -&gt; Integer -&gt; Integer -&gt; a) -&gt; Reader a
-</span><a href="Data.Text.Lazy.Read.html#floaty"><span class="hs-identifier hs-var">floaty</span></a></span><span> </span><span class="annot"><span class="annottext">((Integer -&gt; Integer -&gt; Integer -&gt; a) -&gt; Reader a)
--&gt; (Integer -&gt; Integer -&gt; Integer -&gt; a) -&gt; Reader a
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679113665"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113665"><span class="hs-identifier hs-var">real</span></a></span></span><span> </span><span id="local-6989586621679113664"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113664"><span class="hs-identifier hs-var">frac</span></a></span></span><span> </span><span id="local-6989586621679113663"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113663"><span class="hs-identifier hs-var">fracDenom</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ratio Integer -&gt; a
-forall a. Fractional a =&gt; Ratio Integer -&gt; a
-</span><a href="../../base/src/GHC.Real.html#fromRational"><span class="hs-identifier hs-var">fromRational</span></a></span><span> </span><span class="annot"><span class="annottext">(Ratio Integer -&gt; a) -&gt; Ratio Integer -&gt; a
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="Data.Text.Lazy.Read.html#floaty"><span class="hs-identifier hs-var">floaty</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679109762"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109762"><span class="hs-identifier hs-var">real</span></a></span></span><span> </span><span id="local-6989586621679109761"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109761"><span class="hs-identifier hs-var">frac</span></a></span></span><span> </span><span id="local-6989586621679109760"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109760"><span class="hs-identifier hs-var">fracDenom</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. Fractional a =&gt; Rational -&gt; a
+</span><a href="../../base/src/GHC.Real.html#fromRational"><span class="hs-identifier hs-var">fromRational</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
 </span><span id="line-132"></span><span>                     </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113665"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Ratio Integer
-forall a. Integral a =&gt; a -&gt; a -&gt; Ratio a
+</span><a href="#local-6989586621679109762"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Integral a =&gt; a -&gt; a -&gt; Ratio a
 </span><a href="../../base/src/GHC.Real.html#%25"><span class="hs-operator hs-var">%</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><span class="hs-number">1</span></span><span> </span><span class="annot"><span class="annottext">Ratio Integer -&gt; Ratio Integer -&gt; Ratio Integer
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><span class="hs-number">1</span></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113664"><span class="hs-identifier hs-var">frac</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Ratio Integer
-forall a. Integral a =&gt; a -&gt; a -&gt; Ratio a
+</span><a href="#local-6989586621679109761"><span class="hs-identifier hs-var">frac</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Integral a =&gt; a -&gt; a -&gt; Ratio a
 </span><a href="../../base/src/GHC.Real.html#%25"><span class="hs-operator hs-var">%</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113663"><span class="hs-identifier hs-var">fracDenom</span></a></span><span>
+</span><a href="#local-6989586621679109760"><span class="hs-identifier hs-var">fracDenom</span></a></span><span>
 </span><span id="line-133"></span><span>
 </span><span id="line-134"></span><span class="hs-comment">-- | Read a rational number.</span><span>
 </span><span id="line-135"></span><span class="hs-comment">--</span><span>
@@ -272,34 +243,26 @@ forall a. Integral a =&gt; a -&gt; a -&gt; Ratio a
 </span><span id="line-145"></span><span class="hs-comment">-- function will lose precision at the 13th or 14th decimal place.</span><span>
 </span><span id="line-146"></span><span class="annot"><a href="Data.Text.Lazy.Read.html#double"><span class="hs-identifier hs-type">double</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Double"><span class="hs-identifier hs-type">Double</span></a></span><span>
 </span><span id="line-147"></span><span id="double"><span class="annot"><span class="annottext">double :: Reader Double
-</span><a href="Data.Text.Lazy.Read.html#double"><span class="hs-identifier hs-var hs-var">double</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Integer -&gt; Double) -&gt; Reader Double
-forall a.
+</span><a href="Data.Text.Lazy.Read.html#double"><span class="hs-identifier hs-var hs-var">double</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a.
 Fractional a =&gt;
 (Integer -&gt; Integer -&gt; Integer -&gt; a) -&gt; Reader a
-</span><a href="Data.Text.Lazy.Read.html#floaty"><span class="hs-identifier hs-var">floaty</span></a></span><span> </span><span class="annot"><span class="annottext">((Integer -&gt; Integer -&gt; Integer -&gt; Double) -&gt; Reader Double)
--&gt; (Integer -&gt; Integer -&gt; Integer -&gt; Double) -&gt; Reader Double
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679113662"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113662"><span class="hs-identifier hs-var">real</span></a></span></span><span> </span><span id="local-6989586621679113661"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113661"><span class="hs-identifier hs-var">frac</span></a></span></span><span> </span><span id="local-6989586621679113660"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113660"><span class="hs-identifier hs-var">fracDenom</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-148"></span><span>                   </span><span class="annot"><span class="annottext">Integer -&gt; Double
-forall a. Num a =&gt; Integer -&gt; a
+</span><a href="Data.Text.Lazy.Read.html#floaty"><span class="hs-identifier hs-var">floaty</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679109759"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109759"><span class="hs-identifier hs-var">real</span></a></span></span><span> </span><span id="local-6989586621679109758"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109758"><span class="hs-identifier hs-var">frac</span></a></span></span><span> </span><span id="local-6989586621679109757"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109757"><span class="hs-identifier hs-var">fracDenom</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-148"></span><span>                   </span><span class="annot"><span class="annottext">forall a. Num a =&gt; Integer -&gt; a
 </span><a href="../../base/src/GHC.Num.html#fromInteger"><span class="hs-identifier hs-var">fromInteger</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113662"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; Double
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679109759"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2B"><span class="hs-operator hs-var">+</span></a></span><span>
-</span><span id="line-149"></span><span>                   </span><span class="annot"><span class="annottext">Integer -&gt; Double
-forall a. Num a =&gt; Integer -&gt; a
+</span><span id="line-149"></span><span>                   </span><span class="annot"><span class="annottext">forall a. Num a =&gt; Integer -&gt; a
 </span><a href="../../base/src/GHC.Num.html#fromInteger"><span class="hs-identifier hs-var">fromInteger</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113661"><span class="hs-identifier hs-var">frac</span></a></span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; Double
-forall a. Fractional a =&gt; a -&gt; a -&gt; a
-</span><a href="../../base/src/GHC.Real.html#%2F"><span class="hs-operator hs-var">/</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Double
-forall a. Num a =&gt; Integer -&gt; a
+</span><a href="#local-6989586621679109758"><span class="hs-identifier hs-var">frac</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Fractional a =&gt; a -&gt; a -&gt; a
+</span><a href="../../base/src/GHC.Real.html#%2F"><span class="hs-operator hs-var">/</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; Integer -&gt; a
 </span><a href="../../base/src/GHC.Num.html#fromInteger"><span class="hs-identifier hs-var">fromInteger</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113660"><span class="hs-identifier hs-var">fracDenom</span></a></span><span>
+</span><a href="#local-6989586621679109757"><span class="hs-identifier hs-var">fracDenom</span></a></span><span>
 </span><span id="line-150"></span><span>
-</span><span id="line-151"></span><span id="local-6989586621679113845"><span class="annot"><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-identifier hs-type">signa</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Num.html#Num"><span class="hs-identifier hs-type">Num</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113845"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-identifier hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113845"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-identifier hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113845"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-151"></span><span id="local-6989586621679109942"><span class="annot"><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-identifier hs-type">signa</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Num.html#Num"><span class="hs-identifier hs-type">Num</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109942"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-identifier hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109942"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-identifier hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109942"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-152"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-pragma hs-type">signa</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Int"><span class="hs-pragma hs-type">Int</span></a></span><span> </span><span class="hs-pragma">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Int"><span class="hs-pragma hs-type">Int</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-153"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-pragma hs-type">signa</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int8"><span class="hs-pragma hs-type">Int8</span></a></span><span> </span><span class="hs-pragma">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int8"><span class="hs-pragma hs-type">Int8</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-154"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-pragma hs-type">signa</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int16"><span class="hs-pragma hs-type">Int16</span></a></span><span> </span><span class="hs-pragma">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int16"><span class="hs-pragma hs-type">Int16</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
@@ -307,250 +270,191 @@ forall a. Num a =&gt; Integer -&gt; a
 </span><span id="line-156"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-pragma hs-type">signa</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int64"><span class="hs-pragma hs-type">Int64</span></a></span><span> </span><span class="hs-pragma">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int64"><span class="hs-pragma hs-type">Int64</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-157"></span><span class="hs-pragma">{-# SPECIALIZE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-pragma hs-type">signa</span></a></span><span> </span><span class="hs-pragma">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><span class="hs-pragma hs-type">Integer</span></span><span> </span><span class="hs-pragma">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-pragma hs-type">Parser</span></a></span><span> </span><span class="annot"><span class="hs-pragma hs-type">Integer</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-158"></span><span id="signa"><span class="annot"><span class="annottext">signa :: forall a. Num a =&gt; Parser a -&gt; Parser a
-</span><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-identifier hs-var hs-var">signa</span></a></span></span><span> </span><span id="local-6989586621679113649"><span class="annot"><span class="annottext">Parser a
-</span><a href="#local-6989586621679113649"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-159"></span><span>  </span><span id="local-6989586621679113648"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113648"><span class="hs-identifier hs-var">sign</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Char -&gt; IParser Text Char -&gt; IParser Text Char
-forall a t. a -&gt; IParser t a -&gt; IParser t a
+</span><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-identifier hs-var hs-var">signa</span></a></span></span><span> </span><span id="local-6989586621679109746"><span class="annot"><span class="annottext">Parser a
+</span><a href="#local-6989586621679109746"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-159"></span><span>  </span><span id="local-6989586621679109745"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109745"><span class="hs-identifier hs-var">sign</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a t. a -&gt; IParser t a -&gt; IParser t a
 </span><a href="Data.Text.Internal.Read.html#perhaps"><span class="hs-identifier hs-var">perhaps</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">'+'</span></span><span> </span><span class="annot"><span class="annottext">(IParser Text Char -&gt; IParser Text Char)
--&gt; IParser Text Char -&gt; IParser Text Char
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-char">'+'</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; IParser Text Char
-</span><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679113645"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113645"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113645"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679109742"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109742"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109742"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'-'</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%7C%7C"><span class="hs-operator hs-var">||</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113645"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109742"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'+'</span></span><span class="hs-special">)</span><span>
 </span><span id="line-160"></span><span>  </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113648"><span class="hs-identifier hs-var">sign</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109745"><span class="hs-identifier hs-var">sign</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'+'</span></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Parser a
-</span><a href="#local-6989586621679113649"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">a -&gt; a
-forall a. Num a =&gt; a -&gt; a
-</span><a href="../../base/src/GHC.Num.html#negate"><span class="hs-identifier hs-var">negate</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; a) -&gt; Parser a -&gt; Parser a
-forall (m :: * -&gt; *) a1 r. Monad m =&gt; (a1 -&gt; r) -&gt; m a1 -&gt; m r
+</span><a href="#local-6989586621679109746"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a
+</span><a href="../../base/src/GHC.Num.html#negate"><span class="hs-identifier hs-var">negate</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a1 r. Monad m =&gt; (a1 -&gt; r) -&gt; m a1 -&gt; m r
 </span><a href="../../base/src/GHC.Base.html#liftM"><span class="hs-operator hs-var">`liftM`</span></a></span><span> </span><span class="annot"><span class="annottext">Parser a
-</span><a href="#local-6989586621679113649"><span class="hs-identifier hs-var">p</span></a></span><span>
+</span><a href="#local-6989586621679109746"><span class="hs-identifier hs-var">p</span></a></span><span>
 </span><span id="line-161"></span><span>
 </span><span id="line-162"></span><span class="annot"><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-type">char</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Char"><span class="hs-identifier hs-type">Char</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Bool"><span class="hs-identifier hs-type">Bool</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-identifier hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Char"><span class="hs-identifier hs-type">Char</span></a></span><span>
 </span><span id="line-163"></span><span id="char"><span class="annot"><span class="annottext">char :: (Char -&gt; Bool) -&gt; IParser Text Char
-</span><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-var hs-var">char</span></a></span></span><span> </span><span id="local-6989586621679113644"><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679113644"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IReader Text Char -&gt; IParser Text Char
-forall t a. IReader t a -&gt; IParser t a
-</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">(IReader Text Char -&gt; IParser Text Char)
--&gt; IReader Text Char -&gt; IParser Text Char
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679113643"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113643"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Maybe (Char, Text)
+</span><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-var hs-var">char</span></a></span></span><span> </span><span id="local-6989586621679109741"><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><a href="#local-6989586621679109741"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall t a. IReader t a -&gt; IParser t a
+</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679109740"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109740"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Maybe (Char, Text)
 </span><a href="Data.Text.Lazy.html#uncons"><span class="hs-identifier hs-var">T.uncons</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113643"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-164"></span><span>                     </span><span class="annot"><a href="../../base/src/GHC.Maybe.html#Just"><span class="hs-identifier hs-type">Just</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679113641"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113641"><span class="hs-identifier hs-var">c</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679113640"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113640"><span class="hs-identifier hs-var">t'</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679113644"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113641"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Char, Text) -&gt; Either String (Char, Text)
-forall a b. b -&gt; Either a b
+</span><a href="#local-6989586621679109740"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-164"></span><span>                     </span><span class="annot"><a href="../../base/src/GHC.Maybe.html#Just"><span class="hs-identifier hs-type">Just</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679109738"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109738"><span class="hs-identifier hs-var">c</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679109737"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109737"><span class="hs-identifier hs-var">t'</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
+</span><a href="#local-6989586621679109741"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109738"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><a href="../../base/src/Data.Either.html#Right"><span class="hs-identifier hs-var">Right</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113641"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113640"><span class="hs-identifier hs-var">t'</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679109738"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109737"><span class="hs-identifier hs-var">t'</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-165"></span><span>                     </span><span class="annot"><span class="annottext">Maybe (Char, Text)
-</span><span class="hs-identifier">_</span></span><span>                 </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; Either String (Char, Text)
-forall a b. a -&gt; Either a b
+</span><span class="hs-identifier">_</span></span><span>                 </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; Either a b
 </span><a href="../../base/src/Data.Either.html#Left"><span class="hs-identifier hs-var">Left</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;character does not match&quot;</span></span><span>
 </span><span id="line-166"></span><span>
-</span><span id="line-167"></span><span id="local-6989586621679113840"><span class="annot"><a href="Data.Text.Lazy.Read.html#floaty"><span class="hs-identifier hs-type">floaty</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Fractional"><span class="hs-identifier hs-type">Fractional</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113840"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679113840"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679113840"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-167"></span><span id="local-6989586621679109937"><span class="annot"><a href="Data.Text.Lazy.Read.html#floaty"><span class="hs-identifier hs-type">floaty</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Real.html#Fractional"><span class="hs-identifier hs-type">Fractional</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109937"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679109937"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Reader"><span class="hs-identifier hs-type">Reader</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679109937"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-168"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#floaty"><span class="hs-pragma hs-type">floaty</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-169"></span><span id="floaty"><span class="annot"><span class="annottext">floaty :: forall a.
 Fractional a =&gt;
 (Integer -&gt; Integer -&gt; Integer -&gt; a) -&gt; Reader a
-</span><a href="Data.Text.Lazy.Read.html#floaty"><span class="hs-identifier hs-var hs-var">floaty</span></a></span></span><span> </span><span id="local-6989586621679113616"><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer -&gt; a
-</span><a href="#local-6989586621679113616"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IParser Text a -&gt; IReader Text a
-forall t a. IParser t a -&gt; IReader t a
-</span><a href="Data.Text.Internal.Read.html#runP"><span class="hs-identifier hs-var hs-var">runP</span></a></span><span> </span><span class="annot"><span class="annottext">(IParser Text a -&gt; IReader Text a)
--&gt; IParser Text a -&gt; IReader Text a
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="Data.Text.Lazy.Read.html#floaty"><span class="hs-identifier hs-var hs-var">floaty</span></a></span></span><span> </span><span id="local-6989586621679109713"><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer -&gt; a
+</span><a href="#local-6989586621679109713"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall t a. IParser t a -&gt; IReader t a
+</span><a href="Data.Text.Internal.Read.html#runP"><span class="hs-identifier hs-var">runP</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-170"></span><span>  </span><span id="local-6989586621679113615"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113615"><span class="hs-identifier hs-var">sign</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Char -&gt; IParser Text Char -&gt; IParser Text Char
-forall a t. a -&gt; IParser t a -&gt; IParser t a
+</span><span id="line-170"></span><span>  </span><span id="local-6989586621679109712"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109712"><span class="hs-identifier hs-var">sign</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a t. a -&gt; IParser t a -&gt; IParser t a
 </span><a href="Data.Text.Internal.Read.html#perhaps"><span class="hs-identifier hs-var">perhaps</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><span class="hs-char">'+'</span></span><span> </span><span class="annot"><span class="annottext">(IParser Text Char -&gt; IParser Text Char)
--&gt; IParser Text Char -&gt; IParser Text Char
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-char">'+'</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; IParser Text Char
-</span><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679113614"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113614"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113614"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679109711"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109711"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109711"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'-'</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%7C%7C"><span class="hs-operator hs-var">||</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113614"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109711"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'+'</span></span><span class="hs-special">)</span><span>
-</span><span id="line-171"></span><span>  </span><span id="local-6989586621679113613"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113613"><span class="hs-identifier hs-var">real</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IReader Text Integer -&gt; IParser Text Integer
-forall t a. IReader t a -&gt; IParser t a
-</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">IReader Text Integer
-forall a. Integral a =&gt; Reader a
+</span><span id="line-171"></span><span>  </span><span id="local-6989586621679109710"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109710"><span class="hs-identifier hs-var">real</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall t a. IReader t a -&gt; IParser t a
+</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Integral a =&gt; Reader a
 </span><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-identifier hs-var">decimal</span></a></span><span>
-</span><span id="line-172"></span><span>  </span><span class="annot"><a href="Data.Text.Internal.Read.html#T"><span class="hs-identifier hs-type">T</span></a></span><span> </span><span id="local-6989586621679113611"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113611"><span class="hs-identifier hs-var">fraction</span></a></span></span><span> </span><span id="local-6989586621679113610"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113610"><span class="hs-identifier hs-var">fracDigits</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">T -&gt; IParser Text T -&gt; IParser Text T
-forall a t. a -&gt; IParser t a -&gt; IParser t a
+</span><span id="line-172"></span><span>  </span><span class="annot"><a href="Data.Text.Internal.Read.html#T"><span class="hs-identifier hs-type">T</span></a></span><span> </span><span id="local-6989586621679109708"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109708"><span class="hs-identifier hs-var">fraction</span></a></span></span><span> </span><span id="local-6989586621679109707"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679109707"><span class="hs-identifier hs-var">fracDigits</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a t. a -&gt; IParser t a -&gt; IParser t a
 </span><a href="Data.Text.Internal.Read.html#perhaps"><span class="hs-identifier hs-var">perhaps</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Int -&gt; T
 </span><a href="Data.Text.Internal.Read.html#T"><span class="hs-identifier hs-var">T</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">0</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IParser Text T -&gt; IParser Text T)
--&gt; IParser Text T -&gt; IParser Text T
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-number">0</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-173"></span><span>    </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; IParser Text Char
-</span><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'.'</span></span><span class="hs-special">)</span><span>
-</span><span id="line-174"></span><span>    </span><span id="local-6989586621679113609"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113609"><span class="hs-identifier hs-var">digits</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IReader Text Int -&gt; IParser Text Int
-forall t a. IReader t a -&gt; IParser t a
-</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">(IReader Text Int -&gt; IParser Text Int)
--&gt; IReader Text Int -&gt; IParser Text Int
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679113608"><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113608"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">(Int, Text) -&gt; Either String (Int, Text)
-forall a b. b -&gt; Either a b
+</span><span id="line-174"></span><span>    </span><span id="local-6989586621679109706"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679109706"><span class="hs-identifier hs-var">digits</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall t a. IReader t a -&gt; IParser t a
+</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679109705"><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109705"><span class="hs-identifier hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><a href="../../base/src/Data.Either.html#Right"><span class="hs-identifier hs-var">Right</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int64 -&gt; Int
-</span><a href="Data.Text.Lazy.Read.html#int64ToInt"><span class="hs-identifier hs-var">int64ToInt</span></a></span><span> </span><span class="annot"><span class="annottext">(Int64 -&gt; Int) -&gt; (Text -&gt; Int64) -&gt; Text -&gt; Int
-forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="Data.Text.Lazy.Read.html#int64ToInt"><span class="hs-identifier hs-var">int64ToInt</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="../../base/src/GHC.Base.html#."><span class="hs-operator hs-var">.</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; Int64
-</span><a href="Data.Text.Lazy.html#length"><span class="hs-identifier hs-var">T.length</span></a></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Int) -&gt; Text -&gt; Int
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="Data.Text.Lazy.html#length"><span class="hs-identifier hs-var">T.length</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; Text -&gt; Text
 </span><a href="Data.Text.Lazy.html#takeWhile"><span class="hs-identifier hs-var">T.takeWhile</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
 </span><a href="../../base/src/GHC.Unicode.html#isDigit"><span class="hs-identifier hs-var">isDigit</span></a></span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113608"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
-</span><a href="#local-6989586621679113608"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-175"></span><span>    </span><span id="local-6989586621679113603"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113603"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IReader Text Integer -&gt; IParser Text Integer
-forall t a. IReader t a -&gt; IParser t a
-</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">IReader Text Integer
-forall a. Integral a =&gt; Reader a
+</span><a href="#local-6989586621679109705"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text
+</span><a href="#local-6989586621679109705"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-175"></span><span>    </span><span id="local-6989586621679109700"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109700"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall t a. IReader t a -&gt; IParser t a
+</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Integral a =&gt; Reader a
 </span><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-identifier hs-var">decimal</span></a></span><span>
-</span><span id="line-176"></span><span>    </span><span class="annot"><span class="annottext">T -&gt; IParser Text T
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(T -&gt; IParser Text T) -&gt; T -&gt; IParser Text T
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-176"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Int -&gt; T
 </span><a href="Data.Text.Internal.Read.html#T"><span class="hs-identifier hs-var">T</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113603"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113609"><span class="hs-identifier hs-var">digits</span></a></span><span>
-</span><span id="line-177"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679113600"><span class="annot"><span class="annottext">e :: Char -&gt; Bool
-</span><a href="#local-6989586621679113600"><span class="hs-identifier hs-var hs-var">e</span></a></span></span><span> </span><span id="local-6989586621679113599"><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113599"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113599"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109700"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679109706"><span class="hs-identifier hs-var">digits</span></a></span><span>
+</span><span id="line-177"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679109697"><span class="annot"><span class="annottext">e :: Char -&gt; Bool
+</span><a href="#local-6989586621679109697"><span class="hs-identifier hs-var hs-var">e</span></a></span></span><span> </span><span id="local-6989586621679109696"><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109696"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Char
+</span><a href="#local-6989586621679109696"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'e'</span></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%7C%7C"><span class="hs-operator hs-var">||</span></a></span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113599"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109696"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'E'</span></span><span>
-</span><span id="line-178"></span><span>  </span><span id="local-6989586621679113598"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113598"><span class="hs-identifier hs-var">power</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; IParser Text Int -&gt; IParser Text Int
-forall a t. a -&gt; IParser t a -&gt; IParser t a
+</span><span id="line-178"></span><span>  </span><span id="local-6989586621679109695"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679109695"><span class="hs-identifier hs-var">power</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a t. a -&gt; IParser t a -&gt; IParser t a
 </span><a href="Data.Text.Internal.Read.html#perhaps"><span class="hs-identifier hs-var">perhaps</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(Char -&gt; Bool) -&gt; IParser Text Char
 </span><a href="Data.Text.Lazy.Read.html#char"><span class="hs-identifier hs-var">char</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Bool
-</span><a href="#local-6989586621679113600"><span class="hs-identifier hs-var">e</span></a></span><span> </span><span class="annot"><span class="annottext">IParser Text Char -&gt; IParser Text Int -&gt; IParser Text Int
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; m b -&gt; m b
-</span><a href="../../base/src/GHC.Base.html#%3E%3E"><span class="hs-operator hs-var">&gt;&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">IParser Text Int -&gt; IParser Text Int
-forall a. Num a =&gt; Parser a -&gt; Parser a
-</span><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-identifier hs-var">signa</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IReader Text Int -&gt; IParser Text Int
-forall t a. IReader t a -&gt; IParser t a
-</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">IReader Text Int
-forall a. Integral a =&gt; Reader a
+</span><a href="#local-6989586621679109697"><span class="hs-identifier hs-var">e</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; m b -&gt; m b
+</span><a href="../../base/src/GHC.Base.html#%3E%3E"><span class="hs-operator hs-var">&gt;&gt;</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; Parser a -&gt; Parser a
+</span><a href="Data.Text.Lazy.Read.html#signa"><span class="hs-identifier hs-var">signa</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall t a. IReader t a -&gt; IParser t a
+</span><a href="Data.Text.Internal.Read.html#P"><span class="hs-identifier hs-var">P</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Integral a =&gt; Reader a
 </span><a href="Data.Text.Lazy.Read.html#decimal"><span class="hs-identifier hs-var">decimal</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="Data.Text.Lazy.Read.html#Parser"><span class="hs-identifier hs-type">Parser</span></a></span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Int"><span class="hs-identifier hs-type">Int</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-179"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679113574"><span class="annot"><span class="annottext">n :: a
-</span><a href="#local-6989586621679113574"><span class="hs-identifier hs-var hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113610"><span class="hs-identifier hs-var">fracDigits</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span id="line-179"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679109671"><span class="annot"><span class="annottext">n :: a
+</span><a href="#local-6989586621679109671"><span class="hs-identifier hs-var hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679109707"><span class="hs-identifier hs-var">fracDigits</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span>
 </span><span id="line-180"></span><span>          </span><span class="hs-keyword">then</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113598"><span class="hs-identifier hs-var">power</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109695"><span class="hs-identifier hs-var">power</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span>
-</span><span id="line-181"></span><span>               </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; a
-forall a. Num a =&gt; Integer -&gt; a
+</span><span id="line-181"></span><span>               </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; Integer -&gt; a
 </span><a href="../../base/src/GHC.Num.html#fromInteger"><span class="hs-identifier hs-var">fromInteger</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113613"><span class="hs-identifier hs-var">real</span></a></span><span>
-</span><span id="line-182"></span><span>               </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; a
-forall a. Num a =&gt; Integer -&gt; a
+</span><a href="#local-6989586621679109710"><span class="hs-identifier hs-var">real</span></a></span><span>
+</span><span id="line-182"></span><span>               </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; Integer -&gt; a
 </span><a href="../../base/src/GHC.Num.html#fromInteger"><span class="hs-identifier hs-var">fromInteger</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113613"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679109710"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2A"><span class="hs-operator hs-var">*</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; Int -&gt; a
-forall a b. (Fractional a, Integral b) =&gt; a -&gt; b -&gt; a
+</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Fractional a, Integral b) =&gt; a -&gt; b -&gt; a
 </span><a href="../../base/src/GHC.Real.html#%5E%5E"><span class="hs-operator hs-var">^^</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113598"><span class="hs-identifier hs-var">power</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679109695"><span class="hs-identifier hs-var">power</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-183"></span><span>          </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113598"><span class="hs-identifier hs-var">power</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109695"><span class="hs-identifier hs-var">power</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span>
 </span><span id="line-184"></span><span>               </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer -&gt; a
-</span><a href="#local-6989586621679113616"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113613"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113611"><span class="hs-identifier hs-var">fraction</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer
-</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Int -&gt; Integer
-forall a b. (Num a, Integral b) =&gt; a -&gt; b -&gt; a
+</span><a href="#local-6989586621679109713"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109710"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109708"><span class="hs-identifier hs-var">fraction</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Num a, Integral b) =&gt; a -&gt; b -&gt; a
 </span><a href="../../base/src/GHC.Real.html#%5E"><span class="hs-operator hs-var">^</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113610"><span class="hs-identifier hs-var">fracDigits</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679109707"><span class="hs-identifier hs-var">fracDigits</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-185"></span><span>               </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; Integer -&gt; a
-</span><a href="#local-6989586621679113616"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113613"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679113611"><span class="hs-identifier hs-var">fraction</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer
-</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Int -&gt; Integer
-forall a b. (Num a, Integral b) =&gt; a -&gt; b -&gt; a
+</span><a href="#local-6989586621679109713"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109710"><span class="hs-identifier hs-var">real</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679109708"><span class="hs-identifier hs-var">fraction</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer
+</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Num a, Integral b) =&gt; a -&gt; b -&gt; a
 </span><a href="../../base/src/GHC.Real.html#%5E"><span class="hs-operator hs-var">^</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113610"><span class="hs-identifier hs-var">fracDigits</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679109707"><span class="hs-identifier hs-var">fracDigits</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2A"><span class="hs-operator hs-var">*</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">a -&gt; Int -&gt; a
-forall a b. (Fractional a, Integral b) =&gt; a -&gt; b -&gt; a
+</span><span class="hs-number">10</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (Fractional a, Integral b) =&gt; a -&gt; b -&gt; a
 </span><a href="../../base/src/GHC.Real.html#%5E%5E"><span class="hs-operator hs-var">^^</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679113598"><span class="hs-identifier hs-var">power</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-186"></span><span>  </span><span class="annot"><span class="annottext">a -&gt; IParser Text a
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; IParser Text a) -&gt; a -&gt; IParser Text a
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679109695"><span class="hs-identifier hs-var">power</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-186"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24%21"><span class="hs-operator hs-var">$!</span></a></span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Char
-</span><a href="#local-6989586621679113615"><span class="hs-identifier hs-var">sign</span></a></span><span> </span><span class="annot"><span class="annottext">Char -&gt; Char -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679109712"><span class="hs-identifier hs-var">sign</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><a href="../../ghc-prim/src/GHC.Classes.html#%3D%3D"><span class="hs-operator hs-var">==</span></a></span><span> </span><span class="annot"><span class="annottext">Char
 </span><span class="hs-char">'+'</span></span><span>
 </span><span id="line-187"></span><span>            </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679113574"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679109671"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-188"></span><span>            </span><span class="hs-keyword">else</span><span> </span><span class="hs-glyph">-</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679113574"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679109671"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-189"></span><span>
 </span><span id="line-190"></span><span class="annot"><a href="Data.Text.Lazy.Read.html#int64ToInt"><span class="hs-identifier hs-type">int64ToInt</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Int.html#Int64"><span class="hs-identifier hs-type">Int64</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../ghc-prim/src/GHC.Types.html#Int"><span class="hs-identifier hs-type">Int</span></a></span><span>
 </span><span id="line-191"></span><span id="int64ToInt"><span class="annot"><span class="annottext">int64ToInt :: Int64 -&gt; Int
-</span><a href="Data.Text.Lazy.Read.html#int64ToInt"><span class="hs-identifier hs-var hs-var">int64ToInt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int64 -&gt; Int
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="Data.Text.Lazy.Read.html#int64ToInt"><span class="hs-identifier hs-var hs-var">int64ToInt</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span>
 </span><span id="line-192"></span></pre></body></html>

@@ -121,14 +121,13 @@
 </span><span id="line-114"></span><span class="hs-comment">--   'ProcessGroupID' for process @pid@.</span><span>
 </span><span id="line-115"></span><span class="annot"><a href="System.Posix.Process.Common.html#getProcessGroupIDOf"><span class="hs-identifier hs-type">getProcessGroupIDOf</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessGroupID"><span class="hs-identifier hs-type">ProcessGroupID</span></a></span><span>
 </span><span id="line-116"></span><span id="getProcessGroupIDOf"><span class="annot"><span class="annottext">getProcessGroupIDOf :: CPid -&gt; IO CPid
-</span><a href="System.Posix.Process.Common.html#getProcessGroupIDOf"><span class="hs-identifier hs-var hs-var">getProcessGroupIDOf</span></a></span></span><span> </span><span id="local-6989586621679060897"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060897"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-117"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CPid -&gt; IO CPid
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><a href="System.Posix.Process.Common.html#getProcessGroupIDOf"><span class="hs-identifier hs-var hs-var">getProcessGroupIDOf</span></a></span></span><span> </span><span id="local-6989586621679065954"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065954"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-117"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1"><span class="hs-identifier hs-var">throwErrnoIfMinus1</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;getProcessGroupIDOf&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; IO CPid
 </span><a href="System.Posix.Process.Common.html#c_getpgid"><span class="hs-identifier hs-var">c_getpgid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060897"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065954"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-118"></span><span>
 </span><span id="line-119"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;getpgid&quot;</span></span><span>
 </span><span id="line-120"></span><span>  </span><span id="c_getpgid"><span class="annot"><a href="System.Posix.Process.Common.html#c_getpgid"><span class="hs-identifier hs-var">c_getpgid</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CPid"><span class="hs-identifier hs-type">CPid</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CPid"><span class="hs-identifier hs-type">CPid</span></a></span><span>
@@ -150,33 +149,30 @@ createProcessGroup = do
 </span><span id="line-136"></span><span class="hs-comment">--   process @pid@ a new process group leader.</span><span>
 </span><span id="line-137"></span><span class="annot"><a href="System.Posix.Process.Common.html#createProcessGroupFor"><span class="hs-identifier hs-type">createProcessGroupFor</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessGroupID"><span class="hs-identifier hs-type">ProcessGroupID</span></a></span><span>
 </span><span id="line-138"></span><span id="createProcessGroupFor"><span class="annot"><span class="annottext">createProcessGroupFor :: CPid -&gt; IO CPid
-</span><a href="System.Posix.Process.Common.html#createProcessGroupFor"><span class="hs-identifier hs-var hs-var">createProcessGroupFor</span></a></span></span><span> </span><span id="local-6989586621679060894"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060894"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-139"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.Process.Common.html#createProcessGroupFor"><span class="hs-identifier hs-var hs-var">createProcessGroupFor</span></a></span></span><span> </span><span id="local-6989586621679065951"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065951"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-139"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;createProcessGroupFor&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; CPid -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_setpgid"><span class="hs-identifier hs-var">c_setpgid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060894"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065951"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span>
-</span><span id="line-140"></span><span>  </span><span class="annot"><span class="annottext">CPid -&gt; IO CPid
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span id="line-140"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060894"><span class="hs-identifier hs-var">pid</span></a></span><span>
+</span><a href="#local-6989586621679065951"><span class="hs-identifier hs-var">pid</span></a></span><span>
 </span><span id="line-141"></span><span>
 </span><span id="line-142"></span><span class="hs-comment">-- | @'joinProcessGroup' pgid@ calls @setpgid@ to set the</span><span>
 </span><span id="line-143"></span><span class="hs-comment">--   'ProcessGroupID' of the current process to @pgid@.</span><span>
 </span><span id="line-144"></span><span class="annot"><a href="System.Posix.Process.Common.html#joinProcessGroup"><span class="hs-identifier hs-type">joinProcessGroup</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessGroupID"><span class="hs-identifier hs-type">ProcessGroupID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-145"></span><span id="joinProcessGroup"><span class="annot"><span class="annottext">joinProcessGroup :: CPid -&gt; IO ()
-</span><a href="System.Posix.Process.Common.html#joinProcessGroup"><span class="hs-identifier hs-var hs-var">joinProcessGroup</span></a></span></span><span> </span><span id="local-6989586621679060891"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060891"><span class="hs-identifier hs-var">pgid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-146"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.Process.Common.html#joinProcessGroup"><span class="hs-identifier hs-var hs-var">joinProcessGroup</span></a></span></span><span> </span><span id="local-6989586621679065948"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065948"><span class="hs-identifier hs-var">pgid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-146"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;joinProcessGroup&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; CPid -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_setpgid"><span class="hs-identifier hs-var">c_setpgid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
 </span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060891"><span class="hs-identifier hs-var">pgid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065948"><span class="hs-identifier hs-var">pgid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-147"></span><span>
 </span><span id="line-148"></span><span class="hs-comment">{-
    To be added in the future, after the deprecation period for the
@@ -193,16 +189,15 @@ setProcessGroupID pgid =
 </span><span id="line-160"></span><span class="hs-comment">--   'ProcessGroupIDOf' for process @pid@ to @pgid@.</span><span>
 </span><span id="line-161"></span><span class="annot"><a href="System.Posix.Process.Common.html#setProcessGroupIDOf"><span class="hs-identifier hs-type">setProcessGroupIDOf</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessGroupID"><span class="hs-identifier hs-type">ProcessGroupID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-162"></span><span id="setProcessGroupIDOf"><span class="annot"><span class="annottext">setProcessGroupIDOf :: CPid -&gt; CPid -&gt; IO ()
-</span><a href="System.Posix.Process.Common.html#setProcessGroupIDOf"><span class="hs-identifier hs-var hs-var">setProcessGroupIDOf</span></a></span></span><span> </span><span id="local-6989586621679060890"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060890"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span id="local-6989586621679060889"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060889"><span class="hs-identifier hs-var">pgid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-163"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.Process.Common.html#setProcessGroupIDOf"><span class="hs-identifier hs-var hs-var">setProcessGroupIDOf</span></a></span></span><span> </span><span id="local-6989586621679065947"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065947"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span id="local-6989586621679065946"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065946"><span class="hs-identifier hs-var">pgid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-163"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;setProcessGroupIDOf&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; CPid -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_setpgid"><span class="hs-identifier hs-var">c_setpgid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060890"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060889"><span class="hs-identifier hs-var">pgid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065947"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065946"><span class="hs-identifier hs-var">pgid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-164"></span><span>
 </span><span id="line-165"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;setpgid&quot;</span></span><span>
 </span><span id="line-166"></span><span>  </span><span id="c_setpgid"><span class="annot"><a href="System.Posix.Process.Common.html#c_setpgid"><span class="hs-identifier hs-var">c_setpgid</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CPid"><span class="hs-identifier hs-type">CPid</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CPid"><span class="hs-identifier hs-type">CPid</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span>
@@ -211,8 +206,7 @@ forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><span id="line-169"></span><span class="hs-comment">--   with the current process as session leader.</span><span>
 </span><span id="line-170"></span><span class="annot"><a href="System.Posix.Process.Common.html#createSession"><span class="hs-identifier hs-type">createSession</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessGroupID"><span class="hs-identifier hs-type">ProcessGroupID</span></a></span><span>
 </span><span id="line-171"></span><span id="createSession"><span class="annot"><span class="annottext">createSession :: IO CPid
-</span><a href="System.Posix.Process.Common.html#createSession"><span class="hs-identifier hs-var hs-var">createSession</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CPid -&gt; IO CPid
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><a href="System.Posix.Process.Common.html#createSession"><span class="hs-identifier hs-var hs-var">createSession</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1"><span class="hs-identifier hs-var">throwErrnoIfMinus1</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;createSession&quot;</span></span><span> </span><span class="annot"><span class="annottext">IO CPid
 </span><a href="System.Posix.Process.Common.html#c_setsid"><span class="hs-identifier hs-var">c_setsid</span></a></span><span>
@@ -243,14 +237,11 @@ forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><span id="line-191"></span><span class="annot"><a href="System.Posix.Process.Common.html#getProcessTimes"><span class="hs-identifier hs-type">getProcessTimes</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Posix.Process.Common.html#ProcessTimes"><span class="hs-identifier hs-type">ProcessTimes</span></a></span><span>
 </span><span id="line-192"></span><span id="getProcessTimes"><span class="annot"><span class="annottext">getProcessTimes :: IO ProcessTimes
 </span><a href="System.Posix.Process.Common.html#getProcessTimes"><span class="hs-identifier hs-var hs-var">getProcessTimes</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-193"></span><span>   </span><span class="annot"><span class="annottext">Int -&gt; (Ptr CTms -&gt; IO ProcessTimes) -&gt; IO ProcessTimes
-forall a b. Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span id="line-193"></span><span>   </span><span class="annot"><span class="annottext">forall a b. Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
 </span><a href="../../base/src/Foreign.Marshal.Alloc.html#allocaBytes"><span class="hs-identifier hs-var">allocaBytes</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">32</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((Ptr CTms -&gt; IO ProcessTimes) -&gt; IO ProcessTimes)
--&gt; (Ptr CTms -&gt; IO ProcessTimes) -&gt; IO ProcessTimes
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679060880"><span class="annot"><span class="annottext">Ptr CTms
-</span><a href="#local-6989586621679060880"><span class="hs-identifier hs-var">p_tms</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span class="hs-number">32</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679065937"><span class="annot"><span class="annottext">Ptr CTms
+</span><a href="#local-6989586621679065937"><span class="hs-identifier hs-var">p_tms</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-194"></span><span class="hs-pragma">{-# LINE 194 &quot;libraries/unix/System/Posix/Process/Common.hsc&quot; #-}</span><span>
 </span><span id="line-194"></span><span>     </span><span class="hs-identifier">elapsed</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-identifier">throwErrnoIfMinus1</span><span> </span><span class="hs-string">&quot;getProcessTimes&quot;</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">c_times</span><span> </span><span class="hs-identifier">p_tms</span><span class="hs-special">)</span><span>
 </span><span id="line-195"></span><span>     </span><span class="hs-identifier">ut</span><span>  </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-identifier">hsc_ptr</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">peekByteOff</span><span> </span><span class="hs-identifier">hsc_ptr</span><span> </span><span class="hs-number">0</span><span class="hs-special">)</span><span class="hs-special">)</span><span>  </span><span class="hs-identifier">p_tms</span><span>
@@ -278,36 +269,29 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span id="line-213"></span><span>
 </span><span id="line-214"></span><span class="annot"><a href="System.Posix.Process.Common.html#nice"><span class="hs-identifier hs-type">nice</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-215"></span><span id="nice"><span class="annot"><span class="annottext">nice :: Int -&gt; IO ()
-</span><a href="System.Posix.Process.Common.html#nice"><span class="hs-identifier hs-var hs-var">nice</span></a></span></span><span> </span><span id="local-6989586621679060868"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060868"><span class="hs-identifier hs-var">prio</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="System.Posix.Process.Common.html#nice"><span class="hs-identifier hs-var hs-var">nice</span></a></span></span><span> </span><span id="local-6989586621679065925"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679065925"><span class="hs-identifier hs-var">prio</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-216"></span><span>  </span><span class="annot"><span class="annottext">IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#resetErrno"><span class="hs-identifier hs-var">resetErrno</span></a></span><span>
-</span><span id="line-217"></span><span>  </span><span id="local-6989586621679060866"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679060866"><span class="hs-identifier hs-var">res</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CInt -&gt; IO CInt
-</span><a href="System.Posix.Process.Common.html#c_nice"><span class="hs-identifier hs-var">c_nice</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span id="line-217"></span><span>  </span><span id="local-6989586621679065923"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679065923"><span class="hs-identifier hs-var">res</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CInt -&gt; IO CInt
+</span><a href="System.Posix.Process.Common.html#c_nice"><span class="hs-identifier hs-var">c_nice</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060868"><span class="hs-identifier hs-var">prio</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-218"></span><span>  </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
-forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><a href="#local-6989586621679065925"><span class="hs-identifier hs-var">prio</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-218"></span><span>  </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><a href="../../base/src/GHC.Base.html#when"><span class="hs-identifier hs-var">when</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679060866"><span class="hs-identifier hs-var">res</span></a></span><span> </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679065923"><span class="hs-identifier hs-var">res</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="hs-glyph">-</span><span class="annot"><span class="annottext">CInt
-</span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-219"></span><span>    </span><span id="local-6989586621679060863"><span class="annot"><span class="annottext">Errno
-</span><a href="#local-6989586621679060863"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Errno
+</span><span id="line-219"></span><span>    </span><span id="local-6989586621679065920"><span class="annot"><span class="annottext">Errno
+</span><a href="#local-6989586621679065920"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Errno
 </span><a href="../../base/src/Foreign.C.Error.html#getErrno"><span class="hs-identifier hs-var">getErrno</span></a></span><span>
-</span><span id="line-220"></span><span>    </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
-forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><span id="line-220"></span><span>    </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><a href="../../base/src/GHC.Base.html#when"><span class="hs-identifier hs-var">when</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Errno
-</span><a href="#local-6989586621679060863"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">Errno -&gt; Errno -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679065920"><span class="hs-identifier hs-var">err</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">Errno
-</span><a href="../../base/src/Foreign.C.Error.html#eOK"><span class="hs-identifier hs-var">eOK</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; IO ()
-forall a. String -&gt; IO a
+</span><a href="../../base/src/Foreign.C.Error.html#eOK"><span class="hs-identifier hs-var">eOK</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. String -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrno"><span class="hs-identifier hs-var">throwErrno</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;nice&quot;</span></span><span class="hs-special">)</span><span>
 </span><span id="line-221"></span><span>
@@ -319,59 +303,50 @@ forall a. String -&gt; IO a
 </span><span id="line-227"></span><span class="annot"><a href="System.Posix.Process.Common.html#getUserPriority"><span class="hs-identifier hs-type">getUserPriority</span></a></span><span>         </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#UserID"><span class="hs-identifier hs-type">UserID</span></a></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
 </span><span id="line-228"></span><span>
 </span><span id="line-229"></span><span id="getProcessPriority"><span class="annot"><span class="annottext">getProcessPriority :: CPid -&gt; IO Int
-</span><a href="System.Posix.Process.Common.html#getProcessPriority"><span class="hs-identifier hs-var hs-var">getProcessPriority</span></a></span></span><span> </span><span id="local-6989586621679060858"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060858"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-230"></span><span>  </span><span id="local-6989586621679060857"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679060857"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO CInt
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><a href="System.Posix.Process.Common.html#getProcessPriority"><span class="hs-identifier hs-var hs-var">getProcessPriority</span></a></span></span><span> </span><span id="local-6989586621679065915"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065915"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-230"></span><span>  </span><span id="local-6989586621679065914"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679065914"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1"><span class="hs-identifier hs-var">throwErrnoIfMinus1</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;getProcessPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">(IO CInt -&gt; IO CInt) -&gt; IO CInt -&gt; IO CInt
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-string">&quot;getProcessPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
 </span><span id="line-231"></span><span>         </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_getpriority"><span class="hs-identifier hs-var">c_getpriority</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt
-</span><span class="hs-number">0</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-number">0</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060858"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065915"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-232"></span><span class="hs-pragma">{-# LINE 232 &quot;libraries/unix/System/Posix/Process/Common.hsc&quot; #-}</span><span>
 </span><span id="line-232"></span><span>  </span><span class="hs-identifier">return</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromIntegral</span><span> </span><span class="hs-identifier">r</span><span class="hs-special">)</span><span>
 </span><span id="line-233"></span><span>
 </span><span id="line-234"></span><span id="getProcessGroupPriority"><span class="annot"><span class="annottext">getProcessGroupPriority :: CPid -&gt; IO Int
-</span><a href="System.Posix.Process.Common.html#getProcessGroupPriority"><span class="hs-identifier hs-var hs-var">getProcessGroupPriority</span></a></span></span><span> </span><span id="local-6989586621679060855"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060855"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-235"></span><span>  </span><span id="local-6989586621679060854"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679060854"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO CInt
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><a href="System.Posix.Process.Common.html#getProcessGroupPriority"><span class="hs-identifier hs-var hs-var">getProcessGroupPriority</span></a></span></span><span> </span><span id="local-6989586621679065912"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065912"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-235"></span><span>  </span><span id="local-6989586621679065911"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679065911"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1"><span class="hs-identifier hs-var">throwErrnoIfMinus1</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;getProcessPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">(IO CInt -&gt; IO CInt) -&gt; IO CInt -&gt; IO CInt
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-string">&quot;getProcessPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
 </span><span id="line-236"></span><span>         </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_getpriority"><span class="hs-identifier hs-var">c_getpriority</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt
-</span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060855"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065912"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-237"></span><span class="hs-pragma">{-# LINE 237 &quot;libraries/unix/System/Posix/Process/Common.hsc&quot; #-}</span><span>
 </span><span id="line-237"></span><span>  </span><span class="hs-identifier">return</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromIntegral</span><span> </span><span class="hs-identifier">r</span><span class="hs-special">)</span><span>
 </span><span id="line-238"></span><span>
 </span><span id="line-239"></span><span id="getUserPriority"><span class="annot"><span class="annottext">getUserPriority :: UserID -&gt; IO Int
-</span><a href="System.Posix.Process.Common.html#getUserPriority"><span class="hs-identifier hs-var hs-var">getUserPriority</span></a></span></span><span> </span><span id="local-6989586621679060853"><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679060853"><span class="hs-identifier hs-var">uid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-240"></span><span>  </span><span id="local-6989586621679060852"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679060852"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO CInt
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><a href="System.Posix.Process.Common.html#getUserPriority"><span class="hs-identifier hs-var hs-var">getUserPriority</span></a></span></span><span> </span><span id="local-6989586621679065910"><span class="annot"><span class="annottext">UserID
+</span><a href="#local-6989586621679065910"><span class="hs-identifier hs-var">uid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-240"></span><span>  </span><span id="local-6989586621679065909"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679065909"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1"><span class="hs-identifier hs-var">throwErrnoIfMinus1</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;getUserPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">(IO CInt -&gt; IO CInt) -&gt; IO CInt -&gt; IO CInt
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-string">&quot;getUserPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
 </span><span id="line-241"></span><span>         </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_getpriority"><span class="hs-identifier hs-var">c_getpriority</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt
-</span><span class="hs-number">2</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">UserID -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-number">2</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679060853"><span class="hs-identifier hs-var">uid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065910"><span class="hs-identifier hs-var">uid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-242"></span><span class="hs-pragma">{-# LINE 242 &quot;libraries/unix/System/Posix/Process/Common.hsc&quot; #-}</span><span>
 </span><span id="line-242"></span><span>  </span><span class="hs-identifier">return</span><span> </span><span class="hs-special">(</span><span class="hs-identifier">fromIntegral</span><span> </span><span class="hs-identifier">r</span><span class="hs-special">)</span><span>
 </span><span id="line-243"></span><span>
@@ -383,66 +358,54 @@ forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span id="line-249"></span><span class="annot"><a href="System.Posix.Process.Common.html#setUserPriority"><span class="hs-identifier hs-type">setUserPriority</span></a></span><span>         </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#UserID"><span class="hs-identifier hs-type">UserID</span></a></span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-250"></span><span>
 </span><span id="line-251"></span><span id="setProcessPriority"><span class="annot"><span class="annottext">setProcessPriority :: CPid -&gt; Int -&gt; IO ()
-</span><a href="System.Posix.Process.Common.html#setProcessPriority"><span class="hs-identifier hs-var hs-var">setProcessPriority</span></a></span></span><span> </span><span id="local-6989586621679060851"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060851"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span id="local-6989586621679060850"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060850"><span class="hs-identifier hs-var">val</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-252"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.Process.Common.html#setProcessPriority"><span class="hs-identifier hs-var hs-var">setProcessPriority</span></a></span></span><span> </span><span id="local-6989586621679065908"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065908"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span id="local-6989586621679065907"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679065907"><span class="hs-identifier hs-var">val</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-252"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;setProcessPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">(IO CInt -&gt; IO ()) -&gt; IO CInt -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-string">&quot;setProcessPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
 </span><span id="line-253"></span><span>    </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; CInt -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_setpriority"><span class="hs-identifier hs-var">c_setpriority</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt
-</span><span class="hs-number">0</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-number">0</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060851"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679065908"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060850"><span class="hs-identifier hs-var">val</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065907"><span class="hs-identifier hs-var">val</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-254"></span><span class="hs-pragma">{-# LINE 254 &quot;libraries/unix/System/Posix/Process/Common.hsc&quot; #-}</span><span>
 </span><span id="line-254"></span><span>
 </span><span id="line-255"></span><span id="setProcessGroupPriority"><span class="annot"><span class="annottext">setProcessGroupPriority :: CPid -&gt; Int -&gt; IO ()
-</span><a href="System.Posix.Process.Common.html#setProcessGroupPriority"><span class="hs-identifier hs-var hs-var">setProcessGroupPriority</span></a></span></span><span> </span><span id="local-6989586621679060848"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060848"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span id="local-6989586621679060847"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060847"><span class="hs-identifier hs-var">val</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-256"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.Process.Common.html#setProcessGroupPriority"><span class="hs-identifier hs-var hs-var">setProcessGroupPriority</span></a></span></span><span> </span><span id="local-6989586621679065905"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065905"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span id="local-6989586621679065904"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679065904"><span class="hs-identifier hs-var">val</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-256"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;setProcessPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">(IO CInt -&gt; IO ()) -&gt; IO CInt -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-string">&quot;setProcessPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
 </span><span id="line-257"></span><span>    </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; CInt -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_setpriority"><span class="hs-identifier hs-var">c_setpriority</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt
-</span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060848"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679065905"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060847"><span class="hs-identifier hs-var">val</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065904"><span class="hs-identifier hs-var">val</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-258"></span><span class="hs-pragma">{-# LINE 258 &quot;libraries/unix/System/Posix/Process/Common.hsc&quot; #-}</span><span>
 </span><span id="line-258"></span><span>
 </span><span id="line-259"></span><span id="setUserPriority"><span class="annot"><span class="annottext">setUserPriority :: UserID -&gt; Int -&gt; IO ()
-</span><a href="System.Posix.Process.Common.html#setUserPriority"><span class="hs-identifier hs-var hs-var">setUserPriority</span></a></span></span><span> </span><span id="local-6989586621679060846"><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679060846"><span class="hs-identifier hs-var">uid</span></a></span></span><span> </span><span id="local-6989586621679060845"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060845"><span class="hs-identifier hs-var">val</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-260"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.Process.Common.html#setUserPriority"><span class="hs-identifier hs-var hs-var">setUserPriority</span></a></span></span><span> </span><span id="local-6989586621679065903"><span class="annot"><span class="annottext">UserID
+</span><a href="#local-6989586621679065903"><span class="hs-identifier hs-var">uid</span></a></span></span><span> </span><span id="local-6989586621679065902"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679065902"><span class="hs-identifier hs-var">val</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-260"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;setUserPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">(IO CInt -&gt; IO ()) -&gt; IO CInt -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-string">&quot;setUserPriority&quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span>
 </span><span id="line-261"></span><span>    </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; CInt -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_setpriority"><span class="hs-identifier hs-var">c_setpriority</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt
-</span><span class="hs-number">2</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">UserID -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span class="hs-number">2</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679060846"><span class="hs-identifier hs-var">uid</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679065903"><span class="hs-identifier hs-var">uid</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060845"><span class="hs-identifier hs-var">val</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065902"><span class="hs-identifier hs-var">val</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-262"></span><span class="hs-pragma">{-# LINE 262 &quot;libraries/unix/System/Posix/Process/Common.hsc&quot; #-}</span><span>
 </span><span id="line-262"></span><span>
 </span><span id="line-263"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;setpriority&quot;</span></span><span>
@@ -468,65 +431,55 @@ in the parent.
 </span><span id="line-283"></span><span>
 </span><span id="line-284"></span><span class="annot"><a href="System.Posix.Process.Common.html#forkProcess"><span class="hs-identifier hs-type">forkProcess</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span>
 </span><span id="line-285"></span><span id="forkProcess"><span class="annot"><span class="annottext">forkProcess :: IO () -&gt; IO CPid
-</span><a href="System.Posix.Process.Common.html#forkProcess"><span class="hs-identifier hs-var hs-var">forkProcess</span></a></span></span><span> </span><span id="local-6989586621679060844"><span class="annot"><span class="annottext">IO ()
-</span><a href="#local-6989586621679060844"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a href="System.Posix.Process.Common.html#forkProcess"><span class="hs-identifier hs-var hs-var">forkProcess</span></a></span></span><span> </span><span id="local-6989586621679065901"><span class="annot"><span class="annottext">IO ()
+</span><a href="#local-6989586621679065901"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-286"></span><span>  </span><span class="hs-comment">-- wrap action to re-establish caller's masking state, as</span><span>
 </span><span id="line-287"></span><span>  </span><span class="hs-comment">-- 'forkProcessPrim' starts in 'MaskedInterruptible' state by</span><span>
 </span><span id="line-288"></span><span>  </span><span class="hs-comment">-- default; see also #1048</span><span>
-</span><span id="line-289"></span><span>  </span><span id="local-6989586621679060843"><span class="annot"><span class="annottext">MaskingState
-</span><a href="#local-6989586621679060843"><span class="hs-identifier hs-var">mstate</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO MaskingState
+</span><span id="line-289"></span><span>  </span><span id="local-6989586621679065900"><span class="annot"><span class="annottext">MaskingState
+</span><a href="#local-6989586621679065900"><span class="hs-identifier hs-var">mstate</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO MaskingState
 </span><a href="../../base/src/GHC.IO.html#getMaskingState"><span class="hs-identifier hs-var">getMaskingState</span></a></span><span>
-</span><span id="line-290"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679060842"><span class="annot"><span class="annottext">action' :: IO ()
-</span><a href="#local-6989586621679060842"><span class="hs-identifier hs-var hs-var">action'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">MaskingState
-</span><a href="#local-6989586621679060843"><span class="hs-identifier hs-var">mstate</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-290"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679065899"><span class="annot"><span class="annottext">action' :: IO ()
+</span><a href="#local-6989586621679065899"><span class="hs-identifier hs-var hs-var">action'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">MaskingState
+</span><a href="#local-6989586621679065900"><span class="hs-identifier hs-var">mstate</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-291"></span><span>          </span><span class="annot"><span class="annottext">MaskingState
-</span><a href="../../base/src/GHC.IO.html#Unmasked"><span class="hs-identifier hs-var">Unmasked</span></a></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO ()
-forall a. IO a -&gt; IO a
+</span><a href="../../base/src/GHC.IO.html#Unmasked"><span class="hs-identifier hs-var">Unmasked</span></a></span><span>              </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. IO a -&gt; IO a
 </span><a href="../../base/src/GHC.IO.html#unsafeUnmask"><span class="hs-identifier hs-var">unsafeUnmask</span></a></span><span> </span><span class="annot"><span class="annottext">IO ()
-</span><a href="#local-6989586621679060844"><span class="hs-identifier hs-var">action</span></a></span><span>
+</span><a href="#local-6989586621679065901"><span class="hs-identifier hs-var">action</span></a></span><span>
 </span><span id="line-292"></span><span>          </span><span class="annot"><span class="annottext">MaskingState
 </span><a href="../../base/src/GHC.IO.html#MaskedInterruptible"><span class="hs-identifier hs-var">MaskedInterruptible</span></a></span><span>   </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">IO ()
-</span><a href="#local-6989586621679060844"><span class="hs-identifier hs-var">action</span></a></span><span>
+</span><a href="#local-6989586621679065901"><span class="hs-identifier hs-var">action</span></a></span><span>
 </span><span id="line-293"></span><span>          </span><span class="annot"><span class="annottext">MaskingState
-</span><a href="../../base/src/GHC.IO.html#MaskedUninterruptible"><span class="hs-identifier hs-var">MaskedUninterruptible</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO ()
-forall a. IO a -&gt; IO a
+</span><a href="../../base/src/GHC.IO.html#MaskedUninterruptible"><span class="hs-identifier hs-var">MaskedUninterruptible</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. IO a -&gt; IO a
 </span><a href="../../base/src/GHC.IO.html#uninterruptibleMask_"><span class="hs-identifier hs-var">uninterruptibleMask_</span></a></span><span> </span><span class="annot"><span class="annottext">IO ()
-</span><a href="#local-6989586621679060844"><span class="hs-identifier hs-var">action</span></a></span><span>
+</span><a href="#local-6989586621679065901"><span class="hs-identifier hs-var">action</span></a></span><span>
 </span><span id="line-294"></span><span>
-</span><span id="line-295"></span><span>  </span><span class="annot"><span class="annottext">IO (StablePtr (IO ()))
--&gt; (StablePtr (IO ()) -&gt; IO ())
--&gt; (StablePtr (IO ()) -&gt; IO CPid)
--&gt; IO CPid
-forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
+</span><span id="line-295"></span><span>  </span><span class="annot"><span class="annottext">forall a b c. IO a -&gt; (a -&gt; IO b) -&gt; (a -&gt; IO c) -&gt; IO c
 </span><a href="../../base/src/Control.Exception.Base.html#bracket"><span class="hs-identifier hs-var">bracket</span></a></span><span>
-</span><span id="line-296"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IO () -&gt; IO (StablePtr (IO ()))
-forall a. a -&gt; IO (StablePtr a)
-</span><a href="../../base/src/GHC.Stable.html#newStablePtr"><span class="hs-identifier hs-var">newStablePtr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">IO () -&gt; IO ()
-forall a. IO a -&gt; IO a
+</span><span id="line-296"></span><span>    </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; IO (StablePtr a)
+</span><a href="../../base/src/GHC.Stable.html#newStablePtr"><span class="hs-identifier hs-var">newStablePtr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. IO a -&gt; IO a
 </span><a href="../../base/src/GHC.TopHandler.html#runIO"><span class="hs-identifier hs-var">runIO</span></a></span><span> </span><span class="annot"><span class="annottext">IO ()
-</span><a href="#local-6989586621679060842"><span class="hs-identifier hs-var">action'</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-297"></span><span>    </span><span class="annot"><span class="annottext">StablePtr (IO ()) -&gt; IO ()
-forall a. StablePtr a -&gt; IO ()
+</span><a href="#local-6989586621679065899"><span class="hs-identifier hs-var">action'</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-297"></span><span>    </span><span class="annot"><span class="annottext">forall a. StablePtr a -&gt; IO ()
 </span><a href="../../base/src/GHC.Stable.html#freeStablePtr"><span class="hs-identifier hs-var">freeStablePtr</span></a></span><span>
-</span><span id="line-298"></span><span>    </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679060838"><span class="annot"><span class="annottext">StablePtr (IO ())
-</span><a href="#local-6989586621679060838"><span class="hs-identifier hs-var">stable</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CPid -&gt; IO CPid
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><span id="line-298"></span><span>    </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679065895"><span class="annot"><span class="annottext">StablePtr (IO ())
+</span><a href="#local-6989586621679065895"><span class="hs-identifier hs-var">stable</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1"><span class="hs-identifier hs-var">throwErrnoIfMinus1</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;forkProcess&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">StablePtr (IO ()) -&gt; IO CPid
 </span><a href="System.Posix.Process.Common.html#forkProcessPrim"><span class="hs-identifier hs-var">forkProcessPrim</span></a></span><span> </span><span class="annot"><span class="annottext">StablePtr (IO ())
-</span><a href="#local-6989586621679060838"><span class="hs-identifier hs-var">stable</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065895"><span class="hs-identifier hs-var">stable</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-299"></span><span>
 </span><span id="line-300"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-string">&quot;forkProcess&quot;</span></span><span> </span><span id="forkProcessPrim"><span class="annot"><a href="System.Posix.Process.Common.html#forkProcessPrim"><span class="hs-identifier hs-var">forkProcessPrim</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Stable.html#StablePtr"><span class="hs-identifier hs-type">StablePtr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CPid"><span class="hs-identifier hs-type">CPid</span></a></span><span>
 </span><span id="line-301"></span><span>
 </span><span id="line-302"></span><span class="hs-comment">-- | Variant of 'forkProcess' in the style of 'forkIOWithUnmask'.</span><span>
 </span><span id="line-303"></span><span class="hs-comment">--</span><span>
 </span><span id="line-304"></span><span class="hs-comment">-- @since 2.7.0.0</span><span>
-</span><span id="line-305"></span><span class="annot"><a href="System.Posix.Process.Common.html#forkProcessWithUnmask"><span class="hs-identifier hs-type">forkProcessWithUnmask</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679060836"><span class="annot"><a href="#local-6989586621679060836"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679060836"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679060836"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span>
+</span><span id="line-305"></span><span class="annot"><a href="System.Posix.Process.Common.html#forkProcessWithUnmask"><span class="hs-identifier hs-type">forkProcessWithUnmask</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-keyword">forall</span><span> </span><span id="local-6989586621679065893"><span class="annot"><a href="#local-6989586621679065893"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-operator">.</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679065893"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679065893"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span>
 </span><span id="line-306"></span><span id="forkProcessWithUnmask"><span class="annot"><span class="annottext">forkProcessWithUnmask :: ((forall a. IO a -&gt; IO a) -&gt; IO ()) -&gt; IO CPid
-</span><a href="System.Posix.Process.Common.html#forkProcessWithUnmask"><span class="hs-identifier hs-var hs-var">forkProcessWithUnmask</span></a></span></span><span> </span><span id="local-6989586621679060835"><span class="annot"><span class="annottext">(forall a. IO a -&gt; IO a) -&gt; IO ()
-</span><a href="#local-6989586621679060835"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO CPid
+</span><a href="System.Posix.Process.Common.html#forkProcessWithUnmask"><span class="hs-identifier hs-var hs-var">forkProcessWithUnmask</span></a></span></span><span> </span><span id="local-6989586621679065892"><span class="annot"><span class="annottext">(forall a. IO a -&gt; IO a) -&gt; IO ()
+</span><a href="#local-6989586621679065892"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO CPid
 </span><a href="System.Posix.Process.Common.html#forkProcess"><span class="hs-identifier hs-var">forkProcess</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(forall a. IO a -&gt; IO a) -&gt; IO ()
-</span><a href="#local-6989586621679060835"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. IO a -&gt; IO a
+</span><a href="#local-6989586621679065892"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. IO a -&gt; IO a
 </span><a href="../../base/src/GHC.IO.html#unsafeUnmask"><span class="hs-identifier hs-var">unsafeUnmask</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-307"></span><span>
 </span><span id="line-308"></span><span class="hs-comment">-- -----------------------------------------------------------------------------</span><span>
@@ -540,50 +493,40 @@ forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><span id="line-316"></span><span class="hs-comment">--   options for @waitpid@, otherwise not.</span><span>
 </span><span id="line-317"></span><span class="annot"><a href="System.Posix.Process.Common.html#getProcessStatus"><span class="hs-identifier hs-type">getProcessStatus</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Maybe.html#Maybe"><span class="hs-identifier hs-type">Maybe</span></a></span><span> </span><span class="annot"><a href="System.Posix.Process.Internals.html#ProcessStatus"><span class="hs-identifier hs-type">ProcessStatus</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-318"></span><span id="getProcessStatus"><span class="annot"><span class="annottext">getProcessStatus :: Bool -&gt; Bool -&gt; CPid -&gt; IO (Maybe ProcessStatus)
-</span><a href="System.Posix.Process.Common.html#getProcessStatus"><span class="hs-identifier hs-var hs-var">getProcessStatus</span></a></span></span><span> </span><span id="local-6989586621679060834"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060834"><span class="hs-identifier hs-var">block</span></a></span></span><span> </span><span id="local-6989586621679060833"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060833"><span class="hs-identifier hs-var">stopped</span></a></span></span><span> </span><span id="local-6989586621679060832"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060832"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-319"></span><span>  </span><span class="annot"><span class="annottext">(Ptr CInt -&gt; IO (Maybe ProcessStatus)) -&gt; IO (Maybe ProcessStatus)
-forall a b. Storable a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
-</span><a href="../../base/src/Foreign.Marshal.Alloc.html#alloca"><span class="hs-identifier hs-var">alloca</span></a></span><span> </span><span class="annot"><span class="annottext">((Ptr CInt -&gt; IO (Maybe ProcessStatus))
- -&gt; IO (Maybe ProcessStatus))
--&gt; (Ptr CInt -&gt; IO (Maybe ProcessStatus))
--&gt; IO (Maybe ProcessStatus)
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679060831"><span class="annot"><span class="annottext">Ptr CInt
-</span><a href="#local-6989586621679060831"><span class="hs-identifier hs-var">wstatp</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-320"></span><span>    </span><span id="local-6989586621679060830"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060830"><span class="hs-identifier hs-var">pid'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CPid -&gt; IO CPid
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><a href="System.Posix.Process.Common.html#getProcessStatus"><span class="hs-identifier hs-var hs-var">getProcessStatus</span></a></span></span><span> </span><span id="local-6989586621679065891"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679065891"><span class="hs-identifier hs-var">block</span></a></span></span><span> </span><span id="local-6989586621679065890"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679065890"><span class="hs-identifier hs-var">stopped</span></a></span></span><span> </span><span id="local-6989586621679065889"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065889"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-319"></span><span>  </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="../../base/src/Foreign.Marshal.Alloc.html#alloca"><span class="hs-identifier hs-var">alloca</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679065888"><span class="annot"><span class="annottext">Ptr CInt
+</span><a href="#local-6989586621679065888"><span class="hs-identifier hs-var">wstatp</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-320"></span><span>    </span><span id="local-6989586621679065887"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065887"><span class="hs-identifier hs-var">pid'</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1Retry"><span class="hs-identifier hs-var">throwErrnoIfMinus1Retry</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;getProcessStatus&quot;</span></span><span>
 </span><span id="line-321"></span><span>                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; Ptr CInt -&gt; CInt -&gt; IO CPid
 </span><a href="System.Posix.Process.Common.html#c_waitpid"><span class="hs-identifier hs-var">c_waitpid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060832"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CInt
-</span><a href="#local-6989586621679060831"><span class="hs-identifier hs-var">wstatp</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; CInt
+</span><a href="#local-6989586621679065889"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CInt
+</span><a href="#local-6989586621679065888"><span class="hs-identifier hs-var">wstatp</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; CInt
 </span><a href="System.Posix.Process.Common.html#waitOptions"><span class="hs-identifier hs-var">waitOptions</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060834"><span class="hs-identifier hs-var">block</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060833"><span class="hs-identifier hs-var">stopped</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065891"><span class="hs-identifier hs-var">block</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679065890"><span class="hs-identifier hs-var">stopped</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-322"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060830"><span class="hs-identifier hs-var">pid'</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679065887"><span class="hs-identifier hs-var">pid'</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-323"></span><span>      </span><span class="annot"><span class="annottext">CPid
-</span><span class="hs-number">0</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe ProcessStatus -&gt; IO (Maybe ProcessStatus)
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe ProcessStatus
-forall a. Maybe a
+</span><span class="hs-number">0</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span>
 </span><span id="line-324"></span><span>      </span><span class="annot"><span class="annottext">CPid
-</span><span class="hs-identifier">_</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679060826"><span class="annot"><span class="annottext">ProcessStatus
-</span><a href="#local-6989586621679060826"><span class="hs-identifier hs-var">ps</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CInt -&gt; IO ProcessStatus
+</span><span class="hs-identifier">_</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679065883"><span class="annot"><span class="annottext">ProcessStatus
+</span><a href="#local-6989586621679065883"><span class="hs-identifier hs-var">ps</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CInt -&gt; IO ProcessStatus
 </span><a href="System.Posix.Process.Common.html#readWaitStatus"><span class="hs-identifier hs-var">readWaitStatus</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CInt
-</span><a href="#local-6989586621679060831"><span class="hs-identifier hs-var">wstatp</span></a></span><span>
-</span><span id="line-325"></span><span>               </span><span class="annot"><span class="annottext">Maybe ProcessStatus -&gt; IO (Maybe ProcessStatus)
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ProcessStatus -&gt; Maybe ProcessStatus
-forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679065888"><span class="hs-identifier hs-var">wstatp</span></a></span><span>
+</span><span id="line-325"></span><span>               </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><a href="../../base/src/GHC.Maybe.html#Just"><span class="hs-identifier hs-var">Just</span></a></span><span> </span><span class="annot"><span class="annottext">ProcessStatus
-</span><a href="#local-6989586621679060826"><span class="hs-identifier hs-var">ps</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065883"><span class="hs-identifier hs-var">ps</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-326"></span><span>
 </span><span id="line-327"></span><span class="hs-comment">-- safe/interruptible, because this call might block</span><span>
 </span><span id="line-328"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">interruptible</span></span><span> </span><span class="annot"><span class="hs-string">&quot;waitpid&quot;</span></span><span>
@@ -604,52 +547,41 @@ forall a. a -&gt; Maybe a
 </span><span id="line-343"></span><span>                      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessGroupID"><span class="hs-identifier hs-type">ProcessGroupID</span></a></span><span>
 </span><span id="line-344"></span><span>                      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Maybe.html#Maybe"><span class="hs-identifier hs-type">Maybe</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="System.Posix.Process.Internals.html#ProcessStatus"><span class="hs-identifier hs-type">ProcessStatus</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-345"></span><span id="getGroupProcessStatus"><span class="annot"><span class="annottext">getGroupProcessStatus :: Bool -&gt; Bool -&gt; CPid -&gt; IO (Maybe (CPid, ProcessStatus))
-</span><a href="System.Posix.Process.Common.html#getGroupProcessStatus"><span class="hs-identifier hs-var hs-var">getGroupProcessStatus</span></a></span></span><span> </span><span id="local-6989586621679060824"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060824"><span class="hs-identifier hs-var">block</span></a></span></span><span> </span><span id="local-6989586621679060823"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060823"><span class="hs-identifier hs-var">stopped</span></a></span></span><span> </span><span id="local-6989586621679060822"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060822"><span class="hs-identifier hs-var">pgid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-346"></span><span>  </span><span class="annot"><span class="annottext">(Ptr CInt -&gt; IO (Maybe (CPid, ProcessStatus)))
--&gt; IO (Maybe (CPid, ProcessStatus))
-forall a b. Storable a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
-</span><a href="../../base/src/Foreign.Marshal.Alloc.html#alloca"><span class="hs-identifier hs-var">alloca</span></a></span><span> </span><span class="annot"><span class="annottext">((Ptr CInt -&gt; IO (Maybe (CPid, ProcessStatus)))
- -&gt; IO (Maybe (CPid, ProcessStatus)))
--&gt; (Ptr CInt -&gt; IO (Maybe (CPid, ProcessStatus)))
--&gt; IO (Maybe (CPid, ProcessStatus))
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679060821"><span class="annot"><span class="annottext">Ptr CInt
-</span><a href="#local-6989586621679060821"><span class="hs-identifier hs-var">wstatp</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-347"></span><span>    </span><span id="local-6989586621679060820"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060820"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CPid -&gt; IO CPid
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><a href="System.Posix.Process.Common.html#getGroupProcessStatus"><span class="hs-identifier hs-var hs-var">getGroupProcessStatus</span></a></span></span><span> </span><span id="local-6989586621679065881"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679065881"><span class="hs-identifier hs-var">block</span></a></span></span><span> </span><span id="local-6989586621679065880"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679065880"><span class="hs-identifier hs-var">stopped</span></a></span></span><span> </span><span id="local-6989586621679065879"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065879"><span class="hs-identifier hs-var">pgid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-346"></span><span>  </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="../../base/src/Foreign.Marshal.Alloc.html#alloca"><span class="hs-identifier hs-var">alloca</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679065878"><span class="annot"><span class="annottext">Ptr CInt
+</span><a href="#local-6989586621679065878"><span class="hs-identifier hs-var">wstatp</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-347"></span><span>    </span><span id="local-6989586621679065877"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065877"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1Retry"><span class="hs-identifier hs-var">throwErrnoIfMinus1Retry</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;getGroupProcessStatus&quot;</span></span><span>
 </span><span id="line-348"></span><span>                </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; Ptr CInt -&gt; CInt -&gt; IO CPid
 </span><a href="System.Posix.Process.Common.html#c_waitpid"><span class="hs-identifier hs-var">c_waitpid</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060822"><span class="hs-identifier hs-var">pgid</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr CInt
-</span><a href="#local-6989586621679060821"><span class="hs-identifier hs-var">wstatp</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; CInt
+</span><a href="#local-6989586621679065879"><span class="hs-identifier hs-var">pgid</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr CInt
+</span><a href="#local-6989586621679065878"><span class="hs-identifier hs-var">wstatp</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; CInt
 </span><a href="System.Posix.Process.Common.html#waitOptions"><span class="hs-identifier hs-var">waitOptions</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060824"><span class="hs-identifier hs-var">block</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060823"><span class="hs-identifier hs-var">stopped</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065881"><span class="hs-identifier hs-var">block</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679065880"><span class="hs-identifier hs-var">stopped</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-349"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060820"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621679065877"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-350"></span><span>      </span><span class="annot"><span class="annottext">CPid
-</span><span class="hs-number">0</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Maybe (CPid, ProcessStatus) -&gt; IO (Maybe (CPid, ProcessStatus))
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe (CPid, ProcessStatus)
-forall a. Maybe a
+</span><span class="hs-number">0</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span>
 </span><span id="line-351"></span><span>      </span><span class="annot"><span class="annottext">CPid
-</span><span class="hs-identifier">_</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679060819"><span class="annot"><span class="annottext">ProcessStatus
-</span><a href="#local-6989586621679060819"><span class="hs-identifier hs-var">ps</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CInt -&gt; IO ProcessStatus
+</span><span class="hs-identifier">_</span></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679065876"><span class="annot"><span class="annottext">ProcessStatus
+</span><a href="#local-6989586621679065876"><span class="hs-identifier hs-var">ps</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CInt -&gt; IO ProcessStatus
 </span><a href="System.Posix.Process.Common.html#readWaitStatus"><span class="hs-identifier hs-var">readWaitStatus</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CInt
-</span><a href="#local-6989586621679060821"><span class="hs-identifier hs-var">wstatp</span></a></span><span>
-</span><span id="line-352"></span><span>               </span><span class="annot"><span class="annottext">Maybe (CPid, ProcessStatus) -&gt; IO (Maybe (CPid, ProcessStatus))
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(CPid, ProcessStatus) -&gt; Maybe (CPid, ProcessStatus)
-forall a. a -&gt; Maybe a
+</span><a href="#local-6989586621679065878"><span class="hs-identifier hs-var">wstatp</span></a></span><span>
+</span><span id="line-352"></span><span>               </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. a -&gt; Maybe a
 </span><a href="../../base/src/GHC.Maybe.html#Just"><span class="hs-identifier hs-var">Just</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060820"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ProcessStatus
-</span><a href="#local-6989586621679060819"><span class="hs-identifier hs-var">ps</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065877"><span class="hs-identifier hs-var">pid</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">ProcessStatus
+</span><a href="#local-6989586621679065876"><span class="hs-identifier hs-var">ps</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-353"></span><span>
 </span><span id="line-354"></span><span class="hs-comment">-- | @'getAnyProcessStatus' blk stopped@ calls @waitpid@, returning</span><span>
 </span><span id="line-355"></span><span class="hs-comment">--   @'Just' (pid, tc)@, the 'ProcessID' and 'ProcessStatus' for any</span><span>
@@ -663,12 +595,12 @@ forall a. a -&gt; Maybe a
 </span><span id="line-363"></span><span class="hs-comment">--   @WUNTRACED@ is set in the options for @waitpid@, otherwise not.</span><span>
 </span><span id="line-364"></span><span class="annot"><a href="System.Posix.Process.Common.html#getAnyProcessStatus"><span class="hs-identifier hs-type">getAnyProcessStatus</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Maybe.html#Maybe"><span class="hs-identifier hs-type">Maybe</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="System.Posix.Process.Internals.html#ProcessStatus"><span class="hs-identifier hs-type">ProcessStatus</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-365"></span><span id="getAnyProcessStatus"><span class="annot"><span class="annottext">getAnyProcessStatus :: Bool -&gt; Bool -&gt; IO (Maybe (CPid, ProcessStatus))
-</span><a href="System.Posix.Process.Common.html#getAnyProcessStatus"><span class="hs-identifier hs-var hs-var">getAnyProcessStatus</span></a></span></span><span> </span><span id="local-6989586621679060818"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060818"><span class="hs-identifier hs-var">block</span></a></span></span><span> </span><span id="local-6989586621679060817"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060817"><span class="hs-identifier hs-var">stopped</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; CPid -&gt; IO (Maybe (CPid, ProcessStatus))
+</span><a href="System.Posix.Process.Common.html#getAnyProcessStatus"><span class="hs-identifier hs-var hs-var">getAnyProcessStatus</span></a></span></span><span> </span><span id="local-6989586621679065875"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679065875"><span class="hs-identifier hs-var">block</span></a></span></span><span> </span><span id="local-6989586621679065874"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679065874"><span class="hs-identifier hs-var">stopped</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; CPid -&gt; IO (Maybe (CPid, ProcessStatus))
 </span><a href="System.Posix.Process.Common.html#getGroupProcessStatus"><span class="hs-identifier hs-var">getGroupProcessStatus</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060818"><span class="hs-identifier hs-var">block</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621679060817"><span class="hs-identifier hs-var">stopped</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065875"><span class="hs-identifier hs-var">block</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621679065874"><span class="hs-identifier hs-var">stopped</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
 </span><span class="hs-number">1</span></span><span>
 </span><span id="line-366"></span><span>
 </span><span id="line-367"></span><span class="annot"><a href="System.Posix.Process.Common.html#waitOptions"><span class="hs-identifier hs-type">waitOptions</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Bool</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span>
@@ -692,16 +624,15 @@ forall a. a -&gt; Maybe a
 </span><span id="line-375"></span><span>
 </span><span id="line-376"></span><span class="annot"><a href="System.Posix.Process.Common.html#readWaitStatus"><span class="hs-identifier hs-type">readWaitStatus</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Posix.Process.Internals.html#ProcessStatus"><span class="hs-identifier hs-type">ProcessStatus</span></a></span><span>
 </span><span id="line-377"></span><span id="readWaitStatus"><span class="annot"><span class="annottext">readWaitStatus :: Ptr CInt -&gt; IO ProcessStatus
-</span><a href="System.Posix.Process.Common.html#readWaitStatus"><span class="hs-identifier hs-var hs-var">readWaitStatus</span></a></span></span><span> </span><span id="local-6989586621679060816"><span class="annot"><span class="annottext">Ptr CInt
-</span><a href="#local-6989586621679060816"><span class="hs-identifier hs-var">wstatp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-378"></span><span>  </span><span id="local-6989586621679060815"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679060815"><span class="hs-identifier hs-var">wstat</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr CInt -&gt; IO CInt
-forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><a href="System.Posix.Process.Common.html#readWaitStatus"><span class="hs-identifier hs-var hs-var">readWaitStatus</span></a></span></span><span> </span><span id="local-6989586621679065873"><span class="annot"><span class="annottext">Ptr CInt
+</span><a href="#local-6989586621679065873"><span class="hs-identifier hs-var">wstatp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-378"></span><span>  </span><span id="local-6989586621679065872"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679065872"><span class="hs-identifier hs-var">wstat</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Storable a =&gt; Ptr a -&gt; IO a
 </span><a href="../../base/src/Foreign.Storable.html#peek"><span class="hs-identifier hs-var">peek</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CInt
-</span><a href="#local-6989586621679060816"><span class="hs-identifier hs-var">wstatp</span></a></span><span>
+</span><a href="#local-6989586621679065873"><span class="hs-identifier hs-var">wstatp</span></a></span><span>
 </span><span id="line-379"></span><span>  </span><span class="annot"><span class="annottext">CInt -&gt; IO ProcessStatus
 </span><a href="System.Posix.Process.Internals.html#decipherWaitStatus"><span class="hs-identifier hs-var">decipherWaitStatus</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679060815"><span class="hs-identifier hs-var">wstat</span></a></span><span>
+</span><a href="#local-6989586621679065872"><span class="hs-identifier hs-var">wstat</span></a></span><span>
 </span><span id="line-380"></span><span>
 </span><span id="line-381"></span><span class="hs-comment">-- -----------------------------------------------------------------------------</span><span>
 </span><span id="line-382"></span><span class="hs-comment">-- Exiting</span><span>
@@ -711,22 +642,20 @@ forall a. Storable a =&gt; Ptr a -&gt; IO a
 </span><span id="line-386"></span><span class="hs-comment">--   The operation never returns.</span><span>
 </span><span id="line-387"></span><span class="annot"><a href="System.Posix.Process.Common.html#exitImmediately"><span class="hs-identifier hs-type">exitImmediately</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.IO.Exception.html#ExitCode"><span class="hs-identifier hs-type">ExitCode</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-388"></span><span id="exitImmediately"><span class="annot"><span class="annottext">exitImmediately :: ExitCode -&gt; IO ()
-</span><a href="System.Posix.Process.Common.html#exitImmediately"><span class="hs-identifier hs-var hs-var">exitImmediately</span></a></span></span><span> </span><span id="local-6989586621679060812"><span class="annot"><span class="annottext">ExitCode
-</span><a href="#local-6989586621679060812"><span class="hs-identifier hs-var">exitcode</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CInt -&gt; IO ()
-</span><a href="System.Posix.Process.Common.html#c_exit"><span class="hs-identifier hs-var">c_exit</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ExitCode -&gt; CInt
-forall {p}. Num p =&gt; ExitCode -&gt; p
-</span><a href="#local-6989586621679060810"><span class="hs-identifier hs-var">exitcode2Int</span></a></span><span> </span><span class="annot"><span class="annottext">ExitCode
-</span><a href="#local-6989586621679060812"><span class="hs-identifier hs-var">exitcode</span></a></span><span class="hs-special">)</span><span>
+</span><a href="System.Posix.Process.Common.html#exitImmediately"><span class="hs-identifier hs-var hs-var">exitImmediately</span></a></span></span><span> </span><span id="local-6989586621679065869"><span class="annot"><span class="annottext">ExitCode
+</span><a href="#local-6989586621679065869"><span class="hs-identifier hs-var">exitcode</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CInt -&gt; IO ()
+</span><a href="System.Posix.Process.Common.html#c_exit"><span class="hs-identifier hs-var">c_exit</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall {a}. Num a =&gt; ExitCode -&gt; a
+</span><a href="#local-6989586621679065867"><span class="hs-identifier hs-var">exitcode2Int</span></a></span><span> </span><span class="annot"><span class="annottext">ExitCode
+</span><a href="#local-6989586621679065869"><span class="hs-identifier hs-var">exitcode</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-389"></span><span>  </span><span class="hs-keyword">where</span><span>
-</span><span id="line-390"></span><span>    </span><span id="local-6989586621679060810"><span class="annot"><span class="annottext">exitcode2Int :: ExitCode -&gt; p
-</span><a href="#local-6989586621679060810"><span class="hs-identifier hs-var hs-var">exitcode2Int</span></a></span></span><span> </span><span class="annot"><span class="annottext">ExitCode
-</span><a href="../../base/src/GHC.IO.Exception.html#ExitSuccess"><span class="hs-identifier hs-var">ExitSuccess</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">p
+</span><span id="line-390"></span><span>    </span><span id="local-6989586621679065867"><span class="annot"><span class="annottext">exitcode2Int :: ExitCode -&gt; a
+</span><a href="#local-6989586621679065867"><span class="hs-identifier hs-var hs-var">exitcode2Int</span></a></span></span><span> </span><span class="annot"><span class="annottext">ExitCode
+</span><a href="../../base/src/GHC.IO.Exception.html#ExitSuccess"><span class="hs-identifier hs-var">ExitSuccess</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-number">0</span></span><span>
-</span><span id="line-391"></span><span>    </span><span class="annot"><a href="#local-6989586621679060810"><span class="hs-identifier hs-var">exitcode2Int</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.IO.Exception.html#ExitFailure"><span class="hs-identifier hs-type">ExitFailure</span></a></span><span> </span><span id="local-6989586621679060803"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060803"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Int -&gt; p
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span id="line-391"></span><span>    </span><span class="annot"><a href="#local-6989586621679065867"><span class="hs-identifier hs-var">exitcode2Int</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.IO.Exception.html#ExitFailure"><span class="hs-identifier hs-type">ExitFailure</span></a></span><span> </span><span id="local-6989586621679065860"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679065860"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679060803"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621679065860"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-392"></span><span>
 </span><span id="line-393"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;exit&quot;</span></span><span>
 </span><span id="line-394"></span><span>  </span><span id="c_exit"><span class="annot"><a href="System.Posix.Process.Common.html#c_exit"><span class="hs-identifier hs-var">c_exit</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
@@ -742,19 +671,17 @@ forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span id="line-404"></span><span class="hs-comment">--   process a new process group leader in future versions.</span><span>
 </span><span id="line-405"></span><span class="annot"><a href="System.Posix.Process.Common.html#createProcessGroup"><span class="hs-identifier hs-type">createProcessGroup</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessGroupID"><span class="hs-identifier hs-type">ProcessGroupID</span></a></span><span>
 </span><span id="line-406"></span><span id="createProcessGroup"><span class="annot"><span class="annottext">createProcessGroup :: CPid -&gt; IO CPid
-</span><a href="System.Posix.Process.Common.html#createProcessGroup"><span class="hs-identifier hs-var hs-var">createProcessGroup</span></a></span></span><span> </span><span id="local-6989586621679060802"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060802"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-407"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.Process.Common.html#createProcessGroup"><span class="hs-identifier hs-var hs-var">createProcessGroup</span></a></span></span><span> </span><span id="local-6989586621679065859"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065859"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-407"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;createProcessGroup&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; CPid -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_setpgid"><span class="hs-identifier hs-var">c_setpgid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060802"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065859"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span>
-</span><span id="line-408"></span><span>  </span><span class="annot"><span class="annottext">CPid -&gt; IO CPid
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span id="line-408"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060802"><span class="hs-identifier hs-var">pid</span></a></span><span>
+</span><a href="#local-6989586621679065859"><span class="hs-identifier hs-var">pid</span></a></span><span>
 </span><span id="line-409"></span><span>
 </span><span id="line-410"></span><span class="hs-pragma">{-# DEPRECATED</span><span> </span><span class="hs-pragma">setProcessGroupID</span><span> </span><span class="hs-pragma">&quot;This function is scheduled to be replaced by something different in the future, we therefore recommend that you do not use this version and use 'setProcessGroupIDOf' instead.&quot;</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-comment">-- deprecated in 7.2</span><span>
 </span><span id="line-411"></span><span class="hs-comment">-- | @'setProcessGroupID' pid pgid@ calls @setpgid@ to set the</span><span>
@@ -764,16 +691,15 @@ forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span id="line-415"></span><span class="hs-comment">--   for the current process in future versions.</span><span>
 </span><span id="line-416"></span><span class="annot"><a href="System.Posix.Process.Common.html#setProcessGroupID"><span class="hs-identifier hs-type">setProcessGroupID</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessID"><span class="hs-identifier hs-type">ProcessID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#ProcessGroupID"><span class="hs-identifier hs-type">ProcessGroupID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-417"></span><span id="setProcessGroupID"><span class="annot"><span class="annottext">setProcessGroupID :: CPid -&gt; CPid -&gt; IO ()
-</span><a href="System.Posix.Process.Common.html#setProcessGroupID"><span class="hs-identifier hs-var hs-var">setProcessGroupID</span></a></span></span><span> </span><span id="local-6989586621679060801"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060801"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span id="local-6989586621679060800"><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060800"><span class="hs-identifier hs-var">pgid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-418"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.Process.Common.html#setProcessGroupID"><span class="hs-identifier hs-var hs-var">setProcessGroupID</span></a></span></span><span> </span><span id="local-6989586621679065858"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065858"><span class="hs-identifier hs-var">pid</span></a></span></span><span> </span><span id="local-6989586621679065857"><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065857"><span class="hs-identifier hs-var">pgid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-418"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;setProcessGroupID&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CPid -&gt; CPid -&gt; IO CInt
 </span><a href="System.Posix.Process.Common.html#c_setpgid"><span class="hs-identifier hs-var">c_setpgid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060801"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
-</span><a href="#local-6989586621679060800"><span class="hs-identifier hs-var">pgid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679065858"><span class="hs-identifier hs-var">pid</span></a></span><span> </span><span class="annot"><span class="annottext">CPid
+</span><a href="#local-6989586621679065857"><span class="hs-identifier hs-var">pgid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-419"></span><span>
 </span><span id="line-420"></span><span class="hs-comment">-- -----------------------------------------------------------------------------</span><span>
 </span><span id="line-421"></span></pre></body></html>

@@ -51,44 +51,38 @@
 </span><span id="line-51"></span><span class="hs-comment">-- so shouldn't be considered safe.</span><span>
 </span><span id="line-52"></span><span class="annot"><a href="System.Posix.Temp.ByteString.html#mkstemp"><span class="hs-identifier hs-type">mkstemp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Internal.html#ByteString"><span class="hs-identifier hs-type">ByteString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="System.Posix.ByteString.FilePath.html#RawFilePath"><span class="hs-identifier hs-type">RawFilePath</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="../../base/src/GHC.IO.Handle.Types.html#Handle"><span class="hs-identifier hs-type">Handle</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-53"></span><span id="mkstemp"><span class="annot"><span class="annottext">mkstemp :: ByteString -&gt; IO (ByteString, Handle)
-</span><a href="System.Posix.Temp.ByteString.html#mkstemp"><span class="hs-identifier hs-var hs-var">mkstemp</span></a></span></span><span> </span><span id="local-6989586621679062299"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679062299"><span class="hs-identifier hs-var">template'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-54"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679062298"><span class="annot"><span class="annottext">template :: ByteString
-</span><a href="#local-6989586621679062298"><span class="hs-identifier hs-var hs-var">template</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679062299"><span class="hs-identifier hs-var">template'</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; ByteString -&gt; ByteString
+</span><a href="System.Posix.Temp.ByteString.html#mkstemp"><span class="hs-identifier hs-var hs-var">mkstemp</span></a></span></span><span> </span><span id="local-6989586621679067356"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679067356"><span class="hs-identifier hs-var">template'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679067355"><span class="annot"><span class="annottext">template :: ByteString
+</span><a href="#local-6989586621679067355"><span class="hs-identifier hs-var hs-var">template</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679067356"><span class="hs-identifier hs-var">template'</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; ByteString -&gt; ByteString
 </span><a href="../../bytestring/src/Data.ByteString.html#append"><span class="hs-operator hs-var">`B.append`</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ByteString
 </span><a href="../../bytestring/src/Data.ByteString.Char8.html#pack"><span class="hs-identifier hs-var">BC.pack</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;XXXXXX&quot;</span></span><span class="hs-special">)</span><span>
-</span><span id="line-55"></span><span>  </span><span class="annot"><span class="annottext">ByteString
--&gt; (CString -&gt; IO (ByteString, Handle)) -&gt; IO (ByteString, Handle)
-forall a. ByteString -&gt; (CString -&gt; IO a) -&gt; IO a
+</span><span id="line-55"></span><span>  </span><span class="annot"><span class="annottext">forall a. ByteString -&gt; (CString -&gt; IO a) -&gt; IO a
 </span><a href="System.Posix.ByteString.FilePath.html#withFilePath"><span class="hs-identifier hs-var">withFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679062298"><span class="hs-identifier hs-var">template</span></a></span><span> </span><span class="annot"><span class="annottext">((CString -&gt; IO (ByteString, Handle)) -&gt; IO (ByteString, Handle))
--&gt; (CString -&gt; IO (ByteString, Handle)) -&gt; IO (ByteString, Handle)
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679062294"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679062294"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-56"></span><span>    </span><span id="local-6989586621679062293"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679062293"><span class="hs-identifier hs-var">fd</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO CInt
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
+</span><a href="#local-6989586621679067355"><span class="hs-identifier hs-var">template</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679067351"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679067351"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-56"></span><span>    </span><span id="local-6989586621679067350"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679067350"><span class="hs-identifier hs-var">fd</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1"><span class="hs-identifier hs-var">throwErrnoIfMinus1</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;mkstemp&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CString -&gt; IO CInt
 </span><a href="System.Posix.Temp.ByteString.html#c_mkstemp"><span class="hs-identifier hs-var">c_mkstemp</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679062294"><span class="hs-identifier hs-var">ptr</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-57"></span><span>    </span><span id="local-6989586621679062291"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679062291"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO ByteString
+</span><a href="#local-6989586621679067351"><span class="hs-identifier hs-var">ptr</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-57"></span><span>    </span><span id="local-6989586621679067348"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679067348"><span class="hs-identifier hs-var">name</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO ByteString
 </span><a href="System.Posix.ByteString.FilePath.html#peekFilePath"><span class="hs-identifier hs-var">peekFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679062294"><span class="hs-identifier hs-var">ptr</span></a></span><span>
-</span><span id="line-58"></span><span>    </span><span id="local-6989586621679062289"><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679062289"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Fd -&gt; IO Handle
+</span><a href="#local-6989586621679067351"><span class="hs-identifier hs-var">ptr</span></a></span><span>
+</span><span id="line-58"></span><span>    </span><span id="local-6989586621679067346"><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679067346"><span class="hs-identifier hs-var">h</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Fd -&gt; IO Handle
 </span><a href="System.Posix.IO.Common.html#fdToHandle"><span class="hs-identifier hs-var">fdToHandle</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt -&gt; Fd
 </span><a href="../../base/src/System.Posix.Types.html#Fd"><span class="hs-identifier hs-var">Fd</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679062293"><span class="hs-identifier hs-var">fd</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-59"></span><span>    </span><span class="annot"><span class="annottext">(ByteString, Handle) -&gt; IO (ByteString, Handle)
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679067350"><span class="hs-identifier hs-var">fd</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-59"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679062291"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Handle
-</span><a href="#local-6989586621679062289"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679067348"><span class="hs-identifier hs-var">name</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Handle
+</span><a href="#local-6989586621679067346"><span class="hs-identifier hs-var">h</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-60"></span><span>
 </span><span id="line-61"></span><span>
 </span><span id="line-62"></span><span class="hs-pragma">{-# LINE 62 &quot;libraries/unix/System/Posix/Temp/ByteString.hsc&quot; #-}</span><span>
@@ -132,11 +126,11 @@ forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span id="line-95"></span><span class="hs-comment">-- so shouldn't be considered safe.</span><span>
 </span><span id="line-96"></span><span class="annot"><a href="System.Posix.Temp.ByteString.html#mkdtemp"><span class="hs-identifier hs-type">mkdtemp</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../bytestring/src/Data.ByteString.Internal.html#ByteString"><span class="hs-identifier hs-type">ByteString</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Posix.ByteString.FilePath.html#RawFilePath"><span class="hs-identifier hs-type">RawFilePath</span></a></span><span>
 </span><span id="line-97"></span><span id="mkdtemp"><span class="annot"><span class="annottext">mkdtemp :: ByteString -&gt; IO ByteString
-</span><a href="System.Posix.Temp.ByteString.html#mkdtemp"><span class="hs-identifier hs-var hs-var">mkdtemp</span></a></span></span><span> </span><span id="local-6989586621679062272"><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679062272"><span class="hs-identifier hs-var">template'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-98"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679062271"><span class="annot"><span class="annottext">template :: ByteString
-</span><a href="#local-6989586621679062271"><span class="hs-identifier hs-var hs-var">template</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString
-</span><a href="#local-6989586621679062272"><span class="hs-identifier hs-var">template'</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; ByteString -&gt; ByteString
+</span><a href="System.Posix.Temp.ByteString.html#mkdtemp"><span class="hs-identifier hs-var hs-var">mkdtemp</span></a></span></span><span> </span><span id="local-6989586621679067329"><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679067329"><span class="hs-identifier hs-var">template'</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-98"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621679067328"><span class="annot"><span class="annottext">template :: ByteString
+</span><a href="#local-6989586621679067328"><span class="hs-identifier hs-var hs-var">template</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ByteString
+</span><a href="#local-6989586621679067329"><span class="hs-identifier hs-var">template'</span></a></span><span> </span><span class="annot"><span class="annottext">ByteString -&gt; ByteString -&gt; ByteString
 </span><a href="../../bytestring/src/Data.ByteString.html#append"><span class="hs-operator hs-var">`B.append`</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ByteString
 </span><a href="../../bytestring/src/Data.ByteString.Char8.html#pack"><span class="hs-identifier hs-var">BC.pack</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;XXXXXX&quot;</span></span><span class="hs-special">)</span><span>

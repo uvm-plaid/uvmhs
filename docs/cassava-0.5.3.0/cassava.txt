@@ -445,13 +445,13 @@ encodeDefaultOrderedByName :: (DefaultOrdered a, ToNamedRecord a) => [a] -> Byte
 class DefaultOrdered a
 
 -- | The header order for this record. Should include the names used in the
---   <a>NamedRecord</a> returned by <a>toNamedRecord</a>. Pass
+--   <a>NamedRecord</a> returned by <a>ToNamedRecord</a>. Pass
 --   <a>undefined</a> as the argument, together with a type annotation e.g.
 --   <tt><a>headerOrder</a> (<a>undefined</a> :: MyRecord)</tt>.
 headerOrder :: DefaultOrdered a => a -> Header
 
 -- | The header order for this record. Should include the names used in the
---   <a>NamedRecord</a> returned by <a>toNamedRecord</a>. Pass
+--   <a>NamedRecord</a> returned by <a>ToNamedRecord</a>. Pass
 --   <a>undefined</a> as the argument, together with a type annotation e.g.
 --   <tt><a>headerOrder</a> (<a>undefined</a> :: MyRecord)</tt>.
 headerOrder :: (DefaultOrdered a, Generic a, GToNamedRecordHeader (Rep a)) => a -> Header
@@ -819,7 +819,7 @@ genericToRecord :: (Generic a, GToRecord (Rep a) Field) => Options -> a -> Recor
 genericParseNamedRecord :: (Generic a, GFromNamedRecord (Rep a)) => Options -> NamedRecord -> Parser a
 
 -- | A configurable CSV named record creator. This function applied to
---   <a>defaultOptions</a> is used as the default for <a>toNamedRecord</a>
+--   <a>defaultOptions</a> is used as the default for <a>ToNamedRecord</a>
 --   when the type is an instance of <a>Generic</a>.
 genericToNamedRecord :: (Generic a, GToRecord (Rep a) (ByteString, ByteString)) => Options -> a -> NamedRecord
 

@@ -146,6 +146,17 @@ withBS :: ByteString -> (ForeignPtr Word8 -> Int -> r) -> r
 --   API or name. Functions in this module may not check or enforce
 --   preconditions expected by public modules. Use at your own risk!
 --   
+--   Basic UTF-16 validation and character manipulation.
+module Data.Text.Internal.Encoding.Utf16
+chr2 :: Word16 -> Word16 -> Char
+validate1 :: Word16 -> Bool
+validate2 :: Word16 -> Word16 -> Bool
+
+
+-- | <i>Warning</i>: this is an internal module, and does not have a stable
+--   API or name. Functions in this module may not check or enforce
+--   preconditions expected by public modules. Use at your own risk!
+--   
 --   Basic UTF-32 validation.
 module Data.Text.Internal.Encoding.Utf32
 validate :: Word32 -> Bool
@@ -164,23 +175,12 @@ intersperse :: a -> [a] -> [a]
 unsafeWithForeignPtr :: ForeignPtr a -> (Ptr a -> IO b) -> IO b
 
 module Data.Text.Internal.PrimCompat
-word8ToWord# :: Word# -> Word#
-wordToWord8# :: Word# -> Word#
-word16ToWord# :: Word# -> Word#
-wordToWord16# :: Word# -> Word#
-wordToWord32# :: Word# -> Word#
-word32ToWord# :: Word# -> Word#
-
-
--- | <i>Warning</i>: this is an internal module, and does not have a stable
---   API or name. Functions in this module may not check or enforce
---   preconditions expected by public modules. Use at your own risk!
---   
---   Basic UTF-16 validation and character manipulation.
-module Data.Text.Internal.Encoding.Utf16
-chr2 :: Word16 -> Word16 -> Char
-validate1 :: Word16 -> Bool
-validate2 :: Word16 -> Word16 -> Bool
+word8ToWord# :: Word8# -> Word#
+wordToWord8# :: Word# -> Word8#
+word16ToWord# :: Word16# -> Word#
+wordToWord16# :: Word# -> Word16#
+wordToWord32# :: Word# -> Word32#
+word32ToWord# :: Word32# -> Word#
 
 
 -- | Common internal functions for reading textual data.

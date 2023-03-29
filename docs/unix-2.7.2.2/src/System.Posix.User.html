@@ -120,41 +120,32 @@
 </span><span id="line-107"></span><span class="annot"><a href="System.Posix.User.html#getGroups"><span class="hs-identifier hs-type">getGroups</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">[</span><span class="annot"><a href="../../base/src/System.Posix.Types.html#GroupID"><span class="hs-identifier hs-type">GroupID</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-108"></span><span id="getGroups"><span class="annot"><span class="annottext">getGroups :: IO [GroupID]
 </span><a href="System.Posix.User.html#getGroups"><span class="hs-identifier hs-var hs-var">getGroups</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-109"></span><span>    </span><span id="local-6989586621679063954"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063954"><span class="hs-identifier hs-var">ngroups</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CInt -&gt; Ptr GroupID -&gt; IO CInt
+</span><span id="line-109"></span><span>    </span><span id="local-6989586621679069010"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679069010"><span class="hs-identifier hs-var">ngroups</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">CInt -&gt; Ptr GroupID -&gt; IO CInt
 </span><a href="System.Posix.User.html#c_getgroups"><span class="hs-identifier hs-var">c_getgroups</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">Ptr GroupID
-forall a. Ptr a
+</span><span class="hs-number">0</span></span><span> </span><span class="annot"><span class="annottext">forall a. Ptr a
 </span><a href="../../base/src/GHC.Ptr.html#nullPtr"><span class="hs-identifier hs-var">nullPtr</span></a></span><span>
-</span><span id="line-110"></span><span>    </span><span class="annot"><span class="annottext">Int -&gt; (Ptr GroupID -&gt; IO [GroupID]) -&gt; IO [GroupID]
-forall a b. Storable a =&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
-</span><a href="../../base/src/Foreign.Marshal.Array.html#allocaArray"><span class="hs-identifier hs-var">allocaArray</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt -&gt; Int
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><span id="line-110"></span><span>    </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="../../base/src/Foreign.Marshal.Array.html#allocaArray"><span class="hs-identifier hs-var">allocaArray</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063954"><span class="hs-identifier hs-var">ngroups</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((Ptr GroupID -&gt; IO [GroupID]) -&gt; IO [GroupID])
--&gt; (Ptr GroupID -&gt; IO [GroupID]) -&gt; IO [GroupID]
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679063950"><span class="annot"><span class="annottext">Ptr GroupID
-</span><a href="#local-6989586621679063950"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-111"></span><span>       </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="#local-6989586621679069010"><span class="hs-identifier hs-var">ngroups</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679069006"><span class="annot"><span class="annottext">Ptr GroupID
+</span><a href="#local-6989586621679069006"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-111"></span><span>       </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;getGroups&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt -&gt; Ptr GroupID -&gt; IO CInt
 </span><a href="System.Posix.User.html#c_getgroups"><span class="hs-identifier hs-var">c_getgroups</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063954"><span class="hs-identifier hs-var">ngroups</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GroupID
-</span><a href="#local-6989586621679063950"><span class="hs-identifier hs-var">arr</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-112"></span><span>       </span><span id="local-6989586621679063948"><span class="annot"><span class="annottext">[GroupID]
-</span><a href="#local-6989586621679063948"><span class="hs-identifier hs-var">groups</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; Ptr GroupID -&gt; IO [GroupID]
-forall a. Storable a =&gt; Int -&gt; Ptr a -&gt; IO [a]
-</span><a href="../../base/src/Foreign.Marshal.Array.html#peekArray"><span class="hs-identifier hs-var">peekArray</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt -&gt; Int
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679069010"><span class="hs-identifier hs-var">ngroups</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr GroupID
+</span><a href="#local-6989586621679069006"><span class="hs-identifier hs-var">arr</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-112"></span><span>       </span><span id="local-6989586621679069004"><span class="annot"><span class="annottext">[GroupID]
+</span><a href="#local-6989586621679069004"><span class="hs-identifier hs-var">groups</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Storable a =&gt; Int -&gt; Ptr a -&gt; IO [a]
+</span><a href="../../base/src/Foreign.Marshal.Array.html#peekArray"><span class="hs-identifier hs-var">peekArray</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063954"><span class="hs-identifier hs-var">ngroups</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr GroupID
-</span><a href="#local-6989586621679063950"><span class="hs-identifier hs-var">arr</span></a></span><span>
-</span><span id="line-113"></span><span>       </span><span class="annot"><span class="annottext">[GroupID] -&gt; IO [GroupID]
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679069010"><span class="hs-identifier hs-var">ngroups</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr GroupID
+</span><a href="#local-6989586621679069006"><span class="hs-identifier hs-var">arr</span></a></span><span>
+</span><span id="line-113"></span><span>       </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">[GroupID]
-</span><a href="#local-6989586621679063948"><span class="hs-identifier hs-var">groups</span></a></span><span>
+</span><a href="#local-6989586621679069004"><span class="hs-identifier hs-var">groups</span></a></span><span>
 </span><span id="line-114"></span><span>
 </span><span id="line-115"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;getgroups&quot;</span></span><span>
 </span><span id="line-116"></span><span>  </span><span id="c_getgroups"><span class="annot"><a href="System.Posix.User.html#c_getgroups"><span class="hs-identifier hs-var">c_getgroups</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CGid"><span class="hs-identifier hs-type">CGid</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span>
@@ -164,26 +155,21 @@ forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><span id="line-120"></span><span class="hs-comment">--   supplementary @GroupID@s associated with the current process.</span><span>
 </span><span id="line-121"></span><span class="annot"><a href="System.Posix.User.html#setGroups"><span class="hs-identifier hs-type">setGroups</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="../../base/src/System.Posix.Types.html#GroupID"><span class="hs-identifier hs-type">GroupID</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-122"></span><span id="setGroups"><span class="annot"><span class="annottext">setGroups :: [GroupID] -&gt; IO ()
-</span><a href="System.Posix.User.html#setGroups"><span class="hs-identifier hs-var hs-var">setGroups</span></a></span></span><span> </span><span id="local-6989586621679063946"><span class="annot"><span class="annottext">[GroupID]
-</span><a href="#local-6989586621679063946"><span class="hs-identifier hs-var">groups</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-123"></span><span>    </span><span class="annot"><span class="annottext">[GroupID] -&gt; (Int -&gt; Ptr GroupID -&gt; IO ()) -&gt; IO ()
-forall a b. Storable a =&gt; [a] -&gt; (Int -&gt; Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="System.Posix.User.html#setGroups"><span class="hs-identifier hs-var hs-var">setGroups</span></a></span></span><span> </span><span id="local-6989586621679069002"><span class="annot"><span class="annottext">[GroupID]
+</span><a href="#local-6989586621679069002"><span class="hs-identifier hs-var">groups</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-123"></span><span>    </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; [a] -&gt; (Int -&gt; Ptr a -&gt; IO b) -&gt; IO b
 </span><a href="../../base/src/Foreign.Marshal.Array.html#withArrayLen"><span class="hs-identifier hs-var">withArrayLen</span></a></span><span> </span><span class="annot"><span class="annottext">[GroupID]
-</span><a href="#local-6989586621679063946"><span class="hs-identifier hs-var">groups</span></a></span><span> </span><span class="annot"><span class="annottext">((Int -&gt; Ptr GroupID -&gt; IO ()) -&gt; IO ())
--&gt; (Int -&gt; Ptr GroupID -&gt; IO ()) -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679063944"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063944"><span class="hs-identifier hs-var">ngroups</span></a></span></span><span> </span><span id="local-6989586621679063943"><span class="annot"><span class="annottext">Ptr GroupID
-</span><a href="#local-6989586621679063943"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-124"></span><span>       </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="#local-6989586621679069002"><span class="hs-identifier hs-var">groups</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679069000"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679069000"><span class="hs-identifier hs-var">ngroups</span></a></span></span><span> </span><span id="local-6989586621679068999"><span class="annot"><span class="annottext">Ptr GroupID
+</span><a href="#local-6989586621679068999"><span class="hs-identifier hs-var">arr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-124"></span><span>       </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;setGroups&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt -&gt; Ptr GroupID -&gt; IO CInt
-</span><a href="System.Posix.User.html#c_setgroups"><span class="hs-identifier hs-var">c_setgroups</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CInt
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="System.Posix.User.html#c_setgroups"><span class="hs-identifier hs-var">c_setgroups</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063944"><span class="hs-identifier hs-var">ngroups</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr GroupID
-</span><a href="#local-6989586621679063943"><span class="hs-identifier hs-var">arr</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679069000"><span class="hs-identifier hs-var">ngroups</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr GroupID
+</span><a href="#local-6989586621679068999"><span class="hs-identifier hs-var">arr</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-125"></span><span>
 </span><span id="line-126"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;setgroups&quot;</span></span><span>
 </span><span id="line-127"></span><span>  </span><span id="c_setgroups"><span class="annot"><a href="System.Posix.User.html#c_setgroups"><span class="hs-identifier hs-var">c_setgroups</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CGid"><span class="hs-identifier hs-type">CGid</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span>
@@ -196,15 +182,14 @@ forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span id="line-134"></span><span id="getLoginName"><span class="annot"><span class="annottext">getLoginName :: IO String
 </span><a href="System.Posix.User.html#getLoginName"><span class="hs-identifier hs-var hs-var">getLoginName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>  </span><span class="hs-keyword">do</span><span>
 </span><span id="line-135"></span><span>    </span><span class="hs-comment">-- ToDo: use getlogin_r</span><span>
-</span><span id="line-136"></span><span>    </span><span id="local-6989586621679063941"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679063941"><span class="hs-identifier hs-var">str</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CString -&gt; IO CString
-forall a. String -&gt; IO (Ptr a) -&gt; IO (Ptr a)
+</span><span id="line-136"></span><span>    </span><span id="local-6989586621679068997"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679068997"><span class="hs-identifier hs-var">str</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; IO (Ptr a) -&gt; IO (Ptr a)
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfNull"><span class="hs-identifier hs-var">throwErrnoIfNull</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;getLoginName&quot;</span></span><span> </span><span class="annot"><span class="annottext">IO CString
 </span><a href="System.Posix.User.html#c_getlogin"><span class="hs-identifier hs-var">c_getlogin</span></a></span><span>
 </span><span id="line-137"></span><span>    </span><span class="annot"><span class="annottext">CString -&gt; IO String
 </span><a href="../../base/src/Foreign.C.String.html#peekCAString"><span class="hs-identifier hs-var">peekCAString</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679063941"><span class="hs-identifier hs-var">str</span></a></span><span>
+</span><a href="#local-6989586621679068997"><span class="hs-identifier hs-var">str</span></a></span><span>
 </span><span id="line-138"></span><span>
 </span><span id="line-139"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;getlogin&quot;</span></span><span>
 </span><span id="line-140"></span><span>  </span><span id="c_getlogin"><span class="annot"><a href="System.Posix.User.html#c_getlogin"><span class="hs-identifier hs-var">c_getlogin</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.String.html#CString"><span class="hs-identifier hs-type">CString</span></a></span><span>
@@ -213,13 +198,12 @@ forall a. String -&gt; IO (Ptr a) -&gt; IO (Ptr a)
 </span><span id="line-143"></span><span class="hs-comment">--   saved set-user-id associated with the current process to @uid@.</span><span>
 </span><span id="line-144"></span><span class="annot"><a href="System.Posix.User.html#setUserID"><span class="hs-identifier hs-type">setUserID</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#UserID"><span class="hs-identifier hs-type">UserID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-145"></span><span id="setUserID"><span class="annot"><span class="annottext">setUserID :: UserID -&gt; IO ()
-</span><a href="System.Posix.User.html#setUserID"><span class="hs-identifier hs-var hs-var">setUserID</span></a></span></span><span> </span><span id="local-6989586621679063937"><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679063937"><span class="hs-identifier hs-var">uid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.User.html#setUserID"><span class="hs-identifier hs-var hs-var">setUserID</span></a></span></span><span> </span><span id="local-6989586621679068993"><span class="annot"><span class="annottext">UserID
+</span><a href="#local-6989586621679068993"><span class="hs-identifier hs-var">uid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;setUserID&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">UserID -&gt; IO CInt
 </span><a href="System.Posix.User.html#c_setuid"><span class="hs-identifier hs-var">c_setuid</span></a></span><span> </span><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679063937"><span class="hs-identifier hs-var">uid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679068993"><span class="hs-identifier hs-var">uid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-146"></span><span>
 </span><span id="line-147"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;setuid&quot;</span></span><span>
 </span><span id="line-148"></span><span>  </span><span id="c_setuid"><span class="annot"><a href="System.Posix.User.html#c_setuid"><span class="hs-identifier hs-var">c_setuid</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CUid"><span class="hs-identifier hs-type">CUid</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span>
@@ -229,13 +213,12 @@ forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><span id="line-152"></span><span class="hs-comment">--   does not update the real user-id or set-user-id.</span><span>
 </span><span id="line-153"></span><span class="annot"><a href="System.Posix.User.html#setEffectiveUserID"><span class="hs-identifier hs-type">setEffectiveUserID</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#UserID"><span class="hs-identifier hs-type">UserID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-154"></span><span id="setEffectiveUserID"><span class="annot"><span class="annottext">setEffectiveUserID :: UserID -&gt; IO ()
-</span><a href="System.Posix.User.html#setEffectiveUserID"><span class="hs-identifier hs-var hs-var">setEffectiveUserID</span></a></span></span><span> </span><span id="local-6989586621679063935"><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679063935"><span class="hs-identifier hs-var">uid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.User.html#setEffectiveUserID"><span class="hs-identifier hs-var hs-var">setEffectiveUserID</span></a></span></span><span> </span><span id="local-6989586621679068991"><span class="annot"><span class="annottext">UserID
+</span><a href="#local-6989586621679068991"><span class="hs-identifier hs-var">uid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;setEffectiveUserID&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">UserID -&gt; IO CInt
 </span><a href="System.Posix.User.html#c_seteuid"><span class="hs-identifier hs-var">c_seteuid</span></a></span><span> </span><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679063935"><span class="hs-identifier hs-var">uid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679068991"><span class="hs-identifier hs-var">uid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-155"></span><span>
 </span><span id="line-156"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;seteuid&quot;</span></span><span>
 </span><span id="line-157"></span><span>  </span><span id="c_seteuid"><span class="annot"><a href="System.Posix.User.html#c_seteuid"><span class="hs-identifier hs-var">c_seteuid</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CUid"><span class="hs-identifier hs-type">CUid</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span>
@@ -244,13 +227,12 @@ forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><span id="line-160"></span><span class="hs-comment">--   saved set-group-id associated with the current process to @gid@.</span><span>
 </span><span id="line-161"></span><span class="annot"><a href="System.Posix.User.html#setGroupID"><span class="hs-identifier hs-type">setGroupID</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#GroupID"><span class="hs-identifier hs-type">GroupID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-162"></span><span id="setGroupID"><span class="annot"><span class="annottext">setGroupID :: GroupID -&gt; IO ()
-</span><a href="System.Posix.User.html#setGroupID"><span class="hs-identifier hs-var hs-var">setGroupID</span></a></span></span><span> </span><span id="local-6989586621679063933"><span class="annot"><span class="annottext">GroupID
-</span><a href="#local-6989586621679063933"><span class="hs-identifier hs-var">gid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.User.html#setGroupID"><span class="hs-identifier hs-var hs-var">setGroupID</span></a></span></span><span> </span><span id="local-6989586621679068989"><span class="annot"><span class="annottext">GroupID
+</span><a href="#local-6989586621679068989"><span class="hs-identifier hs-var">gid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;setGroupID&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">GroupID -&gt; IO CInt
 </span><a href="System.Posix.User.html#c_setgid"><span class="hs-identifier hs-var">c_setgid</span></a></span><span> </span><span class="annot"><span class="annottext">GroupID
-</span><a href="#local-6989586621679063933"><span class="hs-identifier hs-var">gid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679068989"><span class="hs-identifier hs-var">gid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-163"></span><span>
 </span><span id="line-164"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;setgid&quot;</span></span><span>
 </span><span id="line-165"></span><span>  </span><span id="c_setgid"><span class="annot"><a href="System.Posix.User.html#c_setgid"><span class="hs-identifier hs-var">c_setgid</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#CGid"><span class="hs-identifier hs-type">CGid</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span>
@@ -260,14 +242,13 @@ forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><span id="line-169"></span><span class="hs-comment">--   does not update the real group-id or set-group-id.</span><span>
 </span><span id="line-170"></span><span class="annot"><a href="System.Posix.User.html#setEffectiveGroupID"><span class="hs-identifier hs-type">setEffectiveGroupID</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#GroupID"><span class="hs-identifier hs-type">GroupID</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-171"></span><span id="setEffectiveGroupID"><span class="annot"><span class="annottext">setEffectiveGroupID :: GroupID -&gt; IO ()
-</span><a href="System.Posix.User.html#setEffectiveGroupID"><span class="hs-identifier hs-var hs-var">setEffectiveGroupID</span></a></span></span><span> </span><span id="local-6989586621679063931"><span class="annot"><span class="annottext">GroupID
-</span><a href="#local-6989586621679063931"><span class="hs-identifier hs-var">gid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-172"></span><span>  </span><span class="annot"><span class="annottext">String -&gt; IO CInt -&gt; IO ()
-forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
+</span><a href="System.Posix.User.html#setEffectiveGroupID"><span class="hs-identifier hs-var hs-var">setEffectiveGroupID</span></a></span></span><span> </span><span id="local-6989586621679068987"><span class="annot"><span class="annottext">GroupID
+</span><a href="#local-6989586621679068987"><span class="hs-identifier hs-var">gid</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-172"></span><span>  </span><span class="annot"><span class="annottext">forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrnoIfMinus1_"><span class="hs-identifier hs-var">throwErrnoIfMinus1_</span></a></span><span> </span><span class="annot"><span class="annottext">String
 </span><span class="hs-string">&quot;setEffectiveGroupID&quot;</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">GroupID -&gt; IO CInt
 </span><a href="System.Posix.User.html#c_setegid"><span class="hs-identifier hs-var">c_setegid</span></a></span><span> </span><span class="annot"><span class="annottext">GroupID
-</span><a href="#local-6989586621679063931"><span class="hs-identifier hs-var">gid</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679068987"><span class="hs-identifier hs-var">gid</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-173"></span><span>
 </span><span id="line-174"></span><span>
 </span><span id="line-175"></span><span class="hs-keyword">foreign</span><span> </span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-keyword">ccall</span></span><span> </span><span class="annot"><span class="hs-keyword">unsafe</span></span><span> </span><span class="annot"><span class="hs-string">&quot;setegid&quot;</span></span><span>
@@ -281,18 +262,17 @@ forall a. (Eq a, Num a) =&gt; String -&gt; IO a -&gt; IO ()
 </span><span id="line-183"></span><span class="annot"><a href="System.Posix.User.html#getEffectiveUserName"><span class="hs-identifier hs-type">getEffectiveUserName</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span>
 </span><span id="line-184"></span><span id="getEffectiveUserName"><span class="annot"><span class="annottext">getEffectiveUserName :: IO String
 </span><a href="System.Posix.User.html#getEffectiveUserName"><span class="hs-identifier hs-var hs-var">getEffectiveUserName</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-185"></span><span>    </span><span id="local-6989586621679063929"><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679063929"><span class="hs-identifier hs-var">euid</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO UserID
+</span><span id="line-185"></span><span>    </span><span id="local-6989586621679068985"><span class="annot"><span class="annottext">UserID
+</span><a href="#local-6989586621679068985"><span class="hs-identifier hs-var">euid</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO UserID
 </span><a href="System.Posix.User.html#getEffectiveUserID"><span class="hs-identifier hs-var">getEffectiveUserID</span></a></span><span>
-</span><span id="line-186"></span><span>    </span><span id="local-6989586621679063928"><span class="annot"><span class="annottext">UserEntry
-</span><a href="#local-6989586621679063928"><span class="hs-identifier hs-var">pw</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">UserID -&gt; IO UserEntry
+</span><span id="line-186"></span><span>    </span><span id="local-6989586621679068984"><span class="annot"><span class="annottext">UserEntry
+</span><a href="#local-6989586621679068984"><span class="hs-identifier hs-var">pw</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">UserID -&gt; IO UserEntry
 </span><a href="System.Posix.User.html#getUserEntryForID"><span class="hs-identifier hs-var">getUserEntryForID</span></a></span><span> </span><span class="annot"><span class="annottext">UserID
-</span><a href="#local-6989586621679063929"><span class="hs-identifier hs-var">euid</span></a></span><span>
-</span><span id="line-187"></span><span>    </span><span class="annot"><span class="annottext">String -&gt; IO String
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679068985"><span class="hs-identifier hs-var">euid</span></a></span><span>
+</span><span id="line-187"></span><span>    </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">UserEntry -&gt; String
-</span><a href="System.Posix.User.html#userName"><span class="hs-identifier hs-var hs-var">userName</span></a></span><span> </span><span class="annot"><span class="annottext">UserEntry
-</span><a href="#local-6989586621679063928"><span class="hs-identifier hs-var">pw</span></a></span><span class="hs-special">)</span><span>
+</span><a href="System.Posix.User.html#userName"><span class="hs-identifier hs-var">userName</span></a></span><span> </span><span class="annot"><span class="annottext">UserEntry
+</span><a href="#local-6989586621679068984"><span class="hs-identifier hs-var">pw</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-188"></span><span>
 </span><span id="line-189"></span><span class="hs-comment">-- -----------------------------------------------------------------------------</span><span>
 </span><span id="line-190"></span><span class="hs-comment">-- The group database (grp.h)</span><span>
@@ -307,13 +287,9 @@ forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="System.Posix.User.html#groupID"><span class="hs-identifier hs-var hs-var">groupID</span></a></span></span><span>      </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/System.Posix.Types.html#GroupID"><span class="hs-identifier hs-type">GroupID</span></a></span><span class="hs-special">,</span><span>      </span><span class="hs-comment">-- ^ The unique numeric ID for this group (gr_gid)</span><span>
 </span><span id="line-197"></span><span>  </span><span id="groupMembers"><span class="annot"><span class="annottext">GroupEntry -&gt; [String]
 </span><a href="System.Posix.User.html#groupMembers"><span class="hs-identifier hs-var hs-var">groupMembers</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span class="hs-special">]</span><span>      </span><span class="hs-comment">-- ^ A list of zero or more usernames that are members (gr_mem)</span><span>
-</span><span id="line-198"></span><span> </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679063907"><span id="local-6989586621679063909"><span id="local-6989586621679063920"><span class="annot"><span class="annottext">Int -&gt; GroupEntry -&gt; ShowS
+</span><span id="line-198"></span><span> </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679068963"><span id="local-6989586621679068965"><span id="local-6989586621679068976"><span class="annot"><span class="annottext">Int -&gt; GroupEntry -&gt; ShowS
 [GroupEntry] -&gt; ShowS
 GroupEntry -&gt; String
-(Int -&gt; GroupEntry -&gt; ShowS)
--&gt; (GroupEntry -&gt; String)
--&gt; ([GroupEntry] -&gt; ShowS)
--&gt; Show GroupEntry
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
 showList :: [GroupEntry] -&gt; ShowS
@@ -322,15 +298,10 @@ show :: GroupEntry -&gt; String
 $cshow :: GroupEntry -&gt; String
 showsPrec :: Int -&gt; GroupEntry -&gt; ShowS
 $cshowsPrec :: Int -&gt; GroupEntry -&gt; ShowS
-</span><a href="../../base/src/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679063877"><span id="local-6989586621679063898"><span id="local-6989586621679063901"><span id="local-6989586621679063903"><span class="annot"><span class="annottext">ReadPrec [GroupEntry]
+</span><a href="../../base/src/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679068933"><span id="local-6989586621679068954"><span id="local-6989586621679068957"><span id="local-6989586621679068959"><span class="annot"><span class="annottext">ReadPrec [GroupEntry]
 ReadPrec GroupEntry
 Int -&gt; ReadS GroupEntry
 ReadS [GroupEntry]
-(Int -&gt; ReadS GroupEntry)
--&gt; ReadS [GroupEntry]
--&gt; ReadPrec GroupEntry
--&gt; ReadPrec [GroupEntry]
--&gt; Read GroupEntry
 forall a.
 (Int -&gt; ReadS a)
 -&gt; ReadS [a] -&gt; ReadPrec a -&gt; ReadPrec [a] -&gt; Read a
@@ -342,9 +313,7 @@ readList :: ReadS [GroupEntry]
 $creadList :: ReadS [GroupEntry]
 readsPrec :: Int -&gt; ReadS GroupEntry
 $creadsPrec :: Int -&gt; ReadS GroupEntry
-</span><a href="../../base/src/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679063863"><span id="local-6989586621679063872"><span class="annot"><span class="annottext">GroupEntry -&gt; GroupEntry -&gt; Bool
-(GroupEntry -&gt; GroupEntry -&gt; Bool)
--&gt; (GroupEntry -&gt; GroupEntry -&gt; Bool) -&gt; Eq GroupEntry
+</span><a href="../../base/src/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679068919"><span id="local-6989586621679068928"><span class="annot"><span class="annottext">GroupEntry -&gt; GroupEntry -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: GroupEntry -&gt; GroupEntry -&gt; Bool
 $c/= :: GroupEntry -&gt; GroupEntry -&gt; Bool
@@ -436,17 +405,15 @@ $c== :: GroupEntry -&gt; GroupEntry -&gt; Bool
 </span><span id="line-276"></span><span>
 </span><span id="line-277"></span><span class="annot"><a href="System.Posix.User.html#unpackGroupEntry"><span class="hs-identifier hs-type">unpackGroupEntry</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="System.Posix.User.html#CGroup"><span class="hs-identifier hs-type">CGroup</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Posix.User.html#GroupEntry"><span class="hs-identifier hs-type">GroupEntry</span></a></span><span>
 </span><span id="line-278"></span><span id="unpackGroupEntry"><span class="annot"><span class="annottext">unpackGroupEntry :: Ptr CGroup -&gt; IO GroupEntry
-</span><a href="System.Posix.User.html#unpackGroupEntry"><span class="hs-identifier hs-var hs-var">unpackGroupEntry</span></a></span></span><span> </span><span id="local-6989586621679063830"><span class="annot"><span class="annottext">Ptr CGroup
-</span><a href="#local-6989586621679063830"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-279"></span><span>   </span><span id="local-6989586621679063829"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063829"><span class="hs-identifier hs-var">name</span></a></span></span><span>    </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679063828"><span class="annot"><span class="annottext">Ptr CGroup
-</span><a href="#local-6989586621679063828"><span class="hs-identifier hs-var">hsc_ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr CGroup -&gt; Int -&gt; IO CString
-forall a b. Storable a =&gt; Ptr b -&gt; Int -&gt; IO a
+</span><a href="System.Posix.User.html#unpackGroupEntry"><span class="hs-identifier hs-var hs-var">unpackGroupEntry</span></a></span></span><span> </span><span id="local-6989586621679068886"><span class="annot"><span class="annottext">Ptr CGroup
+</span><a href="#local-6989586621679068886"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-279"></span><span>   </span><span id="local-6989586621679068885"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679068885"><span class="hs-identifier hs-var">name</span></a></span></span><span>    </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679068884"><span class="annot"><span class="annottext">Ptr CGroup
+</span><a href="#local-6989586621679068884"><span class="hs-identifier hs-var">hsc_ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; Ptr b -&gt; Int -&gt; IO a
 </span><a href="../../base/src/Foreign.Storable.html#peekByteOff"><span class="hs-identifier hs-var">peekByteOff</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CGroup
-</span><a href="#local-6989586621679063828"><span class="hs-identifier hs-var">hsc_ptr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679068884"><span class="hs-identifier hs-var">hsc_ptr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr CGroup
-</span><a href="#local-6989586621679063830"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">IO CString -&gt; (CString -&gt; IO String) -&gt; IO String
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621679068886"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><a href="../../base/src/GHC.Base.html#%3E%3E%3D"><span class="hs-operator hs-var">&gt;&gt;=</span></a></span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO String
 </span><a href="../../base/src/Foreign.C.String.html#peekCAString"><span class="hs-identifier hs-var">peekCAString</span></a></span><span>
 </span><span id="line-280"></span><span class="hs-pragma">{-# LINE 280 &quot;libraries/unix/System/Posix/User.hsc&quot; #-}</span><span>
@@ -457,14 +424,13 @@ forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span id="line-282"></span><span>   </span><span class="hs-identifier">mem</span><span>     </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span class="hs-identifier">hsc_ptr</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier">peekByteOff</span><span> </span><span class="hs-identifier">hsc_ptr</span><span> </span><span class="hs-number">24</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-identifier">ptr</span><span>
 </span><span id="line-283"></span><span class="hs-pragma">{-# LINE 283 &quot;libraries/unix/System/Posix/User.hsc&quot; #-}</span><span>
 </span><span id="line-283"></span><span>   </span><span class="hs-identifier">members</span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-identifier">peekArray0</span><span> </span><span class="hs-identifier">nullPtr</span><span> </span><span class="hs-identifier">mem</span><span> </span><span class="hs-operator">&gt;&gt;=</span><span> </span><span class="hs-identifier">mapM</span><span> </span><span class="hs-identifier">peekCAString</span><span>
-</span><span id="line-284"></span><span>   </span><span class="annot"><span class="annottext">GroupEntry -&gt; IO GroupEntry
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><span id="line-284"></span><span>   </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; String -&gt; GroupID -&gt; [String] -&gt; GroupEntry
 </span><a href="System.Posix.User.html#GroupEntry"><span class="hs-identifier hs-var">GroupEntry</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063829"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063826"><span class="hs-identifier hs-var">passwd</span></a></span><span> </span><span class="annot"><span class="annottext">GroupID
-</span><a href="#local-6989586621679063824"><span class="hs-identifier hs-var">gid</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
-</span><a href="#local-6989586621679063820"><span class="hs-identifier hs-var">members</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679068885"><span class="hs-identifier hs-var">name</span></a></span><span> </span><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679068882"><span class="hs-identifier hs-var">passwd</span></a></span><span> </span><span class="annot"><span class="annottext">GroupID
+</span><a href="#local-6989586621679068880"><span class="hs-identifier hs-var">gid</span></a></span><span> </span><span class="annot"><span class="annottext">[String]
+</span><a href="#local-6989586621679068876"><span class="hs-identifier hs-var">members</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-285"></span><span>
 </span><span id="line-286"></span><span class="hs-comment">-- -----------------------------------------------------------------------------</span><span>
 </span><span id="line-287"></span><span class="hs-comment">-- The user database (pwd.h)</span><span>
@@ -485,13 +451,9 @@ forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="System.Posix.User.html#homeDirectory"><span class="hs-identifier hs-var hs-var">homeDirectory</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span class="hs-special">,</span><span>     </span><span class="hs-comment">-- ^ Home directory (pw_dir)</span><span>
 </span><span id="line-297"></span><span>   </span><span id="userShell"><span class="annot"><span class="annottext">UserEntry -&gt; String
 </span><a href="System.Posix.User.html#userShell"><span class="hs-identifier hs-var hs-var">userShell</span></a></span></span><span>     </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span>      </span><span class="hs-comment">-- ^ Default shell (pw_shell)</span><span>
-</span><span id="line-298"></span><span> </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679063795"><span id="local-6989586621679063797"><span id="local-6989586621679063809"><span class="annot"><span class="annottext">Int -&gt; UserEntry -&gt; ShowS
+</span><span id="line-298"></span><span> </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679068851"><span id="local-6989586621679068853"><span id="local-6989586621679068865"><span class="annot"><span class="annottext">Int -&gt; UserEntry -&gt; ShowS
 [UserEntry] -&gt; ShowS
 UserEntry -&gt; String
-(Int -&gt; UserEntry -&gt; ShowS)
--&gt; (UserEntry -&gt; String)
--&gt; ([UserEntry] -&gt; ShowS)
--&gt; Show UserEntry
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
 showList :: [UserEntry] -&gt; ShowS
@@ -500,15 +462,10 @@ show :: UserEntry -&gt; String
 $cshow :: UserEntry -&gt; String
 showsPrec :: Int -&gt; UserEntry -&gt; ShowS
 $cshowsPrec :: Int -&gt; UserEntry -&gt; ShowS
-</span><a href="../../base/src/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679063760"><span id="local-6989586621679063788"><span id="local-6989586621679063791"><span id="local-6989586621679063793"><span class="annot"><span class="annottext">ReadPrec [UserEntry]
+</span><a href="../../base/src/GHC.Show.html#Show"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></a></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679068816"><span id="local-6989586621679068844"><span id="local-6989586621679068847"><span id="local-6989586621679068849"><span class="annot"><span class="annottext">ReadPrec [UserEntry]
 ReadPrec UserEntry
 Int -&gt; ReadS UserEntry
 ReadS [UserEntry]
-(Int -&gt; ReadS UserEntry)
--&gt; ReadS [UserEntry]
--&gt; ReadPrec UserEntry
--&gt; ReadPrec [UserEntry]
--&gt; Read UserEntry
 forall a.
 (Int -&gt; ReadS a)
 -&gt; ReadS [a] -&gt; ReadPrec a -&gt; ReadPrec [a] -&gt; Read a
@@ -520,9 +477,7 @@ readList :: ReadS [UserEntry]
 $creadList :: ReadS [UserEntry]
 readsPrec :: Int -&gt; ReadS UserEntry
 $creadsPrec :: Int -&gt; ReadS UserEntry
-</span><a href="../../base/src/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679063746"><span id="local-6989586621679063757"><span class="annot"><span class="annottext">UserEntry -&gt; UserEntry -&gt; Bool
-(UserEntry -&gt; UserEntry -&gt; Bool)
--&gt; (UserEntry -&gt; UserEntry -&gt; Bool) -&gt; Eq UserEntry
+</span><a href="../../base/src/GHC.Read.html#Read"><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></a></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679068802"><span id="local-6989586621679068813"><span class="annot"><span class="annottext">UserEntry -&gt; UserEntry -&gt; Bool
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
 /= :: UserEntry -&gt; UserEntry -&gt; Bool
 $c/= :: UserEntry -&gt; UserEntry -&gt; Bool
@@ -541,12 +496,9 @@ $c== :: UserEntry -&gt; UserEntry -&gt; Bool
 </span><span id="line-308"></span><span class="hs-pragma">{-# LINE 308 &quot;libraries/unix/System/Posix/User.hsc&quot; #-}</span><span>
 </span><span id="line-308"></span><span class="hs-identifier">lock</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier">MVar</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-309"></span><span id="lock"><span class="annot"><span class="annottext">lock :: MVar ()
-</span><a href="System.Posix.User.html#lock"><span class="hs-identifier hs-var hs-var">lock</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO (MVar ()) -&gt; MVar ()
-forall a. IO a -&gt; a
-</span><a href="../../base/src/GHC.IO.Unsafe.html#unsafePerformIO"><span class="hs-identifier hs-var">unsafePerformIO</span></a></span><span> </span><span class="annot"><span class="annottext">(IO (MVar ()) -&gt; MVar ()) -&gt; IO (MVar ()) -&gt; MVar ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">() -&gt; IO (MVar ())
-forall a. a -&gt; IO (MVar a)
+</span><a href="System.Posix.User.html#lock"><span class="hs-identifier hs-var hs-var">lock</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. IO a -&gt; a
+</span><a href="../../base/src/GHC.IO.Unsafe.html#unsafePerformIO"><span class="hs-identifier hs-var">unsafePerformIO</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. a -&gt; IO (MVar a)
 </span><a href="../../base/src/GHC.MVar.html#newMVar"><span class="hs-identifier hs-var">newMVar</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-310"></span><span class="hs-pragma">{-# NOINLINE</span><span> </span><span class="annot"><a href="System.Posix.User.html#lock"><span class="hs-pragma hs-type">lock</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-311"></span><span>
@@ -639,34 +591,26 @@ forall a. a -&gt; IO (MVar a)
 </span><span id="line-408"></span><span class="hs-comment">-- Mac OS X 10.4.9 on i386.</span><span>
 </span><span id="line-409"></span><span class="annot"><a href="System.Posix.User.html#sysconfWithDefault"><span class="hs-identifier hs-type">sysconfWithDefault</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
 </span><span id="line-410"></span><span id="sysconfWithDefault"><span class="annot"><span class="annottext">sysconfWithDefault :: Int -&gt; CInt -&gt; Int
-</span><a href="System.Posix.User.html#sysconfWithDefault"><span class="hs-identifier hs-var hs-var">sysconfWithDefault</span></a></span></span><span> </span><span id="local-6989586621679063723"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063723"><span class="hs-identifier hs-var">def</span></a></span></span><span> </span><span id="local-6989586621679063722"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063722"><span class="hs-identifier hs-var">sc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-411"></span><span>    </span><span class="annot"><span class="annottext">IO Int -&gt; Int
-forall a. IO a -&gt; a
-</span><a href="../../base/src/GHC.IO.Unsafe.html#unsafePerformIO"><span class="hs-identifier hs-var">unsafePerformIO</span></a></span><span> </span><span class="annot"><span class="annottext">(IO Int -&gt; Int) -&gt; IO Int -&gt; Int
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679063721"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063721"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">(CLong -&gt; Int) -&gt; IO CLong -&gt; IO Int
-forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><a href="../../base/src/GHC.Base.html#fmap"><span class="hs-identifier hs-var">fmap</span></a></span><span> </span><span class="annot"><span class="annottext">CLong -&gt; Int
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">(IO CLong -&gt; IO Int) -&gt; IO CLong -&gt; IO Int
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="System.Posix.User.html#sysconfWithDefault"><span class="hs-identifier hs-var hs-var">sysconfWithDefault</span></a></span></span><span> </span><span id="local-6989586621679068779"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679068779"><span class="hs-identifier hs-var">def</span></a></span></span><span> </span><span id="local-6989586621679068778"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679068778"><span class="hs-identifier hs-var">sc</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-411"></span><span>    </span><span class="annot"><span class="annottext">forall a. IO a -&gt; a
+</span><a href="../../base/src/GHC.IO.Unsafe.html#unsafePerformIO"><span class="hs-identifier hs-var">unsafePerformIO</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679068777"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679068777"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="../../base/src/GHC.Base.html#fmap"><span class="hs-identifier hs-var">fmap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">CInt -&gt; IO CLong
 </span><a href="System.Posix.User.html#c_sysconf"><span class="hs-identifier hs-var">c_sysconf</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063722"><span class="hs-identifier hs-var">sc</span></a></span><span>
-</span><span id="line-412"></span><span>                         </span><span class="annot"><span class="annottext">Int -&gt; IO Int
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(Int -&gt; IO Int) -&gt; Int -&gt; IO Int
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679068778"><span class="hs-identifier hs-var">sc</span></a></span><span>
+</span><span id="line-412"></span><span>                         </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063721"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679068777"><span class="hs-identifier hs-var">v</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">1</span></span><span class="hs-special">)</span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063723"><span class="hs-identifier hs-var">def</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063721"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><a href="#local-6989586621679068779"><span class="hs-identifier hs-var">def</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679068777"><span class="hs-identifier hs-var">v</span></a></span><span>
 </span><span id="line-413"></span><span>
 </span><span id="line-414"></span><span class="hs-pragma">{-# LINE 414 &quot;libraries/unix/System/Posix/User.hsc&quot; #-}</span><span>
 </span><span id="line-414"></span><span>
@@ -676,13 +620,13 @@ forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span id="line-418"></span><span class="hs-comment">-- that they can use to store those strings. We have to be</span><span>
 </span><span id="line-419"></span><span class="hs-comment">-- careful to unpack the struct containing the result before</span><span>
 </span><span id="line-420"></span><span class="hs-comment">-- the buffer is deallocated.</span><span>
-</span><span id="line-421"></span><span id="local-6989586621679064132"><span id="local-6989586621679064133"><span id="local-6989586621679064134"><span class="annot"><a href="System.Posix.User.html#doubleAllocWhileERANGE"><span class="hs-identifier hs-type">doubleAllocWhileERANGE</span></a></span><span>
+</span><span id="line-421"></span><span id="local-6989586621679069189"><span id="local-6989586621679069190"><span id="local-6989586621679069191"><span class="annot"><a href="System.Posix.User.html#doubleAllocWhileERANGE"><span class="hs-identifier hs-type">doubleAllocWhileERANGE</span></a></span><span>
 </span><span id="line-422"></span><span>  </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span>
 </span><span id="line-423"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span> </span><span class="hs-comment">-- entry type: &quot;user&quot; or &quot;group&quot;</span><span>
 </span><span id="line-424"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Int</span></span><span>
-</span><span id="line-425"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679064134"><span class="hs-identifier hs-type">r</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679064133"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-426"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679064132"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CSize"><span class="hs-identifier hs-type">CSize</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679064134"><span class="hs-identifier hs-type">r</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-427"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679064133"><span class="hs-identifier hs-type">a</span></a></span></span></span></span><span>
+</span><span id="line-425"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679069191"><span class="hs-identifier hs-type">r</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679069190"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-426"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679069189"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CSize"><span class="hs-identifier hs-type">CSize</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679069191"><span class="hs-identifier hs-type">r</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="../../base/src/Foreign.C.Types.html#CInt"><span class="hs-identifier hs-type">CInt</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-427"></span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="#local-6989586621679069190"><span class="hs-identifier hs-type">a</span></a></span></span></span></span><span>
 </span><span id="line-428"></span><span id="doubleAllocWhileERANGE"><span class="annot"><span class="annottext">doubleAllocWhileERANGE :: forall r a b.
 String
 -&gt; String
@@ -690,150 +634,118 @@ String
 -&gt; (Ptr r -&gt; IO a)
 -&gt; (Ptr b -&gt; CSize -&gt; Ptr (Ptr r) -&gt; IO CInt)
 -&gt; IO a
-</span><a href="System.Posix.User.html#doubleAllocWhileERANGE"><span class="hs-identifier hs-var hs-var">doubleAllocWhileERANGE</span></a></span></span><span> </span><span id="local-6989586621679063719"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063719"><span class="hs-identifier hs-var">loc</span></a></span></span><span> </span><span id="local-6989586621679063718"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063718"><span class="hs-identifier hs-var">enttype</span></a></span></span><span> </span><span id="local-6989586621679063717"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063717"><span class="hs-identifier hs-var">initlen</span></a></span></span><span> </span><span id="local-6989586621679063716"><span class="annot"><span class="annottext">Ptr r -&gt; IO a
-</span><a href="#local-6989586621679063716"><span class="hs-identifier hs-var">unpack</span></a></span></span><span> </span><span id="local-6989586621679063715"><span class="annot"><span class="annottext">Ptr b -&gt; CSize -&gt; Ptr (Ptr r) -&gt; IO CInt
-</span><a href="#local-6989586621679063715"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-429"></span><span>  </span><span class="annot"><span class="annottext">(Ptr (Ptr r) -&gt; IO a) -&gt; IO a
-forall a b. Storable a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
-</span><a href="../../base/src/Foreign.Marshal.Alloc.html#alloca"><span class="hs-identifier hs-var">alloca</span></a></span><span> </span><span class="annot"><span class="annottext">((Ptr (Ptr r) -&gt; IO a) -&gt; IO a) -&gt; (Ptr (Ptr r) -&gt; IO a) -&gt; IO a
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="System.Posix.User.html#doubleAllocWhileERANGE"><span class="hs-identifier hs-var hs-var">doubleAllocWhileERANGE</span></a></span></span><span> </span><span id="local-6989586621679068775"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679068775"><span class="hs-identifier hs-var">loc</span></a></span></span><span> </span><span id="local-6989586621679068774"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679068774"><span class="hs-identifier hs-var">enttype</span></a></span></span><span> </span><span id="local-6989586621679068773"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679068773"><span class="hs-identifier hs-var">initlen</span></a></span></span><span> </span><span id="local-6989586621679068772"><span class="annot"><span class="annottext">Ptr r -&gt; IO a
+</span><a href="#local-6989586621679068772"><span class="hs-identifier hs-var">unpack</span></a></span></span><span> </span><span id="local-6989586621679068771"><span class="annot"><span class="annottext">Ptr b -&gt; CSize -&gt; Ptr (Ptr r) -&gt; IO CInt
+</span><a href="#local-6989586621679068771"><span class="hs-identifier hs-var">action</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-429"></span><span>  </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><a href="../../base/src/Foreign.Marshal.Alloc.html#alloca"><span class="hs-identifier hs-var">alloca</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Ptr (Ptr r) -&gt; IO a
-</span><a href="#local-6989586621679063713"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063717"><span class="hs-identifier hs-var">initlen</span></a></span><span>
+</span><a href="#local-6989586621679068769"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679068773"><span class="hs-identifier hs-var">initlen</span></a></span><span>
 </span><span id="line-430"></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-431"></span><span>  </span><span id="local-6989586621679063713"><span class="annot"><span class="annottext">go :: Int -&gt; Ptr (Ptr r) -&gt; IO a
-</span><a href="#local-6989586621679063713"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679063692"><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063692"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span id="local-6989586621679063691"><span class="annot"><span class="annottext">Ptr (Ptr r)
-</span><a href="#local-6989586621679063691"><span class="hs-identifier hs-var">res</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-432"></span><span>    </span><span id="local-6989586621679063690"><span class="annot"><span class="annottext">Either CInt a
-</span><a href="#local-6989586621679063690"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Int -&gt; (Ptr b -&gt; IO (Either CInt a)) -&gt; IO (Either CInt a)
-forall a b. Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
+</span><span id="line-431"></span><span>  </span><span id="local-6989586621679068769"><span class="annot"><span class="annottext">go :: Int -&gt; Ptr (Ptr r) -&gt; IO a
+</span><a href="#local-6989586621679068769"><span class="hs-identifier hs-var hs-var">go</span></a></span></span><span> </span><span id="local-6989586621679068748"><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679068748"><span class="hs-identifier hs-var">len</span></a></span></span><span> </span><span id="local-6989586621679068747"><span class="annot"><span class="annottext">Ptr (Ptr r)
+</span><a href="#local-6989586621679068747"><span class="hs-identifier hs-var">res</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-432"></span><span>    </span><span id="local-6989586621679068746"><span class="annot"><span class="annottext">Either CInt a
+</span><a href="#local-6989586621679068746"><span class="hs-identifier hs-var">r</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a b. Int -&gt; (Ptr a -&gt; IO b) -&gt; IO b
 </span><a href="../../base/src/Foreign.Marshal.Alloc.html#allocaBytes"><span class="hs-identifier hs-var">allocaBytes</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063692"><span class="hs-identifier hs-var">len</span></a></span><span> </span><span class="annot"><span class="annottext">((Ptr b -&gt; IO (Either CInt a)) -&gt; IO (Either CInt a))
--&gt; (Ptr b -&gt; IO (Either CInt a)) -&gt; IO (Either CInt a)
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679063689"><span class="annot"><span class="annottext">Ptr b
-</span><a href="#local-6989586621679063689"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-433"></span><span>           </span><span id="local-6989586621679063688"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063688"><span class="hs-identifier hs-var">rc</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr b -&gt; CSize -&gt; Ptr (Ptr r) -&gt; IO CInt
-</span><a href="#local-6989586621679063715"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr b
-</span><a href="#local-6989586621679063689"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int -&gt; CSize
-forall a b. (Integral a, Num b) =&gt; a -&gt; b
+</span><a href="#local-6989586621679068748"><span class="hs-identifier hs-var">len</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span id="local-6989586621679068745"><span class="annot"><span class="annottext">Ptr b
+</span><a href="#local-6989586621679068745"><span class="hs-identifier hs-var">buf</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-433"></span><span>           </span><span id="local-6989586621679068744"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679068744"><span class="hs-identifier hs-var">rc</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr b -&gt; CSize -&gt; Ptr (Ptr r) -&gt; IO CInt
+</span><a href="#local-6989586621679068771"><span class="hs-identifier hs-var">action</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr b
+</span><a href="#local-6989586621679068745"><span class="hs-identifier hs-var">buf</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Real.html#fromIntegral"><span class="hs-identifier hs-var">fromIntegral</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063692"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr r)
-</span><a href="#local-6989586621679063691"><span class="hs-identifier hs-var">res</span></a></span><span>
+</span><a href="#local-6989586621679068748"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr r)
+</span><a href="#local-6989586621679068747"><span class="hs-identifier hs-var">res</span></a></span><span>
 </span><span id="line-434"></span><span>           </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063688"><span class="hs-identifier hs-var">rc</span></a></span><span> </span><span class="annot"><span class="annottext">CInt -&gt; CInt -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679068744"><span class="hs-identifier hs-var">rc</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">CInt
 </span><span class="hs-number">0</span></span><span>
-</span><span id="line-435"></span><span>             </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Either CInt a -&gt; IO (Either CInt a)
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt -&gt; Either CInt a
-forall a b. a -&gt; Either a b
+</span><span id="line-435"></span><span>             </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a b. a -&gt; Either a b
 </span><a href="../../base/src/Data.Either.html#Left"><span class="hs-identifier hs-var">Left</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063688"><span class="hs-identifier hs-var">rc</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-436"></span><span>             </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679063686"><span class="annot"><span class="annottext">Ptr r
-</span><a href="#local-6989586621679063686"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr r) -&gt; IO (Ptr r)
-forall a. Storable a =&gt; Ptr a -&gt; IO a
+</span><a href="#local-6989586621679068744"><span class="hs-identifier hs-var">rc</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-436"></span><span>             </span><span class="hs-keyword">else</span><span> </span><span class="hs-keyword">do</span><span> </span><span id="local-6989586621679068742"><span class="annot"><span class="annottext">Ptr r
+</span><a href="#local-6989586621679068742"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. Storable a =&gt; Ptr a -&gt; IO a
 </span><a href="../../base/src/Foreign.Storable.html#peek"><span class="hs-identifier hs-var">peek</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr r)
-</span><a href="#local-6989586621679063691"><span class="hs-identifier hs-var">res</span></a></span><span>
-</span><span id="line-437"></span><span>                     </span><span class="annot"><span class="annottext">Bool -&gt; IO () -&gt; IO ()
-forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
+</span><a href="#local-6989586621679068747"><span class="hs-identifier hs-var">res</span></a></span><span>
+</span><span id="line-437"></span><span>                     </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *). Applicative f =&gt; Bool -&gt; f () -&gt; f ()
 </span><a href="../../base/src/GHC.Base.html#when"><span class="hs-identifier hs-var">when</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr r
-</span><a href="#local-6989586621679063686"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr r -&gt; Ptr r -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
-</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Ptr r
-forall a. Ptr a
-</span><a href="../../base/src/GHC.Ptr.html#nullPtr"><span class="hs-identifier hs-var">nullPtr</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">IO ()
-forall {a}. IO a
-</span><a href="#local-6989586621679063683"><span class="hs-identifier hs-var">notFoundErr</span></a></span><span>
-</span><span id="line-438"></span><span>                     </span><span class="annot"><span class="annottext">(a -&gt; Either CInt a) -&gt; IO a -&gt; IO (Either CInt a)
-forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
-</span><a href="../../base/src/GHC.Base.html#fmap"><span class="hs-identifier hs-var">fmap</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; Either CInt a
-forall a b. b -&gt; Either a b
+</span><a href="#local-6989586621679068742"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">forall a. Ptr a
+</span><a href="../../base/src/GHC.Ptr.html#nullPtr"><span class="hs-identifier hs-var">nullPtr</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall {a}. IO a
+</span><a href="#local-6989586621679068739"><span class="hs-identifier hs-var">notFoundErr</span></a></span><span>
+</span><span id="line-438"></span><span>                     </span><span class="annot"><span class="annottext">forall (f :: * -&gt; *) a b. Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</span><a href="../../base/src/GHC.Base.html#fmap"><span class="hs-identifier hs-var">fmap</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. b -&gt; Either a b
 </span><a href="../../base/src/Data.Either.html#Right"><span class="hs-identifier hs-var">Right</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr r -&gt; IO a
-</span><a href="#local-6989586621679063716"><span class="hs-identifier hs-var">unpack</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr r
-</span><a href="#local-6989586621679063686"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679068772"><span class="hs-identifier hs-var">unpack</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr r
+</span><a href="#local-6989586621679068742"><span class="hs-identifier hs-var">p</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-439"></span><span>    </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Either CInt a
-</span><a href="#local-6989586621679063690"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-440"></span><span>      </span><span class="annot"><a href="../../base/src/Data.Either.html#Right"><span class="hs-identifier hs-type">Right</span></a></span><span> </span><span id="local-6989586621679063682"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679063682"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">a -&gt; IO a
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679068746"><span class="hs-identifier hs-var">r</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-440"></span><span>      </span><span class="annot"><a href="../../base/src/Data.Either.html#Right"><span class="hs-identifier hs-type">Right</span></a></span><span> </span><span id="local-6989586621679068738"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621679068738"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621679063682"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-441"></span><span>      </span><span class="annot"><a href="../../base/src/Data.Either.html#Left"><span class="hs-identifier hs-type">Left</span></a></span><span> </span><span id="local-6989586621679063681"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063681"><span class="hs-identifier hs-var">rc</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">CInt -&gt; Errno
+</span><a href="#local-6989586621679068738"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-441"></span><span>      </span><span class="annot"><a href="../../base/src/Data.Either.html#Left"><span class="hs-identifier hs-type">Left</span></a></span><span> </span><span id="local-6989586621679068737"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679068737"><span class="hs-identifier hs-var">rc</span></a></span></span><span> </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">CInt -&gt; Errno
 </span><a href="../../base/src/Foreign.C.Error.html#Errno"><span class="hs-identifier hs-var">Errno</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063681"><span class="hs-identifier hs-var">rc</span></a></span><span> </span><span class="annot"><span class="annottext">Errno -&gt; Errno -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679068737"><span class="hs-identifier hs-var">rc</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Errno
 </span><a href="../../base/src/Foreign.C.Error.html#eRANGE"><span class="hs-identifier hs-var">eRANGE</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span>
 </span><span id="line-442"></span><span>        </span><span class="hs-comment">-- ERANGE means this is not an error</span><span>
 </span><span id="line-443"></span><span>        </span><span class="hs-comment">-- we just have to try again with a larger buffer</span><span>
 </span><span id="line-444"></span><span>        </span><span class="annot"><span class="annottext">Int -&gt; Ptr (Ptr r) -&gt; IO a
-</span><a href="#local-6989586621679063713"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
-</span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Int
-forall a. Num a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621679068769"><span class="hs-identifier hs-var">go</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><span class="hs-number">2</span></span><span> </span><span class="annot"><span class="annottext">forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><a href="../../base/src/GHC.Num.html#%2A"><span class="hs-operator hs-var">*</span></a></span><span> </span><span class="annot"><span class="annottext">Int
-</span><a href="#local-6989586621679063692"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr r)
-</span><a href="#local-6989586621679063691"><span class="hs-identifier hs-var">res</span></a></span><span>
-</span><span id="line-445"></span><span>      </span><span class="annot"><a href="../../base/src/Data.Either.html#Left"><span class="hs-identifier hs-type">Left</span></a></span><span> </span><span id="local-6989586621679063677"><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063677"><span class="hs-identifier hs-var">rc</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
-</span><span id="line-446"></span><span>        </span><span class="annot"><span class="annottext">IOError -&gt; IO a
-forall a. IOError -&gt; IO a
+</span><a href="#local-6989586621679068748"><span class="hs-identifier hs-var">len</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Ptr (Ptr r)
+</span><a href="#local-6989586621679068747"><span class="hs-identifier hs-var">res</span></a></span><span>
+</span><span id="line-445"></span><span>      </span><span class="annot"><a href="../../base/src/Data.Either.html#Left"><span class="hs-identifier hs-type">Left</span></a></span><span> </span><span id="local-6989586621679068733"><span class="annot"><span class="annottext">CInt
+</span><a href="#local-6989586621679068733"><span class="hs-identifier hs-var">rc</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span>
+</span><span id="line-446"></span><span>        </span><span class="annot"><span class="annottext">forall a. IOError -&gt; IO a
 </span><a href="../../base/src/GHC.IO.Exception.html#ioError"><span class="hs-identifier hs-var">ioError</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Errno -&gt; Maybe Handle -&gt; Maybe String -&gt; IOError
 </span><a href="../../base/src/Foreign.C.Error.html#errnoToIOError"><span class="hs-identifier hs-var">errnoToIOError</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063719"><span class="hs-identifier hs-var">loc</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt -&gt; Errno
+</span><a href="#local-6989586621679068775"><span class="hs-identifier hs-var">loc</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">CInt -&gt; Errno
 </span><a href="../../base/src/Foreign.C.Error.html#Errno"><span class="hs-identifier hs-var">Errno</span></a></span><span> </span><span class="annot"><span class="annottext">CInt
-</span><a href="#local-6989586621679063677"><span class="hs-identifier hs-var">rc</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Maybe Handle
-forall a. Maybe a
-</span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe String
-forall a. Maybe a
+</span><a href="#local-6989586621679068733"><span class="hs-identifier hs-var">rc</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
+</span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-447"></span><span>  </span><span id="local-6989586621679063683"><span class="annot"><span class="annottext">notFoundErr :: IO a
-</span><a href="#local-6989586621679063683"><span class="hs-identifier hs-var hs-var">notFoundErr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-448"></span><span>    </span><span class="annot"><span class="annottext">IOError -&gt; IO a
-forall a. IOError -&gt; IO a
-</span><a href="../../base/src/GHC.IO.Exception.html#ioError"><span class="hs-identifier hs-var">ioError</span></a></span><span> </span><span class="annot"><span class="annottext">(IOError -&gt; IO a) -&gt; IOError -&gt; IO a
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(IOError -&gt; String -&gt; IOError) -&gt; String -&gt; IOError -&gt; IOError
-forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
+</span><span id="line-447"></span><span>  </span><span id="local-6989586621679068739"><span class="annot"><span class="annottext">notFoundErr :: IO a
+</span><a href="#local-6989586621679068739"><span class="hs-identifier hs-var hs-var">notFoundErr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-448"></span><span>    </span><span class="annot"><span class="annottext">forall a. IOError -&gt; IO a
+</span><a href="../../base/src/GHC.IO.Exception.html#ioError"><span class="hs-identifier hs-var">ioError</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b c. (a -&gt; b -&gt; c) -&gt; b -&gt; a -&gt; c
 </span><a href="../../base/src/GHC.Base.html#flip"><span class="hs-identifier hs-var">flip</span></a></span><span> </span><span class="annot"><span class="annottext">IOError -&gt; String -&gt; IOError
 </span><a href="../../base/src/System.IO.Error.html#ioeSetErrorString"><span class="hs-identifier hs-var">ioeSetErrorString</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;no such &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
-forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-string">&quot;no such &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><a href="../../base/src/GHC.Base.html#%2B%2B"><span class="hs-operator hs-var">++</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063718"><span class="hs-identifier hs-var">enttype</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-449"></span><span>            </span><span class="annot"><span class="annottext">(IOError -&gt; IOError) -&gt; IOError -&gt; IOError
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679068774"><span class="hs-identifier hs-var">enttype</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-449"></span><span>            </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">IOErrorType -&gt; String -&gt; Maybe Handle -&gt; Maybe String -&gt; IOError
 </span><a href="../../base/src/System.IO.Error.html#mkIOError"><span class="hs-identifier hs-var">mkIOError</span></a></span><span> </span><span class="annot"><span class="annottext">IOErrorType
 </span><a href="../../base/src/System.IO.Error.html#doesNotExistErrorType"><span class="hs-identifier hs-var">doesNotExistErrorType</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063719"><span class="hs-identifier hs-var">loc</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe Handle
-forall a. Maybe a
-</span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span> </span><span class="annot"><span class="annottext">Maybe String
-forall a. Maybe a
+</span><a href="#local-6989586621679068775"><span class="hs-identifier hs-var">loc</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
+</span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Maybe a
 </span><a href="../../base/src/GHC.Maybe.html#Nothing"><span class="hs-identifier hs-var">Nothing</span></a></span><span>
 </span><span id="line-450"></span><span>
 </span><span id="line-451"></span><span class="annot"><a href="System.Posix.User.html#unpackUserEntry"><span class="hs-identifier hs-type">unpackUserEntry</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="System.Posix.User.html#CPasswd"><span class="hs-identifier hs-type">CPasswd</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Posix.User.html#UserEntry"><span class="hs-identifier hs-type">UserEntry</span></a></span><span>
 </span><span id="line-452"></span><span id="unpackUserEntry"><span class="annot"><span class="annottext">unpackUserEntry :: Ptr CPasswd -&gt; IO UserEntry
-</span><a href="System.Posix.User.html#unpackUserEntry"><span class="hs-identifier hs-var hs-var">unpackUserEntry</span></a></span></span><span> </span><span id="local-6989586621679063670"><span class="annot"><span class="annottext">Ptr CPasswd
-</span><a href="#local-6989586621679063670"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-453"></span><span>   </span><span id="local-6989586621679063669"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063669"><span class="hs-identifier hs-var">name</span></a></span></span><span>   </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679063668"><span class="annot"><span class="annottext">Ptr CPasswd
-</span><a href="#local-6989586621679063668"><span class="hs-identifier hs-var">hsc_ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr CPasswd -&gt; Int -&gt; IO CString
-forall a b. Storable a =&gt; Ptr b -&gt; Int -&gt; IO a
+</span><a href="System.Posix.User.html#unpackUserEntry"><span class="hs-identifier hs-var hs-var">unpackUserEntry</span></a></span></span><span> </span><span id="local-6989586621679068726"><span class="annot"><span class="annottext">Ptr CPasswd
+</span><a href="#local-6989586621679068726"><span class="hs-identifier hs-var">ptr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-453"></span><span>   </span><span id="local-6989586621679068725"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679068725"><span class="hs-identifier hs-var">name</span></a></span></span><span>   </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679068724"><span class="annot"><span class="annottext">Ptr CPasswd
+</span><a href="#local-6989586621679068724"><span class="hs-identifier hs-var">hsc_ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; Ptr b -&gt; Int -&gt; IO a
 </span><a href="../../base/src/Foreign.Storable.html#peekByteOff"><span class="hs-identifier hs-var">peekByteOff</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CPasswd
-</span><a href="#local-6989586621679063668"><span class="hs-identifier hs-var">hsc_ptr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679068724"><span class="hs-identifier hs-var">hsc_ptr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>   </span><span class="annot"><span class="annottext">Ptr CPasswd
-</span><a href="#local-6989586621679063670"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">IO CString -&gt; (CString -&gt; IO String) -&gt; IO String
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621679068726"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><a href="../../base/src/GHC.Base.html#%3E%3E%3D"><span class="hs-operator hs-var">&gt;&gt;=</span></a></span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO String
 </span><a href="../../base/src/Foreign.C.String.html#peekCAString"><span class="hs-identifier hs-var">peekCAString</span></a></span><span>
 </span><span id="line-454"></span><span class="hs-pragma">{-# LINE 454 &quot;libraries/unix/System/Posix/User.hsc&quot; #-}</span><span>
@@ -845,15 +757,13 @@ forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span id="line-457"></span><span class="hs-pragma">{-# LINE 457 &quot;libraries/unix/System/Posix/User.hsc&quot; #-}</span><span>
 </span><span id="line-457"></span><span>
 </span><span id="line-458"></span><span class="hs-pragma">{-# LINE 460 &quot;libraries/unix/System/Posix/User.hsc&quot; #-}</span><span>
-</span><span id="line-460"></span><span>   </span><span id="local-6989586621679063661"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063661"><span class="hs-identifier hs-var">gecos</span></a></span></span><span>  </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679063660"><span class="annot"><span class="annottext">Ptr CPasswd
-</span><a href="#local-6989586621679063660"><span class="hs-identifier hs-var">hsc_ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Ptr CPasswd -&gt; Int -&gt; IO CString
-forall a b. Storable a =&gt; Ptr b -&gt; Int -&gt; IO a
+</span><span id="line-460"></span><span>   </span><span id="local-6989586621679068717"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679068717"><span class="hs-identifier hs-var">gecos</span></a></span></span><span>  </span><span class="hs-glyph">&lt;-</span><span> </span><span class="hs-special">(</span><span class="hs-special">(</span><span class="hs-glyph">\</span><span id="local-6989586621679068716"><span class="annot"><span class="annottext">Ptr CPasswd
+</span><a href="#local-6989586621679068716"><span class="hs-identifier hs-var">hsc_ptr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a b. Storable a =&gt; Ptr b -&gt; Int -&gt; IO a
 </span><a href="../../base/src/Foreign.Storable.html#peekByteOff"><span class="hs-identifier hs-var">peekByteOff</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr CPasswd
-</span><a href="#local-6989586621679063660"><span class="hs-identifier hs-var">hsc_ptr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679068716"><span class="hs-identifier hs-var">hsc_ptr</span></a></span><span> </span><span class="annot"><span class="annottext">Int
 </span><span class="hs-number">40</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>  </span><span class="annot"><span class="annottext">Ptr CPasswd
-</span><a href="#local-6989586621679063670"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">IO CString -&gt; (CString -&gt; IO String) -&gt; IO String
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="#local-6989586621679068726"><span class="hs-identifier hs-var">ptr</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><a href="../../base/src/GHC.Base.html#%3E%3E%3D"><span class="hs-operator hs-var">&gt;&gt;=</span></a></span><span> </span><span class="annot"><span class="annottext">CString -&gt; IO String
 </span><a href="../../base/src/Foreign.C.String.html#peekCAString"><span class="hs-identifier hs-var">peekCAString</span></a></span><span>
 </span><span id="line-461"></span><span class="hs-pragma">{-# LINE 461 &quot;libraries/unix/System/Posix/User.hsc&quot; #-}</span><span>
@@ -867,34 +777,29 @@ forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 </span><span id="line-465"></span><span>
 </span><span id="line-466"></span><span class="hs-comment">-- Used when a function returns NULL to indicate either an error or</span><span>
 </span><span id="line-467"></span><span class="hs-comment">-- EOF, depending on whether the global errno is nonzero.</span><span>
-</span><span id="line-468"></span><span id="local-6989586621679063655"><span class="annot"><a href="System.Posix.User.html#throwErrnoIfNullAndError"><span class="hs-identifier hs-type">throwErrnoIfNullAndError</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679063655"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679063655"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-468"></span><span id="local-6989586621679068711"><span class="annot"><a href="System.Posix.User.html#throwErrnoIfNullAndError"><span class="hs-identifier hs-type">throwErrnoIfNullAndError</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="../../base/src/GHC.Base.html#String"><span class="hs-identifier hs-type">String</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068711"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="../../base/src/GHC.Ptr.html#Ptr"><span class="hs-identifier hs-type">Ptr</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679068711"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-469"></span><span id="throwErrnoIfNullAndError"><span class="annot"><span class="annottext">throwErrnoIfNullAndError :: forall a. String -&gt; IO (Ptr a) -&gt; IO (Ptr a)
-</span><a href="System.Posix.User.html#throwErrnoIfNullAndError"><span class="hs-identifier hs-var hs-var">throwErrnoIfNullAndError</span></a></span></span><span> </span><span id="local-6989586621679063649"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063649"><span class="hs-identifier hs-var">loc</span></a></span></span><span> </span><span id="local-6989586621679063648"><span class="annot"><span class="annottext">IO (Ptr a)
-</span><a href="#local-6989586621679063648"><span class="hs-identifier hs-var">act</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-470"></span><span>    </span><span id="local-6989586621679063647"><span class="annot"><span class="annottext">Ptr a
-</span><a href="#local-6989586621679063647"><span class="hs-identifier hs-var">rc</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO (Ptr a)
-</span><a href="#local-6989586621679063648"><span class="hs-identifier hs-var">act</span></a></span><span>
-</span><span id="line-471"></span><span>    </span><span id="local-6989586621679063646"><span class="annot"><span class="annottext">Errno
-</span><a href="#local-6989586621679063646"><span class="hs-identifier hs-var">errno</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Errno
+</span><a href="System.Posix.User.html#throwErrnoIfNullAndError"><span class="hs-identifier hs-var hs-var">throwErrnoIfNullAndError</span></a></span></span><span> </span><span id="local-6989586621679068705"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679068705"><span class="hs-identifier hs-var">loc</span></a></span></span><span> </span><span id="local-6989586621679068704"><span class="annot"><span class="annottext">IO (Ptr a)
+</span><a href="#local-6989586621679068704"><span class="hs-identifier hs-var">act</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-470"></span><span>    </span><span id="local-6989586621679068703"><span class="annot"><span class="annottext">Ptr a
+</span><a href="#local-6989586621679068703"><span class="hs-identifier hs-var">rc</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO (Ptr a)
+</span><a href="#local-6989586621679068704"><span class="hs-identifier hs-var">act</span></a></span><span>
+</span><span id="line-471"></span><span>    </span><span id="local-6989586621679068702"><span class="annot"><span class="annottext">Errno
+</span><a href="#local-6989586621679068702"><span class="hs-identifier hs-var">errno</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">IO Errno
 </span><a href="../../base/src/Foreign.C.Error.html#getErrno"><span class="hs-identifier hs-var">getErrno</span></a></span><span>
 </span><span id="line-472"></span><span>    </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Ptr a
-</span><a href="#local-6989586621679063647"><span class="hs-identifier hs-var">rc</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr a -&gt; Ptr a -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
-</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Ptr a
-forall a. Ptr a
+</span><a href="#local-6989586621679068703"><span class="hs-identifier hs-var">rc</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">forall a. Ptr a
 </span><a href="../../base/src/GHC.Ptr.html#nullPtr"><span class="hs-identifier hs-var">nullPtr</span></a></span><span> </span><span class="annot"><span class="annottext">Bool -&gt; Bool -&gt; Bool
 </span><span class="hs-operator hs-var">&amp;&amp;</span></span><span> </span><span class="annot"><span class="annottext">Errno
-</span><a href="#local-6989586621679063646"><span class="hs-identifier hs-var">errno</span></a></span><span> </span><span class="annot"><span class="annottext">Errno -&gt; Errno -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><a href="#local-6989586621679068702"><span class="hs-identifier hs-var">errno</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">/=</span></span><span> </span><span class="annot"><span class="annottext">Errno
 </span><a href="../../base/src/Foreign.C.Error.html#eOK"><span class="hs-identifier hs-var">eOK</span></a></span><span>
-</span><span id="line-473"></span><span>       </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">String -&gt; IO (Ptr a)
-forall a. String -&gt; IO a
+</span><span id="line-473"></span><span>       </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">forall a. String -&gt; IO a
 </span><a href="../../base/src/Foreign.C.Error.html#throwErrno"><span class="hs-identifier hs-var">throwErrno</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679063649"><span class="hs-identifier hs-var">loc</span></a></span><span>
-</span><span id="line-474"></span><span>       </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Ptr a -&gt; IO (Ptr a)
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="#local-6989586621679068705"><span class="hs-identifier hs-var">loc</span></a></span><span>
+</span><span id="line-474"></span><span>       </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
 </span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr a
-</span><a href="#local-6989586621679063647"><span class="hs-identifier hs-var">rc</span></a></span><span>
+</span><a href="#local-6989586621679068703"><span class="hs-identifier hs-var">rc</span></a></span><span>
 </span><span id="line-475"></span></pre></body></html>

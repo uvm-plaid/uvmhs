@@ -74,45 +74,35 @@
 </span><span id="line-73"></span><span>
 </span><span id="line-74"></span><span class="annot"><a href="System.Posix.DynamicLinker.Module.ByteString.html#moduleOpen"><span class="hs-identifier hs-type">moduleOpen</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="System.Posix.ByteString.FilePath.html#RawFilePath"><span class="hs-identifier hs-type">RawFilePath</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">[</span><span class="annot"><a href="System.Posix.DynamicLinker.Prim.html#RTLDFlags"><span class="hs-identifier hs-type">RTLDFlags</span></a></span><span class="hs-special">]</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="annot"><a href="System.Posix.DynamicLinker.Common.html#Module"><span class="hs-identifier hs-type">Module</span></a></span><span>
 </span><span id="line-75"></span><span id="moduleOpen"><span class="annot"><span class="annottext">moduleOpen :: RawFilePath -&gt; [RTLDFlags] -&gt; IO Module
-</span><a href="System.Posix.DynamicLinker.Module.ByteString.html#moduleOpen"><span class="hs-identifier hs-var hs-var">moduleOpen</span></a></span></span><span> </span><span id="local-6989586621679058145"><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679058145"><span class="hs-identifier hs-var">file</span></a></span></span><span> </span><span id="local-6989586621679058144"><span class="annot"><span class="annottext">[RTLDFlags]
-</span><a href="#local-6989586621679058144"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-76"></span><span>  </span><span id="local-6989586621679058143"><span class="annot"><span class="annottext">Ptr ()
-</span><a href="#local-6989586621679058143"><span class="hs-identifier hs-var">modPtr</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">RawFilePath -&gt; (CString -&gt; IO (Ptr ())) -&gt; IO (Ptr ())
-forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
+</span><a href="System.Posix.DynamicLinker.Module.ByteString.html#moduleOpen"><span class="hs-identifier hs-var hs-var">moduleOpen</span></a></span></span><span> </span><span id="local-6989586621679063189"><span class="annot"><span class="annottext">RawFilePath
+</span><a href="#local-6989586621679063189"><span class="hs-identifier hs-var">file</span></a></span></span><span> </span><span id="local-6989586621679063188"><span class="annot"><span class="annottext">[RTLDFlags]
+</span><a href="#local-6989586621679063188"><span class="hs-identifier hs-var">flags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-76"></span><span>  </span><span id="local-6989586621679063187"><span class="annot"><span class="annottext">Ptr ()
+</span><a href="#local-6989586621679063187"><span class="hs-identifier hs-var">modPtr</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">forall a. RawFilePath -&gt; (CString -&gt; IO a) -&gt; IO a
 </span><a href="System.Posix.ByteString.FilePath.html#withFilePath"><span class="hs-identifier hs-var">withFilePath</span></a></span><span> </span><span class="annot"><span class="annottext">RawFilePath
-</span><a href="#local-6989586621679058145"><span class="hs-identifier hs-var">file</span></a></span><span> </span><span class="annot"><span class="annottext">((CString -&gt; IO (Ptr ())) -&gt; IO (Ptr ()))
--&gt; (CString -&gt; IO (Ptr ())) -&gt; IO (Ptr ())
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679058141"><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679058141"><span class="hs-identifier hs-var">modAddr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">CString -&gt; CInt -&gt; IO (Ptr ())
+</span><a href="#local-6989586621679063189"><span class="hs-identifier hs-var">file</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679063185"><span class="annot"><span class="annottext">CString
+</span><a href="#local-6989586621679063185"><span class="hs-identifier hs-var">modAddr</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">CString -&gt; CInt -&gt; IO (Ptr ())
 </span><a href="System.Posix.DynamicLinker.Prim.html#c_dlopen"><span class="hs-identifier hs-var">c_dlopen</span></a></span><span> </span><span class="annot"><span class="annottext">CString
-</span><a href="#local-6989586621679058141"><span class="hs-identifier hs-var">modAddr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[RTLDFlags] -&gt; CInt
+</span><a href="#local-6989586621679063185"><span class="hs-identifier hs-var">modAddr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[RTLDFlags] -&gt; CInt
 </span><a href="System.Posix.DynamicLinker.Prim.html#packRTLDFlags"><span class="hs-identifier hs-var">packRTLDFlags</span></a></span><span> </span><span class="annot"><span class="annottext">[RTLDFlags]
-</span><a href="#local-6989586621679058144"><span class="hs-identifier hs-var">flags</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679063188"><span class="hs-identifier hs-var">flags</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-77"></span><span>  </span><span class="hs-keyword">if</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Ptr ()
-</span><a href="#local-6989586621679058143"><span class="hs-identifier hs-var">modPtr</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr () -&gt; Ptr () -&gt; Bool
-forall a. Eq a =&gt; a -&gt; a -&gt; Bool
-</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">Ptr ()
-forall a. Ptr a
+</span><a href="#local-6989586621679063187"><span class="hs-identifier hs-var">modPtr</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">==</span></span><span> </span><span class="annot"><span class="annottext">forall a. Ptr a
 </span><a href="../../base/src/GHC.Ptr.html#nullPtr"><span class="hs-identifier hs-var">nullPtr</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-78"></span><span>      </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">IO String
-</span><a href="System.Posix.DynamicLinker.Module.html#moduleError"><span class="hs-identifier hs-var">moduleError</span></a></span><span> </span><span class="annot"><span class="annottext">IO String -&gt; (String -&gt; IO Module) -&gt; IO Module
-forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
-</span><a href="../../base/src/GHC.Base.html#%3E%3E%3D"><span class="hs-operator hs-var">&gt;&gt;=</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679058137"><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679058137"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">IOError -&gt; IO Module
-forall a. IOError -&gt; IO a
+</span><a href="System.Posix.DynamicLinker.Module.html#moduleError"><span class="hs-identifier hs-var">moduleError</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+</span><a href="../../base/src/GHC.Base.html#%3E%3E%3D"><span class="hs-operator hs-var">&gt;&gt;=</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621679063181"><span class="annot"><span class="annottext">String
+</span><a href="#local-6989586621679063181"><span class="hs-identifier hs-var">err</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">forall a. IOError -&gt; IO a
 </span><a href="../../base/src/GHC.IO.Exception.html#ioError"><span class="hs-identifier hs-var">ioError</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; IOError
 </span><a href="../../base/src/GHC.IO.Exception.html#userError"><span class="hs-identifier hs-var">userError</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String
-</span><span class="hs-string">&quot;dlopen: &quot;</span></span><span> </span><span class="annot"><span class="annottext">String -&gt; String -&gt; String
-forall a. [a] -&gt; [a] -&gt; [a]
+</span><span class="hs-string">&quot;dlopen: &quot;</span></span><span> </span><span class="annot"><span class="annottext">forall a. [a] -&gt; [a] -&gt; [a]
 </span><a href="../../base/src/GHC.Base.html#%2B%2B"><span class="hs-operator hs-var">++</span></a></span><span> </span><span class="annot"><span class="annottext">String
-</span><a href="#local-6989586621679058137"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
-</span><span id="line-79"></span><span>      </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Module -&gt; IO Module
-forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
-</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(Module -&gt; IO Module) -&gt; Module -&gt; IO Module
-forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621679063181"><span class="hs-identifier hs-var">err</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-79"></span><span>      </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a. Monad m =&gt; a -&gt; m a
+</span><a href="../../base/src/GHC.Base.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="../../base/src/GHC.Base.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr () -&gt; Module
 </span><a href="System.Posix.DynamicLinker.Common.html#Module"><span class="hs-identifier hs-var">Module</span></a></span><span> </span><span class="annot"><span class="annottext">Ptr ()
-</span><a href="#local-6989586621679058143"><span class="hs-identifier hs-var">modPtr</span></a></span><span>
+</span><a href="#local-6989586621679063187"><span class="hs-identifier hs-var">modPtr</span></a></span><span>
 </span><span id="line-80"></span></pre></body></html>
