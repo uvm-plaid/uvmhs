@@ -45,19 +45,19 @@ instance Pretty SrcCxt where
         , ppLoc e
         ]
     , concat
-        [ ppFormat (formats [BG grayLight]) $ ppString "«"
+        [ ppAnnotation $ ppString "«"
         , ppAlign $ concat
             [ renderWindowR pre 
             , ppUT '^' green $ renderWindowL d
             , renderWindowL pi
             ]
-        , ppFormat (formats [BG grayLight]) $ ppString "»"
+        , ppAnnotation $ ppString "»"
         ]
     ]
     where
       ppLoc = \case
-        BotBT → ppBG grayLight $ ppString "BOF"
-        TopBT → ppBG grayLight $ ppString "EOF"
+        BotBT → ppAnnotation $ ppString "BOF"
+        TopBT → ppAnnotation $ ppString "EOF"
         AddBT (Loc _ r c) → concat
           [ pretty $ succ r
           , ppPun ":"

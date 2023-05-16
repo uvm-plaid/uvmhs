@@ -29,6 +29,7 @@ data PrettyParams = PrettyParams
   , commentFormat            ∷ Formats
   , errorFormat              ∷ Formats
   , lineNumberFormat         ∷ Formats
+  , annotationFormat         ∷ Formats
   , appLevel                 ∷ ℕ64
   } deriving (Eq,Ord,Show)
 makeLenses ''PrettyParams
@@ -47,6 +48,7 @@ prettyParams₀ = PrettyParams
   , commentFormat            = formats [IT,FG grayLight]
   , errorFormat              = formats [FG white,BG red]
   , lineNumberFormat         = formats [FG grayLight]
+  , annotationFormat         = formats [BG grayLight]
   , appLevel                 = 𝕟64 100
   }
 
@@ -224,6 +226,9 @@ ppLineNumFmt = ppFormatParam lineNumberFormatL
 
 ppLineNum ∷ 𝕊 → Doc
 ppLineNum = ppLineNumFmt ∘ ppString
+
+ppAnnotation ∷ Doc → Doc
+ppAnnotation = ppFormatParam annotationFormatL
 
 ppCxt ∷ 𝕊 → Doc → Doc
 ppCxt k v = ppHorizontal
