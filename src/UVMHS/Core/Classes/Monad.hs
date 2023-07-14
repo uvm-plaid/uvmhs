@@ -6,7 +6,7 @@ import UVMHS.Core.Classes.Functor
 import qualified Prelude as HS
 
 infixr 0 *$
-infixr 1 ≫=, ≫
+infixl 1 ≫=, ≫
 infixl 6 ⧆
 infixl 7 *∘
 
