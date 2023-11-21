@@ -6,7 +6,7 @@ build:
 
 .PHONY: dev
 dev: .stack-work
-	ghcid --warnings --run=$E --command="stack ghci uvmhs:lib --ghc-options='-fobject-code -DUVMHS_TESTS'"
+	ghcid --warnings --run=$E --command="stack ghci uvmhs:lib --ghc-options='-DUVMHS_TESTS'"
 
 .stack-work:
 	stack setup

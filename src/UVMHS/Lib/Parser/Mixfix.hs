@@ -76,19 +76,19 @@ onlyTerminalsF ∷ MixfixF t f a → MixfixF t f a
 onlyTerminalsF m = MixfixF (mixfixFTerminals m) null
 
 fmixPrefix ∷ ℕ64 → CParser t (f a → a) → MixfixF t f a
-fmixPrefix l p = null { mixfixFLevels = dict [ l ↦ null {mixesFPrefix = p} ] }
+fmixPrefix l p = null { mixfixFLevels = dict [ l ↦♭ null {mixesFPrefix = p} ] }
 
 fmixPostfix ∷ ℕ64 → CParser t (f a → a) → MixfixF t f a
-fmixPostfix l p = null { mixfixFLevels = dict [ l ↦ null {mixesFPostfix = p} ] }
+fmixPostfix l p = null { mixfixFLevels = dict [ l ↦♭ null {mixesFPostfix = p} ] }
 
 fmixInfix ∷ ℕ64 → CParser t (f a → f a → a) → MixfixF t f a
-fmixInfix l p = null { mixfixFLevels = dict [ l ↦ null {mixesFInfix = p} ] }
+fmixInfix l p = null { mixfixFLevels = dict [ l ↦♭ null {mixesFInfix = p} ] }
 
 fmixInfixL ∷ ℕ64 → CParser t (f a → f a → a) → MixfixF t f a
-fmixInfixL l p = null { mixfixFLevels = dict [ l ↦ null {mixesFInfixL = p} ] }
+fmixInfixL l p = null { mixfixFLevels = dict [ l ↦♭ null {mixesFInfixL = p} ] }
 
 fmixInfixR ∷ ℕ64 → CParser t (f a → f a → a) → MixfixF t f a
-fmixInfixR l p = null { mixfixFLevels = dict [ l ↦ null {mixesFInfixR = p} ] }
+fmixInfixR l p = null { mixfixFLevels = dict [ l ↦♭ null {mixesFInfixR = p} ] }
 
 fmixTerminal ∷ CParser t a → MixfixF t f a
 fmixTerminal p = null { mixfixFTerminals = p}
@@ -206,19 +206,19 @@ instance (Ord t) ⇒ Append (Mixfix t a) where Mixfix ts₁ ls₁ ⧺ Mixfix ts�
 instance (Ord t) ⇒ Monoid (Mixfix t a)
 
 mixPrefix ∷ ℕ64 → CParser t (a → a) → Mixfix t a
-mixPrefix l p = null { mixfixLevels = dict [ l ↦ null {mixesPrefix = p} ] }
+mixPrefix l p = null { mixfixLevels = dict [ l ↦♭ null {mixesPrefix = p} ] }
 
 mixPostfix ∷ ℕ64 → CParser t (a → a) → Mixfix t a
-mixPostfix l p = null { mixfixLevels = dict [ l ↦ null {mixesPostfix = p} ] }
+mixPostfix l p = null { mixfixLevels = dict [ l ↦♭ null {mixesPostfix = p} ] }
 
 mixInfix ∷ ℕ64 → CParser t (a → a → a) → Mixfix t a
-mixInfix l p = null { mixfixLevels = dict [ l ↦ null {mixesInfix = p} ] }
+mixInfix l p = null { mixfixLevels = dict [ l ↦♭ null {mixesInfix = p} ] }
 
 mixInfixL ∷ ℕ64 → CParser t (a → a → a) → Mixfix t a
-mixInfixL l p = null { mixfixLevels = dict [ l ↦ null {mixesInfixL = p} ] }
+mixInfixL l p = null { mixfixLevels = dict [ l ↦♭ null {mixesInfixL = p} ] }
 
 mixInfixR ∷ ℕ64 → CParser t (a → a → a) → Mixfix t a
-mixInfixR l p = null { mixfixLevels = dict [ l ↦ null {mixesInfixR = p} ] }
+mixInfixR l p = null { mixfixLevels = dict [ l ↦♭ null {mixesInfixR = p} ] }
 
 mixTerminal ∷ CParser t a → Mixfix t a
 mixTerminal p = null { mixfixTerminals = p}

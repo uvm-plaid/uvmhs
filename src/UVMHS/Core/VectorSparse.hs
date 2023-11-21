@@ -152,4 +152,4 @@ assoc𝑉 ∷ (ToIter (ℤ64 ∧ a) t) ⇒ t → 𝑉 a
 assoc𝑉 = spvec ∘ map single ∘ iter
 
 join𝑉 ∷ (Ord a,Ord b) ⇒ 𝑉 (𝑃 a) → 𝑉 (𝑃 b) → 𝑉 (𝑃 (a ∧ b))
-join𝑉 = interWith𝑉 $ \ vs₁ vs₂ → pow $ zipWith (:*) vs₁ vs₂
+join𝑉 = interWith𝑉 $ \ vs₁ vs₂ → pow𝐼𝑃 $ iter $ zipWith (:*) vs₁ vs₂

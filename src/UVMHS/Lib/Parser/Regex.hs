@@ -272,7 +272,7 @@ data RegexState c t o u = RegexState
 makeLenses ''RegexState
 
 regexState₀ ∷ RegexState c t o u
-regexState₀ = RegexState zero dø dø dø dø
+regexState₀ = RegexState zero dø𝐷 dø𝐷 dø𝐷 dø𝐷
 
 data DFA c t o u = DFA
   { dfaLits ∷ 𝑃 t
@@ -303,7 +303,7 @@ compileRegex e₀ =
           modifyL regexStateDeadL $ (⩌) $ n ↦ (extract (unRegex e) ≡ NullR)
           eachOn codes $ \ xc → do
             n' ← compile $ derRegex xc e
-            modifyL regexStateTransitionsL $ unionWith (⩌) $ xc ↦ (n ↦ n')
+            modifyL regexStateTransitionsL $ dunionBy (⩌) $ xc ↦ (n ↦ n')
           return n
     newRegexEntry ∷ Regex c t o u → State (RegexState c t o u) ℕ64
     newRegexEntry e = do
@@ -615,7 +615,7 @@ mkTokenBasic cs = \case
   Some SyntaxCBasic → (:*) False $ SyntaxTBasic $ stringCS cs
   Some StringCBasic → (:*) False $ StringTBasic $ read𝕊 $ stringCS cs
   Some NameCBasic → (:*) False $ NameTBasic $ stringCS cs
-  Some NaturalCBasic → (:*) False $ NaturalTBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow ['_','n']) cs
+  Some NaturalCBasic → (:*) False $ NaturalTBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow𝑃 ['_','n']) cs
   Some IntegerCBasic → (:*) False $ IntegerTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some DoubleCBasic → (:*) False $ DoubleTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some CharCBasic → (:*) False $ CharTBasic $ read𝕊 $ stringCS cs
@@ -920,7 +920,7 @@ mkTokenWSBasic cs = \case
   Some BlockCWSBasic → (:*) False $ BlockTWSBasic $ stringCS cs
   Some StringCWSBasic → (:*) False $ StringTWSBasic $ read𝕊 $ stringCS cs
   Some NameCWSBasic → (:*) False $ NameTWSBasic $ stringCS cs
-  Some NaturalCWSBasic → (:*) False $ NaturalTWSBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow ['_','n']) cs
+  Some NaturalCWSBasic → (:*) False $ NaturalTWSBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow𝑃 ['_','n']) cs
   Some IntegerCWSBasic → (:*) False $ IntegerTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some DoubleCWSBasic → (:*) False $ DoubleTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs
 

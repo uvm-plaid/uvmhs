@@ -111,11 +111,11 @@ frameGroupingInterWithM
   → FrameGrouping v₂ 
   → m (FrameGrouping v₃)
 frameGroupingInterWithM f vs₁ vs₂ = case (vs₁,vs₂) of
-  (B_FG kvs₁,B_FG kvs₂) → B_FG ^$ interWithM f kvs₁ kvs₂
-  (N_FG kvs₁,N_FG kvs₂) → N_FG ^$ interWithM f kvs₁ kvs₂
-  (Z_FG kvs₁,Z_FG kvs₂) → Z_FG ^$ interWithM f kvs₁ kvs₂
-  (D_FG kvs₁,D_FG kvs₂) → D_FG ^$ interWithM f kvs₁ kvs₂
-  (S_FG kvs₁,S_FG kvs₂) → S_FG ^$ interWithM f kvs₁ kvs₂
+  (B_FG kvs₁,B_FG kvs₂) → B_FG ^$ dinterByM f kvs₁ kvs₂
+  (N_FG kvs₁,N_FG kvs₂) → N_FG ^$ dinterByM f kvs₁ kvs₂
+  (Z_FG kvs₁,Z_FG kvs₂) → Z_FG ^$ dinterByM f kvs₁ kvs₂
+  (D_FG kvs₁,D_FG kvs₂) → D_FG ^$ dinterByM f kvs₁ kvs₂
+  (S_FG kvs₁,S_FG kvs₂) → S_FG ^$ dinterByM f kvs₁ kvs₂
   _ → abort
 
 data FrameData =
@@ -154,8 +154,8 @@ frameProduct fr₁ fr₂ = do
       colt'  ∷ 𝕊 ⇰ FrameType
       colt'  = colt₁' ⩌ colt₂'
   grpt' ∷ 𝕊 ⇰ FrameType
-        ← interWithM (\ τ₁ τ₂ → do guard $ τ₁ ≡ τ₂ ; return τ₁) grpt₁ grpt₂
-  let data' = interWithOn data₁ data₂ $ \ (n₁ :* svss₁) (n₂ :* svss₂) → 
+        ← dinterByM (\ τ₁ τ₂ → do guard $ τ₁ ≡ τ₂ ; return τ₁) grpt₁ grpt₂
+  let data' = dinterByOn data₁ data₂ $ \ (n₁ :* svss₁) (n₂ :* svss₂) → 
         let svss₁'₁ ∷ 𝕊 ⇰ FrameCol
             svss₁'₁ = assoc $ mapOn (iter svss₁) $ mapFst $ flip (⧺) "_L"
             svss₂'₁ ∷ 𝕊 ⇰ FrameCol
@@ -171,7 +171,7 @@ frameProduct fr₁ fr₂ = do
 
             rows = csize svss'₁
 
-            svss'₂ = mapWithKeyOn colt' $ \ s τ → 
+            svss'₂ = kmapOn colt' $ \ s τ → 
               viewΩ someL $ frameColPack τ $ mapOn (iterC svss'₁) $ lupΩ s
         in rows :* svss'₂
   return $ Frame colp' colv' colt' grpt' data'
@@ -179,14 +179,14 @@ frameProduct fr₁ fr₂ = do
 frameGroup ∷ 𝕊 → 𝕊 → Frame → 𝑂 Frame
 frameGroup col s₀ (Frame colp colv colt grpt data') = do
   guard $ col ∈ colp
-  guard $ not $ s₀ ⋵ grpt
+  guard $ not $ s₀ ⋿ grpt
   return $
     let colp' ∷ 𝑃 𝕊
         colp' = colp ∖ single col
         colv' ∷ 𝕍 𝕊
         colv' = vec $ filter (≢ col) colv
         colt' ∷ 𝕊 ⇰ FrameType
-        colt' = without (single col) colt 
+        colt' = dtoss (single col) colt 
         grpt' ∷ 𝕊 ⇰ FrameType
         grpt' = dict [s₀ ↦ colt ⋕! col,grpt]
         data'₁ ∷ (𝕊 ⇰ FrameVal) ⇰ FrameVal ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
@@ -194,7 +194,7 @@ frameGroup col s₀ (Frame colp colv colt grpt data') = do
           let svs ∷ FrameCol
               svs = svss ⋕! col
               svss'₁ ∷ 𝕊 ⇰ FrameCol
-              svss'₁ = without (single col) svss
+              svss'₁ = dtoss (single col) svss
               svss'₂ ∷ FrameVal ⇰ 𝐼C (𝕊 ⇰ FrameVal)
               svss'₂ = concat $ mapOn (upto n) $ \ nᵢ → 
                 let vᵢ   = viewΩ someL $ frameColIndex nᵢ svs
@@ -203,7 +203,7 @@ frameGroup col s₀ (Frame colp colv colt grpt data') = do
               svss'₃ ∷ FrameVal ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
               svss'₃ = mapOn svss'₂ $ \ svssᵢ →
                 let rows = csize svssᵢ
-                    svsᵢ = mapWithKeyOn colt' $ \ s τ → 
+                    svsᵢ = kmapOn colt' $ \ s τ → 
                       viewΩ someL $ frameColPack τ $ mapOn svssᵢ $ lupΩ s
                 in rows :* svsᵢ
           in svss'₃
@@ -217,7 +217,7 @@ frameGroup col s₀ (Frame colp colv colt grpt data') = do
 
 frameUngroup ∷ 𝕊 → 𝕊 → Frame → 𝑂 Frame
 frameUngroup grp s₀ (Frame colp colv colt grpt data') = do
-  guard $ grp ⋵ grpt
+  guard $ grp ⋿ grpt
   guard $ not $ s₀ ∈ colp
   return $
     let colp' ∷ 𝑃 𝕊
@@ -227,11 +227,11 @@ frameUngroup grp s₀ (Frame colp colv colt grpt data') = do
         colt' ∷ 𝕊 ⇰ FrameType
         colt' = dict [s₀ ↦ grpt ⋕! grp,colt]
         grpt' ∷ 𝕊 ⇰ FrameType
-        grpt' = without (single grp) grpt
+        grpt' = dtoss (single grp) grpt
         data'₁ ∷ (𝕊 ⇰ FrameVal) ⇰ ℕ64 ∧ (𝕊 ⇰ 𝐼C FrameVal)
         data'₁ = concat $ mapOn (iter data') $ \ (svs :* (n :* svss)) → 
           let svs' ∷ 𝕊 ⇰ FrameVal
-              svs' = without (single grp) svs 
+              svs' = dtoss (single grp) svs 
               v ∷ FrameVal
               v = svs ⋕! grp
               svss' ∷ 𝕊 ⇰ 𝐼C FrameVal
@@ -244,7 +244,7 @@ frameUngroup grp s₀ (Frame colp colv colt grpt data') = do
         data'₂ ∷ (𝕊 ⇰ FrameVal) ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
         data'₂ = mapOn data'₁ $ \ (n :* svss) → 
           let svss' ∷ 𝕊 ⇰ FrameCol
-              svss' = mapWithKeyOn svss $ \ s vs →
+              svss' = kmapOn svss $ \ s vs →
                 let τ ∷ FrameType
                     τ = colt' ⋕! s
                     vs' ∷ FrameCol
@@ -287,7 +287,7 @@ frameParse s = do
       sss' = vecF (csize sss - 2) $ \ i → sss ⋕! (i + 2)
       rows ∷ ℕ64
       rows = csize sss'
-  typs' ∷ 𝐿 FrameType ← ifNoneM (failIO "bad3") $ mapMOn typs $ flip lup $ dict
+  typs' ∷ 𝐿 FrameType ← ifNoneM (failIO "bad3") $ mapMOn typs $ flip lup $ dict @((⇰) _)
     [ frameTypeCode B_FT ↦ B_FT
     , frameTypeCode N_FT ↦ N_FT
     , frameTypeCode Z_FT ↦ Z_FT
@@ -303,7 +303,7 @@ frameParse s = do
       v ← frameValParse sᵢ t
       return $ key :* v
   let svss' ∷ 𝕊 ⇰ FrameCol
-      svss' = mapWithKeyOn coltyps' $ \ sᵢ τ → 
+      svss' = kmapOn coltyps' $ \ sᵢ τ → 
         viewΩ someL $ frameColPack τ $ mapOn (iterC svss) $ lupΩ sᵢ
   return $ Frame (pow cols) (vec cols) (assoc coltyps) null $ null ↦ (rows :* svss')
 

@@ -25,7 +25,7 @@ makePrettySumLogic cx ty tyargs concontys = do
   let tyargVars ∷ 𝐿 TH.Type
       tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
       instanceCx ∷ 𝐿 TH.Pred
-      instanceCx = list $ uniques $ concat 
+      instanceCx = list $ uniques𝑃 $ concat 
         [ frhs cx
         , map (\ x → TH.ConT ''Pretty ⊙ x) $ concat $ map snd $ concontys
         ]
@@ -61,7 +61,7 @@ makePrettyUnionLogic cx ty tyargs concontys = do
     return (con :* tmpˣˢ)
   let tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
       instanceCx ∷ 𝐿 TH.Pred
-      instanceCx = list $ uniques $ concat [frhs cx,map (\ x → TH.ConT ''Pretty ⊙ x) $ concat $ map snd concontys]
+      instanceCx = list $ uniques𝑃 $ concat [frhs cx,map (\ x → TH.ConT ''Pretty ⊙ x) $ concat $ map snd concontys]
       instanceTy ∷ TH.Type
       instanceTy = TH.ConT ''Pretty ⊙ (TH.ConT ty ⊙⋆ tyargVars)
       instanceDec ∷ TH.Dec
@@ -111,7 +111,7 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
     return (field :* loweredAfterPrefix :* tmpˣ)
   let tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
       instanceCx ∷ 𝐿 TH.Pred
-      instanceCx = list $ uniques $ concat 
+      instanceCx = list $ uniques𝑃 $ concat 
         [ frhs cx
         , map (\ x → TH.ConT ''Pretty ⊙ x) $ map snd fieldfieldtys
         ]

@@ -27,10 +27,11 @@ instance Monad IO
 
 newtype ID a = ID { unID ∷ a }
   deriving 
-  (Null,Append,Monoid
-  ,Bot,Join,JoinLattice
-  ,Top,Meet,MeetLattice
-  ,Lattice,Dual,Difference)
+  ( Null,Append,Monoid
+  , Bot,Join,JoinLattice
+  , Top,Meet,MeetLattice
+  , Lattice,Dual,Difference
+  )
 
 instance Functor ID where 
   map = mmap
@@ -83,15 +84,15 @@ instance (Monad m) ⇒ MonadReader r (ReaderT r m) where
   localL ∷ ∀ r' a. r ⟢ r' → r' → ReaderT r m a → ReaderT r m a
   localL ℓ r' xM = ReaderT $ \ r → unReaderT xM $ update ℓ r' r
 
-instance (∀ a'. Null a' ⇒ Null (m a'),Null a) ⇒ Null (ReaderT r m a) where
+instance (Func Null m,Null a) ⇒ Null (ReaderT r m a) where
   null ∷ ReaderT r m a
   null = ReaderT $ \ _ → null
-instance (∀ a'. Append a' ⇒ Append (m a'),Append a) ⇒ Append (ReaderT r m a) where
+instance (Func Append m,Append a) ⇒ Append (ReaderT r m a) where
   (⧺) ∷ ReaderT r m a → ReaderT r m a → ReaderT r m a
   (⧺) xM₁ xM₂ = ReaderT $ \ r → unReaderT xM₁ r ⧺ unReaderT xM₂ r
 instance 
-  ( ∀ a'. Null a' ⇒ Null (m a')
-  , ∀ a'. Append a' ⇒ Append (m a')
+  ( Func Null m
+  , Func Append m
   , Monoid a
   ) ⇒ Monoid (ReaderT r m a)
 
@@ -136,15 +137,15 @@ instance (Monad m,Null o) ⇒ MonadWriter o (WriterT o m) where
     oa ← unWriterT xM
     return $ null :* oa
 
-instance (∀ a'. Null a' ⇒ Null (m a'),Null o,Null a) ⇒ Null (WriterT o m a) where
+instance (Func Null m,Null o,Null a) ⇒ Null (WriterT o m a) where
   null ∷ WriterT o m a
   null = WriterT null
-instance (∀ a'. Append a' ⇒ Append (m a'),Append o,Append a) ⇒ Append (WriterT o m a) where
+instance (Func Append m,Append o,Append a) ⇒ Append (WriterT o m a) where
   (⧺) ∷ WriterT o m a → WriterT o m a → WriterT o m a
   xM₁ ⧺ xM₂ = WriterT $ unWriterT xM₁ ⧺ unWriterT xM₂
 instance 
-  ( ∀ a'. Null a' ⇒ Null (m a')
-  , ∀ a'. Append a' ⇒ Append (m a')
+  ( Func Null m
+  , Func Append m
   , Monoid o
   , Monoid a
   ) 
@@ -191,15 +192,15 @@ instance (Return m) ⇒ MonadState s (StateT s m) where
   put ∷ s → StateT s m ()
   put s = StateT $ \ _ → return (s :* ())
 
-instance (∀ a'. Null a' ⇒ Null (m a'),Null s,Null a) ⇒ Null (StateT s m a) where
+instance (Func Null m,Null s,Null a) ⇒ Null (StateT s m a) where
   null ∷ StateT s m a
   null = StateT $ \ _ → null
-instance (∀ a'. Append a' ⇒ Append (m a'),Append s,Append a) ⇒ Append (StateT s m a) where
+instance (Func Append m,Append s,Append a) ⇒ Append (StateT s m a) where
   (⧺) ∷ StateT s m a → StateT s m a → StateT s m a
   xM₁ ⧺ xM₂ = StateT $ \ s → unStateT xM₁ s ⧺ unStateT xM₂ s
 instance 
-  ( ∀ a'. Null a' ⇒ Null (m a')
-  , ∀ a'. Append a' ⇒ Append (m a')
+  ( Func Null m
+  , Func Append m
   , Monoid s,Monoid a
   ) 
   ⇒ Monoid (StateT s m a)
@@ -256,15 +257,15 @@ instance (Monad m) ⇒ MonadFail (FailT m) where
       None → unFailT xM₂
       Some x → return $ Some x
 
-instance (∀ a'. Null a' ⇒ Null (m a'),Null a) ⇒ Null (FailT m a) where
+instance (Func Null m,Null a) ⇒ Null (FailT m a) where
   null ∷ FailT m a
   null = FailT null
-instance (∀ a'. Append a' ⇒ Append (m a'),Append a) ⇒ Append (FailT m a) where
+instance (Func Append m,Append a) ⇒ Append (FailT m a) where
   (⧺) ∷ FailT m a → FailT m a → FailT m a
   xM₁ ⧺ xM₂ = FailT $ unFailT xM₁ ⧺ unFailT xM₂
 instance 
-  ( ∀ a'. Null a' ⇒ Null (m a')
-  , ∀ a'. Append a' ⇒ Append (m a')
+  ( Func Null m
+  , Func Append m
   , Monoid a
   ) 
   ⇒ Monoid (FailT m a)
@@ -310,15 +311,15 @@ instance (Monad m) ⇒ MonadError e (ErrorT e m) where
       Inl e → unErrorT $ k e
       Inr x → return $ Inr x
 
-instance (∀ a'. Null a' ⇒ Null (m a'),Null a) ⇒ Null (ErrorT e m a) where
+instance (Func Null m,Null a) ⇒ Null (ErrorT e m a) where
   null ∷ ErrorT e m a
   null = ErrorT null
-instance (∀ a'. Append a' ⇒ Append (m a'),Append e,Append a) ⇒ Append (ErrorT e m a) where
+instance (Func Append m,Append e,Append a) ⇒ Append (ErrorT e m a) where
   (⧺) ∷ ErrorT e m a → ErrorT e m a → ErrorT e m a
   xM₁ ⧺ xM₂ = ErrorT $ unErrorT xM₁ ⧺ unErrorT xM₂
 instance 
-  ( ∀ a'. Null a' ⇒ Null (m a')
-  , ∀ a'. Append a' ⇒ Append (m a')
+  ( Func Null m
+  , Func Append m
   , Append e,Monoid a
   )
   ⇒ Monoid (ErrorT e m a)
@@ -348,11 +349,11 @@ instance Functor2 DelayT where
 instance MonadDelay (DelayT m) where
   delay xMU = DelayT $ \ () → runDelayT $ xMU ()
 
-instance (∀ a'. Null (m a')) ⇒ Null (DelayT m a) where 
+instance (Const Null m) ⇒ Null (DelayT m a) where 
   null = DelayT $ \ () → null
-instance (∀ a'. Append (m a')) ⇒ Append (DelayT m a) where 
+instance (Const Append m) ⇒ Append (DelayT m a) where 
   xM₁ ⧺ xM₂ = DelayT $ \ () → runDelayT xM₁ ⧺ runDelayT xM₂
-instance (∀ a'. Null (m a'),∀ a'. Append (m a')) ⇒ Monoid (DelayT m a)
+instance (Const Null m,Const Append m) ⇒ Monoid (DelayT m a)
 
 instance Transformer DelayT where lift xM = DelayT $ \ () → xM
 
@@ -369,14 +370,14 @@ instance (Functor m) ⇒ Functor (NondetT m) where
 instance (Return m) ⇒ Return (NondetT m) where
   return ∷ ∀ a. a → NondetT m a
   return x = NondetT $ return $ single x
-instance (Bind m,∀ a'. Monoid a' ⇒ Monoid (m a')) ⇒ Bind (NondetT m) where
+instance (Bind m,Func Monoid m) ⇒ Bind (NondetT m) where 
   (≫=) ∷ ∀ a b. NondetT m a → (a → NondetT m b) → NondetT m b
   xM ≫= k = NondetT $ do
     xs ← unNondetT xM
     unNondetT $ foldr mzero (⊞) $ map k $ iter xs
-instance (Monad m,∀ a'. Monoid a' ⇒ Monoid (m a')) ⇒ Monad (NondetT m)
+instance (Monad m,Func Monoid m) ⇒ Monad (NondetT m)
 
-instance (∀ a'. Monoid a' ⇒ Monoid (m a')) ⇒ MonadNondet (NondetT m) where
+instance (Func Monoid m) ⇒ MonadNondet (NondetT m) where
   mzero ∷ ∀ a. NondetT m a
   mzero = NondetT $ null
 
@@ -429,15 +430,15 @@ instance (Monad m) ⇒ MonadCont u (ContT u m) where
     k₂ *$ unContT xM $ \ (x ∷ a) → 
       runContT return $ k₁ x
 
-instance (∀ a'. Null a' ⇒ Null (m a'),Null u) ⇒ Null (ContT u m a) where
+instance (Func Null m,Null u) ⇒ Null (ContT u m a) where
   null ∷ ContT u m a
   null = ContT $ \ (_ ∷ a → m r) → null
-instance (∀ a'. Append a' ⇒ Append (m a'),Append u) ⇒ Append (ContT u m a) where
+instance (Func Append m,Append u) ⇒ Append (ContT u m a) where
   (⧺) ∷ ContT u m a → ContT u m a → ContT u m a
   xM₁ ⧺ xM₂ = ContT $ \ (k ∷ a → m r) → unContT xM₁ k ⧺ unContT xM₂ k
 instance 
-  ( ∀ a'. Null a' ⇒ Null (m a')
-  , ∀ a'. Append a' ⇒ Append (m a')
+  ( Func Null m
+  , Func Append m
   , Monoid u
   ) 
   ⇒ Monoid (ContT u m a)
@@ -488,14 +489,14 @@ instance (Monad m) ⇒ MonadUCont (UContT m) where
     𝓀 *$ unUContT xM $ \ (x ∷ a) → 
       evalUContT $ f x
 
-instance (∀ a'. Null (m a')) ⇒ Null (UContT m a) where
+instance (Const Null m) ⇒ Null (UContT m a) where
   null ∷ UContT m a
   null = UContT HS.$ \ (_ ∷ a → m u) → null
-instance (∀ a'. Append (m a')) ⇒ Append (UContT m a) where
+instance (Const Append m) ⇒ Append (UContT m a) where
   (⧺) ∷ UContT m a → UContT m a → UContT m a
   xM₁ ⧺ xM₂ = UContT HS.$ \ (𝓀 ∷ a → m u) → unUContT xM₁ 𝓀 ⧺ unUContT xM₂ 𝓀
 instance 
-  ( ∀ a'. Monoid (m a')
+  ( Const Monoid m
   ) ⇒ Monoid (UContT m a)
 
 instance Transformer UContT where
@@ -1169,7 +1170,7 @@ instance LiftTop NondetT where
 instance (Monad m,MonadTop m) ⇒ MonadTop (NondetT m) where
   mtop = liftMtop mtop
 
-instance (Monad m,∀ a'. Monoid a' ⇒ Monoid (m a'),MonadCont (𝑄 r) m) ⇒ MonadCont r (NondetT m) where
+instance (Monad m,Func Monoid m,MonadCont (𝑄 r) m) ⇒ MonadCont r (NondetT m) where
   callCC ∷ ∀ a. ((a → NondetT m r) → NondetT m r) → NondetT m a
   callCC kk = NondetT $
     callCC $ \ (k ∷ 𝑄 a → m (𝑄 r)) →
@@ -1376,11 +1377,11 @@ instance (RWST r o s) ⇄⁼ (ReaderT r ⊡ WriterT o ⊡ StateT s) where
 instance (Monoid o) ⇒ Transformer (RWST r o s) where
   lift = RWST ∘ lift ∘ lift ∘ lift
 
-deriving instance (∀ a'. Null a' ⇒ Null (m a'),Null o,Null s,Null a) ⇒ Null (RWST r o s m a)
-deriving instance (∀ a'. Append a' ⇒ Append (m a'),Append o,Append s,Append a) ⇒ Append (RWST r o s m a)
+deriving instance (Func Null m,Null o,Null s,Null a) ⇒ Null (RWST r o s m a)
+deriving instance (Func Append m,Append o,Append s,Append a) ⇒ Append (RWST r o s m a)
 deriving instance 
-  ( ∀ a'. Null a' ⇒ Null (m a')
-  , ∀ a'. Append a' ⇒ Append (m a')
+  ( Func Null m
+  , Func Append m
   , Monoid o,Monoid s,Monoid a
   ) 
   ⇒ Monoid (RWST r o s m a)

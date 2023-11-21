@@ -50,7 +50,7 @@ vecF ∷ ℕ64 → (ℕ64 → a) → 𝕍 a
 vecF n f = vecC $ map f $ uptoC n
 
 vecDΩ ∷ ℕ64 ⇰ a → 𝕍 a
-vecDΩ d = case dmaxKey d of
+vecDΩ d = case dmaxKey𝐷 d of
   None → vec empty𝐼
   Some k → vecF (k + one) $ \ n → d ⋕! n
 
@@ -215,7 +215,7 @@ uvecF ∷ (Storable a) ⇒ ℕ64 → (ℕ64 → a) → 𝕌 a
 uvecF n f = uvec $ map f $ upto n
 
 uvecDΩ ∷ (Storable a) ⇒ ℕ64 ⇰ a → 𝕌 a
-uvecDΩ d = case dmaxKey d of
+uvecDΩ d = case dmaxKey𝐷 d of
   None → uvec empty𝐼
   Some k → uvecF (k + one) $ \ n → d ⋕! n
 

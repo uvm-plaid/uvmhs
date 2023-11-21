@@ -100,7 +100,7 @@ sumsMMSPL =
 
 prodsMMSPL ∷ MMSP ⌲ MMSPProds
 prodsMMSPL = 
-  let mk δ̇ = MMSPSums zero $ δ̇ ↦ one
+  let mk δ̇ = MMSPSums zero $ δ̇ ↦♭ one
       vw = \case
         MMSPSums c γ | c ≡ zero,Some (δ̇ :* d) ← view single𝐷L γ,d ≡ one → Some δ̇
         _ → None
@@ -108,7 +108,7 @@ prodsMMSPL =
 
 atomMMSPL ∷ MMSP ⌲ MMSPAtom
 atomMMSPL =
-  let mk ω = MMSPProds $ ω ↦ one
+  let mk ω = MMSPProds $ ω ↦♭ one
       vw = \case
         MMSPProds δ | Some (ω :* e) ← view single𝐷L δ,e ≡ one → Some ω
         _ → None
@@ -487,7 +487,7 @@ plusSumsProds ∷ MMSPProds ⇰ ℕ → MMSPProds ⇰ ℕ → MMSPProds ⇰ ℕ
 --         ≜ ∑( { d×̇δ | d×̇δ ∈ γ₁ , δ ∉ dom(γ₂) }
 --            ∪ { d×̇δ | d×̇δ ∈ γ₂ , δ ∉ dom(γ₁) }
 --            ∪ { (d₁+d₂)×̇δ | d₁×̇δ ∈ γ₁ , d₂×̇δ ∈ γ₂ } )
-plusSumsProds γ₁ γ₂ = γ₁ ⊎ γ₂
+plusSumsProds γ₁ γ₂ = γ₁ + γ₂
 
 -- ┌─────┐
 -- │d ×̃ γ│
@@ -546,4 +546,4 @@ timesProds ∷ MMSPProds → MMSPProds → MMSPProds
 --         ≜ ∏( { ω^̇e | ω^̇e ∈ δ₁ , ω ∉ dom(δ₂) }
 --            ∪ { ω^̇e | ω^̇e ∈ δ₂ , ω ∉ dom(δ₁) }
 --            ∪ { ω^̇(e₁+e₂) | ω^̇e₁ ∈ δ₁ , ω^̇e₂ ∈ δ₂ } )
-timesProds (MMSPProds δ₁) (MMSPProds δ₂) = MMSPProds $ δ₁ ⊎ δ₂
+timesProds (MMSPProds δ₁) (MMSPProds δ₂) = MMSPProds $ δ₁ + δ₂

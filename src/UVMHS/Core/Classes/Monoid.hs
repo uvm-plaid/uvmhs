@@ -2,7 +2,7 @@ module UVMHS.Core.Classes.Monoid where
 
 import UVMHS.Core.Init
 
-import UVMHS.Core.Classes.Monad
+import UVMHS.Core.Classes.Functors
 
 infixl 5 ⧺
 infixl 6 ⨳

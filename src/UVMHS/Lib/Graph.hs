@@ -6,7 +6,7 @@ type Graph a = a ⇰ 𝑃 a
 
 graphTranspose ∷ ∀ a. (Ord a) ⇒ Graph a → Graph a
 graphTranspose kvs = joins
-  [ dict $ mapOn (iter $ keys kvs) $ \ k → k ↦ pø
+  [ dict $ mapOn (iter $ dkeys kvs) $ \ k → k ↦ pø
   , joins $ mapOn (iter kvs) $ \ (k :* vs) → 
       dict $ mapOn (iter vs) $ \ v → v ↦ single k
   ]
@@ -29,7 +29,7 @@ kosaraju g =
 
       assign ∷ a → a → a ⇰ a → a ⇰ a
       assign u anchor sccs =
-        if u ⋵ sccs
+        if u ⋿ sccs
         then sccs
         else
           let sccs' = (u ↦ anchor) ⩌ sccs
@@ -42,7 +42,7 @@ kosaraju g =
       stack₀ = Nil
       sccs₀ = dø
 
-      stackᵣ = snd $ foldOnFrom (keys g) (visited₀ :* stack₀) $ \ u (visitedᵢ :* stackᵢ) →
+      stackᵣ = snd $ foldOnFrom (dkeys g) (visited₀ :* stack₀) $ \ u (visitedᵢ :* stackᵢ) →
         visit u visitedᵢ stackᵢ
 
       sccsᵣ = foldOnFrom stackᵣ sccs₀ $ \ u sccsᵢ → assign u u sccsᵢ

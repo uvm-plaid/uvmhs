@@ -20,7 +20,7 @@ onCParser ∷ (Parser t a → Parser t a) → CParser t a → CParser t a
 onCParser f (CParser n b) = CParser (map (onCParser f) n) $ f b
 
 toCParser ∷ Parser t a → CParser t a
-toCParser p = CParser dø p
+toCParser p = CParser dø𝐷 p
 
 frCParser ∷ (Ord t) ⇒ CParser t a → Parser t a
 frCParser (CParser n b) 
@@ -57,7 +57,7 @@ instance Null (CParser t a) where
   null = toCParser abort
 instance (Ord t) ⇒ Append (CParser t a) where
   (⧺) ∷ CParser t a → CParser t a → CParser t a
-  CParser n₁ b₁ ⧺ CParser n₂ b₂ = CParser (unionWith (⧺) n₁ n₂) (b₁ ⎅ b₂)
+  CParser n₁ b₁ ⧺ CParser n₂ b₂ = CParser (dunionBy (⧺) n₁ n₂) (b₁ ⎅ b₂)
 instance (Ord t) ⇒ Monoid (CParser t a)
 
 instance Eps (CParser t ()) where

@@ -6,6 +6,12 @@ infixl 7 ⋕?,⋕,⋕!
 
 class All a where all ∷ 𝐼 a
 
+-- aggregate size = sum of sizes of each element
+class ASized a where asize ∷ a → ℕ64
+
+-- count size = number of elements
+class CSized a where csize ∷ a → ℕ64
+
 class Single a t | t → a where single ∷ a → t
 class Lookup k v t | t → k,t → v where (⋕?) ∷ t → k → 𝑂 v
 class Access k v t | t → k,t → v where (⋕) ∷ t → k → v
@@ -22,3 +28,4 @@ kvs ⋕! k = case kvs ⋕? k of
 
 lupΩ ∷ (Lookup k v t) ⇒ k → t → v
 lupΩ = flip (⋕!)
+

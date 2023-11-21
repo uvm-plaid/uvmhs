@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.35.0.
+-- This file has been generated from package.yaml by hpack version 0.35.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -28,10 +28,8 @@ library
       UVMHS.Core.Classes.Comonad
       UVMHS.Core.Classes.Constraints
       UVMHS.Core.Classes.DSL
-      UVMHS.Core.Classes.Functor
-      UVMHS.Core.Classes.FunctorM
+      UVMHS.Core.Classes.Functors
       UVMHS.Core.Classes.Lattice
-      UVMHS.Core.Classes.Monad
       UVMHS.Core.Classes.Monoid
       UVMHS.Core.Classes.Morphism
       UVMHS.Core.Classes.Order
@@ -125,6 +123,8 @@ library
       src
   default-extensions:
       ConstraintKinds
+      CPP
+      DefaultSignatures
       DataKinds
       DeriveLift
       EmptyCase
@@ -134,6 +134,7 @@ library
       FunctionalDependencies
       GADTs
       GeneralizedNewtypeDeriving
+      ImpredicativeTypes
       InstanceSigs
       KindSignatures
       LambdaCase
@@ -191,6 +192,8 @@ executable uvmhs
       main
   default-extensions:
       ConstraintKinds
+      CPP
+      DefaultSignatures
       DataKinds
       DeriveLift
       EmptyCase
@@ -200,6 +203,7 @@ executable uvmhs
       FunctionalDependencies
       GADTs
       GeneralizedNewtypeDeriving
+      ImpredicativeTypes
       InstanceSigs
       KindSignatures
       LambdaCase

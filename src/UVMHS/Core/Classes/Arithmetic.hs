@@ -3,7 +3,7 @@ module UVMHS.Core.Classes.Arithmetic where
 import UVMHS.Core.Init
 
 import UVMHS.Core.Classes.Order
-import UVMHS.Core.Classes.Functor
+import UVMHS.Core.Classes.Functors
 
 infixl 5 +,-
 infixl 6 ×,⨵,/,⌿,÷
@@ -44,6 +44,9 @@ neg x = zero - x
 
 (⨵) ∷ (Functor f,Multiplicative a) ⇒ a → f a → f a
 x ⨵ xs = map (x ×) xs
+
+(⨴ ) ∷ (Functor f,Multiplicative a) ⇒ f a → a → f a
+xs ⨴ x = map (× x) xs
 
 class ToNat   a where nat   ∷ a → ℕ
 class ToNat64 a where nat64 ∷ a → ℕ64

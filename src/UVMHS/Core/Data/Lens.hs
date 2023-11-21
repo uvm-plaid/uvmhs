@@ -4,9 +4,9 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.Choice
-import UVMHS.Core.Data.Dict
 import UVMHS.Core.Data.Iter
 import UVMHS.Core.Data.Option
+import UVMHS.Core.Data.Dict
 import UVMHS.Core.Data.Pair
 import UVMHS.Core.Data.Sequence
 import UVMHS.Core.Data.Set
@@ -104,7 +104,7 @@ consL ∷ 𝐿 a ⌲ (a ∧ 𝐿 a)
 consL = Prism (curry (:&)) $ \case { x:&xs → Some (x:*xs) ; _ → None}
 
 single𝑃L ∷ (Ord a) ⇒ 𝑃 a ⌲ a
-single𝑃L = prism single𝑃 $ \ xs → case pmin xs of
+single𝑃L = prism single𝑃 $ \ xs → case pminView𝑃 xs of
   Some (x :* xs') | isEmpty xs' → Some x
   _ → None
 
@@ -114,14 +114,14 @@ single𝑄L = prism single𝑄 $ \ xs → case uncons𝑄 xs of
   _ → None
 
 single𝐷L ∷ (Ord k) ⇒ (k ⇰ v) ⌲ (k ∧ v)
-single𝐷L = prism (curry (↦)) $ \ kvs → case dminView kvs of
+single𝐷L = prism (curry (↦♭)) $ \ kvs → case dminView𝐷 kvs of
   Some (kv :* kvs') | isEmpty kvs' → Some kv
   _ → None
 
 keyL ∷ (Ord k) ⇒ k → (k ⇰ v) ⟢ 𝑂 v
 keyL k = lens (⋕? k) $ flip $ \case
-  None → delete k
-  Some v → ((k ↦ v) ⩌)
+  None → drem𝐷 k
+  Some v → ((k ↦♭ v) ⩌♭)
 
 keyL𝑂 ∷ (Ord k,Null v) ⇒ k → (k ⇰ v) ⟢ v
 keyL𝑂 k =

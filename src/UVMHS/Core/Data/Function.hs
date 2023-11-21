@@ -24,9 +24,6 @@ instance (Ord a) ⇒ Ord (() → a) where
 instance (Show a) ⇒ Show (() → a) where
   show = show ∘ appto ()
 
-appto ∷ a → (a → b) → b
-appto x f = f x
-
 pipe ∷ (a → b) → (b → c) → a → c
 pipe = flip (∘)
 

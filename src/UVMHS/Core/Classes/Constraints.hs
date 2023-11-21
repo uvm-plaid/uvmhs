@@ -16,3 +16,13 @@ class (t (u a)) ⇒ (t :∘: u) a
 instance (t (u a)) ⇒ (t :∘: u) a
 
 class (:⇒:) c₁ c₂ where impl ∷ W c₁ → W c₂
+
+type FCoercibleRel t t' = (∀ x x'. (Coercible x x') ⇒ Coercible (t x) (t' x')) ∷ Constraint
+type FCoercible t = FCoercibleRel t t
+
+fcoercibleW_UNSAFE ∷ W (FCoercible m)
+fcoercibleW_UNSAFE = coerce_UNSAFE (W ∷ W (FCoercible 𝑂))
+
+type Func (c ∷ ★ → Constraint) (t ∷ ★ → ★) = (∀ x. (c x) ⇒ c (t x)) ∷ Constraint
+type Const (c ∷ ★ → Constraint) (t ∷ ★ → ★) = (∀ x. c (t x)) ∷ Constraint
+

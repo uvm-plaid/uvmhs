@@ -8,7 +8,6 @@ import UVMHS.Core.Data.List ()
 import UVMHS.Core.Data.String
 import UVMHS.Core.Data.Pair
 import UVMHS.Core.Data.Stream
-import UVMHS.Core.Data.Function
 
 import qualified Prelude as HS
 import qualified Data.List as HS

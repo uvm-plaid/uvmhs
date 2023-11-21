@@ -15,6 +15,7 @@ import Prelude
   )
 import Data.Coerce 
   ( coerce
+  , Coercible
   )
 import GHC.Exts 
   ( type Constraint
@@ -354,6 +355,9 @@ f $ x = f x
 
 id ∷ a → a
 id = \ x → x
+
+appto ∷ a → (a → b) → b
+appto = \ x f → f x
 
 const ∷ a → b → a
 const x = \ _ → x
