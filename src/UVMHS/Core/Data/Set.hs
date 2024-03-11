@@ -254,19 +254,18 @@ instance (Ord a)          ⇒ Difference  (𝑃 a) where (⊟)    = diff𝑃
 instance (Ord a,All a)    ⇒ All         (𝑃 a) where all    = all𝑃
 
 instance (Ord e) ⇒ Set e (𝑃 e) where
-  pø = pø𝑃
-  psingle = psingle𝑃
-  padd = padd𝑃
-  prem = prem𝑃
-  (∈) = (∈♭) 
-  (⊆) = (⊆♭)
-  (∪) = (∪♭)
-  (∩) = (∩♭)
-  (∖) = (∖♭)
+  pø       = pø𝑃
+  psingle  = psingle𝑃
+  padd     = padd𝑃
+  prem     = prem𝑃
+  (∈)      = (∈♭) 
+  (⊆)      = (⊆♭)
+  (∪)      = (∪♭)
+  (∩)      = (∩♭)
+  (∖)      = (∖♭)
   pminView = pminView𝑃
   pmaxView = pmaxView𝑃
   pminElem = pminElem𝑃
   pmaxElem = pmaxElem𝑃
-  pow𝐼 = pow𝐼𝑃
-  pvals = pvals𝑃
-
+  pow𝐼     = pow𝐼𝑃
+  pvals    = pvals𝑃

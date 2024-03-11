@@ -481,30 +481,111 @@ instance (Ord k,Difference a)                ⇒ Difference     (k ⇰ a) where 
 instance (Ord k,All k,All a)                 ⇒ All            (k ⇰ a) where all      = all𝐷
 
 instance (Ord k) ⇒ Dict k (𝑃 k) ((⇰) k) where
-    dø = dø𝐷
-    (↦) = (↦♭)
-    dadd = dadd𝐷
-    drem = drem𝐷
-    dupd = dupd𝐷
-    dlteBy = dlteBy𝐷
+    dø       = dø𝐷
+    (↦)      = (↦♭)
+    dadd     = dadd𝐷
+    drem     = drem𝐷
+    dupd     = dupd𝐷
+    dlteBy   = dlteBy𝐷
     dunionBy = dunionBy𝐷
     dinterBy = dinterBy𝐷
     dsdiffBy = dsdiffBy𝐷
-    (⋿) = (⋿♭)
-    (⫑) = (⫑♭)
-    (⩌) = (⩌♭)
-    (⩍) = (⩍♭)
-    (⧅) = (⧅♭)
+    (⋿)      = (⋿♭)
+    (⫑)      = (⫑♭)
+    (⩌)      = (⩌♭)
+    (⩍)      = (⩍♭)
+    (⧅)      = (⧅♭)
     dminView = dminView𝐷
     dmaxView = dmaxView𝐷
     dkeyView = dkeyView𝐷
     dminElem = dminElem𝐷
     dmaxElem = dmaxElem𝐷
-    dkeep = dkeep𝐷
-    dtoss = dtoss𝐷
-    dict𝐼 = dict𝐼𝐷
-    dkeys = dkeys𝐷
-    dvals = dvals𝐷
+    dkeep    = dkeep𝐷
+    dtoss    = dtoss𝐷
+    dict𝐼    = dict𝐼𝐷
+    dkeys    = dkeys𝐷
+    dvals    = dvals𝐷
+
+---------------------
+-- ESD ABSTRACTION --
+---------------------
+
+data family Elem ∷ ★ → ★
+data family ESet ∷ ★ → ★
+data family EDct ∷ ★ → ★ → ★
+
+class
+  ( Set (Elem p) (ESet p)
+  , Dict (Elem p) (ESet p) (EDct p)
+  ) ⇒ ESD p
+
+data StdESD (x ∷ ★)
+
+newtype instance Elem (StdESD a) = StdESDElm { unStdESDElm ∷ a }
+  deriving (Eq,Ord)
+newtype instance ESet (StdESD e) = StdESDSet { unStdESDSet ∷ 𝑃 e }
+  deriving 
+  ( CSized,Eq,Ord
+  , Null,Append,Monoid
+  , POrd
+  , Bot,Join,JoinLattice,Meet,Difference
+  )
+newtype instance EDct (StdESD k) a = StdESDDct { unStdESDDct ∷ k ⇰ a }
+  deriving 
+  ( Eq,Ord
+  , Null,Append,Monoid
+  , Bot,Join,JoinLattice
+  -- , Single (Elem (StdESD k) ∧ a)
+  -- , ToIter (Elem (StdESD k) ∧ a)
+  -- , Lookup (Elem (StdESD k)) a
+  , Functor
+  )
+
+instance (Ord e) ⇒ ToIter (Elem (StdESD e)) (ESet (StdESD e)) where
+  iter ∷ ESet (StdESD e) → 𝐼 (Elem (StdESD e))
+  iter = coerce @(𝑃 e → 𝐼 e) iter
+instance (Ord e) ⇒ Single (Elem (StdESD e)) (ESet (StdESD e)) where
+  single = coerce @(e → 𝑃 e) single
+instance (Ord e) ⇒ Set (Elem (StdESD e)) (ESet (StdESD e)) where
+  pø       = coerce @(𝑃 e)               pø
+  psingle  = coerce @(e → 𝑃 e)           single
+  padd     = coerce @(e → 𝑃 e → 𝑃 e)     padd
+  prem     = coerce @(e → 𝑃 e → 𝑃 e)     prem
+  (∈)      = coerce @(e → 𝑃 e → 𝔹)       (∈)
+  (⊆)      = coerce @(𝑃 e → 𝑃 e → 𝔹)     (⊆)
+  (∪)      = coerce @(𝑃 e → 𝑃 e → 𝑃 e)   (∪)
+  (∩)      = coerce @(𝑃 e → 𝑃 e → 𝑃 e)   (∩)
+  (∖)      = coerce @(𝑃 e → 𝑃 e → 𝑃 e)   (∖)
+  pminView = coerce @(𝑃 e → 𝑂 (e ∧ 𝑃 e)) pminView
+  pmaxView = coerce @(𝑃 e → 𝑂 (e ∧ 𝑃 e)) pmaxView
+  pminElem = coerce @(𝑃 e → 𝑂 e)         pminElem
+  pmaxElem = coerce @(𝑃 e → 𝑂 e)         pmaxElem
+  pow𝐼     = coerce @(𝐼 e → 𝑃 e)         pow𝐼
+  pvals    = coerce @(𝑃 e → 𝐼 e)         pvals
+
+instance (Ord k) ⇒ FunctorM (EDct (StdESD k)) where
+  mapM ∷ ∀ m a b. (Monad m) ⇒ (a → m b) → EDct (StdESD k) a → m (EDct (StdESD k) b)
+  mapM = with (fcoercibleW_UNSAFE @m) HS.$ coerce @((a → m b) → k ⇰ a → m (k ⇰ b)) mapM
+instance (Ord k) ⇒ Single (Elem (StdESD k) ∧ a) (EDct (StdESD k) a) where
+  single = coerce @((k ∧ a) → k ⇰ a) single
+
+-- instance ToIter (Elem (StdESD k) ∧ a) (EDct (StdESD k) a) where
+--   iter = coerce @(𝐼 (k ∧ a)) @(𝐼 (Elem (StdESD k) ∧ a)) ∘ iter ∘ coerce @(EDct (StdESD k) a) @(k ⇰ a)
+-- instance (Ord k) ⇒ Lookup (Elem (StdESD k)) a (EDct (StdESD k) a) where
+--   kvs ⋕? k = coerce @(EDct (StdESD k) a) @(k ⇰ a) kvs ⋕? coerce @(Elem (StdESD k)) @k k
+-- instance (Ord k,Show k) ⇒ GDict (Elem (StdESD k)) (ESet (StdESD k)) (EDct (StdESD k)) where
+--   (⩌♯) ∷ ∀ a. EDct (StdESD k) a → EDct (StdESD k) a → EDct (StdESD k) a
+--   (⩌♯) = coerce @(k ⇰ a → k ⇰ a → k ⇰ a) (⩌)
+--   gkeys ∷ ∀ a. EDct (StdESD k) a → ESet (StdESD k)
+--   gkeys = coerce @(k ⇰ a → 𝑃 k) keys
+--   gkeep ∷ ∀ a. ESet (StdESD k) → EDct (StdESD k) a → EDct (StdESD k) a
+--   gkeep = coerce @(𝑃 k → k ⇰ a → k ⇰ a) restrict
+--   gtoss ∷ ∀ a. ESet (StdESD k) → EDct (StdESD k) a → EDct (StdESD k) a
+--   gtoss = coerce @(𝑃 k → k ⇰ a → k ⇰ a) without
+--   gmapWithKeyM ∷ ∀ m a b. (Monad m,FCoercibleRefl m) ⇒ (Elem (StdESD k) → a → m b) → EDct (StdESD k) a → m (EDct (StdESD k) b)
+--   gmapWithKeyM = coerce @((k → a → m b) → k ⇰ a → m (k ⇰ b)) mapMWithKey
+--   gbimapWithKeyM ∷ ∀ m a b c. (Monad m,FCoercibleRefl m) ⇒ (k → a → m c) → (k → b → m c) → (Elem (StdESD k) → a → b → m c) → EDct (StdESD k) a → EDct (StdESD k) b → m (EDct (StdESD k) c)
+--   gbimapWithKeyM = coerce @((k → a → m c) → (k → b → m c) → (k → a → b → m c) → k ⇰ a → k ⇰ b → m (k ⇰ c)) bimapWithKeyM
 
 
 
