@@ -245,8 +245,8 @@ encodeRecord :: ToRecord a => a -> Builder a
 -- | A builder for building the CSV data incrementally. Just like the
 --   <tt>ByteString</tt> builder, this builder should be used in a
 --   right-associative, <a>foldr</a> style. Using <a>&lt;&gt;</a> to
---   compose builders in a left-associative, <a>foldl</a>` style makes the
---   building not be incremental.
+--   compose builders in a left-associative, <tt>foldl'</tt> style makes
+--   the building not be incremental.
 data Builder a
 
 -- | Efficiently serialize named records in an incremental fashion,
@@ -273,8 +273,8 @@ encodeNamedRecord :: ToNamedRecord a => a -> NamedBuilder a
 -- | A builder for building the CSV data incrementally. Just like the
 --   <tt>ByteString</tt> builder, this builder should be used in a
 --   right-associative, <a>foldr</a> style. Using <a>&lt;&gt;</a> to
---   compose builders in a left-associative, <a>foldl</a>` style makes the
---   building not be incremental.
+--   compose builders in a left-associative, <tt>foldl'</tt> style makes
+--   the building not be incremental.
 data NamedBuilder a
 instance GHC.Base.Functor Data.Csv.Incremental.HeaderParser
 instance GHC.Base.Functor Data.Csv.Incremental.Parser
@@ -681,7 +681,7 @@ record :: [ByteString] -> Record
 --   xs &lt;- decodeSomething
 --   forM_ xs $ \(<a>Only</a> id) -&gt; {- ... -}
 --   </pre>
-newtype Only a
+newtype () => Only a
 Only :: a -> Only a
 [fromOnly] :: Only a -> a
 

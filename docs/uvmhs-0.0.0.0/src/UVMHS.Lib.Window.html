@@ -8,21 +8,34 @@
 </span><span id="line-8"></span><span class="hs-comment">-- WindowL --</span><span>
 </span><span id="line-9"></span><span class="hs-comment">-------------</span><span>
 </span><span id="line-10"></span><span>
-</span><span id="line-11"></span><span class="hs-keyword">data</span><span> </span><span id="WindowL"><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-var">WindowL</span></a></span></span><span> </span><span id="local-6989586621680523177"><span class="annot"><a href="#local-6989586621680523177"><span class="hs-identifier hs-type">i</span></a></span></span><span> </span><span id="local-6989586621680523178"><span class="annot"><a href="#local-6989586621680523178"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-12"></span><span>    </span><span id="ZerWindowL"><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-var">ZerWindowL</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621680523178"><span class="hs-identifier hs-type">a</span></a></span><span>
-</span><span id="line-13"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="OneWindowL"><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-var">OneWindowL</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523178"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523177"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523178"><span class="hs-identifier hs-type">a</span></a></span><span>
-</span><span id="line-14"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680523013"><span id="local-6989586621680523021"><span class="annot"><span class="annottext">WindowL i a -&gt; WindowL i a -&gt; Bool
+</span><span id="line-11"></span><span class="hs-keyword">data</span><span> </span><span id="WindowL"><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-var">WindowL</span></a></span></span><span> </span><span id="local-6989586621680552697"><span class="annot"><a href="#local-6989586621680552697"><span class="hs-identifier hs-type">i</span></a></span></span><span> </span><span id="local-6989586621680552696"><span class="annot"><a href="#local-6989586621680552696"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-12"></span><span>    </span><span id="ZerWindowL"><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-var">ZerWindowL</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621680552696"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-13"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="OneWindowL"><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-var">OneWindowL</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552696"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552697"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552696"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-14"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680552831"><span id="local-6989586621680552839"><span class="annot"><span class="annottext">WindowL i a -&gt; WindowL i a -&gt; Bool
+(WindowL i a -&gt; WindowL i a -&gt; Bool)
+-&gt; (WindowL i a -&gt; WindowL i a -&gt; Bool) -&gt; Eq (WindowL i a)
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
-forall i a. (Eq a, Eq i) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
-/= :: WindowL i a -&gt; WindowL i a -&gt; Bool
-$c/= :: forall i a. (Eq a, Eq i) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
+forall i a. (Eq i, Eq a) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
+$c== :: forall i a. (Eq i, Eq a) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
 == :: WindowL i a -&gt; WindowL i a -&gt; Bool
-$c== :: forall i a. (Eq a, Eq i) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680522982"><span id="local-6989586621680522984"><span id="local-6989586621680522987"><span id="local-6989586621680522990"><span id="local-6989586621680522993"><span id="local-6989586621680523000"><span id="local-6989586621680523008"><span class="annot"><span class="annottext">WindowL i a -&gt; WindowL i a -&gt; Bool
+$c/= :: forall i a. (Eq i, Eq a) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
+/= :: WindowL i a -&gt; WindowL i a -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680552850"><span id="local-6989586621680552858"><span id="local-6989586621680552865"><span id="local-6989586621680552869"><span id="local-6989586621680552872"><span id="local-6989586621680552875"><span id="local-6989586621680552878"><span class="annot"><span class="annottext">Eq (WindowL i a)
+Eq (WindowL i a) =&gt;
+(WindowL i a -&gt; WindowL i a -&gt; Ordering)
+-&gt; (WindowL i a -&gt; WindowL i a -&gt; Bool)
+-&gt; (WindowL i a -&gt; WindowL i a -&gt; Bool)
+-&gt; (WindowL i a -&gt; WindowL i a -&gt; Bool)
+-&gt; (WindowL i a -&gt; WindowL i a -&gt; Bool)
+-&gt; (WindowL i a -&gt; WindowL i a -&gt; WindowL i a)
+-&gt; (WindowL i a -&gt; WindowL i a -&gt; WindowL i a)
+-&gt; Ord (WindowL i a)
+WindowL i a -&gt; WindowL i a -&gt; Bool
 WindowL i a -&gt; WindowL i a -&gt; Ordering
+WindowL i a -&gt; WindowL i a -&gt; WindowL i a
 forall a.
-Eq a
--&gt; (a -&gt; a -&gt; Ordering)
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
 -&gt; (a -&gt; a -&gt; Bool)
 -&gt; (a -&gt; a -&gt; Bool)
 -&gt; (a -&gt; a -&gt; Bool)
@@ -30,209 +43,252 @@ Eq a
 -&gt; (a -&gt; a -&gt; a)
 -&gt; (a -&gt; a -&gt; a)
 -&gt; Ord a
-forall {i} {a}. (Ord a, Ord i) =&gt; Eq (WindowL i a)
-forall i a. (Ord a, Ord i) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
+forall i a. (Ord i, Ord a) =&gt; Eq (WindowL i a)
+forall i a. (Ord i, Ord a) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
 forall i a.
-(Ord a, Ord i) =&gt;
+(Ord i, Ord a) =&gt;
 WindowL i a -&gt; WindowL i a -&gt; Ordering
 forall i a.
-(Ord a, Ord i) =&gt;
+(Ord i, Ord a) =&gt;
 WindowL i a -&gt; WindowL i a -&gt; WindowL i a
-min :: WindowL i a -&gt; WindowL i a -&gt; WindowL i a
-$cmin :: forall i a.
-(Ord a, Ord i) =&gt;
+$ccompare :: forall i a.
+(Ord i, Ord a) =&gt;
+WindowL i a -&gt; WindowL i a -&gt; Ordering
+compare :: WindowL i a -&gt; WindowL i a -&gt; Ordering
+$c&lt; :: forall i a. (Ord i, Ord a) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
+&lt; :: WindowL i a -&gt; WindowL i a -&gt; Bool
+$c&lt;= :: forall i a. (Ord i, Ord a) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
+&lt;= :: WindowL i a -&gt; WindowL i a -&gt; Bool
+$c&gt; :: forall i a. (Ord i, Ord a) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
+&gt; :: WindowL i a -&gt; WindowL i a -&gt; Bool
+$c&gt;= :: forall i a. (Ord i, Ord a) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
+&gt;= :: WindowL i a -&gt; WindowL i a -&gt; Bool
+$cmax :: forall i a.
+(Ord i, Ord a) =&gt;
 WindowL i a -&gt; WindowL i a -&gt; WindowL i a
 max :: WindowL i a -&gt; WindowL i a -&gt; WindowL i a
-$cmax :: forall i a.
-(Ord a, Ord i) =&gt;
+$cmin :: forall i a.
+(Ord i, Ord a) =&gt;
 WindowL i a -&gt; WindowL i a -&gt; WindowL i a
-&gt;= :: WindowL i a -&gt; WindowL i a -&gt; Bool
-$c&gt;= :: forall i a. (Ord a, Ord i) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
-&gt; :: WindowL i a -&gt; WindowL i a -&gt; Bool
-$c&gt; :: forall i a. (Ord a, Ord i) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
-&lt;= :: WindowL i a -&gt; WindowL i a -&gt; Bool
-$c&lt;= :: forall i a. (Ord a, Ord i) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
-&lt; :: WindowL i a -&gt; WindowL i a -&gt; Bool
-$c&lt; :: forall i a. (Ord a, Ord i) =&gt; WindowL i a -&gt; WindowL i a -&gt; Bool
-compare :: WindowL i a -&gt; WindowL i a -&gt; Ordering
-$ccompare :: forall i a.
-(Ord a, Ord i) =&gt;
-WindowL i a -&gt; WindowL i a -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680522966"><span id="local-6989586621680522968"><span id="local-6989586621680522979"><span class="annot"><span class="annottext">Int -&gt; WindowL i a -&gt; ShowS
+min :: WindowL i a -&gt; WindowL i a -&gt; WindowL i a
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680552885"><span id="local-6989586621680552896"><span id="local-6989586621680552900"><span class="annot"><span class="annottext">Int -&gt; WindowL i a -&gt; ShowS
+[WindowL i a] -&gt; ShowS
+WindowL i a -&gt; String
+(Int -&gt; WindowL i a -&gt; ShowS)
+-&gt; (WindowL i a -&gt; String)
+-&gt; ([WindowL i a] -&gt; ShowS)
+-&gt; Show (WindowL i a)
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
-forall i a. (Show a, Show i) =&gt; Int -&gt; WindowL i a -&gt; ShowS
-forall i a. (Show a, Show i) =&gt; [WindowL i a] -&gt; ShowS
-forall i a. (Show a, Show i) =&gt; WindowL i a -&gt; String
-showList :: [WindowL i a] -&gt; ShowS
-$cshowList :: forall i a. (Show a, Show i) =&gt; [WindowL i a] -&gt; ShowS
-show :: WindowL i a -&gt; String
-$cshow :: forall i a. (Show a, Show i) =&gt; WindowL i a -&gt; String
+forall i a. (Show i, Show a) =&gt; Int -&gt; WindowL i a -&gt; ShowS
+forall i a. (Show i, Show a) =&gt; [WindowL i a] -&gt; ShowS
+forall i a. (Show i, Show a) =&gt; WindowL i a -&gt; String
+$cshowsPrec :: forall i a. (Show i, Show a) =&gt; Int -&gt; WindowL i a -&gt; ShowS
 showsPrec :: Int -&gt; WindowL i a -&gt; ShowS
-$cshowsPrec :: forall i a. (Show a, Show i) =&gt; Int -&gt; WindowL i a -&gt; ShowS
+$cshow :: forall i a. (Show i, Show a) =&gt; WindowL i a -&gt; String
+show :: WindowL i a -&gt; String
+$cshowList :: forall i a. (Show i, Show a) =&gt; [WindowL i a] -&gt; ShowS
+showList :: [WindowL i a] -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
 </span><span id="line-15"></span><span>
-</span><span id="line-16"></span><span id="local-6989586621680523172"><span id="local-6989586621680523173"><span class="annot"><a href="UVMHS.Lib.Window.html#eWindowL"><span class="hs-identifier hs-type">eWindowL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680523173"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523172"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523173"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
+</span><span id="line-16"></span><span id="local-6989586621680552692"><span id="local-6989586621680552693"><span class="annot"><a href="UVMHS.Lib.Window.html#eWindowL"><span class="hs-identifier hs-type">eWindowL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680552692"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552693"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552692"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
 </span><span id="line-17"></span><span id="eWindowL"><span class="annot"><span class="annottext">eWindowL :: forall a i. a -&gt; WindowL i a
-</span><a href="UVMHS.Lib.Window.html#eWindowL"><span class="hs-identifier hs-var hs-var">eWindowL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; WindowL i a
+</span><a href="UVMHS.Lib.Window.html#eWindowL"><span class="hs-identifier hs-var hs-var">eWindowL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; WindowL i a
+forall i a. a -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-var">ZerWindowL</span></a></span><span>
 </span><span id="line-18"></span><span>
-</span><span id="line-19"></span><span id="local-6989586621680523169"><span id="local-6989586621680523171"><span class="annot"><a href="UVMHS.Lib.Window.html#iWindowL"><span class="hs-identifier hs-type">iWindowL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523171"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680523169"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523169"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523171"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
+</span><span id="line-19"></span><span id="local-6989586621680552698"><span id="local-6989586621680552700"><span class="annot"><a href="UVMHS.Lib.Window.html#iWindowL"><span class="hs-identifier hs-type">iWindowL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552698"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680552700"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552700"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552698"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
 </span><span id="line-20"></span><span id="iWindowL"><span class="annot"><span class="annottext">iWindowL :: forall a i. Null a =&gt; i -&gt; WindowL i a
-</span><a href="UVMHS.Lib.Window.html#iWindowL"><span class="hs-identifier hs-var hs-var">iWindowL</span></a></span></span><span> </span><span id="local-6989586621680522959"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522959"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+</span><a href="UVMHS.Lib.Window.html#iWindowL"><span class="hs-identifier hs-var hs-var">iWindowL</span></a></span></span><span> </span><span id="local-6989586621680552908"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552908"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-var">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="annot"><span class="annottext">a
+forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522959"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><a href="#local-6989586621680552908"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
+forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
 </span><span id="line-21"></span><span>
-</span><span id="line-22"></span><span id="local-6989586621680523164"><span id="local-6989586621680523165"><span class="annot"><a href="UVMHS.Lib.Window.html#overflowL"><span class="hs-identifier hs-type">overflowL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523165"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523164"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span></span></span><span>
+</span><span id="line-22"></span><span id="local-6989586621680552704"><span id="local-6989586621680552705"><span class="annot"><a href="UVMHS.Lib.Window.html#overflowL"><span class="hs-identifier hs-type">overflowL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552704"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552705"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span></span></span><span>
 </span><span id="line-23"></span><span id="overflowL"><span class="annot"><span class="annottext">overflowL :: forall i a. WindowL i a -&gt; Bool
 </span><a href="UVMHS.Lib.Window.html#overflowL"><span class="hs-identifier hs-var hs-var">overflowL</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span>
-</span><span id="line-24"></span><span class="annot"><a href="UVMHS.Lib.Window.html#overflowL"><span class="hs-identifier hs-var">overflowL</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span id="local-6989586621680522956"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522956"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span class="annot"><span class="annottext">a
+</span><span id="line-24"></span><span class="annot"><a href="UVMHS.Lib.Window.html#overflowL"><span class="hs-identifier hs-var">overflowL</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span id="local-6989586621680552911"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680552911"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">i
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522956"><span class="hs-identifier hs-var">o</span></a></span><span>
+</span><a href="#local-6989586621680552911"><span class="hs-identifier hs-var">o</span></a></span><span>
 </span><span id="line-25"></span><span>
-</span><span id="line-26"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680523158"><span id="local-6989586621680523159"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523159"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523158"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523159"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span> </span><span>
-</span><span id="line-27"></span><span>  </span><span id="local-6989586621680522950"><span class="annot"><span class="annottext">null :: WindowL i a
-</span><a href="#local-6989586621680522950"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; WindowL i a
-</span><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-var">ZerWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><span id="line-26"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680552710"><span id="local-6989586621680552711"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552710"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552711"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552710"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span> </span><span>
+</span><span id="line-27"></span><span>  </span><span id="local-6989586621680552917"><span class="annot"><span class="annottext">null :: WindowL i a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; WindowL i a
+forall i a. a -&gt; WindowL i a
+</span><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-var">ZerWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">a
+forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
-</span><span id="line-28"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680523152"><span id="local-6989586621680523153"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523153"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523152"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523153"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-29"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680522941"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522941"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522940"><span class="annot"><span class="annottext">&#10746; :: WindowL i a -&gt; WindowL i a -&gt; WindowL i a
-</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680522938"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522938"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; WindowL i a
-</span><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-var">ZerWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-28"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680552716"><span id="local-6989586621680552717"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552716"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552717"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552716"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-29"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680552926"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552926"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680552927"><span class="annot"><span class="annottext">&#10746; :: WindowL i a -&gt; WindowL i a -&gt; WindowL i a
+</span><a href="#local-6989586621680552927"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680552929"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552929"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; WindowL i a
+forall i a. a -&gt; WindowL i a
+</span><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-var">ZerWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; WindowL i a) -&gt; a -&gt; WindowL i a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522941"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680552926"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522938"><span class="hs-identifier hs-var">y</span></a></span><span>
-</span><span id="line-30"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680522936"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522936"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span id="local-6989586621680522935"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522935"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span id="local-6989586621680522934"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522934"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span id="local-6989586621680522933"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522933"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522932"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522932"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+</span><a href="#local-6989586621680552929"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680552931"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552931"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span id="local-6989586621680552932"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680552932"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span id="local-6989586621680552933"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552933"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span id="local-6989586621680552934"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552934"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680552935"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552935"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-var">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522935"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522936"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680552932"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552931"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522934"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522933"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522932"><span class="hs-identifier hs-var">z</span></a></span><span>
+</span><a href="#local-6989586621680552933"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552934"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552935"><span class="hs-identifier hs-var">z</span></a></span><span>
 </span><span id="line-31"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">True</span></span><span> </span><span id="local-6989586621680522931"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522931"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522930"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522930"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522929"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522929"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL i a
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+</span><span class="hs-identifier hs-var">True</span></span><span> </span><span id="local-6989586621680552936"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552936"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680552937"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552937"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680552938"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552938"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL i a
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-var">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522931"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522930"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522929"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><a href="#local-6989586621680552936"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552937"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552938"><span class="hs-identifier hs-var">y</span></a></span><span>
 </span><span id="line-32"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621680522928"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522928"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522927"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522927"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522926"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522926"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680522925"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522925"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621680552939"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552939"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680552940"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552940"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680552941"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552941"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680552942"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552942"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-var">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522928"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522927"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680552939"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552940"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; WindowL i a) -&gt; a -&gt; WindowL i a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522926"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680552941"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522925"><span class="hs-identifier hs-var">z</span></a></span><span>
+</span><a href="#local-6989586621680552942"><span class="hs-identifier hs-var">z</span></a></span><span>
 </span><span id="line-33"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621680522924"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522924"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522923"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522923"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522922"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522922"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680522921"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522921"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="annot"><span class="annottext">i
+</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621680552943"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552943"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680552944"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552944"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680552945"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552945"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680552946"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552946"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="annot"><span class="annottext">i
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-var">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522924"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522923"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680552943"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552944"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; WindowL i a) -&gt; a -&gt; WindowL i a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522922"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680552945"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522921"><span class="hs-identifier hs-var">z</span></a></span><span>
-</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680523144"><span id="local-6989586621680523145"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523145"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523144"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523145"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span>
+</span><a href="#local-6989586621680552946"><span class="hs-identifier hs-var">z</span></a></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680552724"><span id="local-6989586621680552725"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552724"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552725"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552724"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span>
 </span><span id="line-35"></span><span>
-</span><span id="line-36"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680523181"><span class="annot"><a href="UVMHS.Core.Classes.Collections.html#ToIter"><span class="hs-identifier hs-type">ToIter</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523181"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523181"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523181"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-37"></span><span>  </span><span id="local-6989586621680522904"><span class="annot"><span class="annottext">iter :: WindowL a a -&gt; &#119868; a
-</span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var hs-var hs-var hs-var">iter</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680522902"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522902"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a t. Single a t =&gt; a -&gt; t
+</span><span id="line-36"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680552674"><span class="annot"><a href="UVMHS.Core.Classes.Collections.html#ToIter"><span class="hs-identifier hs-type">ToIter</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552674"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552674"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552674"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-37"></span><span>  </span><span id="local-6989586621680552963"><span class="annot"><span class="annottext">iter :: WindowL a a -&gt; &#119868; a
+</span><a href="#local-6989586621680552963"><span class="hs-identifier hs-var hs-var hs-var hs-var">iter</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680552965"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552965"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; &#119868; a
+forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522902"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><a href="#local-6989586621680552965"><span class="hs-identifier hs-var">x</span></a></span><span>
 </span><span id="line-38"></span><span>  </span><span class="annot"><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680522900"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522900"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522899"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522899"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522898"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522898"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a t. ToIter a t =&gt; t -&gt; &#119868; a
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680552967"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552967"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680552968"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552968"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680552969"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552969"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[a] -&gt; &#119868; a
+forall a t. ToIter a t =&gt; t -&gt; &#119868; a
 </span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522900"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522899"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522898"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621680552967"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552968"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552969"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-39"></span><span>
-</span><span id="line-40"></span><span id="local-6989586621680523132"><span id="local-6989586621680523133"><span id="local-6989586621680523134"><span id="local-6989586621680523135"><span class="annot"><a href="UVMHS.Lib.Window.html#mapWindowL"><span class="hs-identifier hs-type">mapWindowL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680523135"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680523134"><span class="hs-identifier hs-type">j</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680523133"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680523132"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523135"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523133"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523134"><span class="hs-identifier hs-type">j</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523132"><span class="hs-identifier hs-type">b</span></a></span></span></span></span></span><span>
+</span><span id="line-40"></span><span id="local-6989586621680552734"><span id="local-6989586621680552735"><span id="local-6989586621680552736"><span id="local-6989586621680552737"><span class="annot"><a href="UVMHS.Lib.Window.html#mapWindowL"><span class="hs-identifier hs-type">mapWindowL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680552734"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680552735"><span class="hs-identifier hs-type">j</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680552736"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680552737"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552734"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552736"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552735"><span class="hs-identifier hs-type">j</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552737"><span class="hs-identifier hs-type">b</span></a></span></span></span></span></span><span>
 </span><span id="line-41"></span><span id="mapWindowL"><span class="annot"><span class="annottext">mapWindowL :: forall i j a b. (i -&gt; j) -&gt; (a -&gt; b) -&gt; WindowL i a -&gt; WindowL j b
 </span><a href="UVMHS.Lib.Window.html#mapWindowL"><span class="hs-identifier hs-var hs-var">mapWindowL</span></a></span></span><span> </span><span class="annot"><span class="annottext">i -&gt; j
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680522896"><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522896"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680522895"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522895"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; WindowL i a
-</span><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-var">ZerWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680552971"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680552971"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-type">ZerWindowL</span></a></span><span> </span><span id="local-6989586621680552972"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552972"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; WindowL j b
+forall i a. a -&gt; WindowL i a
+</span><a href="UVMHS.Lib.Window.html#ZerWindowL"><span class="hs-identifier hs-var">ZerWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; WindowL j b) -&gt; b -&gt; WindowL j b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522896"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522895"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-42"></span><span class="annot"><a href="UVMHS.Lib.Window.html#mapWindowL"><span class="hs-identifier hs-var">mapWindowL</span></a></span><span> </span><span id="local-6989586621680522894"><span class="annot"><span class="annottext">i -&gt; j
-</span><a href="#local-6989586621680522894"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621680522893"><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522893"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span id="local-6989586621680522892"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522892"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span id="local-6989586621680522891"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522891"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522890"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522890"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522889"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522889"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
+</span><a href="#local-6989586621680552971"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552972"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-42"></span><span class="annot"><a href="UVMHS.Lib.Window.html#mapWindowL"><span class="hs-identifier hs-var">mapWindowL</span></a></span><span> </span><span id="local-6989586621680552973"><span class="annot"><span class="annottext">i -&gt; j
+</span><a href="#local-6989586621680552973"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621680552974"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680552974"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-type">OneWindowL</span></a></span><span> </span><span id="local-6989586621680552975"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680552975"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span id="local-6989586621680552976"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552976"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680552977"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552977"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680552978"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552978"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; b -&gt; j -&gt; b -&gt; WindowL j b
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowL"><span class="hs-identifier hs-var">OneWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522892"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522893"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522891"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">i -&gt; j
-</span><a href="#local-6989586621680522894"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522890"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680552975"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680552974"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552976"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">i -&gt; j
+</span><a href="#local-6989586621680552973"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680552977"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(b -&gt; WindowL j b) -&gt; b -&gt; WindowL j b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522893"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522889"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><a href="#local-6989586621680552974"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680552978"><span class="hs-identifier hs-var">y</span></a></span><span>
 </span><span id="line-43"></span><span>
 </span><span id="line-44"></span><span class="hs-comment">-------------</span><span>
 </span><span id="line-45"></span><span class="hs-comment">-- WindowR --</span><span>
 </span><span id="line-46"></span><span class="hs-comment">-------------</span><span>
 </span><span id="line-47"></span><span>
-</span><span id="line-48"></span><span class="hs-keyword">data</span><span> </span><span id="WindowR"><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-var">WindowR</span></a></span></span><span> </span><span id="local-6989586621680523126"><span class="annot"><a href="#local-6989586621680523126"><span class="hs-identifier hs-type">i</span></a></span></span><span> </span><span id="local-6989586621680523127"><span class="annot"><a href="#local-6989586621680523127"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-49"></span><span>    </span><span id="ZerWindowR"><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-var">ZerWindowR</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621680523127"><span class="hs-identifier hs-type">a</span></a></span><span>
-</span><span id="line-50"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="OneWindowR"><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-var">OneWindowR</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523127"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523126"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523127"><span class="hs-identifier hs-type">a</span></a></span><span>
-</span><span id="line-51"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680522878"><span id="local-6989586621680522885"><span class="annot"><span class="annottext">WindowR i a -&gt; WindowR i a -&gt; Bool
+</span><span id="line-48"></span><span class="hs-keyword">data</span><span> </span><span id="WindowR"><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-var">WindowR</span></a></span></span><span> </span><span id="local-6989586621680552759"><span class="annot"><a href="#local-6989586621680552759"><span class="hs-identifier hs-type">i</span></a></span></span><span> </span><span id="local-6989586621680552758"><span class="annot"><a href="#local-6989586621680552758"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-49"></span><span>    </span><span id="ZerWindowR"><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-var">ZerWindowR</span></a></span></span><span> </span><span class="annot"><a href="#local-6989586621680552758"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-50"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="OneWindowR"><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-var">OneWindowR</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552758"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552759"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552758"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-51"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680552984"><span id="local-6989586621680552991"><span class="annot"><span class="annottext">WindowR i a -&gt; WindowR i a -&gt; Bool
+(WindowR i a -&gt; WindowR i a -&gt; Bool)
+-&gt; (WindowR i a -&gt; WindowR i a -&gt; Bool) -&gt; Eq (WindowR i a)
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
-forall i a. (Eq a, Eq i) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
-/= :: WindowR i a -&gt; WindowR i a -&gt; Bool
-$c/= :: forall i a. (Eq a, Eq i) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
+forall i a. (Eq i, Eq a) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
+$c== :: forall i a. (Eq i, Eq a) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
 == :: WindowR i a -&gt; WindowR i a -&gt; Bool
-$c== :: forall i a. (Eq a, Eq i) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680522849"><span id="local-6989586621680522851"><span id="local-6989586621680522854"><span id="local-6989586621680522857"><span id="local-6989586621680522860"><span id="local-6989586621680522867"><span id="local-6989586621680522874"><span class="annot"><span class="annottext">WindowR i a -&gt; WindowR i a -&gt; Bool
+$c/= :: forall i a. (Eq i, Eq a) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
+/= :: WindowR i a -&gt; WindowR i a -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680553001"><span id="local-6989586621680553008"><span id="local-6989586621680553015"><span id="local-6989586621680553019"><span id="local-6989586621680553022"><span id="local-6989586621680553025"><span id="local-6989586621680553028"><span class="annot"><span class="annottext">Eq (WindowR i a)
+Eq (WindowR i a) =&gt;
+(WindowR i a -&gt; WindowR i a -&gt; Ordering)
+-&gt; (WindowR i a -&gt; WindowR i a -&gt; Bool)
+-&gt; (WindowR i a -&gt; WindowR i a -&gt; Bool)
+-&gt; (WindowR i a -&gt; WindowR i a -&gt; Bool)
+-&gt; (WindowR i a -&gt; WindowR i a -&gt; Bool)
+-&gt; (WindowR i a -&gt; WindowR i a -&gt; WindowR i a)
+-&gt; (WindowR i a -&gt; WindowR i a -&gt; WindowR i a)
+-&gt; Ord (WindowR i a)
+WindowR i a -&gt; WindowR i a -&gt; Bool
 WindowR i a -&gt; WindowR i a -&gt; Ordering
+WindowR i a -&gt; WindowR i a -&gt; WindowR i a
 forall a.
-Eq a
--&gt; (a -&gt; a -&gt; Ordering)
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
 -&gt; (a -&gt; a -&gt; Bool)
 -&gt; (a -&gt; a -&gt; Bool)
 -&gt; (a -&gt; a -&gt; Bool)
@@ -240,243 +296,284 @@ Eq a
 -&gt; (a -&gt; a -&gt; a)
 -&gt; (a -&gt; a -&gt; a)
 -&gt; Ord a
-forall {i} {a}. (Ord a, Ord i) =&gt; Eq (WindowR i a)
-forall i a. (Ord a, Ord i) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
+forall i a. (Ord i, Ord a) =&gt; Eq (WindowR i a)
+forall i a. (Ord i, Ord a) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
 forall i a.
-(Ord a, Ord i) =&gt;
+(Ord i, Ord a) =&gt;
 WindowR i a -&gt; WindowR i a -&gt; Ordering
 forall i a.
-(Ord a, Ord i) =&gt;
+(Ord i, Ord a) =&gt;
 WindowR i a -&gt; WindowR i a -&gt; WindowR i a
-min :: WindowR i a -&gt; WindowR i a -&gt; WindowR i a
-$cmin :: forall i a.
-(Ord a, Ord i) =&gt;
+$ccompare :: forall i a.
+(Ord i, Ord a) =&gt;
+WindowR i a -&gt; WindowR i a -&gt; Ordering
+compare :: WindowR i a -&gt; WindowR i a -&gt; Ordering
+$c&lt; :: forall i a. (Ord i, Ord a) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
+&lt; :: WindowR i a -&gt; WindowR i a -&gt; Bool
+$c&lt;= :: forall i a. (Ord i, Ord a) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
+&lt;= :: WindowR i a -&gt; WindowR i a -&gt; Bool
+$c&gt; :: forall i a. (Ord i, Ord a) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
+&gt; :: WindowR i a -&gt; WindowR i a -&gt; Bool
+$c&gt;= :: forall i a. (Ord i, Ord a) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
+&gt;= :: WindowR i a -&gt; WindowR i a -&gt; Bool
+$cmax :: forall i a.
+(Ord i, Ord a) =&gt;
 WindowR i a -&gt; WindowR i a -&gt; WindowR i a
 max :: WindowR i a -&gt; WindowR i a -&gt; WindowR i a
-$cmax :: forall i a.
-(Ord a, Ord i) =&gt;
+$cmin :: forall i a.
+(Ord i, Ord a) =&gt;
 WindowR i a -&gt; WindowR i a -&gt; WindowR i a
-&gt;= :: WindowR i a -&gt; WindowR i a -&gt; Bool
-$c&gt;= :: forall i a. (Ord a, Ord i) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
-&gt; :: WindowR i a -&gt; WindowR i a -&gt; Bool
-$c&gt; :: forall i a. (Ord a, Ord i) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
-&lt;= :: WindowR i a -&gt; WindowR i a -&gt; Bool
-$c&lt;= :: forall i a. (Ord a, Ord i) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
-&lt; :: WindowR i a -&gt; WindowR i a -&gt; Bool
-$c&lt; :: forall i a. (Ord a, Ord i) =&gt; WindowR i a -&gt; WindowR i a -&gt; Bool
-compare :: WindowR i a -&gt; WindowR i a -&gt; Ordering
-$ccompare :: forall i a.
-(Ord a, Ord i) =&gt;
-WindowR i a -&gt; WindowR i a -&gt; Ordering
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680522836"><span id="local-6989586621680522838"><span id="local-6989586621680522847"><span class="annot"><span class="annottext">Int -&gt; WindowR i a -&gt; ShowS
+min :: WindowR i a -&gt; WindowR i a -&gt; WindowR i a
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680553033"><span id="local-6989586621680553042"><span id="local-6989586621680553046"><span class="annot"><span class="annottext">Int -&gt; WindowR i a -&gt; ShowS
+[WindowR i a] -&gt; ShowS
+WindowR i a -&gt; String
+(Int -&gt; WindowR i a -&gt; ShowS)
+-&gt; (WindowR i a -&gt; String)
+-&gt; ([WindowR i a] -&gt; ShowS)
+-&gt; Show (WindowR i a)
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
-forall i a. (Show a, Show i) =&gt; Int -&gt; WindowR i a -&gt; ShowS
-forall i a. (Show a, Show i) =&gt; [WindowR i a] -&gt; ShowS
-forall i a. (Show a, Show i) =&gt; WindowR i a -&gt; String
-showList :: [WindowR i a] -&gt; ShowS
-$cshowList :: forall i a. (Show a, Show i) =&gt; [WindowR i a] -&gt; ShowS
-show :: WindowR i a -&gt; String
-$cshow :: forall i a. (Show a, Show i) =&gt; WindowR i a -&gt; String
+forall i a. (Show i, Show a) =&gt; Int -&gt; WindowR i a -&gt; ShowS
+forall i a. (Show i, Show a) =&gt; [WindowR i a] -&gt; ShowS
+forall i a. (Show i, Show a) =&gt; WindowR i a -&gt; String
+$cshowsPrec :: forall i a. (Show i, Show a) =&gt; Int -&gt; WindowR i a -&gt; ShowS
 showsPrec :: Int -&gt; WindowR i a -&gt; ShowS
-$cshowsPrec :: forall i a. (Show a, Show i) =&gt; Int -&gt; WindowR i a -&gt; ShowS
+$cshow :: forall i a. (Show i, Show a) =&gt; WindowR i a -&gt; String
+show :: WindowR i a -&gt; String
+$cshowList :: forall i a. (Show i, Show a) =&gt; [WindowR i a] -&gt; ShowS
+showList :: [WindowR i a] -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
 </span><span id="line-52"></span><span>
-</span><span id="line-53"></span><span id="local-6989586621680523124"><span id="local-6989586621680523125"><span class="annot"><a href="UVMHS.Lib.Window.html#eWindowR"><span class="hs-identifier hs-type">eWindowR</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680523125"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523124"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523125"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
+</span><span id="line-53"></span><span id="local-6989586621680552754"><span id="local-6989586621680552755"><span class="annot"><a href="UVMHS.Lib.Window.html#eWindowR"><span class="hs-identifier hs-type">eWindowR</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680552754"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552755"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552754"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
 </span><span id="line-54"></span><span id="eWindowR"><span class="annot"><span class="annottext">eWindowR :: forall a i. a -&gt; WindowR i a
-</span><a href="UVMHS.Lib.Window.html#eWindowR"><span class="hs-identifier hs-var hs-var">eWindowR</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; WindowR i a
+</span><a href="UVMHS.Lib.Window.html#eWindowR"><span class="hs-identifier hs-var hs-var">eWindowR</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; WindowR i a
+forall i a. a -&gt; WindowR i a
 </span><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-var">ZerWindowR</span></a></span><span>
 </span><span id="line-55"></span><span>
-</span><span id="line-56"></span><span id="local-6989586621680523122"><span id="local-6989586621680523123"><span class="annot"><a href="UVMHS.Lib.Window.html#iWindowR"><span class="hs-identifier hs-type">iWindowR</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523123"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680523122"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523122"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523123"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
+</span><span id="line-56"></span><span id="local-6989586621680552760"><span id="local-6989586621680552761"><span class="annot"><a href="UVMHS.Lib.Window.html#iWindowR"><span class="hs-identifier hs-type">iWindowR</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552760"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680552761"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552761"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552760"><span class="hs-identifier hs-type">a</span></a></span></span></span><span>
 </span><span id="line-57"></span><span id="iWindowR"><span class="annot"><span class="annottext">iWindowR :: forall a i. Null a =&gt; i -&gt; WindowR i a
-</span><a href="UVMHS.Lib.Window.html#iWindowR"><span class="hs-identifier hs-var hs-var">iWindowR</span></a></span></span><span> </span><span id="local-6989586621680522830"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522830"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+</span><a href="UVMHS.Lib.Window.html#iWindowR"><span class="hs-identifier hs-var hs-var">iWindowR</span></a></span></span><span> </span><span id="local-6989586621680553053"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553053"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-var">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="annot"><span class="annottext">a
+forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522830"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><a href="#local-6989586621680553053"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
+forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
 </span><span id="line-58"></span><span>
-</span><span id="line-59"></span><span id="local-6989586621680523118"><span id="local-6989586621680523119"><span class="annot"><a href="UVMHS.Lib.Window.html#overflowR"><span class="hs-identifier hs-type">overflowR</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523119"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523118"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span></span></span><span>
+</span><span id="line-59"></span><span id="local-6989586621680552764"><span id="local-6989586621680552765"><span class="annot"><a href="UVMHS.Lib.Window.html#overflowR"><span class="hs-identifier hs-type">overflowR</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552764"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552765"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span></span></span><span>
 </span><span id="line-60"></span><span id="overflowR"><span class="annot"><span class="annottext">overflowR :: forall i a. WindowR i a -&gt; Bool
 </span><a href="UVMHS.Lib.Window.html#overflowR"><span class="hs-identifier hs-var hs-var">overflowR</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span>
-</span><span id="line-61"></span><span class="annot"><a href="UVMHS.Lib.Window.html#overflowR"><span class="hs-identifier hs-var">overflowR</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span id="local-6989586621680522828"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522828"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span class="annot"><span class="annottext">a
+</span><span id="line-61"></span><span class="annot"><a href="UVMHS.Lib.Window.html#overflowR"><span class="hs-identifier hs-var">overflowR</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span id="local-6989586621680553055"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680553055"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">i
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522828"><span class="hs-identifier hs-var">o</span></a></span><span>
+</span><a href="#local-6989586621680553055"><span class="hs-identifier hs-var">o</span></a></span><span>
 </span><span id="line-62"></span><span>
-</span><span id="line-63"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680523112"><span id="local-6989586621680523113"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523113"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523112"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523113"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span> </span><span>
-</span><span id="line-64"></span><span>  </span><span id="local-6989586621680522823"><span class="annot"><span class="annottext">null :: WindowR i a
-</span><a href="#local-6989586621680522823"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; WindowR i a
-</span><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-var">ZerWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><span id="line-63"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680552770"><span id="local-6989586621680552771"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552770"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552771"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552770"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span> </span><span>
+</span><span id="line-64"></span><span>  </span><span id="local-6989586621680553060"><span class="annot"><span class="annottext">null :: WindowR i a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; WindowR i a
+forall i a. a -&gt; WindowR i a
+</span><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-var">ZerWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">a
+forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
-</span><span id="line-65"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680523108"><span id="local-6989586621680523109"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523109"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523108"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523109"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-66"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680522815"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522815"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522814"><span class="annot"><span class="annottext">&#10746; :: WindowR i a -&gt; WindowR i a -&gt; WindowR i a
-</span><a href="#local-6989586621680522814"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680522813"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522813"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; WindowR i a
-</span><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-var">ZerWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-65"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680552774"><span id="local-6989586621680552775"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552774"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552775"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552774"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-66"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680553068"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553068"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680553069"><span class="annot"><span class="annottext">&#10746; :: WindowR i a -&gt; WindowR i a -&gt; WindowR i a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680553070"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553070"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; WindowR i a
+forall i a. a -&gt; WindowR i a
+</span><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-var">ZerWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; WindowR i a) -&gt; a -&gt; WindowR i a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522815"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680553068"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522813"><span class="hs-identifier hs-var">y</span></a></span><span>
-</span><span id="line-67"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span id="local-6989586621680522812"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522812"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span id="local-6989586621680522811"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522811"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522810"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522810"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522809"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522809"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680522808"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522808"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+</span><a href="#local-6989586621680553070"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><span id="line-67"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span id="local-6989586621680553071"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680553071"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span id="local-6989586621680553072"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553072"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680553073"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553073"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680553074"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553074"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680553075"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553075"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-var">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522812"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522811"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522810"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680553071"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553072"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553073"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; WindowR i a) -&gt; a -&gt; WindowR i a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522809"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680553074"><span class="hs-identifier hs-var">y</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522808"><span class="hs-identifier hs-var">z</span></a></span><span>
+</span><a href="#local-6989586621680553075"><span class="hs-identifier hs-var">z</span></a></span><span>
 </span><span id="line-68"></span><span>  </span><span class="annot"><span class="annottext">WindowR i a
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">True</span></span><span> </span><span id="local-6989586621680522807"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522807"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522806"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522806"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522805"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522805"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+</span><span class="hs-identifier hs-var">True</span></span><span> </span><span id="local-6989586621680553076"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553076"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680553077"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553077"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680553078"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553078"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-var">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522807"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522806"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522805"><span class="hs-identifier hs-var">y</span></a></span><span>
-</span><span id="line-69"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680522804"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522804"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621680522803"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522803"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span id="local-6989586621680522802"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522802"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522801"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522801"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+</span><a href="#local-6989586621680553076"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553077"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553078"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><span id="line-69"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680553079"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553079"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621680553080"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553080"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span id="local-6989586621680553081"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553081"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680553082"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553082"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-var">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522804"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680553079"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522803"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522802"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522801"><span class="hs-identifier hs-var">z</span></a></span><span>
+</span><a href="#local-6989586621680553080"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553081"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553082"><span class="hs-identifier hs-var">z</span></a></span><span>
 </span><span id="line-70"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">a
 </span><span class="hs-identifier">_</span></span><span> </span><span class="annot"><span class="annottext">i
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680522800"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522800"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621680522799"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522799"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span id="local-6989586621680522798"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522798"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522797"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522797"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680553083"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553083"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">False</span></span><span> </span><span id="local-6989586621680553084"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553084"><span class="hs-identifier hs-var">y</span></a></span></span><span> </span><span id="local-6989586621680553085"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553085"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680553086"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553086"><span class="hs-identifier hs-var">z</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-var">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
 </span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522800"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680553083"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; a -&gt; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522799"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522798"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522797"><span class="hs-identifier hs-var">z</span></a></span><span>
-</span><span id="line-71"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680523104"><span id="local-6989586621680523105"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523105"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523104"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523105"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span>
+</span><a href="#local-6989586621680553084"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553085"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553086"><span class="hs-identifier hs-var">z</span></a></span><span>
+</span><span id="line-71"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680552778"><span id="local-6989586621680552779"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552778"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552779"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552778"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span></span><span> </span><span>
 </span><span id="line-72"></span><span>
-</span><span id="line-73"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680523180"><span class="annot"><a href="UVMHS.Core.Classes.Collections.html#ToIter"><span class="hs-identifier hs-type">ToIter</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523180"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523180"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523180"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-74"></span><span>  </span><span id="local-6989586621680522785"><span class="annot"><span class="annottext">iter :: WindowR a a -&gt; &#119868; a
-</span><a href="#local-6989586621680522785"><span class="hs-identifier hs-var hs-var hs-var hs-var">iter</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680522784"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522784"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a t. Single a t =&gt; a -&gt; t
+</span><span id="line-73"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680552675"><span class="annot"><a href="UVMHS.Core.Classes.Collections.html#ToIter"><span class="hs-identifier hs-type">ToIter</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552675"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552675"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552675"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-74"></span><span>  </span><span id="local-6989586621680553098"><span class="annot"><span class="annottext">iter :: WindowR a a -&gt; &#119868; a
+</span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var hs-var hs-var hs-var">iter</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680553099"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553099"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; &#119868; a
+forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522784"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><a href="#local-6989586621680553099"><span class="hs-identifier hs-var">x</span></a></span><span>
 </span><span id="line-75"></span><span>  </span><span class="annot"><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680522783"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522783"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522782"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522782"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522781"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522781"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a t. ToIter a t =&gt; t -&gt; &#119868; a
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680553100"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553100"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680553101"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553101"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680553102"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553102"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[a] -&gt; &#119868; a
+forall a t. ToIter a t =&gt; t -&gt; &#119868; a
 </span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522783"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522782"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522781"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">]</span><span>
+</span><a href="#local-6989586621680553100"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553101"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553102"><span class="hs-identifier hs-var">y</span></a></span><span class="hs-special">]</span><span>
 </span><span id="line-76"></span><span>
-</span><span id="line-77"></span><span id="local-6989586621680523099"><span id="local-6989586621680523100"><span id="local-6989586621680523101"><span id="local-6989586621680523102"><span class="annot"><a href="UVMHS.Lib.Window.html#mapWindowR"><span class="hs-identifier hs-type">mapWindowR</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680523102"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680523101"><span class="hs-identifier hs-type">j</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680523100"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680523099"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523102"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523100"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523101"><span class="hs-identifier hs-type">j</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680523099"><span class="hs-identifier hs-type">b</span></a></span></span></span></span></span><span>
+</span><span id="line-77"></span><span id="local-6989586621680552781"><span id="local-6989586621680552782"><span id="local-6989586621680552783"><span id="local-6989586621680552784"><span class="annot"><a href="UVMHS.Lib.Window.html#mapWindowR"><span class="hs-identifier hs-type">mapWindowR</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680552781"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680552782"><span class="hs-identifier hs-type">j</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="#local-6989586621680552783"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680552784"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552781"><span class="hs-identifier hs-type">i</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552783"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552782"><span class="hs-identifier hs-type">j</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680552784"><span class="hs-identifier hs-type">b</span></a></span></span></span></span></span><span>
 </span><span id="line-78"></span><span id="mapWindowR"><span class="annot"><span class="annottext">mapWindowR :: forall i j a b. (i -&gt; j) -&gt; (a -&gt; b) -&gt; WindowR i a -&gt; WindowR j b
 </span><a href="UVMHS.Lib.Window.html#mapWindowR"><span class="hs-identifier hs-var hs-var">mapWindowR</span></a></span></span><span> </span><span class="annot"><span class="annottext">i -&gt; j
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680522779"><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522779"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680522778"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522778"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; WindowR i a
-</span><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-var">ZerWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621680553104"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680553104"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-type">ZerWindowR</span></a></span><span> </span><span id="local-6989586621680553105"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553105"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">b -&gt; WindowR j b
+forall i a. a -&gt; WindowR i a
+</span><a href="UVMHS.Lib.Window.html#ZerWindowR"><span class="hs-identifier hs-var">ZerWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; WindowR j b) -&gt; b -&gt; WindowR j b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522779"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522778"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-79"></span><span class="annot"><a href="UVMHS.Lib.Window.html#mapWindowR"><span class="hs-identifier hs-var">mapWindowR</span></a></span><span> </span><span id="local-6989586621680522777"><span class="annot"><span class="annottext">i -&gt; j
-</span><a href="#local-6989586621680522777"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621680522776"><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522776"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span id="local-6989586621680522775"><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522775"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span id="local-6989586621680522774"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522774"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680522773"><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522773"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680522772"><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522772"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
+</span><a href="#local-6989586621680553104"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553105"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-79"></span><span class="annot"><a href="UVMHS.Lib.Window.html#mapWindowR"><span class="hs-identifier hs-var">mapWindowR</span></a></span><span> </span><span id="local-6989586621680553106"><span class="annot"><span class="annottext">i -&gt; j
+</span><a href="#local-6989586621680553106"><span class="hs-identifier hs-var">g</span></a></span></span><span> </span><span id="local-6989586621680553107"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680553107"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-type">OneWindowR</span></a></span><span> </span><span id="local-6989586621680553108"><span class="annot"><span class="annottext">Bool
+</span><a href="#local-6989586621680553108"><span class="hs-identifier hs-var">o</span></a></span></span><span> </span><span id="local-6989586621680553109"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553109"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680553110"><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553110"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span id="local-6989586621680553111"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553111"><span class="hs-identifier hs-var">y</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; b -&gt; j -&gt; b -&gt; WindowR j b
+forall i a. Bool -&gt; a -&gt; i -&gt; a -&gt; WindowR i a
 </span><a href="UVMHS.Lib.Window.html#OneWindowR"><span class="hs-identifier hs-var">OneWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Bool
-</span><a href="#local-6989586621680522775"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522776"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522774"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">i -&gt; j
-</span><a href="#local-6989586621680522777"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">i
-</span><a href="#local-6989586621680522773"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680553108"><span class="hs-identifier hs-var">o</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680553107"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553109"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">i -&gt; j
+</span><a href="#local-6989586621680553106"><span class="hs-identifier hs-var">g</span></a></span><span> </span><span class="annot"><span class="annottext">i
+</span><a href="#local-6989586621680553110"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(b -&gt; WindowR j b) -&gt; b -&gt; WindowR j b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680522776"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
-</span><a href="#local-6989586621680522772"><span class="hs-identifier hs-var">y</span></a></span><span>
+</span><a href="#local-6989586621680553107"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621680553111"><span class="hs-identifier hs-var">y</span></a></span><span>
 </span><span id="line-80"></span><span>
-</span><span id="line-81"></span><span id="local-6989586621680522767"><span id="local-6989586621680523177"><span id="local-6989586621680523178"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">WindowL</span></span></span></span><span>
-</span><span id="line-82"></span><span id="local-6989586621680522739"><span id="local-6989586621680523126"><span id="local-6989586621680523127"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">WindowR</span></span></span></span><span>
+</span><span id="line-81"></span><span id="local-6989586621680552696"><span id="local-6989586621680552697"><span id="local-6989586621680553116"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">WindowL</span></span></span></span><span>
+</span><span id="line-82"></span><span id="local-6989586621680552758"><span id="local-6989586621680552759"><span id="local-6989586621680553144"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">WindowR</span></span></span></span><span>
 </span><span id="line-83"></span><span>
 </span><span id="line-84"></span><span class="hs-comment">-- RENDER --</span><span>
 </span><span id="line-85"></span><span>
 </span><span id="line-86"></span><span class="annot"><a href="UVMHS.Lib.Window.html#renderWindowL"><span class="hs-identifier hs-type">renderWindowL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span>
 </span><span id="line-87"></span><span id="renderWindowL"><span class="annot"><span class="annottext">renderWindowL :: WindowL Doc Doc -&gt; Doc
-</span><a href="UVMHS.Lib.Window.html#renderWindowL"><span class="hs-identifier hs-var hs-var">renderWindowL</span></a></span></span><span> </span><span id="local-6989586621680522720"><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680522720"><span class="hs-identifier hs-var">dL</span></a></span></span><span>
-</span><span id="line-88"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">forall i a. WindowL i a -&gt; Bool
+</span><a href="UVMHS.Lib.Window.html#renderWindowL"><span class="hs-identifier hs-var hs-var">renderWindowL</span></a></span></span><span> </span><span id="local-6989586621680553163"><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680553163"><span class="hs-identifier hs-var">dL</span></a></span></span><span>
+</span><span id="line-88"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; Bool
+forall i a. WindowL i a -&gt; Bool
 </span><a href="UVMHS.Lib.Window.html#overflowL"><span class="hs-identifier hs-var">overflowL</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680522720"><span class="hs-identifier hs-var">dL</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall t. ToIter Doc t =&gt; t -&gt; Doc
+</span><a href="#local-6989586621680553163"><span class="hs-identifier hs-var">dL</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
+forall t. ToIter Doc t =&gt; t -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppVertical"><span class="hs-identifier hs-var">ppVertical</span></a></span><span>
-</span><span id="line-89"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><span id="line-89"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; Doc
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680522720"><span class="hs-identifier hs-var">dL</span></a></span><span>
+</span><a href="#local-6989586621680553163"><span class="hs-identifier hs-var">dL</span></a></span><span>
 </span><span id="line-90"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
-</span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall t. ToIter Format t =&gt; t -&gt; Formats
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Format] -&gt; Formats
+forall t. ToIter Format t =&gt; t -&gt; Formats
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#formats"><span class="hs-identifier hs-var">formats</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Color -&gt; Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#BG"><span class="hs-identifier hs-var">BG</span></a></span><span> </span><span class="annot"><span class="annottext">Color
-</span><a href="UVMHS.Lib.Pretty.Color.html#grayLight"><span class="hs-identifier hs-var">grayLight</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.Color.html#grayLight"><span class="hs-identifier hs-var">grayLight</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#8230;&quot;</span></span><span>
 </span><span id="line-91"></span><span>      </span><span class="hs-special">]</span><span>
 </span><span id="line-92"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; Doc
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680522720"><span class="hs-identifier hs-var">dL</span></a></span><span>
+</span><a href="#local-6989586621680553163"><span class="hs-identifier hs-var">dL</span></a></span><span>
 </span><span id="line-93"></span><span>
 </span><span id="line-94"></span><span class="annot"><a href="UVMHS.Lib.Window.html#renderWindowR"><span class="hs-identifier hs-type">renderWindowR</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowR"><span class="hs-identifier hs-type">WindowR</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span>
 </span><span id="line-95"></span><span id="renderWindowR"><span class="annot"><span class="annottext">renderWindowR :: WindowR Doc Doc -&gt; Doc
-</span><a href="UVMHS.Lib.Window.html#renderWindowR"><span class="hs-identifier hs-var hs-var">renderWindowR</span></a></span></span><span> </span><span id="local-6989586621680522711"><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680522711"><span class="hs-identifier hs-var">dR</span></a></span></span><span>
-</span><span id="line-96"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">forall i a. WindowR i a -&gt; Bool
+</span><a href="UVMHS.Lib.Window.html#renderWindowR"><span class="hs-identifier hs-var hs-var">renderWindowR</span></a></span></span><span> </span><span id="local-6989586621680553172"><span class="annot"><span class="annottext">WindowR Doc Doc
+</span><a href="#local-6989586621680553172"><span class="hs-identifier hs-var">dR</span></a></span></span><span>
+</span><span id="line-96"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; Bool
+forall i a. WindowR i a -&gt; Bool
 </span><a href="UVMHS.Lib.Window.html#overflowR"><span class="hs-identifier hs-var">overflowR</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680522711"><span class="hs-identifier hs-var">dR</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall t. ToIter Doc t =&gt; t -&gt; Doc
+</span><a href="#local-6989586621680553172"><span class="hs-identifier hs-var">dR</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
+forall t. ToIter Doc t =&gt; t -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppVertical"><span class="hs-identifier hs-var">ppVertical</span></a></span><span>
 </span><span id="line-97"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Formats -&gt; Doc -&gt; Doc
-</span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall t. ToIter Format t =&gt; t -&gt; Formats
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppFormat"><span class="hs-identifier hs-var">ppFormat</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[Format] -&gt; Formats
+forall t. ToIter Format t =&gt; t -&gt; Formats
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#formats"><span class="hs-identifier hs-var">formats</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">Color -&gt; Format
 </span><a href="UVMHS.Lib.Pretty.Annotation.html#BG"><span class="hs-identifier hs-var">BG</span></a></span><span> </span><span class="annot"><span class="annottext">Color
-</span><a href="UVMHS.Lib.Pretty.Color.html#grayLight"><span class="hs-identifier hs-var">grayLight</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.Color.html#grayLight"><span class="hs-identifier hs-var">grayLight</span></a></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#8230;&quot;</span></span><span>
-</span><span id="line-98"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><span id="line-98"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; Doc
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680522711"><span class="hs-identifier hs-var">dR</span></a></span><span>
+</span><a href="#local-6989586621680553172"><span class="hs-identifier hs-var">dR</span></a></span><span>
 </span><span id="line-99"></span><span>      </span><span class="hs-special">]</span><span>
 </span><span id="line-100"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc -&gt; Doc
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">WindowR Doc Doc
-</span><a href="#local-6989586621680522711"><span class="hs-identifier hs-var">dR</span></a></span><span>
+</span><a href="#local-6989586621680553172"><span class="hs-identifier hs-var">dR</span></a></span><span>
 </span><span id="line-101"></span><span>        </span><span>
 </span><span id="line-102"></span><span class="hs-comment">-- import UVMHS.Core</span><span>
 </span><span id="line-103"></span><span>

@@ -9,11 +9,11 @@
 --   <a>ShortByteString</a> relates to <a>ByteString</a>.
 --   
 --   The main difference between <a>Text</a> and <a>ShortText</a> is that
---   <a>ShortText</a> uses UTF-8 instead of UTF-16 internally and also
---   doesn't support zero-copy slicing (thereby saving 2 words).
---   Consequently, the memory footprint of a (boxed) <a>ShortText</a> value
---   is 4 words (2 words when unboxed) plus the length of the UTF-8 encoded
---   payload.
+--   <a>ShortText</a> doesn't support zero-copy slicing (thereby saving 2
+--   words), and, compared to text-1.*, that it uses UTF-8 instead of
+--   UTF-16 internally. Consequently, the memory footprint of a (boxed)
+--   <a>ShortText</a> value is 4 words (2 words when unboxed) plus the
+--   length of the UTF-8 encoded payload.
 @package text-short
 @version 0.1.5
 

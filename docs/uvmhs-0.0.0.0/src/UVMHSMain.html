@@ -16,26 +16,34 @@
 </span><span id="line-16"></span><span>
 </span><span id="line-17"></span><span class="annot"><a href="UVMHSMain.html#main"><span class="hs-identifier hs-type">main</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-18"></span><span id="main"><span class="annot"><span class="annottext">main :: IO ()
-</span><a href="UVMHSMain.html#main"><span class="hs-identifier hs-var hs-var">main</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. IO a -&gt; IO a
-</span><a href="UVMHS.Core.IO.html#cleanExit"><span class="hs-identifier hs-var">cleanExit</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHSMain.html#main"><span class="hs-identifier hs-var hs-var">main</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">IO () -&gt; IO ()
+forall a. IO a -&gt; IO a
+</span><a href="UVMHS.Core.IO.html#cleanExit"><span class="hs-identifier hs-var">cleanExit</span></a></span><span> </span><span class="annot"><span class="annottext">(IO () -&gt; IO ()) -&gt; IO () -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-19"></span><span>  </span><span class="annot"><span class="annottext">forall a. Pretty a =&gt; a -&gt; IO ()
-</span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-19"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+forall a. Pretty a =&gt; a -&gt; IO ()
+</span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppHeader"><span class="hs-identifier hs-var">ppHeader</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;COLOR TEST&quot;</span></span><span>
-</span><span id="line-20"></span><span>  </span><span class="annot"><span class="annottext">forall a. Pretty a =&gt; a -&gt; IO ()
+</span><span id="line-20"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+forall a. Pretty a =&gt; a -&gt; IO ()
 </span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#colorsDemo"><span class="hs-identifier hs-var">colorsDemo</span></a></span><span>
 </span><span id="line-21"></span><span>  </span><span class="hs-special">$$</span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Testing.html#testModules"><span class="hs-identifier hs-type">testModules</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">False</span></span><span>
 </span><span id="line-22"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="hs-string">&quot;UVMHS.Tests.Core&quot;</span></span><span>
 </span><span id="line-23"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;UVMHS.Tests.Substitution&quot;</span></span><span>
 </span><span id="line-24"></span><span>    </span><span class="hs-special">]</span><span class="hs-special">)</span><span>
-</span><span id="line-25"></span><span>  </span><span class="annot"><span class="annottext">forall a. Pretty a =&gt; a -&gt; IO ()
-</span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-25"></span><span>  </span><span class="annot"><span class="annottext">Doc -&gt; IO ()
+forall a. Pretty a =&gt; a -&gt; IO ()
+</span><a href="UVMHS.Lib.Pretty.RenderANSI.html#pprint"><span class="hs-identifier hs-var">pprint</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; IO ()) -&gt; Doc -&gt; IO ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Color -&gt; Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppFG"><span class="hs-identifier hs-var">ppFG</span></a></span><span> </span><span class="annot"><span class="annottext">Color
-</span><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-var">teal</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-var">teal</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
 </span><span class="hs-string">&quot;&#175;\\_&#65113;&#12484;&#65114;_/&#175;&quot;</span></span><span>

@@ -17,7 +17,8 @@
 </span><span id="line-16"></span><span id="renderUTEnv%2080"><span class="annot"><span class="annottext">renderUTEnv&#8320; :: RenderUTEnv
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUTEnv%2080"><span class="hs-identifier hs-var hs-var">renderUTEnv&#8320;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTEnv"><span class="hs-identifier hs-type">RenderUTEnv</span></a></span><span> </span><span>
 </span><span id="line-17"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="annot"><span class="annottext">renderUTEnvUnderFormat :: &#119874; (&#8450; &#8743; Formats)
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUTEnvUnderFormat"><span class="hs-identifier hs-var">renderUTEnvUnderFormat</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. &#119874; a
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUTEnvUnderFormat"><span class="hs-identifier hs-var">renderUTEnvUnderFormat</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
+forall a. &#119874; a
 </span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-special">}</span><span>
 </span><span id="line-18"></span><span>
 </span><span id="line-19"></span><span class="hs-keyword">data</span><span> </span><span id="RenderUTState"><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTState"><span class="hs-identifier hs-var">RenderUTState</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="RenderUTState"><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTState"><span class="hs-identifier hs-var">RenderUTState</span></a></span></span><span>
@@ -30,7 +31,7 @@
 </span><span id="line-24"></span><span>  </span><span class="hs-comment">--                         ^^^</span><span>
 </span><span id="line-25"></span><span>  </span><span class="hs-comment">--                         length</span><span>
 </span><span id="line-26"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-27"></span><span id="t2StateUndersL"><span id="t2StateColL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">RenderUTState</span></span></span><span>
+</span><span id="line-27"></span><span id="t2StateColL"><span id="t2StateUndersL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">RenderUTState</span></span></span><span>
 </span><span id="line-28"></span><span>
 </span><span id="line-29"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2State%2080"><span class="hs-identifier hs-type">t2State&#8320;</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTState"><span class="hs-identifier hs-type">RenderUTState</span></a></span><span>
 </span><span id="line-30"></span><span id="t2State%2080"><span class="annot"><span class="annottext">t2State&#8320; :: RenderUTState
@@ -40,7 +41,8 @@
 </span><a href="UVMHS.Core.Init.html#%1D55F64"><span class="hs-identifier hs-var">&#120159;64</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;
 </span><span class="hs-number">0</span></span><span>
 </span><span id="line-32"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">t2StateUnders :: &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateUnders"><span class="hs-identifier hs-var">t2StateUnders</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateUnders"><span class="hs-identifier hs-var">t2StateUnders</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
 </span><span id="line-33"></span><span>  </span><span class="hs-special">}</span><span>
 </span><span id="line-34"></span><span>
@@ -50,302 +52,450 @@
 </span><span id="line-37"></span><span>
 </span><span id="line-38"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT"><span class="hs-identifier hs-type">onRenderUT</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span>
 </span><span id="line-39"></span><span id="onRenderUT"><span class="annot"><span class="annottext">onRenderUT :: (RenderUTM () -&gt; RenderUTM ()) -&gt; RenderUT -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT"><span class="hs-identifier hs-var hs-var">onRenderUT</span></a></span></span><span> </span><span id="local-6989586621680514404"><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUTM ()
-</span><a href="#local-6989586621680514404"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span id="local-6989586621680514403"><span class="annot"><span class="annottext">RenderUTM ()
-</span><a href="#local-6989586621680514403"><span class="hs-identifier hs-var">xM</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-var">RenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT"><span class="hs-identifier hs-var hs-var">onRenderUT</span></a></span></span><span> </span><span id="local-6989586621680544023"><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUTM ()
+</span><a href="#local-6989586621680544023"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span id="local-6989586621680544024"><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="#local-6989586621680544024"><span class="hs-identifier hs-var">xM</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUT
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-var">RenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUT) -&gt; RenderUTM () -&gt; RenderUT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUTM ()
-</span><a href="#local-6989586621680514404"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
-</span><a href="#local-6989586621680514403"><span class="hs-identifier hs-var">xM</span></a></span><span>
+</span><a href="#local-6989586621680544023"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="#local-6989586621680544024"><span class="hs-identifier hs-var">xM</span></a></span><span>
 </span><span id="line-40"></span><span>
 </span><span id="line-41"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT2"><span class="hs-identifier hs-type">onRenderUT2</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span>
 </span><span id="line-42"></span><span id="onRenderUT2"><span class="annot"><span class="annottext">onRenderUT2 :: (RenderUTM () -&gt; RenderUTM () -&gt; RenderUTM ())
 -&gt; RenderUT -&gt; RenderUT -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT2"><span class="hs-identifier hs-var hs-var">onRenderUT2</span></a></span></span><span> </span><span id="local-6989586621680514400"><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUTM () -&gt; RenderUTM ()
-</span><a href="#local-6989586621680514400"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span id="local-6989586621680514399"><span class="annot"><span class="annottext">RenderUTM ()
-</span><a href="#local-6989586621680514399"><span class="hs-identifier hs-var">xM&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span id="local-6989586621680514398"><span class="annot"><span class="annottext">RenderUTM ()
-</span><a href="#local-6989586621680514398"><span class="hs-identifier hs-var">xM&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-var">RenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT2"><span class="hs-identifier hs-var hs-var">onRenderUT2</span></a></span></span><span> </span><span id="local-6989586621680544027"><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUTM () -&gt; RenderUTM ()
+</span><a href="#local-6989586621680544027"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span id="local-6989586621680544028"><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="#local-6989586621680544028"><span class="hs-identifier hs-var">xM&#8321;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span id="local-6989586621680544029"><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="#local-6989586621680544029"><span class="hs-identifier hs-var">xM&#8322;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUT
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-var">RenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUT) -&gt; RenderUTM () -&gt; RenderUT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUTM () -&gt; RenderUTM ()
-</span><a href="#local-6989586621680514400"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
-</span><a href="#local-6989586621680514399"><span class="hs-identifier hs-var">xM&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
-</span><a href="#local-6989586621680514398"><span class="hs-identifier hs-var">xM&#8322;</span></a></span><span>
+</span><a href="#local-6989586621680544027"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="#local-6989586621680544028"><span class="hs-identifier hs-var">xM&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="#local-6989586621680544029"><span class="hs-identifier hs-var">xM&#8322;</span></a></span><span>
 </span><span id="line-43"></span><span>
-</span><span id="line-44"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span>   </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680514393"><span class="annot"><span class="annottext">null :: RenderUT
-</span><a href="#local-6989586621680514393"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-var">RenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Return m =&gt; m ()
-</span><a href="UVMHS.Core.Classes.Monad.html#skip"><span class="hs-identifier hs-var">skip</span></a></span><span>
-</span><span id="line-45"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680514387"><span class="annot"><span class="annottext">&#10746; :: RenderUT -&gt; RenderUT -&gt; RenderUT
-</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">(&#10746;)</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUTM () -&gt; RenderUTM ())
+</span><span id="line-44"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span>   </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680544034"><span class="annot"><span class="annottext">null :: RenderUT
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUT
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-var">RenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+forall (m :: * -&gt; *). Return m =&gt; m ()
+</span><a href="UVMHS.Core.Classes.Functors.html#skip"><span class="hs-identifier hs-var">skip</span></a></span><span>
+</span><span id="line-45"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span> </span><span class="hs-keyword">where</span><span> </span><span id="local-6989586621680544040"><span class="annot"><span class="annottext">&#10746; :: RenderUT -&gt; RenderUT -&gt; RenderUT
+</span><a href="#local-6989586621680544040"><span class="hs-operator hs-var hs-var hs-var hs-var">(&#10746;)</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUTM () -&gt; RenderUTM ())
 -&gt; RenderUT -&gt; RenderUT -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT2"><span class="hs-identifier hs-var">onRenderUT2</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Bind m =&gt; m a -&gt; m b -&gt; m b
-</span><a href="UVMHS.Core.Classes.Monad.html#%226B"><span class="hs-operator hs-var">(&#8811;)</span></a></span><span>
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT2"><span class="hs-identifier hs-var">onRenderUT2</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUTM () -&gt; RenderUTM ()
+forall (m :: * -&gt; *) a b. Bind m =&gt; m a -&gt; m b -&gt; m b
+</span><a href="UVMHS.Core.Classes.Functors.html#%226B"><span class="hs-operator hs-var">(&#8811;)</span></a></span><span>
 </span><span id="line-46"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span>
 </span><span id="line-47"></span><span>
 </span><span id="line-48"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#buildUndertags"><span class="hs-identifier hs-type">buildUndertags</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-49"></span><span id="buildUndertags"><span class="annot"><span class="annottext">buildUndertags :: &#8469;64 -&gt; RenderUTM ()
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#buildUndertags"><span class="hs-identifier hs-var hs-var">buildUndertags</span></a></span></span><span> </span><span id="local-6989586621680514378"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514378"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-50"></span><span>  </span><span id="local-6989586621680514377"><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-</span><a href="#local-6989586621680514377"><span class="hs-identifier hs-var">uf</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">forall r (m :: * -&gt; *) r'. MonadReader r m =&gt; (r &#10210; r') -&gt; m r'
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#buildUndertags"><span class="hs-identifier hs-var hs-var">buildUndertags</span></a></span></span><span> </span><span id="local-6989586621680544049"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544049"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-50"></span><span>  </span><span id="local-6989586621680544050"><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
+</span><a href="#local-6989586621680544050"><span class="hs-identifier hs-var">uf</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">(RenderUTEnv &#10210; &#119874; (&#8450; &#8743; Formats))
+-&gt; RWST RenderUTEnv SummaryO RenderUTState ID (&#119874; (&#8450; &#8743; Formats))
+forall r'.
+(RenderUTEnv &#10210; r') -&gt; RWST RenderUTEnv SummaryO RenderUTState ID r'
+forall r (m :: * -&gt; *) r'. MonadReader r m =&gt; (r &#10210; r') -&gt; m r'
 </span><a href="UVMHS.Core.Effects.html#askL"><span class="hs-identifier hs-var">askL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTEnv &#10210; &#119874; (&#8450; &#8743; Formats)
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUTEnvUnderFormatL"><span class="hs-identifier hs-var">renderUTEnvUnderFormatL</span></a></span><span>
 </span><span id="line-51"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-</span><a href="#local-6989586621680514377"><span class="hs-identifier hs-var">uf</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><a href="#local-6989586621680544050"><span class="hs-identifier hs-var">uf</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-52"></span><span>    </span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Return m =&gt; m ()
-</span><a href="UVMHS.Core.Classes.Monad.html#skip"><span class="hs-identifier hs-var">skip</span></a></span><span>
-</span><span id="line-53"></span><span>    </span><span class="annot"><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-type">Some</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680514374"><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680514374"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680514372"><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680514372"><span class="hs-identifier hs-var">fm</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-54"></span><span>      </span><span id="local-6989586621680514371"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514371"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a.
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+forall (m :: * -&gt; *). Return m =&gt; m ()
+</span><a href="UVMHS.Core.Classes.Functors.html#skip"><span class="hs-identifier hs-var">skip</span></a></span><span>
+</span><span id="line-53"></span><span>    </span><span class="annot"><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-type">Some</span></a></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680544053"><span class="annot"><span class="annottext">&#8450;
+</span><a href="#local-6989586621680544053"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680544055"><span class="annot"><span class="annottext">Formats
+</span><a href="#local-6989586621680544055"><span class="hs-identifier hs-var">fm</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-54"></span><span>      </span><span id="local-6989586621680544056"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544056"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">(RenderUTState &#10210; &#8469;64)
+-&gt; RWST RenderUTEnv SummaryO RenderUTState ID &#8469;64
+forall (m :: * -&gt; *) s a.
 (Monad m, MonadState s m) =&gt;
 (s &#10210; a) -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#getL"><span class="hs-identifier hs-var">getL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTState &#10210; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateColL"><span class="hs-identifier hs-var">t2StateColL</span></a></span><span>
-</span><span id="line-55"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a.
+</span><span id="line-55"></span><span>      </span><span class="annot"><span class="annottext">(RenderUTState &#10210; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+-&gt; (&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+    -&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+-&gt; RenderUTM ()
+forall (m :: * -&gt; *) s a.
 (Monad m, MonadState s m) =&gt;
 (s &#10210; a) -&gt; (a -&gt; a) -&gt; m ()
 </span><a href="UVMHS.Core.Effects.html#modifyL"><span class="hs-identifier hs-var">modifyL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTState &#10210; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateUndersL"><span class="hs-identifier hs-var">t2StateUndersL</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
-</span><a href="UVMHS.Core.Classes.Monoid.html#pospend"><span class="hs-identifier hs-var">pospend</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a t. Single a t =&gt; a -&gt; t
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateUndersL"><span class="hs-identifier hs-var">t2StateUndersL</span></a></span><span> </span><span class="annot"><span class="annottext">((&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+  -&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+ -&gt; RenderUTM ())
+-&gt; (&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+    -&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+-&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+-&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+-&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#pospend"><span class="hs-identifier hs-var">pospend</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+ -&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+ -&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+-&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+-&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+-&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats) -&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514371"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; b -&gt; a &#8743; b
+</span><a href="#local-6989586621680544056"><span class="hs-identifier hs-var">col</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64 &#8743; &#8469;64
+forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514378"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; b -&gt; a &#8743; b
+</span><a href="#local-6989586621680544049"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 &#8743; &#8469;64) -&gt; &#8450; -&gt; (&#8469;64 &#8743; &#8469;64) &#8743; &#8450;
+forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680514374"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. a -&gt; b -&gt; a &#8743; b
+</span><a href="#local-6989586621680544053"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) -&gt; Formats -&gt; ((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats
+forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680514372"><span class="hs-identifier hs-var">fm</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680544055"><span class="hs-identifier hs-var">fm</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-56"></span><span>
 </span><span id="line-57"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderNewline"><span class="hs-identifier hs-type">renderNewline</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-58"></span><span id="renderNewline"><span class="annot"><span class="annottext">renderNewline :: &#8469;64 -&gt; RenderUTM ()
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderNewline"><span class="hs-identifier hs-var hs-var">renderNewline</span></a></span></span><span> </span><span id="local-6989586621680514365"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514365"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-59"></span><span>  </span><span class="annot"><span class="annottext">forall o (m :: * -&gt; *). MonadWriter o m =&gt; o -&gt; m ()
-</span><a href="UVMHS.Core.Effects.html#tell"><span class="hs-identifier hs-var">tell</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderNewline"><span class="hs-identifier hs-var hs-var">renderNewline</span></a></span></span><span> </span><span id="local-6989586621680544062"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544062"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-59"></span><span>  </span><span class="annot"><span class="annottext">SummaryO -&gt; RenderUTM ()
+forall o (m :: * -&gt; *). MonadWriter o m =&gt; o -&gt; m ()
+</span><a href="UVMHS.Core.Effects.html#tell"><span class="hs-identifier hs-var">tell</span></a></span><span> </span><span class="annot"><span class="annottext">(SummaryO -&gt; RenderUTM ()) -&gt; SummaryO -&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Sep () (&#119868;A ChunkO) -&gt; SummaryO
-</span><a href="UVMHS.Lib.Pretty.Common.html#summaryChunksO"><span class="hs-identifier hs-var">summaryChunksO</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a i. Null a =&gt; i -&gt; Sep i a
-</span><a href="UVMHS.Lib.Sep.html#sepI"><span class="hs-identifier hs-var">sepI</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a. Append a =&gt; a -&gt; a -&gt; a
-</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; Sep i a
-</span><a href="UVMHS.Lib.Sep.html#SepE"><span class="hs-identifier hs-var">SepE</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a t. Single a t =&gt; a -&gt; t
-</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.Common.html#summaryChunksO"><span class="hs-identifier hs-var">summaryChunksO</span></a></span><span> </span><span class="annot"><span class="annottext">(Sep () (&#119868;A ChunkO) -&gt; SummaryO) -&gt; Sep () (&#119868;A ChunkO) -&gt; SummaryO
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">() -&gt; Sep () (&#119868;A ChunkO)
+forall a i. Null a =&gt; i -&gt; Sep i a
+</span><a href="UVMHS.Lib.Sep.html#sepI"><span class="hs-identifier hs-var">sepI</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Sep () (&#119868;A ChunkO) -&gt; Sep () (&#119868;A ChunkO) -&gt; Sep () (&#119868;A ChunkO)
+forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868;A ChunkO -&gt; Sep () (&#119868;A ChunkO)
+forall i a. a -&gt; Sep i a
+</span><a href="UVMHS.Lib.Sep.html#SepE"><span class="hs-identifier hs-var">SepE</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ChunkO -&gt; &#119868;A ChunkO
+forall a t. Single a t =&gt; a -&gt; t
+</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">(ChunkO -&gt; &#119868;A ChunkO) -&gt; ChunkO -&gt; &#119868;A ChunkO
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; ChunkO
 </span><a href="UVMHS.Lib.Pretty.Common.html#PaddingChunkO"><span class="hs-identifier hs-var">PaddingChunkO</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514365"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-60"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a.
+</span><a href="#local-6989586621680544062"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-60"></span><span>  </span><span class="annot"><span class="annottext">(RenderUTState &#10210; &#8469;64) -&gt; &#8469;64 -&gt; RenderUTM ()
+forall (m :: * -&gt; *) s a.
 (Monad m, MonadState s m) =&gt;
 (s &#10210; a) -&gt; a -&gt; m ()
 </span><a href="UVMHS.Core.Effects.html#putL"><span class="hs-identifier hs-var">putL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTState &#10210; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateColL"><span class="hs-identifier hs-var">t2StateColL</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514365"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621680544062"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-61"></span><span>
 </span><span id="line-62"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderRaw"><span class="hs-identifier hs-type">renderRaw</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-63"></span><span id="renderRaw"><span class="annot"><span class="annottext">renderRaw :: &#8469;64 -&gt; &#120138; -&gt; RenderUTM ()
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderRaw"><span class="hs-identifier hs-var hs-var">renderRaw</span></a></span></span><span> </span><span id="local-6989586621680514357"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514357"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621680514356"><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680514356"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-64"></span><span>  </span><span class="annot"><span class="annottext">forall o (m :: * -&gt; *). MonadWriter o m =&gt; o -&gt; m ()
-</span><a href="UVMHS.Core.Effects.html#tell"><span class="hs-identifier hs-var">tell</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderRaw"><span class="hs-identifier hs-var hs-var">renderRaw</span></a></span></span><span> </span><span id="local-6989586621680544070"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544070"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621680544071"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621680544071"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-64"></span><span>  </span><span class="annot"><span class="annottext">SummaryO -&gt; RenderUTM ()
+forall o (m :: * -&gt; *). MonadWriter o m =&gt; o -&gt; m ()
+</span><a href="UVMHS.Core.Effects.html#tell"><span class="hs-identifier hs-var">tell</span></a></span><span> </span><span class="annot"><span class="annottext">(SummaryO -&gt; RenderUTM ()) -&gt; SummaryO -&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Sep () (&#119868;A ChunkO) -&gt; SummaryO
-</span><a href="UVMHS.Lib.Pretty.Common.html#summaryChunksO"><span class="hs-identifier hs-var">summaryChunksO</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; Sep i a
-</span><a href="UVMHS.Lib.Sep.html#SepE"><span class="hs-identifier hs-var">SepE</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a t. Single a t =&gt; a -&gt; t
-</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.Common.html#summaryChunksO"><span class="hs-identifier hs-var">summaryChunksO</span></a></span><span> </span><span class="annot"><span class="annottext">(Sep () (&#119868;A ChunkO) -&gt; SummaryO) -&gt; Sep () (&#119868;A ChunkO) -&gt; SummaryO
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868;A ChunkO -&gt; Sep () (&#119868;A ChunkO)
+forall i a. a -&gt; Sep i a
+</span><a href="UVMHS.Lib.Sep.html#SepE"><span class="hs-identifier hs-var">SepE</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868;A ChunkO -&gt; Sep () (&#119868;A ChunkO))
+-&gt; &#119868;A ChunkO -&gt; Sep () (&#119868;A ChunkO)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">ChunkO -&gt; &#119868;A ChunkO
+forall a t. Single a t =&gt; a -&gt; t
+</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">(ChunkO -&gt; &#119868;A ChunkO) -&gt; ChunkO -&gt; &#119868;A ChunkO
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#120138; -&gt; ChunkO
 </span><a href="UVMHS.Lib.Pretty.Common.html#RawChunkO"><span class="hs-identifier hs-var">RawChunkO</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514357"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680514356"><span class="hs-identifier hs-var">s</span></a></span><span>
-</span><span id="line-65"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a.
+</span><a href="#local-6989586621680544070"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621680544071"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-65"></span><span>  </span><span class="annot"><span class="annottext">(RenderUTState &#10210; &#8469;64) -&gt; (&#8469;64 -&gt; &#8469;64) -&gt; RenderUTM ()
+forall (m :: * -&gt; *) s a.
 (Monad m, MonadState s m) =&gt;
 (s &#10210; a) -&gt; (a -&gt; a) -&gt; m ()
 </span><a href="UVMHS.Core.Effects.html#modifyL"><span class="hs-identifier hs-var">modifyL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTState &#10210; &#8469;64
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateColL"><span class="hs-identifier hs-var">t2StateColL</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Plus a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateColL"><span class="hs-identifier hs-var">t2StateColL</span></a></span><span> </span><span class="annot"><span class="annottext">((&#8469;64 -&gt; &#8469;64) -&gt; RenderUTM ()) -&gt; (&#8469;64 -&gt; &#8469;64) -&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">(+)</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514357"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><a href="#local-6989586621680544070"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-66"></span><span>
 </span><span id="line-67"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderPadding"><span class="hs-identifier hs-type">renderPadding</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-68"></span><span id="renderPadding"><span class="annot"><span class="annottext">renderPadding :: &#8469;64 -&gt; RenderUTM ()
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderPadding"><span class="hs-identifier hs-var hs-var">renderPadding</span></a></span></span><span> </span><span id="local-6989586621680514352"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514352"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderPadding"><span class="hs-identifier hs-var hs-var">renderPadding</span></a></span></span><span> </span><span id="local-6989586621680544075"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544075"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-69"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514352"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
-</span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Zero a =&gt; a
+</span><a href="#local-6989586621680544075"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#120121;
+forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
+</span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+forall a. Zero a =&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-70"></span><span>    </span><span class="annot"><span class="annottext">&#120121;
-</span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Return m =&gt; m ()
-</span><a href="UVMHS.Core.Classes.Monad.html#skip"><span class="hs-identifier hs-var">skip</span></a></span><span>
+</span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+forall (m :: * -&gt; *). Return m =&gt; m ()
+</span><a href="UVMHS.Core.Classes.Functors.html#skip"><span class="hs-identifier hs-var">skip</span></a></span><span>
 </span><span id="line-71"></span><span>    </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-72"></span><span>      </span><span class="annot"><span class="annottext">forall o (m :: * -&gt; *). MonadWriter o m =&gt; o -&gt; m ()
-</span><a href="UVMHS.Core.Effects.html#tell"><span class="hs-identifier hs-var">tell</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><span id="line-72"></span><span>      </span><span class="annot"><span class="annottext">SummaryO -&gt; RenderUTM ()
+forall o (m :: * -&gt; *). MonadWriter o m =&gt; o -&gt; m ()
+</span><a href="UVMHS.Core.Effects.html#tell"><span class="hs-identifier hs-var">tell</span></a></span><span> </span><span class="annot"><span class="annottext">(SummaryO -&gt; RenderUTM ()) -&gt; SummaryO -&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Sep () (&#119868;A ChunkO) -&gt; SummaryO
-</span><a href="UVMHS.Lib.Pretty.Common.html#summaryChunksO"><span class="hs-identifier hs-var">summaryChunksO</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall i a. a -&gt; Sep i a
-</span><a href="UVMHS.Lib.Sep.html#SepE"><span class="hs-identifier hs-var">SepE</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a t. Single a t =&gt; a -&gt; t
-</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.Common.html#summaryChunksO"><span class="hs-identifier hs-var">summaryChunksO</span></a></span><span> </span><span class="annot"><span class="annottext">(Sep () (&#119868;A ChunkO) -&gt; SummaryO) -&gt; Sep () (&#119868;A ChunkO) -&gt; SummaryO
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868;A ChunkO -&gt; Sep () (&#119868;A ChunkO)
+forall i a. a -&gt; Sep i a
+</span><a href="UVMHS.Lib.Sep.html#SepE"><span class="hs-identifier hs-var">SepE</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868;A ChunkO -&gt; Sep () (&#119868;A ChunkO))
+-&gt; &#119868;A ChunkO -&gt; Sep () (&#119868;A ChunkO)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">ChunkO -&gt; &#119868;A ChunkO
+forall a t. Single a t =&gt; a -&gt; t
+</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">(ChunkO -&gt; &#119868;A ChunkO) -&gt; ChunkO -&gt; &#119868;A ChunkO
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; ChunkO
 </span><a href="UVMHS.Lib.Pretty.Common.html#PaddingChunkO"><span class="hs-identifier hs-var">PaddingChunkO</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514352"><span class="hs-identifier hs-var">n</span></a></span><span>
-</span><span id="line-73"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a.
+</span><a href="#local-6989586621680544075"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><span id="line-73"></span><span>      </span><span class="annot"><span class="annottext">(RenderUTState &#10210; &#8469;64) -&gt; (&#8469;64 -&gt; &#8469;64) -&gt; RenderUTM ()
+forall (m :: * -&gt; *) s a.
 (Monad m, MonadState s m) =&gt;
 (s &#10210; a) -&gt; (a -&gt; a) -&gt; m ()
 </span><a href="UVMHS.Core.Effects.html#modifyL"><span class="hs-identifier hs-var">modifyL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTState &#10210; &#8469;64
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateColL"><span class="hs-identifier hs-var">t2StateColL</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Plus a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateColL"><span class="hs-identifier hs-var">t2StateColL</span></a></span><span> </span><span class="annot"><span class="annottext">((&#8469;64 -&gt; &#8469;64) -&gt; RenderUTM ()) -&gt; (&#8469;64 -&gt; &#8469;64) -&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+forall a. Plus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#%2B"><span class="hs-operator hs-var">(+)</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514352"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621680544075"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-74"></span><span>
 </span><span id="line-75"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUndertags"><span class="hs-identifier hs-type">renderUndertags</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-76"></span><span id="renderUndertags"><span class="annot"><span class="annottext">renderUndertags :: RenderUTM ()
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUndertags"><span class="hs-identifier hs-var hs-var">renderUndertags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-77"></span><span>  </span><span id="local-6989586621680514348"><span class="annot"><span class="annottext">&#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
-</span><a href="#local-6989586621680514348"><span class="hs-identifier hs-var">us</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">forall a t. ToIter a t =&gt; t -&gt; &#119871; a
-</span><a href="UVMHS.Core.Data.Iter.html#list"><span class="hs-identifier hs-var">list</span></a></span><span> </span><span class="annot"><span class="annottext">forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functor.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a.
+</span><span id="line-77"></span><span>  </span><span id="local-6989586621680544079"><span class="annot"><span class="annottext">&#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+</span><a href="#local-6989586621680544079"><span class="hs-identifier hs-var">us</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats) -&gt; &#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+forall a t. ToIter a t =&gt; t -&gt; &#119871; a
+</span><a href="UVMHS.Core.Data.Iter.html#list"><span class="hs-identifier hs-var">list</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+ -&gt; &#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+-&gt; RWST
+     RenderUTEnv
+     SummaryO
+     RenderUTState
+     ID
+     (&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+-&gt; RWST
+     RenderUTEnv
+     SummaryO
+     RenderUTState
+     ID
+     (&#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">(RenderUTState &#10210; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+-&gt; RWST
+     RenderUTEnv
+     SummaryO
+     RenderUTState
+     ID
+     (&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+forall (m :: * -&gt; *) s a.
 (Monad m, MonadState s m) =&gt;
 (s &#10210; a) -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#getL"><span class="hs-identifier hs-var">getL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTState &#10210; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateUndersL"><span class="hs-identifier hs-var">t2StateUndersL</span></a></span><span>
-</span><span id="line-78"></span><span>  </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a.
+</span><span id="line-78"></span><span>  </span><span class="annot"><span class="annottext">(RenderUTState &#10210; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats))
+-&gt; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats) -&gt; RenderUTM ()
+forall (m :: * -&gt; *) s a.
 (Monad m, MonadState s m) =&gt;
 (s &#10210; a) -&gt; a -&gt; m ()
 </span><a href="UVMHS.Core.Effects.html#putL"><span class="hs-identifier hs-var">putL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTState &#10210; &#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateUndersL"><span class="hs-identifier hs-var">t2StateUndersL</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateUndersL"><span class="hs-identifier hs-var">t2StateUndersL</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
 </span><span id="line-79"></span><span>  </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">&#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
-</span><a href="#local-6989586621680514348"><span class="hs-identifier hs-var">us</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
-</span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><a href="#local-6989586621680544079"><span class="hs-identifier hs-var">us</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+-&gt; &#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats) -&gt; &#120121;
+forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
+</span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="hs-keyword">of</span><span>
 </span><span id="line-80"></span><span>    </span><span class="annot"><span class="annottext">&#120121;
-</span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *). Return m =&gt; m ()
-</span><a href="UVMHS.Core.Classes.Monad.html#skip"><span class="hs-identifier hs-var">skip</span></a></span><span>
+</span><span class="hs-identifier hs-var">True</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+forall (m :: * -&gt; *). Return m =&gt; m ()
+</span><a href="UVMHS.Core.Classes.Functors.html#skip"><span class="hs-identifier hs-var">skip</span></a></span><span>
 </span><span id="line-81"></span><span>    </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
 </span><span id="line-82"></span><span>      </span><span class="annot"><span class="annottext">&#8469;64 -&gt; RenderUTM ()
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderNewline"><span class="hs-identifier hs-var">renderNewline</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Zero a =&gt; a
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderNewline"><span class="hs-identifier hs-var">renderNewline</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+forall a. Zero a =&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#zero"><span class="hs-identifier hs-var">zero</span></a></span><span>
-</span><span id="line-83"></span><span>      </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a t.
+</span><span id="line-83"></span><span>      </span><span class="annot"><span class="annottext">&#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
+-&gt; ((((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats) -&gt; RenderUTM ()) -&gt; RenderUTM ()
+forall (m :: * -&gt; *) a t.
 (Monad m, ToIter a t) =&gt;
 t -&gt; (a -&gt; m ()) -&gt; m ()
 </span><a href="UVMHS.Core.Data.Iter.html#eachOn"><span class="hs-identifier hs-var">eachOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; (((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats)
-</span><a href="#local-6989586621680514348"><span class="hs-identifier hs-var">us</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680514344"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514344"><span class="hs-identifier hs-var">colf</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680514343"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514343"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680514342"><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680514342"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680514341"><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680514341"><span class="hs-identifier hs-var">fm</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-84"></span><span>        </span><span id="local-6989586621680514340"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514340"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) s a.
+</span><a href="#local-6989586621680544079"><span class="hs-identifier hs-var">us</span></a></span><span> </span><span class="annot"><span class="annottext">(((((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats) -&gt; RenderUTM ()) -&gt; RenderUTM ())
+-&gt; ((((&#8469;64 &#8743; &#8469;64) &#8743; &#8450;) &#8743; Formats) -&gt; RenderUTM ()) -&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680544083"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544083"><span class="hs-identifier hs-var">colf</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680544084"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544084"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680544085"><span class="annot"><span class="annottext">&#8450;
+</span><a href="#local-6989586621680544085"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680544086"><span class="annot"><span class="annottext">Formats
+</span><a href="#local-6989586621680544086"><span class="hs-identifier hs-var">fm</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-84"></span><span>        </span><span id="local-6989586621680544087"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544087"><span class="hs-identifier hs-var">col</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">(RenderUTState &#10210; &#8469;64)
+-&gt; RWST RenderUTEnv SummaryO RenderUTState ID &#8469;64
+forall (m :: * -&gt; *) s a.
 (Monad m, MonadState s m) =&gt;
 (s &#10210; a) -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#getL"><span class="hs-identifier hs-var">getL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTState &#10210; &#8469;64
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2StateColL"><span class="hs-identifier hs-var">t2StateColL</span></a></span><span>
 </span><span id="line-85"></span><span>        </span><span class="annot"><span class="annottext">&#8469;64 -&gt; RenderUTM ()
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderPadding"><span class="hs-identifier hs-var">renderPadding</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderPadding"><span class="hs-identifier hs-var">renderPadding</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8469;64 -&gt; RenderUTM ()) -&gt; &#8469;64 -&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514344"><span class="hs-identifier hs-var">colf</span></a></span><span> </span><span class="annot"><span class="annottext">forall a. Minus a =&gt; a -&gt; a -&gt; a
+</span><a href="#local-6989586621680544083"><span class="hs-identifier hs-var">colf</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#8469;64
+forall a. Minus a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#-"><span class="hs-glyph hs-var">-</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514340"><span class="hs-identifier hs-var">col</span></a></span><span>
-</span><span id="line-86"></span><span>        </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) o a.
+</span><a href="#local-6989586621680544087"><span class="hs-identifier hs-var">col</span></a></span><span>
+</span><span id="line-86"></span><span>        </span><span class="annot"><span class="annottext">(SummaryO -&gt; SummaryO) -&gt; RenderUTM () -&gt; RenderUTM ()
+forall (m :: * -&gt; *) o a.
 (Monad m, MonadWriter o m) =&gt;
 (o -&gt; o) -&gt; m a -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#mapOut"><span class="hs-identifier hs-var">mapOut</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; SummaryO -&gt; SummaryO
 </span><a href="UVMHS.Lib.Pretty.Common.html#annotateSummaryO"><span class="hs-identifier hs-var">annotateSummaryO</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680514341"><span class="hs-identifier hs-var">fm</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="#local-6989586621680544086"><span class="hs-identifier hs-var">fm</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUTM ()) -&gt; RenderUTM () -&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#120138; -&gt; RenderUTM ()
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderRaw"><span class="hs-identifier hs-var">renderRaw</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514343"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
-</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall n a. (Eq n, Zero n, One n, Plus n) =&gt; n -&gt; a -&gt; &#119868; a
-</span><a href="UVMHS.Core.Data.Iter.html#replicate"><span class="hs-identifier hs-var">replicate</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. ToNat a =&gt; a -&gt; &#8469;
+</span><a href="#local-6989586621680544084"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; RenderUTM ()) -&gt; &#120138; -&gt; RenderUTM ()
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; &#8450; -&gt; &#120138;
+forall t. ToIter &#8450; t =&gt; t -&gt; &#120138;
+</span><a href="UVMHS.Core.Data.Iter.html#string"><span class="hs-identifier hs-var">string</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; &#8450; -&gt; &#120138;) -&gt; &#119868; &#8450; -&gt; &#120138;
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469; -&gt; &#8450; -&gt; &#119868; &#8450;
+forall n a. (Eq n, Zero n, One n, Plus n) =&gt; n -&gt; a -&gt; &#119868; a
+</span><a href="UVMHS.Core.Data.Iter.html#replicate"><span class="hs-identifier hs-var">replicate</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;
+forall a. ToNat a =&gt; a -&gt; &#8469;
 </span><a href="UVMHS.Core.Classes.Arithmetic.html#nat"><span class="hs-identifier hs-var">nat</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514343"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680514342"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><a href="#local-6989586621680544084"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#8450;
+</span><a href="#local-6989586621680544085"><span class="hs-identifier hs-var">c</span></a></span><span>
 </span><span id="line-87"></span><span>
 </span><span id="line-88"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderChunkUndertags"><span class="hs-identifier hs-type">renderChunkUndertags</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Common.html#ChunkI"><span class="hs-identifier hs-type">ChunkI</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-89"></span><span id="renderChunkUndertags"><span class="annot"><span class="annottext">renderChunkUndertags :: ChunkI -&gt; RenderUTM ()
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderChunkUndertags"><span class="hs-identifier hs-var hs-var">renderChunkUndertags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-90"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Common.html#RawChunkI"><span class="hs-identifier hs-type">RawChunkI</span></a></span><span> </span><span id="local-6989586621680514331"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514331"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621680514330"><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680514330"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; RenderUTM ()
+</span><span id="line-90"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Common.html#RawChunkI"><span class="hs-identifier hs-type">RawChunkI</span></a></span><span> </span><span id="local-6989586621680544096"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544096"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621680544097"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621680544097"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; RenderUTM ()
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#buildUndertags"><span class="hs-identifier hs-var">buildUndertags</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514331"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#120138; -&gt; RenderUTM ()
+</span><a href="#local-6989586621680544096"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#120138; -&gt; RenderUTM ()
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderRaw"><span class="hs-identifier hs-var">renderRaw</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514331"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680514330"><span class="hs-identifier hs-var">s</span></a></span><span>
-</span><span id="line-91"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Common.html#NewlineChunkI"><span class="hs-identifier hs-type">NewlineChunkI</span></a></span><span> </span><span id="local-6989586621680514328"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514328"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="#local-6989586621680544096"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621680544097"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-91"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Pretty.Common.html#NewlineChunkI"><span class="hs-identifier hs-type">NewlineChunkI</span></a></span><span> </span><span id="local-6989586621680544099"><span class="annot"><span class="annottext">&#8469;64
+</span><a href="#local-6989586621680544099"><span class="hs-identifier hs-var">n</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-keyword">do</span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUndertags"><span class="hs-identifier hs-var">renderUndertags</span></a></span><span> </span><span class="hs-special">;</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; RenderUTM ()
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderNewline"><span class="hs-identifier hs-var">renderNewline</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680514328"><span class="hs-identifier hs-var">n</span></a></span><span>
+</span><a href="#local-6989586621680544099"><span class="hs-identifier hs-var">n</span></a></span><span>
 </span><span id="line-92"></span><span>
 </span><span id="line-93"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#annotateRenderUT"><span class="hs-identifier hs-type">annotateRenderUT</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUTM"><span class="hs-identifier hs-type">RenderUTM</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-94"></span><span id="annotateRenderUT"><span class="annot"><span class="annottext">annotateRenderUT :: Annotation -&gt; RenderUTM () -&gt; RenderUTM ()
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#annotateRenderUT"><span class="hs-identifier hs-var hs-var">annotateRenderUT</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span> </span><span id="local-6989586621680514325"><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680514325"><span class="hs-identifier hs-var">fm</span></a></span></span><span> </span><span id="local-6989586621680514324"><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-</span><a href="#local-6989586621680514324"><span class="hs-identifier hs-var">ut</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) o a.
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#annotateRenderUT"><span class="hs-identifier hs-var hs-var">annotateRenderUT</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Annotation.html#Annotation"><span class="hs-identifier hs-type">Annotation</span></a></span><span> </span><span id="local-6989586621680544102"><span class="annot"><span class="annottext">Formats
+</span><a href="#local-6989586621680544102"><span class="hs-identifier hs-var">fm</span></a></span></span><span> </span><span id="local-6989586621680544103"><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
+</span><a href="#local-6989586621680544103"><span class="hs-identifier hs-var">ut</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(SummaryO -&gt; SummaryO) -&gt; RenderUTM () -&gt; RenderUTM ()
+forall (m :: * -&gt; *) o a.
 (Monad m, MonadWriter o m) =&gt;
 (o -&gt; o) -&gt; m a -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#mapOut"><span class="hs-identifier hs-var">mapOut</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Formats -&gt; SummaryO -&gt; SummaryO
 </span><a href="UVMHS.Lib.Pretty.Common.html#annotateSummaryO"><span class="hs-identifier hs-var">annotateSummaryO</span></a></span><span> </span><span class="annot"><span class="annottext">Formats
-</span><a href="#local-6989586621680514325"><span class="hs-identifier hs-var">fm</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) r&#8321; r&#8322; a.
+</span><a href="#local-6989586621680544102"><span class="hs-identifier hs-var">fm</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUTM ())
+-&gt; (RenderUTM () -&gt; RenderUTM ()) -&gt; RenderUTM () -&gt; RenderUTM ()
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">(RenderUTEnv &#10210; &#119874; (&#8450; &#8743; Formats))
+-&gt; (&#119874; (&#8450; &#8743; Formats) -&gt; &#119874; (&#8450; &#8743; Formats))
+-&gt; RenderUTM ()
+-&gt; RenderUTM ()
+forall (m :: * -&gt; *) r&#8321; r&#8322; a.
 (Monad m, MonadReader r&#8321; m) =&gt;
 (r&#8321; &#10210; r&#8322;) -&gt; (r&#8322; -&gt; r&#8322;) -&gt; m a -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#mapEnvL"><span class="hs-identifier hs-var">mapEnvL</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTEnv &#10210; &#119874; (&#8450; &#8743; Formats)
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUTEnvUnderFormatL"><span class="hs-identifier hs-var">renderUTEnvUnderFormatL</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUTEnvUnderFormatL"><span class="hs-identifier hs-var">renderUTEnvUnderFormatL</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats) -&gt; &#119874; (&#8450; &#8743; Formats) -&gt; &#119874; (&#8450; &#8743; Formats)
+forall a. &#119874; a -&gt; &#119874; a -&gt; &#119874; a
 </span><a href="UVMHS.Core.Data.Option.html#first"><span class="hs-identifier hs-var">first</span></a></span><span> </span><span class="annot"><span class="annottext">&#119874; (&#8450; &#8743; Formats)
-</span><a href="#local-6989586621680514324"><span class="hs-identifier hs-var">ut</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680544103"><span class="hs-identifier hs-var">ut</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-95"></span><span>
 </span><span id="line-96"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#compileRenderUT"><span class="hs-identifier hs-type">compileRenderUT</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Common.html#TreeI"><span class="hs-identifier hs-type">TreeI</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-type">RenderUT</span></a></span><span>
 </span><span id="line-97"></span><span id="compileRenderUT"><span class="annot"><span class="annottext">compileRenderUT :: TreeI -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#compileRenderUT"><span class="hs-identifier hs-var hs-var">compileRenderUT</span></a></span></span><span> </span><span id="local-6989586621680514319"><span class="annot"><span class="annottext">TreeI
-</span><a href="#local-6989586621680514319"><span class="hs-identifier hs-var">rd</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUTM ()) -&gt; RenderUT -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT"><span class="hs-identifier hs-var">onRenderUT</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680514318"><span class="annot"><span class="annottext">RenderUTM ()
-</span><a href="#local-6989586621680514318"><span class="hs-identifier hs-var">xM</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
-</span><a href="#local-6989586621680514318"><span class="hs-identifier hs-var">xM</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a b. Bind m =&gt; m a -&gt; m b -&gt; m b
-</span><a href="UVMHS.Core.Classes.Monad.html#%226B"><span class="hs-operator hs-var">&#8811;</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUndertags"><span class="hs-identifier hs-var">renderUndertags</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">forall i a.
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#compileRenderUT"><span class="hs-identifier hs-var hs-var">compileRenderUT</span></a></span></span><span> </span><span id="local-6989586621680544108"><span class="annot"><span class="annottext">TreeI
+</span><a href="#local-6989586621680544108"><span class="hs-identifier hs-var">rd</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUTM ()) -&gt; RenderUT -&gt; RenderUT
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT"><span class="hs-identifier hs-var">onRenderUT</span></a></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680544109"><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="#local-6989586621680544109"><span class="hs-identifier hs-var">xM</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="#local-6989586621680544109"><span class="hs-identifier hs-var">xM</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUTM () -&gt; RenderUTM ()
+forall (m :: * -&gt; *) a b. Bind m =&gt; m a -&gt; m b -&gt; m b
+</span><a href="UVMHS.Core.Classes.Functors.html#%226B"><span class="hs-operator hs-var">&#8811;</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM ()
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUndertags"><span class="hs-identifier hs-var">renderUndertags</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(RenderUT -&gt; RenderUT) -&gt; RenderUT -&gt; RenderUT
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">TreeI
+-&gt; forall b.
+   Monoid b =&gt;
+   (&#119868; ChunkI -&gt; b) -&gt; (Annotation -&gt; b -&gt; b) -&gt; b
+forall i a.
 &#119879;V i a -&gt; forall b. Monoid b =&gt; (a -&gt; b) -&gt; (i -&gt; b -&gt; b) -&gt; b
 </span><a href="UVMHS.Lib.TreeAnnote.html#un%1D447V"><span class="hs-identifier hs-var">un&#119879;V</span></a></span><span> </span><span class="annot"><span class="annottext">TreeI
-</span><a href="#local-6989586621680514319"><span class="hs-identifier hs-var">rd</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; ChunkI -&gt; RenderUT
-</span><a href="#local-6989586621680514316"><span class="hs-identifier hs-var">f&#8337;</span></a></span><span> </span><span class="annot"><span class="annottext">Annotation -&gt; RenderUT -&gt; RenderUT
-</span><a href="#local-6989586621680514315"><span class="hs-identifier hs-var">f&#8336;</span></a></span><span>
+</span><a href="#local-6989586621680544108"><span class="hs-identifier hs-var">rd</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; ChunkI -&gt; RenderUT
+</span><a href="#local-6989586621680544111"><span class="hs-identifier hs-var">f&#8337;</span></a></span><span> </span><span class="annot"><span class="annottext">Annotation -&gt; RenderUT -&gt; RenderUT
+</span><a href="#local-6989586621680544112"><span class="hs-identifier hs-var">f&#8336;</span></a></span><span>
 </span><span id="line-98"></span><span>  </span><span class="hs-keyword">where</span><span> </span><span>
-</span><span id="line-99"></span><span>    </span><span id="local-6989586621680514316"><span class="annot"><span class="annottext">f&#8337; :: &#119868; ChunkI -&gt; RenderUT
-</span><a href="#local-6989586621680514316"><span class="hs-identifier hs-var hs-var">f&#8337;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-var">RenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">forall (m :: * -&gt; *) a t.
+</span><span id="line-99"></span><span>    </span><span id="local-6989586621680544111"><span class="annot"><span class="annottext">f&#8337; :: &#119868; ChunkI -&gt; RenderUT
+</span><a href="#local-6989586621680544111"><span class="hs-identifier hs-var hs-var">f&#8337;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RenderUT
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#RenderUT"><span class="hs-identifier hs-var">RenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUT)
+-&gt; (&#119868; ChunkI -&gt; RenderUTM ()) -&gt; &#119868; ChunkI -&gt; RenderUT
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">(ChunkI -&gt; RenderUTM ()) -&gt; &#119868; ChunkI -&gt; RenderUTM ()
+forall (m :: * -&gt; *) a t.
 (Monad m, ToIter a t) =&gt;
 (a -&gt; m ()) -&gt; t -&gt; m ()
 </span><a href="UVMHS.Core.Data.Iter.html#eachWith"><span class="hs-identifier hs-var">eachWith</span></a></span><span> </span><span class="annot"><span class="annottext">ChunkI -&gt; RenderUTM ()
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderChunkUndertags"><span class="hs-identifier hs-var">renderChunkUndertags</span></a></span><span>
-</span><span id="line-100"></span><span>    </span><span id="local-6989586621680514315"><span class="annot"><span class="annottext">f&#8336; :: Annotation -&gt; RenderUT -&gt; RenderUT
-</span><a href="#local-6989586621680514315"><span class="hs-identifier hs-var hs-var">f&#8336;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUTM ()) -&gt; RenderUT -&gt; RenderUT
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT"><span class="hs-identifier hs-var">onRenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span id="line-100"></span><span>    </span><span id="local-6989586621680544112"><span class="annot"><span class="annottext">f&#8336; :: Annotation -&gt; RenderUT -&gt; RenderUT
+</span><a href="#local-6989586621680544112"><span class="hs-identifier hs-var hs-var">f&#8336;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; RenderUTM ()) -&gt; RenderUT -&gt; RenderUT
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#onRenderUT"><span class="hs-identifier hs-var">onRenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">((RenderUTM () -&gt; RenderUTM ()) -&gt; RenderUT -&gt; RenderUT)
+-&gt; (Annotation -&gt; RenderUTM () -&gt; RenderUTM ())
+-&gt; Annotation
+-&gt; RenderUT
+-&gt; RenderUT
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">Annotation -&gt; RenderUTM () -&gt; RenderUTM ()
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#annotateRenderUT"><span class="hs-identifier hs-var">annotateRenderUT</span></a></span><span>
 </span><span id="line-101"></span><span>
 </span><span id="line-102"></span><span class="annot"><a href="UVMHS.Lib.Pretty.RenderUndertags.html#execRenderUT"><span class="hs-identifier hs-type">execRenderUT</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Common.html#TreeI"><span class="hs-identifier hs-type">TreeI</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Common.html#SummaryO"><span class="hs-identifier hs-type">SummaryO</span></a></span><span>
 </span><span id="line-103"></span><span id="execRenderUT"><span class="annot"><span class="annottext">execRenderUT :: TreeI -&gt; SummaryO
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#execRenderUT"><span class="hs-identifier hs-var hs-var">execRenderUT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">forall r o s a. r -&gt; s -&gt; RWS r o s a -&gt; a
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#execRenderUT"><span class="hs-identifier hs-var hs-var">execRenderUT</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">RenderUTEnv
+-&gt; RenderUTState
+-&gt; RWS RenderUTEnv SummaryO RenderUTState SummaryO
+-&gt; SummaryO
+forall r o s a. r -&gt; s -&gt; RWS r o s a -&gt; a
 </span><a href="UVMHS.Core.Monads.html#evalRWS"><span class="hs-identifier hs-var">evalRWS</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTEnv
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#renderUTEnv%2080"><span class="hs-identifier hs-var">renderUTEnv&#8320;</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTState
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2State%2080"><span class="hs-identifier hs-var">t2State&#8320;</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
-</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">forall o (m :: * -&gt; *) a. (Monad m, MonadWriter o m) =&gt; m a -&gt; m o
-</span><a href="UVMHS.Core.Effects.html#retOut"><span class="hs-identifier hs-var">retOut</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#t2State%2080"><span class="hs-identifier hs-var">t2State&#8320;</span></a></span><span> </span><span class="annot"><span class="annottext">(RWS RenderUTEnv SummaryO RenderUTState SummaryO -&gt; SummaryO)
+-&gt; (RenderUTM ()
+    -&gt; RWS RenderUTEnv SummaryO RenderUTState SummaryO)
+-&gt; RenderUTM ()
+-&gt; SummaryO
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUTM () -&gt; RWS RenderUTEnv SummaryO RenderUTState SummaryO
+forall o (m :: * -&gt; *) a. (Monad m, MonadWriter o m) =&gt; m a -&gt; m o
+</span><a href="UVMHS.Core.Effects.html#retOut"><span class="hs-identifier hs-var">retOut</span></a></span><span> </span><span class="annot"><span class="annottext">(RenderUTM () -&gt; SummaryO)
+-&gt; (RenderUT -&gt; RenderUTM ()) -&gt; RenderUT -&gt; SummaryO
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">RenderUT -&gt; RenderUTM ()
-</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#unRenderUT"><span class="hs-identifier hs-var">unRenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#unRenderUT"><span class="hs-identifier hs-var">unRenderUT</span></a></span><span> </span><span class="annot"><span class="annottext">(RenderUT -&gt; SummaryO) -&gt; (TreeI -&gt; RenderUT) -&gt; TreeI -&gt; SummaryO
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">TreeI -&gt; RenderUT
 </span><a href="UVMHS.Lib.Pretty.RenderUndertags.html#compileRenderUT"><span class="hs-identifier hs-var">compileRenderUT</span></a></span><span>
 </span><span id="line-104"></span></pre></body></html>
