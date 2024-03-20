@@ -14,31 +14,25 @@ people who use UVMHS use the input mode
 Here is a cross-reference table between common datatypes and their
 equivalents in both standard Haskell and UVMHS:
 
-(When you see `<pipe>` in the table, this represents the `|`
-character, which when used directly messes up the `vim-table-mode`
-plugin I use to edit the table.)
-
-|-------------------|--------------------------------------------|------------------------|----------------------|-------------------|--------------------------|-----------------------|
-| Datatype          | Standard Haskell                           | UVMHS                  | Constructor Patterns | Common Operations | Unicode Characters  UVMS | Relevant Source Files |
-|-------------------|--------------------------------------------|------------------------|----------------------|-------------------|--------------------------|-----------------------|
-| `bool`            | `Bool`            (from `Prelude`)         | `𝔹 = Bool` [alias]     |                      | `⩓`, `⩔`          | `\bbB`                   | TODO                  |
-| `char`            | `Char`            (from `Prelude`)         | `ℂ = Char` [alias]     |                      |                   | `\bbC`                   | TODO                  |
-| `nat (unbounded)` | `Natural`         (from `Numeric.Natural`) | `ℕ = Natural` [alias]  |                      | `+`, `×`          | `\bbN`                   | TODO                  |
-| `int (unbounded)` | `Integer`         (from `Prelude`)         | `ℤ = Integer` [alias]  |                      | `+`, `×`          | `\bbZ`                   | TODO                  |
-| `nat 64-bit`      | `Word64`          (from `Data.Word`)       | `ℕ64 = Word64` [alias] |                      | `+`, `×`          | `\bbN`                   | TODO                  |
-| `int 64-bit`      | `Int64`           (from `Data.Int`)        | `ℤ64 = Int64` [alias]  |                      | `+`, `×`          | `\bbZ`                   | TODO                  |
-| `nat 32-bit`      | `Word32`          (from `Data.Word`)       | `ℕ32 = Word32` [alias] |                      | `+`, `×`          | `\bbN`                   | TODO                  |
-| `int 32-bit`      | `Int32`           (from `Data.Int`)        | `ℤ32 = Int32` [alias]  |                      | `+`, `×`          | `\bbZ`                   | TODO                  |
-| `string`          | `String = [Char]` (from `Prelude`)         | `𝕊 = Text` [alias]     |                      | `⧺`               | `\bbS`                   | TODO                  |
-| `list`            | `[a]`             (from `Prelude`)         | `𝐿 a` [new type]       | `Nil`, `:&`          | `list`,`⧺`,       | `\itL`                   | TODO                  |
-| `iterator`        | `[a]`             (from `Prelude`)         | `𝐼 a` [new type]       |                      | `iter`,`⧺`,       | `\itI`                   | TODO                  |
-| `dictionary`      | `Map k a`         (from `Data.Map`)        | `k ⇰ a` [new type]     |                      | `dict`,`⋿` `⩌`    | `\r<pipe>=`              | TODO                  |
-| `set`             | `Set a`           (from `Data.Set`)        | `𝑃 a` [new type]       |                      | `pow`,`∈`,`∪`,`∩` | `\itP`                   | TODO                  |
-| `vector`          | `Vector a`        (from `Data.Vector`)     | `𝕍 a` [new type]       |                      | `vec`,`⋕?`,`⋕!`   | `\bbV`                   | TODO                  |
-| `pair`            | `(a,b)`           (from `Prelude`)         | `a ∧ b` [new type]     | `:*`                 |                   | `\and`                   | TODO                  |
-| `tagged union`    | `Either a b`      (from `Prelude`)         | `a ∨ b` [new type]     | `Inl`, `Inr`         |                   | `\or`                    | TODO                  |
-| `optional`        | `Maybe a`         (from `Prelude`)         | `𝑂 a` [new type]       | `None`, `Some`       |                   | `\itO`                   | TODO                  |
-|-------------------|--------------------------------------------|------------------------|----------------------|-------------------|--------------------------|-----------------------|
+| Datatype          | Standard Haskell                           | UVMHS                                     |
+|-------------------|--------------------------------------------|-------------------------------------------|
+| `bool`            | `Bool`            <br> (`Prelude`)         | `𝔹`            <br> [alias to `Bool`]     |
+| `char`            | `Char`            <br> (`Prelude`)         | `ℂ`            <br> [alias to `Char`]     |
+| `nat (unbounded)` | `Natural`         <br> (`Numeric.Natural`) | `ℕ`            <br> [alias to `Natural`]  |
+| `int (unbounded)` | `Integer`         <br> (`Prelude`)         | `ℤ`            <br> [alias to `Integer`]  |
+| `nat 64-bit`      | `Word64`          <br> (`Data.Word`)       | `ℕ64`          <br> [alias to `Word64`]   |
+| `int 64-bit`      | `Int64`           <br> (`Data.Int`)        | `ℤ64`          <br> [alias to `Int64`]    |
+| `nat 32-bit`      | `Word32`          <br> (`Data.Word`)       | `ℕ32`          <br> [alias to `Word32`]   |
+| `int 32-bit`      | `Int32`           <br> (`Data.Int`)        | `ℤ32`          <br> [alias to `Int32`]     |
+| `string`          | `String = [Char]` <br> (`Prelude`)         | `𝕊`            <br> [alias to `Text`]      |
+| `list`            | `[a]`             <br> (`Prelude`)         | `𝐿 a`          <br> [new datatype]        |
+| `iterator`        | `[a]`             <br> (`Prelude`)         | `𝐼 a`          <br> [new datatype]        |
+| `pair`            | `(a,b)`           <br> (`Prelude`)         | `a ∧ b`        <br> [new datatype]        |
+| `tagged union`    | `Either a b`      <br> (`Prelude`)         | `a ∨ b`        <br> [new datatype]        |
+| `optional`        | `Maybe a`         <br> (`Prelude`)         | `𝑂 a`          <br> [new datatype]        |
+| `dictionary`      | `Map k a`         <br> (`Data.Map`)        | `k ⇰ a`        <br> [newtype to `Map`]    |
+| `set`             | `Set a`           <br> (`Data.Set`)        | `𝑃 a`          <br> [newtype to `Set`]    |
+| `vector`          | `Vector a`        <br> (`Data.Vector`)     | `𝕍 a`          <br> [newtype to `Vector`] |
 
 ## Common Functions
 
@@ -49,18 +43,20 @@ lists `𝐿`) to make things simple, but their actual types are more
 generic and parameterized by type classes (e.g., iterable things
 `ToIter`). Such types are annotated with "(generic)".
 
-|--------------------|-------------------------------|-----------------------------|-------------------------------------------------------------------------------------|-----------------------------------|
-| UVMHS FunctionName | Type                          | Example                     | Description                                                                         | Standard Haskell Analog           |
-|--------------------|-------------------------------|-----------------------------|-------------------------------------------------------------------------------------|-----------------------------------|
-| `out`              | `𝕊 → IO ()`                   | `out "hello world"`         | Print a string to the terminal followed by a newline                                | `putStrLn` (from `Prelude`)       |
-| `pow`              | `𝐿 t → 𝑃 a` (generic)         | `pow [1,2]`                 | Convert something that is iterable with elements to a set of those elements         | `Set.fromList` (from `Data.Set`)  |
-| `(↦)`              | `k → a → k ⇰ a`               | `"a" ↦ 1`                   | Create a singleton dictionary                                                       | `Map.singleton` (from `Data.Map`) |
-| `dict`             | `𝐿 (k ⇰ a) → k ⇰ a` (generic) | `dict ["a"↦1,"b"↦2]`        | Convert something that is iterable with dictionaries inside into a dictionary       | `Map.unions` (from `Data.Map`)    |
-| `iter`             | `𝐿 a → 𝐼 a` (generic)         | `iter [1,2]                 | Convert something that is iterable with elements to an iterator over those elements | N/A                               |
-| `makePrettyRecord` | `<macro>`                     | `makePrettyRecord ''MyType` | Generate a `Pretty` instance that prints keys and values in record notation         | N/A                               |
-| `makePrettySum`    | `<macro>`                     | `makePrettySum ''MyType`    | Generate a `Pretty` instance that prints constructor names                          | N/A                               |
-| `makePrettyUnion`  | `<macro>`                     | `makePrettyUnion ''MyType`  | Generate a `Pretty` instance that omits constructor names                           | N/A                               |
-|--------------------|-------------------------------|-----------------------------|-------------------------------------------------------------------------------------|-----------------------------------|
+| Standard Haskell Function         | UVMHS FunctionName | Type                          |
+|-----------------------------------|--------------------|-------------------------------|
+| `putStrLn`      <br> (`Prelude`)  | `out`              | `𝕊 → IO ()`                   |
+| `Set.fromList`  <br> (`Data.Set`) | `pow`              | `𝐿 t → 𝑃 a` (generic)         |
+| `Map.singleton` <br> (`Data.Map`) | `(↦)`              | `k → a → k ⇰ a`               |
+| `Map.unions`    <br> (`Data.Map`) | `dict`             | `𝐿 (k ⇰ a) → k ⇰ a` (generic) |
+
+
+| Less Standard Haskell Functions | UVMHS Function Name | Type                  |
+|---------------------------------|---------------------|-----------------------|
+| N/A                             | `iter`              | `𝐿 a → 𝐼 a` (generic) |
+| N/A                             | `makePrettyRecord`  | `<macro>`             |
+| N/A                             | `makePrettySum`     | `<macro>`             |
+| N/A                             | `makePrettyUnion`   | `<macro>`             |
 
 And common type classes:
 
@@ -70,19 +66,15 @@ And common type classes:
 
   Functions primitive to the `Zero a` class:
 
-  |---------------|----------------|
   | Function Name | Type           |
   |---------------|----------------|
   | `zero`        | `(Zero a) ⇒ a` |
-  |---------------|----------------|
 
   Functions primitive to the `Plus a` class:
 
-  |---------------|------------------------|
   | Function Name | Type                   |
   |---------------|------------------------|
   | `(+)`         | `(Plus a) ⇒ a → a → a` |
-  |---------------|------------------------|
 
   `Additive a` is equivalent to `(Zero a,Plus a)`
 
@@ -92,19 +84,15 @@ And common type classes:
 
   Functions primitive to the `One a` class:
 
-  |---------------|---------------|
   | Function Name | Type          |
   |---------------|---------------|
   | `one`         | `(One a) ⇒ a` |
-  |---------------|---------------|
 
   Functions primitive to the `Times a` class:
 
-  |---------------|----------------------------------|
   | Function Name | Type                             |
   |---------------|----------------------------------|
   | `(×)`         | `(Multiplicative a) ⇒ a → a → a` |
-  |---------------|----------------------------------|
 
   `Multiplicative a` is equivalent to `(Additive a,One a,Times a)`
 
@@ -114,19 +102,15 @@ And common type classes:
 
   Functions primitive to the `Null a` class:
 
-  |---------------|----------------|
   | Function Name | Type           |
   |---------------|----------------|
   | `null`        | `(Null a) ⇒ a` |
-  |---------------|----------------|
 
   Functions primitive to the `Plus a` class:
 
-  |---------------|--------------------------|
   | Function Name | Type                     |
   |---------------|--------------------------|
   | `(⧺)`         | `(Append a) ⇒ a → a → a` |
-  |---------------|--------------------------|
 
   `Monoid a` is equivalent to `(Null a,Append a)`
 
@@ -136,19 +120,15 @@ And common type classes:
 
   Functions primitive to the `Bot a` class:
 
-  |---------------|---------------|
   | Function Name | Type          |
   |---------------|---------------|
   | `bot`         | `(Bot a) ⇒ a` |
-  |---------------|---------------|
 
   Functions primitive to the `Plus a` class:
 
-  |---------------|------------------------|
   | Function Name | Type                   |
   |---------------|------------------------|
   | `(⊔)`         | `(Join a) ⇒ a → a → a` |
-  |---------------|------------------------|
 
   `JoinLattice a` is equivalent to `(Bot a,Join a)`
 
@@ -158,19 +138,15 @@ And common type classes:
 
   Functions primitive to the `Top a` class:
 
-  |---------------|---------------|
   | Function Name | Type          |
   |---------------|---------------|
   | `top`         | `(Top a) ⇒ a` |
-  |---------------|---------------|
 
   Functions primitive to the `Plus a` class:
 
-  |---------------|------------------------|
   | Function Name | Type                   |
   |---------------|------------------------|
   | `(⊓)`         | `(Meet a) ⇒ a → a → a` |
-  |---------------|------------------------|
 
   `MeetLattice a` is equivalent to `(Top a,Meet a)`
 
