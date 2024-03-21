@@ -41,7 +41,7 @@ docAState₀ = DocAState
   }
 
 type DocAM = RWS DocAEnv TreeI DocAState
-data DocA = 
+data DocA =
     StaticDocA SummaryI
   | DynamicDocA SummaryI (DocAM ())
 makePrisms ''DocA
@@ -57,7 +57,7 @@ dynamicDocA = \case
   DynamicDocA _ d → d
 
 instance Null DocA where null = StaticDocA null
-instance Append DocA where 
+instance Append DocA where
   StaticDocA s₁ ⧺ StaticDocA s₂ = StaticDocA $ s₁ ⧺ s₂
   StaticDocA s₁ ⧺ DynamicDocA s₂ r₂ = DynamicDocA (s₁ ⧺ s₂) $ renderSummaryI s₁ ≫ r₂
   DynamicDocA s₁ r₁ ⧺ StaticDocA s₂ = DynamicDocA (s₁ ⧺ s₂) $ r₁ ≫ renderSummaryI s₂
@@ -65,7 +65,7 @@ instance Append DocA where
 instance Monoid DocA
 
 renderSummaryI ∷ SummaryI → DocAM ()
-renderSummaryI s = 
+renderSummaryI s =
   let f =
         if shapeIAligned $ summaryIShape s
         then alignDocAM
@@ -98,7 +98,7 @@ annotateDocA a = \case
 
 groupDocAM ∷ SummaryI → DocAM () → DocAM ()
 groupDocAM s xM = do
-  if summaryIForceBreak s 
+  if summaryIForceBreak s
   then xM
   else do
     lwO ← askL docAEnvMaxLineWidthL
@@ -108,7 +108,7 @@ groupDocAM s xM = do
     col ← getL docAStateColL
     let ml :* mr = case shapeIShape $ summaryIShape s of
           SingleLine l → (nest + col + l) :* (rib + l)
-          MultiLine (ShapeM fl mml ll _) → 
+          MultiLine (ShapeM fl mml ll _) →
             joins [ nest + col + fl , nest + mml , nest + ll ]
             :*
             joins [ rib + fl , mml , ll ]
@@ -118,7 +118,7 @@ groupDocAM s xM = do
         mrb = case rwO of
           None → True
           Some rw → mr ≤ rw
-    case mlb ⩓ mrb of 
+    case mlb ⩓ mrb of
       True → renderSummaryI s
       False → xM
 

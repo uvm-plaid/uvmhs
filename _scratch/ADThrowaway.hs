@@ -12,7 +12,7 @@
 -- Dual Number Forward Generic --
 ---------------------------------
 
-data DNF a b = DNF 
+data DNF a b = DNF
   { dnfVal ∷ a
   , dnfDer ∷ b
   } deriving (Eq,Ord,Show)
@@ -149,7 +149,7 @@ deriving instance (𝒩 m,𝒩 n) ⇒ Times                       (DNFJ𝔻 m n)
 -- Dual Number Backward Generic --
 ----------------------------------
 
-data DNB a b = DNB 
+data DNB a b = DNB
   { dnbVal ∷ a
   , dnbDer ∷ a → b
   }
@@ -163,7 +163,7 @@ sensDNB ∷ a → (a → b) → DNB a b
 sensDNB = DNB
 
 plusDNB ∷ (Plus a,Plus b) ⇒ DNB a b → DNB a b → DNB a b
-plusDNB (DNB v₁ d₁) (DNB v₂ d₂) = DNB (v₁ + v₂) $ \ δ → 
+plusDNB (DNB v₁ d₁) (DNB v₂ d₂) = DNB (v₁ + v₂) $ \ δ →
   d₁ δ + d₂ δ
 
 timesDNB ∷ (Times a,Plus b) ⇒ DNB a b → DNB a b → DNB a b
@@ -305,7 +305,7 @@ type DNBMC = AllCC 𝒩
 
 data DNBM (ms ∷ [𝐍]) (nss ∷ [[𝐍]]) a = DNBM
   { dnbmVal ∷ 𝕄S ms a
-  , dnbmDer ∷ 𝕄S ms a → 𝐿S nss DNBMC (𝕄S' a) → 𝐿S nss DNBMC (𝕄S' a) 
+  , dnbmDer ∷ 𝕄S ms a → 𝐿S nss DNBMC (𝕄S' a) → 𝐿S nss DNBMC (𝕄S' a)
   }
 makeLenses ''DNBM
 makePrettySum ''DNBM
@@ -329,5 +329,3 @@ timesDNBM ∷ (AllC 𝒩 ms,Times a) ⇒ DNBM ms nss a → DNBM ms nss a → DNB
 timesDNBM (DNBM v₁ 𝒹₁) (DNBM v₂ 𝒹₂) = DNBM (v₁ × v₂) $ \ d → 𝒹₁ (d × v₂) ∘ 𝒹₂ (d × v₁)
 
 -- }}}
-
-

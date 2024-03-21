@@ -17,10 +17,10 @@ newtype NoCostID (a ∷ ★) = NoCostID a
 instance Functor NoCostID where
   map ∷ ∀ a b. (a → b) → NoCostID a → NoCostID b
   map = coerce @((a → b) → a → b) id
-instance Return NoCostID where 
+instance Return NoCostID where
   return ∷ ∀ a. a → NoCostID a
   return = coerce @a
-instance Bind NoCostID where 
+instance Bind NoCostID where
   (≫=) ∷ ∀ a b. NoCostID a → (a → NoCostID b) → NoCostID b
   (≫=) = coerce @(a → (a → b) → b) appto
 instance Monad NoCostID
@@ -29,10 +29,10 @@ instance Monad NoCostID
 -- FunctorM --
 --------------
 
-class FunctorM (t ∷ ★ → ★) where 
+class FunctorM (t ∷ ★ → ★) where
   mapM ∷ ∀ m a b. (Monad m) ⇒ (a → m b) → t a → m (t b)
   -- DEFAULTS --
-  default mapM ∷ (OFunctorM t,Monad m) ⇒ (a → m b) → t a → m (t b) 
+  default mapM ∷ (OFunctorM t,Monad m) ⇒ (a → m b) → t a → m (t b)
   mapM f = omapM $ map Some ∘ f
 class OFunctorM (t ∷ ★ → ★) where
   omapM ∷ ∀ m a b. (Monad m) ⇒ (a → m (𝑂 b)) → t a → m (t b)
@@ -52,26 +52,26 @@ class OKFunctorM (k ∷ ★) (t ∷ ★ → ★) | t → k where
 -- BiFunctorM --
 ----------------
 
-class BiFunctorM (t ∷ ★ → ★) where 
+class BiFunctorM (t ∷ ★ → ★) where
   bimapM ∷ ∀ m a b c. (Monad m) ⇒ (a → m c) → (b → m c) → (a → b → m c) → t a → t b → m (t c)
   -- DEFAULTS --
   default bimapM ∷ (OBiFunctorM t,Monad m) ⇒ (a → m c) → (b → m c) → (a → b → m c) → t a → t b → m (t c)
   bimapM f₁ f₂ f₃ = obimapM (map Some ∘ f₁) (map Some ∘ f₂) $ map Some ∘∘ f₃
-class OBiFunctorM (t ∷ ★ → ★) where 
+class OBiFunctorM (t ∷ ★ → ★) where
   obimapM ∷ ∀ m a b c. (Monad m) ⇒ (a → m (𝑂 c)) → (b → m (𝑂 c)) → (a → b → m (𝑂 c)) → t a → t b → m (t c)
-class KBiFunctorM (k ∷ ★) (t ∷ ★ → ★) | t → k where 
+class KBiFunctorM (k ∷ ★) (t ∷ ★ → ★) | t → k where
   kbimapM ∷ ∀ m a b c. (Monad m) ⇒ (k → a → m c) → (k → b → m c) → (k → a → b → m c) → t a → t b → m (t c)
   -- DEFAULTS --
   default kbimapM ∷ (OKBiFunctorM k t,Monad m) ⇒ (k → a → m c) → (k → b → m c) → (k → a → b → m c) → t a → t b → m (t c)
   kbimapM f₁ f₂ f₃ = okbimapM (map Some ∘∘ f₁) (map Some ∘∘ f₂) $ map Some ∘∘∘ f₃
-class OKBiFunctorM (k ∷ ★) (t ∷ ★ → ★) | t → k where 
+class OKBiFunctorM (k ∷ ★) (t ∷ ★ → ★) | t → k where
   okbimapM ∷ ∀ m a b c. (Monad m) ⇒ (k → a → m (𝑂 c)) → (k → b → m (𝑂 c)) → (k → a → b → m (𝑂 c)) → t a → t b → m (t c)
 
 -------------
 -- Functor --
 -------------
 
-class Functor (t ∷ ★ → ★) where 
+class Functor (t ∷ ★ → ★) where
   map ∷ (a → b) → t a → t b
   -- DEFAULTS --
   default map ∷ ∀ a b. (FunctorM t) ⇒ (a → b) → t a → t b
@@ -81,7 +81,7 @@ class OFunctor (t ∷ ★ → ★) where
   -- DEFAULTS --
   default omap ∷ ∀ a b. (OFunctorM t) ⇒ (a → 𝑂 b) → t a → t b
   omap f = coerce $ omapM @t @NoCostID @a @b $ coerce f
-class KFunctor (k ∷ ★) (t ∷ ★ → ★) | t → k where 
+class KFunctor (k ∷ ★) (t ∷ ★ → ★) | t → k where
   kmap ∷ (k → a → b) → t a → t b
   kmapAt ∷ k → (a → a) → t a → t a
   -- DEFAULTS --
@@ -89,7 +89,7 @@ class KFunctor (k ∷ ★) (t ∷ ★ → ★) | t → k where
   kmap f = coerce $ kmapM @k @t @NoCostID @a @b $ coerce f
   default kmapAt ∷ ∀ a. (KFunctorM k t) ⇒ k → (a → a) → t a → t a
   kmapAt k f = coerce $ kmapAtM @k @t @NoCostID @a k $ coerce f
-class OKFunctor (k ∷ ★) (t ∷ ★ → ★) | t → k where 
+class OKFunctor (k ∷ ★) (t ∷ ★ → ★) | t → k where
   okmap ∷ (k → a → 𝑂 b) → t a → t b
   okmapAt ∷ k → (𝑂 a → 𝑂 a) → t a → t a
   -- DEFAULTS --
@@ -102,22 +102,22 @@ class OKFunctor (k ∷ ★) (t ∷ ★ → ★) | t → k where
 -- BiFunctor --
 ---------------
 
-class BiFunctor (t ∷ ★ → ★) where 
+class BiFunctor (t ∷ ★ → ★) where
   bimap ∷ (a → c) → (b → c) → (a → b → c) → t a → t b → t c
   -- DEFAULTS --
   default bimap ∷ ∀ a b c. (BiFunctorM t) ⇒ (a → c) → (b → c) → (a → b → c) → t a → t b → t c
   bimap f₁ f₂ f₃ = coerce $ bimapM @t @NoCostID @a @b @c (coerce f₁) (coerce f₂) $ coerce f₃
-class OBiFunctor (t ∷ ★ → ★) where 
+class OBiFunctor (t ∷ ★ → ★) where
   obimap ∷ (a → 𝑂 c) → (b → 𝑂 c) → (a → b → 𝑂 c) → t a → t b → t c
   -- DEFAULTS --
   default obimap ∷ ∀ a b c. (OBiFunctorM t) ⇒ (a → 𝑂 c) → (b → 𝑂 c) → (a → b → 𝑂 c) → t a → t b → t c
   obimap f₁ f₂ f₃ = coerce $ obimapM @t @NoCostID @a @b @c (coerce f₁) (coerce f₂) $ coerce f₃
-class KBiFunctor (k ∷ ★) (t ∷ ★ → ★) where 
+class KBiFunctor (k ∷ ★) (t ∷ ★ → ★) where
   kbimap ∷ (k → a → c) → (k → b → c) → (k → a → b → c) → t a → t b → t c
   -- DEFAULTS --
   default kbimap ∷ ∀ a b c. (KBiFunctorM k t) ⇒ (k → a → c) → (k → b → c) → (k → a → b → c) → t a → t b → t c
   kbimap f₁ f₂ f₃ = coerce $ kbimapM @k @t @NoCostID @a @b @c (coerce f₁) (coerce f₂) $ coerce f₃
-class OKBiFunctor (k ∷ ★) (t ∷ ★ → ★) where 
+class OKBiFunctor (k ∷ ★) (t ∷ ★ → ★) where
   okbimap ∷ (k → a → 𝑂 c) → (k → b → 𝑂 c) → (k → a → b → 𝑂 c) → t a → t b → t c
   -- DEFAULTS --
   default okbimap ∷ ∀ a b c. (OKBiFunctorM k t) ⇒ (k → a → 𝑂 c) → (k → b → 𝑂 c) → (k → a → b → 𝑂 c) → t a → t b → t c
@@ -160,7 +160,7 @@ kbimapMOn = \ xM yM f₁ f₂ f₃ → kbimapM f₁ f₂ f₃ xM yM
 okbimapMOn ∷ (OKBiFunctorM k t,Monad m) ⇒ t a → t b → (k → a → m (𝑂 c)) → (k → b → m (𝑂 c)) → (k → a → b → m (𝑂 c)) → m (t c)
 okbimapMOn = \ xM yM f₁ f₂ f₃ → okbimapM f₁ f₂ f₃ xM yM
 
-mapOn ∷ (Functor t) ⇒ t a → (a → b) → t b 
+mapOn ∷ (Functor t) ⇒ t a → (a → b) → t b
 mapOn = flip map
 
 mapp ∷ (Functor t,Functor u) ⇒ (a → b) → t (u a) → t (u b)
@@ -175,13 +175,13 @@ mappp = mapp ∘ map
 mapppOn ∷ (Functor t,Functor u,Functor v) ⇒ t (u (v a)) → (a → b) → t (u (v b))
 mapppOn = flip mappp
 
-(^$) ∷ (Functor t) ⇒ (a → b) → t a → t b 
+(^$) ∷ (Functor t) ⇒ (a → b) → t a → t b
 (^$) = map
 
 (^^$) ∷ (Functor t,Functor u) ⇒ (a → b) → t (u a) → t (u b)
 (^^$) = mapp
 
-(^∘) ∷ (Functor t) ⇒ (b → c) → (a → t b) → a → t c 
+(^∘) ∷ (Functor t) ⇒ (b → c) → (a → t b) → a → t c
 (^∘) = \ g f → map g ∘ f
 
 (^^∘) ∷ (Functor t,Functor u) ⇒ (b → c) → (a → t (u b)) → a → t (u c)

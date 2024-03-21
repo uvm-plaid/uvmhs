@@ -128,7 +128,7 @@ dimB𝕍 ∷ B𝕍 ns a → Sℕ32s ns
 dimB𝕍 (B𝕍 n _) = n
 
 indexB𝕍 ∷ 𝕀32s ns → B𝕍 ns a → a
-indexB𝕍 i (B𝕍 _ xs) = xs Repa.! toRepa𝕀32s i 
+indexB𝕍 i (B𝕍 _ xs) = xs Repa.! toRepa𝕀32s i
 
 virtB𝕍 ∷ B𝕍 ns a → V𝕍 ns a
 virtB𝕍 (B𝕍 n xs) = V𝕍 n $ Repa.delay xs
@@ -147,11 +147,11 @@ dimV𝕍 ∷ V𝕍 ns a → Sℕ32s ns
 dimV𝕍 (V𝕍 n _) = n
 
 indexV𝕍 ∷ 𝕀32s ns → V𝕍 ns a → a
-indexV𝕍 i (V𝕍 _ xs) = xs Repa.! toRepa𝕀32s i 
+indexV𝕍 i (V𝕍 _ xs) = xs Repa.! toRepa𝕀32s i
 
 makeV𝕍 ∷ Sℕ32s ns → (𝕀32s ns → a) → V𝕍 ns a
-makeV𝕍 n f = with (toShapeSℕ32s n) $ 
-  V𝕍 n $ Repa.fromFunction (toRepaSℕ32s n) $ \ i → 
+makeV𝕍 n f = with (toShapeSℕ32s n) $
+  V𝕍 n $ Repa.fromFunction (toRepaSℕ32s n) $ \ i →
     f (frRepa𝕀32s n i)
 
 concV𝕍 ∷ V𝕍 ns a → B𝕍 ns a
@@ -168,7 +168,7 @@ zipWithV𝕍 ∷ (a → b → c) → V𝕍 ns a → V𝕍 ns b → V𝕍 ns c
 zipWithV𝕍 f xs ys = makeV𝕍 (dimV𝕍 xs) $ \ i → f (indexV𝕍 i xs) (indexV𝕍 i ys)
 
 transposeV𝕍 ∷ V𝕍 (n₁ : n₂ : ns) a → V𝕍 (n₂ : n₁ : ns) a
-transposeV𝕍 xs = 
+transposeV𝕍 xs =
   let (n₁ :&& n₂ :&& ns) = dimV𝕍 xs
   in makeV𝕍 (n₂ :&& n₁ :&& ns) $ \ (i₂ :&& i₁ :&& is) → indexV𝕍 (i₁ :&& i₂ :&& is) xs
 
@@ -186,7 +186,7 @@ productV𝕍 ∷ (Additive a,Times a) ⇒ V𝕍 [n₁,n₂] a → V𝕍 [n₂,n�
 productV𝕍 xs ys =
   let (n₁ :&& _  :&& SNil) = dimV𝕍 xs
       (_  :&& n₃ :&& SNil) = dimV𝕍 ys
-  in 
+  in
   makeV𝕍 (n₁ :&& n₃ :&& SNil) $ \ (i₁ :&& i₃ :&& SNil) →
     let v₁ = rowV𝕍 i₁ xs
         v₂ = colV𝕍 i₃ ys

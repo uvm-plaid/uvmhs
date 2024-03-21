@@ -33,16 +33,16 @@ data CParser t a = CParser
   , cParserFallback ∷ Formats ⇰ (𝐼 t → Parser t a)
   }
 
-instance Return (CParser t) where 
+instance Return (CParser t) where
   -- {-# INLINE return #-}
   return ∷ ∀ a. a → CParser t a
   return x = CParser dø None $ null ↦ const (return x)
 instance (Ord t) ⇒ Bind (CParser t) where
   -- {-# INLINE (≫=) #-}
   (≫=) ∷ ∀ a b. CParser t a → (a → CParser t b) → CParser t b
-  CParser n nf f ≫= k = 
-    CParser (map (mapCResultsParsers $ extend k) n) 
-            (map (mapCResultsParsers $ extend k) nf) 
+  CParser n nf f ≫= k =
+    CParser (map (mapCResultsParsers $ extend k) n)
+            (map (mapCResultsParsers $ extend k) nf)
             (map (map $ extend $ cparser ∘ k) f)
 instance (Ord t) ⇒ Functor (CParser t) where map = mmap
 instance (Ord t) ⇒ Monad (CParser t)
@@ -104,5 +104,5 @@ cunit fm f = CParser dø None $ fm ↦ return ∘ f
 
 -- {-# INLINE cpWord #-}
 cpWord ∷ ∀ s t. (Ord t,Eq t,s ⇄ 𝐼 t) ⇒ Formats → s → CParser t s
-cpWord fm ts = foldrOnFrom (isoto ts) (cunit fm isofr) $ \ c cp → 
+cpWord fm ts = foldrOnFrom (isoto ts) (cunit fm isofr) $ \ c cp →
   CParser (c ↦ CResults False {- pø -} cp) (Some (CResults True {- null -} {- (single $ ppshow ts) -} null)) dø

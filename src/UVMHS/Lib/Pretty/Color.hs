@@ -21,7 +21,7 @@ data Color3Bit =
   | TealLight
   | White
   deriving (Eq,Ord,Show)
-data Color = 
+data Color =
     Color Color3Bit
   | Color8 ℕ8
   | Color24 ℕ8 ℕ8 ℕ8
@@ -63,7 +63,7 @@ altBlue,altBlueLight,altPurple,altPurpleLight,altTeal,altTealLight,altGray,altGr
 -- colors borrowed from terminal.sexy
 -- altBlack       = Color24 (𝕟8 0)   (𝕟8 0)   $ 𝕟8 0
 -- altWhite       = Color24 (𝕟8 255) (𝕟8 255) $ 𝕟8 255
--- 
+--
 -- altNight       = Color24 (𝕟8 40)  (𝕟8 42)  $ 𝕟8 46
 -- altNightLight  = Color24 (𝕟8 55)  (𝕟8 59)  $ 𝕟8 65
 -- altRed         = Color24 (𝕟8 165) (𝕟8 66)  $ 𝕟8 66
@@ -72,7 +72,7 @@ altBlue,altBlueLight,altPurple,altPurpleLight,altTeal,altTealLight,altGray,altGr
 -- altGreenLight  = Color24 (𝕟8 181) (𝕟8 189) $ 𝕟8 104
 -- altOrange      = Color24 (𝕟8 222) (𝕟8 147) $ 𝕟8 95
 -- altOrangeLight = Color24 (𝕟8 240) (𝕟8 198) $ 𝕟8 116
--- 
+--
 -- altBlue        = Color24 (𝕟8 95)  (𝕟8 129) $ 𝕟8 157
 -- altBlueLight   = Color24 (𝕟8 129) (𝕟8 162) $ 𝕟8 190
 -- altPurple      = Color24 (𝕟8 133) (𝕟8 103) $ 𝕟8 143
@@ -142,5 +142,3 @@ allColors = frhs
   , ("altTeal"           ,altTeal       )
   , ("altTealLight"      ,altTealLight  )
   ]
-
-

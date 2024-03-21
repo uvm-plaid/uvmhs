@@ -14,22 +14,22 @@ class MonadRand m where
 newtype RG = RG { unRG ∷ R.StdGen }
 
 instance MonadRand IO where
-  rng f = R.getStdRandom $ \ ℊ → 
+  rng f = R.getStdRandom $ \ ℊ →
     let RG ℊ' :* x = runState (RG ℊ) f
     in (x,ℊ')
 
 wrapPrimRandu ∷ (R.StdGen → (a,R.StdGen)) → State RG a
 wrapPrimRandu f = do
   RG ℊ ← get
-  let (x,ℊ') = f ℊ 
+  let (x,ℊ') = f ℊ
   put $ RG ℊ'
   return x
 
 wrapPrimRandr ∷ ((a,a) → R.StdGen → (a,R.StdGen)) → a → a → State RG a
 wrapPrimRandr f xl xh = do
-  RG ℊ ← get 
-  let (x,ℊ') = f (xl,xh) ℊ 
-  put $ RG ℊ' 
+  RG ℊ ← get
+  let (x,ℊ') = f (xl,xh) ℊ
+  put $ RG ℊ'
   return x
 
 ------------------------
@@ -126,21 +126,21 @@ rand ∷ ∀ a m. (MonadRand m,Fuzzy a) ⇒ ℕ64 → ℕ64 → m a
 rand r d = rng $ runFuzzyMRG (FuzzyEnv r d) fuzzy
 
 wrchoose ∷ ∀ t m a. (Monad m,MonadRand m,ToIter (ℕ64 ∧ (() → m a)) t) ⇒ t → m a
-wrchoose wxs 
+wrchoose wxs
   | isEmpty wxs = error "wrchoose not defined for zero elements"
   | otherwise   = do
       let w₀ = sum $ map fst $ iter wxs
       let _ = if w₀ ≡ 0 then error "wrchoose not defined for zero total weight" else ()
       n ← randr 1 w₀
       runContT (\ n' → error $ "impossible" ⧺ show𝕊 n') $ mfoldOnFrom wxs 0 $ \ (w :* xM) wᵢ →
-        let wᵢ' = wᵢ+w 
+        let wᵢ' = wᵢ+w
         in
         if n ≤ wᵢ'
         then callCC $ \ _𝓀 → lift $ xM ()
         else return wᵢ'
 
 rchoose ∷ (Monad m,MonadRand m,ToIter (() → m a) t) ⇒ t → m a
-rchoose xMs 
+rchoose xMs
   | isEmpty xMs = error "rchoose not defined for zero elements"
   | otherwise   = wrchoose $ map (one :*) $ iter xMs
 
@@ -151,7 +151,7 @@ randSml ∷ ∀ a m. (MonadRand m,Fuzzy a) ⇒ m a
 randSml = rand 4 4
 
 randMed ∷ ∀ a m. (MonadRand m,Fuzzy a) ⇒ m a
-randMed = rand 16 16 
+randMed = rand 16 16
 
 randLrg ∷ ∀ a m. (MonadRand m,Fuzzy a) ⇒ m a
 randLrg = rand 64 64
@@ -161,7 +161,7 @@ untilPass f xM = loop
   where
     loop = do
       x ← xM
-      if f x 
+      if f x
       then return x
       else loop
 
@@ -183,36 +183,36 @@ instance Fuzzy 𝔻   where fuzzy = randrRadius ∘ dbl    *$ askL fuzzyEnvRadiu
 
 instance Fuzzy () where fuzzy = return ()
 
-instance Fuzzy 𝔹 where 
+instance Fuzzy 𝔹 where
   fuzzy = rchoose $ map (const ∘ return)
     [ True
     , False
     ]
 
-instance (Fuzzy a) ⇒ Fuzzy (𝑂 a) where 
+instance (Fuzzy a) ⇒ Fuzzy (𝑂 a) where
   fuzzy = rchoose $ map const
     [ return None
     , Some ^$ fuzzy
     ]
 
-instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∨ b) where 
+instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∨ b) where
   fuzzy = rchoose $ map const
     [ Inl ^$ fuzzy
     , Inr ^$ fuzzy
     ]
 
-instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∧ b) where 
+instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∧ b) where
   fuzzy = do
     x ← fuzzy
     y ← fuzzy
     return $ x :* y
 
-instance (Fuzzy a) ⇒ Fuzzy (𝐿 a) where 
+instance (Fuzzy a) ⇒ Fuzzy (𝐿 a) where
   fuzzy = do
     w ← (×2) ^$ askL fuzzyEnvRadiusL
     list ^$ mapMOn (upto w) $ const fuzzy
 
-instance (Ord k,Fuzzy k,Fuzzy v) ⇒ Fuzzy (k ⇰ v) where 
+instance (Ord k,Fuzzy k,Fuzzy v) ⇒ Fuzzy (k ⇰ v) where
   fuzzy = assoc ^$ fuzzy @(𝐿 _)
 
 instance (Fuzzy a) ⇒ Fuzzy (() → a) where fuzzy = const ^$ fuzzy

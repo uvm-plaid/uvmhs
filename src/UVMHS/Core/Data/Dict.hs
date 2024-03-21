@@ -24,7 +24,7 @@ infixl 6 ⩍
 -- GENERIC CLASS --
 -------------------
 
-class 
+class
   ( Set k s
   , FunctorM d
   , OFunctorM d
@@ -127,7 +127,7 @@ assoc = foldr dø $ curry dadd
 
 dø𝐷 ∷ ∀ k a. k ⇰ a
 dø𝐷 = coerce @(Map.Map k a) Map.empty
-  
+
 (↦♭) ∷ ∀ k a. k → a → k ⇰ a
 (↦♭) = coerce @(k → a → Map.Map k a) Map.singleton
 
@@ -165,19 +165,19 @@ dsdiffBy𝐷 = coerce @((a → b → 𝑂 a) → Map.Map k a → Map.Map k b →
 (⩍♭) = coerce @(Map.Map k a → Map.Map k a → Map.Map k a) Map.intersection
 
 (⧅♭) ∷ ∀ k a. (Ord k,Eq a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
-(⧅♭) = coerce @(Map.Map k a → Map.Map k a → Map.Map k a) $ Map.differenceWith $ \ x y → 
+(⧅♭) = coerce @(Map.Map k a → Map.Map k a → Map.Map k a) $ Map.differenceWith $ \ x y →
   if x ≡ y then HS.Nothing else HS.Just x
 
 dminView𝐷 ∷ ∀ k a. k ⇰ a → 𝑂 (k ∧ a ∧ (k ⇰ a))
-dminView𝐷 = coerce @(Map.Map k a → 𝑂 (k ∧ a ∧ Map.Map k a)) $ 
+dminView𝐷 = coerce @(Map.Map k a → 𝑂 (k ∧ a ∧ Map.Map k a)) $
   frhs ∘ Map.minViewWithKey
 
 dmaxView𝐷 ∷ ∀ k a. k ⇰ a → 𝑂 (k ∧ a ∧ (k ⇰ a))
-dmaxView𝐷 = coerce @(Map.Map k a → 𝑂 (k ∧ a ∧ Map.Map k a)) $ 
+dmaxView𝐷 = coerce @(Map.Map k a → 𝑂 (k ∧ a ∧ Map.Map k a)) $
   frhs ∘ Map.maxViewWithKey
 
 dkeyView𝐷 ∷ ∀ k a. (Ord k) ⇒ k → k ⇰ a → 𝑂 (a ∧ (k ⇰ a))
-dkeyView𝐷 = coerce @(k → Map.Map k a → 𝑂 (a ∧ Map.Map k a)) $ \ k d → 
+dkeyView𝐷 = coerce @(k → Map.Map k a → 𝑂 (a ∧ Map.Map k a)) $ \ k d →
   let xM :* d' = frhs $ Map.updateLookupWithKey (const $ const HS.Nothing) k d
   in map (:* d') xM
 
@@ -205,25 +205,25 @@ dvals𝐷 = coerce @(Map.Map k a → 𝐼 a) $ iter ∘ Map.elems
 -- CLASS DEFINITIONS: FunctorM --
 
 mapM𝐷 ∷ ∀ m k a b. (Monad m) ⇒ (a → m b) → k ⇰ a → m (k ⇰ b)
-mapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$ 
+mapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
   coerce @((a → m b) → Map.Map k a → m (Map.Map k b)) HS.mapM
 
 -- CLASS DEFINITIONS: OFunctorM --
 
 omapM𝐷 ∷ ∀ m k a b. (Monad m) ⇒ (a → m (𝑂 b)) → k ⇰ a → m (k ⇰ b)
-omapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$ 
-  coerce @((a → m (𝑂 b)) → Map.Map k a → m (Map.Map k b)) $ \ f → 
+omapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
+  coerce @((a → m (𝑂 b)) → Map.Map k a → m (Map.Map k b)) $ \ f →
     Map.traverseMaybeWithKey $ const $ map tohs ∘ f
 
 -- CLASS DEFINITIONS: KFunctorM --
 
 kmapM𝐷 ∷ ∀ m k a b. (Monad m) ⇒ (k → a → m b) → k ⇰ a → m (k ⇰ b)
-kmapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$ 
+kmapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
   coerce @((k → a → m b) → Map.Map k a → m (Map.Map k b)) Map.traverseWithKey
 
 kmapAtM𝐷 ∷ ∀ m k a. (Monad m,Ord k) ⇒ k → (a → m a) → k ⇰ a → m (k ⇰ a)
-kmapAtM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$ 
-  coerce @(k → (a → m a) → Map.Map k a → m (Map.Map k a)) $ \ k f → 
+kmapAtM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
+  coerce @(k → (a → m a) → Map.Map k a → m (Map.Map k a)) $ \ k f →
     flip Map.alterF k $ \case
       HS.Nothing → return HS.Nothing
       HS.Just x → HS.Just ^$ f x
@@ -231,49 +231,49 @@ kmapAtM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
 -- CLASS DEFINITIONS: OKFunctorM --
 
 okmapM𝐷 ∷ ∀ m k a b. (Monad m) ⇒ (k → a → m (𝑂 b)) → k ⇰ a → m (k ⇰ b)
-okmapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$ 
-  coerce @((k → a → m (𝑂 b)) → Map.Map k a → m (Map.Map k b)) $ \ f → 
+okmapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
+  coerce @((k → a → m (𝑂 b)) → Map.Map k a → m (Map.Map k b)) $ \ f →
     Map.traverseMaybeWithKey $ map tohs ∘∘ f
 
 okmapAtM𝐷 ∷ ∀ m k a. (Monad m,Ord k) ⇒ k → (𝑂 a → m (𝑂 a)) → k ⇰ a → m (k ⇰ a)
-okmapAtM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$ 
-  coerce @(k → (𝑂 a → m (𝑂 a)) → Map.Map k a → m (Map.Map k a)) $ \ k f → 
+okmapAtM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
+  coerce @(k → (𝑂 a → m (𝑂 a)) → Map.Map k a → m (Map.Map k a)) $ \ k f →
     flip Map.alterF k $ tohs ^∘ f ∘ frhs
 
 -- CLASS DEFINITIONS: BiFunctorM --
 
 bimapM𝐷 ∷ ∀ m k a b c. (Monad m,Ord k) ⇒ (a → m c) → (b → m c) → (a → b → m c) → k ⇰ a → k ⇰ b → m (k ⇰ c)
-bimapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$ 
-  coerce @((a → m c) → (b → m c) → (a → b → m c) → Map.Map k a → Map.Map k b → m (Map.Map k c)) $ \ f₁ f₂ f₃ → 
-    Map.mergeA (Map.traverseMissing $ const f₁) 
-               (Map.traverseMissing $ const f₂) $ 
+bimapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
+  coerce @((a → m c) → (b → m c) → (a → b → m c) → Map.Map k a → Map.Map k b → m (Map.Map k c)) $ \ f₁ f₂ f₃ →
+    Map.mergeA (Map.traverseMissing $ const f₁)
+               (Map.traverseMissing $ const f₂) $
                Map.zipWithAMatched $ const f₃
 
 -- CLASS DEFINITIONS: OBiFunctorM --
 
 obimapM𝐷 ∷ ∀ m k a b c. (Monad m,Ord k) ⇒ (a → m (𝑂 c)) → (b → m (𝑂 c)) → (a → b → m (𝑂 c)) → k ⇰ a → k ⇰ b → m (k ⇰ c)
-obimapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$ 
-  coerce @((a → m (𝑂 c)) → (b → m (𝑂 c)) → (a → b → m (𝑂 c)) → Map.Map k a → Map.Map k b → m (Map.Map k c)) $ \ f₁ f₂ f₃ → 
-    Map.mergeA (Map.traverseMaybeMissing $ const $ map tohs ∘ f₁) 
-               (Map.traverseMaybeMissing $ const $ map tohs ∘ f₂) $ 
+obimapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
+  coerce @((a → m (𝑂 c)) → (b → m (𝑂 c)) → (a → b → m (𝑂 c)) → Map.Map k a → Map.Map k b → m (Map.Map k c)) $ \ f₁ f₂ f₃ →
+    Map.mergeA (Map.traverseMaybeMissing $ const $ map tohs ∘ f₁)
+               (Map.traverseMaybeMissing $ const $ map tohs ∘ f₂) $
                Map.zipWithMaybeAMatched $ const $ map tohs ∘∘ f₃
 
 -- CLASS DEFINITIONS: KBiFunctorM --
 
 kbimapM𝐷 ∷ ∀ m k a b c. (Monad m,Ord k) ⇒ (k → a → m c) → (k → b → m c) → (k → a → b → m c) → k ⇰ a → k ⇰ b → m (k ⇰ c)
-kbimapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$ 
-  coerce @((k → a → m c) → (k → b → m c) → (k → a → b → m c) → Map.Map k a → Map.Map k b → m (Map.Map k c)) $ \ f₁ f₂ f₃ → 
-    Map.mergeA (Map.traverseMissing f₁) 
-               (Map.traverseMissing f₂) $ 
+kbimapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
+  coerce @((k → a → m c) → (k → b → m c) → (k → a → b → m c) → Map.Map k a → Map.Map k b → m (Map.Map k c)) $ \ f₁ f₂ f₃ →
+    Map.mergeA (Map.traverseMissing f₁)
+               (Map.traverseMissing f₂) $
                Map.zipWithAMatched f₃
 
 -- CLASS DEFINITIONS: KBiFunctorM --
 
 okbimapM𝐷 ∷ ∀ m k a b c. (Monad m,Ord k) ⇒ (k → a → m (𝑂 c)) → (k → b → m (𝑂 c)) → (k → a → b → m (𝑂 c)) → k ⇰ a → k ⇰ b → m (k ⇰ c)
 okbimapM𝐷 = with (tohsMonad @m) HS.$ with (fcoercibleW_UNSAFE @m) HS.$
-  coerce @((k → a → m (𝑂 c)) → (k → b → m (𝑂 c)) → (k → a → b → m (𝑂 c)) → Map.Map k a → Map.Map k b → m (Map.Map k c)) $ \ f₁ f₂ f₃ → 
-    Map.mergeA (Map.traverseMaybeMissing $ map tohs ∘∘ f₁) 
-               (Map.traverseMaybeMissing $ map tohs ∘∘ f₂) $ 
+  coerce @((k → a → m (𝑂 c)) → (k → b → m (𝑂 c)) → (k → a → b → m (𝑂 c)) → Map.Map k a → Map.Map k b → m (Map.Map k c)) $ \ f₁ f₂ f₃ →
+    Map.mergeA (Map.traverseMaybeMissing $ map tohs ∘∘ f₁)
+               (Map.traverseMaybeMissing $ map tohs ∘∘ f₂) $
                Map.zipWithMaybeAMatched $ map tohs ∘∘∘ f₃
 
 -- CLASS DEFINITIONS: Functor --
@@ -305,33 +305,33 @@ okmapAt𝐷 = coerce @(k → (𝑂 a → 𝑂 a) → Map.Map k a → Map.Map k a
 -- CLASS DEFINITIONS: BiFunctor --
 
 bimap𝐷 ∷ ∀ k a b c. (Ord k) ⇒ (a → c) → (b → c) → (a → b → c) → k ⇰ a → k ⇰ b → k ⇰ c
-bimap𝐷 = coerce @((a → c) → (b → c) → (a → b → c) → Map.Map k a → Map.Map k b → Map.Map k c) $ \ f₁ f₂ f₃ → 
-  Map.merge (Map.mapMissing $ const f₁) 
-            (Map.mapMissing $ const f₂) $ 
+bimap𝐷 = coerce @((a → c) → (b → c) → (a → b → c) → Map.Map k a → Map.Map k b → Map.Map k c) $ \ f₁ f₂ f₃ →
+  Map.merge (Map.mapMissing $ const f₁)
+            (Map.mapMissing $ const f₂) $
              Map.zipWithMatched $ const f₃
 
 -- CLASS DEFINITIONS: OBiFunctor --
 
 obimap𝐷 ∷ ∀ k a b c. (Ord k) ⇒ (a → 𝑂 c) → (b → 𝑂 c) → (a → b → 𝑂 c) → k ⇰ a → k ⇰ b → k ⇰ c
-obimap𝐷 = coerce @((a → 𝑂 c) → (b → 𝑂 c) → (a → b → 𝑂 c) → Map.Map k a → Map.Map k b → Map.Map k c) $ \ f₁ f₂ f₃ → 
-  Map.merge (Map.mapMaybeMissing $ const $ tohs ∘ f₁) 
-            (Map.mapMaybeMissing $ const $ tohs ∘ f₂) $ 
+obimap𝐷 = coerce @((a → 𝑂 c) → (b → 𝑂 c) → (a → b → 𝑂 c) → Map.Map k a → Map.Map k b → Map.Map k c) $ \ f₁ f₂ f₃ →
+  Map.merge (Map.mapMaybeMissing $ const $ tohs ∘ f₁)
+            (Map.mapMaybeMissing $ const $ tohs ∘ f₂) $
              Map.zipWithMaybeMatched $ const $ tohs ∘∘ f₃
 
 -- CLASS DEFINITIONS: KBiFunctor --
 
 kbimap𝐷 ∷ ∀ k a b c. (Ord k) ⇒ (k → a → c) → (k → b → c) → (k → a → b → c) → k ⇰ a → k ⇰ b → k ⇰ c
-kbimap𝐷 = coerce @((k → a → c) → (k → b → c) → (k → a → b → c) → Map.Map k a → Map.Map k b → Map.Map k c) $ \ f₁ f₂ f₃ → 
-  Map.merge (Map.mapMissing f₁) 
-            (Map.mapMissing f₂) $ 
+kbimap𝐷 = coerce @((k → a → c) → (k → b → c) → (k → a → b → c) → Map.Map k a → Map.Map k b → Map.Map k c) $ \ f₁ f₂ f₃ →
+  Map.merge (Map.mapMissing f₁)
+            (Map.mapMissing f₂) $
              Map.zipWithMatched f₃
 
 -- CLASS DEFINITIONS: OKBiFunctor --
 
 okbimap𝐷 ∷ ∀ k a b c. (Ord k) ⇒ (k → a → 𝑂 c) → (k → b → 𝑂 c) → (k → a → b → 𝑂 c) → k ⇰ a → k ⇰ b → (k ⇰ c)
-okbimap𝐷 = coerce @((k → a → 𝑂 c) → (k → b → 𝑂 c) → (k → a → b → 𝑂 c) → Map.Map k a → Map.Map k b → Map.Map k c) $ \ f₁ f₂ f₃ → 
-  Map.merge (Map.mapMaybeMissing $ tohs ∘∘ f₁) 
-            (Map.mapMaybeMissing $ tohs ∘∘ f₂) $ 
+okbimap𝐷 = coerce @((k → a → 𝑂 c) → (k → b → 𝑂 c) → (k → a → b → 𝑂 c) → Map.Map k a → Map.Map k b → Map.Map k c) $ \ f₁ f₂ f₃ →
+  Map.merge (Map.mapMaybeMissing $ tohs ∘∘ f₁)
+            (Map.mapMaybeMissing $ tohs ∘∘ f₂) $
              Map.zipWithMaybeMatched $ tohs ∘∘∘ f₃
 
 -- CLASS DEFINITIONS: CSized --
@@ -462,7 +462,7 @@ instance (Ord k)                             ⇒ Single (k ∧ a) (k ⇰ a) wher
 instance (Ord k)                             ⇒ Lookup k a     (k ⇰ a) where (⋕?)     = lookup𝐷
 instance                                       Null           (k ⇰ a) where null     = dø𝐷
 instance (Ord k,Append a)                    ⇒ Append         (k ⇰ a) where (⧺)      = append𝐷
-instance (Ord k,Append a)                    ⇒ Monoid         (k ⇰ a) 
+instance (Ord k,Append a)                    ⇒ Monoid         (k ⇰ a)
 instance (Ord k,Null k,Null a)               ⇒ Unit           (k ⇰ a) where unit     = unit𝐷
 instance (Ord k,Append k,Append a,Cross a)   ⇒ Cross          (k ⇰ a) where (⨳)      = cross𝐷
 instance (Ord k,Monoid k,Prodoid a)          ⇒ Prodoid        (k ⇰ a)
@@ -524,14 +524,14 @@ data StdESD (x ∷ ★)
 newtype instance Elem (StdESD a) = StdESDElm { unStdESDElm ∷ a }
   deriving (Eq,Ord)
 newtype instance ESet (StdESD e) = StdESDSet { unStdESDSet ∷ 𝑃 e }
-  deriving 
+  deriving
   ( CSized,Eq,Ord
   , Null,Append,Monoid
   , POrd
   , Bot,Join,JoinLattice,Meet,Difference
   )
 newtype instance EDct (StdESD k) a = StdESDDct { unStdESDDct ∷ k ⇰ a }
-  deriving 
+  deriving
   ( Eq,Ord
   , Null,Append,Monoid
   , Bot,Join,JoinLattice
@@ -620,28 +620,28 @@ instance (Ord k) ⇒ Single (Elem (StdESD k) ∧ a) (EDct (StdESD k) a) where
 
 -- unionWithOn𝐷 ∷ (Ord k) ⇒ k ⇰ a → k ⇰ a → (a → a → a) → k ⇰ a
 -- unionWithOn𝐷 = rotateL unionWith𝐷
--- 
+--
 -- unionsWith𝐷 ∷ (Ord k,ToIter (k ⇰ a) t) ⇒ (a → a → a) → t → k ⇰ a
 -- unionsWith𝐷 = fold dø𝐷 ∘ unionWith𝐷
--- 
+--
 -- kunionWith𝐷 ∷ ∀ k a. (Ord k) ⇒ (k → a → a → a) → k ⇰ a → k ⇰ a → k ⇰ a
 -- kunionWith𝐷 = coerce @((k → a → a → a) → Map.Map k a → Map.Map k a → Map.Map k a) Map.unionWithKey
--- 
+--
 -- kunionWithOn𝐷 ∷ (Ord k) ⇒ k ⇰ a → k ⇰ a → (k → a → a → a) → k ⇰ a
 -- kunionWithOn𝐷 = rotateL kunionWith𝐷
--- 
+--
 -- kunionsWith𝐷 ∷ (Ord k,ToIter (k ⇰ a) t) ⇒ (k → a → a → a) → t → k ⇰ a
 -- kunionsWith𝐷 = fold dø𝐷 ∘ kunionWith𝐷
--- 
--- interWithOn𝐷 ∷ (Ord k) ⇒ k ⇰ a → k ⇰ b → (a → b → c) → k ⇰ c 
+--
+-- interWithOn𝐷 ∷ (Ord k) ⇒ k ⇰ a → k ⇰ b → (a → b → c) → k ⇰ c
 -- interWithOn𝐷 = rotateL interWith𝐷
--- 
+--
 -- intersWith𝐷 ∷ (Ord k,ToIter (k ⇰ a) t) ⇒ (a → a → a) → t → k ⇰ a
 -- intersWith𝐷 = fold dø𝐷 ∘ interWith𝐷
--- 
+--
 -- diffnWithOn𝐷 ∷ (Ord k) ⇒ k ⇰ a → k ⇰ a → (a → a → a) → k ⇰ a
 -- diffnWithOn𝐷 = rotateL diffnWith𝐷
--- 
+--
 -- diffnsWith𝐷 ∷ (Ord k,ToIter (k ⇰ a) t) ⇒ (a → a → a) → t → k ⇰ a
 -- diffnsWith𝐷 = foldr dø𝐷 ∘ diffnWith𝐷
 
@@ -656,7 +656,7 @@ instance (Ord k) ⇒ Single (Elem (StdESD k) ∧ a) (EDct (StdESD k) a) where
 
 --- mapOnKeyWith ∷ (Ord k) ⇒ (a → a) → k → k ⇰ a → k ⇰ a
 --- mapOnKeyWith f k = 𝐷 ∘ Map.adjust f k ∘ un𝐷
---- 
+---
 --- mapOnKey ∷ (Ord k) ⇒ k → (a → a) → k ⇰ a → k ⇰ a
 --- mapOnKey = flip mapOnKeyWith
 
@@ -668,4 +668,3 @@ instance (Ord k) ⇒ Single (Elem (StdESD k) ∧ a) (EDct (StdESD k) a) where
 
 -- djoin ∷ (Ord k,Ord v₁,Ord v₂) ⇒ k ⇰ 𝑃 v₁ → k ⇰ 𝑃 v₂ → k ⇰ 𝑃 (v₁ ∧ v₂)
 -- djoin = interWith $ \ vs₁ vs₂ → pow $ zipWith (:*) vs₁ vs₂
-

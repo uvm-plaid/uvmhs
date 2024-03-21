@@ -74,31 +74,31 @@ class LiftTop t where
   liftMtop ∷ ∀ m. (Monad m) ⇒ (∀ a. m a) → (∀ a. t m a)
 
 class MonadCont r m | m → r where
-  callCC ∷ ∀ a. ((a → m r) → m r) → m a 
-  withC ∷ ∀ a. (a → m r) → m a → m r 
+  callCC ∷ ∀ a. ((a → m r) → m r) → m a
+  withC ∷ ∀ a. (a → m r) → m a → m r
 
 class LiftCont t where
-  liftCallCC ∷ 
-    ∀ m r. (Monad m) 
-    ⇒ (∀ a. ((a → m r) → m r) → m a) 
+  liftCallCC ∷
+    ∀ m r. (Monad m)
+    ⇒ (∀ a. ((a → m r) → m r) → m a)
     → (∀ a. ((a → t m r) → t m r) → t m a)
-  liftWithC ∷ 
-    ∀ m r. (Monad m) 
-    ⇒ (∀ a. (a → m r) → m a → m r) 
+  liftWithC ∷
+    ∀ m r. (Monad m)
+    ⇒ (∀ a. (a → m r) → m a → m r)
     → (∀ a. (a → t m r) → t m a → t m r)
 
 class MonadUCont m where
-  ucallCC ∷ ∀ a. (∀ u. (a → m u) → m u) → m a 
-  uwithC ∷ ∀ a u. (a → m u) → m a → m u 
+  ucallCC ∷ ∀ a. (∀ u. (a → m u) → m u) → m a
+  uwithC ∷ ∀ a u. (a → m u) → m a → m u
 
 class LiftUCont t where
-  liftUCallCC ∷ 
-    ∀ m. (Monad m) 
-    ⇒ (∀ a. (∀ u. (a → m u) → m u) → m a) 
+  liftUCallCC ∷
+    ∀ m. (Monad m)
+    ⇒ (∀ a. (∀ u. (a → m u) → m u) → m a)
     → (∀ a. (∀ u. (a → t m u) → t m u) → t m a)
-  liftUWithC ∷ 
-    ∀ m. (Monad m) 
-    ⇒ (∀ a u. (a → m u) → m a → m u) 
+  liftUWithC ∷
+    ∀ m. (Monad m)
+    ⇒ (∀ a u. (a → m u) → m a → m u)
     → (∀ a u. (a → t m u) → t m a → t m u)
 
 class MonadBad m where
@@ -176,7 +176,7 @@ ask = askL refl
 local ∷ (Monad m,MonadReader r m) ⇒ r → m a → m a
 local = localL refl
 
-mapEnv ∷ (Monad m,MonadReader r m) ⇒ (r → r) → m a → m a 
+mapEnv ∷ (Monad m,MonadReader r m) ⇒ (r → r) → m a → m a
 mapEnv = mapEnvL refl
 
 -- Writer
@@ -203,26 +203,26 @@ retOut xM = do
 
 -- # State
 
-getL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → m a 
+getL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → m a
 getL l = map (access l) get
 
-putL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → a → m () 
+putL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → a → m ()
 putL 𝓁 = modify ∘ update 𝓁
 
-modify ∷ (Monad m,MonadState s m) ⇒ (s → s) → m () 
+modify ∷ (Monad m,MonadState s m) ⇒ (s → s) → m ()
 modify f = do
   s ← get
   put $ f s
 
-modifyM ∷ (Monad m,MonadState s m) ⇒ (s → m s) → m () 
+modifyM ∷ (Monad m,MonadState s m) ⇒ (s → m s) → m ()
 modifyM f = do
   s ← get
   put *$ f s
 
-modifyL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → (a → a) → m () 
+modifyL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → (a → a) → m ()
 modifyL 𝓁 = modify ∘ alter 𝓁
 
-modifyML ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → (a → m a) → m () 
+modifyML ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → (a → m a) → m ()
 modifyML 𝓁 = modifyM ∘ alterM 𝓁
 
 getput ∷ (Monad m,MonadState s m) ⇒ s → m s
@@ -349,7 +349,7 @@ throwEff = extend $ elimChoice throw return
 throwObs ∷ (Monad m,MonadError e m) ⇒ m a → m (e ∨ a)
 throwObs xM = catch (map Inr xM) $ return ∘ Inl
 
-throw𝑂 ∷ (Monad m,MonadError e m) ⇒ e → 𝑂 a → m a 
+throw𝑂 ∷ (Monad m,MonadError e m) ⇒ e → 𝑂 a → m a
 throw𝑂 e = elim𝑂 (const $ throw e) return
 
 -- Nondet --
@@ -410,7 +410,7 @@ return𝑃 = fold mzero (\ x xM → xM ⊞ return x)
 
 -- Cont --
 
-reset ∷ (Monad m,MonadCont u m) ⇒ m u → m u 
+reset ∷ (Monad m,MonadCont u m) ⇒ m u → m u
 reset aM = callCC $ \ k → k *$ withC return aM
 
 modifyC ∷ (Monad m,MonadCont u m) ⇒ (u → m u) → m ()
@@ -437,7 +437,7 @@ modifyEnvL ℓ f = do
 
 -- UCont --
 
-ureset ∷ (Monad m,MonadUCont m) ⇒ m a → m a 
+ureset ∷ (Monad m,MonadUCont m) ⇒ m a → m a
 ureset aM = ucallCC HS.$ \ k → k *$ uwithC return aM
 
 umodifyC ∷ (Monad m,MonadUCont m) ⇒ (∀ u. u → m u) → m ()
