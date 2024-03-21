@@ -49,7 +49,7 @@ data LocRange = LocRange
 makeLenses ''LocRange
 makePrettyUnion ''LocRange
 
-instance Join LocRange where 
+instance Join LocRange where
   LocRange b₁ e₁ ⊔ LocRange b₂ e₂ = LocRange (b₁ ⊓ b₂) (e₁ ⊔ e₂)
 
 -- # SourceToken
@@ -93,7 +93,7 @@ sourceInput₀ ss = SourceInput ss loc₀
 
 -- # SourceErrorTrace
 
-data SourceErrorTrace = SourceErrorTrace 
+data SourceErrorTrace = SourceErrorTrace
   { sourceErrorTraceFinal ∷ 𝒫 𝕊
   , sourceErrorTraceChain ∷ 𝕊 ⇰ SourceErrorTrace
   } deriving (Eq, Ord)
@@ -108,7 +108,7 @@ instance JoinLattice SourceErrorTrace
 
 sourceErrorTraceFromStack ∷ [𝕊] → 𝕊 → SourceErrorTrace
 sourceErrorTraceFromStack [] fin = SourceErrorTrace (single fin) bot
-sourceErrorTraceFromStack (msg:msgs) fin = 
+sourceErrorTraceFromStack (msg:msgs) fin =
   SourceErrorTrace bot $ dict [msg ↦ sourceErrorTraceFromStack msgs fin]
 
 displaySourceErrorTrace ∷ SourceErrorTrace → Doc
@@ -145,10 +145,10 @@ makeLenses ''SourceError
 makePrettyRecord ''SourceError
 
 sourceErrorAppend ∷ SourceError t → SourceError t → SourceError t
-sourceErrorAppend (SourceError pin₁ ectxs₁) (SourceError pin₂ ectxs₂) = 
+sourceErrorAppend (SourceError pin₁ ectxs₁) (SourceError pin₂ ectxs₂) =
   case sourceInputNextLoc pin₁ ⋚ sourceInputNextLoc pin₂ of
     LT → SourceError pin₂ ectxs₂
-    EQ → 
+    EQ →
       SourceError pin₁ $ unionWithDictOn ectxs₁ ectxs₂ $ \ pei₁ pei₂ →
         let SourceErrorInfo pre₁ trace₁ = pei₁
             SourceErrorInfo _    trace₂ = pei₂
@@ -170,17 +170,17 @@ instance Monoid (SourceError𝒪 t) where
 
 displaySourceError𝒪 ∷ SourceError𝒪 t → Doc
 displaySourceError𝒪 NullSourceError = ppHeader "Nothing to Parse"
-displaySourceError𝒪 (SourceError𝒪 (SourceError (SourceInput ts (Loc _ row col)) ectxs)) = 
+displaySourceError𝒪 (SourceError𝒪 (SourceError (SourceInput ts (Loc _ row col)) ectxs)) =
   ppVertical $ concat
   [ return $ ppHeader "Parse Failure"
-  , return $ ppHorizontal 
+  , return $ ppHorizontal
       [ ppErr ">"
       , concat [ppText "row:",pretty row]
       , concat [ppText "col:",pretty col]
       ]
   , return $ ppHeader "One Of:"
-  , intersperse (ppHeader "OR") $ mapOn (list ectxs) $ 
-    \ ((locRange,ctx),SourceErrorInfo pre etrace) → 
+  , intersperse (ppHeader "OR") $ mapOn (list ectxs) $
+    \ ((locRange,ctx),SourceErrorInfo pre etrace) →
         let (tokRange,nextTok,followStream) = case unconsStream ts of
               Nothing → (Bot,ppErr "EOF",null)
               Just (x,ts') → (AddBot $ sourceTokenRange x,sourceTokenError x,ts')
@@ -211,7 +211,7 @@ makeLenses ''SourceContextPrefix
 
 instance Pretty (SourceContextPrefix t) where
   pretty (SourceContextPrefix prefix display displayError range) =
-    ppRecord "=" 
+    ppRecord "="
       [ ppText "display"      ↦ prefix ⧺ ppUT '^' green display
       , ppText "displayError" ↦ prefix ⧺ ppUT '^' red displayError
       , ppText "range"        ↦ pretty range
@@ -222,7 +222,7 @@ instance Monoid (SourceContextPrefix t) where
   pc₁ ⧺ pc₂ =
     let SourceContextPrefix pre₁ display₁ displayError₁ range₁ = pc₁
         SourceContextPrefix _    display₂ displayError₂ range₂ = pc₂
-    in SourceContextPrefix pre₁ 
+    in SourceContextPrefix pre₁
        (display₁ ⧺ display₂) (displayError₁ ⧺ displayError₂) (range₁ ⊔ range₂)
 
 pushSourceLocalContext ∷ SourceContextPrefix t → SourceContextPrefix t
@@ -235,7 +235,7 @@ errorSourceLocalContext pi (stack,message) (SourceContextPrefix prefix display _
     [(range,display) ↦ SourceErrorInfo prefix (sourceErrorTraceFromStack (reverse stack) message)]
 
 sourceLocalContextFromToken ∷ [Format] → SourceToken t → SourceContextPrefix t
-sourceLocalContextFromToken fmt (SourceToken _ range render renderError) = 
+sourceLocalContextFromToken fmt (SourceToken _ range render renderError) =
   SourceContextPrefix null (ppFormat fmt render) (ppFormat fmt renderError) (AddBot range)
 
 -- # SourceContext
@@ -255,7 +255,7 @@ instance Pretty (SourceContext t) where
           Bot → id
           AddBot (LocRange begin end) → compose
             [ ppSetLineNumber (𝕟 0)
-            , ppLineNumbers 
+            , ppLineNumbers
             , ppBlinders (locRow begin) (locRow end)
             ]
     in ff $ pre ⧺ (ppUT '^' green display) ⧺ concat (map sourceTokenRender ss)
@@ -266,7 +266,7 @@ displaySourceContext (SourceContext (SourceContextPrefix pre display _ range) (S
           Bot → id
           AddBot (LocRange begin end) → compose
             [ ppSetLineNumber (𝕟 0)
-            , ppLineNumbers 
+            , ppLineNumbers
             , ppBlinders (locRow begin) (locRow end)
             ]
     in ff $ pre ⧺ display ⧺ concat (map sourceTokenRender ss)

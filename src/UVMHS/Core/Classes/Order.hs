@@ -28,21 +28,21 @@ x ≥ y = case x ⋚ y of {LT → False;EQ → True;GT → True}
 (>) = (HS.>)
 
 (⩏) ∷ (Ord a) ⇒ a → a → a
-x ⩏ y 
+x ⩏ y
   | x ≤ y = y
   | otherwise = x
 
 (⩎) ∷ (Ord a) ⇒ a → a → a
-x ⩎ y 
+x ⩎ y
   | x ≤ y = x
   | otherwise = y
 
 minBy ∷ (Ord b) ⇒ (a → b) → a → a → a
-minBy f x y 
+minBy f x y
   | f x ≤ f y = x
   | otherwise = y
 
 maxBy ∷ (Ord b) ⇒ (a → b) → a → a → a
-maxBy f x y 
+maxBy f x y
   | f x ≥ f y = x
   | otherwise = y

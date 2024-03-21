@@ -11,16 +11,16 @@ import qualified Data.Text.Lazy            as TextLazy
 import qualified Data.Text.Lazy.Builder    as TextBuilder
 import qualified Prelude                   as HS
 
-instance Null 𝕊 where 
+instance Null 𝕊 where
   null = Text.empty
-instance Append 𝕊 where 
+instance Append 𝕊 where
   (⧺) = Text.append
 instance Monoid 𝕊
 
-instance Single ℂ 𝕊 where 
+instance Single ℂ 𝕊 where
   single = Text.singleton
 
-instance ToIter ℂ 𝕊 where 
+instance ToIter ℂ 𝕊 where
   iter cs = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
     case TextI.stream cs of
       TextI.Stream g s₀ _ →
@@ -32,8 +32,8 @@ instance ToIter ℂ 𝕊 where
                 loop s' i'
         in loop s₀
 
-instance Lookup ℕ ℂ 𝕊 where 
-  s ⋕? n 
+instance Lookup ℕ ℂ 𝕊 where
+  s ⋕? n
     | (n > 0) ⩓ (n ≤ length𝕊 s) = Some $ Text.index s $ HS.fromIntegral $ n - 1
     | otherwise = None
 

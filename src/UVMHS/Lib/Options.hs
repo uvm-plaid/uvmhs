@@ -1,4 +1,4 @@
-module UVMHS.Lib.Options 
+module UVMHS.Lib.Options
   ( module UVMHS.Lib.Options
   , module System.Console.GetOpt
   ) where
@@ -25,6 +25,6 @@ optUsageInfo ∷ 𝕊 → 𝐿 (OptDescr a) → 𝕊
 optUsageInfo s ds = string $ Opt.usageInfo (tohsChars s) $ tohs ds
 
 parseOptions ∷ 𝐿 (OptDescr a) → 𝐿 𝕊 → (𝐿 a ∧ 𝐿 𝕊 ∧ 𝐿 𝕊)
-parseOptions opts args = 
+parseOptions opts args =
   mapPair (mapSnd $ map string) (map string) $
     frhs $ Opt.getOpt Opt.RequireOrder (tohs opts) $ tohs $ map tohsChars args

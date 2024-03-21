@@ -5,39 +5,39 @@ import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.Arithmetic ()
 
-instance (POrd a,POrd b) ⇒ POrd (a ∧ b) where 
+instance (POrd a,POrd b) ⇒ POrd (a ∧ b) where
   (x₁ :* y₁) ⊑ (x₂ :* y₂) = (x₁ ⊑ x₂) ⩓ (y₁ ⊑ y₂)
-instance (Bot a,Bot b) ⇒ Bot (a ∧ b) where 
+instance (Bot a,Bot b) ⇒ Bot (a ∧ b) where
   bot = bot :* bot
-instance (Join a,Join b) ⇒ Join (a ∧ b) where 
+instance (Join a,Join b) ⇒ Join (a ∧ b) where
   (a₁ :* b₁) ⊔ (a₂ :* b₂) = (a₁ ⊔ a₂) :* (b₁ ⊔ b₂)
-instance (Top a,Top b) ⇒ Top (a ∧ b) where 
+instance (Top a,Top b) ⇒ Top (a ∧ b) where
   top = top :* top
-instance (Meet a,Meet b) ⇒ Meet (a ∧ b) where 
+instance (Meet a,Meet b) ⇒ Meet (a ∧ b) where
   (a₁ :* b₁) ⊓ (a₂ :* b₂) = (a₁ ⊓ a₂) :* (b₁ ⊓ b₂)
-instance (Dual a,Dual b) ⇒ Dual (a ∧ b) where 
+instance (Dual a,Dual b) ⇒ Dual (a ∧ b) where
   dual (a :* b) = dual a :* dual b
-instance (Difference a,Difference b) ⇒ Difference (a ∧ b) where 
+instance (Difference a,Difference b) ⇒ Difference (a ∧ b) where
   (a₁ :* b₁) ⊟ (a₂ :* b₂) = (a₁ ⊟ a₂) :* (b₁ ⊟ b₂)
 instance (JoinLattice a,JoinLattice b) ⇒ JoinLattice (a ∧ b)
 instance (MeetLattice a,MeetLattice b) ⇒ MeetLattice (a ∧ b)
 instance (Lattice a,Lattice b) ⇒ Lattice (a ∧ b)
 
-instance (Null a,Null b) ⇒ Null (a ∧ b) where 
+instance (Null a,Null b) ⇒ Null (a ∧ b) where
   null = (null :* null)
-instance (Append a,Append b) ⇒ Append (a ∧ b) where 
+instance (Append a,Append b) ⇒ Append (a ∧ b) where
   (x₁ :* y₁) ⧺ (x₂ :* y₂) = (x₁ ⧺ x₂) :* (y₁ ⧺ y₂)
 instance (Monoid a,Monoid b) ⇒ Monoid (a ∧ b)
 
-instance Functor ((∧) a) where 
+instance Functor ((∧) a) where
   map f (x :* y) = x :* f y
-instance (Null a) ⇒ Return ((∧) a) where 
+instance (Null a) ⇒ Return ((∧) a) where
   return = (:*) null
-instance (Append a) ⇒ Bind ((∧) a) where 
+instance (Append a) ⇒ Bind ((∧) a) where
   (a :* b) ≫= f = let (a' :* c) = f b in (a ⧺ a') :* c
 instance (Monoid a) ⇒ Monad ((∧) a)
 
-instance FunctorM ((∧) a) where 
+instance FunctorM ((∧) a) where
   mapM f (x :* y) = map ((:*) x) $ f y
 
 fst ∷ a ∧ b → a
@@ -75,4 +75,3 @@ mapMFst = flip mapMPair return
 
 mapMSnd ∷ (Monad m) ⇒ (b → m b') → a ∧ b → m (a ∧ b')
 mapMSnd = mapMPair return
-

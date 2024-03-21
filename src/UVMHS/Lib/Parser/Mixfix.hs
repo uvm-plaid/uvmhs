@@ -60,7 +60,7 @@ data MixesF t f a = MixesF
 
 instance Null (MixesF t f a) where null = MixesF null null null null null
 instance (Ord t) ⇒ Append (MixesF t f a) where
-  MixesF pre₁ post₁ inf₁ infl₁ infr₁ ⧺ MixesF pre₂ post₂ inf₂ infl₂ infr₂ = 
+  MixesF pre₁ post₁ inf₁ infl₁ infr₁ ⧺ MixesF pre₂ post₂ inf₂ infl₂ infr₂ =
     MixesF (pre₁ ⧺ pre₂) (post₁ ⧺ post₂) (inf₁ ⧺ inf₂) (infl₁ ⧺ infl₂) $ infr₁ ⧺ infr₂
 instance (Ord t) ⇒ Monoid (MixesF t f a)
 
@@ -96,17 +96,17 @@ fmixTerminal p = null { mixfixFTerminals = p}
 -- PRE PRE x INFR PRE PRE y
 -- ≈
 -- PRE (PRE (x INFR (PRE (PRE y))))
--- 
+--
 -- x POST POST INFL y POST POST
 -- ≈
 -- ((((x POST) POST) INFL y) POST) POST
 
-fmixfix ∷ 
+fmixfix ∷
   ∀ t f a. (Ord t,Comonad f)
-  ⇒ (CParser t (f a) → CParser t (f a)) 
-  → (CParser t (f a) → CParser t (f a)) 
-  → (CParser t a → CParser t (f a)) 
-  → MixfixF t f a 
+  ⇒ (CParser t (f a) → CParser t (f a))
+  → (CParser t (f a) → CParser t (f a))
+  → (CParser t a → CParser t (f a))
+  → MixfixF t f a
   → CParser t (f a)
 fmixfix new bracket cxt (MixfixF terms levels₀) = loop levels₀
   where
@@ -115,9 +115,9 @@ fmixfix new bracket cxt (MixfixF terms levels₀) = loop levels₀
       None → new $ cxt terms
       Some ((i :* mixes) :* levels') →
         let msg = "lvl " ⧺ alignRightFill '0' 3 (show𝕊 i)
-        in 
-        new $ cxt $ buildLevelDirected msg mixes $ 
-        new $ cxt $ buildLevelNondirected msg mixes $ 
+        in
+        new $ cxt $ buildLevelDirected msg mixes $
+        new $ cxt $ buildLevelNondirected msg mixes $
         loop levels'
     buildLevelNondirected ∷ 𝕊 → MixesF t f a → CParser t (f a) → CParser t a
     buildLevelNondirected msg mixes nextLevel = do
@@ -191,12 +191,12 @@ data Mixes t a = Mixes
   }
 
 instance Null (Mixes t a) where null = Mixes null null null null null
-instance (Ord t) ⇒ Append (Mixes t a) where 
-  Mixes pre₁ post₁ inf₁ infl₁ infr₁ ⧺ Mixes pre₂ post₂ inf₂ infl₂ infr₂ = 
+instance (Ord t) ⇒ Append (Mixes t a) where
+  Mixes pre₁ post₁ inf₁ infl₁ infr₁ ⧺ Mixes pre₂ post₂ inf₂ infl₂ infr₂ =
     Mixes (pre₁ ⧺ pre₂) (post₁ ⧺ post₂) (inf₁ ⧺ inf₂) (infl₁ ⧺ infl₂) (infr₁ ⧺ infr₂)
 instance (Ord t) ⇒ Monoid (Mixes t a)
 
-data Mixfix t a = Mixfix 
+data Mixfix t a = Mixfix
   { mixfixTerminals ∷ CParser t a
   , mixfixLevels ∷ ℕ64 ⇰ Mixes t a
   }
@@ -236,7 +236,7 @@ mixfixPure ∷ (Ord t) ⇒ Mixfix t a → MixfixF t ID a
 mixfixPure (Mixfix terminals levels) = MixfixF terminals $ map mixesPure levels
 
 mixfix ∷ (Ord t) ⇒ Mixfix t a → CParser t a
-mixfix mix = unID ^$ fmixfix id id (map ID) (mixfixPure mix) 
+mixfix mix = unID ^$ fmixfix id id (map ID) (mixfixPure mix)
 
 mixfixWithContext ∷ (Ord t) ⇒ 𝕊 → Mixfix t a → CParser t (𝐴 SrcCxt a)
 mixfixWithContext s = cpNewContext s ∘ cpWithContextRendered ∘ mixfix

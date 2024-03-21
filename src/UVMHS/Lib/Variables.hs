@@ -17,7 +17,7 @@ data 𝕏 = 𝕏
 makeLenses ''𝕏
 
 -- fancy variables
-data 𝕐 = 
+data 𝕐 =
     DVar ℕ64
   | NVar ℕ64 𝕏
   | GVar 𝕏

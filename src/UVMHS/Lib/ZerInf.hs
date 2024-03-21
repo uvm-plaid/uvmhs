@@ -123,7 +123,7 @@ instance (Times a) ⇒ Times (AddInf a) where
   AddInf x × AddInf y = AddInf $ x × y
 instance (Divide a,Zero a,Eq a) ⇒ Divide (AddInf a) where
   Inf / Inf = error "∞ / ∞"
-  Inf / y 
+  Inf / y
     | y ≡ zero = error "∞ / 0"
     | otherwise = Inf
   _ / Inf = zero
@@ -136,7 +136,7 @@ instance (DivMod a,Zero a) ⇒ DivMod (AddInf a) where
   x ÷ Inf = x
   AddInf x ÷ AddInf y = AddInf $ x ÷ y
 instance (Pon a,One a) ⇒ Pon (AddInf a) where
-  Inf ^^ n 
+  Inf ^^ n
     | n ≡ zero = one
     | otherwise = Inf
   AddInf x ^^ n = AddInf $ x ^^ n

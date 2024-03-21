@@ -11,7 +11,7 @@ import UVMHS.Lib.Pretty.Shape
 -----------------
 -- Input Chunk --
 -----------------
-  
+
 data ChunkI =
   --          length
   --          ⌄⌄⌄
@@ -25,19 +25,19 @@ data ChunkI =
 
 rawChunksI ∷ 𝕊 → ChunkI
 rawChunksI s = RawChunkI (𝕟64 $ length𝕊 s) s
- 
+
 splitChunksI ∷ 𝕊 → 𝐼 ChunkI
-splitChunksI s = 
-  materialize 
-  $ filter (\ c → c ≢ RawChunkI (𝕟64 0) "") 
-  $ inbetween (NewlineChunkI zero) 
+splitChunksI s =
+  materialize
+  $ filter (\ c → c ≢ RawChunkI (𝕟64 0) "")
+  $ inbetween (NewlineChunkI zero)
   $ map rawChunksI $ splitOn𝕊 "\n" s
 
 shapeIChunk ∷ ChunkI → Shape
 shapeIChunk = \case
   RawChunkI l _ → SingleLine l
   NewlineChunkI n → newlineShape ⧺ SingleLine n
- 
+
 extendNewlinesIChunk ∷ ℕ64 → ChunkI → ChunkI
 extendNewlinesIChunk n = \case
   RawChunkI l s → RawChunkI l s
@@ -73,8 +73,8 @@ shapeOChunk = \case
 
 type TreeI = 𝑇V Annotation (𝐼 ChunkI)
 
---                              stuff 
---                              between 
+--                              stuff
+--                              between
 --                              newlines
 --                              ⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄
 type TreeO = 𝑇V Formats (Sep () (𝐼A ChunkO))
@@ -105,7 +105,7 @@ alignSummary (SummaryI b sh c) = SummaryI b (alignShapeA sh) c
 
 instance Null SummaryI where null = SummaryI False null null
 instance Append SummaryI where
-  SummaryI b₁ sh₁ cs₁ ⧺ SummaryI b₂ sh₂ cs₂ = 
+  SummaryI b₁ sh₁ cs₁ ⧺ SummaryI b₂ sh₂ cs₂ =
     let cs₂' =
           if not $ shapeIAligned sh₂
           then cs₂
@@ -160,7 +160,7 @@ hvalign ha va m n (SummaryO sh cs) =
       hdm = hd ⌿ 𝕟64 2
         -- mmmmmmmm
         -- wwwwwddd
-        --        m 
+        --        m
         --
         -- nnnnnnnn
         -- hhhhhddd
@@ -195,7 +195,7 @@ hvalign ha va m n (SummaryO sh cs) =
           j = fj s
       in concat
         [ if i ≡ zero then null else single $ PaddingChunkO i
-        , xs 
+        , xs
         , if j ≡ zero then null else single $ PaddingChunkO j
         ]
     vwrap i j xs =

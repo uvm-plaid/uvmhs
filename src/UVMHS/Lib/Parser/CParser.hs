@@ -23,7 +23,7 @@ toCParser ∷ Parser t a → CParser t a
 toCParser p = CParser dø𝐷 p
 
 frCParser ∷ (Ord t) ⇒ CParser t a → Parser t a
-frCParser (CParser n b) 
+frCParser (CParser n b)
   | isEmpty n = b
   | otherwise = tries
       [ do t ← pPluck
@@ -35,14 +35,14 @@ frCParser (CParser n b)
       , b
       ]
 
-instance Return (CParser t) where 
+instance Return (CParser t) where
   return ∷ ∀ a. a → CParser t a
   return x = toCParser $ return x
 instance (Ord t) ⇒ Bind (CParser t) where
   (≫=) ∷ ∀ a b. CParser t a → (a → CParser t b) → CParser t b
-  CParser n b ≫= k = 
-    CParser (map (extend k) n) 
-            (b ≫= frCParser ∘ k) 
+  CParser n b ≫= k =
+    CParser (map (extend k) n)
+            (b ≫= frCParser ∘ k)
 instance (Ord t) ⇒ Functor (CParser t) where map = mmap
 instance (Ord t) ⇒ Monad (CParser t)
 
@@ -84,7 +84,7 @@ cpShaped ∷ (t → 𝑂 a) → CParser t a
 cpShaped = toCParser ∘ pShaped
 
 cpSatisfies ∷ (t → 𝔹) → CParser t t
-cpSatisfies = toCParser ∘ pSatisfies 
+cpSatisfies = toCParser ∘ pSatisfies
 
 cpAny ∷ CParser t t
 cpAny = toCParser pAny
@@ -222,7 +222,7 @@ cpOneOrMoreSepByContext f sepM xM = do
 ---------------------
 -- Running Parsers --
 ---------------------
-             
+
 runParser₀ ∷ (ToIter (ParserToken t) ts,Ord t) ⇒ 𝕊 → ts → CParser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
 runParser₀ so = (∘ frCParser) ∘ runParser (parserEnv₀ so) ∘ parserState₀ ∘ stream
 
@@ -239,7 +239,7 @@ parseIO p s ts = case parse p s ts of
 parseIOMain ∷ (Pretty a,ToIter (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → IO ()
 parseIOMain p s ts = do
   x ← parseIO p s ts
-  pprint $ ppVertical 
+  pprint $ ppVertical
     [ ppHeader "Success"
     , pretty x
     ]

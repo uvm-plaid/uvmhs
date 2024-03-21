@@ -3,19 +3,19 @@ module UVMHS.Lib.Parser.Sep where
 import UVMHS.Core
 import UVMHS.Lib.Pretty
 
--- data Sep i a = 
+-- data Sep i a =
 --     SepE a
 --   | SepS a i (𝐼 (a ∧ i)) a
--- 
+--
 -- sepI ∷ (Null a) ⇒ i → Sep i a
 -- sepI i = SepS null i null null
--- 
+--
 -- instance (Null a) ⇒ Null (Sep i a) where null = Sep null
 -- instance (Append a) ⇒ Append (Sep i a) where
 --   Sep x₁ ⧺ Sep x₂ = Sep $ x₁ ⧺ x₂
 --   Sep x₁ ⧺ Sep x₂₁ i₂ xis₂ x₂₂ = Sep (x₁ ⧺ x₂₁) i₂ xis₂ x₂₂
 --   Sep x₁₁ i₁ xis₁ x₁₂ ⧺ Sep x₂ = Sep x₁₁ i₁ xis₁ $ x₁₂ ⧺ x₂
---   Sep x₁₁ i₁ xis₁ x₁₂ ⧺ Sep x₂₁ i₂ xis₂ x₂₂ = 
+--   Sep x₁₁ i₁ xis₁ x₁₂ ⧺ Sep x₂₁ i₂ xis₂ x₂₂ =
 --     let xis' = xis₁ ⧺ single ((x₁₁ ⧺ x₂₁) :* i₂) ⧺ xis₂
 --     in Sep x₁₁ i₁ xis' x₂₂
 -- instance (Monoid a) ⇒ Monoid (Sep i a)
@@ -30,12 +30,12 @@ instance (Append a) ⇒ Append (SepL i a) where
     None → SepL (x₁ ⧺ x₂) sxs₂
     Some (sxs₁' :* (s₁ :* x₁')) → SepL x₁ (sxs₁' ⧺ single (s₁ :* (x₁' ⧺ x₂)) ⧺ sxs₂)
 instance (Monoid a) ⇒ Monoid (SepL i a)
-instance ToStream a (SepL a a) where 
+instance ToStream a (SepL a a) where
   stream (SepL x₀ sxs₀) = concat
     [ single x₀
     , concat $ mapOn sxs₀ $ \ (x :* y) → stream [x,y]
     ]
-instance ToIter a (SepL a a) where 
+instance ToIter a (SepL a a) where
   iter (SepL x₀ sxs₀) = concat
     [ single x₀
     , concat $ mapOn sxs₀ $ \ (x :* y) → iter [x,y]
@@ -65,13 +65,13 @@ instance (Append a) ⇒ Append (SepR i a) where
     Some ((x₂' :* s₂) :* xss₂') → SepR (xss₁ ⧺ single ((x₁ ⧺ x₂') :* s₂) ⧺ xss₂') x₂
 instance (Monoid a) ⇒ Monoid (SepR i a)
 
-instance ToStream a (SepR a a) where 
-  stream (SepR xss₀ x₀) = 
+instance ToStream a (SepR a a) where
+  stream (SepR xss₀ x₀) =
     mjoin
     $ flip (⧺) (single (single x₀))
-    $ map (\ (x :* y) → stream [x,y]) 
+    $ map (\ (x :* y) → stream [x,y])
     $ stream xss₀
-instance ToIter a (SepR a a) where 
+instance ToIter a (SepR a a) where
   iter (SepR xss₀ x₀) =
     mjoin
     $ flip (⧺) (single (single x₀))
@@ -100,7 +100,7 @@ sepRL (SepR xss₀ x₀) = let (x₀' :* sxs₀') = loop xss₀ x₀ in SepL x�
     loop ∷ 𝑄 (a ∧ i) → a → (a ∧ 𝑄 (i ∧ a))
     loop xss x = case unsnoc𝑄 xss of
       None → (x :* null)
-      Some (xss' :* (x' :* s)) → 
+      Some (xss' :* (x' :* s)) →
         let (y :* sys) = loop xss' x'
         in (y :* snoc𝑄 sys (s :* x))
 

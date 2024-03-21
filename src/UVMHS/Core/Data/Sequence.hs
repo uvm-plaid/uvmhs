@@ -11,26 +11,26 @@ import qualified Prelude as HS
 import qualified Data.Foldable as HS
 import qualified Data.Sequence as Sequence
 
-instance Null (𝑄 a) where 
+instance Null (𝑄 a) where
   null = qø
-instance Append (𝑄 a) where 
+instance Append (𝑄 a) where
   (⧺) = append𝑄
 instance Monoid (𝑄 a)
-instance Single a (𝑄 a) where 
+instance Single a (𝑄 a) where
   single = single𝑄
 
-instance Functor 𝑄 where 
+instance Functor 𝑄 where
   map = map𝑄
-instance Return 𝑄 where 
+instance Return 𝑄 where
   return = single
-instance Bind 𝑄 where 
+instance Bind 𝑄 where
   (≫=) = bind𝑄
 instance Monad 𝑄
 
-instance ToIter a (𝑄 a) where 
+instance ToIter a (𝑄 a) where
   iter = iter𝑄
 
-instance (Show a) ⇒ Show (𝑄 a) where 
+instance (Show a) ⇒ Show (𝑄 a) where
   show = tohsChars ∘ showCollection "[" "]" "," show𝕊
 
 qø ∷ 𝑄 a

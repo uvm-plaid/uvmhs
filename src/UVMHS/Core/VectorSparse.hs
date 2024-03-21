@@ -19,7 +19,7 @@ instance (POrd a) ⇒ POrd (𝑉 a) where (⊑) = subDictBy𝑉 (⊑)
 
 instance Null (𝑉 a) where null = wø
 instance (Append a) ⇒ Append (𝑉 a) where (⧺) = unionWith𝑉 (⧺)
-instance (Append a) ⇒ Monoid (𝑉 a) 
+instance (Append a) ⇒ Monoid (𝑉 a)
 
 instance (Null a) ⇒ Unit (𝑉 a) where unit = null ↦♮ null
 instance (Append a,Cross a) ⇒ Cross (𝑉 a) where
@@ -53,7 +53,7 @@ instance Functor 𝑉 where map = map𝑉
 
 instance ToIter (ℤ64 ∧ a) (𝑉 a) where iter = iter𝑉
 
-instance (Show a) ⇒ Show (𝑉 a) where 
+instance (Show a) ⇒ Show (𝑉 a) where
   show = tohsChars ∘ showCollection "{" "}" "," (\ (i :* x) → show𝕊 i ⧺ "⇒" ⧺ show𝕊 x)
 
 lookup𝑉 ∷ 𝑉 a → ℤ64 → 𝑂 a
@@ -70,7 +70,7 @@ wø = 𝑉 IntMap.empty
 
 unionWith𝑉 ∷ (a → a → a) → 𝑉 a → 𝑉 a → 𝑉 a
 unionWith𝑉 f ixs₁ ixs₂ = 𝑉 $ IntMap.unionWith f (un𝑉 ixs₁) (un𝑉 ixs₂)
-  
+
 (↦♮) ∷ ℤ64 → a → 𝑉 a
 i ↦♮ x = 𝑉 $ IntMap.singleton (tohs i) x
 
@@ -82,7 +82,7 @@ ixs₁ ⩌♮ ixs₂ = 𝑉 $ un𝑉 ixs₁ `IntMap.union` un𝑉 ixs₂
 
 (⩍♮) ∷ 𝑉 a → 𝑉 a → 𝑉 a
 ixs₁ ⩍♮ ixs₂ = 𝑉 $ un𝑉 ixs₁ `IntMap.intersection` un𝑉 ixs₂
- 
+
 -- (∸♮) ∷ 𝑉 a → 𝑉 a → 𝑉 a
 -- ixs₁ ∸♮ ixs₂ = 𝑉 $ un𝑉 ixs₁ `IntMap.difference` un𝑉 ixs₂
 
@@ -97,7 +97,7 @@ size𝑉 = HS.fromIntegral ∘ IntMap.size ∘ un𝑉
 
 unionsWith𝑉 ∷ (ToIter (𝑉 a) t) ⇒ (a → a → a) → t → 𝑉 a
 unionsWith𝑉 = fold wø ∘ unionWith𝑉
- 
+
 interWith𝑉 ∷ (a → b → c) → 𝑉 a → 𝑉 b → 𝑉 c
 interWith𝑉 f ixs₁ ixs₂ = 𝑉 $ IntMap.intersectionWith f (un𝑉 ixs₁) (un𝑉 ixs₂)
 
@@ -147,7 +147,7 @@ spvec𝐼 = 𝑉 ∘ IntMap.fromList ∘ lazyList ∘ map tohs
 
 spvec ∷ (ToIter (𝑉 a) t) ⇒ t → 𝑉 a
 spvec = foldr wø (⩌♮) ∘ iter
- 
+
 assoc𝑉 ∷ (ToIter (ℤ64 ∧ a) t) ⇒ t → 𝑉 a
 assoc𝑉 = spvec ∘ map single ∘ iter
 

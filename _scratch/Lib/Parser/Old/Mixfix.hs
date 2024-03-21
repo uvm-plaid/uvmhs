@@ -28,7 +28,7 @@ data MixesF t f a = MixesF
 
 instance Monoid (MixesF t f a) where
   null = MixesF mnull mnull mnull mnull mnull
-  MixesF pre₁ post₁ inf₁ infl₁ infr₁ ⧺ MixesF pre₂ post₂ inf₂ infl₂ infr₂ = 
+  MixesF pre₁ post₁ inf₁ infl₁ infr₁ ⧺ MixesF pre₂ post₂ inf₂ infl₂ infr₂ =
     MixesF (pre₁ <⧺> pre₂) (post₁ <⧺> post₂) (inf₁ <⧺> inf₂) (infl₁ <⧺> infl₂) (infr₁ <⧺> infr₂)
 
 data MixF t f a =
@@ -57,11 +57,11 @@ mixF (TerminalF term) = null {mixfixFTerminals = term}
 
 -- PRE (PRE (x INFR (PRE (PRE y))))
 -- PRE PRE x INFR PRE PRE y
--- 
+--
 -- ((((x POST) POST) INFL y) POST) POST
 -- x POST POST INFL y POST POST
 
-mixfixParserF ∷ 
+mixfixParserF ∷
   ∀ t f a. (Comonad f)
   ⇒ MixfixF t f a → (Parser t a → Parser t (f a)) → Parser t (f a)
 mixfixParserF (MixfixF terms levels₀) fld = loop levels₀
@@ -71,9 +71,9 @@ mixfixParserF (MixfixF terms levels₀) fld = loop levels₀
       Nothing → fld $ terms
       Just ((i,mixes),levels') →
         let msg = "lvl " ⧺ alignRightFill '0' (𝕟 3) (ppString i)
-        in 
-        fld $ buildLevelDirected msg mixes $ 
-        fld $ buildLevelNondirected msg mixes $ 
+        in
+        fld $ buildLevelDirected msg mixes $
+        fld $ buildLevelNondirected msg mixes $
         loop levels'
     buildLevelNondirected ∷ 𝕊 → MixesF t f a → Parser t (f a) → Parser t a
     buildLevelNondirected msg mixes nextLevel = do
@@ -153,7 +153,7 @@ data Mixes t a = Mixes
 
 instance Monoid (Mixes t a) where
   null = Mixes mnull mnull mnull mnull mnull
-  Mixes pre₁ post₁ inf₁ infl₁ infr₁ ⧺ Mixes pre₂ post₂ inf₂ infl₂ infr₂ = 
+  Mixes pre₁ post₁ inf₁ infl₁ infr₁ ⧺ Mixes pre₂ post₂ inf₂ infl₂ infr₂ =
     Mixes (pre₁ <⧺> pre₂) (post₁ <⧺> post₂) (inf₁ <⧺> inf₂) (infl₁ <⧺> infl₂) (infr₁ <⧺> infr₂)
 
 mixesPure ∷ Mixes t a → MixesF t ID a
@@ -165,7 +165,7 @@ mixesPure (Mixes pre post inf infl infr) =
   (map kextract2 infl)
   (map kextract2 infr)
 
-data Mixfix t a = Mixfix 
+data Mixfix t a = Mixfix
   { mixfixTerminals ∷ Parser t a
   , mixfixLevels ∷ ℕ ⇰ Mixes t a
   }

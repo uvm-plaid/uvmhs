@@ -1,5 +1,5 @@
 module UVMHS.Core.IO
-  ( module UVMHS.Core.IO 
+  ( module UVMHS.Core.IO
   , module System.IO.Error
   , module System.Exit
   ) where
@@ -92,7 +92,7 @@ trace s = io_UNSAFE $ do
 
 traceM ∷ (Monad m) ⇒ 𝕊 → m ()
 traceM msg =
-  let _ = trace msg 
+  let _ = trace msg
   in skip
 
 ------------------
@@ -282,14 +282,13 @@ profile xM = do
       u₁ = Stat.cumulative_live_bytes s₁
       -- total CPU time at previous GC in nanoseconds
       t₁ = Stat.cpu_ns s₁
-      -- 
+      --
       n₂ = Stat.major_gcs s₂
       u₂ = Stat.cumulative_live_bytes s₂
       t₂ = Stat.cpu_ns s₂
       --
       -- elapsed CPU time in seconds
-      t' = dbl (t₂ - t₁) / 1000000000.0 
+      t' = dbl (t₂ - t₁) / 1000000000.0
       -- average live data across GCs
       m  = dbl (u₂ - u₁) / dbl (n₂ - n₁)
   return $ x :* t' :* m
-

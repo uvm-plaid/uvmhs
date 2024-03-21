@@ -70,7 +70,7 @@ sgrIt False = "23"
 
 sgrFormat ∷ Formats → 𝑄 𝕊
 sgrFormat (Formats fg bg ul bd it) = single $ concat
-  [ sgrLeader 
+  [ sgrLeader
   , concat $ inbetween ";" $ list $ mconcat $ map (mzero𝑂 @ 𝑄)
       [ sgrFg ^$ fg
       , sgrBg ^$ bg

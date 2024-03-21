@@ -30,11 +30,11 @@ import UVMHS.Lib.Testing
 
 𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) ("x" ↦♭ 𝕟 1) |] [| "x" ↦♭ 𝕟 2 |]
 𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) ("y" ↦♭ 𝕟 1) |] [| "y" ↦♭ 𝕟 1 |]
-𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) (dict𝐷 ["x" ↦♭ 𝕟 10,"y" ↦♭ 𝕟 20]) |] 
+𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) (dict𝐷 ["x" ↦♭ 𝕟 10,"y" ↦♭ 𝕟 20]) |]
               [| dict𝐷 ["x" ↦♭ 𝕟 11,"y" ↦♭ 𝕟 20] |]
 𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) ("x" ↦♭ 𝕟 1) |] [| dø𝐷 |]
 𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) ("y" ↦♭ 𝕟 1) |] [| "y" ↦♭ 𝕟 1 |]
-𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) (dict𝐷 ["x" ↦♭ 𝕟 10,"y" ↦♭ 𝕟 20]) |] 
+𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) (dict𝐷 ["x" ↦♭ 𝕟 10,"y" ↦♭ 𝕟 20]) |]
               [| dict𝐷 ["y" ↦♭ 𝕟 20] |]
 
 newtype CR a = CR { unCR ∷ ContT ℕ64 (ReaderT (ℕ64 ∧ ℕ64) ID) a }
@@ -48,7 +48,7 @@ runCR ∷ ℕ64 → ℕ64 → CR ℕ64 → ℕ64
 runCR x y xM = unID $ runReaderT (x :* y) $ evalContT $ unCR xM
 
 execCR ∷ CR ℕ64 → ℕ64
-execCR = runCR 0 0 
+execCR = runCR 0 0
 
 𝔱 "core:monads:cr" [| 0   |] [| execCR $ do fst ^$ ask |]
 𝔱 "core:monads:cr" [| 0   |] [| execCR $ do snd ^$ ask |]
@@ -56,7 +56,7 @@ execCR = runCR 0 0
 𝔱 "core:monads:cr" [| 10  |] [| execCR $ do putEnvL fstL 10 ; x :* y ← ask ; return $ x + y |]
 𝔱 "core:monads:cr" [| 10  |] [| execCR $ do putEnvL fstL 10 ; reset (do x :* y ← ask ; return $ x + y) |]
 𝔱 "core:monads:cr" [| 0   |] [| execCR $ do _←reset $ (do putEnvL fstL 10;return $ 𝕟64 0);x:*y←ask;return $ x + y |]
-𝔱 "core:monads:cr" [| 110 |] 
+𝔱 "core:monads:cr" [| 110 |]
   [| execCR $ do putEnvL fstL 10;x ← reset $ (do putEnvL fstL 100;askL fstL);y←askL fstL;return $ x + y |]
 -- Note: this is why MonadReader has askL/localL as primitives, and not ask/local
 𝔱 "core:monads:cr" [| 2 |] [| execCR $ do localL fstL 1 $ putEnvL sndL 2 ; askL sndL |]
@@ -72,7 +72,7 @@ runUR ∷ ℕ64 → ℕ64 → UR ℕ64 → ℕ64
 runUR x y xM = unID $ runReaderT (x :* y) $ evalUContT $ unUR xM
 
 execUR ∷ UR ℕ64 → ℕ64
-execUR = runUR 0 0 
+execUR = runUR 0 0
 
 𝔱 "core:monads:ur" [| 0   |] [| execUR $ do fst ^$ ask |]
 𝔱 "core:monads:ur" [| 0   |] [| execUR $ do snd ^$ ask |]
@@ -86,4 +86,3 @@ execUR = runUR 0 0
 𝔱 "core:monads:ur" [| 2 |] [| execUR $ do localL fstL 1 $ uputEnvL sndL 2 ; askL sndL |]
 
 buildTests
-

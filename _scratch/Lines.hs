@@ -15,7 +15,7 @@ instance (Append a) ⇒ Append (LinesPre a) where
     None → LinesPre (x₁ ⧺ x₂) sxs₂
     Some (sxs₁' :꘍ (s₁ :꘍ x₁')) → LinesPre x₁ (sxs₁' ⧺ single (s₁ :꘍ x₁' ⧺ x₂) ⧺ sxs₂)
 instance (Monoid a) ⇒ Monoid (LinesPre a)
-instance ToStream a (LinesPre a) where 
+instance ToStream a (LinesPre a) where
   stream (LinesPre x₀ sxs₀) = case stream sxs₀ of
     𝑆 s₀ g → 𝑆 (Inl (x₀ :꘍ s₀)) $ \case
       Inl (x :꘍ s) → Some (x :꘍ Inr s)
@@ -72,7 +72,7 @@ linesPreFromPost (LinesPost xss₀ x₀) = let (x₀' :꘍ sxs₀') = loop xss�
     loop ∷ 𝑄 (a ∧ a) → a → (a ∧ 𝑄 (a ∧ a))
     loop xss x = case unsnoc𝑄 xss of
       None → (x :꘍ null)
-      Some (xss' :꘍ (x' :꘍ s)) → 
+      Some (xss' :꘍ (x' :꘍ s)) →
         let (y :꘍ sys) = loop xss' x'
         in (y :꘍ snoc𝑄 sys (s :꘍ x))
 
@@ -85,4 +85,3 @@ linesPostFromPre (LinesPre x₀ sxs₀) = let (xss₀' :꘍ x₀') = loop x₀ s
       Some ((s :꘍ x') :꘍ sxs') →
         let (yss :꘍ y) = loop x' sxs'
         in (cons𝑄 (x :꘍ s) yss :꘍ y)
-

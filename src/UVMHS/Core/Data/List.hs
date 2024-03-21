@@ -4,23 +4,23 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data.LazyList ()
 
-instance Null (𝐿 a) where 
+instance Null (𝐿 a) where
   null = empty𝐿
-instance Append (𝐿 a) where 
+instance Append (𝐿 a) where
   (⧺) = append𝐿
 instance Monoid (𝐿 a)
-instance Functor 𝐿 where 
+instance Functor 𝐿 where
   map = map𝐿
 instance Return 𝐿 where
   return = single𝐿
-instance Bind 𝐿 where 
+instance Bind 𝐿 where
   (≫=) = bind𝐿
 instance Monad 𝐿
-instance FunctorM 𝐿 where 
+instance FunctorM 𝐿 where
   mapM = mapM𝐿
-instance Single a (𝐿 a) where 
+instance Single a (𝐿 a) where
   single = single𝐿
-instance ToIter a (𝐿 a) where 
+instance ToIter a (𝐿 a) where
   iter = iter𝐿
 
 empty𝐿 ∷ 𝐿 a
@@ -122,4 +122,3 @@ firstSome = \case
   Nil → None
   None :& xOs → firstSome xOs
   Some x :& _ → Some x
-

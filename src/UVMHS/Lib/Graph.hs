@@ -7,7 +7,7 @@ type Graph a = a ⇰ 𝑃 a
 graphTranspose ∷ ∀ a. (Ord a) ⇒ Graph a → Graph a
 graphTranspose kvs = joins
   [ dict $ mapOn (iter $ dkeys kvs) $ \ k → k ↦ pø
-  , joins $ mapOn (iter kvs) $ \ (k :* vs) → 
+  , joins $ mapOn (iter kvs) $ \ (k :* vs) →
       dict $ mapOn (iter vs) $ \ v → v ↦ single k
   ]
 
@@ -22,7 +22,7 @@ kosaraju g =
         else
           let visited' = single u ∪ visited
               visited'' :* stack' =
-                foldOnFrom (g ⋕! u) (visited' :* stack) $ \ v (visitedᵢ :* stackᵢ) → 
+                foldOnFrom (g ⋕! u) (visited' :* stack) $ \ v (visitedᵢ :* stackᵢ) →
                   visit v visitedᵢ stackᵢ
               stack'' = u :& stack'
           in visited'' :* stack''
@@ -63,12 +63,12 @@ sccGroups deps =
       sccsDefuse = kosaraju graph
       -- throw out def/use information and just map variables to groups
       sccs ∷ a ⇰ a
-      sccs = dict $ mapOn (iter sccsDefuse) $ \ ((x₁ :* b) :* (x₂ :* _)) → 
+      sccs = dict $ mapOn (iter sccsDefuse) $ \ ((x₁ :* b) :* (x₂ :* _)) →
         if b then x₁ ↦ x₂ else null
       -- map group ids to variables in that group, and all dependencies of
       -- that group
       groups ∷ a ⇰ 𝑃 a ∧ 𝑃 a
-      groups = joins $ mapOn (iter sccs) $ \ (x₁ :* x₂) → 
+      groups = joins $ mapOn (iter sccs) $ \ (x₁ :* x₂) →
         x₂ ↦ single x₁ :* (deps ⋕! x₁)
   in sccs :* groups
 

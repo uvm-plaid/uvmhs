@@ -1,9 +1,9 @@
 module UVMHS.Core.Matrix where
 
 -- -- vectors --
--- 
+--
 -- data Bᴍ (m ∷ Tℕ) (n ∷ Tℕ) a where
---   Bᴍ ∷ (Rℕ m,Rℕ n) 
+--   Bᴍ ∷ (Rℕ m,Rℕ n)
 --      ⇒ { rowsBᴍ ∷ Sℕ32 m
 --        , colsBᴍ ∷ Sℕ32 n
 --        , dataBᴍ ∷ Repa.Array Repa.V (Repa.Z Repa.:. HS.Int Repa.:. HS.Int) a
@@ -23,168 +23,168 @@ module UVMHS.Core.Matrix where
 --        , dataVᴍ ∷ Repa.Array Repa.D (Repa.Z Repa.:. HS.Int Repa.:. HS.Int) a
 --        }
 --      → Vᴍ m n a
--- 
+--
 -- infixl 7 𝄪
--- class Matrix t where 
+-- class Matrix t where
 --   xrows ∷ t m n a → Sℕ32 m
 --   xcols ∷ t m n a → Sℕ32 n
 --   (𝄪) ∷ t m n a → (𝕀32 m,𝕀32 n) → a
 --   xvirt ∷ t m n a → Vᴍ m n a
--- 
+--
 -- -- boxed --
--- 
+--
 -- indexBᴍ ∷ 𝕀32 m → 𝕀32 n → Bᴍ m n a → a
 -- indexBᴍ i j xs = Repa.unsafeIndex (dataBᴍ xs) (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j))
--- 
+--
 -- virtBᴍ ∷ Bᴍ m n a → Vᴍ m n a
 -- virtBᴍ (Bᴍ m n xs) = Vᴍ m n $ Repa.delay xs
--- 
--- instance Matrix Bᴍ where 
+--
+-- instance Matrix Bᴍ where
 --   xrows = rowsBᴍ
 --   xcols = colsBᴍ
 --   xs 𝄪 (i,j) = indexBᴍ i j xs
 --   xvirt = virtBᴍ
--- 
+--
 -- -- unboxed --
--- 
+--
 -- indexUᴍ ∷ 𝕀32 m → 𝕀32 n → Uᴍ m n a → a
 -- indexUᴍ i j (Uᴍ _ _ xs) = Repa.unsafeIndex xs (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j))
--- 
+--
 -- virtUᴍ ∷ Uᴍ m n a → Vᴍ m n a
 -- virtUᴍ (Uᴍ m n xs) = Vᴍ m n $ Repa.delay xs
--- 
--- instance Matrix Uᴍ where 
+--
+-- instance Matrix Uᴍ where
 --   xrows = rowsUᴍ
 --   xcols = colsUᴍ
 --   xs 𝄪 (i,j) = indexUᴍ i j xs
 --   xvirt = virtUᴍ
--- 
+--
 -- -- virtual --
--- 
+--
 -- indexVᴍ ∷ 𝕀32 m → 𝕀32 n → Vᴍ m n a → a
--- indexVᴍ i j xs = Repa.unsafeIndex (dataVᴍ xs) (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j)) 
--- 
+-- indexVᴍ i j xs = Repa.unsafeIndex (dataVᴍ xs) (Repa.Z Repa.:. HS.fromIntegral (un𝕀32 i) Repa.:. HS.fromIntegral (un𝕀32 j))
+--
 -- instance Matrix Vᴍ where
 --   xrows = rowsVᴍ
 --   xcols = colsVᴍ
 --   xs 𝄪 (i,j) = indexVᴍ i j xs
 --   xvirt = id
--- 
+--
 -- matrix ∷ (Rℕ m,Rℕ n) ⇒ Sℕ32 m → Sℕ32 n → (𝕀32 m → 𝕀32 n → a) → Vᴍ m n a
--- matrix m n f = 
---   Vᴍ m n $ Repa.fromFunction (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ \ (Repa.Z Repa.:. i Repa.:. j) → 
---     d𝕟32 (HS.fromIntegral i) $ \ i' → 
+-- matrix m n f =
+--   Vᴍ m n $ Repa.fromFunction (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ \ (Repa.Z Repa.:. i Repa.:. j) →
+--     d𝕟32 (HS.fromIntegral i) $ \ i' →
 --       d𝕟32 (HS.fromIntegral j) $ \ j' →
 --         f (𝕀32 i' TRUSTME_LT) (𝕀32 j' TRUSTME_LT)
--- 
+--
 -- xconst ∷ (Rℕ m,Rℕ n) ⇒ Sℕ32 m → Sℕ32 n → a → Vᴍ m n a
 -- xconst m n x = matrix m n $ \ _ _ → x
--- 
+--
 -- xbs ∷ Vᴍ m n a → Bᴍ m n a
 -- xbs (Vᴍ m n xs) = Bᴍ m n $ Repa.computeS xs
--- 
+--
 -- xbp ∷ Vᴍ m n a → Bᴍ m n a
 -- xbp (Vᴍ m n xs) = Bᴍ m n $ HS.runIdentity $ Repa.computeP xs
--- 
+--
 -- xus ∷ (Repa.Unbox a) ⇒ Vᴍ m n a → Uᴍ m n a
 -- xus (Vᴍ m n xs) = Uᴍ m n $ Repa.computeS xs
--- 
+--
 -- xup ∷ (Repa.Unbox a) ⇒ Vᴍ m n a → Uᴍ m n a
 -- xup (Vᴍ m n xs) = Uᴍ m n $ HS.runIdentity $ Repa.computeP xs
--- 
+--
 -- xiter ∷ Vᴍ m n a → 𝐼 a
 -- xiter xs = iter $ Repa.toList $ dataVᴍ xs
--- 
+--
 -- instance ToIter a (Bᴍ m n a) where iter = iter ∘ xvirt
 -- instance ToIter a (Uᴍ m n a) where iter = iter ∘ xvirt
 -- instance ToIter a (Vᴍ m n a) where iter = xiter
--- 
+--
 -- -------------
 -- -- DERIVED --
 -- -------------
--- 
+--
 -- xtranspose ∷ Vᴍ m n a → Vᴍ n m a
 -- xtranspose xs@(Vᴍ _ _ _) = matrix (xcols xs) (xrows xs) $ \ j i → xs 𝄪 (i,j)
--- 
+--
 -- xmap ∷ (a → b) → Vᴍ m n a → Vᴍ m n b
 -- xmap f xs@(Vᴍ _ _ _) = matrix (xrows xs) (xcols xs) $ \ i j → f $ xs 𝄪 (i,j)
--- 
+--
 -- instance Functor (Vᴍ m n) where map = xmap
--- 
+--
 -- xmap2 ∷ (a → b → c) → Vᴍ m n a → Vᴍ m n b → Vᴍ m n c
 -- xmap2 f xs@(Vᴍ _ _ _) ys@(Vᴍ _ _ _) = matrix (xrows xs) (xcols xs) $ \ i j → f (xs 𝄪 (i,j)) (ys 𝄪 (i,j))
--- 
+--
 -- xmeld ∷ (Rℕ n) ⇒ Sℕ32 n → Vᴍ m 1 (Vᴍ 1 n a) → Vᴍ m n a
 -- xmeld n xys@(Vᴍ _ _ _) = matrix (xrows xys) n $ \ i j → indexVᴍ (s𝕚 @ 0 P) j $ indexVᴍ i (s𝕚 @ 0 P) xys
--- 
+--
 -- xsplit ∷ Vᴍ m n a → Vᴍ m 1 (Vᴍ 1 n a)
 -- xsplit xys@(Vᴍ _ _ _) = matrix (xrows xys) (s𝕟32 @ 1) $ \ i _ → matrix (s𝕟32 @ 1) (colsVᴍ xys) $ \ _ j → indexVᴍ i j xys
--- 
+--
 -- xrow ∷ 𝕀32 m → Vᴍ m n a → Vᴍ 1 n a
 -- xrow i xs@(Vᴍ _ _ _) = matrix (s𝕟32 @ 1) (colsVᴍ xs) $ \ _ j → indexVᴍ i j xs
--- 
+--
 -- xcol ∷ 𝕀32 n → Vᴍ m n a → Vᴍ 1 m a
 -- xcol i xs = xrow i $ xtranspose xs
--- 
+--
 -- xproduct ∷ (Additive a,Times a) ⇒ Vᴍ m n a → Vᴍ n o a → Vᴍ m o a
 -- xproduct xs@(Vᴍ _ _ _) ys@(Vᴍ _ _ _) =
 --   matrix (xrows xs) (xcols ys) $ \ i k →
 --     let r₁ = xrow i xs
 --         r₂ = xcol k ys
 --     in sum $ iter $ xmap2 (×) r₁ r₂
--- 
+--
 -- xbmapM ∷ (Monad m) ⇒ (a → m b) → Vᴍ n o a → m (Bᴍ n o b)
 -- xbmapM f xs@(Vᴍ _ _ _) = do
 --   xs' ← mapM (mapM f) $ xlist2 xs
 --   return $ xb xs' $ \ (Bᴍ _ _ xs'') → Bᴍ (xrows xs) (xcols xs) xs''
--- 
+--
 -- xumapM ∷ (Monad m,Repa.Unbox a,Repa.Unbox b) ⇒ (a → m b) → Vᴍ n o a → m (Uᴍ n o b)
 -- xumapM f xs@(Vᴍ _ _ _) = do
 --   xs' ← mapM (mapM f) $ xlist2 xs
 --   return $ xu xs' $ \ (Uᴍ _ _ xs'') → Uᴍ (xrows xs) (xcols xs) xs''
--- 
+--
 -- xindirect ∷ Vᴍ m n a → Vᴍ 1 o (𝕀32 m) → Vᴍ o n a
 -- xindirect xs@(Vᴍ _ _ _) is@(Vᴍ _ _ _) = matrix (xcols is) (xcols xs) $ \ o n → xs 𝄪 (is 𝄪 (s𝕚 @ 0 P,o),n)
--- 
+--
 -- xiter2 ∷ Vᴍ m n a → 𝐼 (𝐼 a)
 -- xiter2 = map iter ∘ iter ∘ xsplit
--- 
+--
 -- xlist2 ∷ Vᴍ m n a → 𝐿 (𝐿 a)
 -- xlist2 = list ∘ map list ∘ xiter2
--- 
+--
 -- xb𝐼 ∷ 𝐼 (𝐼 a) → (∀ m n. (Rℕ m,Rℕ n) ⇒ Bᴍ m n a → b) → b
 -- xb𝐼 xs f =
 --   let uc = joins $ map (natΩ32 ∘ count) xs
 --       lc = meets $ map (AddTop ∘ natΩ32 ∘ count) xs
 --   in case AddTop uc ≡ lc of
---     True → 
+--     True →
 --       d𝕟32 uc $ \ n →
 --       d𝕟32 (natΩ32 $ count xs) $ \ m →
 --         f $ Bᴍ m n $ Repa.fromList (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ lazyList $ concat xs
 --     False → error "`xb𝐿`: bad input list: input list is either empty (no columns) or has columns of different length"
--- 
+--
 -- xb ∷ (ToIter a t,ToIter t u) ⇒ u → (∀ m n. (Rℕ m,Rℕ n) ⇒ Bᴍ m n a → b) → b
 -- xb xs f = xb𝐼 (map iter (iter xs)) f
--- 
+--
 -- xu𝐼 ∷ (Repa.Unbox a) ⇒ 𝐼 (𝐼 a) → (∀ m n. (Rℕ m,Rℕ n) ⇒ Uᴍ m n a → b) → b
 -- xu𝐼 xs f =
 --   let uc = joins $ map (natΩ32 ∘ count) xs
 --       lc = meets $ map (AddTop ∘ natΩ32 ∘ count) xs
 --   in case AddTop uc ≡ lc of
---     True → 
+--     True →
 --       d𝕟32 uc $ \ n →
 --       d𝕟32 (natΩ32 $ count xs) $ \ m →
 --         f $ Uᴍ m n $ Repa.fromList (Repa.Z Repa.:. HS.fromIntegral (unSℕ32 m) Repa.:. HS.fromIntegral (unSℕ32 n)) $ lazyList $ concat xs
 --     False → error "`xb𝐿`: bad input list: input list is either empty (no columns) or has columns of different length"
--- 
+--
 -- xu ∷ (Repa.Unbox a,ToIter a t,ToIter t u) ⇒ u → (∀ m n. (Rℕ m,Rℕ n) ⇒ Uᴍ m n a → b) → b
 -- xu xs f = xu𝐼 (map iter (iter xs)) f
--- 
+--
 -- instance (Times a) ⇒ Times (Vᴍ m n a) where (×) = xmap2 (×)
--- 
+--
 -- (✖) ∷ (Additive a,Times a) ⇒ Vᴍ m n a → Vᴍ n o a → Vᴍ m o a
 -- (✖) = xproduct
--- 
+--
 -- testMatrix1 ∷ IO ()
 -- testMatrix1 = do
 --   let xs = list [list [1,2,3],list [4,5,6],list [7,8,9]]
@@ -192,5 +192,4 @@ module UVMHS.Core.Matrix where
 --   xb xs $ \ xs' → do
 --     let ys = xlist2 $ xtranspose $ xvirt xs'
 --     shout ys
--- 
-
+--

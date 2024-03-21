@@ -23,7 +23,7 @@ swivelR (x :& xs) y =
 -- SepL --
 ----------
 
-data SepL i a = 
+data SepL i a =
     SepLSingle a
   | SepLMulti ℕ64 a (𝐼 (i ∧ a)) i a
   deriving (Show)
@@ -36,7 +36,7 @@ eSepL x = SepLSingle x
 iSepL ∷ (Null a) ⇒ i → SepL i a
 iSepL i = SepLMulti one null null i null
 
-instance (Null a) ⇒ Null (SepL i a) where 
+instance (Null a) ⇒ Null (SepL i a) where
   -- {-# INLINE null #-}
   null = SepLSingle null
 instance (Append a) ⇒ Append (SepL i a) where
@@ -44,11 +44,11 @@ instance (Append a) ⇒ Append (SepL i a) where
   SepLSingle x₁ ⧺ SepLSingle x₂ = SepLSingle $ x₁ ⧺ x₂
   SepLSingle x₁ ⧺ SepLMulti n x₂ ixs₂ i₂ y₂ = SepLMulti n (x₁ ⧺ x₂) ixs₂ i₂ y₂
   SepLMulti n x₁ ixs₁ i₁ y₁ ⧺ SepLSingle x₂ = SepLMulti n x₁ ixs₁ i₁ (y₁ ⧺ x₂)
-  SepLMulti n₁ x₁ ixs₁ i₁ y₁ ⧺ SepLMulti n₂ x₂ ixs₂ i₂ y₂ = 
+  SepLMulti n₁ x₁ ixs₁ i₁ y₁ ⧺ SepLMulti n₂ x₂ ixs₂ i₂ y₂ =
     SepLMulti (n₁ + n₂) x₁ (ixs₁ ⧺ single (i₁ :* (y₁ ⧺ x₂)) ⧺ ixs₂) i₂ y₂
 instance (Monoid a) ⇒ Monoid (SepL i a)
 
-instance ToIter a (SepL a a) where 
+instance ToIter a (SepL a a) where
   -- {-# INLINE iter #-}
   iter (SepLSingle x) = single x
   iter (SepLMulti _ x ixs i y) = concat
@@ -57,7 +57,7 @@ instance ToIter a (SepL a a) where
     , iter [i,y]
     ]
 
-instance (Pretty a) ⇒ Pretty (SepL a a) where 
+instance (Pretty a) ⇒ Pretty (SepL a a) where
   -- {-# INLINE pretty #-}
   pretty = concat ∘ map pretty ∘ iter
 
@@ -84,7 +84,7 @@ sepsCountL (SepLMulti n _ _ _ _) = n
 -- SepR --
 ----------
 
-data SepR i a = 
+data SepR i a =
     SepRSingle a
   | SepRMulti ℕ64 a i (𝐼 (a ∧ i)) a
   deriving (Show)
@@ -97,7 +97,7 @@ eSepR x = SepRSingle x
 iSepR ∷ (Null a) ⇒ i → SepR i a
 iSepR i = SepRMulti one null i null null
 
-instance (Null a) ⇒ Null (SepR i a) where 
+instance (Null a) ⇒ Null (SepR i a) where
   -- {-# INLINE null #-}
   null = SepRSingle null
 instance (Append a) ⇒ Append (SepR i a) where
@@ -105,11 +105,11 @@ instance (Append a) ⇒ Append (SepR i a) where
   SepRSingle x₁ ⧺ SepRSingle x₂ = SepRSingle $ x₁ ⧺ x₂
   SepRSingle x₁ ⧺ SepRMulti n x₂ i₂ xis₂ y₂ = SepRMulti n (x₁ ⧺ x₂) i₂ xis₂ y₂
   SepRMulti n x₁ i₁ xis₁ y₁ ⧺ SepRSingle x₂ = SepRMulti n x₁ i₁ xis₁ (y₁ ⧺ x₂)
-  SepRMulti n₁ x₁ i₁ xis₁ y₁ ⧺ SepRMulti n₂ x₂ i₂ xis₂ y₂ = 
+  SepRMulti n₁ x₁ i₁ xis₁ y₁ ⧺ SepRMulti n₂ x₂ i₂ xis₂ y₂ =
     SepRMulti (n₁ + n₂) x₁ i₁ (xis₁ ⧺ single ((y₁ ⧺ x₂) :* i₂) ⧺ xis₂) y₂
 instance (Monoid a) ⇒ Monoid (SepR i a)
 
-instance ToIter a (SepR a a) where 
+instance ToIter a (SepR a a) where
   -- {-# INLINE iter #-}
   iter (SepRSingle x) = single x
   iter (SepRMulti _ x i xis y) = concat
@@ -118,7 +118,7 @@ instance ToIter a (SepR a a) where
     , single y
     ]
 
-instance (Pretty a) ⇒ Pretty (SepR a a) where 
+instance (Pretty a) ⇒ Pretty (SepR a a) where
   -- {-# INLINE pretty #-}
   pretty = concat ∘ map pretty ∘ iter
 

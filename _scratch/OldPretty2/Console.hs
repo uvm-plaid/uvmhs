@@ -11,13 +11,13 @@ data ConsoleEnv = ConsoleEnv
 makeLenses ''ConsoleEnv
 
 consoleEnv₀ ∷ ConsoleEnv
-consoleEnv₀ = ConsoleEnv 
+consoleEnv₀ = ConsoleEnv
   { ρUnderFormat = None
   , ρLineNumberWidth = 0
   }
 
 data ConsoleOut =
-    NullCO 
+    NullCO
   | ChunkCO 𝕊
   | AppendCO ConsoleOut ConsoleOut
   | FormatCO Formats ConsoleOut
@@ -81,7 +81,7 @@ doUnders = do
     eachOn (reverse us) $ \ (colₗ :* colᵤ :* f :* c) → do
       col ← getL σColL
       spitConsole $ string $ repeat (colₗ - col) ' '
-      mapOut (FormatCO f) $ 
+      mapOut (FormatCO f) $
         spitConsole $ string $ repeat (colᵤ - colₗ) c
     putL σUndersL $ list []
 
@@ -105,9 +105,9 @@ interpOutput ∷ Output → ConsoleM ()
 interpOutput = exec ∘ map interpOutputElem ∘ iter
 
 execPrettyOut ∷ PrettyOut → ConsoleOut
-execPrettyOut (PrettyOut o ln) = 
-  evalConsoleM consoleEnv₀ consoleState₀ 
-    $ retOut 
+execPrettyOut (PrettyOut o ln) =
+  evalConsoleM consoleEnv₀ consoleState₀
+    $ retOut
     $ finalize
-    $ mapEnv (update ρLineNumberWidthL ln) 
+    $ mapEnv (update ρLineNumberWidthL ln)
     $ interpOutput o

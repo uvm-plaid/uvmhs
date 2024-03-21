@@ -6,8 +6,8 @@ lexer ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
 lexer = lexerBasic (list ["(",")"]) null null (list ["==","+","*","-","^","!"])
 
 testTokenizerSuccess ∷ IO ()
-testTokenizerSuccess = 
-  tokenizeIOMain lexer "" $ tokens "1 + 2 - 3 * 4 ^ 5 ! == 1 \n -- blah blah \n {- ml {{- ml --}-} -- blah\nb" 
+testTokenizerSuccess =
+  tokenizeIOMain lexer "" $ tokens "1 + 2 - 3 * 4 ^ 5 ! == 1 \n -- blah blah \n {- ml {{- ml --}-} -- blah\nb"
 
 data Lit =
     IntegerL ℤ
@@ -45,7 +45,7 @@ cpAtom = cpNewContext "atom" $ tries
   , NameA ^$ cpShaped $ view nameTBasicL
   ]
 
-cpExp ∷ CParser TokenBasic Exp 
+cpExp ∷ CParser TokenBasic Exp
 cpExp = fmixfixWithContext "exp" $ concat
   [ fmixTerminal $ do
       void $ cpToken $ SyntaxTBasic "("
@@ -70,4 +70,3 @@ testParserFailure1 = parseIOMain cpExp "" *$ tokenizeIO lexer "" $ tokens "((9 =
 
 testParserFailure2 ∷ IO ()
 testParserFailure2 = parseIOMain cpExp "" *$ tokenizeIO lexer "" $ tokens "(((((- 1))) + 2 + 3 * 4 ^ 5 ^ ! == 0))"
-

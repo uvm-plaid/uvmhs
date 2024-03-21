@@ -135,9 +135,9 @@ keyL𝑂 k =
 class HasPrism a b where hasPrism ∷ a ⌲ b
 class HasLens a b where hasLens ∷ a ⟢ b
 
-instance HasPrism a a where 
+instance HasPrism a a where
   hasPrism = refl
-instance HasLens a a where 
+instance HasLens a a where
   hasLens = refl
 
 𝛊 ∷ (HasPrism a b) ⇒ b → a
@@ -151,4 +151,3 @@ instance HasLens a a where
 
 𝛏 ∷ (HasLens a b) ⇒ b → a → a
 𝛏 y x = snd (runLens hasLens x) y
-

@@ -6,7 +6,7 @@ lexer ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
 lexer = lexerBasic (list ["(",")"]) (list ["KEY"]) (list ["PRIM"]) (list ["+"])
 
 testSExpTokenizerSuccess ∷ IO ()
-testSExpTokenizerSuccess = 
+testSExpTokenizerSuccess =
   tokenizeIOMain lexer "" $ tokens "((-1-2-1.42(\"astringwith\\\\stuff\\n\" ( "
 
 testSExpTokenizerFailure1 ∷ IO ()

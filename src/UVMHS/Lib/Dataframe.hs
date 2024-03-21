@@ -28,7 +28,7 @@ frameTypeCode = \case
   D_FT → "dbl"
   S_FT → "str"
 
-data FrameVal = 
+data FrameVal =
     B_FV 𝔹
   | N_FV ℕ64
   | Z_FV ℤ64
@@ -105,10 +105,10 @@ instance FunctorM FrameGrouping where
    S_FG kvs → S_FG ^$ mapM f kvs
 
 frameGroupingInterWithM
-  ∷ (Monad m,MonadFail m) 
-  ⇒ (v₁ → v₂ → m v₃) 
-  → FrameGrouping v₁ 
-  → FrameGrouping v₂ 
+  ∷ (Monad m,MonadFail m)
+  ⇒ (v₁ → v₂ → m v₃)
+  → FrameGrouping v₁
+  → FrameGrouping v₂
   → m (FrameGrouping v₃)
 frameGroupingInterWithM f vs₁ vs₂ = case (vs₁,vs₂) of
   (B_FG kvs₁,B_FG kvs₂) → B_FG ^$ dinterByM f kvs₁ kvs₂
@@ -155,7 +155,7 @@ frameProduct fr₁ fr₂ = do
       colt'  = colt₁' ⩌ colt₂'
   grpt' ∷ 𝕊 ⇰ FrameType
         ← dinterByM (\ τ₁ τ₂ → do guard $ τ₁ ≡ τ₂ ; return τ₁) grpt₁ grpt₂
-  let data' = dinterByOn data₁ data₂ $ \ (n₁ :* svss₁) (n₂ :* svss₂) → 
+  let data' = dinterByOn data₁ data₂ $ \ (n₁ :* svss₁) (n₂ :* svss₂) →
         let svss₁'₁ ∷ 𝕊 ⇰ FrameCol
             svss₁'₁ = assoc $ mapOn (iter svss₁) $ mapFst $ flip (⧺) "_L"
             svss₂'₁ ∷ 𝕊 ⇰ FrameCol
@@ -171,7 +171,7 @@ frameProduct fr₁ fr₂ = do
 
             rows = csize svss'₁
 
-            svss'₂ = kmapOn colt' $ \ s τ → 
+            svss'₂ = kmapOn colt' $ \ s τ →
               viewΩ someL $ frameColPack τ $ mapOn (iterC svss'₁) $ lupΩ s
         in rows :* svss'₂
   return $ Frame colp' colv' colt' grpt' data'
@@ -186,7 +186,7 @@ frameGroup col s₀ (Frame colp colv colt grpt data') = do
         colv' ∷ 𝕍 𝕊
         colv' = vec $ filter (≢ col) colv
         colt' ∷ 𝕊 ⇰ FrameType
-        colt' = dtoss (single col) colt 
+        colt' = dtoss (single col) colt
         grpt' ∷ 𝕊 ⇰ FrameType
         grpt' = dict [s₀ ↦ colt ⋕! col,grpt]
         data'₁ ∷ (𝕊 ⇰ FrameVal) ⇰ FrameVal ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
@@ -196,14 +196,14 @@ frameGroup col s₀ (Frame colp colv colt grpt data') = do
               svss'₁ ∷ 𝕊 ⇰ FrameCol
               svss'₁ = dtoss (single col) svss
               svss'₂ ∷ FrameVal ⇰ 𝐼C (𝕊 ⇰ FrameVal)
-              svss'₂ = concat $ mapOn (upto n) $ \ nᵢ → 
+              svss'₂ = concat $ mapOn (upto n) $ \ nᵢ →
                 let vᵢ   = viewΩ someL $ frameColIndex nᵢ svs
                     svsᵢ = mapOn svss'₁ $ viewΩ someL ∘ frameColIndex nᵢ
                 in vᵢ ↦ single svsᵢ
               svss'₃ ∷ FrameVal ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
               svss'₃ = mapOn svss'₂ $ \ svssᵢ →
                 let rows = csize svssᵢ
-                    svsᵢ = kmapOn colt' $ \ s τ → 
+                    svsᵢ = kmapOn colt' $ \ s τ →
                       viewΩ someL $ frameColPack τ $ mapOn svssᵢ $ lupΩ s
                 in rows :* svsᵢ
           in svss'₃
@@ -229,9 +229,9 @@ frameUngroup grp s₀ (Frame colp colv colt grpt data') = do
         grpt' ∷ 𝕊 ⇰ FrameType
         grpt' = dtoss (single grp) grpt
         data'₁ ∷ (𝕊 ⇰ FrameVal) ⇰ ℕ64 ∧ (𝕊 ⇰ 𝐼C FrameVal)
-        data'₁ = concat $ mapOn (iter data') $ \ (svs :* (n :* svss)) → 
+        data'₁ = concat $ mapOn (iter data') $ \ (svs :* (n :* svss)) →
           let svs' ∷ 𝕊 ⇰ FrameVal
-              svs' = dtoss (single grp) svs 
+              svs' = dtoss (single grp) svs
               v ∷ FrameVal
               v = svs ⋕! grp
               svss' ∷ 𝕊 ⇰ 𝐼C FrameVal
@@ -242,7 +242,7 @@ frameUngroup grp s₀ (Frame colp colv colt grpt data') = do
           in
           svs' ↦ n :* svss'
         data'₂ ∷ (𝕊 ⇰ FrameVal) ⇰ ℕ64 ∧ (𝕊 ⇰ FrameCol)
-        data'₂ = mapOn data'₁ $ \ (n :* svss) → 
+        data'₂ = mapOn data'₁ $ \ (n :* svss) →
           let svss' ∷ 𝕊 ⇰ FrameCol
               svss' = kmapOn svss $ \ s vs →
                 let τ ∷ FrameType
@@ -277,9 +277,9 @@ frameValParse s = \case
 
 frameParse ∷ 𝕊 → IO Frame
 frameParse s = do
-  sss ∷ 𝕍 (𝕍 𝕊) ← 
-    elimChoice (failIO ∘ string) (return ∘ map (map (Text.decodeUtf8 ∘ BSL.toStrict) ∘ 𝕍) ∘ 𝕍) $ 
-      frhs $ CSV.decode @(Vector.Vector BSL.ByteString) CSV.NoHeader $ 
+  sss ∷ 𝕍 (𝕍 𝕊) ←
+    elimChoice (failIO ∘ string) (return ∘ map (map (Text.decodeUtf8 ∘ BSL.toStrict) ∘ 𝕍) ∘ 𝕍) $
+      frhs $ CSV.decode @(Vector.Vector BSL.ByteString) CSV.NoHeader $
         BSL.fromStrict $ Text.encodeUtf8 s
   cols ∷ 𝐿 𝕊 ← ifNoneM (failIO "bad1") $ list ^$ sss ⋕? 0
   typs ∷ 𝐿 𝕊 ← ifNoneM (failIO "bad2") $ list ^$ sss ⋕? 1
@@ -303,33 +303,33 @@ frameParse s = do
       v ← frameValParse sᵢ t
       return $ key :* v
   let svss' ∷ 𝕊 ⇰ FrameCol
-      svss' = kmapOn coltyps' $ \ sᵢ τ → 
+      svss' = kmapOn coltyps' $ \ sᵢ τ →
         viewΩ someL $ frameColPack τ $ mapOn (iterC svss) $ lupΩ sᵢ
   return $ Frame (pow cols) (vec cols) (assoc coltyps) null $ null ↦ (rows :* svss')
 
 instance Pretty Frame where
-  pretty (Frame _colp colv colt grps data') = 
-    let data'' = mapOn data' $ \ (rows :* svss) → 
+  pretty (Frame _colp colv colt grps data') =
+    let data'' = mapOn data' $ \ (rows :* svss) →
           let svss' ∷ 𝕊 ⇰ 𝕍 𝕊
               svss' = map (vecC ∘ map ppshow ∘ frameColUnpack) svss
               colWidths ∷ 𝕍 (𝕊 ∧ ℕ64)
-              colWidths = mapOn colv $ \ col → 
+              colWidths = mapOn colv $ \ col →
                 (:*) col $ joins
                   [ csize col
                   , csize $ frameTypeCode $ colt ⋕! col
                   , joins $ map csize $ svss' ⋕! col
                   ]
-          in 
+          in
           concat
             [ ppForceBreak
             , ppVertical
-                [ ppHorizontal $ inbetween (ppComment "|") $ mapOn colWidths $ \ (col :* width) → 
+                [ ppHorizontal $ inbetween (ppComment "|") $ mapOn colWidths $ \ (col :* width) →
                     ppCon $ alignLeft (nat width) col
-                , ppComment $ string $ 
+                , ppComment $ string $
                     replicate (sum [sum $ map snd colWidths,(count colWidths ⊔ 1 - 1) × 3]) '-'
                 , ppHorizontal $ inbetween (ppComment "|") $ mapOn colWidths $ \ (col :* width) →
                     ppComment $ alignLeft (nat width) $ frameTypeCode $ colt ⋕! col
-                , ppComment $ string $ 
+                , ppComment $ string $
                     replicate (sum [sum $ map snd colWidths,(count colWidths ⊔ 1 - 1) × 3]) '-'
                 , ppVertical $ mapOn (upto rows) $ \ n →
                     ppHorizontal $ inbetween (ppComment "|") $ mapOn colWidths $ \ (col :* width) →
@@ -337,8 +337,7 @@ instance Pretty Frame where
                 , ppComment $ "⇈ ROWS: " ⧺ show𝕊 rows
                 ]
             ]
-    in 
+    in
     if
     | isEmpty grps → pretty $ data'' ⋕! null
     | otherwise    → pretty data''
-

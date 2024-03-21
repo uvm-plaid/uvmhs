@@ -8,8 +8,8 @@ import qualified Language.Haskell.TH as TH
 
 import qualified Data.Text as Text
 
--- makePrettySumLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] [(con₁,[conty₁₁,…,conty₁⸤n₁⸥]),…,(conₘ,[contyₘ₁,…,contyₘ⸤nₘ⸥])] ≔ 
---   [| instance 
+-- makePrettySumLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] [(con₁,[conty₁₁,…,conty₁⸤n₁⸥]),…,(conₘ,[contyₘ₁,…,contyₘ⸤nₘ⸥])] ≔
+--   [| instance
 --        (C₁,…,Cₙ
 --        ,Pretty conty₁₁,…,Pretty conty₁⸤n₁⸥,…,Pretty contyₘ₁,…,Pretty contyₘ⸤nₘ⸥
 --        ) ⇒ Pretty (ty a₁ … aₙ) where
@@ -25,7 +25,7 @@ makePrettySumLogic cx ty tyargs concontys = do
   let tyargVars ∷ 𝐿 TH.Type
       tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
       instanceCx ∷ 𝐿 TH.Pred
-      instanceCx = list $ uniques𝑃 $ concat 
+      instanceCx = list $ uniques𝑃 $ concat
         [ frhs cx
         , map (\ x → TH.ConT ''Pretty ⊙ x) $ concat $ map snd $ concontys
         ]
@@ -45,8 +45,8 @@ makePrettySum name = do
   scs ← mapM (ifNoneM (io abortIO) ∘ thViewSimpleCon) cs
   map tohs $ makePrettySumLogic cx ty tyargs scs
 
--- makePrettyUnionLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] [(con₁,[conty₁₁,…,conty₁⸤n₁⸥]),…,(conₘ,[contyₘ₁,…,contyₘ⸤nₘ⸥])] ≔ 
---   [| instance 
+-- makePrettyUnionLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] [(con₁,[conty₁₁,…,conty₁⸤n₁⸥]),…,(conₘ,[contyₘ₁,…,contyₘ⸤nₘ⸥])] ≔
+--   [| instance
 --        (C₁,…,Cₙ
 --        ,Pretty conty₁₁,…,Pretty conty₁⸤n₁⸥,…,Pretty contyₘ₁,…,Pretty contyₘ⸤nₘ⸥
 --        ) ⇒ Pretty (ty a₁ … aₙ) where
@@ -65,18 +65,18 @@ makePrettyUnionLogic cx ty tyargs concontys = do
       instanceTy ∷ TH.Type
       instanceTy = TH.ConT ''Pretty ⊙ (TH.ConT ty ⊙⋆ tyargVars)
       instanceDec ∷ TH.Dec
-      instanceDec = TH.FunD 'pretty $ tohs $ mapOn conxs $ \ (con :* tmpˣˢ) → 
+      instanceDec = TH.FunD 'pretty $ tohs $ mapOn conxs $ \ (con :* tmpˣˢ) →
         thSingleClause (single $ TH.ConP con [] $ tohs $ map TH.VarP tmpˣˢ) $  case tmpˣˢ of
           Nil → TH.VarE 'pretty ⊙ TH.ConE '()
           x :& Nil → TH.VarE 'pretty ⊙ TH.VarE x
-          _ → 
+          _ →
             let prettyXs = mapOn tmpˣˢ $ \ x → TH.VarE 'pretty ⊙ TH.VarE x
-            in 
-            TH.VarE 'ppCollection 
-            ⊙ (TH.VarE 'ppPun ⊙ thString "⟨") 
-            ⊙ (TH.VarE 'ppPun ⊙ thString "⟩") 
-            ⊙ (TH.VarE 'ppPun ⊙ thString ",") 
-            ⊙$ TH.VarE 'list 
+            in
+            TH.VarE 'ppCollection
+            ⊙ (TH.VarE 'ppPun ⊙ thString "⟨")
+            ⊙ (TH.VarE 'ppPun ⊙ thString "⟩")
+            ⊙ (TH.VarE 'ppPun ⊙ thString ",")
+            ⊙$ TH.VarE 'list
             ⊙$ TH.ListE (tohs prettyXs)
   return $ single $ TH.InstanceD (tohs None) (tohs instanceCx) instanceTy $ single $ instanceDec
 
@@ -87,7 +87,7 @@ makePrettyUnion name = do
   map tohs $ makePrettyUnionLogic cx ty tyargs scs
 
 -- makePrettyRecordLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] con [(field₁,fieldty₁),…,(fieldₙ,fieldtyₙ)] ≔
---   [| instance 
+--   [| instance
 --        (C₁,…,Cₙ
 --        ,Pretty fieldty₁,…,Pretty fieldtyₙ
 --        ) ⇒ Pretty (ty a₁ … aₙ) where
@@ -111,28 +111,28 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
     return (field :* loweredAfterPrefix :* tmpˣ)
   let tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
       instanceCx ∷ 𝐿 TH.Pred
-      instanceCx = list $ uniques𝑃 $ concat 
+      instanceCx = list $ uniques𝑃 $ concat
         [ frhs cx
         , map (\ x → TH.ConT ''Pretty ⊙ x) $ map snd fieldfieldtys
         ]
       instanceTy ∷ TH.Type
       instanceTy = TH.ConT ''Pretty ⊙ (TH.ConT ty ⊙⋆ tyargVars)
       instanceDec ∷ TH.Dec
-      instanceDec = 
-        TH.FunD 'pretty 
-        $ single 
-        $ thSingleClause (single $ TH.RecP con $ tohs $ mapOn fieldNameTmps $ \ (field :* _name :* tmpˣ) → (field :* TH.VarP tmpˣ)) 
-        $ TH.VarE 'ppApp 
-          ⊙ (TH.VarE 'ppCon ⊙ (thString $ string $ TH.nameBase con)) 
-          ⊙$ TH.VarE 'list 
-          ⊙$ TH.ListE 
-             $ single 
-             $ TH.VarE 'ppRecord 
-               ⊙ (TH.VarE 'ppPun ⊙ thString "⇒") 
-               ⊙$ TH.VarE 'list 
-               ⊙$ TH.ListE 
-                  $ tohs 
-                  $ mapOn fieldNameTmps $ \ (frhs → _field :* name :* tmpˣ) → 
+      instanceDec =
+        TH.FunD 'pretty
+        $ single
+        $ thSingleClause (single $ TH.RecP con $ tohs $ mapOn fieldNameTmps $ \ (field :* _name :* tmpˣ) → (field :* TH.VarP tmpˣ))
+        $ TH.VarE 'ppApp
+          ⊙ (TH.VarE 'ppCon ⊙ (thString $ string $ TH.nameBase con))
+          ⊙$ TH.VarE 'list
+          ⊙$ TH.ListE
+             $ single
+             $ TH.VarE 'ppRecord
+               ⊙ (TH.VarE 'ppPun ⊙ thString "⇒")
+               ⊙$ TH.VarE 'list
+               ⊙$ TH.ListE
+                  $ tohs
+                  $ mapOn fieldNameTmps $ \ (frhs → _field :* name :* tmpˣ) →
                       TH.ConE '(:*)
                       ⊙ (TH.VarE 'ppString ⊙ (thString name))
                       ⊙ (TH.VarE 'pretty ⊙ TH.VarE tmpˣ)
@@ -144,4 +144,3 @@ makePrettyRecord name = do
   (con :* fields) ← ifNoneM (io abortIO) $ view thRecCL c
   let fieldfieldtys = mapOn fields $ \ (frhs → field :* _ :* fieldty) → (field :* fieldty)
   map tohs $ makePrettyRecordLogic cx ty tyargs con fieldfieldtys
-

@@ -11,7 +11,7 @@ data NFEnv = NFEnv
   }
 makeLenses ''NFEnv
 
-data OutputElemNF = 
+data OutputElemNF =
     LineNumberNF Formats ℕ
   | CharNF Formats (𝑂 (ℂ ∧ Formats)) ℂ
   | NewlineNF
@@ -33,7 +33,7 @@ annotatedOutputNF ∷ Annotation → Output → ReaderT NFEnv 𝑄 OutputElemNF
 annotatedOutputNF a o = case a of
   FormatA fmts → do
     mapEnvL nfformatsL ((⧺) $ concat $ map formats $ iter fmts) $ outputNF o
-  UndertagA fmtscO → 
+  UndertagA fmtscO →
     let f = case fmtscO of
           None → None
           Some (fmts :* c) → Some (c :* (concat $ map formats $ iter fmts))

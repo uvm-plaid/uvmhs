@@ -3,11 +3,11 @@ module UVMHS.Core.Data.Function where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
-instance Functor ((→) r) where 
+instance Functor ((→) r) where
   map f g = f ∘ g
-instance Return ((→) r) where 
+instance Return ((→) r) where
   return = const
-instance Bind ((→) r) where 
+instance Bind ((→) r) where
   f ≫= k = \ r → k (f r) r
 instance Monad ((→) r)
 
@@ -28,7 +28,7 @@ pipe ∷ (a → b) → (b → c) → a → c
 pipe = flip (∘)
 
 iterateWith ∷ (a → 𝑂 a) → a → a
-iterateWith f = 
+iterateWith f =
   let loop' x = case f x of
         None → x
         Some x' → loop' x'

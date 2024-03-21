@@ -3,7 +3,7 @@ module UVMHS.Core.Classes.Comonad where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes.Functors
 
-infixr 1 =≫ 
+infixr 1 =≫
 
 class Extract (w ∷ ★ → ★) where extract ∷ w a → a
 class Cobind (w ∷ ★ → ★) where (=≫) ∷ w a → (w a → b) → w b
@@ -35,4 +35,3 @@ submerge aMW = map (siphon aMW) (extract aMW)
 
 wmap ∷ (Comonad w) ⇒ (a → b) → w a → w b
 wmap = wextend ∘ kextract
-

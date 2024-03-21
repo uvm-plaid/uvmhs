@@ -1,5 +1,5 @@
 {-# LANGUAGE CPP #-}
-module UVMHS.Lib.Testing 
+module UVMHS.Lib.Testing
   ( module UVMHS.Lib.Testing
   ) where
 
@@ -64,17 +64,17 @@ runTests verb tests = do
           valD :* p ← io $ valdpIO
           let b = p ()
           tags ← list ∘ reverse ^$ ask
-          if b 
+          if b
           then do
             when verb $ \ () →
               io $ pprint $ ppHorizontal
                 [ ppFG teal $ ppBD $ ppString $ concat $ inbetween ":" tags
-                , ppFG green $ ppString "PASS" 
+                , ppFG green $ ppString "PASS"
                 , ppFG grayDark lD
                 ]
             tell $ TestsOut null $ tags ↦ (one :* zero)
           else do
-            when verb $ \ () → 
+            when verb $ \ () →
               io $ pprint $ ppHorizontal
                 [ ppFG teal $ ppBD $ ppString $ concat $ inbetween ":" tags
                 , ppFG red $ ppString "FAIL"
@@ -89,25 +89,25 @@ runTests verb tests = do
         let src = concat $ inbetween ":" tags
         in ppVertical $ concat
           [ if p ≡ 0 then null𝐼 else single $
-              ppHorizontal 
+              ppHorizontal
                 [ ppFG green $ ppString "PASSED"
                 , ppBD $ ppFG green $ ppString $ alignRight (𝕟 3) $ show𝕊 p
                 , ppPun $ concat ["» ",src]
                 ]
-          , if f ≡ 0 then null else single $ 
-              ppHorizontal 
+          , if f ≡ 0 then null else single $
+              ppHorizontal
                 [ ppFG red $ ppString "FAILED"
                 , ppBD $ ppFG red $ ppString $ alignRight (𝕟 3) $ show𝕊 f
                 , ppPun $ concat ["» ",src]
                 ]
           ]
-       
+
     ]
   when (not $ isEmpty $ iter $ testsOutFailures o) $ \ () →
     pprint $ ppVertical
       [ ppHeader "FAILED TESTS"
-      , pretty $ concat $ mapOn (iter $ testsOutFailures o) $ \ (tags :* lsds) → 
-          concat $ mapOn lsds $ \ (lD :* srcD :* valD) → 
+      , pretty $ concat $ mapOn (iter $ testsOutFailures o) $ \ (tags :* lsds) →
+          concat $ mapOn lsds $ \ (lD :* srcD :* valD) →
             key𝑇A (concat $ inbetween ":" tags) $ concat
               [ key𝑇A "loc" $ val𝑇A $ ppFG grayDark lD
               , key𝑇A "src" $ val𝑇A srcD
@@ -167,7 +167,7 @@ buildTests ∷ TH.Q [TH.Dec]
 buildTests = do
   testEQs ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.Code TH.Q (𝑇D Test)))
   l ← TH.location
-  let modNameS = frhsChars $ TH.loc_module l 
+  let modNameS = frhsChars $ TH.loc_module l
       testsNameS = "g__TESTS__" ⧺ replace𝕊 "." "__" modNameS
       testsName = TH.mkName $ tohsChars testsNameS
       testEQs' ∷ TH.Code TH.Q [𝑇D Test]
@@ -178,11 +178,11 @@ buildTests = do
     [ single ^$ TH.sigD testsName [t| 𝑇D Test |]
     , [d| $(TH.varP testsName) = $(TH.unTypeCode testsEQ) |]
     ]
-    
+
 testModules ∷ 𝔹 → [𝕊] → TH.Code TH.Q (IO ())
 testModules verb nsS =
   let nss = map (splitOn𝕊 ":") nsS
-      testsNamesS = mapOn nss $ \ ns → 
+      testsNamesS = mapOn nss $ \ ns →
         concat $ inbetween "." $ mapLastOn ns $ \ n → "g__TESTS__" ⧺ replace𝕊 "." "__" n
       testsNames = mapOn testsNamesS $ \ testsNameS → TH.mkName $ tohsChars testsNameS
       testNamesE = mapOn testsNames $ \ testsName → TH.varE testsName

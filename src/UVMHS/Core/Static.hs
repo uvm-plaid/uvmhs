@@ -57,7 +57,7 @@ wngt_UNSAFE ∷ ∀ m n. P m → P n → W (m ≻ n)
 wngt_UNSAFE _ _ = weq_UNSAFE @(m ⋚ n ≡ 'GT) @'True P P
 
 wnlte_UNSAFE ∷ ∀ m n. P m → P n → W (m ≼ n)
-wnlte_UNSAFE _ _ = weq_UNSAFE @((m ⋚ n ≡ 'LT) ⩔ (m ⋚ n ≡ 'EQ)) @'True P P 
+wnlte_UNSAFE _ _ = weq_UNSAFE @((m ⋚ n ≡ 'LT) ⩔ (m ⋚ n ≡ 'EQ)) @'True P P
 
 data (m ∷ 𝐍) < (n ∷ 𝐍) where
   W_LT ∷ (m ≺ n) ⇒ m < n
@@ -165,17 +165,17 @@ type family Prod (ns ∷ [𝐍]) where
 -- data 𝐿S (is ∷ [i]) (c ∷ i → Constraint) (a ∷ i → ★) ∷ ★ where
 --   NilS ∷ 𝐿S '[] c a
 --   (:&&) ∷ (c x) ⇒ a x → 𝐿S xs c a → 𝐿S (x ': xs) c a
--- 
+--
 -- map𝐿S ∷ ∀ i (xs ∷ [i]) (c ∷ i → Constraint) (a ∷ i → ★) (b ∷ i → ★) . (∀ (x ∷ i). a x → b x) → 𝐿S xs c a → 𝐿S xs c b
 -- map𝐿S f = \case
 --   NilS → NilS
 --   x :&& xs → f x :&& map𝐿S f xs
--- 
+--
 -- append𝐿S ∷ 𝐿S xs c a → 𝐿S ys c a → 𝐿S (xs ⧺ ys) c a
 -- append𝐿S xs ys = case xs of
 --   NilS → ys
 --   x :&& xs' → x :&& append𝐿S xs' ys
--- 
+--
 -- iter𝐿S ∷ ∀ i (xs ∷ [i]) (c ∷ i → Constraint) (a ∷ i → ★) (b ∷ ★). (∀ (x ∷ i). (c x) ⇒ a x → b) → 𝐿S xs c a → 𝐼 b
 -- iter𝐿S f = \case
 --   NilS → null
@@ -191,7 +191,7 @@ type family AllC (c ∷ a → Constraint) (xs ∷ [a]) ∷ Constraint where
 -- instance (∀ x. (c x) ⇒ Plus (a x)) ⇒ Plus (𝐿S xs c a) where
 --   NilS + NilS = NilS
 --   x :&& xs + y :&& ys = (x + y) :&& (xs + ys)
--- 
+--
 -- instance (∀ x. (c x) ⇒ Times (a x)) ⇒ Times (𝐿S xs c a) where
 --   NilS × NilS = NilS
 --   x :&& xs × y :&& ys = (x × y) :&& (xs × ys)
@@ -209,10 +209,10 @@ instance (HasSpine xs) ⇒ HasSpine (x ': xs) where spine = ConsSpine spine
 -- zero𝐿S = \case
 --   NilSpine → NilS
 --   ConsSpine sp → zero :&& zero𝐿S sp
--- 
+--
 -- instance (HasSpine xs,AllC c xs,∀ x. (c x) ⇒ Zero (a x)) ⇒ Zero (𝐿S xs c a) where
 --   zero = zero𝐿S spine
--- 
+--
 -- type family PrependMany (xs ∷ [a]) (xxs ∷ [[a]]) ∷ [[a]] where
 --   PrependMany _ '[] = '[]
 --   PrependMany xs (xs' ': xss) = (xs ⧺ xs') ': PrependMany xs xss
@@ -225,7 +225,7 @@ newtype 𝕀64 (n ∷ 𝐍) = 𝕀64_UNSAFE { un𝕀64 ∷ ℕ64 }
 𝕚64 m = 𝕀64_UNSAFE $ unℕ64S m
 
 𝕚64d ∷ ∀ n. (𝒩64 n) ⇒ ℕ64 → 𝑂 (𝕀64 n)
-𝕚64d m = 
+𝕚64d m =
   if m < unℕ64S (𝕟64s @n)
   then Some $ 𝕀64_UNSAFE m
   else None
@@ -254,22 +254,22 @@ instance ToIter a (𝐼S n a) where iter = un𝐼S
 
 -- infixl 5 +♮
 -- infixl 6 ×♮
--- 
+--
 -- class ZeroS  t where zeroS ∷ t 0
 -- class OneS   t where oneS  ∷ t 1
 -- class PlusS  t where (+♮)  ∷ t m → t n → t (m + n)
 -- class TimesS t where (×♮)  ∷ t m → t n → t (m × n)
--- 
+--
 -- instance ZeroS  ℕ64S where zeroS  = 𝕟64s @0
 -- instance OneS   ℕ64S where oneS   = 𝕟64s @1
 -- instance PlusS  ℕ64S where m +♮ n = ℕ64S_UNSAFE $ unℕ64S m + unℕ64S n
 -- instance TimesS ℕ64S where m ×♮ n = ℕ64S_UNSAFE $ unℕ64S m × unℕ64S n
 
-class NullS t where 
+class NullS t where
   nullS ∷ t 0 a
 class SingleS t where
   𝔢 ∷ a → t 1 a
-class AppendS t where 
+class AppendS t where
   (⧺♮) ∷ t n₁ a → t n₂ a → t (n₁ + n₂) a
 -- class AppendSL t where
 --   (⧺♭) ∷ t ns₁ a → t ns₂ a → t (ns₁ ⧺ ns₂) a

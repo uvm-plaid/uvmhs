@@ -16,21 +16,21 @@ elimAddNull i f = \case
   Null → i
   AddNull x → f x
 
-instance Null (AddNull a) where 
+instance Null (AddNull a) where
   null = Null
 instance (Append a) ⇒ Append (AddNull a) where
   Null ⧺ x = x
   x ⧺ Null = x
   AddNull x ⧺ AddNull y = AddNull $ x ⧺ y
 instance (Append a) ⇒ Monoid (AddNull a)
-instance Functor AddNull where 
+instance Functor AddNull where
   map = mmap
-instance Return AddNull where 
+instance Return AddNull where
   return = AddNull
-instance Bind AddNull where 
+instance Bind AddNull where
   xM ≫= f = case xM of {Null → Null;AddNull x → f x}
 instance Monad AddNull
-instance FunctorM AddNull where 
+instance FunctorM AddNull where
   mapM f xM = case xM of {Null → return Null;AddNull x → map AddNull $ f x}
 
 -- === --
@@ -46,21 +46,21 @@ elimZOM i₁ f i₂= \case
   OneZOM x → f x
   MoreZOM → i₂
 
-instance Null (ZOM a) where 
+instance Null (ZOM a) where
   null = NullZOM
 instance Append (ZOM a) where
   NullZOM ⧺ x = x
   x ⧺ NullZOM = x
   _ ⧺ _ = MoreZOM
 instance Monoid (ZOM a)
-instance Functor ZOM where 
+instance Functor ZOM where
   map = mmap
-instance Return ZOM where 
+instance Return ZOM where
   return = OneZOM
-instance Bind ZOM where 
+instance Bind ZOM where
   xM ≫= f = case xM of {NullZOM → NullZOM;OneZOM x → f x;MoreZOM → MoreZOM}
 instance Monad ZOM
-instance FunctorM ZOM where 
+instance FunctorM ZOM where
   mapM f xM = case xM of {NullZOM → return NullZOM;OneZOM x → map OneZOM $ f x;MoreZOM → return MoreZOM}
 
 instance Single a (ZOM a) where single = OneZOM
@@ -83,13 +83,13 @@ instance (POrd a) ⇒ POrd (AddBot a) where
     (Bot,AddBot _) → True
     (AddBot _,Bot) → False
     (AddBot x,AddBot y) → x ⊑ y
-instance Bot (AddBot a) where 
+instance Bot (AddBot a) where
   bot = Bot
 instance (Join a) ⇒ Join (AddBot a) where
   Bot ⊔ x = x
   x ⊔ Bot = x
   AddBot x ⊔ AddBot y = AddBot $ x ⊔ y
-instance (Top a) ⇒ Top (AddBot a) where 
+instance (Top a) ⇒ Top (AddBot a) where
   top = AddBot top
 instance (Meet a) ⇒ Meet (AddBot a) where
   Bot ⊓ _ = Bot
@@ -98,14 +98,14 @@ instance (Meet a) ⇒ Meet (AddBot a) where
 instance (Join a) ⇒ JoinLattice (AddBot a)
 instance (MeetLattice a) ⇒ MeetLattice (AddBot a)
 instance (Join a,MeetLattice a) ⇒ Lattice (AddBot a)
-instance Functor AddBot where 
+instance Functor AddBot where
   map = mmap
-instance Return AddBot where 
+instance Return AddBot where
   return = AddBot
-instance Bind AddBot where 
+instance Bind AddBot where
   xM ≫= f = case xM of {Bot → Bot;AddBot x → f x}
 instance Monad AddBot
-instance FunctorM AddBot where 
+instance FunctorM AddBot where
   mapM f xM = case xM of {Bot → return Bot;AddBot x → map AddBot $ f x}
 
 -- ====== --
@@ -126,13 +126,13 @@ instance (POrd a) ⇒ POrd (AddTop a) where
     (Top,AddTop _) → False
     (AddTop _,Top) → True
     (AddTop x,AddTop y) → x ⊑ y
-instance (Bot a) ⇒ Bot (AddTop a) where 
+instance (Bot a) ⇒ Bot (AddTop a) where
   bot = AddTop bot
 instance (Join a) ⇒ Join (AddTop a) where
   Top ⊔ _ = Top
   _ ⊔ Top = Top
   AddTop x ⊔ AddTop y = AddTop $ x ⊔ y
-instance Top (AddTop a) where 
+instance Top (AddTop a) where
   top = Top
 instance (Meet a) ⇒ Meet (AddTop a) where
   Top ⊓ x = x
@@ -167,14 +167,14 @@ instance (Times a) ⇒ Times (AddTop a) where
   _ × Top = Top
   AddTop x × AddTop y = AddTop $ x × y
 
-instance Functor AddTop where 
+instance Functor AddTop where
   map = mmap
-instance Return AddTop where 
+instance Return AddTop where
   return = AddTop
-instance Bind AddTop where 
+instance Bind AddTop where
   xM ≫= f = case xM of {Top → Top;AddTop x → f x}
 instance Monad AddTop
-instance FunctorM AddTop where 
+instance FunctorM AddTop where
   mapM f xM = case xM of {Top → return Top;AddTop x → map AddTop $ f x}
 
 -- ===== --
@@ -184,7 +184,7 @@ instance FunctorM AddTop where
 data AddBT a = BotBT | AddBT a | TopBT
   deriving (Eq,Ord,Show)
 
-instance Bot (AddBT a) where 
+instance Bot (AddBT a) where
   bot = BotBT
 instance (Join a) ⇒ Join (AddBT a) where
   BotBT ⊔ x = x
@@ -192,7 +192,7 @@ instance (Join a) ⇒ Join (AddBT a) where
   TopBT ⊔ _ = TopBT
   _ ⊔ TopBT = TopBT
   AddBT x ⊔ AddBT y = AddBT $ x ⊔ y
-instance Top (AddBT a) where 
+instance Top (AddBT a) where
   top = TopBT
 instance (Meet a) ⇒ Meet (AddBT a) where
   BotBT ⊓ _ = BotBT
@@ -203,14 +203,14 @@ instance (Meet a) ⇒ Meet (AddBT a) where
 instance (Join a) ⇒ JoinLattice (AddBT a)
 instance (Meet a) ⇒ MeetLattice (AddBT a)
 instance (Join a,Meet a) ⇒ Lattice (AddBT a)
-instance Functor AddBT where 
+instance Functor AddBT where
   map = mmap
-instance Return AddBT where 
+instance Return AddBT where
   return = AddBT
-instance Bind AddBT where 
+instance Bind AddBT where
   xM ≫= f = case xM of {TopBT → TopBT;BotBT → BotBT;AddBT x → f x}
 instance Monad AddBT
-instance FunctorM AddBT where 
+instance FunctorM AddBT where
   mapM f xM = case xM of {TopBT → return TopBT;BotBT → return BotBT;AddBT x → map AddBT $ f x}
 
 -- LENSES --
@@ -234,4 +234,3 @@ moreZOML ∷ ZOM a ⌲ ()
 moreZOML = prism (const MoreZOM) $ \case
   MoreZOM → Some ()
   _ → None
-

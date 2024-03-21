@@ -8,13 +8,13 @@ data 𝑇A a = 𝑇A
   , nest𝑇A ∷ 𝐼 (𝕊 ∧ 𝑇A a)
   } deriving (Show)
 
-instance Null (𝑇A a) where 
+instance Null (𝑇A a) where
   null = 𝑇A null null
-instance Append (𝑇A a) where 
+instance Append (𝑇A a) where
   𝑇A m₁ n₁ ⧺ 𝑇A m₂ n₂ = 𝑇A (m₁ ⧺ m₂) $ n₁ ⧺ n₂
 instance Monoid (𝑇A a)
 
-instance Eps (𝑇A a) where 
+instance Eps (𝑇A a) where
   eps = 𝑇A null null
 instance Seq (𝑇A a) where
   𝑇A v₁ n₁ ▷ 𝑇A v₂ n₂
@@ -24,7 +24,7 @@ instance Seqoid (𝑇A a)
 
 fold𝑇AWith ∷ (Monoid b) ⇒ (𝐼 a → b) → (𝕊 → b → b) → 𝑇A a → b
 fold𝑇AWith fₗ fₙ = loop
-  where 
+  where
     loop (𝑇A vs sxs) = concat
       [ fₗ vs
       , concat $ mapOn (iter sxs) $ \ (s :* xs) →
@@ -52,18 +52,18 @@ instance (Pretty a) ⇒ Pretty (𝑇A a) where
         ]
     ]
 
-data 𝑇D a = 𝑇D 
+data 𝑇D a = 𝑇D
   { vals𝑇D ∷ 𝐼 a
   , nest𝑇D ∷ 𝕊 ⇰ 𝑇D a
   } deriving (Show)
 
-instance Null (𝑇D a) where 
+instance Null (𝑇D a) where
   null = 𝑇D null null
-instance Append (𝑇D a) where 
+instance Append (𝑇D a) where
   𝑇D m₁ n₁ ⧺ 𝑇D m₂ n₂ = 𝑇D (m₁ ⧺ m₂) $ n₁ ⧺ n₂
 instance Monoid (𝑇D a)
 
-instance Eps (𝑇D a) where 
+instance Eps (𝑇D a) where
   eps = 𝑇D null null
 instance Seq (𝑇D a) where
   𝑇D v₁ n₁ ▷ 𝑇D v₂ n₂
@@ -73,7 +73,7 @@ instance Seqoid (𝑇D a)
 
 fold𝑇DWith ∷ (Monoid b) ⇒ (𝐼 a → b) → (𝕊 → b → b) → 𝑇D a → b
 fold𝑇DWith fₗ fₙ = loop
-  where 
+  where
     loop (𝑇D vs sxs) = concat
       [ fₗ vs
       , concat $ mapOn (iter sxs) $ \ (s :* xs) →

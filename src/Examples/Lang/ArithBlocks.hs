@@ -6,7 +6,7 @@ lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
 lexer = lexerWSBasic (list ["(",")"]) null null (list ["==","+","*","-","^","!"]) (list ["local"])
 
 testTokenizerSuccess ∷ IO ()
-testTokenizerSuccess = 
+testTokenizerSuccess =
   tokenizeFIOMain lexer "" blockifyTokensWSBasic $ tokens $ concat $ inbetween "\n"
     [ "1 -- blah"
     , "2"
@@ -67,7 +67,7 @@ cpBlock = cpNewContext "block" $ do
   void $ cpCloseWS
   return es
 
-cpExp ∷ CParser TokenWSBasic Exp 
+cpExp ∷ CParser TokenWSBasic Exp
 cpExp = fmixfixWithContext "exp" $ concat
   [ fmixTerminal $ do
       void $ cpToken $ SyntaxTWSBasic "("
@@ -91,8 +91,8 @@ testParserSuccess ∷ IO ()
 testParserSuccess = do
   parseIOMain cpExpList ""
     *$ tokenizeFIO lexer ""  blockifyTokensWSBasic
-     $ tokens 
-     $ concat 
+     $ tokens
+     $ concat
      $ inbetween "\n"
     [ "(- 1) + 2"
     , "local 2 + 3"
@@ -101,11 +101,11 @@ testParserSuccess = do
     ]
 
 testParserFailure ∷ IO ()
-testParserFailure = 
+testParserFailure =
   parseIOMain cpExpList ""
     *$ tokenizeFIO lexer "" blockifyTokensWSBasic
-     $ tokens 
-     $ concat 
+     $ tokens
+     $ concat
      $ inbetween "\n"
     [ "(- 1) + 2"
     , "local 2 + 3 + 4"

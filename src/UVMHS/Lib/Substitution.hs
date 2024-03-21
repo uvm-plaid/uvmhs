@@ -38,7 +38,7 @@ subSubstElem substE (SubstElem 𝑠 ueO) = SubstElem zero $ \ () → substE 𝑠
 --------------------------------
 
 -- ℯ ⩴ i | s⇈e
-data SSubstElem s e = 
+data SSubstElem s e =
     Var_SSE ℕ64
   | Trm_SSE (SubstElem s e)
   deriving (Eq,Ord,Show)
@@ -48,7 +48,7 @@ instance (Pretty s,Pretty e) ⇒ Pretty (SSubstElem s e) where
     Var_SSE i → pretty $ DVar i
     Trm_SSE e → pretty e
 
-instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SSubstElem s e) where 
+instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SSubstElem s e) where
   fuzzy = rchoose $ map const
     [ Var_SSE ^$ fuzzy
     , Trm_SSE ^$ fuzzy
@@ -68,7 +68,7 @@ subSSubstElem substV substE = \case
 -- DE BRUIJN SUBSTITUTION --
 ----------------------------
 
--- 𝓈 ⩴ ⟨ρ,es,ι⟩ 
+-- 𝓈 ⩴ ⟨ρ,es,ι⟩
 -- INVARIANT: |es| + ι ≥ 0
 data DSubst s e = DSubst
   { dsubstShift ∷ ℕ64
@@ -78,7 +78,7 @@ data DSubst s e = DSubst
 makeLenses ''DSubst
 makePrettyRecord ''DSubst
 
-instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (DSubst s e) where 
+instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (DSubst s e) where
   fuzzy = do
     ρ ← fuzzy
     𝔰 ← fuzzy
@@ -118,7 +118,7 @@ dsubstVar ∷ DSubst 𝑠 e → ℕ64 → SSubstElem 𝑠 e
 dsubstVar (DSubst ρ̇ es ι) ṅ =
   let 𝔰̇  = csize es
       n  = intΩ64 ṅ
-  in 
+  in
   if
   | ṅ < ρ̇     → Var_SSE ṅ
   | ṅ < 𝔰̇+ρ̇   → es ⋕! (ṅ-ρ̇)
@@ -128,16 +128,16 @@ dsubstVar (DSubst ρ̇ es ι) ṅ =
 -- GENERIC SCOPED SUBSTITUTION --
 -------------------------------
 
-data GSubst s₁ s₂ e = GSubst 
+data GSubst s₁ s₂ e = GSubst
   { gsubstGVars ∷ s₁ ⇰ SubstElem s₂ e
   , gsubstMetas ∷ s₁ ⇰ SubstElem s₂ e
-  , gsubstSubst ∷ s₂ ⇰ DSubst s₂ e 
-  } 
+  , gsubstSubst ∷ s₂ ⇰ DSubst s₂ e
+  }
   deriving (Eq,Ord,Show)
 makeLenses ''GSubst
 makePrettyUnion ''GSubst
 
-instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s₁ s₂ e) where 
+instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s₁ s₂ e) where
   fuzzy = do
     esᴳ ← fuzzy
     esᴹ ← fuzzy
@@ -145,7 +145,7 @@ instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s�
     return $ GSubst esᴳ esᴹ 𝓈
 
 𝓈shiftG ∷ (Ord s₂) ⇒ s₂ ⇰ ℕ64 → GSubst s₁ s₂ e → GSubst s₁ s₂ e
-𝓈shiftG 𝑠 (GSubst esᴳ esᴹ 𝓈s) = 
+𝓈shiftG 𝑠 (GSubst esᴳ esᴹ 𝓈s) =
   let esᴳ' = map (introSubstElem 𝑠) esᴳ
       𝓈s' = kmapOn 𝓈s $ \ s (DSubst ρ es ι) →
         let ρ'  = ρ + ifNone 0 (𝑠 ⋕? s)
@@ -170,9 +170,9 @@ instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s�
 
 -- 𝓈₁ ≜ ⟨ρ₁,es₁,ι₁⟩
 -- 𝓈₂ ≜ ⟨ρ₂,es₂,ι₂⟩
--- 𝔰₁ = |es₁| 
--- 𝔰₂ = |es₂| 
--- (𝓈₂⧺𝓈₁)(i) 
+-- 𝔰₁ = |es₁|
+-- 𝔰₂ = |es₂|
+-- (𝓈₂⧺𝓈₁)(i)
 -- ==
 -- 𝓈₂(𝓈₁(i))
 -- ==
@@ -209,11 +209,11 @@ instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s�
 --     𝔰 ≜ |es|
 --   ρ+𝔰 = (ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁)
 --     𝔰 = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
-appendGSubst ∷ 
-  (Ord s₁,Ord s₂) 
-  ⇒ (GSubst s₁ s₂ e → e → 𝑂 e) 
-  → GSubst s₁ s₂ e 
-  → GSubst s₁ s₂ e 
+appendGSubst ∷
+  (Ord s₁,Ord s₂)
+  ⇒ (GSubst s₁ s₂ e → e → 𝑂 e)
+  → GSubst s₁ s₂ e
+  → GSubst s₁ s₂ e
   → GSubst s₁ s₂ e
 appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
   let GSubst esᴳ₁ esᴹ₁ 𝓈s₁ = 𝓈̂₁
@@ -223,8 +223,8 @@ appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
       esᴳ₁' = map (subSubstElem $ esub 𝓈̂₂) esᴳ₁
       esᴹ₁' = map (subSubstElem $ esub 𝓈̂₂) esᴹ₁
       𝓈s₁' = kmapOn 𝓈s₁ $ \ s (DSubst ρ̇₁ es₁ ι₁) → DSubst ρ̇₁ (mapOn es₁ $ ℯsub s 𝓈̂₂) ι₁
-      esᴳ = esᴳ₁' ⩌ esᴳ₂ 
-      esᴹ = esᴹ₁' ⩌ esᴹ₂ 
+      esᴳ = esᴳ₁' ⩌ esᴳ₂
+      esᴹ = esᴹ₁' ⩌ esᴹ₂
       𝓈s = dunionByOn 𝓈s₂ 𝓈s₁' $ \ 𝓈₂@(DSubst ρ̇₂ es₂ ι₂) 𝓈₁@(DSubst ρ̇₁ es₁ ι₁) →
         if
         | isNullDSubst 𝓈₁ → 𝓈₂
@@ -239,8 +239,8 @@ appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
                 ι  = ι₁+ι₂
                 𝔰  = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
                 δ  = ρ
-                es = vecF (natΩ64 𝔰) $ \ ṅ → 
-                  let n = intΩ64 ṅ + δ in 
+                es = vecF (natΩ64 𝔰) $ \ ṅ →
+                  let n = intΩ64 ṅ + δ in
                   if
                   | n < ρ₁⊓(ρ₂+𝔰₂) → es₂ ⋕! natΩ64 (n-ρ₂)
                   | n < ρ₁         → Var_SSE $ natΩ64 $ n+ι₂
@@ -272,13 +272,13 @@ data SubstAction s e = SubstAction
   }
 makeLenses ''SubstAction
 
-data SubstEnv s e = 
+data SubstEnv s e =
     FVsSubstEnv (FreeVarsAction s)
   | SubSubstEnv (SubstAction s e)
 makePrisms ''SubstEnv
 
-newtype SubstM s e a = SubstM 
-  { unSubstM ∷ UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 𝕐) ID))) a 
+newtype SubstM s e a = SubstM
+  { unSubstM ∷ UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 𝕐) ID))) a
   } deriving
   ( Return,Bind,Functor,Monad
   , MonadUCont
@@ -289,13 +289,13 @@ newtype SubstM s e a = SubstM
 
 mkSubstM ∷ (∀ u. SubstEnv s e → (a → SubstEnv s e → (s ⇰ 𝑃 𝕐) ∧ 𝑂 u) → (s ⇰ 𝑃 𝕐) ∧ 𝑂 u)
          → SubstM s e a
-mkSubstM f = SubstM $ UContT (\ 𝓀 → ReaderT $ \ γ → FailT $ WriterT $ ID $ f γ $ \ x γ' → 
+mkSubstM f = SubstM $ UContT (\ 𝓀 → ReaderT $ \ γ → FailT $ WriterT $ ID $ f γ $ \ x γ' →
   unID $ unWriterT $ unFailT $ runReaderT γ' $ 𝓀 x)
 
-runSubstM ∷ 
-    SubstEnv s e 
-  → (a → SubstEnv s e → (s ⇰ 𝑃 𝕐) ∧ 𝑂 u) 
-  → SubstM s e a 
+runSubstM ∷
+    SubstEnv s e
+  → (a → SubstEnv s e → (s ⇰ 𝑃 𝕐) ∧ 𝑂 u)
+  → SubstM s e a
   → (s ⇰ 𝑃 𝕐) ∧ 𝑂 u
 runSubstM γ 𝓀 = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ runUContT 𝓀' ∘ unSubstM
   where
@@ -320,8 +320,8 @@ fvsWith ∷ (Substy s e a) ⇒ (FreeVarsAction s → FreeVarsAction s) → a →
 fvsWith f = fst ∘ runSubstMHalt (FVsSubstEnv $ f $ FreeVarsAction (const $ const True) null) ∘ substy
 
 fvsSMetas ∷ (Ord s,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 𝕏
-fvsSMetas ss = 
-  map (pow ∘ filterMap (view mVarL) ∘ iter) 
+fvsSMetas ss =
+  map (pow ∘ filterMap (view mVarL) ∘ iter)
   ∘ fvsWith (update freeVarsActionFilterL $ \ s y → s ∈ ss ⩓ shape mVarL y)
 
 fvsMetas ∷ (Ord s,Substy s e a) ⇒ s → a → 𝑃 𝕏
@@ -447,7 +447,7 @@ substyBdr s 𝓋 x = do
   case bO of
     None → skip
     Some b → do
-      if b 
+      if b
       then
         umodifyEnv $ alter subSubstEnvL $ alter substActionSubstL $ flip (⧺) $ concat
           [ 𝓈snintro $ s ↦ x ↦ 1
@@ -468,7 +468,7 @@ substyVar xO s 𝓋 n = do
       when (n ≥ n₀) $ \ () → do
         let n' = n-n₀
             y = elim𝑂 (const DVar) (flip NVar) xO n'
-        when (freeVarsActionFilter 𝒶 s y) $ \ () → 
+        when (freeVarsActionFilter 𝒶 s y) $ \ () →
           tell $ s ↦ single y
       return $ 𝓋 n
     SubSubstEnv 𝒶 → do
@@ -491,7 +491,7 @@ substyGVar s 𝓋 x = do
   case γ of
     FVsSubstEnv 𝒶 → do
       let y = GVar x
-      when (freeVarsActionFilter 𝒶 s y) $ \ () → 
+      when (freeVarsActionFilter 𝒶 s y) $ \ () →
         tell $ s ↦ single y
       return $ 𝓋 x
     SubSubstEnv 𝓈A → do
@@ -506,7 +506,7 @@ substyMVar s 𝓋 x = do
   case γ of
     FVsSubstEnv 𝒶 → do
       let y = MVar x
-      when (freeVarsActionFilter 𝒶 s y) $ \ () → 
+      when (freeVarsActionFilter 𝒶 s y) $ \ () →
         tell $ s ↦ single y
       return $ 𝓋 x
     SubSubstEnv 𝓈A → do

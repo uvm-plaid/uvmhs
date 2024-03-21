@@ -28,7 +28,7 @@ instance Append (ParserError t) where
       EQ → ParserError l₁ d₁ s₁ $ f₁ ⧺ f₂
       GT → e₁
 
-data ParserErrorStackTraces = ParserErrorStackTraces 
+data ParserErrorStackTraces = ParserErrorStackTraces
   { parserErrorStackTracesMessages ∷ 𝑃 𝕊
   , parserErrorStackTracesChain ∷ 𝕊 ⇰ ParserErrorStackTraces
   } deriving (Eq, Ord)
@@ -42,13 +42,13 @@ instance Join ParserErrorStackTraces where
 instance JoinLattice ParserErrorStackTraces
 
 stackTraces ∷ 𝕊 → 𝐼 𝕊 → ParserErrorStackTraces
-stackTraces fin msgs = foldrOnFrom msgs (ParserErrorStackTraces (single fin) bot) $ \ msg tr → 
+stackTraces fin msgs = foldrOnFrom msgs (ParserErrorStackTraces (single fin) bot) $ \ msg tr →
   ParserErrorStackTraces bot $ msg ↦ tr
 
 parserErrorFailuresMap ∷ 𝐼 ParserErrorInfo → (𝕊 ∧ 𝔹) ⇰ WindowR Doc Doc ∧ WindowR Doc Doc ∧ ParserErrorStackTraces
-parserErrorFailuresMap eis = 
-  fold bot (dunionBy $ \ (c' :* p' :* t₁) (_ :* _ :* t₂) → c' :* p' :* (t₁ ⊔ t₂)) $ 
-    mapOn eis $ \ (ParserErrorInfo p c sh st) → 
+parserErrorFailuresMap eis =
+  fold bot (dunionBy $ \ (c' :* p' :* t₁) (_ :* _ :* t₂) → c' :* p' :* (t₁ ⊔ t₂)) $
+    mapOn eis $ \ (ParserErrorInfo p c sh st) →
       (ppRender (concat c) :* overflowR c) ↦ (p :* c :* stackTraces sh st)
 
 displaySourceError ∷ 𝕊 → AddNull (ParserError t) → Doc
@@ -59,20 +59,20 @@ displaySourceError so peM = ppVertical $ concat
   , case peM of
       Null → return $ ppErr "> No Reported Errors"
       AddNull (ParserError l tc ts fs) → concat
-        [ return $ ppHorizontal 
+        [ return $ ppHorizontal
             [ ppErr ">"
-            , concat 
+            , concat
                 [ ppString "line:"
                 , pretty $ succ ∘ locRow ^$ l
                 ]
-            , concat 
+            , concat
                 [ ppString "column:"
                 , pretty $ succ ∘ locCol ^$ l
                 ]
             ]
         , return $ ppHeader "One of:"
         , inbetween (ppHeader "OR") $ mapOn (map snd $ iter $ parserErrorFailuresMap fs) $ \ (pp :* pc :* ets) →
-            ppVertical 
+            ppVertical
               [ concat
                   [ renderWindowR pp
                   , ppUT '^' green $ renderWindowR pc
@@ -87,7 +87,7 @@ displaySourceError so peM = ppVertical $ concat
 displayErrorTraces ∷ ParserErrorStackTraces → Doc
 displayErrorTraces (ParserErrorStackTraces final chain) = ppVertical $ concat
   [ case isEmpty final of
-      True → null 
+      True → null
       False → return $ ppHorizontal $ concat
         [ single $ ppFG red $ ppString "Expected"
         , inbetween (ppFG red $ ppString "OR") $ map ppString $ iter final
@@ -99,4 +99,4 @@ displayErrorTraces (ParserErrorStackTraces final chain) = ppVertical $ concat
           ]
       , concat [ppSpace $ 𝕟64 2,ppAlign $ displayErrorTraces tr]
       ]
-  ]    
+  ]

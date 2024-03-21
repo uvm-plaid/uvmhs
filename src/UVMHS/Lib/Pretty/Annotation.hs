@@ -7,7 +7,7 @@ import UVMHS.Lib.Pretty.Color
 -- Formats --
 -------------
 
-data Format = 
+data Format =
     FG Color
   | NOFG
   | BG Color
@@ -29,7 +29,7 @@ data Formats = Formats
   } deriving (Eq,Ord,Show)
 instance Null Formats where null = Formats None None None None None
 instance Append Formats where
-  Formats fg₁ bg₁ ul₁ bd₁ it₁ ⧺ Formats fg₂ bg₂ ul₂ bd₂ it₂ = 
+  Formats fg₁ bg₁ ul₁ bd₁ it₁ ⧺ Formats fg₂ bg₂ ul₂ bd₂ it₂ =
     Formats (first fg₁ fg₂) (first bg₁ bg₂) (first ul₁ ul₂) (first bd₁ bd₂) (first it₁ it₂)
 instance Monoid Formats
 

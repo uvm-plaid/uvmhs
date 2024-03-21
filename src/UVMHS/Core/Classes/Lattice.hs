@@ -18,7 +18,7 @@ class (Top a,Meet a) ⇒ MeetLattice a
 class (JoinLattice a,MeetLattice a) ⇒ Lattice a
 
 class Dual a where dual ∷ a → a
-class Difference a where (⊟) ∷ a → a → a   
+class Difference a where (⊟) ∷ a → a → a
 
 data PartialOrdering = PLT | PEQ | PGT | PUN
 

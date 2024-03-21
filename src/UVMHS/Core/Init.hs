@@ -13,14 +13,14 @@ import Prelude
   , Bool(..),Eq((==)),Ord(compare),Show(show),Ordering(..),IO
   , fromInteger
   )
-import Data.Coerce 
+import Data.Coerce
   ( coerce
   , Coercible
   )
-import GHC.Exts 
+import GHC.Exts
   ( type Constraint
   )
-import GHC.Stack 
+import GHC.Stack
   ( type CallStack,callStack,withFrozenCallStack
   )
 
@@ -137,7 +137,7 @@ data 𝑂 a = None | Some a
 data 𝐿 a = Nil | a :& 𝐿 a
   deriving (Eq,Ord,TH.Lift)
 
--- iterator type             
+-- iterator type
 --                           fold function               continuation
 --                           ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓       ↓↓↓↓↓↓↓
 newtype 𝐼 a = 𝐼 { un𝐼 ∷ ∀ b. (a → b → (b → b) → b) → b → (b → b) → b }
@@ -194,7 +194,7 @@ iterLL ∷ [a] → 𝐼 a
 iterLL xs₀ = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
   let loop xs i = case xs of
         [] → 𝓀 i
-        x:xs' → 
+        x:xs' →
           f x i $ \ i' →
           loop xs' i'
   in loop xs₀
@@ -417,7 +417,7 @@ class CHS a b | b → a where
   tohs ∷ a → b
   frhs ∷ b → a
 
-instance {-# OVERLAPPABLE #-} (a ~ b) ⇒ CHS a b where 
+instance {-# OVERLAPPABLE #-} (a ~ b) ⇒ CHS a b where
   tohs = id
   frhs = id
 instance {-# OVERLAPPING #-} CHS ℤ64 HS.Int where

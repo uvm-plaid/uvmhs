@@ -52,7 +52,7 @@ instance (Ord c,Ord t,Classified c t) ⇒ Append (Lexer c t) where
           (None,None) → None
           (None,Some nfm) → Some nfm
           (Some nfm,None) → Some nfm
-          (Some (n₁ :* fm₁),Some (n₂ :* fm₂)) 
+          (Some (n₁ :* fm₁),Some (n₂ :* fm₂))
             | n₁ ≥ n₂ → Some (n₁ :* fm₁)
             | otherwise → Some (n₂ :* fm₂)
         h = h₁ ⩓ h₂
@@ -139,7 +139,7 @@ instance Functor (Lexer t) where
   map ∷ ∀ a b. (a → b) → Lexer t a → Lexer t b
   map f (Lexer n c) = Lexer (mapp f n) $ map f c
 
-instance Return (Lexer t) where 
+instance Return (Lexer t) where
   return ∷ ∀ a. a → Lexer t a
   return x = Lexer dø $ LResult zero $ null ↦ return x
 
@@ -189,7 +189,7 @@ lunit n fmt x = Lexer dø $ LResult n $ fmt ↦ return x
 
 -- lOneThen ∷ (Ord t) ⇒ t → Lexer t a → Lexer t a
 -- lOneThen t l = Lexer (t ↦ l) Null Null
--- 
+--
 -- lSatisfyThen ∷ (t → 𝔹) → (() → Lexer t a ) → Lexer t a
 -- lSatisfyThen f l = Lexer dø (AddNull $ \ t → if f t then l () else null) Null
 
@@ -208,7 +208,7 @@ lsat n fm f = toLexer n $ do
 --   in l'
 
 -- lWhitespace ∷ ℕ64 → Lexer ℂ 𝕊
--- lWhitespace n = 
+-- lWhitespace n =
 --   let l = (lSatisfyThen isSpace $ \ () → l) ⧺ lUnit n null True stringS
 --   in lSatisfyThen isSpace $ const l
 
@@ -219,8 +219,8 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 -- lName n = toLexer n $ do
 --   c ← lsat n isLetter
 --   cs ← many $ lsat $ \ c → joins
---     [ isLetter c 
---     , isNumber c 
+--     [ isLetter c
+--     , isNumber c
 --     , c ∈ pow "_-'′"
 --     ]
 --   return $ string $ c :&  cs
@@ -233,7 +233,7 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 --   return $ s₁ ⧺ s₂ ⧺ s₃
 
 -- lComment ∷ ℕ64 → Lexer ℂ 𝕊
--- lComment n = 
+-- lComment n =
 --   let nl = lWord n null iter stringS "\n"
 --   in undefined
 
@@ -279,43 +279,43 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 --   null = Lazy null
 -- instance (Append a) ⇒ Append (Lazy a) where
 --   ~(Lazy x) ⧺ ~(Lazy y) = Lazy (x ⧺ y)
--- 
+--
 -- instance Functor Lazy where
 --   map f ~(Lazy x) = Lazy (f x)
--- 
+--
 -- class Sequence t where (⨟) ∷ t a → t b → t (a ∧ b)
--- 
+--
 -- -----------------
 -- -- LexerResult --
 -- -----------------
--- 
+--
 -- data LexerResult t a = LexerResult
 --   { lexerResultLevel ∷ ℕ64
 --   , lexerResultFormat ∷ Formats
 --   , lexerResultSkip ∷ 𝔹
 --   , lexerResultBuilder ∷ 𝐼S t → a
 --   }
--- 
+--
 -- instance Append (LexerResult t a) where
 --   lr₁ ⧺ lr₂
 --     | lexerResultLevel lr₁ ≥ lexerResultLevel lr₂ = lr₁
 --     | otherwise = lr₂
--- 
+--
 -- instance Functor (LexerResult t) where
 --   map ∷ ∀ a b. (a → b) → LexerResult t a → LexerResult t b
 --   map f (LexerResult n fm sk g) = LexerResult n fm sk $ f ∘ g
--- 
+--
 -- instance Sequence (LexerResult t) where
 --   (⨟) ∷ ∀ a b. LexerResult t a → LexerResult t b → LexerResult t (a ∧ b)
 --   LexerResult n₁ f₁ sk₁ g₁ ⨟ LexerResult n₂ f₂ sk₂ g₂ =
---     LexerResult (n₁ ⊓ n₂) (f₁ ⧺ f₂) (sk₁ ⩓ sk₂) $ \ ts → g₁ ts :* g₂ ts 
--- 
+--     LexerResult (n₁ ⊓ n₂) (f₁ ⧺ f₂) (sk₁ ⩓ sk₂) $ \ ts → g₁ ts :* g₂ ts
+--
 -- data Lexer t a = Lexer
 --   { lexerNext ∷ t ⇰ Lazy (Lexer t a)
 --   , lexerFallback ∷ AddNull (t → Lexer t a)
 --   , lexerResult ∷ AddNull (LexerResult t a)
 --   }
--- 
+--
 -- instance Null (Lexer t a) where
 --   null ∷ Lexer t a
 --   null = Lexer dø Null null
@@ -334,11 +334,11 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 --         fBoth = fO₁ ⧺ fO₂
 --     in Lexer (unionsWith (⧺) [nBoth,n₁Extra n₁Only,n₂Extra n₂Only]) fBoth $ r₁ ⧺ r₂
 -- instance (Ord t) ⇒ Monoid (Lexer t a)
--- 
+--
 -- instance Functor (Lexer t) where
 --   map ∷ ∀ a b. (a → b) → Lexer t a → Lexer t b
 --   map f (Lexer n fO r) = Lexer (mapp (map f) n) (mapp (map f) fO) (map (map f) r)
--- 
+--
 -- instance (Ord t) ⇒ Sequence (Lexer t) where
 --   (⨟) ∷ ∀ a b. Lexer t a → Lexer t b → Lexer t (a ∧ b)
 --   Lexer n₁ fO₁ rO₁ ⨟ l@(Lexer n₂ fO₂ rO₂) =
@@ -351,12 +351,12 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 --           (AddNull r₁,AddNull r₂) → AddNull $ r₁ ⨟ r₂
 --           _ → Null
 --     in Lexer (n₁' ⧺ n₂') (fO₁' ⧺ fO₂') rO'
---   
--- 
+--
+--
 -- ----------------
 -- -- LexerState --
 -- ----------------
--- 
+--
 -- data LexerState t = LexerState
 --   { lexerStateContext ∷ ParserContext
 --   , lexerStateSuffix ∷ WindowL Doc Doc
@@ -364,15 +364,15 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 --   }
 -- makeLenses ''LexerState
 -- makePrettyRecord ''LexerState
--- 
+--
 -- lexerState₀ ∷ ParserInput t → LexerState t
 -- lexerState₀ = LexerState null null
--- 
+--
 -- type LexerM t = StateT (LexerState t) 𝑂
--- 
+--
 -- runLexer ∷ LexerState t → LexerM t a → 𝑂 (LexerState t ∧ a)
 -- runLexer = runStateT
--- 
+--
 -- lAdvance ∷ LexerM t (ParserToken t)
 -- lAdvance = do
 --   pi ← getL lexerStateInputL
@@ -384,12 +384,12 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 --       lAdvance
 --     else do
 --       return $ ParserToken x sk tc ts
--- 
+--
 -- lRecord ∷ ParserToken t → LexerM t ()
 -- lRecord t = do
 --   modifyL lexerStateContextL $ \ pc → pc ⧺ parserTokenContext t
 --   putL lexerStateSuffixL $ parserTokenSuffix t
--- 
+--
 -- interpLexer ∷ ∀ t a. (Ord t) ⇒ Lexer t a → LexerM t (𝔹 ∧ a)
 -- interpLexer l₀ = loop null l₀
 --   where
@@ -407,8 +407,8 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 --            modifyL lexerStateContextL $ formatParserContext fm
 --            return $ sk :* f ts
 --       ]
--- 
--- 
+--
+--
 -- tokenize ∷ ∀ t a. (Ord t) ⇒ Lexer t a → 𝑆 (ParserToken t) → Doc ∨ 𝑆 (ParserToken a)
 -- tokenize l ts = mapInr (stream ∘ vecS ∘ fst) $ loop null $ lexerState₀ $ parserInput₀ ts
 --   where
@@ -427,39 +427,39 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 --           ts' :* ps' ← loop (pp ⧺ parserContextDisplayR pc) σ'
 --           let t' = ParserToken x sk pc ps'
 --           return $ (ts' ⧺ single t') :* (parserContextDisplayL pc ⧺ ps')
--- 
+--
 -- lUnit ∷ ℕ64 → Formats → 𝔹 → (𝐼S t → a) → Lexer t a
 -- lUnit n fm sk f = Lexer dø Null $ AddNull $ LexerResult n fm sk f
--- 
+--
 -- lOneThen ∷ (Ord t) ⇒ t → Lazy (Lexer t a) → Lexer t a
 -- lOneThen t l = Lexer (t ↦ l) Null Null
--- 
+--
 -- lSatisfyThen ∷ (t → 𝔹) → (() → Lexer t a ) → Lexer t a
 -- lSatisfyThen f l = Lexer dø (AddNull $ \ t → if f t then l () else null) Null
--- 
+--
 -- lWord ∷ (Ord t,Eq t) ⇒ ℕ64 → Formats → (s → 𝐼 t) → (𝐼S t → s) → s → Lexer t s
 -- lWord n fm to fr ts = foldrOnFrom (to ts) (lUnit n fm False fr) $ \ c cp → lOneThen c $ Lazy cp
--- 
+--
 -- -- lSatisfies ∷ ℕ64 → Formats → (t → 𝔹) → Lexer t (𝐼S t)
 -- -- lSatisfies n fm f = Lexer dø (AddNull $ \ x → if f x then lUnit n fm False else null) Null
--- 
+--
 -- -- lMany ∷ (Ord t) ⇒ ℕ64 → Formats → 𝔹 → Lexer t a → b → (a → b → b) → Lexer t b
 -- -- lMany n fm sk l i f =
 -- --   let ~l' = map (const i) (lUnit n fm sk) ⧺ (map (\ (x :* xs) → f x xs) (l ⨟ l'))
 -- --   in l'
--- 
+--
 -- lWhitespace ∷ ℕ64 → Lexer ℂ 𝕊
--- lWhitespace n = 
+-- lWhitespace n =
 --   let l = (lSatisfyThen isSpace $ \ () → l) ⧺ lUnit n null True stringS
 --   in lSatisfyThen isSpace $ const l
--- 
+--
 -- lName ∷ ℕ64 → Lexer ℂ 𝕊
 -- lName n =
 --   let l = (lSatisfyThen (\ c → joins [isLetter c,isNumber c,c ∈ pow "_-'′"]) $ \ () → l) ⧺ lUnit n null False stringS
 --   in lLexer dø (AddNull $ \ c → if isLetter c then l else null) Null
--- 
+--
 -- lComment ∷ ℕ64 → Lexer ℂ 𝕊
--- lComment n = 
+-- lComment n =
 --   let nl = lWord n null iter stringS "\n"
 --   in undefined
 
@@ -478,21 +478,21 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 -- LOH -- Make it look like old "fast" parser where when done you get a LexerM
 -- not just an a ; get that working and benchmarked first.
 
--- 
--- 
--- 
--- 
+--
+--
+--
+--
 -- -- import UVMHS.Core
--- -- 
+-- --
 -- -- import UVMHS.Lib.Pretty
--- -- 
+-- --
 -- -- import UVMHS.Lib.Parser.ParserContext
 -- -- import UVMHS.Lib.Parser.ParserInput
--- -- 
+-- --
 -- -- ----------------
 -- -- -- LexerState --
 -- -- ----------------
--- -- 
+-- --
 -- -- data LexerState t = LexerState
 -- --   { lexerStateContext ∷ ParserContext
 -- --   , lexerStateSuffix ∷ WindowL Doc Doc
@@ -500,21 +500,21 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 -- --   }
 -- -- makeLenses ''LexerState
 -- -- makePrettyRecord ''LexerState
--- -- 
+-- --
 -- -- lexerState₀ ∷ ParserInput t → LexerState t
 -- -- lexerState₀ = LexerState null
--- -- 
+-- --
 -- -- -----------
 -- -- -- Lexer --
 -- -- -----------
--- -- 
+-- --
 -- -- newtype Lexer t a = Lexer { unLexer ∷ StateT (LexerState t) 𝑂 a }
--- --   deriving 
+-- --   deriving
 -- --   ( Functor,Return,Bind,Monad
 -- --   , MonadFail
 -- --   , MonadState (LexerState t)
 -- --   )
--- -- 
+-- --
 -- -- lAdvance ∷ Lexer t (AddBot Loc ∨ ParserToken t)
 -- -- lAdvance = do
 -- --   pi ← getL parserStateInputL
@@ -526,16 +526,16 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 -- --       pc ← getL parserStateContextL
 -- --       return $ Inr $ ParserToken x False (formatParserContext fmt tc) ts
 -- -- import UVMHS.Core
--- -- 
+-- --
 -- -- import UVMHS.Lib.Pretty
--- -- 
+-- --
 -- -- import UVMHS.Lib.Parser.ParserContext
 -- -- import UVMHS.Lib.Parser.ParserInput
--- -- 
+-- --
 -- -- ----------------
 -- -- -- LexerState --
 -- -- ----------------
--- -- 
+-- --
 -- -- data LexerState t = LexerState
 -- --   { lexerStateContext ∷ ParserContext
 -- --   , lexerStateSuffix ∷ WindowL Doc Doc
@@ -543,21 +543,21 @@ lWhitespace n = string ^$ oneOrMore $ lsat n null isSpace
 -- --   }
 -- -- makeLenses ''LexerState
 -- -- makePrettyRecord ''LexerState
--- -- 
+-- --
 -- -- lexerState₀ ∷ ParserInput t → LexerState t
 -- -- lexerState₀ = LexerState null
--- -- 
+-- --
 -- -- -----------
 -- -- -- Lexer --
 -- -- -----------
--- -- 
+-- --
 -- -- newtype Lexer t a = Lexer { unLexer ∷ StateT (LexerState t) 𝑂 a }
--- --   deriving 
+-- --   deriving
 -- --   ( Functor,Return,Bind,Monad
 -- --   , MonadFail
 -- --   , MonadState (LexerState t)
 -- --   )
--- -- 
+-- --
 -- -- lAdvance ∷ Lexer t (AddBot Loc ∨ ParserToken t)
 -- -- lAdvance = do
 -- --   pi ← getL parserStateInputL

@@ -27,10 +27,10 @@ type ULCExpSrc = ULCExp SrcCxt
 type ULCExpRaw = ULCExp ()
 
 lexULCExp ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexULCExp = 
-  lexerBasic (list ["(",")","->","→","^","↑",":"]) 
-             (list ["lam","λ"]) 
-             (list ["glbl","𝔤","meta","𝔪"]) 
+lexULCExp =
+  lexerBasic (list ["(",")","->","→","^","↑",":"])
+             (list ["lam","λ"])
+             (list ["glbl","𝔤","meta","𝔪"])
              null
 
 pULCExp ∷ CParser TokenBasic ULCExpSrc
@@ -65,7 +65,7 @@ pULCExp = ULCExp ^$ fmixfixWithContext "exp" $ concat
       xO ← cpOptional $ cpVar
       void $ concat $ map cpSyntax ["->","→"]
       return $ \ e → Lam_ULC xO $ ULCExp e
-  , fmixInfixL pAPP $ return $ \ e₁ e₂ → 
+  , fmixInfixL pAPP $ return $ \ e₁ e₂ →
       App_ULC (ULCExp e₁) $ ULCExp e₂
   ]
 

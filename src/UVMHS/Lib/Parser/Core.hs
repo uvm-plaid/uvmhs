@@ -53,8 +53,8 @@ parserState₀ = ParserState null null null null $ AddBT bot
 
 -- # Parser
 
-newtype Parser t a = Parser { unParser ∷ ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a } 
-  deriving 
+newtype Parser t a = Parser { unParser ∷ ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a }
+  deriving
   ( Functor,Return,Bind,Monad
   , MonadFail
   , MonadReader ParserEnv
@@ -97,7 +97,7 @@ pGetContext = do
   pc ← getL parserStateContextL
   ps ← getL parserStateSuffixL
   return $ (pp ⧺ parserContextDisplayR pk) :* pc :* ps
-  
+
 pGetContextRendered ∷ Parser t SrcCxt
 pGetContextRendered = do
   pp :* pc :* ps ← pGetContext
@@ -170,7 +170,7 @@ pPluck = do
 pRecord ∷ ParserToken t → Parser t ()
 pRecord t = do
   modifyL parserStateContextL $ \ c → c ⧺ parserTokenContext t
-  putL parserStateSuffixL $ parserTokenSuffix t 
+  putL parserStateSuffixL $ parserTokenSuffix t
 
 pEnd ∷ Parser t ()
 pEnd = do
@@ -206,7 +206,7 @@ pShaped {- msg -} sh = do
 
 pSatisfies ∷ {- 𝕊 → -} (t → 𝔹) → Parser t t
 pSatisfies {- msg -} p = pShaped {- msg -} $ \ x → case p x of
-  True → Some x 
+  True → Some x
   False → None
 
 pDie ∷ {- 𝕊 → -} Parser t a

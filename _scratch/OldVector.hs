@@ -64,7 +64,7 @@ idx𝕍 ∷ 𝕍 a → ℕ64 → a
 idx𝕍 (𝕍 a) ι = a BArr.! ι
 
 idx𝕍𝑂 ∷ 𝕍 a → ℕ64 → 𝑂 a
-idx𝕍𝑂 a ι 
+idx𝕍𝑂 a ι
   | idxOK𝕍 a ι = Some $ idx𝕍 a ι
   | otherwise = None
 
@@ -74,8 +74,8 @@ stream𝕍 xs = 𝑆 (𝕟64 0) $ \ ι → do
   return $ x :* succ ι
 
 size𝕍 ∷ 𝕍 a → ℕ64
-size𝕍 (𝕍 a) = 
-  let (ιᴮ,ιᵀ) = BArr.bounds a 
+size𝕍 (𝕍 a) =
+  let (ιᴮ,ιᵀ) = BArr.bounds a
   in if ιᴮ > ιᵀ then zero else ιᵀ + one
 
 map𝕍 ∷ (a → b) → 𝕍 a → 𝕍 b
@@ -102,13 +102,13 @@ emptyChunk n = repeat (nat n) (𝕟8 0)
 
 joinBytes ∷ (ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8) → ℕ64
 joinBytes (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈) =
-         HS.shiftL (HS.fromIntegral b₁ ∷ ℕ64) (HS.fromIntegral  0 ∷ HS.Int) 
-  HS..|. HS.shiftL (HS.fromIntegral b₂ ∷ ℕ64) (HS.fromIntegral  8 ∷ HS.Int) 
-  HS..|. HS.shiftL (HS.fromIntegral b₃ ∷ ℕ64) (HS.fromIntegral 16 ∷ HS.Int) 
+         HS.shiftL (HS.fromIntegral b₁ ∷ ℕ64) (HS.fromIntegral  0 ∷ HS.Int)
+  HS..|. HS.shiftL (HS.fromIntegral b₂ ∷ ℕ64) (HS.fromIntegral  8 ∷ HS.Int)
+  HS..|. HS.shiftL (HS.fromIntegral b₃ ∷ ℕ64) (HS.fromIntegral 16 ∷ HS.Int)
   HS..|. HS.shiftL (HS.fromIntegral b₄ ∷ ℕ64) (HS.fromIntegral 24 ∷ HS.Int)
-  HS..|. HS.shiftL (HS.fromIntegral b₅ ∷ ℕ64) (HS.fromIntegral 32 ∷ HS.Int) 
-  HS..|. HS.shiftL (HS.fromIntegral b₆ ∷ ℕ64) (HS.fromIntegral 40 ∷ HS.Int) 
-  HS..|. HS.shiftL (HS.fromIntegral b₇ ∷ ℕ64) (HS.fromIntegral 48 ∷ HS.Int) 
+  HS..|. HS.shiftL (HS.fromIntegral b₅ ∷ ℕ64) (HS.fromIntegral 32 ∷ HS.Int)
+  HS..|. HS.shiftL (HS.fromIntegral b₆ ∷ ℕ64) (HS.fromIntegral 40 ∷ HS.Int)
+  HS..|. HS.shiftL (HS.fromIntegral b₇ ∷ ℕ64) (HS.fromIntegral 48 ∷ HS.Int)
   HS..|. HS.shiftL (HS.fromIntegral b₈ ∷ ℕ64) (HS.fromIntegral 56 ∷ HS.Int)
 
 splitBytes ∷ ℕ64 → (ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8)
@@ -147,7 +147,7 @@ instance Chunky 𝔹 where
   fromChunk g = do
     b ← g
     return $ case b ≡ 𝕟8 0 of
-      True → False 
+      True → False
       False → True
   toChunk b = toChunk $ case b of
     False → 𝕟8 0
@@ -249,7 +249,7 @@ idx𝕌 ∷ ∀ a. (Chunky a) ⇒ 𝕌 a → ℕ64 → a
 idx𝕌 (𝕌 a) i = evalState (rawIdx𝕌 @ a P i) $ fromChunk $ chunkIOBytes a
 
 idx𝕌𝑂 ∷ (Chunky a) ⇒ 𝕌 a → ℕ64 → 𝑂 a
-idx𝕌𝑂 a i 
+idx𝕌𝑂 a i
   | idxOK𝕌 a i = Some $ idx𝕌 a i
   | otherwise = None
 
@@ -272,9 +272,9 @@ streamBytes𝕌 (𝕌 a) =
 -- examples --
 
 corelib_vector_e1 ∷ 𝕌 (ℕ64 ∨ (ℕ64 ∧ ℕ64))
-corelib_vector_e1 = uvec $ mapOn (upTo 10) $ \ x → 
+corelib_vector_e1 = uvec $ mapOn (upTo 10) $ \ x →
   case even x of
-    True → Inl $ 𝕟64 x 
+    True → Inl $ 𝕟64 x
     False → Inr $ 𝕟64 x :* 𝕟64 99
 
 corelib_vector_e2 ∷ 𝕌 ℂ
@@ -282,5 +282,3 @@ corelib_vector_e2 = uvec ['a','b','c','d','e','f']
 
 corelib_vector_e3 ∷ 𝕌 𝔹
 corelib_vector_e3 = uvec $ map (elimChoice even $ even ∘ fst) $ iter corelib_vector_e1
-
-

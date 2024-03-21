@@ -8,12 +8,12 @@ import UVMHS.Lib.Sep
 import UVMHS.Lib.Pretty.Annotation
 import UVMHS.Lib.Pretty.Common
 
-data RenderUTEnv = RenderUTEnv 
+data RenderUTEnv = RenderUTEnv
   { renderUTEnvUnderFormat ∷ 𝑂 (ℂ ∧ Formats) }
 makeLenses ''RenderUTEnv
 
 renderUTEnv₀ ∷ RenderUTEnv
-renderUTEnv₀ = RenderUTEnv 
+renderUTEnv₀ = RenderUTEnv
   { renderUTEnvUnderFormat = None }
 
 data RenderUTState = RenderUTState
@@ -95,7 +95,7 @@ annotateRenderUT (Annotation fm ut) = mapOut (annotateSummaryO fm) ∘ mapEnvL r
 
 compileRenderUT ∷ TreeI → RenderUT
 compileRenderUT rd = onRenderUT (\ xM → xM ≫ renderUndertags) $ un𝑇V rd fₑ fₐ
-  where 
+  where
     fₑ = RenderUT ∘ eachWith renderChunkUndertags
     fₐ = onRenderUT ∘ annotateRenderUT
 

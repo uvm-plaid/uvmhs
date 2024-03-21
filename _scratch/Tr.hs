@@ -15,7 +15,7 @@ data TrI h o a where
 data ExTr o a where
   ExTr ∷ ∀ h o a. Tr h o a → ExTr o a
 
-data ExTallTr h o a where 
+data ExTallTr h o a where
   EqTlTr ∷ ∀ h o a. Tr h o a → ExTallTr h o a
   SuccTr ∷ ∀ h o a. Tr h o a → Tr h o a → ExTallTr h o a
 
@@ -89,7 +89,7 @@ searchTr s t c = case s $ sryTr t of
   R → NotFoundTr $ PositionTr Right t c
   C → searchTrI s (tr t) c
   N → error "search direction should never be N"
-  
+
 searchTrI ∷ (o → Search) → TrI hᴵ o a → TrK hᴵ hᴼ o a → SearchTr hᴼ o a
 searchTrI _ (Tr0 x) c = FoundTr x c
 searchTrI s (Tr2 tˡ tʳ) c = case (s $ sryTr tˡ,s $ sryTr tʳ) of
@@ -166,7 +166,7 @@ snocTr ∷ (Append o,Summary o a) ⇒ Tr h o a → a → ExTallTr h o a
 snocTr t x = snocTrK t x TopTr
 
 unconsTr ∷ (Append o) ⇒ Tr h o a → a ∧ ExShortTr h o a
-unconsTr t = 
+unconsTr t =
   let x :* c = locFstTr t TopTr
   in x :* balHoleTr c
 
@@ -259,4 +259,3 @@ streamTr t = 𝑆 (Some $ locFstTr𝑆 t TopTr𝑆) $ \case
   Some (x :* c) → Some (x :* nextTr𝑆 c)
 
 instance ToStream a (Tr h o a) where stream = streamTr
-

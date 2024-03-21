@@ -6,7 +6,7 @@ import UVMHS.Core
 --   definitions uses a GADT to capture chaining `a → m b` with `b → m c` as a
 --   `Pipeline` from `a` to `c`, and where `b` ends up existentially quantified
 --   in the chain.
---   
+--
 --   A `Pipeline` 𝒸 m i a b` imposes constraint `𝒸` on all intermediate result
 --   types of monadic computations in the list, annotates each function in the
 --   list with a value of type `i`, and ultimately consumes a value of type `a`

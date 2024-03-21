@@ -37,7 +37,7 @@ instance (Ord u,Zero u) ⇒ Monoid (RegexResult o u)
 instance (Zero u) ⇒ Eps (RegexResult o u) where
   eps = RegexResult zero null None zero
 instance (Ord u,Plus u) ⇒ Seq (RegexResult o u) where
-  RegexResult l₁ fm₁ o₁ u₁ ▷ RegexResult l₂ fm₂ o₂ u₂ = 
+  RegexResult l₁ fm₁ o₁ u₁ ▷ RegexResult l₂ fm₂ o₂ u₂ =
     RegexResult (l₁ ⩏ l₂) (fm₁ ⧺ fm₂) (first o₁ o₂) (u₁ + u₂)
 instance (Ord u,Additive u) ⇒ Seqoid (RegexResult o u)
 
@@ -50,9 +50,9 @@ newtype RegexInfo o u = RegexInfo
   } deriving (Eq,Ord,Show)
 makePrettySum ''RegexInfo
 
-instance (Zero u) ⇒ Null (RegexInfo o u) where 
+instance (Zero u) ⇒ Null (RegexInfo o u) where
   null = RegexInfo None
-instance (Ord u) ⇒ Append (RegexInfo o u) where 
+instance (Ord u) ⇒ Append (RegexInfo o u) where
   RegexInfo rO₁ ⧺ RegexInfo rO₂ = RegexInfo $ case (rO₁,rO₂) of
     (None,None) → None
     (None,Some r₂) → Some r₂
@@ -164,7 +164,7 @@ snocEpsRegexU r = \case
   AtomR r' a → AtomR (r' ▷ r) a
   SumsR es → SumsR $ pow $ map (consEpsRegex r) $ iter es
   SeqsR Nil → NullR
-  SeqsR (e :& es) → 
+  SeqsR (e :& es) →
     let (es' :* e') = swivelR e es
         e'' = snocEpsRegex r e'
         (e''' :* es'') = swivelL es' e''
@@ -180,7 +180,7 @@ sumRegex e₁@(Regex (𝐴 i₁ e₁')) e₂@(Regex (𝐴 i₂ e₂')) = Regex $
   (SumsR es₁,_) → SumsR $ es₁ ∪ single e₂
   (_,SumsR es₂) → SumsR $ single e₁ ∪ es₂
   _ → SumsR $ pow [e₁,e₂]
-  
+
 seqRegex ∷ (Ord c,Ord t,Ord o,Ord u,Additive u) ⇒ Regex c t o u → Regex c t o u → Regex c t o u
 seqRegex e₁@(Regex (𝐴 i₁ e₁')) e₂@(Regex (𝐴 i₂ e₂')) = Regex $ 𝐴 (i₁ ▷ i₂) $ case (e₁',e₂') of
   (NullR,_) → NullR
@@ -215,7 +215,7 @@ derRegex xc e₀ = case extract $ unRegex e₀ of
 derRegexAtom ∷ (Ord c,Ord t,Classified c t,Ord o,Ord u,Additive u) ⇒ t ∨ c → RegexAtom c t o u → Regex c t o u
 derRegexAtom xc = \case
   TokRA t → case xc of
-    Inl t' 
+    Inl t'
       | t ≡ t' → eps
       | otherwise → null
     Inr _ → null
@@ -242,7 +242,7 @@ derRegexSequence xc (e@(Regex (𝐴 i _)) :& es) = case regexInfoResult i of
     ]
 
 -- Literals --
-  
+
 regexLits ∷ (Ord t) ⇒ Regex c t o u → 𝑃 t
 regexLits e₀ = case extract $ unRegex e₀ of
   NullR → pø
@@ -287,7 +287,7 @@ compileRegex ∷ ∀ c t o u. (Pretty t,Pretty o,Pretty u,Ord c,Ord t,Classified
 compileRegex e₀ =
   let RegexState _ _ tr re de :* n = runState regexState₀ $ compile e₀
   in DFA lits n (map vecDΩ tr) (vecDΩ re) $ vecDΩ de
-  where 
+  where
     lits ∷ 𝑃 t
     lits = regexLits e₀
     codes ∷ 𝑃 (t ∨ c)
@@ -326,8 +326,8 @@ data Lexer c t o u w = Lexer
   , lexerInitState ∷ u
   }
 
-tokenize ∷ 
-  ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
+tokenize ∷
+  ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
   ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (PreParserToken w)
 tokenize (Lexer dfas f u₀) so ts₀ = vecC ^$ oloop u₀ (dfas u₀) null $ stream ts₀
   where
@@ -398,30 +398,30 @@ tokenize (Lexer dfas f u₀) so ts₀ = vecC ^$ oloop u₀ (dfas u₀) null $ st
               iloop n' σ' (Some (t :* σ)) rO'
 
 tokenizeFIO ∷
-  ∀ c t o u w w'. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
+  ∀ c t o u w w'. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
   ⇒ Lexer c t o u w → 𝕊 → (𝕍 (PreParserToken w) → 𝕍 (PreParserToken w')) → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken w'))
 tokenizeFIO l so f pi = case map f $ tokenize l so pi of
   Inl d → pprint d ≫ abortIO
   Inr xs → return $ finalizeTokens xs
 
-tokenizeIO ∷ 
-  ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u) 
+tokenizeIO ∷
+  ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
   ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken w))
 tokenizeIO l so = tokenizeFIO l so id
 
-tokenizeFIOMain ∷ 
-  ∀ c t o u w w'. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty w') 
+tokenizeFIOMain ∷
+  ∀ c t o u w w'. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty w')
   ⇒ Lexer c t o u w → 𝕊 → (𝕍 (PreParserToken w) → 𝕍 (PreParserToken w')) → 𝕍 (ParserToken t) → IO ()
 tokenizeFIOMain l so f pi = do
   xs ← tokenizeFIO l so f pi
-  pprint $ ppVertical 
+  pprint $ ppVertical
     [ ppHeader "Success"
     , pretty $ mapOn xs $ \ x → parserTokenValue x :* parserContextLocRange (parserTokenContext x)
     ]
   pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ parserTokenContext) xs
 
 tokenizeIOMain ∷
-  ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty w) 
+  ∀ c t o u w. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u,Pretty w)
   ⇒ Lexer c t o u w → 𝕊 → 𝕍 (ParserToken t) → IO ()
 tokenizeIOMain l so = tokenizeFIOMain l so id
 
@@ -454,7 +454,7 @@ lNl ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex CharClass ℂ o u
 lNl = oom $ classRegex NewlineClass
 
 lName ∷ (Zero u,Ord u,Ord o,Additive u) ⇒ Regex CharClass ℂ o u
-lName = 
+lName =
   let begTok = concat
         [ classRegex LetterClass
         , concat $ map tokRegex $ iter $ 𝕤 "_'′″‴"
@@ -464,7 +464,7 @@ lName =
         , classRegex NumberClass
         ]
       midTok = begTok ⧺ endTok ⧺ tokRegex '-'
-  in 
+  in
   sequence
     [ begTok
     , opt $ sequence
@@ -546,7 +546,7 @@ lComment = sequence
 
 lCommentMLOpen ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lCommentMLOpen = sequence
-  [ lWord "{-" 
+  [ lWord "{-"
   , uepsRegex one
   , fepsRegex $ formats [IT,FG grayLight]
   , lepsRegex $ 𝕟64 100
@@ -706,42 +706,42 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
             prefixLocRangeBumpedEnd = locRangeEnd prefixLocRangeBumped
         in
         if
-        | preParserTokenSkip t → 
-          loopUnanchored (prefix ⧺ single t) 
-                         (prefixLocRangeBumped ⊔ bumpColEnd₂ (parserContextLocRange $ preParserTokenContext t)) 
-                         isFreshBlock 
+        | preParserTokenSkip t →
+          loopUnanchored (prefix ⧺ single t)
+                         (prefixLocRangeBumped ⊔ bumpColEnd₂ (parserContextLocRange $ preParserTokenContext t))
+                         isFreshBlock
                          ts'
-        | {- not (parserTokenSkip t) ⩓ -} 
+        | {- not (parserTokenSkip t) ⩓ -}
           isFreshBlock → concat
-            -- 
+            --
             --     ... <block> <token>
             --                 ^^^^^^^
             [ prefix
             , single $ syntheticToken prefixLocRangeBumpedEnd OpenIC
             , single t
-            , loopAnchored null 
-                           (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd) 
-                           (isBlock $ preParserTokenValue t) 
-                           False 
-                           locₜ 
-                           null 
+            , loopAnchored null
+                           (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd)
+                           (isBlock $ preParserTokenValue t)
+                           False
+                           locₜ
+                           null
                            ts'
             ]
-        | {- not (parserTokenSkip t) ⩓ not (isFreshBlock t) ⩓ -} 
+        | {- not (parserTokenSkip t) ⩓ not (isFreshBlock t) ⩓ -}
           otherwise → concat
           --
           --     ... <token>
           --         ^^^^^^^
           [ prefix
           , single t
-          , loopUnanchored null 
-                           (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd) 
-                           (isBlock $ preParserTokenValue t) 
+          , loopUnanchored null
+                           (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd)
+                           (isBlock $ preParserTokenValue t)
                            ts'
           ]
     loopAnchored ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → AddBT Loc → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
     loopAnchored prefix prefixLocRangeBumped isFreshBlock isAfterNewline anchor anchors ts = case un𝑆 ts () of
-      None → 
+      None →
         let loop' ∷ 𝐿 (AddBT Loc) → 𝐼C (PreParserToken t)
             loop' anchors' =
               if anchors' ≡ anchors₀
@@ -754,25 +754,25 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
                   ]
             -- () = pptrace $ ppHorizontal [ppBD $ ppString "COUNT",pretty $ count prefix]
         in concat
-          [ if isFreshBlock 
+          [ if isFreshBlock
               then concat
-                [ single $ syntheticToken (locRangeBegin prefixLocRangeBumped) OpenIC 
-                , single $ syntheticToken (locRangeBegin prefixLocRangeBumped) CloseIC 
+                [ single $ syntheticToken (locRangeBegin prefixLocRangeBumped) OpenIC
+                , single $ syntheticToken (locRangeBegin prefixLocRangeBumped) CloseIC
                 ]
               else
               null
-          , loop' (anchor :& anchors) 
+          , loop' (anchor :& anchors)
           , prefix
           ]
-      Some (t :* ts') → 
+      Some (t :* ts') →
         let locₜ = locRangeBegin $ parserContextLocRange $ preParserTokenContext t
             prefixLocRangeBumpedEnd = locRangeEnd prefixLocRangeBumped
             prefixLocRangeBumpedBegin = locRangeBegin prefixLocRangeBumped
             recordTokenKeepGoing ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝐼C (PreParserToken t)
-            recordTokenKeepGoing prefix' prefixLocRangeBumped' weHaveANewAnchor = 
+            recordTokenKeepGoing prefix' prefixLocRangeBumped' weHaveANewAnchor =
               let prefixLocRangeBumpedEnd' = locRangeEnd prefixLocRangeBumped'
-                  anchor' :* anchors' = 
-                    if weHaveANewAnchor 
+                  anchor' :* anchors' =
+                    if weHaveANewAnchor
                     --
                     --     anchor ->| <block> <token>
                     --                        ^^^^^^^
@@ -791,27 +791,27 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
                 -- record the token
                 , single t
                 -- keep going with new anchor
-                , loopAnchored null 
-                               (LocRange prefixLocRangeBumpedEnd' prefixLocRangeBumpedEnd') 
-                               (isBlock $ preParserTokenValue t) 
-                               False 
-                               anchor' 
-                               anchors' 
+                , loopAnchored null
+                               (LocRange prefixLocRangeBumpedEnd' prefixLocRangeBumpedEnd')
+                               (isBlock $ preParserTokenValue t)
+                               False
+                               anchor'
+                               anchors'
                                ts'
                 ]
         in
-        if 
+        if
         | preParserTokenSkip t →
          -- this is a skip token; add it to the list
-         loopAnchored (prefix ⧺ single t) 
-                      (prefixLocRangeBumped ⊔ bumpColEnd₂ (parserContextLocRange $ preParserTokenContext t)) 
-                      isFreshBlock 
-                      (isAfterNewline ⩔ isNewline (preParserTokenValue t)) 
-                      anchor 
-                      anchors 
+         loopAnchored (prefix ⧺ single t)
+                      (prefixLocRangeBumped ⊔ bumpColEnd₂ (parserContextLocRange $ preParserTokenContext t))
+                      isFreshBlock
+                      (isAfterNewline ⩔ isNewline (preParserTokenValue t))
+                      anchor
+                      anchors
                       ts'
-        | {- not (parserTokenSkip t) ⩓ -} 
-          not isAfterNewline → 
+        | {- not (parserTokenSkip t) ⩓ -}
+          not isAfterNewline →
             --
             --     anchor ->|... <token>
             --                   ^^^^^^^
@@ -822,7 +822,7 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
             --                 ^^^^^^^
             -- continue as normal
             recordTokenKeepGoing prefix prefixLocRangeBumped isFreshBlock
-        | {- not (parserTokenSkip t) ⩓ isAfterNewline ⩓ -} 
+        | {- not (parserTokenSkip t) ⩓ isAfterNewline ⩓ -}
           map locCol locₜ > map locCol anchor →
             --
             --     anchor ->|...
@@ -830,7 +830,7 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
             --                  ^^^^^^^
             -- continue as normal
             recordTokenKeepGoing prefix prefixLocRangeBumped isFreshBlock
-        | {- not (parserTokenSkip t) ⩓ isAfterNewline ⩓ -} 
+        | {- not (parserTokenSkip t) ⩓ isAfterNewline ⩓ -}
           map locCol locₜ ≡ map locCol anchor → concat
           --
           --     anchor ->|...
@@ -838,10 +838,10 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
           --               ^^^^^^^
           -- this is logically a “newline”
           -- if we just opened a new block, open and close it
-          [ if isFreshBlock 
+          [ if isFreshBlock
             then concat
-              [ single $ syntheticToken prefixLocRangeBumpedBegin OpenIC 
-              , single $ syntheticToken prefixLocRangeBumpedBegin CloseIC 
+              [ single $ syntheticToken prefixLocRangeBumpedBegin OpenIC
+              , single $ syntheticToken prefixLocRangeBumpedBegin CloseIC
               ]
             else null
           -- record the prefix
@@ -851,7 +851,7 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
           -- keep going
           , recordTokenKeepGoing null (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd) False
           ]
-        | {- not (parserTokenSkip t) ⩓ isAfterNewline ⩓ -} 
+        | {- not (parserTokenSkip t) ⩓ isAfterNewline ⩓ -}
           map locCol locₜ < map locCol anchor → concat
           --
           --     anchor ->|...
@@ -859,15 +859,15 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
           --         ^^^^^^^
           -- this is logically a “close”
           -- if we just opened a new block, close it
-          [ if isFreshBlock 
+          [ if isFreshBlock
             then concat
-              [ single $ syntheticToken prefixLocRangeBumpedBegin OpenIC 
-              , single $ syntheticToken prefixLocRangeBumpedBegin CloseIC 
+              [ single $ syntheticToken prefixLocRangeBumpedBegin OpenIC
+              , single $ syntheticToken prefixLocRangeBumpedBegin CloseIC
               ]
             else null
           -- record a “close”
           , single $ syntheticToken prefixLocRangeBumpedBegin CloseIC
-          -- restart this token with new anchor 
+          -- restart this token with new anchor
           , loop prefix prefixLocRangeBumped False isAfterNewline anchors ts
           ]
         | otherwise → error "impossible"

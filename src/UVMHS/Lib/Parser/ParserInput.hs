@@ -40,7 +40,7 @@ renderEOFError ∷ Doc
 renderEOFError = ppErr "EOF"
 
 eofContext ∷ AddBT Loc → ParserContext
-eofContext l = 
+eofContext l =
   let lr = LocRange l l
   in ParserContext lr (eWindowL renderEOFDisplay) (eWindowR renderEOFDisplay) $ eWindowR renderEOFError
 
@@ -56,9 +56,9 @@ charContext l c =
   in ParserContext lr (eWindowL d) (eWindowR d) $ eWindowR d
 
 preTokens ∷ 𝕊 → 𝕍 (PreParserToken ℂ)
-preTokens cs = 
+preTokens cs =
   vecC $ snd $ foldOnFrom cs (bot :* null @(𝐼C _)) $ \ c (loc :* ts) →
-    let (loc',pc) = 
+    let (loc',pc) =
           if c ≡ '\n'
             then (bumpRow₁ loc,nlContext loc)
             else (bumpCol₁ loc,charContext loc c)

@@ -222,8 +222,8 @@ map𝑃 = coerce Set.map
 
 uniques𝑃 ∷ (Ord a,ToIter a t) ⇒ t → 𝐼 a
 uniques𝑃 xs = filterMap id $ appto (iter xs) $ reiter pø𝑃 $ \ x seen →
-  if x ∈♭ seen 
-  then seen :* None 
+  if x ∈♭ seen
+  then seen :* None
   else (single𝑃 x ∪♭ seen) :* Some x
 
 ---------------
@@ -258,7 +258,7 @@ instance (Ord e) ⇒ Set e (𝑃 e) where
   psingle  = psingle𝑃
   padd     = padd𝑃
   prem     = prem𝑃
-  (∈)      = (∈♭) 
+  (∈)      = (∈♭)
   (⊆)      = (⊆♭)
   (∪)      = (∪♭)
   (∩)      = (∩♭)

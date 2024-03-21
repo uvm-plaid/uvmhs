@@ -9,7 +9,7 @@ import UVMHS
 type SType = Annotated FullContext SType_R
 data SType_R =
     Int_ST                --  int
-  | Fun_ST SType SType    -- 
+  | Fun_ST SType SType    --
   deriving (Eq,Ord,Show)
 makePrettySum ''SType_R
 
@@ -49,15 +49,15 @@ makePrettySum ''SCmd_R
 -----------
 
 lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
-lexer = lexerWSBasic 
+lexer = lexerWSBasic
   -- punctuation
-  (list ["(",")",":","=","=>","->"]) 
+  (list ["(",")",":","=","=>","->"])
   -- keywords
   (list ["fun"])
   -- primitives
-  (list ["int"]) 
+  (list ["int"])
   -- operations
-  (list ["+","-","*","<=","<","==","+","*","-","^","!"]) 
+  (list ["+","-","*","<=","<","==","+","*","-","^","!"])
   -- block
   (list [])
 
@@ -114,7 +114,7 @@ pExp = fmixfixWithContext "exp" $ concat
   -- integer
   , fmixTerminal $ Int_SE ^$ cpIntegerWS
   -- binary ops
-  , concat $ mapOn binaryOps $ \ (s :* op :* level :* fy) → 
+  , concat $ mapOn binaryOps $ \ (s :* op :* level :* fy) →
       let mk = case fy of
             NoF → fmixInfix
             LeftF → fmixInfixL
@@ -161,4 +161,3 @@ testParser = parseMain "" $ concat $ inbetween "\n"
   , "f = fun x => fun y =>"
   , "  x + y"
   ]
-
