@@ -20,14 +20,14 @@ pnull = ℙ ""
 pappend ∷ ℙ → ℙ → ℙ
 pappend x y = ℙ $ string $ tohsChars (unℙ x) FP.</> tohsChars (unℙ y)
 
-pfilename ∷ ℙ → ℙ
-pfilename = ℙ ∘ string ∘ FP.takeFileName ∘ tohsChars ∘ unℙ
+pfilename ∷ ℙ → 𝕊
+pfilename = string ∘ FP.takeFileName ∘ tohsChars ∘ unℙ
 
-pbasename ∷ ℙ → ℙ
-pbasename = ℙ ∘ string ∘ FP.takeBaseName ∘ tohsChars ∘ unℙ
+pbasename ∷ ℙ → 𝕊
+pbasename = string ∘ FP.takeBaseName ∘ tohsChars ∘ unℙ
 
 pdirectory ∷ ℙ → ℙ
 pdirectory = ℙ ∘ string ∘ FP.takeDirectory ∘ tohsChars ∘ unℙ
 
-pextension ∷ ℙ → ℙ
-pextension = ℙ ∘ string ∘ FP.takeExtension ∘ tohsChars ∘ unℙ
+pextension ∷ ℙ → 𝕊
+pextension = string ∘ FP.takeExtension ∘ tohsChars ∘ unℙ
