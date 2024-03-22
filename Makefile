@@ -62,3 +62,8 @@ fixity-levels.txt: Makefile $(ALL_HS_FILES)
 .PHONY: count-lines
 count-lines:
 	find src -name "*.hs" | xargs wc -l
+
+.PHONY: local-readme-github
+github-preview:
+	grip --browser
+
