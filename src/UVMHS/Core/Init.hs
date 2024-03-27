@@ -107,6 +107,10 @@ b₁ ⩓ ~b₂ = if b₁ then b₂ else False
 cond ∷ 𝔹 → a → a → a
 cond b ~x ~y = case b of { True → x ; False → y }
 
+-- sometimes convenient to have the arguments in this order
+elim𝔹 ∷ a → a → 𝔹 → a
+elim𝔹 ~x ~y b = cond b x y
+
 ---------------------------
 -- Char and String Types --
 ---------------------------
