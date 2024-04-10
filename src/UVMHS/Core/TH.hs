@@ -29,17 +29,17 @@ instance Apply TH.Exp where (⊙) = TH.AppE
 -- instance Tup TH.Pat where tup = TH.TupP ∘ lazyList
 -- instance Tup TH.Type where tup ts = TH.TupleT (tohs $ intΩ64 $ count ts) ⊙⋆ ts
 
-instance Tup TH.Exp where 
+instance Tup TH.Exp where
   tup es = case list es of
     Nil → TH.ConE '()
     e :& es' → foldOnFrom es' e $ \ e' eᵢ → TH.ConE '(:*) ⊙ eᵢ ⊙ e'
 
-instance Tup TH.Pat where 
+instance Tup TH.Pat where
   tup ps = case list ps of
     Nil → TH.ConP '() [] []
     p :& ps' → foldOnFrom ps' p $ \ p' pᵢ → TH.ConP '(:*) [] [pᵢ,p']
 
-instance Tup TH.Type where 
+instance Tup TH.Type where
   tup ts = case list ts of
     Nil → TH.ConT ''()
     t :& ts' → foldOnFrom ts' t $ \ t' tᵢ → TH.ConT ''(∧) ⊙ tᵢ ⊙ t'
@@ -49,7 +49,7 @@ instance Arrow TH.Type where f ⇨ x = TH.ArrowT ⊙ f ⊙ x
 
 thString ∷ 𝕊 → TH.Exp
 thString = TH.LitE ∘ TH.StringL ∘ lazyList
-      
+
 thConNames ∷ TH.Con → 𝐿 TH.Name
 thConNames (TH.NormalC n _) = single n
 thConNames (TH.RecC n _) = single n
@@ -126,10 +126,10 @@ thLoc𝕊 ∷ TH.Q 𝕊
 thLoc𝕊 = do
   l ← TH.location
   return $ concat
-    [ frhsChars $ TH.loc_module l 
-    , "@" 
-    , show𝕊 $ TH.loc_start l 
-    , ":" 
+    [ frhsChars $ TH.loc_module l
+    , "@"
+    , show𝕊 $ TH.loc_start l
+    , ":"
     , show𝕊 $ TH.loc_end l
     ]
 

@@ -42,13 +42,13 @@ emptyChunk n = replicate (nat n) (𝕟8 0)
 
 joinBytes ∷ (ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8) → ℕ64
 joinBytes (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈) =
-    nat64 b₁ ⋘ 𝕟64  0 
-  ⟇ nat64 b₂ ⋘ 𝕟64  8 
-  ⟇ nat64 b₃ ⋘ 𝕟64 16 
+    nat64 b₁ ⋘ 𝕟64  0
+  ⟇ nat64 b₂ ⋘ 𝕟64  8
+  ⟇ nat64 b₃ ⋘ 𝕟64 16
   ⟇ nat64 b₄ ⋘ 𝕟64 24
-  ⟇ nat64 b₅ ⋘ 𝕟64 32 
-  ⟇ nat64 b₆ ⋘ 𝕟64 40 
-  ⟇ nat64 b₇ ⋘ 𝕟64 48 
+  ⟇ nat64 b₅ ⋘ 𝕟64 32
+  ⟇ nat64 b₆ ⋘ 𝕟64 40
+  ⟇ nat64 b₇ ⋘ 𝕟64 48
   ⟇ nat64 b₈ ⋘ 𝕟64 56
 
 splitBytes ∷ ℕ64 → (ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8)
@@ -88,7 +88,7 @@ instance Chunky 𝔹 where
   fromChunk g = do
     b ← g
     return $ case b ≡ 𝕟8 0 of
-      True → False 
+      True → False
       False → True
   toChunk b = toChunk $ case b of
     False → 𝕟8 0
@@ -101,10 +101,10 @@ instance Chunky ℂ where
     return $ HS.chr $ tohs $ frBitsℤ64 $ joinBytes (b₁,b₂,b₃,b₄,𝕟8 0,𝕟8 0,𝕟8 0,𝕟8 0)
   toChunk c = 𝐼 HS.$ \ (f ∷ ℕ8 → b → (b → b) → b) i 𝓀 →
     let (b₁,b₂,b₃,b₄,_,_,_,_) = splitBytes $ toBitsℤ64 $ frhs $ HS.ord c
-    in 
+    in
       f b₁ i $ \ i' →
-      f b₂ i' $ \ i'' → 
-      f b₃ i'' $ \ i''' → 
+      f b₂ i' $ \ i'' →
+      f b₃ i'' $ \ i''' →
       f b₄ i''' 𝓀
 
 instance Chunky ℕ64 where
@@ -115,7 +115,7 @@ instance Chunky ℕ64 where
     return $ joinBytes (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈)
   toChunk n = 𝐼 HS.$ \ (f ∷ ℕ8 → b → (b → b) → b) i 𝓀 →
     let (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈) = splitBytes n
-    in 
+    in
       f b₁ i $ \ i' →
       f b₂ i' $ \ i'' →
       f b₃ i'' $ \ i''' →

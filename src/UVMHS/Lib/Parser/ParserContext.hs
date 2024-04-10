@@ -16,9 +16,9 @@ data ParserContext = ParserContext
 makeLenses ''ParserContext
 makePrettySum ''ParserContext
 
-instance Null ParserContext where 
+instance Null ParserContext where
   null = ParserContext bot null null null
-instance Append ParserContext where 
+instance Append ParserContext where
   ParserContext l₁ dL₁ dR₁ e₁ ⧺ ParserContext l₂ dL₂ dR₂ e₂ = ParserContext (l₁ ⊔ l₂) (dL₁ ⧺ dL₂) (dR₁ ⧺ dR₂) $ e₁ ⧺ e₂
 instance Monoid ParserContext
 
@@ -47,7 +47,7 @@ instance Pretty SrcCxt where
     , concat
         [ ppAnnotation $ ppString "«"
         , ppAlign $ concat
-            [ renderWindowR pre 
+            [ renderWindowR pre
             , ppUT '^' green $ renderWindowL d
             , renderWindowL pi
             ]
@@ -63,7 +63,7 @@ instance Pretty SrcCxt where
           , ppPun ":"
           , pretty $ succ c
           ]
- 
+
 instance Show SrcCxt where show = tohsChars ∘ ppshow
 
 

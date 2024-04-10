@@ -1,4 +1,4 @@
-module UVMHS.Lib.Pretty 
+module UVMHS.Lib.Pretty
   ( module UVMHS.Lib.Pretty.Annotation
   , module UVMHS.Lib.Pretty.Color
   , module UVMHS.Lib.Pretty.Common

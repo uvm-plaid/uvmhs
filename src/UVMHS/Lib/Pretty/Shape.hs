@@ -25,7 +25,7 @@ import UVMHS.Core
 -- YYYYYY
 -- YYYYYY
 -- ZZZZ
--- 
+--
 -- where:
 -- + XXX:    represented by the length of the first line
 -- + YYYYYY: represented by the maximum length of any line that isn't
@@ -47,8 +47,8 @@ data ShapeM = ShapeM
   } deriving (Eq,Ord,Show)
 makeLenses ''ShapeM
 
-data Shape = 
-    SingleLine {-# UNPACK #-} ℕ64 
+data Shape =
+    SingleLine {-# UNPACK #-} ℕ64
   | MultiLine {-# UNPACK #-} ShapeM
   deriving (Eq,Ord,Show)
 makePrisms ''Shape
@@ -70,7 +70,7 @@ newlineShape ∷ Shape
 newlineShape = MultiLine newlineShapeM
 
 boxShape ∷ ℕ64 → ℕ64 → Shape
-boxShape n nls 
+boxShape n nls
   | nls ≡ zero = SingleLine n
   | otherwise  = MultiLine $ ShapeM n n n nls
 
@@ -86,7 +86,7 @@ shapeNewlines = \case
 
 instance Null Shape where null = SingleLine zero
 instance Append Shape where
-  SingleLine l₁ ⧺ SingleLine l₂ = 
+  SingleLine l₁ ⧺ SingleLine l₂ =
     -- AAA ⧺ XXX = AAAXXX
     SingleLine $ l₁ ⧺ l₂
   SingleLine l₁ ⧺ MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) =
@@ -94,7 +94,7 @@ instance Append Shape where
     --         YY          YY
     --         ZZZZ        ZZZZ
     MultiLine $ ShapeM (l₁ + fl₂) mml₂ ll₂ nls₂
-  MultiLine (ShapeM fl₁ mml₁ ll₁ nls₁) ⧺ SingleLine l₂ = 
+  MultiLine (ShapeM fl₁ mml₁ ll₁ nls₁) ⧺ SingleLine l₂ =
     -- □□□□XXX  ⧺  AAA  =  □□□□XXX
     -- YY                  YY
     -- ZZZZ                ZZZZAAA
@@ -111,11 +111,11 @@ instance Monoid Shape
 instance Bot Shape where bot = SingleLine zero
 instance Join Shape where
   SingleLine l₁ ⊔ SingleLine l₂ = SingleLine $ l₁ ⊔ l₂
-  SingleLine l₁ ⊔ MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) = 
+  SingleLine l₁ ⊔ MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) =
     MultiLine $ ShapeM (l₁ ⊔ fl₂) mml₂ ll₂ nls₂
-  MultiLine (ShapeM fl₁ mml₁ ll₁ nls₁) ⊔ SingleLine l₂ = 
+  MultiLine (ShapeM fl₁ mml₁ ll₁ nls₁) ⊔ SingleLine l₂ =
     MultiLine $ ShapeM (l₂ ⊔ fl₁) mml₁ ll₁ nls₁
-  MultiLine (ShapeM fl₁ mml₁ ll₁ nls₁) ⊔ MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) 
+  MultiLine (ShapeM fl₁ mml₁ ll₁ nls₁) ⊔ MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂)
     | nls₁ > nls₂ = MultiLine $ ShapeM (fl₁ ⊔ fl₂) (mml₁ ⊔ mml₂ ⊔ ll₂) ll₁ nls₁
     | nls₁ < nls₂ = MultiLine $ ShapeM (fl₁ ⊔ fl₂) (mml₁ ⊔ mml₂ ⊔ ll₁) ll₂ nls₂
     | otherwise   = MultiLine $ ShapeM (fl₁ ⊔ fl₂) (mml₁ ⊔ mml₂) (ll₁ ⊔ ll₂) $ nls₁ ⊔ nls₂
@@ -143,7 +143,7 @@ instance Join Shape where
 --     aligned     + non-aligned = aligned
 --     aligned     + aligned     = aligned
 --
--- When the shape is a single line, it is always non-aligned 
+-- When the shape is a single line, it is always non-aligned
 -- (so, aligned = False)
 
 data ShapeA = ShapeA
@@ -159,11 +159,11 @@ instance Append ShapeA where
     let sh₂' =
           if not a₂
           -- ‣ sh₁ is single-line
-          -- ‣ sh₂ is single-line 
+          -- ‣ sh₂ is single-line
           --
           --     □□□□XXX  ⧺  □□□□AAA  =  □□□□XXXAAA
           --
-          -- ‣ sh₁ is single-line 
+          -- ‣ sh₁ is single-line
           -- ‣ sh₂ is multiline non-aligned
           --
           --     □□□□XXX  ⧺  □□□□AAA  =  □□□□XXXAAA
@@ -172,12 +172,12 @@ instance Append ShapeA where
           --
           -- ‣ sh₁ is multiline non-aligned
           -- ‣ sh₂ is single-line
-          -- 
+          --
           --     □□□□XXX  ⧺ □□□□AAA  =  □□□□XXX
-          --     YY                     YY     
+          --     YY                     YY
           --     ZZZZ                   ZZZZAAA
-          -- 
-          -- ‣ sh₁ is multiline non-aligned 
+          --
+          -- ‣ sh₁ is multiline non-aligned
           -- ‣ sh₂ is multiline non-aligned
           --     □□□□XXX  ⧺  □□□□AAA  =  □□□□XXX
           --     YY          BB          YY
@@ -188,12 +188,12 @@ instance Append ShapeA where
           -- ‣ sh₁ is multiline aligned
           -- ‣ sh₂ is single-line
           --
-          --     □□□□XXX   ⧺  □□□□AAA  =  □□□□XXX 
-          --     ⋅⋅⋅⋅YY                   ⋅⋅⋅⋅YY  
+          --     □□□□XXX   ⧺  □□□□AAA  =  □□□□XXX
+          --     ⋅⋅⋅⋅YY                   ⋅⋅⋅⋅YY
           --     ⋅⋅⋅⋅ZZZZ                 ⋅⋅⋅⋅ZZZZAAA
           --
           -- ‣ sh₁ is multiline aligned
-          -- ‣ sh₂ is multiline non-aligned 
+          -- ‣ sh₂ is multiline non-aligned
           --
           --     □□□□XXX   ⧺  □□□□AAA  =  □□□□XXX
           --     ⋅⋅⋅⋅YY       BB          ⋅⋅⋅⋅YY
@@ -205,8 +205,8 @@ instance Append ShapeA where
           -- ‣ sh₁ is single-lined
           -- ‣ sh₂ is multiline aligned
           --
-          --     □□□□XXX  ⧺   □□□□AAA   =  □□□□XXXAAA 
-          --                  ⋅⋅⋅⋅BB       ⋅⋅⋅⋅␣␣␣BB  
+          --     □□□□XXX  ⧺   □□□□AAA   =  □□□□XXXAAA
+          --                  ⋅⋅⋅⋅BB       ⋅⋅⋅⋅␣␣␣BB
           --                  ⋅⋅⋅⋅CCCC     ⋅⋅⋅⋅␣␣␣CCCC
           --
           -- ‣ sh₁ is multiline non-aligned
@@ -219,7 +219,7 @@ instance Append ShapeA where
           --                              ␣␣␣␣CCCC
           --
           -- ‣ sh₁ is multiline aligned
-          -- ‣ sh₂ is multiline aligned 
+          -- ‣ sh₂ is multiline aligned
           --
           --     □□□□XXX   ⧺  □□□□AAA   =  □□□□XXX
           --     ⋅⋅⋅⋅YY       ⋅⋅⋅⋅BB       ⋅⋅⋅⋅YY
@@ -227,7 +227,7 @@ instance Append ShapeA where
           --                               ⋅⋅⋅⋅␣␣␣␣BB
           --                               ⋅⋅⋅⋅␣␣␣␣CCCC
           --
-          else 
+          else
             case sh₂ of
               MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) →
                 MultiLine $ ShapeM fl₂ (shapeLastLength sh₁ + mml₂) (shapeLastLength sh₁ + ll₂) nls₂

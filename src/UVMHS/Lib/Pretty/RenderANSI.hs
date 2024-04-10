@@ -82,7 +82,7 @@ sgrBg = \case
     White        → "107"
   Color8 c → "48;5;" ⧺ show𝕊 c
   Color24 r g b → "48;2;" ⧺ show𝕊 r ⧺ ";" ⧺ show𝕊 g ⧺ ";" ⧺ show𝕊 b
-  
+
 sgrUl ∷ 𝔹 → 𝕊
 sgrUl True = "4"
 sgrUl False = "24"
@@ -97,7 +97,7 @@ sgrIt False = "23"
 
 sgrFormat ∷ Formats → 𝐼A 𝕊
 sgrFormat (Formats fg bg ul bd it) = single $ stringS $ iter
-  [ sgrLeader 
+  [ sgrLeader
   , concat $ inbetween ";" $ mconcat $ map (mzero𝑂 @𝑄) $ iter
       [ sgrFg ^$ fg
       , sgrBg ^$ bg
@@ -125,7 +125,7 @@ renderChunkANSI ∷ ChunkO → 𝐼A 𝕊
 renderChunkANSI = \case
   RawChunkO     n s → 𝐼A n $ single s
   PaddingChunkO n   → 𝐼A n $ single $ string $ replicate (nat n) ' '
-  
+
 formatRenderANSI ∷ Formats → RenderANSIM () → RenderANSIM ()
 formatRenderANSI fm xM = do
   b ← askL ansiEnvDoFormatL
@@ -150,7 +150,7 @@ execRenderANSI = execRenderANSIWith id
 gv_PPRINT_COLOR ∷ IORef 𝔹
 gv_PPRINT_COLOR = io_UNSAFE $ IORef.newIORef True
 
-ppRenderWith ∷ (RenderANSIM () → RenderANSIM ()) 
+ppRenderWith ∷ (RenderANSIM () → RenderANSIM ())
              → (DocAM () → DocAM ())
              → (DocM () → DocM ())
              → Doc → 𝕊
@@ -175,29 +175,29 @@ ppRenderYesFmt ∷ Doc → 𝕊
 ppRenderYesFmt = ppRenderWith (localL ansiEnvDoFormatL True) id id
 
 ppRenderWide ∷ Doc → 𝕊
-ppRenderWide = 
-  ppRenderWith id 
-               (localL docAEnvMaxLineWidthL None 
-                ∘ localL docAEnvMaxRibbonWidthL None) 
+ppRenderWide =
+  ppRenderWith id
+               (localL docAEnvMaxLineWidthL None
+                ∘ localL docAEnvMaxRibbonWidthL None)
                id
 
 ppRenderNarrow ∷ Doc → 𝕊
-ppRenderNarrow = 
-  ppRenderWith id 
-               (localL docAEnvMaxLineWidthL (Some zero) 
-                ∘ localL docAEnvMaxRibbonWidthL (Some zero)) 
+ppRenderNarrow =
+  ppRenderWith id
+               (localL docAEnvMaxLineWidthL (Some zero)
+                ∘ localL docAEnvMaxRibbonWidthL (Some zero))
                id
 
 ppRenderNoFmtWide ∷ Doc → 𝕊
-ppRenderNoFmtWide = 
-  ppRenderWith (localL ansiEnvDoFormatL False) 
+ppRenderNoFmtWide =
+  ppRenderWith (localL ansiEnvDoFormatL False)
                (localL docAEnvMaxLineWidthL None ∘ localL docAEnvMaxRibbonWidthL None)
                id
 
 ppRenderNoFmtNarrow ∷ Doc → 𝕊
-ppRenderNoFmtNarrow = 
-  ppRenderWith (localL ansiEnvDoFormatL False) 
-               (localL docAEnvMaxLineWidthL (Some zero) 
+ppRenderNoFmtNarrow =
+  ppRenderWith (localL ansiEnvDoFormatL False)
+               (localL docAEnvMaxLineWidthL (Some zero)
                 ∘ localL docAEnvMaxRibbonWidthL (Some zero))
                id
 

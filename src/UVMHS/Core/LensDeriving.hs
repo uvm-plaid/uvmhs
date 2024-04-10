@@ -10,7 +10,7 @@ import UVMHS.Core.TH
 
 import qualified Language.Haskell.TH as TH
 
--- makeLensLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] field fieldty ≔ 
+-- makeLensLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] field fieldty ≔
 --   [| fieldL ∷ ∀ a₁ … aₙ. (C₁,…,Cₙ) ⇒ ty a₁ … aₙ ⟢ fieldty
 --      fieldL ≔ lens field (\ x s → s { field = x })
 --   |]
@@ -25,10 +25,10 @@ makeLensLogic cx ty tyargs field fieldty = do
   tmpˢ ← TH.newName $ tohsChars "s"
   return $ list
     [ TH.PragmaD $ TH.InlineP lensName TH.Inline TH.FunLike TH.AllPhases
-    , TH.SigD lensName $ 
+    , TH.SigD lensName $
         TH.ForallT (tohs tyargs') cx $
           TH.ConT ''(⟢) ⊙ (TH.ConT ty ⊙⋆ tyargVars) ⊙ fieldty
-    , TH.FunD lensName $ single $ thSingleClause null $ 
+    , TH.FunD lensName $ single $ thSingleClause null $
         TH.VarE 'lens ⊙ TH.VarE field ⊙$ TH.LamE [TH.VarP tmpˢ,TH.VarP tmpˣ] $ TH.RecUpdE (TH.VarE tmpˢ) [(field,TH.VarE tmpˣ)]
     ]
 
@@ -38,9 +38,9 @@ makeLenses name = do
   (_ :* fields) ← ifNoneM (io abortIO) $ view thRecCL c
   map (tohs ∘ concat) $ mapMOn fields $ \ (frhs → (field :* _ :* fieldty)) → makeLensLogic cx ty tyargs field fieldty
 
--- makePrismLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] con (fieldty₁,…,fieldtyₙ) ≔ 
+-- makePrismLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] con (fieldty₁,…,fieldtyₙ) ≔
 --   [| fieldL ∷ ∀ a₁ … aₙ. (C₁,…,Cₙ) ⇒ ty a₁ … aₙ ⌲ (fieldty₁,…,fieldtyₙ)
---      fieldL ≔ Prism 
+--      fieldL ≔ Prism
 --        { inject = con
 --        , view = \ v → case v of
 --            con x₁ … xₙ → Some (x₁,…,xₙ)
@@ -59,15 +59,15 @@ makePrismLogic cx ty tyargs con fieldtys numcons = do
   return $
     list
     [ TH.PragmaD $ TH.InlineP prismName TH.Inline TH.FunLike TH.AllPhases
-    , TH.SigD prismName $ 
-        TH.ForallT (tohs tyargs') cx $ 
+    , TH.SigD prismName $
+        TH.ForallT (tohs tyargs') cx $
           TH.ConT ''(⌲) ⊙ (TH.ConT ty ⊙⋆ tyargVars) ⊙ tup fieldtys
-    , TH.FunD prismName $ single $ thSingleClause null $ 
-        TH.ConE 'Prism 
+    , TH.FunD prismName $ single $ thSingleClause null $
+        TH.ConE 'Prism
         ⊙ (TH.LamE [tup $ map TH.VarP tmpˣˢ] $ TH.ConE con ⊙⋆ map TH.VarE tmpˣˢ)
-        ⊙ (TH.LamE [TH.VarP tmpˣ] $ 
+        ⊙ (TH.LamE [TH.VarP tmpˣ] $
             TH.CaseE (TH.VarE tmpˣ) $ concat
-              [ single $ thSingleMatch (TH.ConP con [] $ tohs (map TH.VarP tmpˣˢ)) $ 
+              [ single $ thSingleMatch (TH.ConP con [] $ tohs (map TH.VarP tmpˣˢ)) $
                   TH.ConE 'Some ⊙ tup (map TH.VarE tmpˣˢ)
               , case numcons ≤ 1 of
                   -- avoids generating code that has a dead branch
@@ -82,4 +82,3 @@ makePrisms name = do
   scs ← mapM (ifNoneM (io abortIO) ∘ thViewSimpleCon) cs
   let numcons = count scs
   map (tohs ∘ concat) $ mapMOn scs $ \ (con :* fieldtys) → makePrismLogic cx ty tyargs con fieldtys numcons
-

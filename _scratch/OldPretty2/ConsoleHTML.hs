@@ -33,11 +33,11 @@ htmlFGCode c s = concat
 htmlBGCode ∷ 𝑂 Color → 𝑄 𝕊 → 𝑄 𝕊
 htmlBGCode c s = concat
   [ single $ concat
-      [ "<span style='background-color:" 
+      [ "<span style='background-color:"
       , htmlColor c
       , "'>"
       ]
-  , s 
+  , s
   , single "</span>"
   ]
 

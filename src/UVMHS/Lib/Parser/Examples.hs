@@ -43,35 +43,35 @@ testParsingBranching = parseIOMain parser "<branching example>" input
       ]
     input ∷ 𝕍 (ParserToken ℂ)
     input = tokens "xxxx"
-    
+
 -- testParsingAmbiguity ∷ IO ()
 -- testParsingAmbiguity = parseIOMain parser input
 --   where
---     parser = concat ^$ pOneOrMore $ tries 
+--     parser = concat ^$ pOneOrMore $ tries
 --       [ ppFG yellow ∘ ppString ∘ single ^$ pToken 'y'
 --       , ppFG green ∘ ppString ∘ single ^$ pToken 'x'
---       , ppFG blue ∘ ppString ^$ pWord "xx" 
+--       , ppFG blue ∘ ppString ^$ pWord "xx"
 --       ]
 --     input = tokens "xxx"
 
 testParsingGreedy ∷ IO ()
 testParsingGreedy = parseIOMain parser "<greedy example>" input
   where
-    parser = concat ^$ cpOneOrMore $ tries 
+    parser = concat ^$ cpOneOrMore $ tries
       [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ pToken 'y'
       , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ pToken 'x'
-      , ppFG blue ∘ ppString ^$ cpRender (formats [FG yellow]) $ cpWord "xx" 
+      , ppFG blue ∘ ppString ^$ cpRender (formats [FG yellow]) $ cpWord "xx"
       ]
     input = tokens "xxx"
 
 testParsingGreedyAmbiguity ∷ IO ()
 testParsingGreedyAmbiguity = parseIOMain parser "<greedy ambiguity example>" input
   where
-    parser = concat ^$ cpOneOrMore $ tries 
+    parser = concat ^$ cpOneOrMore $ tries
       [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ pToken 'y'
       , tries
-          [ ppFG blue ∘ ppString ^$ cpRender (formats [FG blue]) $ cpWord "x" 
-          , ppFG pink ∘ ppString ^$ cpRender (formats [FG pink]) $ cpWord "xx" 
+          [ ppFG blue ∘ ppString ^$ cpRender (formats [FG blue]) $ cpWord "x"
+          , ppFG pink ∘ ppString ^$ cpRender (formats [FG pink]) $ cpWord "xx"
           ]
       , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ pToken 'x'
       ]
@@ -80,7 +80,7 @@ testParsingGreedyAmbiguity = parseIOMain parser "<greedy ambiguity example>" inp
 testParsingSuccess ∷ IO ()
 testParsingSuccess = parseIOMain parser "<success example>" input
   where
-    parser = concat ^$ cpOneOrMore $ tries 
+    parser = concat ^$ cpOneOrMore $ tries
       [ cpRender (formats [FG green]) $ cpWord $ 𝕤 "xx"
       , cpRender (formats [FG blue]) $ cpWord $ 𝕤 "yy"
       ]
@@ -93,19 +93,19 @@ testParsingErrorEof ∷ IO ()
 testParsingErrorEof = parseIOMain (exec $ replicate (𝕟 3) $ void $ cpToken 'x') "<error eof example>" $ tokens "xx"
 
 testTokenizeSimple ∷ IO ()
-testTokenizeSimple = 
+testTokenizeSimple =
   let rgx = lWord "x" ▷ oepsRegex ()
       dfa = compileRegex rgx
   in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize simple example>" $ tokens "xxx"
 
 testTokenize ∷ IO ()
-testTokenize = 
+testTokenize =
   let rgx = concat [lWord "x",lWord "xy",lWord "y"] ▷ oepsRegex ()
       dfa = compileRegex rgx
   in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize example>" $ tokens "xxyxyxyxyxxyy"
 
 testTokenizeFailure1 ∷ IO ()
-testTokenizeFailure1 = 
+testTokenizeFailure1 =
   let rgx = concat
         [ lWord "x" ▷ fepsRegex (formats [FG green]) ▷ lepsRegex (𝕟64 2)
         , lWord "x" ▷ fepsRegex (formats [FG yellow]) ▷ lepsRegex (𝕟64 1)
@@ -117,7 +117,7 @@ testTokenizeFailure1 =
   in tokenizeIOMain (Lexer (const dfa) (const ∘ ((:*) False) ∘ string) ()) "<tokenize failure1 example>" $ tokens "xxxxy"
 
 testTokenizeFailure2 ∷ IO ()
-testTokenizeFailure2 = 
+testTokenizeFailure2 =
   let rgx = concat
         [ lWord "x" ▷ fepsRegex (formats [FG green]) ▷ lepsRegex (𝕟64 2)
         , lWord "x" ▷ fepsRegex (formats [FG yellow]) ▷ lepsRegex (𝕟64 1)

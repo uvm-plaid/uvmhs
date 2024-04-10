@@ -53,7 +53,7 @@ bvsubst (Subst ρ vs ι _gs) 𝓍 =
   if | 𝓍 < ρ → Inl 𝓍
      -- 𝓍 ≥ ρ
      | 𝓍 - ρ < csize vs → vs ⋕! (𝓍 - ρ)
-     -- 𝓍 ≥ ρ 
+     -- 𝓍 ≥ ρ
      -- 𝓍 - ρ < |vs|
      | otherwise → Inl $ natΩ64 $ intΩ64 𝓍 + ι
 
@@ -104,11 +104,11 @@ bindSubst v = Subst
 -- bumpSubst[n](ρ,vs,ι) ≜ (ρ′,vs′,ι)
 --   where
 --     ρ′ = ρ+n
---     vs′(n′) = 
+--     vs′(n′) =
 --       𝓍+n       if  vs(n′) = 𝓍
 --       (ρₑ+n,e)  if  vs(n′) = (ρₑ,e)
 -- shftSubst' ∷ ℕ64 → Subst a → Subst a
--- shftSubst' n (Subst ρ vs ι gs) = 
+-- shftSubst' n (Subst ρ vs ι gs) =
 --   let ρ' = ρ + n
 --       vs' = mapOn vs $ \case
 --         Inl 𝓍 → Inl $ 𝓍 + n
@@ -150,7 +150,7 @@ appendSubstOld 𝓈₂@(Subst ρ₂ vs₂ ι₂ gs₂) (Subst ρ₁ vs₁ ι₁ 
       vsSize = logicalSize - ρ
       vsOffset₁ = ρ₁ - ρ
       ι = ι₁ + ι₂
-      vs = vecF vsSize $ \ 𝓍 → 
+      vs = vecF vsSize $ \ 𝓍 →
         if 𝓍 < vsOffset₁
         then bvsubst 𝓈₂ $ ρ + 𝓍
         else
@@ -175,7 +175,7 @@ combineSubst sub 𝓈₂@(Subst ρ₂ vs₂ ι₂ gs₂) (Subst ρ₁ vs₁ ι�
       vsSize = logicalSize - ρ
       vsOffset₁ = ρ₁ - ρ
       ι = ι₁ + ι₂
-  vs ← exchange $ vecF vsSize $ \ 𝓍 → 
+  vs ← exchange $ vecF vsSize $ \ 𝓍 →
         if 𝓍 < vsOffset₁
         then return $ bvsubst 𝓈₂ $ ρ + 𝓍
         else
@@ -291,30 +291,30 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
 𝔱 "subst:intro" [| subst (intrSubst $ 𝕟64 2) [ulcd| λ → 2   |] |] [| [ulcd| λ → 4   |] |]
 𝔱 "subst:intro" [| subst (intrSubst $ 𝕟64 2) [ulcd| λ → 0 2 |] |] [| [ulcd| λ → 0 4 |] |]
 
-𝔱 "subst:bind" [| subst (bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |] 
+𝔱 "subst:bind" [| subst (bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |]
                [| [ulcd| λ → 0 |] |]
-𝔱 "subst:bind" [| subst (bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |] 
+𝔱 "subst:bind" [| subst (bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |]
                [| [ulcd| λ → 0 |] |]
-𝔱 "subst:bind" [| subst (bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
+𝔱 "subst:bind" [| subst (bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |]
                [| [ulcd| λ → λ → 0 |] |]
-𝔱 "subst:bind" [| subst (bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |] 
+𝔱 "subst:bind" [| subst (bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |]
                [| [ulcd| λ → λ → 2 |] |]
 
-𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |] 
+𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 0 |] |]
                   [| [ulcd| λ → 0 |] |]
-𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |] 
+𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 0 |] |]
                   [| [ulcd| λ → 0 |] |]
-𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
+𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |]
                   [| [ulcd| λ → 1 |] |]
-𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |] 
+𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 1 |] |]
                   [| [ulcd| λ → 1 |] |]
-𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 2 |]) [ulcd| λ → 0 |] |] 
+𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 2 |]) [ulcd| λ → 0 |] |]
                   [| [ulcd| λ → 0 |] |]
-𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 2 |]) [ulcd| λ → 1 |] |] 
+𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 2 |]) [ulcd| λ → 1 |] |]
                   [| [ulcd| λ → 1 |] |]
-𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 2 |] |] 
+𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 1 |]) [ulcd| λ → 2 |] |]
                   [| [ulcd| λ → λ → 2 |] |]
-𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 2 |]) [ulcd| λ → 2 |] |] 
+𝔱 "subst:bumpSubst" [| subst (bumpSubst one $ bindSubst [ulcd| λ → 2 |]) [ulcd| λ → 2 |] |]
                   [| [ulcd| λ → λ → 3 |] |]
 
 -- append --
@@ -333,26 +333,26 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
 𝔱 "subst:⧺" [| subst (intrSubst one)               [ulcd| λ → 1 |] |] [| [ulcd| λ → 2 |] |]
 𝔱 "subst:⧺" [| subst (null ⧺ intrSubst one ⧺ null) [ulcd| λ → 1 |] |] [| [ulcd| λ → 2 |] |]
 
-𝔱 "subst:⧺" 
+𝔱 "subst:⧺"
   [| subst (bindSubst [ulcd| λ → 0 |])               [ulcd| λ → 1 |] |] [| [ulcd| λ → λ → 0 |] |]
-𝔱 "subst:⧺" 
+𝔱 "subst:⧺"
   [| subst (null ⧺ bindSubst [ulcd| λ → 0 |] ⧺ null) [ulcd| λ → 1 |] |] [| [ulcd| λ → λ → 0 |] |]
 
 𝔱 "subst:⧺" [| subst (intrSubst $ 𝕟64 2)              [ulcd| λ → 1 |] |] [| [ulcd| λ → 3 |] |]
 𝔱 "subst:⧺" [| subst (intrSubst one ⧺ intrSubst one) [ulcd| λ → 1 |] |] [| [ulcd| λ → 3 |] |]
 
-𝔱 "subst:⧺" 
-  [| subst (bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |] 
+𝔱 "subst:⧺"
+  [| subst (bindSubst [ulcd| λ → 0 |]) [ulcd| λ → 1 |] |]
   [| [ulcd| λ → λ → 0 |] |]
-𝔱 "subst:⧺" 
-  [| subst (bumpSubst one (bindSubst [ulcd| λ → 0 |]) ⧺ intrSubst one) [ulcd| λ → 1 |] |] 
+𝔱 "subst:⧺"
+  [| subst (bumpSubst one (bindSubst [ulcd| λ → 0 |]) ⧺ intrSubst one) [ulcd| λ → 1 |] |]
   [| [ulcd| λ → λ → 0 |] |]
 
-𝔱 "subst:⧺" 
-  [| subst (intrSubst one ⧺ bindSubst [ulcd| 1 |]) [ulcd| 0 (λ → 2) |] |] 
+𝔱 "subst:⧺"
+  [| subst (intrSubst one ⧺ bindSubst [ulcd| 1 |]) [ulcd| 0 (λ → 2) |] |]
   [| [ulcd| 2 (λ → 2) |] |]
-𝔱 "subst:⧺" 
-  [| subst (bumpSubst one (weknSubst one (bindSubst [ulcd| 1 |])) ⧺ intrSubst one) [ulcd| 0 (λ → 2) |] |] 
+𝔱 "subst:⧺"
+  [| subst (bumpSubst one (weknSubst one (bindSubst [ulcd| 1 |])) ⧺ intrSubst one) [ulcd| 0 (λ → 2) |] |]
   [| [ulcd| 2 (λ → 2) |] |]
 
 𝔱 "subst:⧺"
@@ -388,7 +388,7 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   [| [ulcd| 0 |] |]
 
 𝔱 "subst:glbl"
-  [| (Subst 1 (vec []) 1 (var "x" ↦ 0 :* [ulcd| 1 |])) 
+  [| (Subst 1 (vec []) 1 (var "x" ↦ 0 :* [ulcd| 1 |]))
      ⧺
      (Subst 1 (vec []) 1 (var "x" ↦ 1 :* [ulcd| 1 |]))
   |]
@@ -396,7 +396,7 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
   [| null |]
 
 𝔱 "subst:glbl"
-  [| subst ((Subst 1 (vec []) 1 (var "x" ↦ 0 :* [ulcd| 1 |])) 
+  [| subst ((Subst 1 (vec []) 1 (var "x" ↦ 0 :* [ulcd| 1 |]))
             ⧺
             (Subst 1 (vec []) 1 (var "x" ↦ 1 :* [ulcd| 1 |]))) $
      [ulcd| λ → x |]
@@ -407,108 +407,107 @@ instance Rand ULCDExpR where prand = flip prandULCDExp zero
 -- fuzzing --
 
 -- 𝔣 "zzz:subst:wf" (𝕟64 100) [| randSml @ (Subst ULCDExpR) |] [| wfSubst |]
--- 
--- 𝔣 "zzz:subst:⧺:wf" (𝕟64 100) 
+--
+-- 𝔣 "zzz:subst:⧺:wf" (𝕟64 100)
 --   [| do 𝓈₁ ← randSml @ (Subst ULCDExpR)
 --         𝓈₂ ← randSml @ (Subst ULCDExpR)
 --         return $ 𝓈₁ :* 𝓈₂
 --   |]
 --   [| \ (𝓈₁ :* 𝓈₂) → wfSubst (𝓈₁ ⧺ 𝓈₂) |]
--- 
--- 𝔣 "zzz:subst:refl:hom" (𝕟64 100) 
+--
+-- 𝔣 "zzz:subst:refl:hom" (𝕟64 100)
 --   [| do e ← randOne @ ULCDExpR
 --         return $ e
 --   |]
---   [| \ e → 
+--   [| \ e →
 --        subst nullSubst e ≡ e
 --   |]
--- 
+--
 -- 𝔣 "zzz:subst:refl/wk:hom" (𝕟64 100)
 --   [| do n ← randSml @ ℕ64
 --         e ← randSml @ ULCDExpR
 --         return $ n :* e
 --   |]
---   [| \ (n :* e) → subst (bumpSubst n nullSubst) e ≡ e 
+--   [| \ (n :* e) → subst (bumpSubst n nullSubst) e ≡ e
 --   |]
--- 
+--
 -- 𝔣 "zzz:subst:bind" (𝕟64 100)
 --   [| do e₁ ← randSml @ ULCDExpR
 --         e₂ ← randSml @ ULCDExpR
 --         return $ e₁ :* e₂
 --   |]
---   [| \ (e₁ :* e₂) → 
---        subst (bindSubst e₁ ⧺ intrSubst one) e₂ 
---        ≡ 
+--   [| \ (e₁ :* e₂) →
+--        subst (bindSubst e₁ ⧺ intrSubst one) e₂
+--        ≡
 --        e₂
 --   |]
--- 
+--
 -- 𝔣 "zzz:subst:commute" (𝕟64 100)
 --   [| do e₁ ← randSml @ ULCDExpR
 --         e₂ ← randSml @ ULCDExpR
 --         return $ e₁ :* e₂
 --   |]
---   [| \ (e₁ :* e₂) → 
+--   [| \ (e₁ :* e₂) →
 --        subst (intrSubst one ⧺ bindSubst e₁) e₂
---        ≡ 
+--        ≡
 --        subst (bumpSubst one (weknSubst one $ bindSubst e₁) ⧺ intrSubst one) e₂
 --   |]
 
-𝔣 "zzz:subst:⧺:hom" (𝕟64 100) 
+𝔣 "zzz:subst:⧺:hom" (𝕟64 100)
   [| do 𝓈₁ ← randOne @ (Subst ULCDExpR)
         𝓈₂ ← randOne @ (Subst ULCDExpR)
         e ← randOne @ ULCDExpR
         return $ 𝓈₁ :* 𝓈₂ :* e
   |]
-  [| \ (𝓈₁ :* 𝓈₂ :* e) → 
+  [| \ (𝓈₁ :* 𝓈₂ :* e) →
        subst (𝓈₁ ⧺ 𝓈₂) e ≡ subst 𝓈₁ (subst 𝓈₂ e)
   |]
 
--- 𝔣 "zzz:subst:⧺:lrefl" (𝕟64 100) 
+-- 𝔣 "zzz:subst:⧺:lrefl" (𝕟64 100)
 --   [| do 𝓈 ← randSml @ (Subst ULCDExpR)
 --         e ← randSml @ ULCDExpR
 --         return $ 𝓈 :* e
 --   |]
---   [| \ (𝓈 :* e) → 
+--   [| \ (𝓈 :* e) →
 --        subst (nullSubst ⧺ 𝓈) e ≡ subst 𝓈 e
 --   |]
--- 
--- 𝔣 "zzz:subst:⧺:rrefl" (𝕟64 100) 
+--
+-- 𝔣 "zzz:subst:⧺:rrefl" (𝕟64 100)
 --   [| do 𝓈 ← randSml @ (Subst ULCDExpR)
 --         e ← randSml @ ULCDExpR
 --         return $ 𝓈 :* e
 --   |]
---   [| \ (𝓈 :* e) → 
+--   [| \ (𝓈 :* e) →
 --        subst (𝓈 ⧺ nullSubst) e ≡ subst 𝓈 e
 --   |]
--- 
+--
 -- 𝔣 "zzz:subst:⧺:lrefl/wk" (𝕟64 100)
 --   [| do n ← randSml @ ℕ64
 --         𝓈 ← randSml @ (Subst ULCDExpR)
 --         e ← randSml @ ULCDExpR
 --         return $ n :* 𝓈 :* e
 --   |]
---   [| \ (n :* 𝓈 :* e) → subst (bumpSubst n nullSubst ⧺ 𝓈) e ≡ subst 𝓈 e 
+--   [| \ (n :* 𝓈 :* e) → subst (bumpSubst n nullSubst ⧺ 𝓈) e ≡ subst 𝓈 e
 --   |]
--- 
+--
 -- 𝔣 "zzz:subst:⧺:rrefl/wk" (𝕟64 100)
 --   [| do n ← randSml @ ℕ64
 --         𝓈 ← randSml @ (Subst ULCDExpR)
 --         e ← randSml @ ULCDExpR
 --         return $ n :* 𝓈 :* e
 --   |]
---   [| \ (n :* 𝓈 :* e) → subst (𝓈 ⧺ bumpSubst n nullSubst) e ≡ subst 𝓈 e 
+--   [| \ (n :* 𝓈 :* e) → subst (𝓈 ⧺ bumpSubst n nullSubst) e ≡ subst 𝓈 e
 --   |]
--- 
--- 𝔣 "zzz:subst:⧺:trans" (𝕟64 100) 
+--
+-- 𝔣 "zzz:subst:⧺:trans" (𝕟64 100)
 --   [| do 𝓈₁ ← randSml @ (Subst ULCDExpR)
 --         𝓈₂ ← randSml @ (Subst ULCDExpR)
 --         𝓈₃ ← randSml @ (Subst ULCDExpR)
 --         e ← randSml @ ULCDExpR
 --         return $ 𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e
 --   |]
---   [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) → 
---        subst ((𝓈₁ ⧺ 𝓈₂) ⧺ 𝓈₃) e ≡ subst (𝓈₁ ⧺ (𝓈₂ ⧺ 𝓈₃)) e 
+--   [| \ (𝓈₁ :* 𝓈₂ :* 𝓈₃ :* e) →
+--        subst ((𝓈₁ ⧺ 𝓈₂) ⧺ 𝓈₃) e ≡ subst (𝓈₁ ⧺ (𝓈₂ ⧺ 𝓈₃)) e
 --   |]
 
 buildTests
-

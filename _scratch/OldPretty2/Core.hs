@@ -86,7 +86,7 @@ prettyEnv₀ = PrettyEnv
 
 data Chunk = LineNumber ℕ | Text 𝕊 | Newline
   deriving (Eq, Ord,Show)
-data Annotation = 
+data Annotation =
     FormatA      (𝐿 Format)
   | UndertagA    (𝑂 (𝐿 Format ∧  ℂ))
   deriving (Eq,Ord,Show)
@@ -102,7 +102,7 @@ data PrettyOut = PrettyOut
   } deriving (Eq,Ord,Show)
 makeLenses ''PrettyOut
 instance Null PrettyOut where null = PrettyOut null 0
-instance Append PrettyOut where PrettyOut o₁ n₁ ⧺ PrettyOut o₂ n₂ = PrettyOut (o₁ ⧺ o₂) (n₁ ⊔ n₂) 
+instance Append PrettyOut where PrettyOut o₁ n₁ ⧺ PrettyOut o₂ n₂ = PrettyOut (o₁ ⧺ o₂) (n₁ ⊔ n₂)
 instance Monoid PrettyOut
 
 -----------------
@@ -172,7 +172,7 @@ shouldOutputNewline = do
     Some (low :* high) → (low ≤ ln) ⩓ (ln < high)
 
 spit ∷ 𝕊 → PrettyM ()
-spit s = 
+spit s =
   let l = length𝕊 s
       c = countWith (not ∘ isSpace) s
       o = single $ RawChunk $ Text s
@@ -184,7 +184,7 @@ spit s =
 annotateOutput ∷ Annotation → Output → PrettyM Output
 annotateOutput a o = do
   df ← askL doFormatL
-  return $ case df of 
+  return $ case df of
     True → single $ AnnotatedOutput a o
     False → o
 
@@ -195,9 +195,9 @@ doLineNumber b = do
       lnf ← askL $ lineNumberFormatL ⊚ prettyParamsL
       dln ← getL displayLineNumberL
       whenM shouldOutput $ \ () → do
-        tellL outputL 
-          *$ annotateOutput (FormatA (lnf ⧺ override)) 
-          *$ annotateOutput (UndertagA None) 
+        tellL outputL
+          *$ annotateOutput (FormatA (lnf ⧺ override))
+          *$ annotateOutput (UndertagA None)
           *$ return $ single $ RawChunk $ LineNumber dln
         tellL maxDisplayLineNumberL $ length𝕊 $ show𝕊 dln
 
@@ -208,17 +208,17 @@ doNesting b = do
     o :* () ← hijackL outputL $ do
       -- spit $ build𝕊 $ repeat n " "
       modifyL columnL $ (+) n
-      whenM shouldOutput $ \ () → 
+      whenM shouldOutput $ \ () →
         tellL outputL $ single $ RawChunk $ Text $ string $ repeat n ' '
-    tellL outputL 
-      *$ annotateOutput (FormatA override) 
+    tellL outputL
+      *$ annotateOutput (FormatA override)
       *$ annotateOutput (UndertagA None)
       *$ return o
 
 word ∷ 𝕊 → PrettyM ()
 word s | isEmpty𝕊 s = skip
-word s = 
-  let cmd = spit s 
+word s =
+  let cmd = spit s
   in do
     b ← getputL beginningL False
     doLineNumber b
@@ -448,10 +448,10 @@ ppCollection open close sep xs = ppGroup $ ppBotLevel $ ppIfFlat flatCollection 
   where
     flatCollection = concat [ppPun open,concat $ inbetween (ppPun sep) xs,ppPun close]
     breakCollection = ppVertical $ concat
-      [ list 
-          $ mapFirst (\ x → ppHorizontal $ list [ppPun open,x]) 
-          $ mapAfterFirst (\ x → ppHorizontal $ list [ppPun sep,x]) 
-          $ map ppAlign 
+      [ list
+          $ mapFirst (\ x → ppHorizontal $ list [ppPun open,x])
+          $ mapAfterFirst (\ x → ppHorizontal $ list [ppPun sep,x])
+          $ map ppAlign
           $ iter xs
       , return $ ppPun close
       ]

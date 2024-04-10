@@ -3,11 +3,11 @@ module UVMHS.Core.Data.Choice where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
-instance Functor ((∨) a) where 
+instance Functor ((∨) a) where
   map f = \case
     Inl x → Inl x
     Inr y → Inr $ f y
-instance Return ((∨) a) where 
+instance Return ((∨) a) where
   return = Inr
 instance Bind ((∨) a) where
   Inl x ≫= _ = Inl x
@@ -20,14 +20,14 @@ instance FunctorM ((∨) a) where
       y' ← f y
       return $ Inr y'
 
-instance (Null b) ⇒ Null (a ∨ b) where 
+instance (Null b) ⇒ Null (a ∨ b) where
   null = Inr null
-instance (Append a,Append b) ⇒ Append (a ∨ b) where 
+instance (Append a,Append b) ⇒ Append (a ∨ b) where
   Inl x ⧺ Inl y = Inl (x ⧺ y)
   Inl x ⧺ Inr _ = Inl x
   Inr _ ⧺ Inl y = Inl y
   Inr x ⧺ Inr y = Inr (x ⧺ y)
-instance (Append a,Monoid b) ⇒ Monoid (a ∨ b) 
+instance (Append a,Monoid b) ⇒ Monoid (a ∨ b)
 
 elimChoice ∷ (a → c) → (b → c) → a ∨ b → c
 elimChoice f₁ f₂ = \case
