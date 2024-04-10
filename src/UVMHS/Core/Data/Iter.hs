@@ -4,6 +4,7 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.Arithmetic ()
+import UVMHS.Core.Data.Choice
 import UVMHS.Core.Data.List ()
 import UVMHS.Core.Data.String
 import UVMHS.Core.Data.Pair
@@ -463,6 +464,13 @@ dropWhile p xs₀ =
           | p x → loop $ un𝑆 xs' ()
           | otherwise → iter $ 𝑆 $ \ () → Some $ x :* xs'
   in loop $ un𝑆 (stream xs₀) ()
+
+partition ∷ (a → b ∨ c) → 𝐿 a → 𝐿 b ∧ 𝐿 c
+partition decide = foldrFromWith (Nil :* Nil) $
+  elimChoice (mapFst ∘ (:&)) (mapSnd ∘ (:&)) ∘ decide
+
+partition𝔹 ∷ (a → 𝔹) → 𝐿 a → 𝐿 a ∧ 𝐿 a
+partition𝔹 decide = partition (\ a → elim𝔹 (Inl a) (Inr a) (decide a))
 
 ---------
 -- All --
