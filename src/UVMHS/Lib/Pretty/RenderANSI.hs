@@ -202,7 +202,7 @@ ppRenderNoFmtNarrow =
                id
 
 ppshow ∷ (Pretty a) ⇒ a → 𝕊
-ppshow = ppRenderNoFmtWide ∘ pretty
+ppshow = ppRenderNoFmtWide ∘ ppGroup ∘ pretty
 
 pprint ∷ (Pretty a) ⇒ a → IO ()
 pprint x = out $ ppRender $ ppGroup $ pretty x
