@@ -66,38 +66,38 @@ instance JoinLattice    ℕ
 instance Monoid         ℕ
 
 instance ToNat ℕ where nat = id
-instance ToNatO64 ℕ where 
-  natO64 n 
+instance ToNatO64 ℕ where
+  natO64 n
     | n > HS.fromIntegral (HS.maxBound @ℕ64) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToNatO32 ℕ where 
-  natO32 n 
+instance ToNatO32 ℕ where
+  natO32 n
     | n > HS.fromIntegral (HS.maxBound @ℕ32) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToNatO16 ℕ where 
-  natO16 n 
+instance ToNatO16 ℕ where
+  natO16 n
     | n > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToNatO8 ℕ where 
-  natO8 n 
+instance ToNatO8 ℕ where
+  natO8 n
     | n > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToInt ℕ where int = HS.fromIntegral
-instance ToIntO64 ℕ where 
-  intO64 n 
+instance ToIntO64 ℕ where
+  intO64 n
     | n > HS.fromIntegral (HS.maxBound @ℤ64) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToIntO32 ℕ where 
-  intO32 n 
+instance ToIntO32 ℕ where
+  intO32 n
     | n > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToIntO16 ℕ where 
-  intO16 n 
+instance ToIntO16 ℕ where
+  intO16 n
     | n > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToIntO8 ℕ where 
-  intO8 n 
+instance ToIntO8 ℕ where
+  intO8 n
     | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
@@ -134,34 +134,34 @@ instance Monoid         ℕ64
 
 instance ToNat   ℕ64 where nat   = HS.fromIntegral
 instance ToNat64 ℕ64 where nat64 = id
-instance ToNatO32 ℕ64 where 
-  natO32 n 
+instance ToNatO32 ℕ64 where
+  natO32 n
     | n > HS.fromIntegral (HS.maxBound @ℕ32) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToNatO16 ℕ64 where 
-  natO16 n 
+instance ToNatO16 ℕ64 where
+  natO16 n
     | n > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToNatO8 ℕ64 where 
-  natO8 n 
+instance ToNatO8 ℕ64 where
+  natO8 n
     | n > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToInt ℕ64 where int = HS.fromIntegral
-instance ToIntO64 ℕ64 where 
-  intO64 n 
+instance ToIntO64 ℕ64 where
+  intO64 n
     | n > HS.fromIntegral (HS.maxBound @ℤ64) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToIntO32 ℕ64 where 
-  intO32 n 
+instance ToIntO32 ℕ64 where
+  intO32 n
     | n > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToIntO16 ℕ64 where 
-  intO16 n 
+instance ToIntO16 ℕ64 where
+  intO16 n
     | n > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToIntO8 ℕ64 where 
-  intO8 n 
+instance ToIntO8 ℕ64 where
+  intO8 n
     | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
@@ -199,27 +199,27 @@ instance Monoid         ℕ32
 instance ToNat    ℕ32 where nat   = HS.fromIntegral
 instance ToNat64  ℕ32 where nat64 = HS.fromIntegral
 instance ToNat32  ℕ32 where nat32 = id
-instance ToNatO16 ℕ32 where 
-  natO16 n 
+instance ToNatO16 ℕ32 where
+  natO16 n
     | n > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToNatO8 ℕ32 where 
-  natO8 n 
+instance ToNatO8 ℕ32 where
+  natO8 n
     | n > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToInt   ℕ32 where int   = HS.fromIntegral
 instance ToInt64 ℕ32 where int64 = HS.fromIntegral
-instance ToIntO32 ℕ32 where 
-  intO32 n 
+instance ToIntO32 ℕ32 where
+  intO32 n
     | n > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToIntO16 ℕ32 where 
-  intO16 n 
+instance ToIntO16 ℕ32 where
+  intO16 n
     | n > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToIntO8 ℕ32 where 
-  intO8 n 
+instance ToIntO8 ℕ32 where
+  intO8 n
     | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
@@ -258,20 +258,20 @@ instance ToNat   ℕ16 where nat   = HS.fromIntegral
 instance ToNat64 ℕ16 where nat64 = HS.fromIntegral
 instance ToNat32 ℕ16 where nat32 = HS.fromIntegral
 instance ToNat16 ℕ16 where nat16 = id
-instance ToNatO8 ℕ16 where 
-  natO8 n 
+instance ToNatO8 ℕ16 where
+  natO8 n
     | n > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
 instance ToInt   ℕ16 where int   = HS.fromIntegral
 instance ToInt64 ℕ16 where int64 = HS.fromIntegral
 instance ToInt32 ℕ16 where int32 = HS.fromIntegral
-instance ToIntO16 ℕ16 where 
-  intO16 n 
+instance ToIntO16 ℕ16 where
+  intO16 n
     | n > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral n
-instance ToIntO8 ℕ16 where 
-  intO8 n 
+instance ToIntO8 ℕ16 where
+  intO8 n
     | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
@@ -316,8 +316,8 @@ instance ToInt   ℕ8 where int   = HS.fromIntegral
 instance ToInt64 ℕ8 where int64 = HS.fromIntegral
 instance ToInt32 ℕ8 where int32 = HS.fromIntegral
 instance ToInt16 ℕ8 where int16 = HS.fromIntegral
-instance ToIntO8 ℕ8 where 
-  intO8 n 
+instance ToIntO8 ℕ8 where
+  intO8 n
     | n > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral n
 
@@ -347,55 +347,55 @@ instance Additive       ℤ
 instance Multiplicative ℤ
 instance Monoid         ℤ
 
-instance ToNatO ℤ where 
-  natO i 
+instance ToNatO ℤ where
+  natO i
     | i < 𝕫 0 = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO64 ℤ where 
-  natO64 i 
+instance ToNatO64 ℤ where
+  natO64 i
     | i < 𝕫 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ64) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO32 ℤ where 
-  natO32 i 
+instance ToNatO32 ℤ where
+  natO32 i
     | i < 𝕫 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ32) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO16 ℤ where 
-  natO16 i 
+instance ToNatO16 ℤ where
+  natO16 i
     | i < 𝕫 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO8 ℤ where 
-  natO8 i 
+instance ToNatO8 ℤ where
+  natO8 i
     | i < 𝕫 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToInt ℤ where int = id
-instance ToIntO64 ℤ where 
-  intO64 i 
+instance ToIntO64 ℤ where
+  intO64 i
     | i < HS.fromIntegral (HS.minBound @ℤ64) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ64) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToIntO32 ℤ where 
-  intO32 i 
+instance ToIntO32 ℤ where
+  intO32 i
     | i < HS.fromIntegral (HS.minBound @ℤ32) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToIntO16 ℤ where 
-  intO16 i 
+instance ToIntO16 ℤ where
+  intO16 i
     | i < HS.fromIntegral (HS.minBound @ℤ16) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToIntO8 ℤ where 
-  intO8 i 
+instance ToIntO8 ℤ where
+  intO8 i
     | i < HS.fromIntegral (HS.minBound @ℤ8) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToRational ℤ where rat = HS.fromIntegral
-instance ToRationalᴾO ℤ where 
+instance ToRationalᴾO ℤ where
   ratᴾO i
     | i < 𝕫 0 = None
     | otherwise = Some $ HS.fromIntegral i
@@ -435,50 +435,50 @@ instance JoinLattice    ℤ64
 instance MeetLattice    ℤ64
 instance Monoid         ℤ64
 
-instance ToNatO ℤ64 where 
+instance ToNatO ℤ64 where
   natO i
     | i < 𝕫64 0 = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO64 ℤ64 where 
+instance ToNatO64 ℤ64 where
   natO64 i
     | i < 𝕫64 0 = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO32 ℤ64 where 
-  natO32 i 
+instance ToNatO32 ℤ64 where
+  natO32 i
     | i < 𝕫64 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ32) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO16 ℤ64 where 
-  natO16 i 
+instance ToNatO16 ℤ64 where
+  natO16 i
     | i < 𝕫64 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO8 ℤ64 where 
-  natO8 i 
+instance ToNatO8 ℤ64 where
+  natO8 i
     | i < 𝕫64 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToInt    ℤ64 where int   = HS.fromIntegral
 instance ToInt64  ℤ64 where int64 = id
-instance ToIntO32 ℤ64 where 
-  intO32 i 
+instance ToIntO32 ℤ64 where
+  intO32 i
     | i < HS.fromIntegral (HS.minBound @ℤ32) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ32) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToIntO16 ℤ64 where 
-  intO16 i 
+instance ToIntO16 ℤ64 where
+  intO16 i
     | i < HS.fromIntegral (HS.minBound @ℤ16) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToIntO8 ℤ64 where 
-  intO8 i 
+instance ToIntO8 ℤ64 where
+  intO8 i
     | i < HS.fromIntegral (HS.minBound @ℤ8) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToRational ℤ64 where rat = HS.fromIntegral
-instance ToRationalᴾO ℤ64 where 
+instance ToRationalᴾO ℤ64 where
   ratᴾO i
     | i < 𝕫64 0 = None
     | otherwise = Some $ HS.fromIntegral i
@@ -519,24 +519,24 @@ instance MeetLattice    ℤ32
 instance Monoid         ℤ32
 
 instance ToNatO ℤ32 where
-  natO i 
+  natO i
     | i < 𝕫32 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO64 ℤ32 where
-  natO64 i 
+  natO64 i
     | i < 𝕫32 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO32 ℤ32 where
-  natO32 i 
+  natO32 i
     | i < 𝕫32 0 = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO16 ℤ32 where 
-  natO16 i 
+instance ToNatO16 ℤ32 where
+  natO16 i
     | i < 𝕫32 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ16) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO8 ℤ32 where 
-  natO8 i 
+instance ToNatO8 ℤ32 where
+  natO8 i
     | i < 𝕫32 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
@@ -544,19 +544,19 @@ instance ToNatO8 ℤ32 where
 instance ToInt   ℤ32 where int   = HS.fromIntegral
 instance ToInt64 ℤ32 where int64 = HS.fromIntegral
 instance ToInt32 ℤ32 where int32 = id
-instance ToIntO16 ℤ32 where 
-  intO16 i 
+instance ToIntO16 ℤ32 where
+  intO16 i
     | i < HS.fromIntegral (HS.minBound @ℤ16) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ16) = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToIntO8 ℤ32 where 
-  intO8 i 
+instance ToIntO8 ℤ32 where
+  intO8 i
     | i < HS.fromIntegral (HS.minBound @ℤ8) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToRational ℤ32 where rat = HS.fromIntegral
-instance ToRationalᴾO ℤ32 where 
+instance ToRationalᴾO ℤ32 where
   ratᴾO i
     | i < 𝕫32 0 = None
     | otherwise = Some $ HS.fromIntegral i
@@ -596,24 +596,24 @@ instance JoinLattice    ℤ16
 instance MeetLattice    ℤ16
 instance Monoid         ℤ16
 
-instance ToNatO ℤ16 where 
-  natO i 
+instance ToNatO ℤ16 where
+  natO i
     | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO64 ℤ16 where 
-  natO64 i 
+instance ToNatO64 ℤ16 where
+  natO64 i
     | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO32 ℤ16 where 
-  natO32 i 
+instance ToNatO32 ℤ16 where
+  natO32 i
     | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO16 ℤ16 where 
-  natO16 i 
+instance ToNatO16 ℤ16 where
+  natO16 i
     | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
-instance ToNatO8 ℤ16 where 
-  natO8 i 
+instance ToNatO8 ℤ16 where
+  natO8 i
     | i < 𝕫16 0 = None
     | i > HS.fromIntegral (HS.maxBound @ℕ8) = None
     | otherwise = Some $ HS.fromIntegral i
@@ -622,14 +622,14 @@ instance ToInt   ℤ16 where int   = HS.fromIntegral
 instance ToInt64 ℤ16 where int64 = HS.fromIntegral
 instance ToInt32 ℤ16 where int32 = HS.fromIntegral
 instance ToInt16 ℤ16 where int16 = id
-instance ToIntO8 ℤ16 where 
-  intO8 i 
+instance ToIntO8 ℤ16 where
+  intO8 i
     | i < HS.fromIntegral (HS.minBound @ℤ8) = None
     | i > HS.fromIntegral (HS.maxBound @ℤ8) = None
     | otherwise = Some $ HS.fromIntegral i
 
 instance ToRational ℤ16 where rat = HS.fromIntegral
-instance ToRationalᴾO ℤ16 where 
+instance ToRationalᴾO ℤ16 where
   ratᴾO i
     | i < 𝕫16 0 = None
     | otherwise = Some $ HS.fromIntegral i
@@ -670,23 +670,23 @@ instance MeetLattice    ℤ8
 instance Monoid         ℤ8
 
 instance ToNatO ℤ8 where
-  natO i 
+  natO i
     | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO64 ℤ8 where
-  natO64 i 
+  natO64 i
     | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO32 ℤ8 where
-  natO32 i 
+  natO32 i
     | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO16 ℤ8 where
-  natO16 i 
+  natO16 i
     | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 instance ToNatO8  ℤ8 where
-  natO8 i 
+  natO8 i
     | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
 
@@ -697,7 +697,7 @@ instance ToInt16 ℤ8 where int16 = HS.fromIntegral
 instance ToInt8  ℤ8 where int8  = id
 
 instance ToRational ℤ8 where rat = HS.fromIntegral
-instance ToRationalᴾO ℤ8 where 
+instance ToRationalᴾO ℤ8 where
   ratᴾO i
     | i < 𝕫8 0 = None
     | otherwise = Some $ HS.fromIntegral i
@@ -777,10 +777,10 @@ instance ToIntO8 ℚ where
     | otherwise = intO8 $ numer q
 
 instance ToRational ℚ where rat = id
-instance ToRationalᴾO ℚ where 
+instance ToRationalᴾO ℚ where
   ratᴾO q
     | numer q < 𝕫 0 = None
-    | otherwise = Some $ HS.fromRational q 
+    | otherwise = Some $ HS.fromRational q
 
 instance ToDouble ℚ where dbl = HS.fromRational
 instance ToDoubleᴾO ℚ where
@@ -789,7 +789,7 @@ instance ToDoubleᴾO ℚ where
     | otherwise = Some $ 𝔻ᴾ $ HS.fromRational q
 
 instance ToNumber ℚ where num = Rational
-instance ToNumberᴾO ℚ where 
+instance ToNumberᴾO ℚ where
   numᴾO q = case ratᴾO q of
     None → None
     Some qᴾ → Some $ Rationalᴾ qᴾ
@@ -803,7 +803,7 @@ instance One    ℚᴾ where one  = 𝕢ᴾ 1
 instance Times  ℚᴾ where (×)  = (HS.*)
 instance Divide ℚᴾ where (/)  = (HS./)
 instance Pon    ℚᴾ where (^^) = (HS.^)
-                                               
+
 instance Bot    ℚᴾ where bot  = 𝕢ᴾ 0
 instance Join   ℚᴾ where (⊔)  = (⩏)
 instance Meet   ℚᴾ where (⊓)  = (⩎)
@@ -954,14 +954,14 @@ instance ToIntO8 𝔻 where
       False → None
 
 instance ToRational 𝔻 where rat = HS.realToFrac
-instance ToRationalᴾO 𝔻 where 
+instance ToRationalᴾO 𝔻 where
   ratᴾO d
     | d < 0.0 = None
     | otherwise = Some $ HS.realToFrac d
 
 instance ToDouble 𝔻 where dbl = id
-instance ToDoubleᴾO 𝔻 where 
-  dblᴾO d 
+instance ToDoubleᴾO 𝔻 where
+  dblᴾO d
     | d < 0.0 = None
     | otherwise = Some $ 𝔻ᴾ d
 
@@ -991,7 +991,7 @@ instance Log    𝔻ᴾ where log  = HS.log
 instance Efn    𝔻ᴾ where efn  = HS.exp
 instance Sin    𝔻ᴾ where sin  = HS.sin
 instance Cos    𝔻ᴾ where cos  = HS.cos
-                                               
+
 instance Bot    𝔻ᴾ where bot  = 𝕕ᴾ 0.0
 instance Join   𝔻ᴾ where (⊔)  = (⩏)
 instance Top    𝔻ᴾ where top  = 𝕕ᴾ 1.0 / 𝕕ᴾ 0.0
@@ -1067,7 +1067,7 @@ instance ToIntO8 𝔻ᴾ where
       False → None
 
 instance ToRational 𝔻ᴾ where rat = HS.toRational
-instance ToRationalᴾO 𝔻ᴾ where 
+instance ToRationalᴾO 𝔻ᴾ where
   ratᴾO d
     | d < 𝕕ᴾ 0.0 = None
     | otherwise = Some $ HS.fromRational $ HS.toRational d
@@ -1101,33 +1101,33 @@ numberBOpᴾ _oZ _oQ  oD (Doubleᴾ   d₁) (Natural   i₂) = oD d₁ (dblᴾ i
 numberBOpᴾ _oZ _oQ  oD (Rationalᴾ q₁) (Doubleᴾ   d₂) = oD (dblᴾ q₁) d₂
 numberBOpᴾ _oZ _oQ  oD (Doubleᴾ   d₁) (Rationalᴾ q₂) = oD d₁ (dblᴾ q₂)
 
-instance Zero ℝ where 
+instance Zero ℝ where
   zero = Integer zero
-instance Plus ℝ where 
+instance Plus ℝ where
   (+) = numberBOp (Integer ∘∘ (+)) (Rational ∘∘ (+)) $ Double ∘∘ (+)
-instance Minus ℝ where 
+instance Minus ℝ where
   (-) = numberBOp (Integer ∘∘ (-)) (Rational ∘∘ (-)) $ Double ∘∘ (-)
-instance One ℝ where 
+instance One ℝ where
   one = Integer one
-instance Times ℝ where 
+instance Times ℝ where
   (×) = numberBOp (Integer ∘∘ (×)) (Rational ∘∘ (×)) $ Double ∘∘ (×)
-instance Divide ℝ where 
-  (/) = numberBOp (\ i₁ i₂ → Rational $ rat i₁ / rat i₂) 
-                  (Rational ∘∘ (/)) 
+instance Divide ℝ where
+  (/) = numberBOp (\ i₁ i₂ → Rational $ rat i₁ / rat i₂)
+                  (Rational ∘∘ (/))
                 $ Double ∘∘ (/)
-instance Pon ℝ where 
+instance Pon ℝ where
   Integer  m ^^ n = Integer  $ m ^^ n
   Rational q ^^ n = Rational $ q ^^ n
   Double   d ^^ n = Double   $ d ^^ n
-instance Pow ℝ where 
-  (^) = numberBOp (\ i₁ i₂ → Double $ dbl i₁ ^ dbl i₂) 
-                  (\ q₁ q₂ → Double $ dbl q₁ ^ dbl q₂) 
+instance Pow ℝ where
+  (^) = numberBOp (\ i₁ i₂ → Double $ dbl i₁ ^ dbl i₂)
+                  (\ q₁ q₂ → Double $ dbl q₁ ^ dbl q₂)
                 $ Double ∘∘ (^)
 instance Root ℝ where
   root (Integer  i) = Double $ root $ dbl i
   root (Rational q) = Double $ root $ dbl q
   root (Double   d) = Double $ root d
-instance Log ℝ where 
+instance Log ℝ where
   log (Integer  i) = Double $ log $ dbl i
   log (Rational q) = Double $ log $ dbl q
   log (Double   d) = Double $ log d
@@ -1212,29 +1212,29 @@ instance ToDoubleᴾO ℝ where
   dblᴾO (Rational q) = dblᴾO q
   dblᴾO (Double   d) = dblᴾO d
 
-instance Zero ℝᴾ where 
+instance Zero ℝᴾ where
   zero = Natural zero
-instance Plus ℝᴾ where 
+instance Plus ℝᴾ where
   (+) = numberBOpᴾ (Natural ∘∘ (+)) (Rationalᴾ ∘∘ (+)) (Doubleᴾ ∘∘ (+))
-instance Minus ℝᴾ where 
+instance Minus ℝᴾ where
   (-) = numberBOpᴾ (Natural ∘∘ (-)) (Rationalᴾ ∘∘ (-)) (Doubleᴾ ∘∘ (-))
-instance One ℝᴾ where 
+instance One ℝᴾ where
   one = Natural one
-instance Times ℝᴾ where 
+instance Times ℝᴾ where
   (×) = numberBOpᴾ (Natural ∘∘ (×)) (Rationalᴾ ∘∘ (×)) (Doubleᴾ ∘∘ (×))
-instance Divide ℝᴾ where 
+instance Divide ℝᴾ where
   (/) = numberBOpᴾ (\ n₁ n₂ → Rationalᴾ $ ratᴾ n₁ / ratᴾ n₂) (Rationalᴾ ∘∘ (/)) (Doubleᴾ ∘∘ (/))
-instance Pon ℝᴾ where 
+instance Pon ℝᴾ where
   Natural   m ^^ n = Natural   $ m ^^ n
   Rationalᴾ q ^^ n = Rationalᴾ $ q ^^ n
   Doubleᴾ   d ^^ n = Doubleᴾ   $ d ^^ n
-instance Pow ℝᴾ where 
+instance Pow ℝᴾ where
   (^) = numberBOpᴾ (Natural ∘∘ (^)) (\ qᴾ₁ qᴾ₂ → Doubleᴾ $ dblᴾ qᴾ₁ ^ dblᴾ qᴾ₂) (Doubleᴾ ∘∘ (^))
 instance Root ℝᴾ where
   root (Natural   n) = Doubleᴾ $ root $ dblᴾ n
   root (Rationalᴾ q) = Doubleᴾ $ root $ dblᴾ q
   root (Doubleᴾ   d) = Doubleᴾ $ root d
-instance Log ℝᴾ where 
+instance Log ℝᴾ where
   log (Natural   n) = Doubleᴾ $ log $ dblᴾ n
   log (Rationalᴾ q) = Doubleᴾ $ log $ dblᴾ q
   log (Doubleᴾ   d) = Doubleᴾ $ log d

@@ -19,7 +19,7 @@ data FrI hᴵ hᴼ o a where
   Fr1 ∷ ∀ h o a. Tr h o a → FrI h h o a
   Fr2 ∷ ∀ hᴵ hᴼ o a. Br hᴵ o a → Fr ('S hᴵ) hᴼ o a → Br hᴵ o a → FrI hᴵ hᴼ o a
 
-data ExTallFr h o a where 
+data ExTallFr h o a where
   EqTlFr ∷ ∀ h o a. Fr 'Z h o a → ExTallFr h o a
   SuccFr ∷ ∀ h o a. Fr 'Z ('S h) o a → ExTallFr h o a
 
@@ -297,7 +297,7 @@ snocFrK f x (InFr2 bˡ () bʳ c) = consFrBrK x bʳ $ InFr2R bˡ f () c
 
 insertPosFr ∷ (Monoid o,Summary o a) ⇒ a → PositionFr h o a → ExTallFr h o a
 insertPosFr x (PositionFr0 c) = consFrK x fr0 c
-insertPosFr x (PositionFr2 d f c) = case d of 
+insertPosFr x (PositionFr2 d f c) = case d of
   Left → consFrK x f c
   Right → snocFrK f x c
 insertPosFr x (PositionFrBr d b c) = case d of
@@ -396,7 +396,7 @@ data FrK𝑆 o a where
 data BrInFr𝑆 o a where
   InFr2L𝑆 ∷ ∀ hᴵ hᴼ o a. () → Fr ('S hᴵ) hᴼ o a → Br hᴵ o a → FrK𝑆 o a → BrInFr𝑆 o a
   InFr2R𝑆 ∷ ∀ o a . () → FrK𝑆 o a → BrInFr𝑆 o a
-  
+
 data TrInFr𝑆 o a  where
   InFr1𝑆 ∷ ∀ o a. () → FrK𝑆 o a → TrInFr𝑆 o a
   InBr1𝑆 ∷ ∀ o a. () → BrInFr𝑆 o a → TrInFr𝑆 o a
@@ -438,4 +438,3 @@ streamFr f  = 𝑆 (locFstFr𝑆 f TopFr𝑆) $ \case
   Some (x :* c :* cc) → Some (x :* nextFr𝑆 c cc)
 
 instance ToStream a (Fr hᴵ hᴼ o a) where stream = streamFr
-

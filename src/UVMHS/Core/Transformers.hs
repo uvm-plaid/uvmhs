@@ -16,7 +16,7 @@ infixl 7 ⊡
 
 newtype (⊡) (t₁ ∷ (★ → ★) → (★ → ★)) (t₂ ∷ (★ → ★) → (★ → ★)) m a = Compose2 { unCompose2 ∷ t₁ (t₂ m) a }
 
-instance (∀ m'. Monad m' ⇒ Monad (t₁ m'),∀ m'. Monad m' ⇒ Monad (t₂ m'),Monad m) ⇒ Functor ((t₁ ⊡ t₂) m) where 
+instance (∀ m'. Monad m' ⇒ Monad (t₁ m'),∀ m'. Monad m' ⇒ Monad (t₂ m'),Monad m) ⇒ Functor ((t₁ ⊡ t₂) m) where
   map = mmap
 instance (∀ m'. Monad m' ⇒ Monad (t₁ m'),∀ m'. Monad m' ⇒ Monad (t₂ m'),Monad m) ⇒ Return ((t₁ ⊡ t₂) m) where
   return ∷ ∀ a. a → (t₁ ⊡ t₂) m a

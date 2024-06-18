@@ -9,8 +9,8 @@ import FP.Parser.Effects
 -- Parser Monad --
 ------------------
 
-newtype Parser t a = Parser { runParser ∷ ReaderT (ParserEnv t) (StateT (ParserState t) (NondetAppendT (Writer (ParserOut t)))) a 
-  } deriving 
+newtype Parser t a = Parser { runParser ∷ ReaderT (ParserEnv t) (StateT (ParserState t) (NondetAppendT (Writer (ParserOut t)))) a
+  } deriving
   ( Functor,Monad
   , MonadReader (ParserEnv t)
   , MonadWriter (ParserOut t)
@@ -96,7 +96,7 @@ pCatch cM xM = do
 
 pError ∷ 𝕊 → Parser t a → Parser t a
 pError msg = compose
-  [ fst ^∘ pNewContext parserStateErrorContextL 
+  [ fst ^∘ pNewContext parserStateErrorContextL
   , local (update parserEnvErrorStackL ([],msg))
   ]
 
@@ -233,7 +233,7 @@ pSurrounded uM = pSurroundedBy uM uM
 ---------------------
 -- Running Parsers --
 ---------------------
-             
+
 runParser₀ ∷ (ToStream (SourceToken t) ts) ⇒ Parser t a → ts → ([(a,ParserState t)],ParserOut t)
 runParser₀ p ts = runParserWith parserEnv₀ (parserState₀ $ stream ts) p
 
@@ -278,7 +278,7 @@ tokenize p ss = loop (parserState₀ $ stream ss) null
             Just ((x,cc),s') → do
               xs ← loop s' $ ParserOut sd pe'
               let locRange = case sourceContextPrefixRange cc of
-                    Bot → 
+                    Bot →
                       let loc = sourceInputNextLoc $ parserStateInput s
                       in LocRange loc loc
                     AddBot r → r
@@ -341,7 +341,7 @@ testParsingMultipleFailure = parseIOMain parser input
       ]
     input ∷ Stream (SourceToken ℂ)
     input = tokens "xxxx"
-    
+
 testParsingBlinders ∷ IO ()
 testParsingBlinders = parseIOMain parser input
   where
@@ -357,9 +357,9 @@ testParsingBlinders = parseIOMain parser input
 testParsingAmbiguity ∷ IO ()
 testParsingAmbiguity = parseIOMain parser input
   where
-    parser = concat ^$ oneOrMore $ mconcat 
+    parser = concat ^$ oneOrMore $ mconcat
       [ ppFG green ∘ ppText ∘ single ^$ pLit 'x'
-      , ppFG blue ∘ ppText ^$ pWord "xx" 
+      , ppFG blue ∘ ppText ^$ pWord "xx"
       ]
     input = tokens "xxx"
 

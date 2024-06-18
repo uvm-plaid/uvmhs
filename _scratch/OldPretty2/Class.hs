@@ -43,14 +43,14 @@ escape = \case
   '\f' → iter "\\f"
   c' → single c'
 
-instance Pretty ℂ where 
+instance Pretty ℂ where
   pretty c = ppLit $ string $ concat
     [ iter "'"
     , escape c
     , iter "'"
     ]
 
-instance Pretty 𝕊 where 
+instance Pretty 𝕊 where
   pretty s = ppLit $ string $ concat
     [ iter "\""
     , escape *$ iter s

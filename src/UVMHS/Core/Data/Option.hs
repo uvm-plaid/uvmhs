@@ -5,18 +5,18 @@ import UVMHS.Core.Classes
 
 import qualified Prelude as HS
 
-instance Functor 𝑂 where 
+instance Functor 𝑂 where
   map = mmap
-instance Return 𝑂 where 
+instance Return 𝑂 where
   return = Some
-instance Bind 𝑂 where 
+instance Bind 𝑂 where
   xO ≫= k = case xO of {None → None;Some x → k x}
 instance Monad 𝑂
-instance FunctorM 𝑂 where 
+instance FunctorM 𝑂 where
   mapM f = \case
     None → return None
     Some x → Some ^$ f x
-instance (Null a) ⇒ Null (𝑂 a) where 
+instance (Null a) ⇒ Null (𝑂 a) where
   null = Some null
 instance (Append a) ⇒ Append (𝑂 a) where
   None ⧺ _ = None

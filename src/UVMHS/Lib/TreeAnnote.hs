@@ -24,7 +24,7 @@ data 𝑇 i a =
 
 fold𝑇With ∷ (Monoid b) ⇒ (a → b) → (i → b → b) → 𝑇 i a → b
 fold𝑇With fₗ fₐ = loop
-  where 
+  where
     loop = \case
       N𝑇 → null
       B𝑇 xs ys → loop xs ⧺ loop ys
@@ -47,11 +47,11 @@ instance Functor (𝑇 i) where map f = fold𝑇With (L𝑇 ∘ f) annote
 -- VIRTUAL --
 -------------
 
-data 𝑇V i a = 𝑇V 
-  { un𝑇V ∷ ∀ b. (Monoid b) 
-              ⇒ (a → b) 
-              → (i → b → b) 
-              → b 
+data 𝑇V i a = 𝑇V
+  { un𝑇V ∷ ∀ b. (Monoid b)
+              ⇒ (a → b)
+              → (i → b → b)
+              → b
   }
 
 fold𝑇VOn ∷ (Monoid b) ⇒ 𝑇V i a → (a → b) → (i → b → b) → b

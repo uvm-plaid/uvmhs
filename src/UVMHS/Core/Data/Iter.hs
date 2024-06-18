@@ -4,6 +4,7 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
 import UVMHS.Core.Data.Arithmetic ()
+import UVMHS.Core.Data.Choice
 import UVMHS.Core.Data.List ()
 import UVMHS.Core.Data.String
 import UVMHS.Core.Data.Pair
@@ -37,7 +38,7 @@ empty𝐼 ∷ 𝐼 a
 empty𝐼 = null𝐼
 
 cons𝐼 ∷ a → 𝐼 a → 𝐼 a
-cons𝐼 x xs = 𝐼 HS.$ \ f i 𝓀 → 
+cons𝐼 x xs = 𝐼 HS.$ \ f i 𝓀 →
   f x i $ \ i' →
   un𝐼 xs f i' 𝓀
 
@@ -51,7 +52,7 @@ zip ∷ (ToIter a t₁,ToIter b t₂) ⇒ t₁ → t₂ → 𝐼 (a ∧ b)
 zip = zipWith (:*)
 
 snoc𝐼 ∷ 𝐼 a → a → 𝐼 a
-snoc𝐼 xs x = 𝐼 HS.$ \ f i 𝓀 → 
+snoc𝐼 xs x = 𝐼 HS.$ \ f i 𝓀 →
   un𝐼 xs f i $ \ i' →
   f x i' 𝓀
 
@@ -213,16 +214,16 @@ mfoldrWithFrom = flip mfoldr
 eachWith ∷ (Monad m,ToIter a t) ⇒ (a → m ()) → t → m ()
 eachWith f = mfoldFromWith () $ const ∘ f
 
-eachOn ∷ (Monad m,ToIter a t) ⇒ t → (a → m ()) → m () 
+eachOn ∷ (Monad m,ToIter a t) ⇒ t → (a → m ()) → m ()
 eachOn = flip eachWith
 
 eachkWith ∷ (Monad m,ToIter a t) ⇒ (a → (m () → m ()) → m ()) → t → m ()
 eachkWith f = mfoldkFromWith () $ const ∘ f
 
-eachkOn ∷ (Monad m,ToIter a t) ⇒ t → (a → (m () → m ()) → m ()) → m () 
+eachkOn ∷ (Monad m,ToIter a t) ⇒ t → (a → (m () → m ()) → m ()) → m ()
 eachkOn = flip eachkWith
 
-exec ∷ (Monad m,ToIter (m ()) t) ⇒ t → m () 
+exec ∷ (Monad m,ToIter (m ()) t) ⇒ t → m ()
 exec = eachWith id
 
 sum ∷ (ToIter a t,Additive a) ⇒ t → a
@@ -288,10 +289,10 @@ reverse ∷ (ToIter a t) ⇒ t → 𝐼 a
 reverse xs = 𝐼 HS.$ \ f i₀ 𝓀₀ → un𝐼 (iter xs) (\ x 𝓀 m𝓀 → m𝓀 $ \ i → f x i 𝓀) 𝓀₀ id i₀
 
 replicateI ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → (n → a) → 𝐼 a
-replicateI n₀ g = 𝐼 HS.$ \ f → flip $ \ 𝓀 → 
+replicateI n₀ g = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
   let loop n i
         | n ≡ n₀ = 𝓀 i
-        | otherwise = 
+        | otherwise =
             f (g n) i $ \ i' →
             loop (succ n) i'
   in loop zero
@@ -300,10 +301,10 @@ replicate ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → 𝐼 a
 replicate n = replicateI n ∘ const
 
 build ∷ ∀ n a. (Eq n,Zero n,One n,Plus n) ⇒ n → a → (a → a) → 𝐼 a
-build n₀ x₀ g = 𝐼 HS.$ \ f → flip $ \ 𝓀 → 
+build n₀ x₀ g = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
   let loop n x i
         | n ≡ n₀ = 𝓀 i
-        | otherwise = 
+        | otherwise =
             f x i $ \ i' →
             loop (succ n) (g x) i'
   in loop zero x₀
@@ -315,11 +316,11 @@ upto ∷ (Eq n,Zero n,One n,Plus n) ⇒ n → 𝐼 n
 upto n = build n zero succ
 
 reiter ∷ (ToIter a t) ⇒ s → (a → s → (s ∧ b)) → t → 𝐼 b
-reiter s₀ f xs = 
-  𝐼 HS.$ \ g i₀ 𝓀₀ → 
-    snd $ run𝐼On (iter xs) (\ (s :* i) → s :* 𝓀₀ i) (s₀ :* i₀) $ \ x (s :* i) 𝓀 → 
+reiter s₀ f xs =
+  𝐼 HS.$ \ g i₀ 𝓀₀ →
+    snd $ run𝐼On (iter xs) (\ (s :* i) → s :* 𝓀₀ i) (s₀ :* i₀) $ \ x (s :* i) 𝓀 →
         let s' :* y = f x s
-        in (s' :*) $ g y i $ \ i' → 
+        in (s' :*) $ g y i $ \ i' →
           snd $ 𝓀 $ s' :* i'
 
 withIndex ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → 𝐼 (n ∧ a)
@@ -329,17 +330,17 @@ withFirst ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
 withFirst = reiter True $ \ x b → False :* (b :* x)
 
 mapFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapFirst f = reiter True $ \ x b → 
-  let x' = if b then f x else x 
+mapFirst f = reiter True $ \ x b →
+  let x' = if b then f x else x
   in False :* x'
 
 mapAfterFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapAfterFirst f = reiter True $ \ x b → 
-  let x' = if b then x else f x 
+mapAfterFirst f = reiter True $ \ x b →
+  let x' = if b then x else f x
   in False :* x'
 
 keepN ∷ (ToIter a t,Eq n,Zero n,One n,Plus n) ⇒ n → t → 𝐼 a
-keepN n₀ xs = 𝐼 HS.$ \ f i₀ 𝓀₀ → 
+keepN n₀ xs = 𝐼 HS.$ \ f i₀ 𝓀₀ →
   let g x (n :* i) 𝓀 = (succ n :*) $
         if n ≡ n₀
         then 𝓀₀ i
@@ -360,7 +361,7 @@ mapBeforeLast f = map (\ (b :* x) → case b of {True → x;False → f x}) ∘ 
 
 filterMap ∷ (ToIter a t) ⇒ (a → 𝑂 b) → t → 𝐼 b
 filterMap f xs = 𝐼 HS.$ \ g →
-  un𝐼 (iter xs) $ \ x i 𝓀 → 
+  un𝐼 (iter xs) $ \ x i 𝓀 →
     case f x of
       None → 𝓀 i
       Some y → g y i 𝓀
@@ -377,9 +378,9 @@ filterOn = flip filter
 inbetween ∷ (ToIter a t) ⇒ a → t → 𝐼 a
 inbetween xⁱ xs = 𝐼 HS.$ \ f →
   un𝐼 (withFirst $ iter xs) $ \ (b :* x) i 𝓀 →
-    if b 
+    if b
     then f x i 𝓀
-    else 
+    else
       f xⁱ i $ \ i' →
       f x i' 𝓀
 
@@ -464,6 +465,13 @@ dropWhile p xs₀ =
           | otherwise → iter $ 𝑆 $ \ () → Some $ x :* xs'
   in loop $ un𝑆 (stream xs₀) ()
 
+partition ∷ (a → b ∨ c) → 𝐿 a → 𝐿 b ∧ 𝐿 c
+partition decide = foldrFromWith (Nil :* Nil) $
+  elimChoice (mapFst ∘ (:&)) (mapSnd ∘ (:&)) ∘ decide
+
+partition𝔹 ∷ (a → 𝔹) → 𝐿 a → 𝐿 a ∧ 𝐿 a
+partition𝔹 decide = partition (\ a → elim𝔹 (Inl a) (Inr a) (decide a))
+
 ---------
 -- All --
 ---------
@@ -471,7 +479,7 @@ dropWhile p xs₀ =
 instance All () where
   all = single ()
 
-instance All 𝔹 where 
+instance All 𝔹 where
   all = iter [True,False]
 
 instance (All a) ⇒ All (𝑂 a) where
@@ -480,7 +488,7 @@ instance (All a) ⇒ All (𝑂 a) where
 instance (All a,All b) ⇒ All (a ∨ b) where
   all = map Inl all ⧺ map Inr all
 
-instance (All a,All b) ⇒ All (a ∧ b) where 
+instance (All a,All b) ⇒ All (a ∧ b) where
   all = do x ← all ; y ← all ; return $ x :* y
 
 

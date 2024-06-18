@@ -156,13 +156,13 @@ ppUT ∷ ℂ → Color → Doc → Doc
 ppUT c o = ppUndertag c (formats [FG o])
 
 ppPunFmt ∷ Doc → Doc
-ppPunFmt = ppFormatParam punctuationFormatL 
+ppPunFmt = ppFormatParam punctuationFormatL
 
 ppPun ∷ 𝕊 → Doc
 ppPun = ppPunFmt ∘ ppString
 
 ppKeyFmt ∷ Doc → Doc
-ppKeyFmt = ppFormatParam keywordFormatL 
+ppKeyFmt = ppFormatParam keywordFormatL
 
 ppKey ∷ 𝕊 → Doc
 ppKey = ppKeyFmt ∘ ppString
@@ -320,15 +320,15 @@ ppPostLevel ∷ ℕ64 → Doc → Doc → Doc
 ppPostLevel i oM xM = ppLevel i $ concat $ iter [xM,oM]
 
 ppInf ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInf i o e₁ e₂ = 
+ppInf i o e₁ e₂ =
   ppInfLevel i (concat [ppNewlineIfBreak,ppAlign o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppInfl ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfl i o e₁ e₂ = 
+ppInfl i o e₁ e₂ =
   ppInflLevel i (concat [ppNewlineIfBreak,ppAlign o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppInfr ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfr i o e₁ e₂ = 
+ppInfr i o e₁ e₂ =
   ppInfrLevel i (concat [ppNewlineIfBreak,ppAlign o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppPre ∷ ℕ64 → Doc → Doc → Doc
@@ -353,15 +353,15 @@ ppPostSep ∷ ℕ64 → Doc → Doc → Doc
 ppPostSep i o = ppPost i $ ppSpaceIfNoBreak ⧺ o
 
 ppInf' ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInf' i o e₁ e₂ = 
+ppInf' i o e₁ e₂ =
   ppInfLevel i (concat [ppNewlineIfBreak,ppAlign o,ppNewlineIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppInfl' ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfl' i o e₁ e₂ = 
+ppInfl' i o e₁ e₂ =
   ppInflLevel i (concat [ppNewlineIfBreak,ppAlign o,ppNewlineIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppInfr' ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfr' i o e₁ e₂ = 
+ppInfr' i o e₁ e₂ =
   ppInfrLevel i (concat [ppNewlineIfBreak,ppAlign o,ppNewlineIfBreak]) (ppGA e₁) $ ppGA e₂
 
 ppInfSep' ∷ ℕ64 → Doc → Doc → Doc → Doc
@@ -375,11 +375,11 @@ ppInfrSep' i o = ppInfr' i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
 
 
 ppApp ∷ (ToIter Doc t) ⇒ Doc → t → Doc
-ppApp x xs 
+ppApp x xs
   | count xs ≡ 𝕟64 0 = ppAlign x
   | otherwise = Doc $ do
     l ← askL $ appLevelL ⊚ docEnvPrettyParamsL
-    unDoc $ ppLevel l $ concat 
+    unDoc $ ppLevel l $ concat
       [ ppGA x
       , ppSpaceNewlineIfBreak
       , concat $ inbetween ppSpaceNewlineIfBreak $ map (ppGA ∘ ppBump) $ iter xs
@@ -437,7 +437,7 @@ ppMatrix has vas dss =
       dss'      = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
         in Doc $ tell $ StaticDocA $ SummaryI True (ShapeA False sh) $ treeIO t
-  in 
+  in
   ppVertical $ mapOn dss' $ \ ds →
     ppHorizontal $ inbetween null ds
 
@@ -449,7 +449,7 @@ ppMatrixCells has vas dss =
       dss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
         in Doc $ tell $ StaticDocA $ SummaryI True (ShapeA False sh) $ treeIO t
-  in 
+  in
   ppVertical $ inbetween sep $ mapOn dss' $ \ ds →
     ppHorizontal $ inbetween (ppFG white $ ppString "│") ds
 
@@ -457,7 +457,7 @@ ppMatrixCells has vas dss =
 -- CLASS --
 -----------
 
-class Pretty a where 
+class Pretty a where
   pretty ∷ a → Doc
 
 class PrettyM m a | a → m where
@@ -481,15 +481,15 @@ instance Pretty ℚ where pretty = ppLit ∘ show𝕊
 instance Pretty ℚᴾ where pretty = ppLit ∘ show𝕊
 instance Pretty 𝔻  where pretty = ppLit ∘ show𝕊
 instance Pretty 𝔻ᴾ  where pretty (𝔻ᴾ d) = ppLit $ show𝕊 d
-instance Pretty ℝ  where 
-  pretty = \case 
-    Integer i → pretty i 
-    Rational q → pretty q 
+instance Pretty ℝ  where
+  pretty = \case
+    Integer i → pretty i
+    Rational q → pretty q
     Double d → pretty d
-instance Pretty ℝᴾ  where 
-  pretty = \case 
-    Natural n → pretty n 
-    Rationalᴾ q → pretty q 
+instance Pretty ℝᴾ  where
+  pretty = \case
+    Natural n → pretty n
+    Rationalᴾ q → pretty q
     Doubleᴾ d → pretty d
 
 instance Pretty Time where pretty = ppLit ∘ show𝕊
@@ -506,14 +506,14 @@ escape = \case
   '\f' → iter $ 𝕤 "\\f"
   c' → single c'
 
-instance Pretty ℂ where 
+instance Pretty ℂ where
   pretty c = ppLit $ string $ concat
     [ iter $ 𝕤 "'"
     , escape c
     , iter $ 𝕤 "'"
     ]
 
-instance Pretty 𝕊 where 
+instance Pretty 𝕊 where
   pretty s = ppLit $ string $ concat
     [ iter $ 𝕤 "\""
     , escape *$ iter s
@@ -527,29 +527,29 @@ instance (Pretty a,Pretty b) ⇒ Pretty (a ∧ b) where
 
 instance (Pretty a) ⇒ Pretty (() → a) where pretty = pretty ∘ appto ()
 
-instance (Pretty a) ⇒ Pretty (𝐿 a) where 
+instance (Pretty a) ⇒ Pretty (𝐿 a) where
   pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
-instance (Pretty a) ⇒ Pretty [a] where 
+instance (Pretty a) ⇒ Pretty [a] where
   pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
-instance (Pretty a) ⇒ Pretty (𝐼 a) where 
+instance (Pretty a) ⇒ Pretty (𝐼 a) where
   pretty xs = ppApp (ppString "𝐼") $ list [pretty $ list xs]
-instance (Pretty a) ⇒ Pretty (𝐼C a) where 
+instance (Pretty a) ⇒ Pretty (𝐼C a) where
   pretty xs = ppApp (ppString "𝐼C") $ list [pretty $ list xs]
-instance (Pretty a) ⇒ Pretty (𝑄 a) where 
+instance (Pretty a) ⇒ Pretty (𝑄 a) where
   pretty xs = ppApp (ppString "𝑄") $ list [pretty $ list xs]
-instance (Pretty a) ⇒ Pretty (𝑃 a) where 
+instance (Pretty a) ⇒ Pretty (𝑃 a) where
   pretty = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") ∘ map pretty ∘ iter
-instance (Pretty k,Pretty v) ⇒ Pretty (k ⇰ v) where 
+instance (Pretty k,Pretty v) ⇒ Pretty (k ⇰ v) where
   pretty = ppRecord (ppPun "↦") ∘ map (mapPair pretty pretty) ∘ iter
-instance (Pretty a) ⇒ Pretty (𝕍 a) where 
+instance (Pretty a) ⇒ Pretty (𝕍 a) where
   pretty xs = ppApp (ppString "𝕍") $ list [pretty $ list xs]
-instance (Pretty a) ⇒ Pretty (𝕍S n a) where 
+instance (Pretty a) ⇒ Pretty (𝕍S n a) where
   pretty xs = ppApp (ppString "𝕍S") $ list [pretty $ list xs]
-instance (Storable a,Pretty a) ⇒ Pretty (𝕌 a) where 
+instance (Storable a,Pretty a) ⇒ Pretty (𝕌 a) where
   pretty xs = ppApp (ppString "𝕌") $ list [pretty $ list xs]
-instance (Storable a,Pretty a) ⇒ Pretty (𝕌S n a) where 
+instance (Storable a,Pretty a) ⇒ Pretty (𝕌S n a) where
   pretty xs = ppApp (ppString "𝕌S") $ list [pretty $ list xs]
--- instance (Element a,Pretty a) ⇒ Pretty (𝕄S m n a) where 
+-- instance (Element a,Pretty a) ⇒ Pretty (𝕄S m n a) where
 --   pretty xs = ppApp (ppString "𝕄S") $ list [pretty $ list xs]
 
 instance (Pretty a) ⇒ Pretty (AddNull a) where
@@ -577,9 +577,9 @@ instance (Pretty a) ⇒ Pretty (AddBT a) where
 instance Pretty Stack.CallStack where pretty = ppString ∘ string ∘ Stack.prettyCallStack
 
 colorsDemo ∷ Doc
-colorsDemo = 
-  d𝕍 (vec $ iter allColors) HS.$ \ allColorsS → 
-    ppMatrix (const𝕍S 𝕟64s LH) (const𝕍S 𝕟64s TV) $ mapOn allColorsS $ \ (n :* c) → 
+colorsDemo =
+  d𝕍 (vec $ iter allColors) HS.$ \ allColorsS →
+    ppMatrix (const𝕍S 𝕟64s LH) (const𝕍S 𝕟64s TV) $ mapOn allColorsS $ \ (n :* c) →
       svec $ 𝔢 (ppString n)
           ⧺♮ 𝔢 (ppFG c $ ppString "XXXXX")
           ⧺♮ 𝔢 (ppBG c $ ppString "XXXXX")

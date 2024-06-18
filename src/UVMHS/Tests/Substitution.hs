@@ -31,21 +31,21 @@ import UVMHS.Lang.ULC
 𝔱 "subst:bind" [| subst (𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |] [| Some [ulc| λ → λ → 0 |] |]
 𝔱 "subst:bind" [| subst (𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 1 |] |] [| Some [ulc| λ → λ → 2 |] |]
 
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 0 |] |] 
+𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 0 |] |]
                  [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 0 |] |] 
+𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 0 |] |]
                  [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |] 
+𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
                  [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 1 |] |] 
+𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 1 |] |]
                  [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 2 |]) [ulc| λ → 0 |] |] 
+𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 2 |]) [ulc| λ → 0 |] |]
                  [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 2 |]) [ulc| λ → 1 |] |] 
+𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 2 |]) [ulc| λ → 1 |] |]
                  [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 2 |] |] 
+𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 2 |] |]
                  [| Some [ulc| λ → λ → 3 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 2 |]) [ulc| λ → 2 |] |] 
+𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 2 |]) [ulc| λ → 2 |] |]
                  [| Some [ulc| λ → λ → 4 |] |]
 
 -- append --
@@ -64,22 +64,22 @@ import UVMHS.Lang.ULC
 𝔱 "subst:⧺" [| subst (𝓈dintro 1)               [ulc| λ → 1 |] |] [| Some [ulc| λ → 2 |] |]
 𝔱 "subst:⧺" [| subst (null ⧺ 𝓈dintro 1 ⧺ null) [ulc| λ → 1 |] |] [| Some [ulc| λ → 2 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |] 
+𝔱 "subst:⧺" [| subst (𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
             [| Some [ulc| λ → λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ 𝓈dbind [ulc| λ → 0 |] ⧺ null) [ulc| λ → 1 |] |] 
+𝔱 "subst:⧺" [| subst (null ⧺ 𝓈dbind [ulc| λ → 0 |] ⧺ null) [ulc| λ → 1 |] |]
             [| Some [ulc| λ → λ → 0 |] |]
 
 𝔱 "subst:⧺" [| subst (𝓈dintro 2)             [ulc| λ → 1 |] |] [| Some [ulc| λ → 3 |] |]
 𝔱 "subst:⧺" [| subst (𝓈dintro 1 ⧺ 𝓈dintro 1) [ulc| λ → 1 |] |] [| Some [ulc| λ → 3 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |] 
+𝔱 "subst:⧺" [| subst (𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
             [| Some [ulc| λ → λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (𝓈dshift 1 (𝓈dbind [ulc| λ → 0 |]) ⧺ 𝓈dintro 1) [ulc| λ → 1 |] |] 
+𝔱 "subst:⧺" [| subst (𝓈dshift 1 (𝓈dbind [ulc| λ → 0 |]) ⧺ 𝓈dintro 1) [ulc| λ → 1 |] |]
             [| Some [ulc| λ → λ → 0 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dintro 1 ⧺ 𝓈dbind [ulc| 1 |]) [ulc| 0 (λ → 2) |] |] 
+𝔱 "subst:⧺" [| subst (𝓈dintro 1 ⧺ 𝓈dbind [ulc| 1 |]) [ulc| 0 (λ → 2) |] |]
             [| Some [ulc| 2 (λ → 2) |] |]
-𝔱 "subst:⧺" [| subst (𝓈dshift 1 (𝓈dbind [ulc| 1 |]) ⧺ 𝓈dintro 1) [ulc| 0 (λ → 2) |] |] 
+𝔱 "subst:⧺" [| subst (𝓈dshift 1 (𝓈dbind [ulc| 1 |]) ⧺ 𝓈dintro 1) [ulc| 0 (λ → 2) |] |]
             [| Some [ulc| 2 (λ → 2) |] |]
 
 𝔱 "subst:⧺" [| subst (𝓈dintro 1) *$ subst (𝓈dshift 1 null) [ulc| 0 |] |]
@@ -155,7 +155,7 @@ import UVMHS.Lang.ULC
 
 -- fuzzing --
 
-𝔣 "zzz:subst:hom:refl" 100 
+𝔣 "zzz:subst:hom:refl" 100
   [| do e ← randSml @ULCExpRaw
         return e
   |]
@@ -169,21 +169,21 @@ import UVMHS.Lang.ULC
   |]
   [| \ (𝓈₁ :* 𝓈₂ :* e) → subst (𝓈₁ ⧺ 𝓈₂) e ≡ (subst 𝓈₁ *$ subst 𝓈₂ e) |]
 
-𝔣 "zzz:subst:lunit:⧺" 100 
+𝔣 "zzz:subst:lunit:⧺" 100
   [| do 𝓈 ← randSml @(Subst () ULCExpRaw)
         e ← randSml @ULCExpRaw
         return $ 𝓈 :* e
   |]
   [| \ (𝓈 :* e) → subst (null ⧺ 𝓈) e ≡ subst 𝓈 e |]
 
-𝔣 "zzz:subst:runit:⧺" 100 
+𝔣 "zzz:subst:runit:⧺" 100
   [| do 𝓈 ← randSml @(Subst () ULCExpRaw)
         e ← randSml @ULCExpRaw
         return $ 𝓈 :* e
   |]
   [| \ (𝓈 :* e) → subst (𝓈 ⧺ null) e ≡ subst 𝓈 e |]
 
-𝔣 "zzz:subst:trans:⧺" 100 
+𝔣 "zzz:subst:trans:⧺" 100
   [| do 𝓈₁ ← randSml @(Subst () ULCExpRaw)
         𝓈₂ ← randSml @(Subst () ULCExpRaw)
         𝓈₃ ← randSml @(Subst () ULCExpRaw)
@@ -211,13 +211,13 @@ import UVMHS.Lang.ULC
         e₂ ← randSml @ULCExpRaw
         return $ e₁ :* e₂
   |]
-  [| \ (e₁ :* e₂) → 
+  [| \ (e₁ :* e₂) →
          (subst (𝓈dintro 1) *$ subst (𝓈dbind e₁) e₂)
-         ≡ 
+         ≡
          (subst (𝓈dshift 1 $ 𝓈dbind e₁) *$ subst (𝓈dintro 1) e₂)
   |]
 
-𝔣 "zzz:subst:dist:shift/⧺:nometa" 100 
+𝔣 "zzz:subst:dist:shift/⧺:nometa" 100
   [| do n  ← randSml @ℕ64
         𝓈₁ ← alter (gsubstMetasL ⊚ unSubstL) null ^$ randSml @(Subst () ULCExpRaw)
         𝓈₂ ← alter (gsubstMetasL ⊚ unSubstL) null ^$ randSml @(Subst () ULCExpRaw)
