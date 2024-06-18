@@ -54,6 +54,7 @@ isSome = \case
   None → False
   Some _ → True
 
+-- TODO: fix this to be explicitly delayed in first argument
 ifNone ∷ a → 𝑂 a → a
 ifNone i = \case
   None → i
