@@ -41,50 +41,50 @@ classes upon which the rest of the library builds.
 
 ### Collections
 
-| UVMHS Type Class Function               | Standard Haskell Class |
-|-----------------------------------------|------------------------|
-| `single ∷ (Single a t) ⇒ a → t`         | N/A                    |
-| `iter   ∷ (ToIter a t) ⇒ t → 𝐼 a`       | `Foldable t`           |
-| `(⋕?)   ∷ (Lookup k v t) ⇒ t → k → 𝑂 v` | N/A                    |
-| `(⋕)    ∷ (Access k v t) ⇒ t → k → v`   | N/A                    |
+| UVMHS Primitive Type Class Functions    |
+|-----------------------------------------|
+| `single ∷ (Single a t) ⇒ a → t`         |
+| `iter   ∷ (ToIter a t) ⇒ t → 𝐼 a`       |
+| `(⋕?)   ∷ (Lookup k v t) ⇒ t → k → 𝑂 v` |
+| `(⋕)    ∷ (Access k v t) ⇒ t → k → v`   |
 
 ### Arithmetic
 
-| UVMHS Type Class Function       | Standard Haskell Class |
-|---------------------------------|------------------------|
-| `zero ∷ (Zero a) ⇒ a`           | TODO                   |
-| `(+)  ∷ (Plus a) ⇒ a → a → a`   | TODO                   |
-| `(-)  ∷ (Minus a) ⇒ a → a → a`  | TODO                   |
-| `one  ∷ (One a) ⇒ a`            | TODO                   |
-| `(×)  ∷ (Times a) ⇒ a → a → a`  | TODO                   |
-| `(/)  ∷ (Divide a) ⇒ a → a → a` | TODO                   |
-| `(⌿)  ∷ (DivMod a) ⇒ a → a → a` | TODO                   |
-| `(÷)  ∷ (DivMod a) ⇒ a → a → a` | TODO                   |
-| `(^^) ∷ (Pon a) ⇒ a → a → a`    | TODO                   |
-| `(^)  ∷ (Pow a) ⇒ a → a → a`    | TODO                   |
-| `root ∷ (Root a) ⇒ a → a`       | TODO                   |
-| `log  ∷ (Log a) ⇒ a → a`        | TODO                   |
-| `efn  ∷ (Efn a) ⇒ a → a         | TODO                   |
-| `sin  ∷ (Sin a) ⇒ a → a`        | TODO                   |
-| `cos  ∷ (Cos a) ⇒ a → a`        | TODO                   |
+| UVMHS Type Class Function       |
+|---------------------------------|
+| `zero ∷ (Zero a) ⇒ a`           |
+| `(+)  ∷ (Plus a) ⇒ a → a → a`   |
+| `(-)  ∷ (Minus a) ⇒ a → a → a`  |
+| `one  ∷ (One a) ⇒ a`            |
+| `(×)  ∷ (Times a) ⇒ a → a → a`  |
+| `(/)  ∷ (Divide a) ⇒ a → a → a` |
+| `(⌿)  ∷ (DivMod a) ⇒ a → a → a` |
+| `(÷)  ∷ (DivMod a) ⇒ a → a → a` |
+| `(^^) ∷ (Pon a) ⇒ a → a → a`    |
+| `(^)  ∷ (Pow a) ⇒ a → a → a`    |
+| `root ∷ (Root a) ⇒ a → a`       |
+| `log  ∷ (Log a) ⇒ a → a`        |
+| `efn  ∷ (Efn a) ⇒ a → a`        |
+| `sin  ∷ (Sin a) ⇒ a → a`        |
+| `cos  ∷ (Cos a) ⇒ a → a`        |
 
 ### Monoids and Lattices
 
-| UVMHS Type Class Function       | Standard Haskell Class |
-|---------------------------------|------------------------|
-| `null ∷ (Null a) ⇒ a`           | TODO                   |
-| `(⧺)  ∷ (Append a) ⇒ a → a → a` | TODO                   |
-| `bot  ∷ (Bot a) ⇒ a`            | TODO                   |
-| `(⊔)  ∷ (Join a) ⇒ a → a → a`   | TODO                   |
-| `top  ∷ (Top a) ⇒ a`            | TODO                   |
-| `(⊓)  ∷ (Meet a) ⇒ a → a → a`   | TODO                   |
-| `(⊑)  ∷ (POrd a) ⇒ a → a → 𝔹`   | TODO                   |
+| UVMHS Type Class Function       |
+|---------------------------------|
+| `null ∷ (Null a) ⇒ a`           |
+| `(⧺)  ∷ (Append a) ⇒ a → a → a` |
+| `bot  ∷ (Bot a) ⇒ a`            |
+| `(⊔)  ∷ (Join a) ⇒ a → a → a`   |
+| `top  ∷ (Top a) ⇒ a`            |
+| `(⊓)  ∷ (Meet a) ⇒ a → a → a`   |
+| `(⊑)  ∷ (POrd a) ⇒ a → a → 𝔹`   |
 
 ### Functors and Monads
 
-| UVMHS Type Class Function                                 | Standard Haskell Class |
-|-----------------------------------------------------------|------------------------|
-| `map ∷ (Functor t) ⇒ t a → t b`                           | TODO                   |
-| `return ∷ (Return m) ⇒ a → m a`                           | TODO                   |
-| `(≫=) ∷ (Bind m) ⇒ m a → (a → m b) → m b`                 | TODO                   |
-| `mapM ∷ (FunctorM t,Monad m) ⇒ (a → m b) → t a → m (t b)` | TODO                   |
+| UVMHS Type Class Function                                   |
+|-------------------------------------------------------------|
+| `map    ∷ (Functor t) ⇒ t a → t b`                          |
+| `return ∷ (Return m) ⇒ a → m a`                             |
+| `(≫=)   ∷ (Bind m) ⇒ m a → (a → m b) → m b`                 |
+| `mapM   ∷ (FunctorM t,Monad m) ⇒ (a → m b) → t a → m (t b)` |
