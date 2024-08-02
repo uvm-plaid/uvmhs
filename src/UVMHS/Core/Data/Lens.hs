@@ -10,6 +10,7 @@ import UVMHS.Core.Data.Dict
 import UVMHS.Core.Data.Pair
 import UVMHS.Core.Data.Sequence
 import UVMHS.Core.Data.Set
+import UVMHS.Core.Data.List
 
 infixr 1 ⟢
 infixr 1 ⌲
@@ -101,7 +102,10 @@ singleL = Prism single $ \case
   _ → None
 
 consL ∷ 𝐿 a ⌲ (a ∧ 𝐿 a)
-consL = Prism (curry (:&)) $ \case { x:&xs → Some (x:*xs) ; _ → None}
+consL = Prism (curry cons𝐿) uncons𝐿
+
+snocL ∷ 𝐿 a ⌲ (𝐿 a ∧ a)
+snocL = Prism (curry snoc𝐿) unsnoc𝐿
 
 single𝑃L ∷ (Ord a) ⇒ 𝑃 a ⌲ a
 single𝑃L = prism single𝑃 $ \ xs → case pminView𝑃 xs of

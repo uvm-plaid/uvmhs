@@ -32,6 +32,11 @@ single𝐿 x = x :& Nil
 cons𝐿 ∷ a → 𝐿 a → 𝐿 a
 cons𝐿 = (:&)
 
+uncons𝐿 ∷ 𝐿 a → 𝑂 (a ∧ 𝐿 a)
+uncons𝐿 = \case
+  Nil → None
+  x :& xs → Some $ x :* xs
+
 snoc𝐿 ∷ 𝐿 a → a → 𝐿 a
 snoc𝐿 xs x = case xs of
   Nil → x :& Nil
