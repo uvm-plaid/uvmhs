@@ -30,6 +30,8 @@ instance (Show a) ⇒ Show (𝑆 a) where show = tohsChars ∘ showCollection "�
 instance (Show a) ⇒ Show (𝐼 a) where show = tohsChars ∘ showCollection "𝐼[" "]" "," show𝕊
 instance (Show a) ⇒ Show (𝐿 a) where show = tohsChars ∘ showCollection "[" "]" "," show𝕊
 
+instance Lookup ℕ64  a (𝐼 a) where (⋕?) = flip lookup𝐼
+
 instance 𝕊 ⇄ 𝐼 ℂ where
   isoto = iter ∘ tohsChars
   isofr = string
@@ -315,13 +317,20 @@ range lb ub = build (ub - lb) lb succ
 upto ∷ (Eq n,Zero n,One n,Plus n) ⇒ n → 𝐼 n
 upto n = build n zero succ
 
-reiter ∷ (ToIter a t) ⇒ s → (a → s → (s ∧ b)) → t → 𝐼 b
-reiter s₀ f xs =
-  𝐼 HS.$ \ g i₀ 𝓀₀ →
-    snd $ run𝐼On (iter xs) (\ (s :* i) → s :* 𝓀₀ i) (s₀ :* i₀) $ \ x (s :* i) 𝓀 →
+reiter ∷ ∀ t a b s. (ToIter a t) ⇒ s → (a → s → (s ∧ b)) → t → 𝐼 b
+reiter s₀ f xs = 𝐼 HS.$ \ (g ∷ b → i → (i → i) → i) (i₀ ∷ i) (𝓀₀ ∷ i → i) →
+  let 
+      g' ∷ a → s ∧ i → (s ∧ i → s ∧ i) → s ∧ i
+      g' x (s :* i) 𝓀 =
         let s' :* y = f x s
-        in (s' :*) $ g y i $ \ i' →
-          snd $ 𝓀 $ s' :* i'
+            i'' = g y i $ \ i' →
+              snd $ 𝓀 $ s' :* i'
+        in 
+        s' :* i''
+      𝓀' ∷ s ∧ i → s ∧ i
+      𝓀' (s :* i) = s :* 𝓀₀ i
+  in
+  snd $ un𝐼 (iter xs) g' (s₀ :* i₀) 𝓀' 
 
 withIndex ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → 𝐼 (n ∧ a)
 withIndex = reiter zero $ \ x i → (i + one) :* (i :* x)
@@ -464,6 +473,12 @@ dropWhile p xs₀ =
           | p x → loop $ un𝑆 xs' ()
           | otherwise → iter $ 𝑆 $ \ () → Some $ x :* xs'
   in loop $ un𝑆 (stream xs₀) ()
+
+dropN ∷ (Ord n,Zero n,One n,Plus n) ⇒ n → 𝐼 a → 𝐼 a
+dropN n₀ xs = map snd $ dropWhile (\ (n :* _x) → n < n₀) $ withIndex xs
+
+lookup𝐼 ∷ ℕ64 → 𝐼 a → 𝑂 a
+lookup𝐼 n xs = firstElem $ dropN n xs
 
 partition ∷ (a → b ∨ c) → 𝐿 a → 𝐿 b ∧ 𝐿 c
 partition decide = foldrFromWith (Nil :* Nil) $
