@@ -3,31 +3,33 @@ module UVMHS.Core.Data.List where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data.LazyList ()
+import UVMHS.Core.Data.Arithmetic ()
 
-instance Null (𝐿 a) where
-  null = empty𝐿
-instance Append (𝐿 a) where
-  (⧺) = append𝐿
-instance Monoid (𝐿 a)
-instance Functor 𝐿 where
-  map = map𝐿
-instance Return 𝐿 where
-  return = single𝐿
-instance Bind 𝐿 where
-  (≫=) = bind𝐿
-instance Monad 𝐿
-instance FunctorM 𝐿 where
-  mapM = mapM𝐿
-instance Single a (𝐿 a) where
-  single = single𝐿
-instance ToIter a (𝐿 a) where
-  iter = iter𝐿
+instance Lookup ℕ64 a (𝐿 a) where (⋕?)   = flip lookup𝐿
+instance Single     a (𝐿 a) where single = single𝐿
+instance ToIter     a (𝐿 a) where iter   = iter𝐿
+instance Null         (𝐿 a) where null   = empty𝐿
+instance Append       (𝐿 a) where (⧺)    = append𝐿
+instance Monoid       (𝐿 a) 
+instance Return       𝐿     where return = single𝐿
+instance Bind         𝐿     where (≫=)   = bind𝐿
+instance Functor      𝐿     where map    = map𝐿
+instance Monad        𝐿
+instance FunctorM     𝐿     where mapM   = mapM𝐿
 
 empty𝐿 ∷ 𝐿 a
 empty𝐿 = Nil
 
 single𝐿 ∷ a → 𝐿 a
 single𝐿 x = x :& Nil
+
+lookup𝐿 ∷ ℕ64 → 𝐿 a → 𝑂 a
+lookup𝐿 n = \case
+  Nil → None
+  x :& xs →
+    if n ≡ zero
+    then Some x
+    else lookup𝐿 (n - one) xs
 
 cons𝐿 ∷ a → 𝐿 a → 𝐿 a
 cons𝐿 = (:&)

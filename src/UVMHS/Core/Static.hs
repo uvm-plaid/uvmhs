@@ -86,8 +86,8 @@ instance Transitive (≤) where
   _ ⊚ _ = nlte_UNSAFE P P
 instance Category (≤)
 
-irreflLT ∷ n < n → Void
-irreflLT _ = void_UNSAFE
+irreflLT ∷ ∀ n. n < n → Void
+irreflLT = \case
 
 weakenLT ∷ n₁ < n₂ → n₁ ≤ n₂
 weakenLT _ = nlte_UNSAFE P P
