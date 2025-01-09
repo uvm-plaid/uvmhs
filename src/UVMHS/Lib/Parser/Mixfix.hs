@@ -28,8 +28,8 @@ pAND    = 030  --  ∧
 pCMP    = 040  --  ==
 pCONS   = 041  --  ∷
 
-pBWAND  = 045  -- ⊻ ⩔
-pBWOR   = 046  -- ⩓
+pBWOR   = 045  -- ⊻ ⩔
+pBWAND  = 046  -- ⩓
 pBSHFT  = 047  -- ⋙ ⋘
 
 pPLUS   = 050  --  + - ⩔ ⊻
