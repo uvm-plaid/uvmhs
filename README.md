@@ -9,6 +9,11 @@ fully featured unicode input mode when editing or using UVMHS. Most
 people who use UVMHS use the input mode
 [here](https://github.com/davdar/darais-unicode-input).
 
+Note that the Symbola font has an issue where it swaps the symbols for
+U+2A4F (Double Square Union) `⩏` and U+2A4E (Double Square Intersection)
+`⩎`, and Symbola is sometimes used as a default fallback font in Linux
+distributions.
+
 ## Cross-Reference Table
 
 Here is a cross-reference table between common datatypes and their
