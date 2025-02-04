@@ -153,6 +153,18 @@ import UVMHS.Lang.ULC
 𝔱 "subst:metas" [| subst (𝓈mbind (var "x") [ulc| y |]) [ulc| 𝔪:x |] |] [| Some [ulc| y |] |]
 𝔱 "subst:metas" [| subst (𝓈mbind (var "x") [ulc| y |]) [ulc| λ y → 𝔪:x |] |] [| Some [ulc| λ y → y |] |]
 
+𝔱 "subst:metas:play" 
+  [| let 𝓈₁ = 𝓈mbind (var "x") [ulc| 1 |]
+         𝓈₂ = 𝓈dintro 1
+         𝓈₃ = 𝓈dintro 1
+         e  = [ulc| λ → 𝔪:x |]
+     in subst ((𝓈₃ ⧺ 𝓈₂) ⧺ 𝓈₁) e :* subst (𝓈₃ ⧺ (𝓈₂ ⧺ 𝓈₁)) e
+  |]
+  [| let e₁  = [ulc| λ → 3 |]
+         e₂  = [ulc| λ → 4 |]
+     in Some e₁ :* Some e₂
+  |]
+
 -- fuzzing --
 
 𝔣 "zzz:subst:hom:refl" 100
