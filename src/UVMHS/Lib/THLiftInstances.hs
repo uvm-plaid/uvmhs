@@ -8,8 +8,12 @@ import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.Substitution
 import UVMHS.Lib.Window
 
+import Instances.TH.Lift ()
+
 import qualified Language.Haskell.TH.Syntax as TH
 
+deriving instance (TH.Lift k,TH.Lift v) ⇒ TH.Lift (k ⇰ v)
+deriving instance (TH.Lift a) ⇒ TH.Lift (𝕍 a)
 deriving instance (TH.Lift a) ⇒ TH.Lift (AddBT a)
 deriving instance (TH.Lift i,TH.Lift a) ⇒ TH.Lift (WindowL i a)
 deriving instance (TH.Lift i,TH.Lift a) ⇒ TH.Lift (WindowR i a)
@@ -18,7 +22,17 @@ deriving instance TH.Lift LocRange
 deriving instance (TH.Lift 𝒸,TH.Lift a) ⇒ TH.Lift (𝐴 𝒸 a)
 deriving instance TH.Lift Loc
 deriving instance TH.Lift 𝕏
-deriving instance TH.Lift 𝕐
+instance (TH.Lift a) ⇒ TH.Lift (() → a) where
+  liftTyped ∷ ∀ m. TH.Quote m ⇒ (() → a) → TH.Code m (() → a)
+  liftTyped f = 
+    let x = f ()
+    in [|| \ () → x ||]
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstElem s e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SSubstElem s e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (DSubst s e)
+deriving instance (TH.Lift s₁,TH.Lift s₂,TH.Lift e) ⇒ TH.Lift (GSubst s₁ s₂ e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (Subst s e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (𝕐 s e)
 deriving instance (TH.Lift a,TH.Lift b) ⇒ TH.Lift (a ∧ b)
 deriving instance TH.Lift Annotation
 deriving instance TH.Lift Formats

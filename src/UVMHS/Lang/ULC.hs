@@ -5,7 +5,6 @@ import UVMHS.Core
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Annotated
-import UVMHS.Lib.Variables
 import UVMHS.Lib.Substitution
 import UVMHS.Lib.Rand
 import UVMHS.Lib.THLiftInstances ()
@@ -18,7 +17,7 @@ import Control.Monad.Fail as HS
 newtype ULCExp 𝒸 = ULCExp { unULCExp ∷ 𝐴 𝒸 (ULCExp_R 𝒸) }
   deriving (Eq,Ord,Show)
 data ULCExp_R 𝒸 =
-    Var_ULC 𝕐
+    Var_ULC (𝕐 () (ULCExp 𝒸))
   | Lam_ULC (𝑂 𝕏) (ULCExp 𝒸)
   | App_ULC (ULCExp 𝒸) (ULCExp 𝒸)
   deriving (Eq,Ord,Show)
@@ -50,7 +49,7 @@ pULCExp = ULCExp ^$ fmixfixWithContext "exp" $ concat
              return GVar
         , do void $ concat $ map cpSyntax ["meta","𝔪"]
              void $ cpSyntax ":"
-             return MVar
+             return $ flip MVar null
         ]
       x ← cpVar
       case fO of

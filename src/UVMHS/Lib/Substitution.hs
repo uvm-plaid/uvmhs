@@ -36,6 +36,9 @@ instance Fuzzy 𝕏 where
     nO ← fuzzy
     return $ 𝕏 nO "x"
 
+ppDVar ∷ ℕ64 → Doc
+ppDVar n = concat [ppPun "⌊",pretty n,ppPun "⌋"] 
+
 --------------------------
 -- SUBSTITUTION ELEMENT --
 --------------------------
@@ -75,7 +78,7 @@ data SSubstElem s e =
 
 instance (Pretty s,Pretty e) ⇒ Pretty (SSubstElem s e) where
   pretty = \case
-    Var_SSE i → pretty $ DVar i
+    Var_SSE i → ppDVar i
     Trm_SSE e → pretty e
 
 instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SSubstElem s e) where
@@ -349,10 +352,10 @@ gensymVar ℓ s = do
   n ← nextL ℓ
   return $ 𝕏 (Some n) s
 
-instance Pretty (𝕐 s e) where
+instance (Pretty s,Pretty e) ⇒ Pretty (𝕐 s e) where
   pretty = \case
     NVar n x → concat [pretty x,if n ≡ 0 then null else ppPun $ concat ["↑",show𝕊 n]]
-    DVar n → concat [ppPun "⌊",pretty n,ppPun "⌋"]
+    DVar n → ppDVar n
     GVar x → concat [pretty x]
     MVar x 𝓈 → concat [pretty x,ppPun "†",pretty 𝓈]
 
@@ -372,14 +375,16 @@ cpGVarWS = GVar ∘ var ^$ cpShaped $ view nameTWSBasicL
 -- FUZZY for Variables --
 -------------------------
 
-instance Fuzzy (𝕐 s e) where
+instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (𝕐 s e) where
   fuzzy = rchoose $ map const
     [ DVar ^$ fuzzy
     , do n ← fuzzy
          x ← fuzzy
          return $ NVar n x
     , GVar ^$ fuzzy
-    , MVar ^$ fuzzy
+    , do x ← fuzzy
+         𝓈 ← fuzzy
+         return $ MVar x 𝓈
     ]
 data FreeVarsAction s e = FreeVarsAction
   { freeVarsActionFilter ∷ s → 𝕐 s e → 𝔹
@@ -460,12 +465,12 @@ tonmd = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction (Some False) null) ∘ 
 fvsWith ∷ (Substy s e a) ⇒ (FreeVarsAction s e → FreeVarsAction s e) → a → s ⇰ 𝑃 (𝕐 s e)
 fvsWith f = fst ∘ runSubstMHalt (FVsSubstEnv $ f $ FreeVarsAction (const $ const True) null) ∘ substy
 
-fvsSMetas ∷ (Ord s,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 (𝕏 ∧ Subst s e)
+fvsSMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 (𝕏 ∧ Subst s e)
 fvsSMetas ss =
   map (pow ∘ filterMap (view mVarL) ∘ iter)
   ∘ fvsWith (update freeVarsActionFilterL $ \ s y → s ∈ ss ⩓ shape mVarL y)
 
-fvsMetas ∷ (Ord s,Substy s e a) ⇒ s → a → 𝑃 (𝕏 ∧ Subst s e)
+fvsMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ s → a → 𝑃 (𝕏 ∧ Subst s e)
 fvsMetas s x = ifNone pø $ fvsSMetas (single s) x ⋕? s
 
 fvs ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕐 s e)
@@ -596,19 +601,19 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 -- CONCRETE IMPLEMENTATIONS OF SUBSTY INSTANCES --
 --------------------------------------------------
 
-substyDBdr ∷ (Ord s) ⇒ s → SubstM s e ()
+substyDBdr ∷ (Ord s,Ord e) ⇒ s → SubstM s e ()
 substyDBdr s = umodifyEnv $ compose
   [ alter subSubstEnvL $ alter substActionSubstL $ 𝓈sdshift $ s ↦ 1
   , alter fVsSubstEnvL $ alter freeVarsActionScopeL $ (⧺) $ (s :* None) ↦ 1
   ]
 
-substyNBdr ∷ (Ord s) ⇒ s → 𝕏 → SubstM s e ()
+substyNBdr ∷ (Ord s,Ord e) ⇒ s → 𝕏 → SubstM s e ()
 substyNBdr s x = umodifyEnv $ compose
   [ alter subSubstEnvL $ alter substActionSubstL $ 𝓈snshift $ s ↦ x ↦ 1
   , alter fVsSubstEnvL $ alter freeVarsActionScopeL $ (⧺) $ (s :* Some x) ↦ 1
   ]
 
-substyBdr ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕏 → SubstM s e ()
+substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕏 → SubstM s e ()
 substyBdr s 𝓋 x = do
   substyDBdr s
   substyNBdr s x
@@ -634,7 +639,7 @@ substyBdr s 𝓋 x = do
 -- this is "the name"
 --
 -- ℕ64 parameter `n` is the de bruijn level/number
-substyVar ∷ (Ord s,Substy s e e) ⇒ 𝑂 𝕏 → s → (ℕ64 → e) → ℕ64 → SubstM s e e
+substyVar ∷ (Ord s,Ord e,Substy s e e) ⇒ 𝑂 𝕏 → s → (ℕ64 → e) → ℕ64 → SubstM s e e
 substyVar xO s 𝓋 n = do
   γ ← ask
   case γ of
@@ -654,13 +659,13 @@ substyVar xO s 𝓋 n = do
           Var_SSE n' → return $ 𝓋 n'
           Trm_SSE (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
 
-substyDVar ∷ (Ord s,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstM s e e
+substyDVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstM s e e
 substyDVar = substyVar None
 
-substyNVar ∷ (Ord s,Substy s e e) ⇒ s → (ℕ64 → e) → 𝕏 → ℕ64 → SubstM s e e
+substyNVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → 𝕏 → ℕ64 → SubstM s e e
 substyNVar s 𝓋 x = substyVar (Some x) s 𝓋
 
-substyGVar ∷ (Ord s,Substy s e e) ⇒ s → (𝕏 → e) → 𝕏 → SubstM s e e
+substyGVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕏 → e) → 𝕏 → SubstM s e e
 substyGVar s 𝓋 x = do
   γ ← ask
   case γ of
@@ -675,7 +680,7 @@ substyGVar s 𝓋 x = do
         None → return $ 𝓋 x
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
 
-substyMVar ∷ (Ord s,Substy s e e) ⇒ s → (𝕏 → Subst s e → e) → 𝕏 → Subst s e → SubstM s e e
+substyMVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕏 → Subst s e → e) → 𝕏 → Subst s e → SubstM s e e
 substyMVar s 𝓋 x 𝓈 = do
   γ ← ask
   case γ of
@@ -693,7 +698,7 @@ substyMVar s 𝓋 x 𝓈 = do
         -- CHECK THIS
         Some (SubstElem 𝑠 ueO) → failEff $ subst (𝓈 ⧺ Subst (𝓈introG 𝑠)) *$ ueO ()
 
-substy𝕐 ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕐 s e → SubstM s e e
+substy𝕐 ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕐 s e → SubstM s e e
 substy𝕐 s 𝓋 = \case
   DVar n     → substyDVar s (𝓋 ∘ DVar)          n
   NVar n x   → substyNVar s (𝓋 ∘ flip NVar x) x n
