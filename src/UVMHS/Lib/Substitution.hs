@@ -1,10 +1,40 @@
 module UVMHS.Lib.Substitution where
 
 import UVMHS.Core
-import UVMHS.Lib.Variables
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
+
+----------------------
+-- SIMPLE VARIABLES --
+----------------------
+
+-- simple variables
+data 𝕏 = 𝕏
+  { 𝕩mark ∷ 𝑂 ℕ64
+  , 𝕩name ∷ 𝕊
+  } deriving (Eq,Ord,Show)
+makeLenses ''𝕏
+
+var ∷ 𝕊 → 𝕏
+var = 𝕏 None
+
+cpVar ∷ CParser TokenBasic 𝕏
+cpVar = var ^$ cpShaped $ view nameTBasicL
+
+cpVarWS ∷ CParser TokenWSBasic 𝕏
+cpVarWS = var ^$ cpShaped $ view nameTWSBasicL
+
+instance Pretty 𝕏 where
+  pretty (𝕏 nO x) = concat
+    [ ppString x
+    , elim𝑂 null (\ n → ppPun $ concat ["#",show𝕊 n]) nO
+    ]
+
+instance Fuzzy 𝕏 where
+  fuzzy = do
+    nO ← fuzzy
+    return $ 𝕏 nO "x"
 
 --------------------------
 -- SUBSTITUTION ELEMENT --
@@ -282,6 +312,10 @@ appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
 -- SUBSTY (STANDARD SCOPED SUBSTITUTION) --
 -------------------------------------------
 
+-- ========= --
+-- VARIABLES --
+-- ========= --
+
 -- FYI there is no Substy instance for Subst, which would be "applying a
 -- substitution to a substition". The way to achieve that is just through
 -- append, or `⧺`, via the Append type class for which Subst has an instance.
@@ -289,8 +323,66 @@ newtype Subst s e = Subst { unSubst ∷ GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e 
   deriving (Eq,Ord,Show,Pretty,Fuzzy)
 makeLenses ''Subst
 
-data FreeVarsAction s = FreeVarsAction
-  { freeVarsActionFilter ∷ s → 𝕐 → 𝔹
+-- fancy variables
+data 𝕐 s e =
+    DVar ℕ64            -- de bruijn variable
+  | NVar ℕ64 𝕏          -- named (+ de bruijn index for that name)
+                        -- λ x. λ x. x↑0
+                        --        └───┘
+                        -- λ x. λ x. x↑1
+                        --   └────────┘
+  | GVar 𝕏              -- global variable
+  | MVar 𝕏 (Subst s e)  -- meta variable
+  deriving (Eq,Ord,Show)
+makePrisms ''𝕐
+
+nvar ∷ 𝕏 → 𝕐 s e
+nvar = NVar 0
+
+nvarL ∷ 𝕐 s e ⌲ 𝕏
+nvarL = prism nvar $ \case
+  NVar n x | n≡0 → Some x
+  _ → None
+
+gensymVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m 𝕏
+gensymVar ℓ s = do
+  n ← nextL ℓ
+  return $ 𝕏 (Some n) s
+
+instance Pretty (𝕐 s e) where
+  pretty = \case
+    NVar n x → concat [pretty x,if n ≡ 0 then null else ppPun $ concat ["↑",show𝕊 n]]
+    DVar n → concat [ppPun "⌊",pretty n,ppPun "⌋"]
+    GVar x → concat [pretty x]
+    MVar x 𝓈 → concat [pretty x,ppPun "†",pretty 𝓈]
+
+cpNVar ∷ CParser TokenBasic (𝕐 s e)
+cpNVar = nvar ∘ var ^$ cpShaped $ view nameTBasicL
+
+cpGVar ∷ CParser TokenBasic (𝕐 s e)
+cpGVar = GVar ∘ var ^$ cpShaped $ view nameTBasicL
+
+cpNVarWS ∷ CParser TokenWSBasic (𝕐 s e)
+cpNVarWS = nvar ∘ var ^$ cpShaped $ view nameTWSBasicL
+
+cpGVarWS ∷ CParser TokenWSBasic (𝕐 s e)
+cpGVarWS = GVar ∘ var ^$ cpShaped $ view nameTWSBasicL
+
+-------------------------
+-- FUZZY for Variables --
+-------------------------
+
+instance Fuzzy (𝕐 s e) where
+  fuzzy = rchoose $ map const
+    [ DVar ^$ fuzzy
+    , do n ← fuzzy
+         x ← fuzzy
+         return $ NVar n x
+    , GVar ^$ fuzzy
+    , MVar ^$ fuzzy
+    ]
+data FreeVarsAction s e = FreeVarsAction
+  { freeVarsActionFilter ∷ s → 𝕐 s e → 𝔹
   , freeVarsActionScope  ∷ (s ∧ 𝑂 𝕏) ⇰ ℕ64
   }
 makeLenses ''FreeVarsAction
@@ -309,7 +401,7 @@ makeLenses ''SubstAction
 -- "substition" action. This action is encoded as a parameter in the monadic
 -- environment.
 data SubstEnv s e =
-    FVsSubstEnv (FreeVarsAction s)
+    FVsSubstEnv (FreeVarsAction s e)
   | SubSubstEnv (SubstAction s e)
 makePrisms ''SubstEnv
 
@@ -320,30 +412,30 @@ makePrisms ''SubstEnv
 -- ⇈ computes free variables (I think only when the action says to do so TODO:
 -- confirm) 
 newtype SubstM s e a = SubstM
-  { unSubstM ∷ UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 𝕐) ID))) a
+  { unSubstM ∷ UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 (𝕐 s e)) ID))) a
   } deriving
   ( Return,Bind,Functor,Monad
   , MonadUCont
   , MonadReader (SubstEnv s e)
-  , MonadWriter (s ⇰ 𝑃 𝕐)
+  , MonadWriter (s ⇰ 𝑃 (𝕐 s e))
   , MonadFail
   )
 
-mkSubstM ∷ (∀ u. SubstEnv s e → (a → SubstEnv s e → (s ⇰ 𝑃 𝕐) ∧ 𝑂 u) → (s ⇰ 𝑃 𝕐) ∧ 𝑂 u)
+mkSubstM ∷ (∀ u. SubstEnv s e → (a → SubstEnv s e → (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u) → (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u)
          → SubstM s e a
 mkSubstM f = SubstM $ UContT (\ 𝓀 → ReaderT $ \ γ → FailT $ WriterT $ ID $ f γ $ \ x γ' →
   unID $ unWriterT $ unFailT $ runReaderT γ' $ 𝓀 x)
 
 runSubstM ∷
     SubstEnv s e
-  → (a → SubstEnv s e → (s ⇰ 𝑃 𝕐) ∧ 𝑂 u)
+  → (a → SubstEnv s e → (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u)
   → SubstM s e a
-  → (s ⇰ 𝑃 𝕐) ∧ 𝑂 u
+  → (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u
 runSubstM γ 𝓀 = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ runUContT 𝓀' ∘ unSubstM
   where
     𝓀' x = ReaderT $ \ γ' → FailT $ WriterT $ ID $ 𝓀 x γ'
 
-runSubstMHalt ∷ SubstEnv s e → SubstM s e a → (s ⇰ 𝑃 𝕐) ∧ 𝑂 a
+runSubstMHalt ∷ SubstEnv s e → SubstM s e a → (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 a
 runSubstMHalt γ = runSubstM γ (\ x _ → null :* Some x)
 
 ----------------
@@ -365,18 +457,18 @@ todbr = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction (Some True) null) ∘ s
 tonmd ∷ (Substy s e a) ⇒ a → 𝑂 a
 tonmd = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction (Some False) null) ∘ substy
 
-fvsWith ∷ (Substy s e a) ⇒ (FreeVarsAction s → FreeVarsAction s) → a → s ⇰ 𝑃 𝕐
+fvsWith ∷ (Substy s e a) ⇒ (FreeVarsAction s e → FreeVarsAction s e) → a → s ⇰ 𝑃 (𝕐 s e)
 fvsWith f = fst ∘ runSubstMHalt (FVsSubstEnv $ f $ FreeVarsAction (const $ const True) null) ∘ substy
 
-fvsSMetas ∷ (Ord s,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 𝕏
+fvsSMetas ∷ (Ord s,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 (𝕏 ∧ Subst s e)
 fvsSMetas ss =
   map (pow ∘ filterMap (view mVarL) ∘ iter)
   ∘ fvsWith (update freeVarsActionFilterL $ \ s y → s ∈ ss ⩓ shape mVarL y)
 
-fvsMetas ∷ (Ord s,Substy s e a) ⇒ s → a → 𝑃 𝕏
+fvsMetas ∷ (Ord s,Substy s e a) ⇒ s → a → 𝑃 (𝕏 ∧ Subst s e)
 fvsMetas s x = ifNone pø $ fvsSMetas (single s) x ⋕? s
 
-fvs ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 𝕐
+fvs ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕐 s e)
 fvs = fvsWith id
 
 nullSubst ∷ Subst s e
@@ -516,7 +608,7 @@ substyNBdr s x = umodifyEnv $ compose
   , alter fVsSubstEnvL $ alter freeVarsActionScopeL $ (⧺) $ (s :* Some x) ↦ 1
   ]
 
-substyBdr ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 → e) → 𝕏 → SubstM s e ()
+substyBdr ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕏 → SubstM s e ()
 substyBdr s 𝓋 x = do
   substyDBdr s
   substyNBdr s x
@@ -583,24 +675,27 @@ substyGVar s 𝓋 x = do
         None → return $ 𝓋 x
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
 
-substyMVar ∷ (Ord s,Substy s e e) ⇒ s → (𝕏 → e) → 𝕏 → SubstM s e e
-substyMVar s 𝓋 x = do
+substyMVar ∷ (Ord s,Substy s e e) ⇒ s → (𝕏 → Subst s e → e) → 𝕏 → Subst s e → SubstM s e e
+substyMVar s 𝓋 x 𝓈 = do
   γ ← ask
   case γ of
     FVsSubstEnv 𝒶 → do
-      let y = MVar x
+      let y = MVar x 𝓈
       when (freeVarsActionFilter 𝒶 s y) $ \ () →
         tell $ s ↦ single y
-      return $ 𝓋 x
+      return $ 𝓋 x 𝓈
     SubSubstEnv 𝓈A → do
       let gsᴹ =  gsubstMetas $ unSubst $ substActionSubst 𝓈A
       case gsᴹ ⋕? (s :* x) of
-        None → return $ 𝓋 x
-        Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
+        None → return $ 𝓋 x 𝓈
+        -- TODO: this is applying the delayed substitution after the
+        -- metavariable has been replaced with something via substitution
+        -- CHECK THIS
+        Some (SubstElem 𝑠 ueO) → failEff $ subst (𝓈 ⧺ Subst (𝓈introG 𝑠)) *$ ueO ()
 
-substy𝕐 ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 → e) → 𝕐 → SubstM s e e
+substy𝕐 ∷ (Ord s,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕐 s e → SubstM s e e
 substy𝕐 s 𝓋 = \case
-  DVar n   → substyDVar s (𝓋 ∘ DVar)          n
-  NVar n x → substyNVar s (𝓋 ∘ flip NVar x) x n
-  GVar   x → substyGVar s (𝓋 ∘ GVar)        x
-  MVar   x → substyMVar s (𝓋 ∘ MVar)        x
+  DVar n     → substyDVar s (𝓋 ∘ DVar)          n
+  NVar n x   → substyNVar s (𝓋 ∘ flip NVar x) x n
+  GVar   x   → substyGVar s (𝓋 ∘ GVar)        x
+  MVar   x 𝓈 → substyMVar s (𝓋 ∘∘ MVar)        x 𝓈

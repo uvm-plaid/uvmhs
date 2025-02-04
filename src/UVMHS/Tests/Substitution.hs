@@ -162,11 +162,13 @@ import UVMHS.Lang.ULC
   [| \ e → subst null e ≡ Some e |]
 
 𝔣 "zzz:subst:hom:⧺:nometa" 100
+  -- generate things to test (100 things)
   [| do 𝓈₁ ← alter (gsubstMetasL ⊚ unSubstL) null ^$ randSml @(Subst () ULCExpRaw)
         𝓈₂ ← alter (gsubstMetasL ⊚ unSubstL) null ^$ randSml @(Subst () ULCExpRaw)
         e ← randSml @ULCExpRaw
         return $ 𝓈₁ :* 𝓈₂ :* e
   |]
+  -- test one of the things that was generated
   [| \ (𝓈₁ :* 𝓈₂ :* e) → subst (𝓈₁ ⧺ 𝓈₂) e ≡ (subst 𝓈₁ *$ subst 𝓈₂ e) |]
 
 𝔣 "zzz:subst:lunit:⧺" 100
@@ -183,7 +185,7 @@ import UVMHS.Lang.ULC
   |]
   [| \ (𝓈 :* e) → subst (𝓈 ⧺ null) e ≡ subst 𝓈 e |]
 
-𝔣 "zzz:subst:trans:⧺" 100
+𝔣 "zzz:subst:assoc:⧺" 100
   [| do 𝓈₁ ← randSml @(Subst () ULCExpRaw)
         𝓈₂ ← randSml @(Subst () ULCExpRaw)
         𝓈₃ ← randSml @(Subst () ULCExpRaw)

@@ -2,10 +2,9 @@ module UVMHS.Lib.MMSP where
 
 import UVMHS.Core
 
-import UVMHS.Lib.Variables
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Annotated
--- import UVMHS.Lib.Substitution
+import UVMHS.Lib.Substitution
 
 -- MMSP ≈
 -- c ⊔ (c ⊓ (c + c(xᶜ…xᶜ)
