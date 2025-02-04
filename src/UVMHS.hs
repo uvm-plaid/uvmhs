@@ -16,7 +16,6 @@ module UVMHS
   , module UVMHS.Lib.Testing
   , module UVMHS.Lib.TreeAnnote
   , module UVMHS.Lib.TreeNested
-  , module UVMHS.Lib.Variables
   , module UVMHS.Lib.Window
   ) where
 
@@ -38,5 +37,4 @@ import UVMHS.Lib.THLiftInstances ()
 import UVMHS.Lib.Testing
 import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.TreeNested
-import UVMHS.Lib.Variables
 import UVMHS.Lib.Window

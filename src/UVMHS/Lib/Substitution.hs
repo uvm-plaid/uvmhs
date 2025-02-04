@@ -681,22 +681,49 @@ substyGVar s 𝓋 x = do
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
 
 substyMVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕏 → Subst s e → e) → 𝕏 → Subst s e → SubstM s e e
-substyMVar s 𝓋 x 𝓈 = do
+substyMVar s 𝓋 x 𝓈₀ = do
   γ ← ask
   case γ of
     FVsSubstEnv 𝒶 → do
-      let y = MVar x 𝓈
+      let y = MVar x 𝓈₀
       when (freeVarsActionFilter 𝒶 s y) $ \ () →
         tell $ s ↦ single y
-      return $ 𝓋 x 𝓈
+      return $ 𝓋 x 𝓈₀
     SubSubstEnv 𝓈A → do
-      let gsᴹ =  gsubstMetas $ unSubst $ substActionSubst 𝓈A
+      let 𝓈 = substActionSubst 𝓈A
+          𝓈' = 𝓈 ⧺ 𝓈₀
+          gsᴹ = gsubstMetas $ unSubst 𝓈'
       case gsᴹ ⋕? (s :* x) of
-        None → return $ 𝓋 x 𝓈
+        -- TODO: this is continuing the delaying of substitutions for the
+        -- metavariable, but as a combination of the original delayed
+        -- substitution and the new substitution in question that is being
+        -- applied.
+        -- CHECK THIS
+        None → return $ 𝓋 x 𝓈'
         -- TODO: this is applying the delayed substitution after the
         -- metavariable has been replaced with something via substitution
         -- CHECK THIS
-        Some (SubstElem 𝑠 ueO) → failEff $ subst (𝓈 ⧺ Subst (𝓈introG 𝑠)) *$ ueO ()
+        Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst (𝓈introG 𝑠)) *$ ueO ()
+
+
+-- subst (𝓈₁ ∘ 𝓈₂) e ≡ subst 𝓈₁ (subst 𝓈₂ e)
+--
+-- subst (apply 𝓈₁ 𝓈₂) e ≡ subst (mapOn 𝓈₂ (\ x e′ → apply 𝓈₁ e′)) e
+-- apply 𝓈₁ id ≡ 𝓈₁
+-- apply 𝓈 {0 ↦ 1 , 1 ↦ 2} 
+-- 𝓈₂(χ⋅𝓈₁)
+--
+-- (𝓈₂∘𝓈₁)(χ)
+--
+-- 𝓈₂(χ) = e
+--
+-- 𝓈₁(e) ← result
+--
+-- χ⋅id
+--
+-- 𝓈(χ⋅id) = χ⋅𝓈
+--
+-- 𝓈₁(𝓈₂(χ⋅id)) ≡ 𝓈₁(χ⋅𝓈₂) ≡ (𝓈₁∘𝓈₂)(χ)
 
 substy𝕐 ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕐 s e → SubstM s e e
 substy𝕐 s 𝓋 = \case

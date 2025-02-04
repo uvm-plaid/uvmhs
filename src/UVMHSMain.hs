@@ -21,10 +21,10 @@ main ∷ IO ()
 main = cleanExit $ do
   pprint $ ppHeader "COLOR TEST"
   pprint colorsDemo
-  -- $$(testModules False
-  --   [ "UVMHS.Tests.Core"
-  --   , "UVMHS.Tests.Substitution"
-  --   ])
+  $$(testModules False
+    -- [ "UVMHS.Tests.Core"
+    [ "UVMHS.Tests.Substitution"
+    ])
   pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"
   -- out "HI"
   -- e ← TH.runQ $ TH.examineCode $ TH.liftTyped (\ () → 𝕟64 5)
