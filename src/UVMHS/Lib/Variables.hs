@@ -18,10 +18,14 @@ makeLenses ''𝕏
 
 -- fancy variables
 data 𝕐 =
-    DVar ℕ64
-  | NVar ℕ64 𝕏
-  | GVar 𝕏
-  | MVar 𝕏
+    DVar ℕ64     -- de bruijn variable
+  | NVar ℕ64 𝕏   -- named (+ de bruijn index for that name)
+                 -- λ x. λ x. x↑0
+                 --        └───┘
+                 -- λ x. λ x. x↑1
+                 --   └────────┘
+  | GVar 𝕏       -- global variable
+  | MVar 𝕏       -- meta variable
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
 

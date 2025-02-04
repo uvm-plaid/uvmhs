@@ -128,6 +128,17 @@ dsubstVar (DSubst ρ̇ es ι) ṅ =
 -- GENERIC SCOPED SUBSTITUTION --
 -------------------------------
 
+-- A "named" variable will still use GSubst. Substitutions for named variables
+-- are seen as maps from variable names (i.e., 𝕏 things, or just strings
+-- conceptually) to a DSubst. In order to perform substitutions on DSubst, you
+-- need to also have the GVar and MVar substitution environments lying around.
+-- So the GSubst type is used for both named and de-bruijn substitutions.
+--
+-- Put another way, you can think of `DVar` substitutions using `DSubst` and `NVar`
+-- substitutions using `𝕏 ⇰ DSubst`. When you keep around the GVar and MVar
+-- subsitution environments, you end up with `GSubst` and `𝕏 ⇰ GSubst` as the
+-- DVar and NVar substitution structures.
+
 data GSubst s₁ s₂ e = GSubst
   { gsubstGVars ∷ s₁ ⇰ SubstElem s₂ e
   , gsubstMetas ∷ s₁ ⇰ SubstElem s₂ e
@@ -137,6 +148,7 @@ data GSubst s₁ s₂ e = GSubst
 makeLenses ''GSubst
 makePrettyUnion ''GSubst
 
+-- generates random substitutions for property based testing
 instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s₁ s₂ e) where
   fuzzy = do
     esᴳ ← fuzzy
@@ -144,6 +156,15 @@ instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s�
     𝓈 ← fuzzy
     return $ GSubst esᴳ esᴹ 𝓈
 
+-- alter a substitution to "protect" the first n de bruijn indices
+-- 0 ↦ 1
+-- 1 ↦ 2
+-- 2 ↦ 3
+-- ⇒ shift 1
+-- 0 ↦ 0
+-- 1 ↦ 2
+-- 2 ↦ 3
+-- 3 ↦ 4
 𝓈shiftG ∷ (Ord s₂) ⇒ s₂ ⇰ ℕ64 → GSubst s₁ s₂ e → GSubst s₁ s₂ e
 𝓈shiftG 𝑠 (GSubst esᴳ esᴹ 𝓈s) =
   let esᴳ' = map (introSubstElem 𝑠) esᴳ
@@ -153,6 +174,11 @@ instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s�
         in DSubst ρ' es' ι
   in GSubst esᴳ' esᴹ 𝓈s'
 
+-- the substitution that introduces de bruijn variable 0, and shifts everything
+-- else up by one
+-- 0 ↦ 1
+-- 1 ↦ 2
+-- etc.
 𝓈introG ∷ s₂ ⇰ ℕ64 → GSubst s₁ s₂ e
 𝓈introG 𝑠 = GSubst null null $ mapOn 𝑠 $ DSubst 0 null ∘ intΩ64
 
@@ -256,6 +282,9 @@ appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
 -- SUBSTY (STANDARD SCOPED SUBSTITUTION) --
 -------------------------------------------
 
+-- FYI there is no Substy instance for Subst, which would be "applying a
+-- substitution to a substition". The way to achieve that is just through
+-- append, or `⧺`, via the Append type class for which Subst has an instance.
 newtype Subst s e = Subst { unSubst ∷ GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e }
   deriving (Eq,Ord,Show,Pretty,Fuzzy)
 makeLenses ''Subst
@@ -267,16 +296,29 @@ data FreeVarsAction s = FreeVarsAction
 makeLenses ''FreeVarsAction
 
 data SubstAction s e = SubstAction
+  -- None == leave binders along
+  -- Some True ==  make everything nameless
+  -- Some False == make everything named
   { substActionReBdr ∷ 𝑂 𝔹
   , substActionSubst ∷ Subst s e
   }
 makeLenses ''SubstAction
 
+-- Substy things are things that support having an action in the SubstM monad.
+-- This "action" can either be a "compute free variables" action or a
+-- "substition" action. This action is encoded as a parameter in the monadic
+-- environment.
 data SubstEnv s e =
     FVsSubstEnv (FreeVarsAction s)
   | SubSubstEnv (SubstAction s e)
 makePrisms ''SubstEnv
 
+-- ReaderT (SubstEnv s e) 
+-- ⇈ the action, which is either compute free variables
+-- or perform substitution
+-- WriterT (s ⇰ 𝑃 𝕐)
+-- ⇈ computes free variables (I think only when the action says to do so TODO:
+-- confirm) 
 newtype SubstM s e a = SubstM
   { unSubstM ∷ UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 𝕐) ID))) a
   } deriving
@@ -304,9 +346,16 @@ runSubstM γ 𝓀 = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ runUCon
 runSubstMHalt ∷ SubstEnv s e → SubstM s e a → (s ⇰ 𝑃 𝕐) ∧ 𝑂 a
 runSubstMHalt γ = runSubstM γ (\ x _ → null :* Some x)
 
+----------------
+-- Substy API --
+----------------
+
 class Substy s e a | a→s,a→e where
   substy ∷ a → SubstM s e a
 
+-- This is the big top level API point of entry for applying a substitution.
+-- Most of the API lower down is concerned with constructing substitutions.
+-- ("substitution" = substitution or free variable computation, per SubstEnv)
 subst ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
 subst 𝓈 = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction None 𝓈) ∘ substy
 
@@ -340,15 +389,21 @@ instance                        Null   (Subst s e) where null = nullSubst
 instance (Ord s,Substy s e e) ⇒ Append (Subst s e) where (⧺)  = appendSubst
 instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 
+-- 𝓈     = substitution library
+-- s     = scoped
+-- d     = nameless
+-- shift = "going under a binder"
 𝓈sdshift ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst s e → Subst s e
 𝓈sdshift = alter unSubstL ∘ 𝓈shiftG ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
+-- n = named
 𝓈snshift ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ ℕ64 → Subst s e → Subst s e
 𝓈snshift 𝑠 = alter unSubstL $ 𝓈shiftG $ assoc $ do
   s :* xns ← iter 𝑠
   x :* n ← iter xns
   return $ s :* Some x :* n
 
+-- intro = "
 𝓈sdintro ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst s e
 𝓈sdintro = Subst ∘ 𝓈introG ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
@@ -358,12 +413,15 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
   x :* n ← iter xns
   return $ s :* Some x :* n
 
+-- dbinds = "substitute de bruijn indices 0..n with elements of this vector"
 𝓈sdbinds ∷ (Ord s) ⇒ s ⇰ 𝕍 e → Subst s e
 𝓈sdbinds = Subst ∘ 𝓈sbindsG ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
 𝓈sdbind ∷ (Ord s) ⇒ s → e → Subst s e
 𝓈sdbind s e = 𝓈sdbinds $ s ↦ single e
 
+-- nbinds = "substitude named variables with key/value pairings in this
+-- dictionary"
 𝓈snbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ 𝕍 e → Subst s e
 𝓈snbinds 𝑠 = Subst $ 𝓈sbindsG $ assoc $ do
   s :* xess ← iter 𝑠
@@ -373,6 +431,7 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈snbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
 𝓈snbind s x e = 𝓈snbinds $ s ↦ x ↦ single e
 
+-- g = global
 𝓈sgbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ e → Subst s e
 𝓈sgbinds sxes = Subst $ 𝓈sgbindsG $ assoc $ do
   s :* xes ← iter sxes
@@ -382,50 +441,68 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈sgbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
 𝓈sgbind s x e = 𝓈sgbinds $ s ↦ x ↦ e
 
+-- m = meta
 𝓈smbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ e → Subst s e
 𝓈smbinds sxes = Subst $ 𝓈smbindsG $ assoc $ do
   s :* xes ← iter sxes
   x :* e ← iter xes
   return $ s :* x :* e
 
+-- non-plural = singular
 𝓈smbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
 𝓈smbind s x e = 𝓈smbinds $ s ↦ x ↦ e
 
+-- no s = unscoped
 𝓈dshift ∷ ℕ64 → Subst () e → Subst () e
 𝓈dshift = 𝓈sdshift ∘ (↦) ()
 
+-- no s = unscoped
 𝓈nshift ∷ 𝕏 ⇰ ℕ64 → Subst () e → Subst () e
 𝓈nshift = 𝓈snshift ∘ (↦) ()
 
+-- no s = unscoped
 𝓈dintro ∷ ℕ64 → Subst () e
 𝓈dintro = 𝓈sdintro ∘ (↦) ()
 
+-- no s = unscoped
 𝓈nintro ∷ 𝕏 ⇰ ℕ64 → Subst () e
 𝓈nintro = 𝓈snintro ∘ (↦) ()
 
+-- no s = unscoped
 𝓈dbinds ∷ 𝕍 e → Subst () e
 𝓈dbinds = 𝓈sdbinds ∘ (↦) ()
 
+-- no s = unscoped
 𝓈dbind ∷ e → Subst () e
 𝓈dbind = 𝓈sdbind ()
 
+-- no s = unscoped
 𝓈nbinds ∷ 𝕏 ⇰ 𝕍 e → Subst () e
 𝓈nbinds = 𝓈snbinds ∘ (↦) ()
 
+-- no s = unscoped
 𝓈nbind ∷ 𝕏 → e → Subst () e
 𝓈nbind = 𝓈snbind ()
 
+-- no s = unscoped
 𝓈gbinds ∷ 𝕏 ⇰ e → Subst () e
 𝓈gbinds = 𝓈sgbinds ∘ (↦) ()
 
+-- no s = unscoped
 𝓈gbind ∷ 𝕏 → e → Subst () e
 𝓈gbind x e = 𝓈gbinds $ x ↦ e
 
+-- no s = unscoped
 𝓈mbinds ∷ 𝕏 ⇰ e → Subst () e
 𝓈mbinds = 𝓈smbinds ∘ (↦) ()
 
+-- no s = unscoped
 𝓈mbind ∷ 𝕏 → e → Subst () e
 𝓈mbind x e = 𝓈mbinds $ x ↦ e
+
+--------------------------------------------------
+-- CONCRETE IMPLEMENTATIONS OF SUBSTY INSTANCES --
+--------------------------------------------------
 
 substyDBdr ∷ (Ord s) ⇒ s → SubstM s e ()
 substyDBdr s = umodifyEnv $ compose
@@ -459,6 +536,12 @@ substyBdr s 𝓋 x = do
           , 𝓈sdbind s $ 𝓋 $ NVar 0 x
           ]
 
+-- 𝑂 𝕏 parameter `xO`...
+-- None = nameless
+-- Some x = named with name `x`
+-- this is "the name"
+--
+-- ℕ64 parameter `n` is the de bruijn level/number
 substyVar ∷ (Ord s,Substy s e e) ⇒ 𝑂 𝕏 → s → (ℕ64 → e) → ℕ64 → SubstM s e e
 substyVar xO s 𝓋 n = do
   γ ← ask
