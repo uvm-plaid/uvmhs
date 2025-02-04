@@ -558,6 +558,10 @@ lCommentMLBodyOpen = sequence
   , uepsRegex one
   ]
 
+-- TODO: don't love that this `neg one` expression is typed at ℕ64 and is
+-- likely generating a very large natural number, which just so happens to do
+-- the right thing with plus and unsigned number wraparound.
+-- E.g., if you changed this type to ℕ this would explode (I think)
 lCommentMLBodyClose ∷ (Ord o) ⇒ Regex CharClass ℂ o ℕ64
 lCommentMLBodyClose = sequence
   [ oom (tokRegex '-') ▷ tokRegex '}'
