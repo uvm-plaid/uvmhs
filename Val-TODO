@@ -1,0 +1,20 @@
+GSubst right now has both GVar/Metas subst and scoped subst.
+
+Let's split it apart so that we have three separate actions:
+
+- global variable substitution
+- meta variable substitution
+- scoped variable substitution
+
+so SubstEnv right now has two actions, and after the change it will have four
+
+make meta variable substitution not stick delayed substitutions onto meta
+variables
+
+make global and scoped variable substitutions *do* stick delayed substitutions onto meta variables
+
+current state of things is that all substitutions always stick (because we recently changed it to do it that way)
+
+you'll need to split appendGSubst into two or three versions (where most of the work will be)
+
+you'll need to surface copies of `subst` and friends for each variant/action
