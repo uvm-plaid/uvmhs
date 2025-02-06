@@ -375,17 +375,15 @@ cpGVarWS = GVar ∘ var ^$ cpShaped $ view nameTWSBasicL
 -- FUZZY for Variables --
 -------------------------
 
-instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (𝕐 s e) where
-  fuzzy = rchoose $ map const
-    [ DVar ^$ fuzzy
-    , do n ← fuzzy
-         x ← fuzzy
-         return $ NVar n x
-    , GVar ^$ fuzzy
-    , do x ← fuzzy
-         𝓈 ← fuzzy
-         return $ MVar x 𝓈
-    ]
+instance (Pretty e,Pretty s,Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (𝕐 s e) where
+  fuzzy = do
+    d ← askL fuzzyEnvDepthL
+    wrchoose
+      [ (:*) one $ \ () → DVar ^$ fuzzy
+      , (:*) one $ \ () → return NVar ⊡ fuzzy ⊡ fuzzy
+      , (:*) one $ \ () → GVar ^$ fuzzy
+      , (:*) d $ \ () → return MVar ⊡ fuzzy ⊡ fuzzyRec fuzzy
+      ]
 data FreeVarsAction s e = FreeVarsAction
   { freeVarsActionFilter ∷ s → 𝕐 s e → 𝔹
   , freeVarsActionScope  ∷ (s ∧ 𝑂 𝕏) ⇰ ℕ64

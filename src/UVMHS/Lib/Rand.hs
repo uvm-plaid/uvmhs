@@ -75,6 +75,9 @@ runFuzzyM γ ℊ = mapFst fst ∘ runRWS γ ℊ ∘ unRandM
 runFuzzyMRG ∷ FuzzyEnv → FuzzyM a → State RG a
 runFuzzyMRG γ xM = mkState $ \ ℊ → runFuzzyM γ ℊ xM
 
+-- | Use this to ensure termination when building recursive datatypes.  Note that this will
+-- underflow to the maximum natural when `d` is zero, so you should only every use this when you're
+-- sure `d` is not zero, e.g. guarded behind a `wrchoose` with coefficient `d`.
 fuzzyRec ∷ FuzzyM a → FuzzyM a
 fuzzyRec = mapEnvL fuzzyEnvDepthL (\ d → d-1)
 
