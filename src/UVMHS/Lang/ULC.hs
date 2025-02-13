@@ -27,7 +27,7 @@ type ULCExpRaw = ULCExp ()
 
 lexULCExp ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
 lexULCExp =
-  lexerBasic (list ["(",")","->","→","^","↑",":"])
+  lexerBasic (list ["(",")","->","→","^","↑",":","[","]"])
              (list ["lam","λ"])
              (list ["glbl","𝔤","meta","𝔪"])
              null
@@ -49,7 +49,12 @@ pULCExp = ULCExp ^$ fmixfixWithContext "exp" $ concat
              return GVar
         , do void $ concat $ map cpSyntax ["meta","𝔪"]
              void $ cpSyntax ":"
-             return $ flip MVar null
+             s ← elim𝑂 (const null) 𝓈dintro ^$ cpOptional $ do
+                void $ cpSyntax "["
+                n ← failEff ∘ natO64 *$ cpInteger
+                void $ cpSyntax "]"
+                return n
+             return $ flip MVar s
         ]
       x ← cpVar
       case fO of

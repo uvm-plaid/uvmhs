@@ -37,7 +37,7 @@ instance Fuzzy 𝕏 where
     return $ 𝕏 nO "x"
 
 ppDVar ∷ ℕ64 → Doc
-ppDVar n = concat [ppPun "⌊",pretty n,ppPun "⌋"] 
+ppDVar n = concat [ppPun "⌊",pretty n,ppPun "⌋"]
 
 --------------------------
 -- SUBSTITUTION ELEMENT --
@@ -50,9 +50,15 @@ data SubstElem s e = SubstElem
   } deriving (Eq,Ord,Show)
 makeLenses ''SubstElem
 
+instance Functor (SubstElem s) where
+  map f (SubstElem a b) = SubstElem a (map f ∘ b)
+
 instance (Pretty s,Pretty e) ⇒ Pretty (SubstElem s e) where
-  pretty (SubstElem s ueO) = ppInfr pASC (ppPun "⇈") (pretty s) $
-    ifNone (ppPun "⊥") $ pretty ^$ ueO ()
+  pretty (SubstElem s ueO) =
+    let def = ifNone (ppPun "⊥") $ map (ppPun ":=" ⧺) (pretty ^$ ueO ()) in
+    if csize s ≡ 0
+      then def
+      else ppInfr pASC (ppPun "𝓈") (pretty s) def
 
 instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SubstElem s e) where
   fuzzy = do
@@ -75,6 +81,10 @@ data SSubstElem s e =
     Var_SSE ℕ64
   | Trm_SSE (SubstElem s e)
   deriving (Eq,Ord,Show)
+
+instance Functor (SSubstElem s) where
+  map _ (Var_SSE n) = Var_SSE n
+  map f (Trm_SSE s) = Trm_SSE (map f s)
 
 instance (Pretty s,Pretty e) ⇒ Pretty (SSubstElem s e) where
   pretty = \case
@@ -109,13 +119,35 @@ data DSubst s e = DSubst
   , dsubstIntro ∷ ℤ64
   } deriving (Eq,Ord,Show)
 makeLenses ''DSubst
-makePrettyRecord ''DSubst
+
+-- Note: DSubst tend to be quite verbose under makePrettyRecord, so this instance tries to make them
+-- print more concisely.
+--
+-- ⊘ means the identity substitution
+--
+-- Otherwise the pattern is: `/n{...}↑o` where:
+-- - `/n` represents `n` shifts,
+-- - `{...}` is the vector of de Bruijn instantiations,
+-- - `↑o` represents `o` introductions,
+-- Each of these subparts is optional if it's zero/zero-length.
+instance (Pretty e, Pretty s) ⇒ Pretty (DSubst s e) where
+  pretty (DSubst 0 (csize → 0) 0) = ppPun "⊘"
+  pretty (DSubst s e i) =
+    concat $
+      (if s ≡ 0 then [] else [ppPun "/", pretty s])
+      ⧺ (if csize e ≡ 0
+          then []
+          else [ppCollection (ppPun "{") (ppPun "}") (ppPun ",") (map pretty e)])
+      ⧺ (if i ≡ 0 then [] else [ppPun "↑", pretty i])
+
+instance Functor (DSubst s) where
+  map f (DSubst a b c) = DSubst a (map (map f) b) c
 
 instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (DSubst s e) where
   fuzzy = do
     ρ ← fuzzy
     𝔰 ← fuzzy
-    es ← mapMOn (vecF 𝔰 id) $ const $ fuzzy
+    es ← mapMOn (vecF 𝔰 id) $ const fuzzy
     ι ← randr (neg $ intΩ64 𝔰) $ intΩ64 𝔰
     return $ DSubst ρ es ι
 
@@ -138,13 +170,13 @@ isNullDSubst (DSubst _ρ es ι) = csize es ≡ 0 ⩓ ι ≡ 0
 -- 𝓈 = ⟨2,[e],-1⟩
 -- 𝓈 is logically equivalent to the (infinite) substitution vector
 -- [ …
--- ,  0 ↦ ⌊ 0⌋    | ≡
--- ,  1 ↦ ⌊ 1⌋    |
--- ----------------
--- ,  2 ↦   e     | [e]
--- ----------------
--- ,  3 ↦ ⌊ 2⌋    | -1
--- ,  4 ↦ ⌊ 3⌋    |
+-- ,  0 ↦ ⌊0⌋    | ≡
+-- ,  1 ↦ ⌊1⌋    |
+-- ---------------
+-- ,  2 ↦  e     | [e]
+-- ---------------
+-- ,  3 ↦ ⌊2⌋    | -1
+-- ,  4 ↦ ⌊3⌋    |
 -- , …
 -- ]
 dsubstVar ∷ DSubst 𝑠 e → ℕ64 → SSubstElem 𝑠 e
@@ -179,7 +211,19 @@ data GSubst s₁ s₂ e = GSubst
   }
   deriving (Eq,Ord,Show)
 makeLenses ''GSubst
-makePrettyUnion ''GSubst
+
+instance (Pretty a, Pretty b, Pretty c) ⇒ Pretty (GSubst a b c) where
+  pretty (GSubst g m s)
+    | csize g ≡ 0 ⩓ csize m ≡ 0 ⩓ csize s ≡ 0 = ppString "⊘"
+    | otherwise =
+        ppCollection (ppPun "⟨") (ppPun "⟩") (ppPun ",")
+          [ concat [ppString "𝐆:", ppGA $ pretty g]
+          , concat [ppString "𝐌:", ppGA $ pretty m]
+          , concat [ppString "𝐒:", ppGA $ pretty s]
+          ]
+
+instance Functor (GSubst s₁ s₂) where
+  map f (GSubst a b c) = GSubst (map (map f) a) (map (map f) b) (map (map f) c)
 
 -- generates random substitutions for property based testing
 instance (Ord s₁,Ord s₂,Fuzzy s₁,Fuzzy s₂,Fuzzy e) ⇒ Fuzzy (GSubst s₁ s₂ e) where
@@ -326,6 +370,9 @@ newtype Subst s e = Subst { unSubst ∷ GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e 
   deriving (Eq,Ord,Show,Pretty,Fuzzy)
 makeLenses ''Subst
 
+instance Functor (Subst s) where
+  map f (Subst s) = Subst (map f s)
+
 -- fancy variables
 data 𝕐 s e =
     DVar ℕ64            -- de bruijn variable
@@ -338,6 +385,12 @@ data 𝕐 s e =
   | MVar 𝕏 (Subst s e)  -- meta variable
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
+
+instance Functor (𝕐 s) where
+  map _ (DVar n) = DVar n
+  map _ (NVar n x) = NVar n x
+  map _ (GVar n) = GVar n
+  map f (MVar x s) = MVar x (map f s)
 
 nvar ∷ 𝕏 → 𝕐 s e
 nvar = NVar 0
@@ -352,7 +405,7 @@ gensymVar ℓ s = do
   n ← nextL ℓ
   return $ 𝕏 (Some n) s
 
-instance (Pretty s,Pretty e) ⇒ Pretty (𝕐 s e) where
+instance (Pretty e, Pretty s) ⇒ Pretty (𝕐 s e) where
   pretty = \case
     NVar n x → concat [pretty x,if n ≡ 0 then null else ppPun $ concat ["↑",show𝕊 n]]
     DVar n → ppDVar n
@@ -391,13 +444,14 @@ data FreeVarsAction s e = FreeVarsAction
 makeLenses ''FreeVarsAction
 
 data SubstAction s e = SubstAction
-  -- None == leave binders along
+  -- None == leave binders alone
   -- Some True ==  make everything nameless
   -- Some False == make everything named
   { substActionReBdr ∷ 𝑂 𝔹
   , substActionSubst ∷ Subst s e
   }
 makeLenses ''SubstAction
+makePrettyRecord ''SubstAction
 
 -- Substy things are things that support having an action in the SubstM monad.
 -- This "action" can either be a "compute free variables" action or a
@@ -408,12 +462,16 @@ data SubstEnv s e =
   | SubSubstEnv (SubstAction s e)
 makePrisms ''SubstEnv
 
--- ReaderT (SubstEnv s e) 
+instance (Pretty e, Pretty s) ⇒ Pretty (SubstEnv s e) where
+  pretty (FVsSubstEnv{}) = ppString "FVsSubstEnv (cannot be prettified)"
+  pretty (SubSubstEnv sa) = pretty sa
+
+-- ReaderT (SubstEnv s e)
 -- ⇈ the action, which is either compute free variables
 -- or perform substitution
 -- WriterT (s ⇰ 𝑃 𝕐)
 -- ⇈ computes free variables (I think only when the action says to do so TODO:
--- confirm) 
+-- confirm)
 newtype SubstM s e a = SubstM
   { unSubstM ∷ UContT (ReaderT (SubstEnv s e) (FailT (WriterT (s ⇰ 𝑃 (𝕐 s e)) ID))) a
   } deriving
@@ -446,12 +504,12 @@ runSubstMHalt γ = runSubstM γ (\ x _ → null :* Some x)
 ----------------
 
 class Substy s e a | a→s,a→e where
-  substy ∷ a → SubstM s e a
+  substy ∷ STACK ⇒ a → SubstM s e a
 
 -- This is the big top level API point of entry for applying a substitution.
 -- Most of the API lower down is concerned with constructing substitutions.
 -- ("substitution" = substitution or free variable computation, per SubstEnv)
-subst ∷ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
+subst ∷ STACK ⇒ (Substy s e a) ⇒ Subst s e → a → 𝑂 a
 subst 𝓈 = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction None 𝓈) ∘ substy
 
 todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
@@ -611,7 +669,7 @@ substyNBdr s x = umodifyEnv $ compose
   , alter fVsSubstEnvL $ alter freeVarsActionScopeL $ (⧺) $ (s :* Some x) ↦ 1
   ]
 
-substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕏 → SubstM s e ()
+substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e' → e) → 𝕏 → SubstM s e ()
 substyBdr s 𝓋 x = do
   substyDBdr s
   substyNBdr s x
@@ -678,7 +736,7 @@ substyGVar s 𝓋 x = do
         None → return $ 𝓋 x
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
 
-substyMVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕏 → Subst s e → e) → 𝕏 → Subst s e → SubstM s e e
+substyMVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕏 → Subst s e → e) → 𝕏 → Subst s e → SubstM s e e
 substyMVar s 𝓋 x 𝓈₀ = do
   γ ← ask
   case γ of
@@ -690,25 +748,51 @@ substyMVar s 𝓋 x 𝓈₀ = do
     SubSubstEnv 𝓈A → do
       let 𝓈 = substActionSubst 𝓈A
           𝓈' = 𝓈 ⧺ 𝓈₀
+          -- 𝓈' = 𝓈₀ ⧺ 𝓈
           gsᴹ = gsubstMetas $ unSubst 𝓈'
+      -- pptraceM $ ppVertical
+      --   [ ppHorizontal [ppString "About to substitute MVar ", pretty x]
+      --   , ppHorizontal [ppString "with delayed substitution", pretty 𝓈₀]
+      --   , ppHorizontal [ppString "in subst environment     ", pretty 𝓈A]
+      --   -- Note: when descoping χ↑1, 𝓈A looks like {:=𝟙}↑-1, and it seems we want option 1 (which
+      --   -- results in an identity substitution), rather than option 2 (which results in ⌊0⌋↦𝟙)
+      --   -- But then, when we instantiate χ↑1 with metavar substitution χ↦⌊0⌋, we want option 2
+      --   -- (which results in 𝐌:χ↦⌊1⌋,𝐒:None↦↑1), rather than option 1 (which results in
+      --   -- 𝐌:χ↦⌊0⌋,𝐒:None↦↑1).
+      --   , ppHorizontal [ppString "option 1:", pretty (𝓈 ⧺ 𝓈₀)]
+      --   , ppHorizontal [ppString "option 2:", pretty (𝓈₀ ⧺ 𝓈)]
+      --   , ppHorizontal [ppString "gsᴹ", pretty gsᴹ]
+      --   ]
       case gsᴹ ⋕? (s :* x) of
         -- TODO: this is continuing the delaying of substitutions for the
         -- metavariable, but as a combination of the original delayed
         -- substitution and the new substitution in question that is being
         -- applied.
         -- CHECK THIS
-        None → return $ 𝓋 x 𝓈'
+        None → do
+          pptraceM $ ppHorizontal [ppString "None case, with result:", pretty (𝓋 x 𝓈')]
+          return $ 𝓋 x 𝓈'
         -- TODO: this is applying the delayed substitution after the
         -- metavariable has been replaced with something via substitution
         -- CHECK THIS
-        Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst (𝓈introG 𝑠)) *$ ueO ()
-
+        Some (SubstElem 𝑠 ueO) → do
+          result ← failEff $ subst (Subst (𝓈introG 𝑠)) *$ ueO ()
+          case gsubstSubst (unSubst 𝓈') ⋕? (s :* None) of
+            Some thing → do
+              -- pptraceM $ ppVertical
+              --   [ ppHorizontal [ppString "Some case, with result:", pretty result]
+              --   , ppHorizontal [ppString "with thing:            ", pretty thing]
+              --   ]
+              failEff $ subst (Subst (GSubst null null (gsubstSubst (unSubst 𝓈'))) ⧺ Subst (𝓈introG 𝑠)) *$ ueO ()
+            None → do
+              -- pptraceM $ ppHorizontal [ppString "Some case, with result:", pretty result]
+              failEff $ subst (Subst (𝓈introG 𝑠)) *$ ueO ()
 
 -- subst (𝓈₁ ∘ 𝓈₂) e ≡ subst 𝓈₁ (subst 𝓈₂ e)
 --
 -- subst (apply 𝓈₁ 𝓈₂) e ≡ subst (mapOn 𝓈₂ (\ x e′ → apply 𝓈₁ e′)) e
 -- apply 𝓈₁ id ≡ 𝓈₁
--- apply 𝓈 {0 ↦ 1 , 1 ↦ 2} 
+-- apply 𝓈 {0 ↦ 1 , 1 ↦ 2}
 -- 𝓈₂(χ⋅𝓈₁)
 --
 -- (𝓈₂∘𝓈₁)(χ)
@@ -723,9 +807,9 @@ substyMVar s 𝓋 x 𝓈₀ = do
 --
 -- 𝓈₁(𝓈₂(χ⋅id)) ≡ 𝓈₁(χ⋅𝓈₂) ≡ (𝓈₁∘𝓈₂)(χ)
 
-substy𝕐 ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕐 s e → SubstM s e e
+substy𝕐 ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕐 s e → SubstM s e e
 substy𝕐 s 𝓋 = \case
-  DVar n     → substyDVar s (𝓋 ∘ DVar)          n
+  DVar n     → substyDVar s (𝓋 ∘ DVar)        n
   NVar n x   → substyNVar s (𝓋 ∘ flip NVar x) x n
   GVar   x   → substyGVar s (𝓋 ∘ GVar)        x
-  MVar   x 𝓈 → substyMVar s (𝓋 ∘∘ MVar)        x 𝓈
+  MVar   x 𝓈 → substyMVar s (𝓋 ∘∘ MVar)       x 𝓈
