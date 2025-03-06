@@ -61,7 +61,7 @@ runTests verb tests = do
   oflush
   let fₗ ts = MU $ eachOn ts $ \ (Test lD srcD k valdpIO) → do
         eachOn (upto k) $ const $ do
-          valD :* p ← io $ valdpIO
+          valD :* p ← io valdpIO
           let b = p ()
           tags ← list ∘ reverse ^$ ask
           if b

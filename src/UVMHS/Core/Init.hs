@@ -33,6 +33,7 @@ import Data.String
   )
 
 import qualified Prelude as HS
+import qualified GHC.Generics as HS
 import qualified GHC.Types as HS
 import qualified GHC.Stack as HS
 
@@ -137,7 +138,7 @@ data a ∧ b = a :* b
 ----------------------
 
 data 𝑂 a = None | Some a
-  deriving (Eq,Ord,Show)
+  deriving (Eq,HS.Generic,Ord,Show)
 data 𝐿 a = Nil | a :& 𝐿 a
   deriving (Eq,Ord,TH.Lift)
 

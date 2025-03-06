@@ -4,10 +4,12 @@ import UVMHS.Core
 
 import UVMHS.Lib.Pretty
 
+import qualified GHC.Generics as HS
+
 data 𝐴 e a = 𝐴
   { atag ∷ e
   , aval ∷ a
-  } deriving (Show)
+  } deriving (HS.Generic, Show)
 makeLenses ''𝐴
 makePrettySum ''𝐴
 

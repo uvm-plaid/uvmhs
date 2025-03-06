@@ -12,15 +12,16 @@ import UVMHS.Lib.THLiftInstances ()
 import qualified Language.Haskell.TH.Syntax as TH
 import qualified Language.Haskell.TH.Quote  as TH
 
+import GHC.Generics as HS
 import Control.Monad.Fail as HS
 
 newtype ULCExp 𝒸 = ULCExp { unULCExp ∷ 𝐴 𝒸 (ULCExp_R 𝒸) }
-  deriving (Eq,Ord,Show)
+  deriving (Eq,Generic,Ord,Show)
 data ULCExp_R 𝒸 =
     Var_ULC (𝕐 () (ULCExp 𝒸))
   | Lam_ULC (𝑂 𝕏) (ULCExp 𝒸)
   | App_ULC (ULCExp 𝒸) (ULCExp 𝒸)
-  deriving (Eq,Ord,Show)
+  deriving (Eq,HS.Generic,Ord,Show)
 
 type ULCExpSrc = ULCExp SrcCxt
 type ULCExpRaw = ULCExp ()

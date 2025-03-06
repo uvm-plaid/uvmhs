@@ -56,10 +56,12 @@ instance Functor (SubstElem s) where
 instance (Pretty s,Pretty e) ⇒ Pretty (SubstElem s e) where
   pretty (SubstElem s ueO) =
     let def = ifNone (ppPun "⊥") $ map (ppPun "≔" ⧺) (pretty ^$ ueO ()) in
-    if csize s ≡ 0
-      then def
-      -- Attempt to remove keys that map to 0 from the output
-      else ppInfr pASC (ppPun "𝓈") (pretty (omap𝐷 (\ n → if n ≡ 0 then None else Some n) s)) def
+    ppGA $
+      if csize s ≡ 0
+        then ppHorizontal [def]
+        -- Attempt to remove keys that map to 0 from the output
+        -- else ppGA $ ppHorizontal [def, ppKey "where", pretty (omap𝐷 (\ n → if n ≡ 0 then None else Some n) s)]
+        else ppGA $ ppHorizontal [ppPun "⎨", def, ppKey "where", pretty s, ppPun "⎬"]
 
 instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SubstElem s e) where
   fuzzy = return SubstElem ⊡ fuzzy ⊡ fuzzy
@@ -113,9 +115,57 @@ subSSubstElem substV substE = \case
 -- INVARIANT: |es| + ι ≥ 0
 data DSubst s e = DSubst
   { dsubstShift ∷ ℕ64
+  -- ^ de Bruijn indices lower than this number will be untouched by this substitution.  Think of it
+  -- as a substitution working over all natural numbers being shifted to the right to ignore this
+  -- many first indices.
   , dsubstElems ∷ 𝕍 (SSubstElem s e)
+  -- ^ Instantiates as many of the first indices (post-shift) as the length of this vector with the
+  -- values in the vector.
   , dsubstIntro ∷ ℤ64
+  -- ^ Starting at the de Bruijn index after all the shifts and all the instantiations, simulate an
+  -- introduction of this many de Bruijn variables, by bumping all subsequent indices by this much.
   } deriving (Eq,Ord,Show)
+
+-- | If we get a `DSubst` where some `dsubstElems` elements are merely emulating what happens under
+-- a shift, or under an intro, we simplify it to instead use those, making the vector of elements
+-- shorter.
+--
+-- For instance, consider:
+--   DSubst 3 [3, 4, 1, 1, 9, 10] 2
+-- supposedly, it:
+--   * keeps the first 3 indices protected (0 ↦ 0, 1 ↦ 1, 2 ↦ 2)
+--   * then maps indices [3,4,5,6,7,8] to [3,4,1,1,9,10]
+--   * then maps indices [9,10,11,…] to [11,12,13,‥]
+-- but this could be better expressed as:
+--   DSubst 5 [1, 1] 2
+--   * keeps the first 5 indices protected, i.e. [0,1,2,3,4] ↦ [0,1,2,3,4]
+--   * then [5,6] ↦ [1, 1]
+--   * then [7,8,9,10,11,…] ↦ [9,10,11,12,13,…]
+simplifyDSubst ∷ DSubst s e → DSubst s e
+simplifyDSubst (DSubst s es i) =
+  let
+    (shifts :* intermediate) = peelPrefix s (list es)
+    elems = peelReverseSuffix shifts (list $ reverse intermediate) i
+  in DSubst shifts elems i
+  where
+    peelPrefix ∷ ℕ64 → 𝐿 (SSubstElem s e) → (ℕ64 ∧ 𝐿 (SSubstElem s e))
+    peelPrefix shifts (Var_SSE h :& t) | h ≡ s = peelPrefix (shifts + 1) t
+    peelPrefix shifts elems = shifts :* elems
+
+    -- Note: technically we could pre-add shifts and intros, but this is a bit more readable
+    peelReverseSuffix ∷ ℕ64 → 𝐿 (SSubstElem s e) → ℤ64 → 𝕍 (SSubstElem s e)
+    peelReverseSuffix shifts (Var_SSE h :& t) intros
+      | intΩ64 h ≡ intΩ64 (shifts + count t) + intros
+      = peelReverseSuffix shifts t intros
+    peelReverseSuffix _ revElems _ = vec (reverse revElems)
+
+-- instance (Eq e, Eq s) ⇒ Eq (DSubst s e) where
+--   ds1 == ds2 =
+--     let
+--       DSubst s1 es1 i1 = simplifyDSubst ds1
+--       DSubst s2 es2 i2 = simplifyDSubst ds2
+--       in meets [s1 ≡ s2, es1 ≡ es2, i1 ≡ i2]
+
 makeLenses ''DSubst
 
 -- Note: DSubst tend to be quite verbose under makePrettyRecord, so this instance tries to make them
@@ -214,7 +264,7 @@ instance (Pretty a, Pretty b, Pretty c) ⇒ Pretty (GSubst a b c) where
   pretty (GSubst g s)
     | csize g ≡ 0 ⩓ csize s ≡ 0 = ppString "⊘"
     | otherwise =
-        ppCollection (ppPun "⟨") (ppPun "⟩") (ppPun ",")
+        ppGA $ ppCollection (ppPun "⟨") (ppPun "⟩") (ppPun ",")
           [ concat [ppString "𝐆:", ppGA $ pretty g]
           -- , concat [ppString "𝐌:", ppGA $ pretty m]
           , concat [ppString "𝐒:", ppGA $ pretty s]
@@ -360,7 +410,13 @@ appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
 -- FYI there is no Substy instance for Subst, which would be "applying a
 -- substitution to a substition". The way to achieve that is just through
 -- append, or `⧺`, via the Append type class for which Subst has an instance.
-newtype Subst s e = Subst { unSubst ∷ GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) e }
+newtype Subst s e = Subst {
+  unSubst ∷
+    GSubst
+      (s ∧ 𝕏)   -- domain for global variables: scope + gvar name
+      (s ∧ 𝑂 𝕏) -- domain for scoped variables: scope + either name or None for de Bruijn substitution
+      e
+  }
   deriving (Eq,Ord,Show,Pretty,Fuzzy)
 makeLenses ''Subst
 
@@ -752,9 +808,11 @@ substyMVar s 𝓋 x 𝓈₀ = do
       return $ 𝓋 x 𝓈₀
     SubSubstEnv 𝓈A → do
       let 𝓈 = substActionSubst 𝓈A
-          -- 𝓈' = 𝓈 ⧺ 𝓈₀
+          -- This versions makes more intuitive sense, in that the incoming substitution action
+          -- should have the final word? (This assumes the append does RHS before LHS)
+          𝓈' = 𝓈 ⧺ 𝓈₀
           -- This version seems to work better:
-          𝓈' = 𝓈₀ ⧺ 𝓈
+          -- 𝓈' = 𝓈₀ ⧺ 𝓈
       return $ 𝓋 x 𝓈'
     MetaSubstEnv (MetaSubst gs) →
       case gs ⋕? (s :* x) of

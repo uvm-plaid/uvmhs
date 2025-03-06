@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.37.0.
+-- This file has been generated from package.yaml by hpack version 0.38.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -125,6 +125,7 @@ library
       CPP
       DefaultSignatures
       DataKinds
+      DeriveGeneric
       DeriveLift
       EmptyCase
       ExplicitNamespaces
@@ -164,7 +165,8 @@ library
       ViewPatterns
   ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -Wno-star-is-type -j2 -fno-prof-auto -O2 -optc-O3 -fspecialise-aggressively -fexpose-all-unfoldings -fprint-potential-instances
   build-depends:
-      base
+      QuickCheck
+    , base
     , bytestring
     , cassava
     , containers
@@ -195,6 +197,7 @@ executable uvmhs
       CPP
       DefaultSignatures
       DataKinds
+      DeriveGeneric
       DeriveLift
       EmptyCase
       ExplicitNamespaces
@@ -234,7 +237,8 @@ executable uvmhs
       ViewPatterns
   ghc-options: -optP-Wno-nonportable-include-path -Wall -Wno-orphans -Wno-star-is-type -j2 -fno-prof-auto -O2 -optc-O3 -fspecialise-aggressively -fexpose-all-unfoldings -fprint-potential-instances
   build-depends:
-      base
+      QuickCheck
+    , base
     , bytestring
     , cassava
     , containers
