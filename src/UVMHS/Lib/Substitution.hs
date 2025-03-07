@@ -773,7 +773,7 @@ substyVar xO s 𝓋 n = do
         Some 𝓈 → case dsubstVar 𝓈 n of
           Var_SSE n' → return $ 𝓋 n'
           Trm_SSE (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
-    MetaSubstEnv{} → error "TODO"
+    MetaSubstEnv{} → return $ 𝓋 n -- I think we just don't apply meta-substitutions to D/NVars?
 
 substyDVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstM s e e
 substyDVar = substyVar None
@@ -795,7 +795,7 @@ substyGVar s 𝓋 x = do
       case gsᴳ ⋕? (s :* x) of
         None → return $ 𝓋 x
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
-    MetaSubstEnv{} → error "TODO"
+    MetaSubstEnv{} → return $ 𝓋 x -- I think we just don't apply meta-substitutions to GVars?
 
 substyMVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕏 → Subst s e → e) → 𝕏 → Subst s e → SubstM s e e
 substyMVar s 𝓋 x 𝓈₀ = do
