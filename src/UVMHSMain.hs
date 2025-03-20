@@ -120,8 +120,8 @@ instance Null c ⇒ Arbitrary (ULCExp c) where
 prop_todbr_tonmd ∷ ULCExpRaw → QC.Property
 prop_todbr_tonmd e =
   let
-    Some de = todbr e
-    Some dne = todbr *$ tonmd e
+    de = viewΩ someL $ todbr e
+    dne = viewΩ someL $ todbr *$ tonmd e
     _ = pptrace $ ppVertical
         [ ppString "COUNTER-EXAMPLE"
         , ppGA $ ppHorizontal [ppString "               e:", pretty e]
@@ -140,6 +140,7 @@ prop_todbr_tonmd e =
     )
     $ equivULCExp de dne
 
+broken ∷ ULCExp SrcCxt → QC.Property
 broken e = do
   let
     de = todbr e
@@ -158,9 +159,9 @@ broken e = do
 testThisExpression ∷ Monad m ⇒ ULCExp SrcCxt -> m ()
 testThisExpression e = do
   let
-    Some de = todbr e
-    Some ne = tonmd e
-    Some dne = todbr ne
+    de = viewΩ someL $ todbr e
+    ne = viewΩ someL $ tonmd e
+    dne = viewΩ someL $ todbr ne
   pptraceM $
       ppVertical
         [ ppGA $ ppHorizontal [ppString "               e:", ppGA $ pretty e]
@@ -175,8 +176,8 @@ prop_simplify_SubstElem e _shifts = do
   let
     𝓈₁ = DSubst @(() ∧ 𝑂 𝕏) @(ULCExp ()) 0 (vec Nil) 1
     𝓈₂ = DSubst @(() ∧ 𝑂 𝕏) @(ULCExp ()) 0 (vec [Var_SSE 1]) 1
-    Some a = subst (Subst (GSubst null ((() :* None) ↦ 𝓈₁))) e
-    Some b = subst (Subst (GSubst null ((() :* None) ↦ 𝓈₂))) e
+    a = viewΩ someL $ subst (Subst (GSubst null ((() :* None) ↦ 𝓈₁))) e
+    b = viewΩ someL $ subst (Subst (GSubst null ((() :* None) ↦ 𝓈₂))) e
     _ = pptrace $ ppVertical
       [ ppGA $ ppHorizontal [ppString "𝓈₁:", ppGA $ pretty 𝓈₁]
       , ppGA $ ppHorizontal [ppString "𝓈₂:", ppGA $ pretty 𝓈₂]
@@ -213,6 +214,7 @@ equivULCDSubst d1 d2 =
   in
   s1 ≡ s2
 
+compare𝐷 ∷ (v → v → 𝔹) → (k ⇰ v) → (k ⇰ v) → 𝔹
 compare𝐷 compareElement d1 d2 =
   meets $ zipWith (compareElement `on` HS.snd)
     (Map.toAscList (un𝐷 d1)) (Map.toAscList (un𝐷 d2))
@@ -286,6 +288,7 @@ simplifyDSubstULC (DSubst s es i) =
       = peelReverseSuffix shifts t intros
     peelReverseSuffix _ revElems _ = vec (reverse revElems)
 
+test_equiv_01 ∷ 𝔹
 test_equiv_01 =
   let
     -- [] [0,0] [1,2,3,…]
@@ -294,6 +297,7 @@ test_equiv_01 =
     d2 = DSubst 1 (vec []) ((HS.-) 0 1)
   in equivULCDSubst @() d1 d2
 
+test_equiv_02 ∷ 𝔹
 test_equiv_02 =
   let
     -- [] [1] [1,2,3,…]
