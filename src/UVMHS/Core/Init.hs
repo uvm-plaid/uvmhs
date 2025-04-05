@@ -390,11 +390,11 @@ mirror f = \ c b a → f a b c
 on ∷ (b → b → c) → (a → b) → (a → a → c)
 on p f = \ x y → p (f x) (f y)
 
-curry ∷ (a → b → c) → a ∧ b → c
-curry f (x :* y) = f x y
+uncurry ∷ (a → b → c) → a ∧ b → c
+uncurry f (x :* y) = f x y
 
-uncurry ∷ (a ∧ b → c) → a → b → c
-uncurry f x y = f (x :* y)
+curry ∷ (a ∧ b → c) → a → b → c
+curry f x y = f (x :* y)
 
 
 -----------------------------------
