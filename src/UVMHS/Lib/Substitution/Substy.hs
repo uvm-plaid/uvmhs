@@ -16,7 +16,7 @@ import UVMHS.Lib.Substitution.SVar
 
 data FreeVarsAction s e = FreeVarsAction
   { freeVarsActionFilter ∷ s → 𝕐 s e → 𝔹
-  , freeVarsActionScope  ∷ (s ∧ 𝑂 𝕏) ⇰ ℕ64
+  , freeVarsActionScope  ∷ (s ∧ 𝑂 𝕎) ⇰ ℕ64
   }
 makeLenses ''FreeVarsAction
 
@@ -103,12 +103,12 @@ tonmd = snd ∘ runSubstMHalt (SubSubstEnv $ SubstAction (Some False) null) ∘ 
 fvsWith ∷ (Substy s e a) ⇒ (FreeVarsAction s e → FreeVarsAction s e) → a → s ⇰ 𝑃 (𝕐 s e)
 fvsWith f = fst ∘ runSubstMHalt (FVsSubstEnv $ f $ FreeVarsAction (const $ const True) null) ∘ substy
 
-fvsSMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 (𝕏 ∧ Subst s e)
+fvsSMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 (𝕎 ∧ Subst s e)
 fvsSMetas ss =
   map (pow ∘ filterMap (view mVarL) ∘ iter)
   ∘ fvsWith (update freeVarsActionFilterL $ \ s y → s ∈ ss ⩓ shape mVarL y)
 
-fvsMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ s → a → 𝑃 (𝕏 ∧ Subst s e)
+fvsMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ s → a → 𝑃 (𝕎 ∧ Subst s e)
 fvsMetas s x = ifNone pø $ fvsSMetas (single s) x ⋕? s
 
 fvs ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕐 s e)
@@ -132,7 +132,7 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈sdshift = alter unSubstL ∘ 𝓈shiftG ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
 -- n = named
-𝓈snshift ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ ℕ64 → Subst s e → Subst s e
+𝓈snshift ∷ (Ord s) ⇒ s ⇰ 𝕎 ⇰ ℕ64 → Subst s e → Subst s e
 𝓈snshift 𝑠 = alter unSubstL $ 𝓈shiftG $ assoc $ do
   s :* xns ← iter 𝑠
   x :* n ← iter xns
@@ -142,7 +142,7 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈sdintro ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst s e
 𝓈sdintro = Subst ∘ 𝓈introG ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
-𝓈snintro ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ ℕ64 → Subst s e
+𝓈snintro ∷ (Ord s) ⇒ s ⇰ 𝕎 ⇰ ℕ64 → Subst s e
 𝓈snintro 𝑠 = Subst $ 𝓈introG $ assoc $ do
   s :* xns ← iter 𝑠
   x :* n ← iter xns
@@ -157,34 +157,34 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 
 -- nbinds = "substitude named variables with key/value pairings in this
 -- dictionary"
-𝓈snbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ 𝕍 e → Subst s e
+𝓈snbinds ∷ (Ord s) ⇒ s ⇰ 𝕎 ⇰ 𝕍 e → Subst s e
 𝓈snbinds 𝑠 = Subst $ 𝓈sbindsG $ assoc $ do
   s :* xess ← iter 𝑠
   x :* es ← iter xess
   return $ s :* Some x :* es
 
-𝓈snbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
+𝓈snbind ∷ (Ord s) ⇒ s → 𝕎 → e → Subst s e
 𝓈snbind s x e = 𝓈snbinds $ s ↦ x ↦ single e
 
 -- g = global
-𝓈sgbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ e → Subst s e
+𝓈sgbinds ∷ (Ord s) ⇒ s ⇰ 𝕎 ⇰ e → Subst s e
 𝓈sgbinds sxes = Subst $ 𝓈sgbindsG $ assoc $ do
   s :* xes ← iter sxes
   x :* e ← iter xes
   return $ s :* x :* e
 
-𝓈sgbind ∷ (Ord s) ⇒ s → 𝕏 → e → Subst s e
+𝓈sgbind ∷ (Ord s) ⇒ s → 𝕎 → e → Subst s e
 𝓈sgbind s x e = 𝓈sgbinds $ s ↦ x ↦ e
 
 -- m = meta
-𝓈smbinds ∷ (Ord s) ⇒ s ⇰ 𝕏 ⇰ e → MetaSubst s e
+𝓈smbinds ∷ (Ord s) ⇒ s ⇰ 𝕎 ⇰ e → MetaSubst s e
 𝓈smbinds sxes = MetaSubst $ assoc $ do
   s :* xes ← iter sxes
   x :* e ← iter xes
   return $ s :* x :* SubstElem null (const (return e))
 
 -- non-plural = singular
-𝓈smbind ∷ (Ord s) ⇒ s → 𝕏 → e → MetaSubst s e
+𝓈smbind ∷ (Ord s) ⇒ s → 𝕎 → e → MetaSubst s e
 𝓈smbind s x e = 𝓈smbinds $ s ↦ x ↦ e
 
 -- no s = unscoped
@@ -192,7 +192,7 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈dshift = 𝓈sdshift ∘ (↦) ()
 
 -- no s = unscoped
-𝓈nshift ∷ 𝕏 ⇰ ℕ64 → Subst () e → Subst () e
+𝓈nshift ∷ 𝕎 ⇰ ℕ64 → Subst () e → Subst () e
 𝓈nshift = 𝓈snshift ∘ (↦) ()
 
 -- no s = unscoped
@@ -200,7 +200,7 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈dintro = 𝓈sdintro ∘ (↦) ()
 
 -- no s = unscoped
-𝓈nintro ∷ 𝕏 ⇰ ℕ64 → Subst () e
+𝓈nintro ∷ 𝕎 ⇰ ℕ64 → Subst () e
 𝓈nintro = 𝓈snintro ∘ (↦) ()
 
 -- no s = unscoped
@@ -212,27 +212,27 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 𝓈dbind = 𝓈sdbind ()
 
 -- no s = unscoped
-𝓈nbinds ∷ 𝕏 ⇰ 𝕍 e → Subst () e
+𝓈nbinds ∷ 𝕎 ⇰ 𝕍 e → Subst () e
 𝓈nbinds = 𝓈snbinds ∘ (↦) ()
 
 -- no s = unscoped
-𝓈nbind ∷ 𝕏 → e → Subst () e
+𝓈nbind ∷ 𝕎 → e → Subst () e
 𝓈nbind = 𝓈snbind ()
 
 -- no s = unscoped
-𝓈gbinds ∷ 𝕏 ⇰ e → Subst () e
+𝓈gbinds ∷ 𝕎 ⇰ e → Subst () e
 𝓈gbinds = 𝓈sgbinds ∘ (↦) ()
 
 -- no s = unscoped
-𝓈gbind ∷ 𝕏 → e → Subst () e
+𝓈gbind ∷ 𝕎 → e → Subst () e
 𝓈gbind x e = 𝓈gbinds $ x ↦ e
 
 -- no s = unscoped
-𝓈mbinds ∷ 𝕏 ⇰ e → MetaSubst () e
+𝓈mbinds ∷ 𝕎 ⇰ e → MetaSubst () e
 𝓈mbinds = 𝓈smbinds ∘ (↦) ()
 
 -- no s = unscoped
-𝓈mbind ∷ 𝕏 → e → MetaSubst () e
+𝓈mbind ∷ 𝕎 → e → MetaSubst () e
 𝓈mbind x e = 𝓈mbinds $ x ↦ e
 
 --------------------------------------------------
@@ -245,13 +245,13 @@ substyDBdr s = umodifyEnv $ compose
   , alter fVsSubstEnvL $ alter freeVarsActionScopeL $ (⧺) $ (s :* None) ↦ 1
   ]
 
-substyNBdr ∷ (Ord s,Ord e) ⇒ s → 𝕏 → SubstM s e ()
+substyNBdr ∷ (Ord s,Ord e) ⇒ s → 𝕎 → SubstM s e ()
 substyNBdr s x = umodifyEnv $ compose
   [ alter subSubstEnvL $ alter substActionSubstL $ 𝓈snshift $ s ↦ x ↦ 1
   , alter fVsSubstEnvL $ alter freeVarsActionScopeL $ (⧺) $ (s :* Some x) ↦ 1
   ]
 
-substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e' → e) → 𝕏 → SubstM s e ()
+substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e' → e) → 𝕎 → SubstM s e ()
 substyBdr s 𝓋 x = do
   substyDBdr s
   substyNBdr s x
@@ -271,13 +271,13 @@ substyBdr s 𝓋 x = do
           , 𝓈sdbind s $ 𝓋 $ NVar 0 x
           ]
 
--- 𝑂 𝕏 parameter `xO`...
+-- 𝑂 𝕎 parameter `xO`...
 -- None = nameless
 -- Some x = named with name `x`
 -- this is "the name"
 --
 -- ℕ64 parameter `n` is the de bruijn level/number
-substyVar ∷ (Ord s,Ord e,Substy s e e) ⇒ 𝑂 𝕏 → s → (ℕ64 → e) → ℕ64 → SubstM s e e
+substyVar ∷ (Ord s,Ord e,Substy s e e) ⇒ 𝑂 𝕎 → s → (ℕ64 → e) → ℕ64 → SubstM s e e
 substyVar xO s 𝓋 n = do
   γ ← ask
   case γ of
@@ -301,10 +301,10 @@ substyVar xO s 𝓋 n = do
 substyDVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstM s e e
 substyDVar = substyVar None
 
-substyNVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → 𝕏 → ℕ64 → SubstM s e e
+substyNVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → 𝕎 → ℕ64 → SubstM s e e
 substyNVar s 𝓋 x = substyVar (Some x) s 𝓋
 
-substyGVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕏 → e) → 𝕏 → SubstM s e e
+substyGVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕎 → e) → 𝕎 → SubstM s e e
 substyGVar s 𝓋 x = do
   γ ← ask
   case γ of
@@ -320,7 +320,7 @@ substyGVar s 𝓋 x = do
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
     MetaSubstEnv{} → return $ 𝓋 x -- I think we just don't apply meta-substitutions to GVars?
 
-substyMVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕏 → Subst s e → e) → 𝕏 → Subst s e → SubstM s e e
+substyMVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕎 → Subst s e → e) → 𝕎 → Subst s e → SubstM s e e
 substyMVar s 𝓋 x 𝓈₀ = do
   γ ← ask
   case γ of

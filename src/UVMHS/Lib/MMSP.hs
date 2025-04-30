@@ -51,7 +51,7 @@ data MMSPProds = MMSPProds
   deriving (Eq,Ord,Show)
 
 data MMSPAtom =
-    Var_MMSPAtom (𝐴 (𝑃 SrcCxt) 𝕏)
+    Var_MMSPAtom (𝐴 (𝑃 SrcCxt) 𝕎)
   deriving (Eq,Ord,Show)
 makePrisms ''MMSPAtom
 
@@ -113,7 +113,7 @@ atomMMSPL =
         _ → None
   in prism mk vw ⊚ prodsMMSPL
 
-varMMSPL ∷ MMSP ⌲ 𝐴 (𝑃 SrcCxt) 𝕏
+varMMSPL ∷ MMSP ⌲ 𝐴 (𝑃 SrcCxt) 𝕎
 varMMSPL = var_MMSPAtomL ⊚ atomMMSPL
 
 litMMSPL ∷ MMSP ⌲ ℕ
@@ -158,7 +158,7 @@ prodsMMSP = construct prodsMMSPL
 atomMMSP ∷ MMSPAtom → MMSP
 atomMMSP = construct atomMMSPL
 
-varMMSP ∷ 𝐴 (𝑃 SrcCxt) 𝕏 → MMSP
+varMMSP ∷ 𝐴 (𝑃 SrcCxt) 𝕎 → MMSP
 varMMSP = construct varMMSPL
 
 litMMSP ∷ ℕ → MMSP

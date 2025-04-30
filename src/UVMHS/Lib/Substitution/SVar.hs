@@ -17,13 +17,13 @@ import UVMHS.Lib.Substitution.Var
 -- fancy variables
 data 𝕐 s e =
     DVar ℕ64            -- de bruijn variable
-  | NVar ℕ64 𝕏          -- named (+ de bruijn index for that name)
+  | NVar ℕ64 𝕎          -- named (+ de bruijn index for that name)
                         -- λ x. λ x. x↑0
                         --        └───┘
                         -- λ x. λ x. x↑1
                         --   └────────┘
-  | GVar 𝕏              -- global variable
-  | MVar 𝕏 (Subst s e)  -- meta variable
+  | GVar 𝕎              -- global variable
+  | MVar 𝕎 (Subst s e)  -- meta variable
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
 
@@ -33,18 +33,18 @@ instance Functor (𝕐 s) where
   map _ (GVar n) = GVar n
   map f (MVar x s) = MVar x (map f s)
 
-nvar ∷ 𝕏 → 𝕐 s e
+nvar ∷ 𝕎 → 𝕐 s e
 nvar = NVar 0
 
-nvarL ∷ 𝕐 s e ⌲ 𝕏
+nvarL ∷ 𝕐 s e ⌲ 𝕎
 nvarL = prism nvar $ \case
   NVar n x | n≡0 → Some x
   _ → None
 
-gensymVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m 𝕏
+gensymVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m 𝕎
 gensymVar ℓ s = do
   n ← nextL ℓ
-  return $ 𝕏 (Some n) s
+  return $ 𝕎 (Some n) s
 
 instance (Pretty e, Pretty s) ⇒ Pretty (𝕐 s e) where
   pretty = \case

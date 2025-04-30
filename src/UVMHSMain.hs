@@ -88,8 +88,8 @@ instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (𝕐 s e) where
   shrink (GVar x) = [DVar 0] ⧺ (GVar ^$ shrink x)
   shrink (MVar x s) = [DVar 0, MVar x null] ⧺ [MVar x' s' | x' <- shrink x, s' <- shrink s]
 
-instance Arbitrary 𝕏 where
-  arbitrary = return 𝕏 ⊡ arbitrary ⊡ return "x"
+instance Arbitrary 𝕎 where
+  arbitrary = return 𝕎 ⊡ arbitrary ⊡ return "x"
 
 -- instance (Arbitrary a, Arbitrary c) ⇒ Arbitrary (𝐴 c a) where
 --   arbitrary = return 𝐴 ⊡ arbitrary ⊡ arbitrary
@@ -174,8 +174,8 @@ testThisExpression e = do
 prop_simplify_SubstElem ∷ ULCExp () → ℕ64 → QC.Property
 prop_simplify_SubstElem e _shifts = do
   let
-    𝓈₁ = DSubst @(() ∧ 𝑂 𝕏) @(ULCExp ()) 0 (vec Nil) 1
-    𝓈₂ = DSubst @(() ∧ 𝑂 𝕏) @(ULCExp ()) 0 (vec [Var_SSE 1]) 1
+    𝓈₁ = DSubst @(() ∧ 𝑂 𝕎) @(ULCExp ()) 0 (vec Nil) 1
+    𝓈₂ = DSubst @(() ∧ 𝑂 𝕎) @(ULCExp ()) 0 (vec [Var_SSE 1]) 1
     a = viewΩ someL $ subst (Subst (GSubst null ((() :* None) ↦ 𝓈₁))) e
     b = viewΩ someL $ subst (Subst (GSubst null ((() :* None) ↦ 𝓈₂))) e
     _ = pptrace $ ppVertical
@@ -231,7 +231,7 @@ equivULCSubstElem (SubstElem i1 mkE1) (SubstElem i2 mkE2) = meets [i1 ≡ i2, el
 -- GSubst sometimes look different even though they are morally equivalent.
 -- For instance, when the substitution contains a mapping to a substitution that is equivalent to no
 -- substitution at all.
-simplifyGSubst ∷ Eq s ⇒ GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) (ULCExp 𝒸) → GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) (ULCExp 𝒸)
+simplifyGSubst ∷ Eq s ⇒ GSubst (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → GSubst (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸)
 simplifyGSubst (GSubst gs s) = GSubst gs' s'
   where
     gs' = gs -- TODO: I think technically a SubstElem that only has 0 intros, and None value, is null
@@ -239,7 +239,7 @@ simplifyGSubst (GSubst gs s) = GSubst gs' s'
     s' = 𝐷 (Map.filter ((≢ DSubst 0 (vec Nil) 0) ∘ simplifyDSubstULC) (un𝐷 s))
 
 equivULCGSubst ∷
-  Eq s ⇒ Pretty s ⇒ GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) (ULCExp 𝒸) → GSubst (s ∧ 𝕏) (s ∧ 𝑂 𝕏) (ULCExp 𝒸) → 𝔹
+  Eq s ⇒ Pretty s ⇒ GSubst (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → GSubst (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → 𝔹
 equivULCGSubst (simplifyGSubst → GSubst gs1 s1) (simplifyGSubst → GSubst gs2 s2) =
   meets
     [ compare𝐷 equivULCSubstElem gs1 gs2

@@ -13,14 +13,14 @@ import UVMHS.Lib.Substitution.Var
 -------------------------------
 
 -- A "named" variable will still use GSubst. Substitutions for named variables
--- are seen as maps from variable names (i.e., 𝕏 things, or just strings
+-- are seen as maps from variable names (i.e., 𝕎 things, or just strings
 -- conceptually) to a DSubst. In order to perform substitutions on DSubst, you
 -- need to also have the GVar and MVar substitution environments lying around.
 -- So the GSubst type is used for both named and de-bruijn substitutions.
 --
 -- Put another way, you can think of `DVar` substitutions using `DSubst` and `NVar`
--- substitutions using `𝕏 ⇰ DSubst`. When you keep around the GVar and MVar
--- subsitution environments, you end up with `GSubst` and `𝕏 ⇰ GSubst` as the
+-- substitutions using `𝕎 ⇰ DSubst`. When you keep around the GVar and MVar
+-- subsitution environments, you end up with `GSubst` and `𝕎 ⇰ GSubst` as the
 -- DVar and NVar substitution structures.
 
 data GSubst s₁ s₂ e = GSubst
@@ -177,14 +177,14 @@ appendGSubst esubst 𝓈̂₂ 𝓈̂₁ =
 newtype Subst s e = Subst {
   unSubst ∷
     GSubst
-      (s ∧ 𝕏)   -- domain for global variables: scope + gvar name
-      (s ∧ 𝑂 𝕏) -- domain for scoped variables: scope + either name or None for de Bruijn substitution
+      (s ∧ 𝕎)   -- domain for global variables: scope + gvar name
+      (s ∧ 𝑂 𝕎) -- domain for scoped variables: scope + either name or None for de Bruijn substitution
       e
   }
   deriving (Eq,Ord,Show,Pretty,Fuzzy)
 makeLenses ''Subst
 
-newtype MetaSubst s e = MetaSubst { unMetaSubst ∷ (s ∧ 𝕏) ⇰ SubstElem (s ∧ 𝑂 𝕏) e }
+newtype MetaSubst s e = MetaSubst { unMetaSubst ∷ (s ∧ 𝕎) ⇰ SubstElem (s ∧ 𝑂 𝕎) e }
   deriving (Eq,Ord,Show,Pretty,Fuzzy)
 makeLenses ''MetaSubst
 

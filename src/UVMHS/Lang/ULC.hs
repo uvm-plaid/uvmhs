@@ -19,7 +19,7 @@ newtype ULCExp 𝒸 = ULCExp { unULCExp ∷ 𝐴 𝒸 (ULCExp_R 𝒸) }
   deriving (Eq,Generic,Ord,Show)
 data ULCExp_R 𝒸 =
     Var_ULC (𝕐 () (ULCExp 𝒸))
-  | Lam_ULC (𝑂 𝕏) (ULCExp 𝒸)
+  | Lam_ULC (𝑂 𝕎) (ULCExp 𝒸)
   | App_ULC (ULCExp 𝒸) (ULCExp 𝒸)
   deriving (Eq,HS.Generic,Ord,Show)
 
