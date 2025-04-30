@@ -6,7 +6,7 @@ import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 
 import UVMHS.Lib.Substitution.SubstNameless
-import UVMHS.Lib.Substitution.GSubst
+import UVMHS.Lib.Substitution.SubstScoped
 import UVMHS.Lib.Substitution.Var
 import UVMHS.Lib.Substitution.SVar
 
@@ -115,10 +115,10 @@ fvs ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕐 s e)
 fvs = fvsWith id
 
 nullSubst ∷ Subst s e
-nullSubst = Subst $ GSubst null null
+nullSubst = Subst $ SubstScoped null null
 
 appendSubst ∷ (Ord s,Substy s e e) ⇒ Subst s e → Subst s e → Subst s e
-appendSubst 𝓈₂ 𝓈₁ = Subst $ appendGSubst (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
+appendSubst 𝓈₂ 𝓈₁ = Subst $ appendSubstScoped (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
 
 instance                        Null   (Subst s e) where null = nullSubst
 instance (Ord s,Substy s e e) ⇒ Append (Subst s e) where (⧺)  = appendSubst
@@ -290,10 +290,10 @@ substyVar xO s 𝓋 n = do
           tell $ s ↦ single y
       return $ 𝓋 n
     SubSubstEnv 𝒶 → do
-      let 𝓈s = gsubstSubst $ unSubst $ substActionSubst 𝒶
+      let 𝓈s = gsubstScoped $ unSubst $ substActionSubst 𝒶
       case 𝓈s ⋕? (s :* xO) of
         None → return $ 𝓋 n
-        Some 𝓈 → case dsubstVar 𝓈 n of
+        Some 𝓈 → case interpSubstNameless 𝓈 n of
           Var_SSE n' → return $ 𝓋 n'
           Trm_SSE (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
     MetaSubstEnv{} → return $ 𝓋 n -- I think we just don't apply meta-substitutions to D/NVars?
@@ -314,7 +314,7 @@ substyGVar s 𝓋 x = do
         tell $ s ↦ single y
       return $ 𝓋 x
     SubSubstEnv 𝓈A → do
-      let gsᴳ =  gsubstGVars $ unSubst $ substActionSubst 𝓈A
+      let gsᴳ =  gsubstUnscoped $ unSubst $ substActionSubst 𝓈A
       case gsᴳ ⋕? (s :* x) of
         None → return $ 𝓋 x
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()

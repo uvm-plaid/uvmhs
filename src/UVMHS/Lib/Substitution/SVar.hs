@@ -6,7 +6,7 @@ import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 
 import UVMHS.Lib.Substitution.SubstNameless
-import UVMHS.Lib.Substitution.GSubst
+import UVMHS.Lib.Substitution.SubstScoped
 import UVMHS.Lib.Substitution.Var
 
 -- ========= --
