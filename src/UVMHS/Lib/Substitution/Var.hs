@@ -5,9 +5,9 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 
-----------------------
--- SIMPLE VARIABLES --
-----------------------
+-- =============== --
+-- SIMPLE VARIABLE --
+-- =============== --
 
 data 𝕎 = 𝕎
   { 𝕩mark ∷ 𝑂 ℕ64
