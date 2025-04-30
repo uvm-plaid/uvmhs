@@ -2,9 +2,8 @@ module UVMHS.Lib.Substitution.Substy where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty
-import UVMHS.Lib.Parser
-import UVMHS.Lib.Rand
 
+import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstNameless
 import UVMHS.Lib.Substitution.SubstScoped
 import UVMHS.Lib.Substitution.Var
@@ -129,11 +128,11 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 -- d     = nameless
 -- shift = "going under a binder"
 𝓈sdshift ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst s e → Subst s e
-𝓈sdshift = alter unSubstL ∘ 𝓈shiftG ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
+𝓈sdshift = alter unSubstL ∘ shiftSubstScoped ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
 -- n = named
 𝓈snshift ∷ (Ord s) ⇒ s ⇰ 𝕎 ⇰ ℕ64 → Subst s e → Subst s e
-𝓈snshift 𝑠 = alter unSubstL $ 𝓈shiftG $ assoc $ do
+𝓈snshift 𝑠 = alter unSubstL $ shiftSubstScoped $ assoc $ do
   s :* xns ← iter 𝑠
   x :* n ← iter xns
   return $ s :* Some x :* n
