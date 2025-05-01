@@ -67,8 +67,8 @@ instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (SubstNameless s 
     ⧺ [SubstNameless s es' i | es' <- shrink es]
     ⧺ (if i ≡ 0 then [] else [SubstNameless s es 0, SubstNameless s es (i `HS.div` 2)]) -- No MonadFail [] instance!?
 
-instance (Arbitrary s1, Arbitrary s2, Arbitrary e, Eq e, Ord s1, Ord s2) ⇒ Arbitrary (SubstScoped s1 s2 e) where
-  arbitrary = return SubstScoped ⊡ arbitrary ⊡ arbitrary
+instance (Arbitrary s1, Arbitrary s2, Arbitrary e, Eq e, Ord s1, Ord s2) ⇒ Arbitrary (SubstSpaced s1 s2 e) where
+  arbitrary = return SubstSpaced ⊡ arbitrary ⊡ arbitrary
 
 instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (Subst s e) where
   arbitrary = return Subst ⊡ arbitrary
@@ -176,8 +176,8 @@ prop_simplify_SubstElem e _shifts = do
   let
     𝓈₁ = SubstNameless @(() ∧ 𝑂 𝕎) @(ULCExp ()) 0 (vec Nil) 1
     𝓈₂ = SubstNameless @(() ∧ 𝑂 𝕎) @(ULCExp ()) 0 (vec [Var_SSE 1]) 1
-    a = viewΩ someL $ subst (Subst (SubstScoped null ((() :* None) ↦ 𝓈₁))) e
-    b = viewΩ someL $ subst (Subst (SubstScoped null ((() :* None) ↦ 𝓈₂))) e
+    a = viewΩ someL $ subst (Subst (SubstSpaced null ((() :* None) ↦ 𝓈₁))) e
+    b = viewΩ someL $ subst (Subst (SubstSpaced null ((() :* None) ↦ 𝓈₂))) e
     _ = pptrace $ ppVertical
       [ ppGA $ ppHorizontal [ppString "𝓈₁:", ppGA $ pretty 𝓈₁]
       , ppGA $ ppHorizontal [ppString "𝓈₂:", ppGA $ pretty 𝓈₂]
@@ -228,19 +228,19 @@ equivULCSubstElem (SubstElem i1 mkE1) (SubstElem i2 mkE2) = meets [i1 ≡ i2, el
         (None, None) → True
         _ → False
 
--- SubstScoped sometimes look different even though they are morally equivalent.
+-- SubstSpaced sometimes look different even though they are morally equivalent.
 -- For instance, when the substitution contains a mapping to a substitution that is equivalent to no
 -- substitution at all.
-simplifyGSubst ∷ Eq s ⇒ SubstScoped (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → SubstScoped (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸)
-simplifyGSubst (SubstScoped gs s) = SubstScoped gs' s'
+simplifyGSubst ∷ Eq s ⇒ SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸)
+simplifyGSubst (SubstSpaced gs s) = SubstSpaced gs' s'
   where
     gs' = gs -- TODO: I think technically a SubstElem that only has 0 intros, and None value, is null
     -- Keep only those values that don't simplify to the empty substitution
     s' = 𝐷 (Map.filter ((≢ SubstNameless 0 (vec Nil) 0) ∘ simplifySubstNamelessULC) (un𝐷 s))
 
 equivULCGSubst ∷
-  Eq s ⇒ Pretty s ⇒ SubstScoped (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → SubstScoped (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → 𝔹
-equivULCGSubst (simplifyGSubst → SubstScoped gs1 s1) (simplifyGSubst → SubstScoped gs2 s2) =
+  Eq s ⇒ Pretty s ⇒ SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → 𝔹
+equivULCGSubst (simplifyGSubst → SubstSpaced gs1 s1) (simplifyGSubst → SubstSpaced gs2 s2) =
   meets
     [ compare𝐷 equivULCSubstElem gs1 gs2
     , compare𝐷 equivULCSubstNameless s1 s2

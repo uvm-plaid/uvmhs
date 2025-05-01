@@ -5,7 +5,7 @@ import UVMHS.Lib.Pretty
 
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstNameless
-import UVMHS.Lib.Substitution.SubstScoped
+import UVMHS.Lib.Substitution.SubstSpaced
 import UVMHS.Lib.Substitution.Var
 import UVMHS.Lib.Substitution.SVar
 
@@ -114,10 +114,10 @@ fvs ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕐 s e)
 fvs = fvsWith id
 
 nullSubst ∷ Subst s e
-nullSubst = Subst $ SubstScoped null null
+nullSubst = Subst $ SubstSpaced null null
 
 appendSubst ∷ (Ord s,Substy s e e) ⇒ Subst s e → Subst s e → Subst s e
-appendSubst 𝓈₂ 𝓈₁ = Subst $ appendSubstScoped (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
+appendSubst 𝓈₂ 𝓈₁ = Subst $ appendSubstSpaced (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
 
 instance                        Null   (Subst s e) where null = nullSubst
 instance (Ord s,Substy s e e) ⇒ Append (Subst s e) where (⧺)  = appendSubst
@@ -128,11 +128,11 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 -- d     = nameless
 -- shift = "going under a binder"
 𝓈sdshift ∷ (Ord s) ⇒ s ⇰ ℕ64 → Subst s e → Subst s e
-𝓈sdshift = alter unSubstL ∘ shiftSubstScoped ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
+𝓈sdshift = alter unSubstL ∘ shiftSubstSpaced ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
 
 -- n = named
 𝓈snshift ∷ (Ord s) ⇒ s ⇰ 𝕎 ⇰ ℕ64 → Subst s e → Subst s e
-𝓈snshift 𝑠 = alter unSubstL $ shiftSubstScoped $ assoc $ do
+𝓈snshift 𝑠 = alter unSubstL $ shiftSubstSpaced $ assoc $ do
   s :* xns ← iter 𝑠
   x :* n ← iter xns
   return $ s :* Some x :* n
@@ -289,7 +289,7 @@ substyVar xO s 𝓋 n = do
           tell $ s ↦ single y
       return $ 𝓋 n
     SubSubstEnv 𝒶 → do
-      let 𝓈s = substScopedLocal $ unSubst $ substActionSubst 𝒶
+      let 𝓈s = substSpacedLocal $ unSubst $ substActionSubst 𝒶
       case 𝓈s ⋕? (s :* xO) of
         None → return $ 𝓋 n
         Some 𝓈 → case interpSubstNameless 𝓈 n of
@@ -313,7 +313,7 @@ substyGVar s 𝓋 x = do
         tell $ s ↦ single y
       return $ 𝓋 x
     SubSubstEnv 𝓈A → do
-      let gsᴳ =  substScopedGlobal $ unSubst $ substActionSubst 𝓈A
+      let gsᴳ =  substSpacedGlobal $ unSubst $ substActionSubst 𝓈A
       case gsᴳ ⋕? (s :* x) of
         None → return $ 𝓋 x
         Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
