@@ -57,15 +57,15 @@ instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (SSubstElem s e) 
 instance Arbitrary a ⇒ Arbitrary (𝕍 a) where
   arbitrary = 𝕍 ∘ V.fromList ^$ arbitrary @[_]
 
-instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (SubstNameless s e) where
+instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (SubstScoped s e) where
   arbitrary = do
     es ← QC.sized $ \ s → do
       mapMOn (vecF (fromInteger $ HS.toInteger s) id) (\_ → arbitrary @(SSubstElem s e))
-    return SubstNameless ⊡ QC.arbitrarySizedBoundedIntegral ⊡ return es ⊡ QC.arbitrarySizedBoundedIntegral
-  shrink (SubstNameless s es i) =
-    (if s ≡ 0 then [] else [SubstNameless 0 es i, SubstNameless 0 es (i `HS.div` 2)])
-    ⧺ [SubstNameless s es' i | es' <- shrink es]
-    ⧺ (if i ≡ 0 then [] else [SubstNameless s es 0, SubstNameless s es (i `HS.div` 2)]) -- No MonadFail [] instance!?
+    return SubstScoped ⊡ QC.arbitrarySizedBoundedIntegral ⊡ return es ⊡ QC.arbitrarySizedBoundedIntegral
+  shrink (SubstScoped s es i) =
+    (if s ≡ 0 then [] else [SubstScoped 0 es i, SubstScoped 0 es (i `HS.div` 2)])
+    ⧺ [SubstScoped s es' i | es' <- shrink es]
+    ⧺ (if i ≡ 0 then [] else [SubstScoped s es 0, SubstScoped s es (i `HS.div` 2)]) -- No MonadFail [] instance!?
 
 instance (Arbitrary s1, Arbitrary s2, Arbitrary e, Eq e, Ord s1, Ord s2) ⇒ Arbitrary (SubstSpaced s1 s2 e) where
   arbitrary = return SubstSpaced ⊡ arbitrary ⊡ arbitrary
@@ -174,8 +174,8 @@ testThisExpression e = do
 prop_simplify_SubstElem ∷ ULCExp () → ℕ64 → QC.Property
 prop_simplify_SubstElem e _shifts = do
   let
-    𝓈₁ = SubstNameless @(() ∧ 𝑂 𝕎) @(ULCExp ()) 0 (vec Nil) 1
-    𝓈₂ = SubstNameless @(() ∧ 𝑂 𝕎) @(ULCExp ()) 0 (vec [Var_SSE 1]) 1
+    𝓈₁ = SubstScoped @(() ∧ 𝑂 𝕎) @(ULCExp ()) 0 (vec Nil) 1
+    𝓈₂ = SubstScoped @(() ∧ 𝑂 𝕎) @(ULCExp ()) 0 (vec [Var_SSE 1]) 1
     a = viewΩ someL $ subst (Subst (SubstSpaced null ((() :* None) ↦ 𝓈₁))) e
     b = viewΩ someL $ subst (Subst (SubstSpaced null ((() :* None) ↦ 𝓈₂))) e
     _ = pptrace $ ppVertical
@@ -198,18 +198,18 @@ prop_simplify_SubstElem e _shifts = do
 -- This does not work well, as it does not get picked up by recursive calls.
 --
 -- {-# LANGUAGE OverlappingInstances #-}
--- instance {-# OVERLAPS #-} (Eq s) ⇒ Eq (SubstNameless s (ULCExp SrcCxt)) where
+-- instance {-# OVERLAPS #-} (Eq s) ⇒ Eq (SubstScoped s (ULCExp SrcCxt)) where
 --   ds1 == ds2 = error "yes"
 --     -- let
---     --   SubstNameless s1 es1 i1 = simplifySubstNamelessULC ds1
---     --   SubstNameless s2 es2 i2 = simplifySubstNamelessULC ds2
+--     --   SubstScoped s1 es1 i1 = simplifySubstScopedULC ds1
+--     --   SubstScoped s2 es2 i2 = simplifySubstScopedULC ds2
 --     --   in meets [s1 ≡ s2, es1 ≡ es2, i1 ≡ i2]
 
-equivULCSubstNameless ∷ Eq s ⇒ Pretty s ⇒ SubstNameless s (ULCExp 𝒸) → SubstNameless s (ULCExp 𝒸) → 𝔹
-equivULCSubstNameless d1 d2 =
+equivULCSubstScoped ∷ Eq s ⇒ Pretty s ⇒ SubstScoped s (ULCExp 𝒸) → SubstScoped s (ULCExp 𝒸) → 𝔹
+equivULCSubstScoped d1 d2 =
   let
-    s1 = simplifySubstNamelessULC d1
-    s2 = simplifySubstNamelessULC d2
+    s1 = simplifySubstScopedULC d1
+    s2 = simplifySubstScopedULC d2
     -- _ = pptrace (ppVertical [ ppString "equiv", pretty d1, pretty s1, pretty d2, pretty s2, pretty (s1 ≡ s2), ppString "-----"])
   in
   s1 ≡ s2
@@ -236,14 +236,14 @@ simplifyGSubst (SubstSpaced gs s) = SubstSpaced gs' s'
   where
     gs' = gs -- TODO: I think technically a SubstElem that only has 0 intros, and None value, is null
     -- Keep only those values that don't simplify to the empty substitution
-    s' = 𝐷 (Map.filter ((≢ SubstNameless 0 (vec Nil) 0) ∘ simplifySubstNamelessULC) (un𝐷 s))
+    s' = 𝐷 (Map.filter ((≢ SubstScoped 0 (vec Nil) 0) ∘ simplifySubstScopedULC) (un𝐷 s))
 
 equivULCGSubst ∷
   Eq s ⇒ Pretty s ⇒ SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) (ULCExp 𝒸) → 𝔹
 equivULCGSubst (simplifyGSubst → SubstSpaced gs1 s1) (simplifyGSubst → SubstSpaced gs2 s2) =
   meets
     [ compare𝐷 equivULCSubstElem gs1 gs2
-    , compare𝐷 equivULCSubstNameless s1 s2
+    , compare𝐷 equivULCSubstScoped s1 s2
     ]
 
 equivULCSubst ∷ Eq s ⇒ Pretty s ⇒ Subst s (ULCExp 𝒸) → Subst s (ULCExp 𝒸) → 𝔹
@@ -259,8 +259,8 @@ equivULCExp (unULCExp → aval → e1) (unULCExp → aval → e2) =
     (App_ULC l1 r1, App_ULC l2 r2) → meets [equivULCExp l1 l2, equivULCExp r1 r2]
     (_, _) → False
 
-simplifySubstNamelessULC ∷ Eq s ⇒ SubstNameless s (ULCExp 𝒸) → SubstNameless s (ULCExp 𝒸)
-simplifySubstNamelessULC (SubstNameless s es i) =
+simplifySubstScopedULC ∷ Eq s ⇒ SubstScoped s (ULCExp 𝒸) → SubstScoped s (ULCExp 𝒸)
+simplifySubstScopedULC (SubstScoped s es i) =
   let
     es' = map replaceDVarTermsWithVars es
     (shifts :* intermediate) = peelPrefix s (list es')
@@ -268,7 +268,7 @@ simplifySubstNamelessULC (SubstNameless s es i) =
     -- shifting then doing nothing is the same as not shifting at all
     shifts' = if count elems + i ≡ 0 then 0 else shifts
   in
-    SubstNameless shifts' elems i
+    SubstScoped shifts' elems i
   where
     replaceDVarTermsWithVars
       (Trm_SSE (SubstElem intros (($ ()) → Some (ULCExp (aval → Var_ULC (DVar d))))))
@@ -292,22 +292,22 @@ test_equiv_01 ∷ 𝔹
 test_equiv_01 =
   let
     -- [] [0,0] [1,2,3,…]
-    d1 = SubstNameless 0 (vec [Var_SSE 0, Var_SSE 0]) ((HS.-) 0 1)
+    d1 = SubstScoped 0 (vec [Var_SSE 0, Var_SSE 0]) ((HS.-) 0 1)
     -- [0] [] [0,1,2,3,…]
-    d2 = SubstNameless 1 (vec []) ((HS.-) 0 1)
-  in equivULCSubstNameless @() d1 d2
+    d2 = SubstScoped 1 (vec []) ((HS.-) 0 1)
+  in equivULCSubstScoped @() d1 d2
 
 test_equiv_02 ∷ 𝔹
 test_equiv_02 =
   let
     -- [] [1] [1,2,3,…]
-    d1 = SubstNameless 0 (vec [Var_SSE 1]) 0
+    d1 = SubstScoped 0 (vec [Var_SSE 1]) 0
     -- [] [1,1] [2,3,…]
-    d2 = SubstNameless 0 (vec
+    d2 = SubstScoped 0 (vec
       [Trm_SSE (SubstElem null $ \ () → Some $ ULCExp $ 𝐴 () $ Var_ULC (DVar 1))
       ,Trm_SSE (SubstElem null $ \ () → Some $ ULCExp $ 𝐴 () $ Var_ULC (DVar 1))
       ]) 0
-  in equivULCSubstNameless @() d1 d2
+  in equivULCSubstScoped @() d1 d2
 
 instance Null SrcCxt where null = srcCxt₀
 

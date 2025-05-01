@@ -4,7 +4,7 @@ import UVMHS.Core
 import UVMHS.Lib.Pretty
 
 import UVMHS.Lib.Substitution.SubstElem
-import UVMHS.Lib.Substitution.SubstNameless
+import UVMHS.Lib.Substitution.SubstScoped
 import UVMHS.Lib.Substitution.SubstSpaced
 import UVMHS.Lib.Substitution.Var
 import UVMHS.Lib.Substitution.SVar
@@ -292,7 +292,7 @@ substyVar xO s 𝓋 n = do
       let 𝓈s = substSpacedLocal $ unSubst $ substActionSubst 𝒶
       case 𝓈s ⋕? (s :* xO) of
         None → return $ 𝓋 n
-        Some 𝓈 → case interpSubstNameless 𝓈 n of
+        Some 𝓈 → case interpSubstScoped 𝓈 n of
           Var_SSE n' → return $ 𝓋 n'
           Trm_SSE (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ 𝓈introG 𝑠) *$ ueO ()
     MetaSubstEnv{} → return $ 𝓋 n -- I think we just don't apply meta-substitutions to D/NVars?

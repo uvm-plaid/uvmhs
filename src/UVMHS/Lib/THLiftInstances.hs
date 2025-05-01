@@ -29,7 +29,7 @@ instance (TH.Lift a) ⇒ TH.Lift (() → a) where
     in [|| \ () → x ||]
 deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstElem s e)
 deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SSubstElem s e)
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstNameless s e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstScoped s e)
 deriving instance (TH.Lift s₁,TH.Lift s₂,TH.Lift e) ⇒ TH.Lift (SubstSpaced s₁ s₂ e)
 deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (Subst s e)
 deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (𝕐 s e)
