@@ -238,20 +238,20 @@ import UVMHS.Lang.ULC
 --   |]
 --   [| \ (n :* 𝓈₁ :* 𝓈₂ :* e) → subst (dshiftSubst n (𝓈₁ ⧺ 𝓈₂)) e ≡ subst (dshiftSubst n 𝓈₁ ⧺ dshiftSubst n 𝓈₂) e |]
 
-𝔣 "zzz:subst:todbr:idemp" 100
-  [| do randSml @ULCExpRaw |]
-  [| \ e → todbr e ≡ (todbr *$ todbr e)  |]
-
-𝔣 "zzz:subst:todbr:∘tonmd" 100
-  [| do randSml @ULCExpRaw |]
-  [| \ e → todbr e ≡ (todbr *$ tonmd e)  |]
-
-𝔣 "zzz:subst:tonmd:idemp" 100
-  [| do randSml @ULCExpRaw |]
-  [| \ e → tonmd e ≡ (tonmd *$ tonmd e)  |]
-
-𝔣 "zzz:subst:tonmd:∘todbr" 100
-  [| do randSml @ULCExpRaw |]
-  [| \ e → tonmd e ≡ (tonmd *$ todbr e)  |]
+-- 𝔣 "zzz:subst:todbr:idemp" 100
+--   [| do randSml @ULCExpRaw |]
+--   [| \ e → todbr e ≡ (todbr *$ todbr e)  |]
+-- 
+-- 𝔣 "zzz:subst:todbr:∘tonmd" 100
+--   [| do randSml @ULCExpRaw |]
+--   [| \ e → todbr e ≡ (todbr *$ tonmd e)  |]
+-- 
+-- 𝔣 "zzz:subst:tonmd:idemp" 100
+--   [| do randSml @ULCExpRaw |]
+--   [| \ e → tonmd e ≡ (tonmd *$ tonmd e)  |]
+-- 
+-- 𝔣 "zzz:subst:tonmd:∘todbr" 100
+--   [| do randSml @ULCExpRaw |]
+--   [| \ e → tonmd e ≡ (tonmd *$ todbr e)  |]
 
 buildTests

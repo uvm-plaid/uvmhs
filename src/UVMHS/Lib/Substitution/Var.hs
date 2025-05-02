@@ -101,9 +101,12 @@ cpGSVarWS = G_SVar ∘ var ^$ cpShaped $ view nameTWSBasicL
 ppDVar ∷ ℕ64 → Doc
 ppDVar n = concat [ppPun "⌊",pretty n,ppPun "⌋"]
 
+ppNVar ∷ Doc → Doc → Doc
+ppNVar n x = concat [x,ppPun "@",n]
+
 instance Pretty 𝕏 where
   pretty = \case
-    N_SVar n x → concat [pretty x,if n ≡ 0 then null else concat [ppPun "↑",pretty n]]
+    N_SVar n x → if n ≡ 0 then pretty x else ppNVar (pretty n) $ pretty x
     D_SVar n → ppDVar n
     G_SVar x → pretty x
 

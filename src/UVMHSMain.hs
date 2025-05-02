@@ -21,6 +21,8 @@ import qualified Data.Text as Text
 import qualified Data.Map as Map
 import qualified Data.Vector as V
 
+import UVMHS.Lang.ULC
+
 type M = UContT (RWS ℕ64 ℕ64 ℕ64)
 
 instance Functor QC.Gen where
@@ -326,6 +328,8 @@ main = cleanExit $ do
     -- [ "UVMHS.Tests.Core"
     [ "UVMHS.Tests.Substitution"
     ])
+  pprint $ N_SVar 2 $ 𝕎 (Some 5) "foo"
+  pprint $ dintroSubst @ULCExpRaw 1
   -- pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"
   -- out "HI"
   -- e ← TH.runQ $ TH.examineCode $ TH.liftTyped (\ () → 𝕟64 5)
