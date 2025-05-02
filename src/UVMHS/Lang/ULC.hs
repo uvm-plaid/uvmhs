@@ -42,20 +42,20 @@ pULCExp = ULCExp ^$ fmixfixWithContext "exp" $ concat
       return $ aval $ unULCExp e
   , fmixTerminal $ do
       n ← failEff ∘ natO64 *$ cpInteger
-      return $ Var_ULC $ DVar n
+      return $ Var_ULC $ duvar n
   , fmixTerminal $ do
       fO ← cpOptional $ concat
         [ do void $ concat $ map cpSyntax ["glbl","𝔤"]
              void $ cpSyntax ":"
-             return GVar
+             return guvar
         , do void $ concat $ map cpSyntax ["meta","𝔪"]
              void $ cpSyntax ":"
-             s ← elim𝑂 (const null) 𝓈dintro ^$ cpOptional $ do
+             s ← elim𝑂 (const null) dintroSubst ^$ cpOptional $ do
                 void $ cpSyntax "["
                 n ← failEff ∘ natO64 *$ cpInteger
                 void $ cpSyntax "]"
                 return n
-             return $ flip MVar s
+             return $ flip M_UVar s
         ]
       x ← cpVar
       case fO of
@@ -64,7 +64,7 @@ pULCExp = ULCExp ^$ fmixfixWithContext "exp" $ concat
           n ← ifNone 0 ^$ cpOptional $ do
             void $ concat $ map cpSyntax ["^","↑"]
             failEff ∘ natO64 *$ cpInteger
-          return $ Var_ULC $ NVar n x
+          return $ Var_ULC $ nuvar n x
   , fmixPrefix pLET $ do
       void $ concat $ map cpSyntax ["lam","λ"]
       xO ← cpOptional $ cpVar

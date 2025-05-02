@@ -73,20 +73,20 @@ instance (Arbitrary s1, Arbitrary s2, Arbitrary e, Eq e, Ord s1, Ord s2) ⇒ Arb
 instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (Subst s e) where
   arbitrary = return Subst ⊡ arbitrary
 
-instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (𝕐 s e) where
-  arbitrary =
-    QC.sized $ \ s → QC.frequency
-      [ (1, DVar ^$ arbitrary)
-      , (1, return NVar ⊡ arbitrary ⊡ arbitrary)
-      , (1, GVar ^$ arbitrary)
-      , (s, return MVar ⊡ arbitrary ⊡ QC.scale (flip (HS.-) 1) arbitrary)
-      ]
-  shrink (DVar 0) = []
-  shrink (DVar n) = [DVar 0, DVar (n `HS.div` 2)]
-  shrink (NVar 0 x) = [DVar 0] ⧺ (NVar 0 ^$ shrink x)
-  shrink (NVar n x) = [DVar 0, NVar 0 x, NVar (n `HS.div` 2) x] ⧺ (NVar n ^$ shrink x)
-  shrink (GVar x) = [DVar 0] ⧺ (GVar ^$ shrink x)
-  shrink (MVar x s) = [DVar 0, MVar x null] ⧺ [MVar x' s' | x' <- shrink x, s' <- shrink s]
+-- instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (𝕐 s e) where
+--   arbitrary =
+--     QC.sized $ \ s → QC.frequency
+--       [ (1, duvar ^$ arbitrary)
+--       , (1, return nuvar ⊡ arbitrary ⊡ arbitrary)
+--       , (1, guvar ^$ arbitrary)
+--       , (s, return M_UVar ⊡ arbitrary ⊡ QC.scale (flip (HS.-) 1) arbitrary)
+--       ]
+--   shrink (S_UVar (D_SVar 0)) = []
+--   shrink (S_UVar (D_SVar n)) = [DSVar 0, DSVar (n `HS.div` 2)]
+--   shrink (S_UVar (N_SVar 0 x)) = [DSVar 0] ⧺ (NVSar 0 ^$ shrink x)
+--   shrink (S_UVar (N_SVar n x)) = [DSVar 0, NSVar 0 x, NSVar (n `HS.div` 2) x] ⧺ (NSVar n ^$ shrink x)
+--   shrink (S_UVar (G_SVar x)) = [DSVar 0] ⧺ (GSVar ^$ shrink x)
+--   shrink (M_UVar x s) = [DSVar 0, MVar x null] ⧺ [MUVar x' s' | x' <- shrink x, s' <- shrink s]
 
 instance Arbitrary 𝕎 where
   arbitrary = return 𝕎 ⊡ arbitrary ⊡ return "x"
@@ -95,27 +95,27 @@ instance Arbitrary 𝕎 where
 --   arbitrary = return 𝐴 ⊡ arbitrary ⊡ arbitrary
 --   shrink = QC.genericShrink
 
-instance Null c ⇒ Arbitrary (ULCExp_R c) where
-  arbitrary =
-    QC.sized $ \size →
-      QC.frequency
-        [ (1, Var_ULC ^$ arbitrary)
-        , (size, QC.oneof
-            [ return Lam_ULC ⊡ arbitrary ⊡ QC.scale (flip (HS.-) 1) arbitrary
-            , return App_ULC ⊡ QC.scale (flip (HS.-) 1) arbitrary ⊡ QC.scale (flip (HS.-) 1) arbitrary
-            ])
-        ]
-  shrink (Var_ULC v) = Var_ULC ^$ shrink v
-  shrink (Lam_ULC bdr body@(ULCExp (aval → bodyRaw))) =
-    [bodyRaw]
-    ⧺ [Lam_ULC bdr' body' | bdr' <- shrink bdr, body' <- shrink body]
-  shrink (App_ULC a@(ULCExp (aval → aRaw)) b@(ULCExp (aval → bRaw))) =
-    [aRaw, bRaw]
-    ⧺ [App_ULC a' b' | a' <- shrink a, b' <- shrink b]
+-- instance Null c ⇒ Arbitrary (ULCExp_R c) where
+--   arbitrary =
+--     QC.sized $ \size →
+--       QC.frequency
+--         [ (1, Var_ULC ^$ arbitrary)
+--         , (size, QC.oneof
+--             [ return Lam_ULC ⊡ arbitrary ⊡ QC.scale (flip (HS.-) 1) arbitrary
+--             , return App_ULC ⊡ QC.scale (flip (HS.-) 1) arbitrary ⊡ QC.scale (flip (HS.-) 1) arbitrary
+--             ])
+--         ]
+--   shrink (Var_ULC v) = Var_ULC ^$ shrink v
+--   shrink (Lam_ULC bdr body@(ULCExp (aval → bodyRaw))) =
+--     [bodyRaw]
+--     ⧺ [Lam_ULC bdr' body' | bdr' <- shrink bdr, body' <- shrink body]
+--   shrink (App_ULC a@(ULCExp (aval → aRaw)) b@(ULCExp (aval → bRaw))) =
+--     [aRaw, bRaw]
+--     ⧺ [App_ULC a' b' | a' <- shrink a, b' <- shrink b]
 
-instance Null c ⇒ Arbitrary (ULCExp c) where
-  arbitrary = ULCExp ∘ 𝐴 null ^$ arbitrary
-  shrink (ULCExp (𝐴 _ e)) = ULCExp ∘ 𝐴 null ^$ shrink e
+-- instance Null c ⇒ Arbitrary (ULCExp c) where
+--   arbitrary = ULCExp ∘ 𝐴 null ^$ arbitrary
+--   shrink (ULCExp (𝐴 _ e)) = ULCExp ∘ 𝐴 null ^$ shrink e
 
 prop_todbr_tonmd ∷ ULCExpRaw → QC.Property
 prop_todbr_tonmd e =
@@ -253,7 +253,7 @@ equivULCSubst (Subst s1) (Subst s2) =
 equivULCExp ∷ ULCExp 𝒸 → ULCExp 𝒸 → 𝔹
 equivULCExp (unULCExp → aval → e1) (unULCExp → aval → e2) =
   case (e1, e2) of
-    (Var_ULC (MVar v1 s1), Var_ULC (MVar v2 s2)) → meets [v1 ≡ v2, equivULCSubst s1 s2]
+    (Var_ULC (M_UVar v1 s1), Var_ULC (M_UVar v2 s2)) → meets [v1 ≡ v2, equivULCSubst s1 s2]
     (Var_ULC v1, Var_ULC v2) → v1 ≡ v2
     (Lam_ULC o1 b1, Lam_ULC o2 b2) → meets [o1 ≡ o2, equivULCExp b1 b2]
     (App_ULC l1 r1, App_ULC l2 r2) → meets [equivULCExp l1 l2, equivULCExp r1 r2]
@@ -271,7 +271,7 @@ simplifySubstScopedULC (SubstScoped s es i) =
     SubstScoped shifts' elems i
   where
     replaceDVarTermsWithVars
-      (Trm_SSE (SubstElem intros (($ ()) → Some (ULCExp (aval → Var_ULC (DVar d))))))
+      (Trm_SSE (SubstElem intros (($ ()) → Some (ULCExp (aval → Var_ULC (S_UVar (D_SVar d)))))))
       | intros ≡ null = Var_SSE d -- technically we should also detect when the intro map is non-empty but all zeroes...
     replaceDVarTermsWithVars e = e
 
@@ -304,8 +304,8 @@ test_equiv_02 =
     d1 = SubstScoped 0 (vec [Var_SSE 1]) 0
     -- [] [1,1] [2,3,…]
     d2 = SubstScoped 0 (vec
-      [Trm_SSE (SubstElem null $ \ () → Some $ ULCExp $ 𝐴 () $ Var_ULC (DVar 1))
-      ,Trm_SSE (SubstElem null $ \ () → Some $ ULCExp $ 𝐴 () $ Var_ULC (DVar 1))
+      [Trm_SSE (SubstElem null $ \ () → Some $ ULCExp $ 𝐴 () $ Var_ULC (duvar 1))
+      ,Trm_SSE (SubstElem null $ \ () → Some $ ULCExp $ 𝐴 () $ Var_ULC (duvar 1))
       ]) 0
   in equivULCSubstScoped @() d1 d2
 
@@ -318,14 +318,14 @@ main = cleanExit $ do
   -- testThisExpression [ulc| λ a → λ b → λ c → 𝔪:[1]x |]
   -- testThisExpression [ulc| λ a → 𝔪:[1]x |]
   -- QC.quickCheck prop_simplify_SubstElem
-  QC.quickCheck prop_todbr_tonmd
+  -- QC.quickCheck prop_todbr_tonmd
 
   -- pprint $ ppHeader "COLOR TEST"
   -- pprint colorsDemo
-  -- $$(testModules False
-  --   -- [ "UVMHS.Tests.Core"
-  --   [ "UVMHS.Tests.Substitution"
-  --   ])
+  $$(testModules False
+    -- [ "UVMHS.Tests.Core"
+    [ "UVMHS.Tests.Substitution"
+    ])
   -- pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"
   -- out "HI"
   -- e ← TH.runQ $ TH.examineCode $ TH.liftTyped (\ () → 𝕟64 5)

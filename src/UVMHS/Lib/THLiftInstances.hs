@@ -22,6 +22,7 @@ deriving instance TH.Lift LocRange
 deriving instance (TH.Lift 𝒸,TH.Lift a) ⇒ TH.Lift (𝐴 𝒸 a)
 deriving instance TH.Lift Loc
 deriving instance TH.Lift 𝕎
+deriving instance TH.Lift 𝕏
 instance (TH.Lift a) ⇒ TH.Lift (() → a) where
   liftTyped ∷ ∀ m. TH.Quote m ⇒ (() → a) → TH.Code m (() → a)
   liftTyped f = 

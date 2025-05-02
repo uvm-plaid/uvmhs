@@ -15,83 +15,83 @@ import UVMHS.Lang.ULC
 𝔱 "subst:id" [| subst null [ulc| λ → 2   |] |] [| Some [ulc| λ → 2   |] |]
 𝔱 "subst:id" [| subst null [ulc| λ → 0 2 |] |] [| Some [ulc| λ → 0 2 |] |]
 
-𝔱 "subst:intro" [| subst (𝓈dintro 1) [ulc| λ → 0   |] |] [| Some [ulc| λ → 0   |] |]
-𝔱 "subst:intro" [| subst (𝓈dintro 1) [ulc| λ → 1   |] |] [| Some [ulc| λ → 2   |] |]
-𝔱 "subst:intro" [| subst (𝓈dintro 1) [ulc| λ → 2   |] |] [| Some [ulc| λ → 3   |] |]
-𝔱 "subst:intro" [| subst (𝓈dintro 1) [ulc| λ → 0 2 |] |] [| Some [ulc| λ → 0 3 |] |]
+𝔱 "subst:intro" [| subst (dintroSubst 1) [ulc| λ → 0   |] |] [| Some [ulc| λ → 0   |] |]
+𝔱 "subst:intro" [| subst (dintroSubst 1) [ulc| λ → 1   |] |] [| Some [ulc| λ → 2   |] |]
+𝔱 "subst:intro" [| subst (dintroSubst 1) [ulc| λ → 2   |] |] [| Some [ulc| λ → 3   |] |]
+𝔱 "subst:intro" [| subst (dintroSubst 1) [ulc| λ → 0 2 |] |] [| Some [ulc| λ → 0 3 |] |]
 
-𝔱 "subst:intro" [| subst (𝓈dintro 2) [ulc| λ → 0   |] |] [| Some [ulc| λ → 0   |] |]
-𝔱 "subst:intro" [| subst (𝓈dintro 2) [ulc| λ → 1   |] |] [| Some [ulc| λ → 3   |] |]
-𝔱 "subst:intro" [| subst (𝓈dintro 2) [ulc| λ → 2   |] |] [| Some [ulc| λ → 4   |] |]
-𝔱 "subst:intro" [| subst (𝓈dintro 2) [ulc| λ → 0 2 |] |] [| Some [ulc| λ → 0 4 |] |]
+𝔱 "subst:intro" [| subst (dintroSubst 2) [ulc| λ → 0   |] |] [| Some [ulc| λ → 0   |] |]
+𝔱 "subst:intro" [| subst (dintroSubst 2) [ulc| λ → 1   |] |] [| Some [ulc| λ → 3   |] |]
+𝔱 "subst:intro" [| subst (dintroSubst 2) [ulc| λ → 2   |] |] [| Some [ulc| λ → 4   |] |]
+𝔱 "subst:intro" [| subst (dintroSubst 2) [ulc| λ → 0 2 |] |] [| Some [ulc| λ → 0 4 |] |]
 
-𝔱 "subst:bind" [| subst (𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 0 |] |] [| Some [ulc| λ → 0     |] |]
-𝔱 "subst:bind" [| subst (𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 0 |] |] [| Some [ulc| λ → 0     |] |]
-𝔱 "subst:bind" [| subst (𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |] [| Some [ulc| λ → λ → 0 |] |]
-𝔱 "subst:bind" [| subst (𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 1 |] |] [| Some [ulc| λ → λ → 2 |] |]
+𝔱 "subst:bind" [| subst (dbindSubst [ulc| λ → 0 |]) [ulc| λ → 0 |] |] [| Some [ulc| λ → 0     |] |]
+𝔱 "subst:bind" [| subst (dbindSubst [ulc| λ → 1 |]) [ulc| λ → 0 |] |] [| Some [ulc| λ → 0     |] |]
+𝔱 "subst:bind" [| subst (dbindSubst [ulc| λ → 0 |]) [ulc| λ → 1 |] |] [| Some [ulc| λ → λ → 0 |] |]
+𝔱 "subst:bind" [| subst (dbindSubst [ulc| λ → 1 |]) [ulc| λ → 1 |] |] [| Some [ulc| λ → λ → 2 |] |]
 
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 0 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst 1 $ dbindSubst [ulc| λ → 0 |]) [ulc| λ → 0 |] |]
                  [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 0 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst 1 $ dbindSubst [ulc| λ → 1 |]) [ulc| λ → 0 |] |]
                  [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst 1 $ dbindSubst [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
                  [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 1 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst 1 $ dbindSubst [ulc| λ → 1 |]) [ulc| λ → 1 |] |]
                  [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 2 |]) [ulc| λ → 0 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst 1 $ dbindSubst [ulc| λ → 2 |]) [ulc| λ → 0 |] |]
                  [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 2 |]) [ulc| λ → 1 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst 1 $ dbindSubst [ulc| λ → 2 |]) [ulc| λ → 1 |] |]
                  [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 1 |]) [ulc| λ → 2 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst 1 $ dbindSubst [ulc| λ → 1 |]) [ulc| λ → 2 |] |]
                  [| Some [ulc| λ → λ → 3 |] |]
-𝔱 "subst:shift" [| subst (𝓈dshift 1 $ 𝓈dbind [ulc| λ → 2 |]) [ulc| λ → 2 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst 1 $ dbindSubst [ulc| λ → 2 |]) [ulc| λ → 2 |] |]
                  [| Some [ulc| λ → λ → 4 |] |]
 
 -- append --
 
 𝔱 "subst:⧺" [| subst null                      [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
 𝔱 "subst:⧺" [| subst (null ⧺ null)             [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (𝓈dshift 1 null)          [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (𝓈dshift 2 null)          [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst 1 null)          [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst 2 null)          [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
 
 𝔱 "subst:⧺" [| subst null                      [ulc| λ → 1 |] |] [| Some [ulc| λ → 1 |] |]
 𝔱 "subst:⧺" [| subst (null ⧺ null)             [ulc| λ → 1 |] |] [| Some [ulc| λ → 1 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dintro 1)               [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ 𝓈dintro 1 ⧺ null) [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst 1)               [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
+𝔱 "subst:⧺" [| subst (null ⧺ dintroSubst 1 ⧺ null) [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dintro 1)               [ulc| λ → 1 |] |] [| Some [ulc| λ → 2 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ 𝓈dintro 1 ⧺ null) [ulc| λ → 1 |] |] [| Some [ulc| λ → 2 |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst 1)               [ulc| λ → 1 |] |] [| Some [ulc| λ → 2 |] |]
+𝔱 "subst:⧺" [| subst (null ⧺ dintroSubst 1 ⧺ null) [ulc| λ → 1 |] |] [| Some [ulc| λ → 2 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
+𝔱 "subst:⧺" [| subst (dbindSubst [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
             [| Some [ulc| λ → λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ 𝓈dbind [ulc| λ → 0 |] ⧺ null) [ulc| λ → 1 |] |]
-            [| Some [ulc| λ → λ → 0 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈dintro 2)             [ulc| λ → 1 |] |] [| Some [ulc| λ → 3 |] |]
-𝔱 "subst:⧺" [| subst (𝓈dintro 1 ⧺ 𝓈dintro 1) [ulc| λ → 1 |] |] [| Some [ulc| λ → 3 |] |]
-
-𝔱 "subst:⧺" [| subst (𝓈dbind [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
-            [| Some [ulc| λ → λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (𝓈dshift 1 (𝓈dbind [ulc| λ → 0 |]) ⧺ 𝓈dintro 1) [ulc| λ → 1 |] |]
+𝔱 "subst:⧺" [| subst (null ⧺ dbindSubst [ulc| λ → 0 |] ⧺ null) [ulc| λ → 1 |] |]
             [| Some [ulc| λ → λ → 0 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dintro 1 ⧺ 𝓈dbind [ulc| 1 |]) [ulc| 0 (λ → 2) |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst 2)             [ulc| λ → 1 |] |] [| Some [ulc| λ → 3 |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst 1 ⧺ dintroSubst 1) [ulc| λ → 1 |] |] [| Some [ulc| λ → 3 |] |]
+
+𝔱 "subst:⧺" [| subst (dbindSubst [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
+            [| Some [ulc| λ → λ → 0 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst 1 (dbindSubst [ulc| λ → 0 |]) ⧺ dintroSubst 1) [ulc| λ → 1 |] |]
+            [| Some [ulc| λ → λ → 0 |] |]
+
+𝔱 "subst:⧺" [| subst (dintroSubst 1 ⧺ dbindSubst [ulc| 1 |]) [ulc| 0 (λ → 2) |] |]
             [| Some [ulc| 2 (λ → 2) |] |]
-𝔱 "subst:⧺" [| subst (𝓈dshift 1 (𝓈dbind [ulc| 1 |]) ⧺ 𝓈dintro 1) [ulc| 0 (λ → 2) |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst 1 (dbindSubst [ulc| 1 |]) ⧺ dintroSubst 1) [ulc| 0 (λ → 2) |] |]
             [| Some [ulc| 2 (λ → 2) |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dintro 1) *$ subst (𝓈dshift 1 null) [ulc| 0 |] |]
-            [| subst (𝓈dintro 1 ⧺ 𝓈dshift 1 null) [ulc| 0 |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst 1) *$ subst (dshiftSubst 1 null) [ulc| 0 |] |]
+            [| subst (dintroSubst 1 ⧺ dshiftSubst 1 null) [ulc| 0 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dbind [ulc| 1 |]) *$ subst (𝓈dshift 1 (𝓈dintro 1)) [ulc| 0 |] |]
-            [| subst (𝓈dbind [ulc| 1 |] ⧺ 𝓈dshift 1 (𝓈dintro 1)) [ulc| 0 |] |]
+𝔱 "subst:⧺" [| subst (dbindSubst [ulc| 1 |]) *$ subst (dshiftSubst 1 (dintroSubst 1)) [ulc| 0 |] |]
+            [| subst (dbindSubst [ulc| 1 |] ⧺ dshiftSubst 1 (dintroSubst 1)) [ulc| 0 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dshift 1 (𝓈dbind [ulc| 1 |])) *$ subst (𝓈dshift 1 null) [ulc| 1 |] |]
-            [| subst (𝓈dshift 1 (𝓈dbind [ulc| 1 |]) ⧺ 𝓈dshift 1 null) [ulc| 1 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst 1 (dbindSubst [ulc| 1 |])) *$ subst (dshiftSubst 1 null) [ulc| 1 |] |]
+            [| subst (dshiftSubst 1 (dbindSubst [ulc| 1 |]) ⧺ dshiftSubst 1 null) [ulc| 1 |] |]
 
-𝔱 "subst:⧺" [| subst (𝓈dshift 1 (𝓈dbind [ulc| 3 |]) ⧺ null) [ulc| 0 |] |]
-            [| subst (𝓈dshift 1 (𝓈dbind [ulc| 3 |])) [ulc| 0 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst 1 (dbindSubst [ulc| 3 |]) ⧺ null) [ulc| 0 |] |]
+            [| subst (dshiftSubst 1 (dbindSubst [ulc| 3 |])) [ulc| 0 |] |]
 
 -- de bruijn conversion --
 
@@ -147,13 +147,13 @@ import UVMHS.Lang.ULC
 -- 𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → x) y   |] |] [| (↦♭) () $ pow𝑃 $ map (nvar∘var) ["y"]     |]
 -- 𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → x) x y |] |] [| (↦♭) () $ pow𝑃 $ map (nvar∘var) ["y"]     |]
 
-𝔱 "subst:metas" [| subst (𝓈nbind (var "x") [ulc| y |]) [ulc| x |] |] [| Some [ulc| y |] |]
-𝔱 "subst:metas" [| subst (𝓈nbind (var "x") [ulc| y |]) [ulc| λ y → x |] |] [| Some [ulc| λ y → y↑1 |] |]
-𝔱 "subst:metas" [| msubst (𝓈mbind (var "x") [ulc| y |]) [ulc| 𝔪:x |] |] [| Some [ulc| y |] |]
-𝔱 "subst:metas" [| msubst (𝓈mbind (var "x") [ulc| y |]) [ulc| λ y → 𝔪:x |] |] [| Some [ulc| λ y → y |] |]
+𝔱 "subst:metas" [| subst (nbindSubst (var "x") [ulc| y |]) [ulc| x |] |] [| Some [ulc| y |] |]
+𝔱 "subst:metas" [| subst (nbindSubst (var "x") [ulc| y |]) [ulc| λ y → x |] |] [| Some [ulc| λ y → y↑1 |] |]
+𝔱 "subst:metas" [| msubst (mbindSubst (var "x") [ulc| y |]) [ulc| 𝔪:x |] |] [| Some [ulc| y |] |]
+𝔱 "subst:metas" [| msubst (mbindSubst (var "x") [ulc| y |]) [ulc| λ y → 𝔪:x |] |] [| Some [ulc| λ y → y |] |]
 
 𝔱 "subst:metas:delayed-subst (the one that solves our problem!!!)"
-  [| msubst (𝓈mbind (var "x") [ulc| 0 |]) [ulc| 𝔪:x (λ y → 𝔪:[1]x) |] |]
+  [| msubst (mbindSubst (var "x") [ulc| 0 |]) [ulc| 𝔪:x (λ y → 𝔪:[1]x) |] |]
   [| Some [ulc| 0 (λ y → 1) |] |]
 
 --   -- {m:x ↦ int}      m:x, m:y, m:z
@@ -209,14 +209,14 @@ import UVMHS.Lang.ULC
 --         e ← randSml @ULCExpRaw
 --         return $ i :* e
 --   |]
---   [| \ (i :* e) → subst (𝓈dshift i null) e ≡ Some e |]
+--   [| \ (i :* e) → subst (dshiftSubst i null) e ≡ Some e |]
 
 -- 𝔣 "zzz:subst:unit:bind∘intro" 100
 --   [| do e₁ ← randSml @ULCExpRaw
 --         e₂ ← randSml @ULCExpRaw
 --         return $ e₁ :* e₂
 --   |]
---   [| \ (e₁ :* e₂) → (subst (𝓈dbind e₁) *$ subst (𝓈dintro 1) e₂) ≡ Some e₂ |]
+--   [| \ (e₁ :* e₂) → (subst (dbindSubst e₁) *$ subst (dintroSubst 1) e₂) ≡ Some e₂ |]
 
 -- 𝔣 "zzz:subst:commute:intro∘bind" 100
 --   [| do e₁ ← randSml @ULCExpRaw
@@ -224,9 +224,9 @@ import UVMHS.Lang.ULC
 --         return $ e₁ :* e₂
 --   |]
 --   [| \ (e₁ :* e₂) →
---          (subst (𝓈dintro 1) *$ subst (𝓈dbind e₁) e₂)
+--          (subst (dintroSubst 1) *$ subst (dbindSubst e₁) e₂)
 --          ≡
---          (subst (𝓈dshift 1 $ 𝓈dbind e₁) *$ subst (𝓈dintro 1) e₂)
+--          (subst (dshiftSubst 1 $ dbindSubst e₁) *$ subst (dintroSubst 1) e₂)
 --   |]
 
 -- 𝔣 "zzz:subst:dist:shift/⧺:nometa" 100
@@ -236,7 +236,7 @@ import UVMHS.Lang.ULC
 --         e  ← randSml @ULCExpRaw
 --         return $ n :* 𝓈₁ :* 𝓈₂ :* e
 --   |]
---   [| \ (n :* 𝓈₁ :* 𝓈₂ :* e) → subst (𝓈dshift n (𝓈₁ ⧺ 𝓈₂)) e ≡ subst (𝓈dshift n 𝓈₁ ⧺ 𝓈dshift n 𝓈₂) e |]
+--   [| \ (n :* 𝓈₁ :* 𝓈₂ :* e) → subst (dshiftSubst n (𝓈₁ ⧺ 𝓈₂)) e ≡ subst (dshiftSubst n 𝓈₁ ⧺ dshiftSubst n 𝓈₂) e |]
 
 𝔣 "zzz:subst:todbr:idemp" 100
   [| do randSml @ULCExpRaw |]
