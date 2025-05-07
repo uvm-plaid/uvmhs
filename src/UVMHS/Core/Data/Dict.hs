@@ -427,7 +427,10 @@ all𝐷 = foldrOnFrom all (return dø𝐷) $ \ k dsᵢ → do
 -- OTHER DEFINITIONS --
 
 dict𝐷 ∷ (Ord k,ToIter (k ⇰ a) t) ⇒ t → k ⇰ a
-dict𝐷 = foldr dø𝐷 (⩌♭)
+dict𝐷 = dict
+
+assoc𝐷 ∷ (Ord k,ToIter (k ∧ a) t) ⇒ t → k ⇰ a
+assoc𝐷 = assoc
 
 dminKey𝐷 ∷ k ⇰ a → 𝑂 k
 dminKey𝐷 = map fst ∘ dminElem𝐷

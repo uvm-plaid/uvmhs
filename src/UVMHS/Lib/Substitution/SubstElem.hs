@@ -3,6 +3,7 @@ module UVMHS.Lib.Substitution.SubstElem where
 import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Rand
+import UVMHS.Lib.Parser
 
 import UVMHS.Lib.Substitution.Var
 
@@ -27,22 +28,22 @@ data SubstElem s e = SubstElem
 makeLenses ''SubstElem
 
 interpSubstElem ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → 𝑂 e
-interpSubstElem intro (SubstElem ι ueO) = intro ι *$ ueO ()
+interpSubstElem substE (SubstElem ι ueO) = substE ι *$ ueO ()
 
 canonSubstElem ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e
-canonSubstElem intro e = SubstElem null $ const $ interpSubstElem intro e
+canonSubstElem substE e = SubstElem null $ const $ interpSubstElem substE e
 
 eqSubstElem ∷ (Eq e) ⇒ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e → 𝔹
-eqSubstElem intro e₁ e₂ = interpSubstElem intro e₁ ≡ interpSubstElem intro e₂
+eqSubstElem substE e₁ e₂ = interpSubstElem substE e₁ ≡ interpSubstElem substE e₂
 
 compareSubstElem ∷ (Ord e) ⇒ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e → Ordering
-compareSubstElem intro e₁ e₂ = interpSubstElem intro e₁ ⋚ interpSubstElem intro e₂
+compareSubstElem substE e₁ e₂ = interpSubstElem substE e₁ ⋚ interpSubstElem substE e₂
 
 introSubstElem ∷ (Ord s) ⇒ s ⇰ ℕ64 → SubstElem s e → SubstElem s e
 introSubstElem = alter substElemIntroL ∘ (+)
 
 subSubstElem ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e
-subSubstElem intro e = SubstElem zero $ \ () → interpSubstElem intro e
+subSubstElem substE e = SubstElem zero $ \ () → interpSubstElem substE e
 
 -------------
 -- FUNCTOR --
@@ -55,21 +56,16 @@ instance Functor (SubstElem s) where
 -- PRETTY PRINTING --
 ---------------------
 
+ppSubstElemNamed ∷ (Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → SubstElem s e → Doc
+ppSubstElemNamed ιD (SubstElem ι ueO) =
+  let eD = elim𝑂 (const $ ppPun "⊥") pretty $ ueO ()
+  in 
+  if isEmpty ι
+  then eD
+  else ppInf pTOP (ppPun "⇈") eD $ ιD ι
+
 instance (Pretty s,Pretty e) ⇒ Pretty (SubstElem s e) where
-  pretty (SubstElem ι ueO) = 
-    let eD = elim𝑂 (const $ ppPun "⊥") pretty $ ueO ()
-    in
-    if isEmpty ι 
-    then eD
-    else concat [eD,ppPun "⇈",pretty ι]
-  --pretty (SubstElem s ueO) =
-  --  let def = ifNone (ppPun "⊥") $ map (ppPun "≔" ⧺) (pretty ^$ ueO ()) in
-  --  ppGA $
-  --    if csize s ≡ 0
-  --      then ppHorizontal [def]
-  --      -- Attempt to remove keys that map to 0 from the output
-  --      -- else ppGA $ ppHorizontal [def, ppKey "where", pretty (omap𝐷 (\ n → if n ≡ 0 then None else Some n) s)]
-  --      else ppGA $ ppHorizontal [ppPun "⎨", def, ppKey "where", pretty s, ppPun "⎬"]
+  pretty = ppSubstElemNamed pretty
 
 -------------
 -- FUZZING --
@@ -130,10 +126,13 @@ instance Functor (SSubstElem s) where
 -- PRETTY PRINTING --
 ---------------------
 
-instance (Pretty s,Pretty e) ⇒ Pretty (SSubstElem s e) where
-  pretty = \case
+ppSSubstElemNamed ∷ (Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → SSubstElem s e → Doc
+ppSSubstElemNamed ιD = \case
     Var_SSE i → ppDVar i
-    Trm_SSE e → pretty e
+    Trm_SSE e → ppSubstElemNamed ιD e
+
+instance (Pretty s,Pretty e) ⇒ Pretty (SSubstElem s e) where
+  pretty = ppSSubstElemNamed pretty
 
 -------------
 -- FUZZING --

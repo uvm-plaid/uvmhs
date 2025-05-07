@@ -329,7 +329,16 @@ main = cleanExit $ do
     [ "UVMHS.Tests.Substitution"
     ])
   pprint $ N_SVar 2 $ 𝕎 (Some 5) "foo"
-  pprint $ dintroSubst @ULCExpRaw 1
+  let 𝓈 = concat
+        -- , nintroSubst (var "x" ↦ 1)
+        -- [ null
+        -- , dshiftSubst 1 $ dintroSubst 1
+        [ null
+        , nshiftSubst (var "x" ↦ 1) $ nbindSubst (var "x") [ulc| λ → 2 |]
+        -- [ dshiftSubst 1 $ dbindSubst [ulc| λ → 1 |]
+        , null
+        ]
+  pprint 𝓈
   -- pprint $ ppFG teal $ ppString "¯\\_﹙ツ﹚_/¯"
   -- out "HI"
   -- e ← TH.runQ $ TH.examineCode $ TH.liftTyped (\ () → 𝕟64 5)

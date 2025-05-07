@@ -178,29 +178,41 @@ canonSubstScoped mkVar intro = canonElems ∘ collapseNullShift ∘ expandIncs �
 -- PRETTY PRINTING --
 ---------------------
 
-ppSubstScoped ∷ (Pretty s,Pretty e) ⇒ (ℕ64 → Doc) → (ℕ64 → Doc) → (Doc → Doc) → SubstScoped s e → Doc
-ppSubstScoped ρD eD pι (SubstScoped ρ es ι) = ppSetBotLevel $ concat
-    [ ppPun "["
-    , ppSpaceIfBreak
-    , concat [ppPun "ID…",ρD ρ]
-    , ppNewlineIfBreak
-    , ppPun ":"
-    , ppSpaceIfBreak
-    , concat $ inbetween (concat [ppNewlineIfBreak,ppPun ",",ppSpaceIfBreak]) $ map (ppGA ∘ pretty) es
-    , ppNewlineIfBreak
-    , ppPun ":"
-    , ppSpaceIfBreak
-    , concat [ppPun "⇈",pretty ι,ppPun "…",pι $ ppLit "∞"]
-    , ppNewlineIfBreak
-    , ppPun "]"
-    ]
+ppSubstScoped ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → (𝕊 → Doc) → SubstScoped s e → Doc
+ppSubstScoped ιD xD (SubstScoped ρ es ι) = 
+  let kvs = concat
+        [ if ρ ≡ null then null else single $
+            let k = concat [xD "0",ppPun "…",xD $ show𝕊 ρ] 
+                v = ppLit "[≡]"
+            in k :* v
+        , mapOn (withIndex @ℕ64 es) $ \ (n :* e) →
+            let k = concat [xD $ show𝕊 $ ρ + n]
+                v = ppSSubstElemNamed ιD e
+            in k :* v
+        , single $ 
+            let k = concat
+                  [ xD $ show𝕊 $ ρ + csize es
+                  , ppPun "…"
+                  , xD "∞" 
+                  ]
+                v = ppLit $ concat 
+                  [ "["
+                  , case ι ⋚ 0 of
+                      LT → show𝕊 ι 
+                      EQ → "≡"
+                      GT → concat ["+",show𝕊 ι]
+                  , "]"
+                  ]
+            in k :* v
+        ]
+  in
+  ppDict kvs
 
-ppSubstScopedNamed ∷ (Pretty s,Pretty e) ⇒ 𝕊 → SubstScoped s e → Doc
-ppSubstScopedNamed s = ppSubstScoped pretty pretty id
+ppSubstScopedNamed ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → 𝕊 → SubstScoped s e → Doc
+ppSubstScopedNamed ιD x = ppSubstScoped ιD $ ppBdr ∘ ((⧺) x)
 
 instance (Pretty e, Pretty s) ⇒ Pretty (SubstScoped s e) where
-  -- pretty (SubstScoped 0 (csize → 0) 0) = ppPun "⊘"
-  pretty = ppSubstScopedNamed "x"
+  pretty = ppSubstScopedNamed pretty ""
 
 -------------
 -- FUNCTOR --

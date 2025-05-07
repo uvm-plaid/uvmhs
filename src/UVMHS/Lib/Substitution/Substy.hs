@@ -89,6 +89,7 @@ evalSubstM γ = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ evalUContT 
 -- Substy --
 ------------
 
+-- TODO: make this return a delayed subst elem?
 class Substy s e a | a→s,a→e where
   substy ∷ a → SubstyM s e a
 

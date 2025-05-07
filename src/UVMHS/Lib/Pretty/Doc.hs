@@ -520,61 +520,96 @@ instance Pretty 𝕊 where
     , iter $ 𝕤 "\""
     ]
 
-instance (Pretty a,Pretty b) ⇒ Pretty (a,b) where
-  pretty (a,b) = ppCollection (ppPun "(") (ppPun ")") (ppPun ",") [pretty a, pretty b]
-instance (Pretty a,Pretty b) ⇒ Pretty (a ∧ b) where
-  pretty (a :* b) = ppCollection (ppPun "⟨") (ppPun "⟩") (ppPun ",") [pretty a, pretty b]
+ppTupHS2 ∷ Doc → Doc → Doc
+ppTupHS2 x y = ppCollection (ppPun "(") (ppPun ")") (ppPun ",") [x,y]
 
-instance (Pretty a) ⇒ Pretty (() → a) where pretty = pretty ∘ appto ()
+ppTup ∷ Doc → Doc → Doc
+ppTup x y = ppCollection (ppPun "⟨") (ppPun "⟩") (ppPun ",") [x,y]
 
-instance (Pretty a) ⇒ Pretty (𝐿 a) where
-  pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
-instance (Pretty a) ⇒ Pretty [a] where
-  pretty = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ map pretty ∘ iter
-instance (Pretty a) ⇒ Pretty (𝐼 a) where
-  pretty xs = ppApp (ppString "𝐼") $ list [pretty $ list xs]
-instance (Pretty a) ⇒ Pretty (𝐼C a) where
-  pretty xs = ppApp (ppString "𝐼C") $ list [pretty $ list xs]
-instance (Pretty a) ⇒ Pretty (𝑄 a) where
-  pretty xs = ppApp (ppString "𝑄") $ list [pretty $ list xs]
-instance (Pretty a) ⇒ Pretty (𝑃 a) where
-  pretty = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") ∘ map pretty ∘ iter
-instance (Pretty k,Pretty v) ⇒ Pretty (k ⇰ v) where
-  pretty = ppRecord (ppPun "↦") ∘ map (mapPair pretty pretty) ∘ iter
-instance (Pretty a) ⇒ Pretty (𝕍 a) where
-  pretty xs = ppApp (ppString "𝕍") $ list [pretty $ list xs]
-instance (Pretty a) ⇒ Pretty (𝕍S n a) where
-  pretty xs = ppApp (ppString "𝕍S") $ list [pretty $ list xs]
-instance (Storable a,Pretty a) ⇒ Pretty (𝕌 a) where
-  pretty xs = ppApp (ppString "𝕌") $ list [pretty $ list xs]
-instance (Storable a,Pretty a) ⇒ Pretty (𝕌S n a) where
-  pretty xs = ppApp (ppString "𝕌S") $ list [pretty $ list xs]
--- instance (Element a,Pretty a) ⇒ Pretty (𝕄S m n a) where
---   pretty xs = ppApp (ppString "𝕄S") $ list [pretty $ list xs]
+ppList ∷ (ToIter Doc t) ⇒ t → Doc
+ppList = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ iter
 
-instance (Pretty a) ⇒ Pretty (AddNull a) where
-  pretty Null = ppCon "•"
-  pretty (AddNull x) = pretty x
+ppLazyList ∷ (ToIter Doc t) ⇒ t → Doc
+ppLazyList xs = ppApp (ppString "LL") [ppList xs]
 
-instance (Pretty a) ⇒ Pretty (ZOM a) where
-  pretty NullZOM = ppCon "⊥"
-  pretty (OneZOM x) = pretty x
-  pretty MoreZOM = ppCon "⊤"
+ppIter ∷ (ToIter Doc t) ⇒ t → Doc
+ppIter xs = ppApp (ppString "𝐼") [ppList xs]
 
-instance (Pretty a) ⇒ Pretty (AddBot a) where
-  pretty Bot = ppCon "⊥"
-  pretty (AddBot x) = pretty x
+ppIterC ∷ (ToIter Doc t) ⇒ t → Doc
+ppIterC xs = ppApp (ppString "𝐼C") [ppList xs]
 
-instance (Pretty a) ⇒ Pretty (AddTop a) where
-  pretty Top = ppCon "⊤"
-  pretty (AddTop x) = pretty x
+ppSeq ∷ (ToIter Doc t) ⇒ t → Doc
+ppSeq xs = ppApp (ppString "𝑄") [ppList xs]
 
-instance (Pretty a) ⇒ Pretty (AddBT a) where
-  pretty BotBT = ppCon "⊥"
-  pretty TopBT = ppCon "⊤"
-  pretty (AddBT x) = pretty x
+ppSet ∷ (ToIter Doc t) ⇒ t → Doc
+ppSet = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") ∘ iter
+
+ppDict ∷ (ToIter (Doc ∧ Doc) t) ⇒ t → Doc
+ppDict = ppRecord (ppPun "↦") ∘ iter
+
+ppVec ∷ (ToIter Doc t) ⇒ t → Doc
+ppVec xs = ppApp (ppString "𝕍") [ppList xs]
+
+ppVecS ∷ (ToIter Doc t) ⇒ t → Doc
+ppVecS xs = ppApp (ppString "𝕍S") [ppList xs]
+
+ppUVec ∷ (ToIter Doc t) ⇒ t → Doc
+ppUVec xs = ppApp (ppString "𝕌") [ppList xs]
+
+ppUVecS ∷ (ToIter Doc t) ⇒ t → Doc
+ppUVecS xs = ppApp (ppString "𝕌S") [ppList xs]
+
+ppAddNull ∷ AddNull Doc → Doc
+ppAddNull = \case
+  Null → ppCon "•"
+  AddNull x → x
+
+ppAddBot ∷ AddBot Doc → Doc
+ppAddBot = \case
+  Bot → ppCon "⊥"
+  AddBot x → x
+
+ppAddTop ∷ AddTop Doc → Doc
+ppAddTop = \case
+  Top → ppCon "⊤"
+  AddTop x → x
+
+ppAddBT ∷ AddBT Doc → Doc
+ppAddBT = \case
+  BotBT → ppCon "⊥"
+  TopBT → ppCon "⊤"
+  AddBT x → x
+
+ppZOM ∷ ZOM Doc → Doc
+ppZOM = \case
+  NullZOM → ppCon "⊥"
+  OneZOM x → x
+  MoreZOM → ppCon "⊤"
+
+instance (Pretty a,Pretty b)   ⇒ Pretty (a , b)     where pretty = curry ppTupHS2 ∘ mapPair pretty pretty ∘ frhs
+instance (Pretty a,Pretty b)   ⇒ Pretty (a ∧ b)     where pretty = curry ppTup ∘ mapPair pretty pretty
+instance (Pretty a)            ⇒ Pretty (() → a)    where pretty = pretty ∘ appto ()
+instance (Pretty a)            ⇒ Pretty (𝐿 a)       where pretty = ppList ∘ map pretty ∘ iter
+instance (Pretty a)            ⇒ Pretty [a]         where pretty = ppLazyList ∘ map pretty ∘ iter
+instance (Pretty a)            ⇒ Pretty (𝐼 a)       where pretty = ppIter ∘ map pretty
+instance (Pretty a)            ⇒ Pretty (𝐼C a)      where pretty = ppIterC ∘ map pretty ∘ iter
+instance (Pretty a)            ⇒ Pretty (𝑄 a)       where pretty = ppSeq ∘ map pretty ∘ iter
+instance (Pretty a)            ⇒ Pretty (𝑃 a)       where pretty = ppSet ∘ map pretty ∘ iter
+instance (Pretty k,Pretty v)   ⇒ Pretty (k ⇰ v)     where pretty = ppDict ∘ map (mapPair pretty pretty) ∘ iter
+instance (Pretty a)            ⇒ Pretty (𝕍 a)       where pretty = ppVec ∘ map pretty ∘ iter
+instance (Pretty a)            ⇒ Pretty (𝕍S n a)    where pretty = ppVecS ∘ map pretty ∘ iter
+instance (Storable a,Pretty a) ⇒ Pretty (𝕌 a)       where pretty = ppUVec ∘ map pretty ∘ iter
+instance (Storable a,Pretty a) ⇒ Pretty (𝕌S n a)    where pretty = ppUVecS ∘ map pretty ∘ iter
+instance (Pretty a)            ⇒ Pretty (AddNull a) where pretty = ppAddNull ∘ map pretty
+instance (Pretty a)            ⇒ Pretty (AddBot a)  where pretty = ppAddBot ∘ map pretty
+instance (Pretty a)            ⇒ Pretty (AddTop a)  where pretty = ppAddTop ∘ map pretty
+instance (Pretty a)            ⇒ Pretty (AddBT a)   where pretty = ppAddBT ∘ map pretty
+instance (Pretty a)            ⇒ Pretty (ZOM a)     where pretty = ppZOM ∘ map pretty
 
 instance Pretty Stack.CallStack where pretty = ppString ∘ string ∘ Stack.prettyCallStack
+
+-- instance (Element a,Pretty a) ⇒ Pretty (𝕄S m n a) where
+--   pretty xs = ppApp (ppString "𝕄S") $ list [pretty $ list xs]
 
 colorsDemo ∷ Doc
 colorsDemo =

@@ -104,7 +104,7 @@ shiftSubstSpaced ιs (SubstSpaced 𝓈U 𝓈S) =
 --     , …
 --     ]
 introSubstSpaced ∷ sS ⇰ ℕ64 → SubstSpaced sU sS e
-introSubstSpaced 𝑠 = SubstSpaced null $ mapOn 𝑠 $ SubstScoped 0 null ∘ intΩ64
+introSubstSpaced ι = SubstSpaced null $ mapOn ι $ SubstScoped 0 null ∘ intΩ64
 
 sbindsSubstSpaced ∷ sS ⇰ 𝕍 e → SubstSpaced sU sS e
 sbindsSubstSpaced ess = SubstSpaced null $ mapOn ess $ \ es →
@@ -118,38 +118,38 @@ ubindsSubstSpaced esᴳ = SubstSpaced (map (SubstElem null ∘ const ∘ return)
 -- 𝓈smbindsG ∷ sU ⇰ e → SubstSpaced sU sS e
 -- 𝓈smbindsG esᴳ = SubstSpaced null (map (SubstElem null ∘ const ∘ return) esᴳ) null
 
--- 𝓈₁ ≜ ⟨ρ₁,esU,ι₁⟩
--- 𝓈₂ ≜ ⟨ρ₂,esS,ι₂⟩
--- 𝔰₁ = |esU|
--- 𝔰₂ = |esS|
+-- 𝓈₁ ≜ ⟨ρ₁,es₁,ι₁⟩
+-- 𝓈₂ ≜ ⟨ρ₂,es₂,ι₂⟩
+-- 𝔰₁ = |es₁|
+-- 𝔰₂ = |es₂|
 -- (𝓈₂⧺𝓈₁)(i)
 -- ==
 -- 𝓈₂(𝓈₁(i))
 -- ==
 -- cases (sequential):
 --   | i < ρ₁    ⇒ 𝓈₂(i)
---   | i < ρ₁+𝔰₁ ⇒ 𝓈₂(esU[i-ρ₁])
+--   | i < ρ₁+𝔰₁ ⇒ 𝓈₂(es₁[i-ρ₁])
 --   | ⊤         ⇒ 𝓈₂(i+ι₁)
 -- ==
 -- cases (sequential):
 --   | i < ρ₁    ⇒ cases (sequential):
 --                    | i < ρ₂    ⇒ i
---                    | i < ρ₂+𝔰₂ ⇒ esS[i-ρ₂]
+--                    | i < ρ₂+𝔰₂ ⇒ es₂[i-ρ₂]
 --                    | ⊤         ⇒ i+ι₂
---   | i < ρ₁+𝔰₁ ⇒ 𝓈₂(esU[i-ρ₁])
+--   | i < ρ₁+𝔰₁ ⇒ 𝓈₂(es₁[i-ρ₁])
 --   | ⊤         ⇒ cases (sequential):
 --                    | i < ρ₂-ι₁    ⇒ i+ι₁
---                    | i < ρ₂+𝔰₂-ι₁ ⇒ esS[i+ι₁-ρ₂]
+--                    | i < ρ₂+𝔰₂-ι₁ ⇒ es₂[i+ι₁-ρ₂]
 --                    | ⊤            ⇒ i+ι₁+ι₂
 -- ==
 -- cases (sequential):
 --   | i < ρ₁⊓ρ₂      ⇒ i
 --   ---------------------------------
---   | i < ρ₁⊓(ρ₂+𝔰₂) ⇒ esS[i-ρ₂]
+--   | i < ρ₁⊓(ρ₂+𝔰₂) ⇒ es₂[i-ρ₂]
 --   | i < ρ₁         ⇒ i+ι₂
---   | i < ρ₁+𝔰₁      ⇒ 𝓈₂(esU[i-ρ₁])
+--   | i < ρ₁+𝔰₁      ⇒ 𝓈₂(es₁[i-ρ₁])
 --   | i < ρ₂-ι₁      ⇒ i+ι₁
---   | i < ρ₂+𝔰₂-ι₁   ⇒ esS[i+ι₁-ρ₂]
+--   | i < ρ₂+𝔰₂-ι₁   ⇒ es₂[i+ι₁-ρ₂]
 --   ---------------------------------
 --   | ⊤              ⇒ i+ι₁+ι₂
 -- == ⟨ρ,es,ι⟩(i)
@@ -160,28 +160,30 @@ ubindsSubstSpaced esᴳ = SubstSpaced (map (SubstElem null ∘ const ∘ return)
 --   ρ+𝔰 = (ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁)
 --     𝔰 = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
 appendSubstSpaced ∷
-  (Ord sU,Ord sS)
+  ∀ sU sS e. (Ord sU,Ord sS)
   ⇒ (SubstSpaced sU sS e → e → 𝑂 e)
   → SubstSpaced sU sS e
   → SubstSpaced sU sS e
   → SubstSpaced sU sS e
 appendSubstSpaced esubst 𝓈̂₂ 𝓈̂₁ =
-  let SubstSpaced esᴳ₁ 𝓈sU = 𝓈̂₁
-      SubstSpaced esᴳ₂ 𝓈sS = 𝓈̂₂
-      esub 𝓈 𝑠 = esubst $ appendSubstSpaced esubst 𝓈 $ introSubstSpaced 𝑠
+  let SubstSpaced 𝓈U₁ 𝓈S₁ = 𝓈̂₁
+      SubstSpaced 𝓈U₂ 𝓈S₂ = 𝓈̂₂
+      esub ∷ SubstSpaced sU sS e → sS ⇰ ℕ64 → e → 𝑂 e
+      esub 𝓈 ι = esubst $ appendSubstSpaced esubst 𝓈 $ introSubstSpaced ι
+      ℯsub ∷ sS → SubstSpaced sU sS e → SSubstElem sS e → SSubstElem sS e
       ℯsub s 𝓈 = subSSubstElem (elim𝑂 (const Var_SSE) lookupSubstScoped $ substSpacedScoped 𝓈 ⋕? s) $ esub 𝓈
-      esᴳ₁' = map (subSubstElem $ esub 𝓈̂₂) esᴳ₁
+      𝓈U₁' = map (subSubstElem $ esub 𝓈̂₂) 𝓈U₁
       -- esᴹ₁' = map (subSubstElem $ esub 𝓈̂₂) esᴹ₁
-      𝓈sU' = kmapOn 𝓈sU $ \ s (SubstScoped ρ̇₁ esU ι₁) → SubstScoped ρ̇₁ (mapOn esU $ ℯsub s 𝓈̂₂) ι₁
-      esᴳ = esᴳ₁' ⩌ esᴳ₂
+      𝓈S₁' = kmapOn 𝓈S₁ $ \ s (SubstScoped ρ̇₁ es₁ ι₁) → SubstScoped ρ̇₁ (mapOn es₁ $ ℯsub s 𝓈̂₂) ι₁
+      𝓈Uᵣ = 𝓈U₁' ⩌ 𝓈U₂
       -- esᴹ = esᴹ₁' ⩌ esᴹ₂
-      𝓈s = dunionByOn 𝓈sS 𝓈sU' $ \ 𝓈₂@(SubstScoped ρ̇₂ esS ι₂) 𝓈₁@(SubstScoped ρ̇₁ esU ι₁) →
+      𝓈Sᵣ= dunionByOn 𝓈S₂ 𝓈S₁' $ \ 𝓈₂@(SubstScoped ρ̇₂ es₂ ι₂) 𝓈₁@(SubstScoped ρ̇₁ es₁ ι₁) →
         if
         | isNullSubstScoped 𝓈₁ → 𝓈₂
         | isNullSubstScoped 𝓈₂ → 𝓈₁
         | otherwise →
-            let 𝔰₁ = intΩ64 $ csize esU
-                𝔰₂ = intΩ64 $ csize esS
+            let 𝔰₁ = intΩ64 $ csize es₁
+                𝔰₂ = intΩ64 $ csize es₂
                 ρ₁ = intΩ64 ρ̇₁
                 ρ₂ = intΩ64 ρ̇₂
                 ρ̇  = ρ̇₁⊓ρ̇₂
@@ -192,15 +194,15 @@ appendSubstSpaced esubst 𝓈̂₂ 𝓈̂₁ =
                 es = vecF (natΩ64 𝔰) $ \ ṅ →
                   let n = intΩ64 ṅ + δ in
                   if
-                  | n < ρ₁⊓(ρ₂+𝔰₂) → esS ⋕! natΩ64 (n-ρ₂)
+                  | n < ρ₁⊓(ρ₂+𝔰₂) → es₂ ⋕! natΩ64 (n-ρ₂)
                   | n < ρ₁         → Var_SSE $ natΩ64 $ n+ι₂
-                  | n < ρ₁+𝔰₁      → esU ⋕! natΩ64 (n-ρ₁)
+                  | n < ρ₁+𝔰₁      → es₁ ⋕! natΩ64 (n-ρ₁)
                   | n < ρ₂-ι₁      → Var_SSE $ natΩ64 $ n+ι₁
-                  | n < ρ₂+𝔰₂-ι₁   → esS ⋕! natΩ64 (n+ι₁-ρ₂)
+                  | n < ρ₂+𝔰₂-ι₁   → es₂ ⋕! natΩ64 (n+ι₁-ρ₂)
                   | otherwise      → error "bad"
             in
             SubstScoped ρ̇ es ι
-  in SubstSpaced esᴳ 𝓈s
+  in SubstSpaced 𝓈Uᵣ 𝓈Sᵣ
 
 -------------
 -- FUNCTOR --
@@ -213,10 +215,10 @@ instance Functor (SubstSpaced sU sS) where
 -- PRETTY PRINTING --
 ---------------------
 
-instance (Pretty a, Pretty b, Pretty c) ⇒ Pretty (SubstSpaced a b c) where
-  pretty (SubstSpaced 𝓈U 𝓈S) = ppRecord (ppPun "↦") $ map frhs $ concat
-    [ if csize 𝓈U > 0 then [(ppCon "𝐆",pretty 𝓈U)] else []
-    , if csize 𝓈S > 0 then [(ppCon "𝐋",pretty 𝓈S)] else []
+instance (Pretty s₁,Pretty s₂,Pretty e) ⇒ Pretty (SubstSpaced s₁ s₂ e) where
+  pretty (SubstSpaced 𝓈U 𝓈S) = ppDict $ concat
+    [ if csize 𝓈U ≡ 0 then null𝐼 else single $ ppCon "𝐔" :* pretty 𝓈U
+    , if csize 𝓈S ≡ 0 then null𝐼 else single $ ppCon "𝐒" :* pretty 𝓈S
     ]
     -- | csize g ≡ 0 ⩓ csize s ≡ 0 = ppString "⊘"
     -- | csize g ≡ 0 ⩓ csize s ≢ 0 

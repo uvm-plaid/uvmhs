@@ -6,6 +6,7 @@ import UVMHS.Lib.Rand
 
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstSpaced
+import UVMHS.Lib.Substitution.SubstScoped
 import UVMHS.Lib.Substitution.Var
 
 -- ===== --
@@ -25,7 +26,7 @@ import UVMHS.Lib.Substitution.Var
 --------------------------------------------------------------------------------
 
 newtype Subst s e = Subst { unSubst ∷ SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) e }
-  deriving (Eq,Ord,Show,Pretty,Fuzzy,Functor)
+  deriving (Eq,Ord,Show,Fuzzy,Functor)
 makeLenses ''Subst
 
 canonSubst ∷ (Eq e) ⇒ (ℕ64 → e) → (s ∧ 𝑂 𝕎 ⇰ ℕ64 → e → 𝑂 e) → Subst s e → Subst s e
@@ -177,9 +178,25 @@ gbindSubst = sgbindSubst ()
 -- PRETTY --
 ------------
 
--- instance Pretty (Subst s e) where
---   pretty ∷ Subst s e → Doc
---   pretty (Subst (SubstSpaced 𝓈U 𝓈S)) = 
+ppSubst ∷ ∀ s e. (Ord s,Pretty s,Pretty e) ⇒ Subst s e → Doc
+ppSubst (Subst (SubstSpaced 𝓈U 𝓈S)) = 
+  let sD ∷ s ∧ 𝑂 𝕎 ⇰ ℕ64 → Doc
+      sD sιs = pretty $ concat $ mapOn (iter sιs) $ \ (s :* xO :* n) → 
+        (↦♭) s $ case xO of
+          Some x → ppDict [ppBdr (ppshow x) :* pretty n]
+          None → pretty n
+  in 
+  ppDict $ concat
+    [ if csize 𝓈U ≡ 0 then null𝐼 else null -- single $ (:*) (ppCon "𝐔") $ ppSet $ mapOn 𝓈UprettySubstScoped 𝓈U
+    , if csize 𝓈S ≡ 0 
+      then null𝐼 
+      else single $ (:*) (ppCon "𝐒") $ pretty $ concat $ mapOn (iter 𝓈S) $ \ (s :* xO :* 𝓈) →
+        (↦♭) s $ ppSubstScoped sD (\ x → ppBdr $ elim𝑂 (const id) (⧺) (map ppshow xO) x) 𝓈
+    ]
+
+instance (Ord s,Pretty s,Pretty e) ⇒ Pretty (Subst s e) where
+  pretty ∷ Subst s e → Doc
+  pretty = ppSubst
 
 -- ========== --
 -- META SUBST --
