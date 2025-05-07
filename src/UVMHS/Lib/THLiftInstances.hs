@@ -12,6 +12,7 @@ import Instances.TH.Lift ()
 
 import qualified Language.Haskell.TH.Syntax as TH
 
+deriving instance (TH.Lift a) ⇒ TH.Lift (𝑃 a)
 deriving instance (TH.Lift k,TH.Lift v) ⇒ TH.Lift (k ⇰ v)
 deriving instance (TH.Lift a) ⇒ TH.Lift (𝕍 a)
 deriving instance (TH.Lift a) ⇒ TH.Lift (AddBT a)

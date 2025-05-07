@@ -178,6 +178,9 @@ fmixfix new bracket cxt (MixfixF terms levels₀) = loop levels₀
 fmixfixWithContext ∷ ∀ t a. (Ord t) ⇒ 𝕊 → MixfixF t (𝐴 SrcCxt) a → CParser t (𝐴 SrcCxt a)
 fmixfixWithContext s = fmixfix (cpNewContext s) cpNewExpressionContext cpWithContextRendered
 
+fmixfixWithContextSet ∷ ∀ t a. (Ord t) ⇒ 𝕊 → MixfixF t (𝐴 (𝑃 SrcCxt)) a → CParser t (𝐴 (𝑃 SrcCxt) a)
+fmixfixWithContextSet s = fmixfix (cpNewContext s) cpNewExpressionContext (map (mapATag single) ∘ cpWithContextRendered)
+
 ---------------
 -- Non-fancy --
 ---------------

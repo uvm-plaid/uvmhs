@@ -3,7 +3,9 @@ module UVMHS.Lib.Substitution.SubstElem where
 import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Rand
+import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Parser
+import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.Var
 
@@ -23,15 +25,20 @@ import UVMHS.Lib.Substitution.Var
 -- ⟦e⇈ι⟧ = ⟦ι⟧(e)
 data SubstElem s e = SubstElem
   { substElemIntro ∷ s ⇰ ℕ64   -- ^ delayed renaming
-  , substElemValue ∷ () → 𝑂 e  -- ^ delayed element
+  -- , substElemValue ∷ () → 𝑂 e  -- ^ delayed element
+  , substelemValue ∷ 𝑂 e
   } deriving (Eq,Ord,Show)
 makeLenses ''SubstElem
 
+-- `substE ιs e`
+-- ≡ 
+-- first weaken `e` by `ιs`, and then optionally perform some substitution to
+-- the result (e.g., just leaving it alone)
 interpSubstElem ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → 𝑂 e
-interpSubstElem substE (SubstElem ι ueO) = substE ι *$ ueO ()
+interpSubstElem substE (SubstElem ιs eO) = substE ιs *$ eO
 
 canonSubstElem ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e
-canonSubstElem substE e = SubstElem null $ const $ interpSubstElem substE e
+canonSubstElem substE e = SubstElem null $ interpSubstElem substE e
 
 eqSubstElem ∷ (Eq e) ⇒ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e → 𝔹
 eqSubstElem substE e₁ e₂ = interpSubstElem substE e₁ ≡ interpSubstElem substE e₂
@@ -42,27 +49,30 @@ compareSubstElem substE e₁ e₂ = interpSubstElem substE e₁ ⋚ interpSubstE
 introSubstElem ∷ (Ord s) ⇒ s ⇰ ℕ64 → SubstElem s e → SubstElem s e
 introSubstElem = alter substElemIntroL ∘ (+)
 
-subSubstElem ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e
-subSubstElem substE e = SubstElem zero $ \ () → interpSubstElem substE e
+substSubstElemE ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → 𝑂 e
+substSubstElemE substE (SubstElem ιs e) = substE ιs *$ e
+
+substSubstElem ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e
+substSubstElem substE = SubstElem null ∘ substSubstElemE substE
 
 -------------
 -- FUNCTOR --
 -------------
 
 instance Functor (SubstElem s) where
-  map f (SubstElem ι e) = SubstElem ι $ mapp f e
+  map f (SubstElem ιs e) = SubstElem ιs $ f ^$ e
 
 ---------------------
 -- PRETTY PRINTING --
 ---------------------
 
 ppSubstElemNamed ∷ (Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → SubstElem s e → Doc
-ppSubstElemNamed ιD (SubstElem ι ueO) =
-  let eD = elim𝑂 (const $ ppPun "⊥") pretty $ ueO ()
-  in 
-  if isEmpty ι
+ppSubstElemNamed ιD (SubstElem ιs eO) =
+  let eD = elim𝑂 (const $ ppCon "⊥") pretty eO
+  in
+  if isEmpty ιs
   then eD
-  else ppInf pTOP (ppPun "⇈") eD $ ιD ι
+  else ppInf pTOP (ppPun "⇈") eD $ ιD ιs
 
 instance (Pretty s,Pretty e) ⇒ Pretty (SubstElem s e) where
   pretty = ppSubstElemNamed pretty
@@ -73,6 +83,13 @@ instance (Pretty s,Pretty e) ⇒ Pretty (SubstElem s e) where
 
 instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SubstElem s e) where
   fuzzy = return SubstElem ⊡ fuzzy ⊡ fuzzy
+
+---------------
+-- SHRINKING --
+---------------
+
+instance (Shrinky e) ⇒ Shrinky (SubstElem s e) where
+  shrink (SubstElem ιs eO) = SubstElem ιs ^$ shrink eO
 
 -- ========================== --
 -- SCOPED SUBSTITUION ELEMENT --
@@ -88,39 +105,45 @@ data SSubstElem s e =
   | Trm_SSE (SubstElem s e)
   deriving (Eq,Ord,Show)
 
-interpSSubstElem ∷ (ℕ64 → e) → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → 𝑂 e
-interpSSubstElem mkVar intro = \case
-  Var_SSE i → Some $ mkVar i
-  Trm_SSE e → interpSubstElem intro e
+mkSSubstElem ∷ e ⌲ ℕ64 → 𝑂 e → SSubstElem s e
+mkSSubstElem ℓvar eO = case view (ℓvar ⊚ someL) eO of
+  Some n → Var_SSE n
+  None → Trm_SSE $ SubstElem null eO
 
-canonSSubstElem ∷ (ℕ64 → e) → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e
-canonSSubstElem mkVar intro = \case
-  Var_SSE n → Trm_SSE $ SubstElem null $ const $ Some $ mkVar n
-  Trm_SSE e → Trm_SSE $ canonSubstElem intro e
+interpSSubstElem ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → 𝑂 e
+interpSSubstElem ℓvar substE = \case
+  Var_SSE i → Some $ construct ℓvar i
+  Trm_SSE e → interpSubstElem substE e
 
-eqSSubstElem ∷ (Eq e) ⇒ (ℕ64 → e) → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e → 𝔹
-eqSSubstElem mkVar intro e₁ e₂ = interpSSubstElem mkVar intro e₁ ≡ interpSSubstElem mkVar intro e₂
+canonSSubstElem ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e
+canonSSubstElem ℓvar substE = \case
+  Var_SSE n → Var_SSE n
+  Trm_SSE e → mkSSubstElem ℓvar $ interpSubstElem substE e
 
-compareSSubstElem ∷ (Ord e) ⇒ (ℕ64 → e) → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e → Ordering
-compareSSubstElem mkVar intro e₁ e₂ = interpSSubstElem mkVar intro e₁ ⋚ interpSSubstElem mkVar intro e₂
+eqSSubstElem ∷ (Eq e) ⇒ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e → 𝔹
+eqSSubstElem ℓvar substE e₁ e₂ = interpSSubstElem ℓvar substE e₁ ≡ interpSSubstElem ℓvar substE e₂
+
+compareSSubstElem ∷ (Ord e) ⇒ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e → Ordering
+compareSSubstElem ℓvar substE e₁ e₂ = interpSSubstElem ℓvar substE e₁ ⋚ interpSSubstElem ℓvar substE e₂
 
 introSSubstElem ∷ (Ord s) ⇒ s → s ⇰ ℕ64 → SSubstElem s e → SSubstElem s e
-introSSubstElem s ι = \case
-  Var_SSE n → Var_SSE $ n + ifNone 0 (ι ⋕? s)
-  Trm_SSE e → Trm_SSE $ introSubstElem ι e
+introSSubstElem s ιs = \case
+  Var_SSE n → Var_SSE $ n + ifNone 0 (ιs ⋕? s)
+  Trm_SSE e → Trm_SSE $ introSubstElem ιs e
 
-subSSubstElem ∷ (ℕ64 → SSubstElem s e) → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e
-subSSubstElem mkVar intro = \case
-  Var_SSE n → mkVar n
-  Trm_SSE e → Trm_SSE $ subSubstElem intro e
+substSSubstElem ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e
+substSSubstElem ℓvar substE = \case
+  Var_SSE n → mkSSubstElem ℓvar $ substE null $ construct ℓvar n
+  Trm_SSE e → mkSSubstElem ℓvar $ substSubstElemE substE e
 
 -------------
 -- FUNCTOR --
 -------------
 
 instance Functor (SSubstElem s) where
-  map _ (Var_SSE n) = Var_SSE n
-  map f (Trm_SSE s) = Trm_SSE (map f s)
+  map f = \case
+    Var_SSE n → Var_SSE n
+    Trm_SSE e → Trm_SSE $ map f e
 
 ---------------------
 -- PRETTY PRINTING --
@@ -128,8 +151,8 @@ instance Functor (SSubstElem s) where
 
 ppSSubstElemNamed ∷ (Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → SSubstElem s e → Doc
 ppSSubstElemNamed ιD = \case
-    Var_SSE i → ppDVar i
-    Trm_SSE e → ppSubstElemNamed ιD e
+  Var_SSE i → ppDVar i
+  Trm_SSE e → ppSubstElemNamed ιD e
 
 instance (Pretty s,Pretty e) ⇒ Pretty (SSubstElem s e) where
   pretty = ppSSubstElemNamed pretty
@@ -144,4 +167,11 @@ instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SSubstElem s e) where
     , Trm_SSE ^$ fuzzy
     ]
 
+---------------
+-- SHRINKING --
+---------------
 
+instance (Shrinky e) ⇒ Shrinky (SSubstElem s e) where
+  shrink = \case
+    Var_SSE _i → null
+    Trm_SSE e → Trm_SSE ^$ shrink e

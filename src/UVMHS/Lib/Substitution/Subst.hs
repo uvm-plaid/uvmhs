@@ -2,7 +2,9 @@ module UVMHS.Lib.Substitution.Subst where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty
-import UVMHS.Lib.Rand
+import UVMHS.Lib.Parser
+import UVMHS.Lib.Fuzzy
+import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstSpaced
@@ -29,8 +31,8 @@ newtype Subst s e = Subst { unSubst ∷ SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 �
   deriving (Eq,Ord,Show,Fuzzy,Functor)
 makeLenses ''Subst
 
-canonSubst ∷ (Eq e) ⇒ (ℕ64 → e) → (s ∧ 𝑂 𝕎 ⇰ ℕ64 → e → 𝑂 e) → Subst s e → Subst s e
-canonSubst mkVar intro (Subst 𝓈) = Subst $ canonSubstSpaced mkVar intro 𝓈
+canonSubst ∷ (Eq s,Eq e) ⇒ e ⌲ ℕ64 → (s ∧ 𝑂 𝕎 ⇰ ℕ64 → e → 𝑂 e) → Subst s e → Subst s e
+canonSubst ℓvar intro (Subst 𝓈) = Subst $ canonSubstSpaced ℓvar intro 𝓈
 
 --------------------
 -- SHIFT NAMELESS --
@@ -178,32 +180,30 @@ gbindSubst = sgbindSubst ()
 -- PRETTY --
 ------------
 
-ppSubst ∷ ∀ s e. (Ord s,Pretty s,Pretty e) ⇒ Subst s e → Doc
-ppSubst (Subst (SubstSpaced 𝓈U 𝓈S)) = 
-  let sD ∷ s ∧ 𝑂 𝕎 ⇰ ℕ64 → Doc
-      sD sιs = pretty $ concat $ mapOn (iter sιs) $ \ (s :* xO :* n) → 
-        (↦♭) s $ case xO of
-          Some x → ppDict [ppBdr (ppshow x) :* pretty n]
-          None → pretty n
-  in 
-  ppDict $ concat
-    [ if csize 𝓈U ≡ 0 then null𝐼 else null -- single $ (:*) (ppCon "𝐔") $ ppSet $ mapOn 𝓈UprettySubstScoped 𝓈U
-    , if csize 𝓈S ≡ 0 
-      then null𝐼 
-      else single $ (:*) (ppCon "𝐒") $ pretty $ concat $ mapOn (iter 𝓈S) $ \ (s :* xO :* 𝓈) →
-        (↦♭) s $ ppSubstScoped sD (\ x → ppBdr $ elim𝑂 (const id) (⧺) (map ppshow xO) x) 𝓈
-    ]
-
 instance (Ord s,Pretty s,Pretty e) ⇒ Pretty (Subst s e) where
   pretty ∷ Subst s e → Doc
-  pretty = ppSubst
+  pretty (Subst (SubstSpaced 𝓈U 𝓈S)) = 
+    let sD ∷ s ∧ 𝑂 𝕎 ⇰ ℕ64 → Doc
+        sD sιs = pretty $ concat $ mapOn (iter sιs) $ \ (s :* xO :* n) → 
+          (↦♭) s $ case xO of
+            Some x → ppRecord (ppPun "⇈") [ppBdr (ppshow x) :* pretty n]
+            None → ppPre pTOP (ppPun "⇈") $ pretty n
+    in 
+    ppDict $ concat
+      [ if csize 𝓈U ≡ 0 then null𝐼 else 
+          single $ (:*) (ppCon "𝐔") $ pretty $ concat $ mapOn (iter 𝓈U) $ \ (s :* e) →
+            (↦♭) s $ ppSubstElemNamed sD e
+      , if csize 𝓈S ≡ 0 then null𝐼 else 
+          single $ (:*) (ppCon "𝐒") $ pretty $ concat $ mapOn (iter 𝓈S) $ \ (s :* xO :* 𝓈) →
+            (↦♭) s $ ppSubstScoped sD (\ x → ppBdr $ elim𝑂 (const id) (⧺) (map ppshow xO) x) 𝓈
+      ]
 
 -- ========== --
 -- META SUBST --
 -- ========== --
 
 newtype MetaSubst s e = MetaSubst { unMetaSubst ∷ (s ∧ 𝕎) ⇰ SubstElem (s ∧ 𝑂 𝕎) e }
-  deriving (Eq,Ord,Show,Pretty,Fuzzy)
+  deriving (Eq,Ord,Show,Pretty,Fuzzy,Shrinky)
 makeLenses ''MetaSubst
 
 ----------
@@ -217,7 +217,7 @@ smbindsSubst ∷ (Ord s) ⇒ s ⇰ 𝕎 ⇰ e → MetaSubst s e
 smbindsSubst sxes = MetaSubst $ assoc $ do
   s :* xes ← iter sxes
   x :* e ← iter xes
-  return $ s :* x :* SubstElem null (const (return e))
+  return $ (:*) (s :* x) $ SubstElem null $ Some e
 
 -- m     = metavar (unscoped)
 -- binds = "substitute variables with elements from this vector"

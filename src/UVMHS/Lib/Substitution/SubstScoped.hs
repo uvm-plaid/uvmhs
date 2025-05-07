@@ -3,6 +3,8 @@ module UVMHS.Lib.Substitution.SubstScoped where
 import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Rand
+import UVMHS.Lib.Fuzzy
+import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.SubstElem
 
@@ -67,21 +69,11 @@ lookupSubstScoped (SubstScoped ρ es ι) n =
      | n < 𝔰̇+ρ   → es ⋕! (n-ρ)
      | otherwise → Var_SSE $ natΩ64 $ intΩ64 n+ι
 
-introSubstScoped ∷ (Ord s) ⇒ s ⇰ ℕ64 → s → SubstScoped s e → SubstScoped s e
-introSubstScoped ιs s (SubstScoped ρ es ι) = 
-  let ρ'  = ρ + ifNone 0 (ιs ⋕? s)
-      es' = mapOn es $ introSSubstElem s ιs
-  -- TODO: why isn't ι incremented??
-  in SubstScoped ρ' es' ι
+interpSubstScoped ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → ℕ64 → 𝑂 e
+interpSubstScoped ℓvar substE 𝓈 n = interpSSubstElem ℓvar substE $ lookupSubstScoped 𝓈 n
 
-isNullSubstScoped ∷ SubstScoped s e → 𝔹
-isNullSubstScoped (SubstScoped _ρ es ι) = csize es ≡ 0 ⩓ ι ≡ 0
-
-interpSubstScoped ∷ (ℕ64 → e) → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → ℕ64 → 𝑂 e
-interpSubstScoped mkVar intro 𝓈 n = interpSSubstElem mkVar intro $ lookupSubstScoped 𝓈 n
-
-canonSubstScoped ∷ ∀ s e. (Eq e) ⇒ (ℕ64 → e) → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → SubstScoped s e
-canonSubstScoped mkVar intro = canonElems ∘ collapseNullShift ∘ expandIncs ∘ expandShifts
+canonSubstScoped ∷ ∀ s e. (Eq s,Eq e) ⇒ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → SubstScoped s e
+canonSubstScoped ℓvar substE = canonElems ∘ collapseNullShift ∘ expandIncs ∘ expandShifts
   where
     expandShiftsM ∷ RWS (SubstScoped s e) () ℕ64 ()
     expandShiftsM = do
@@ -91,7 +83,7 @@ canonSubstScoped mkVar intro = canonElems ∘ collapseNullShift ∘ expandIncs �
       if 𝔰 ≡ 0
       then skip
       else 
-        if interpSSubstElem mkVar intro (es ⋕! n) ≡ Some (mkVar (ρ+n+1))
+        if canonSSubstElem ℓvar substE (es ⋕! n) ≡ Var_SSE (ρ+n+1)
         then do bump ; expandShiftsM
         else skip
     expandShifts ∷ SubstScoped s e → SubstScoped s e
@@ -106,7 +98,9 @@ canonSubstScoped mkVar intro = canonElems ∘ collapseNullShift ∘ expandIncs �
       if (𝔰 - n) ≡ 0
       then skip
       else
-        if interpSSubstElem mkVar intro (es ⋕! (𝔰 - n - 1)) ≡ Some (mkVar (natΩ64 (intΩ64 (ρ + (𝔰 - n - 1)) + ι)))
+        let 𝔰' = 𝔰 - n - 1
+        in
+        if canonSSubstElem ℓvar substE (es ⋕! 𝔰') ≡ Var_SSE (natΩ64 $ intΩ64 (ρ + 𝔰') + ι)
         then do bump ; expandIncsM
         else skip
     expandIncs ∷ SubstScoped s e → SubstScoped s e
@@ -119,9 +113,19 @@ canonSubstScoped mkVar intro = canonElems ∘ collapseNullShift ∘ expandIncs �
       then SubstScoped 0 null 0
       else 𝓈
     canonElems ∷ SubstScoped s e → SubstScoped s e
-    canonElems (SubstScoped ρ es ι) = SubstScoped ρ (map (canonSSubstElem mkVar intro) es) ι
+    canonElems (SubstScoped ρ es ι) = SubstScoped ρ (map (canonSSubstElem ℓvar substE) es) ι
         
+isNullSubstScoped ∷ SubstScoped s e → 𝔹
+isNullSubstScoped (SubstScoped _ρ es ι) = csize es ≡ 0 ⩓ ι ≡ 0
 
+introSubstScoped ∷ ℕ64 → SubstScoped s e
+introSubstScoped = SubstScoped 0 null ∘ intΩ64
+
+shiftSubstScoped ∷ (Ord s) ⇒ s ⇰ ℕ64 → s → SubstScoped s e → SubstScoped s e
+shiftSubstScoped ιs s (SubstScoped ρ es ι) = 
+  let ρ'  = (+) ρ $ ifNone 0 $ ιs ⋕? s
+      es' = mapOn es $ introSSubstElem s ιs
+  in SubstScoped ρ' es' ι
 
 -- -- | If we get a `SubstScoped` where some `dsubstElems` elements are merely emulating what happens under
 -- -- a shift, or under an intro, we simplify it to instead use those, making the vector of elements
@@ -232,3 +236,8 @@ instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SubstScoped s e) where
     es ← mapMOn (vecF 𝔰 id) $ const fuzzy
     ι ← randr (neg $ intΩ64 𝔰) $ intΩ64 𝔰
     return $ SubstScoped ρ es ι
+
+instance (Shrinky e) ⇒ Shrinky (SubstScoped s e) where
+  shrink (SubstScoped ρ es ι) = do
+    es' ← shrink es
+    return $ SubstScoped ρ es' ι

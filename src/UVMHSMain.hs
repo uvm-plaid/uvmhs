@@ -46,7 +46,7 @@ instance Arbitrary a ⇒ Arbitrary (𝑂 a) where
 instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (SubstElem s e) where
   arbitrary = return SubstElem ⊡ arbitrary ⊡ arbitrary
   shrink (SubstElem is v) =
-    (if v () ≡ None then [] else [ SubstElem null (\() → None) ])
+    (if v ≡ None then [] else [ SubstElem null None ])
     ⧺ (if is ≡ null then [] else [ SubstElem null v])
     ⧺ [SubstElem is' v' | is' <- shrink is, v' <- shrink v]
 
@@ -225,7 +225,7 @@ equivULCSubstElem ∷ Eq s ⇒ SubstElem s (ULCExp 𝒸) → SubstElem s (ULCExp
 equivULCSubstElem (SubstElem i1 mkE1) (SubstElem i2 mkE2) = meets [i1 ≡ i2, elemsEqual]
   where
     elemsEqual =
-      case (mkE1 (), mkE2 ()) of
+      case (mkE1, mkE2) of
         (Some e1, Some e2) → equivULCExp e1 e2
         (None, None) → True
         _ → False
@@ -273,14 +273,14 @@ simplifySubstScopedULC (SubstScoped s es i) =
     SubstScoped shifts' elems i
   where
     replaceDVarTermsWithVars
-      (Trm_SSE (SubstElem intros (($ ()) → Some (ULCExp (aval → Var_ULC (S_UVar (D_SVar d)))))))
+      (Trm_SSE (SubstElem intros (Some (ULCExp (aval → Var_ULC (S_UVar (D_SVar d)))))))
       | intros ≡ null = Var_SSE d -- technically we should also detect when the intro map is non-empty but all zeroes...
     replaceDVarTermsWithVars e = e
 
     peelPrefix ∷ ℕ64 → 𝐿 (SSubstElem s (ULCExp 𝒸)) → (ℕ64 ∧ 𝐿 (SSubstElem s (ULCExp 𝒸)))
     peelPrefix shifts (Var_SSE h :& t) | h ≡ shifts = peelPrefix (shifts + 1) t
     -- I think seeing `None` here means that the value will be unchanged, which is the same as shift?
-    peelPrefix shifts (Trm_SSE (SubstElem _ (($ ()) → None)) :& t) = peelPrefix (shifts + 1) t
+    peelPrefix shifts (Trm_SSE (SubstElem _ None) :& t) = peelPrefix (shifts + 1) t
     peelPrefix shifts elems = shifts :* elems
 
     -- Note: technically we could pre-add shifts and intros, but this is a bit more readable
@@ -306,8 +306,8 @@ test_equiv_02 =
     d1 = SubstScoped 0 (vec [Var_SSE 1]) 0
     -- [] [1,1] [2,3,…]
     d2 = SubstScoped 0 (vec
-      [Trm_SSE (SubstElem null $ \ () → Some $ ULCExp $ 𝐴 () $ Var_ULC (duvar 1))
-      ,Trm_SSE (SubstElem null $ \ () → Some $ ULCExp $ 𝐴 () $ Var_ULC (duvar 1))
+      [Trm_SSE (SubstElem null $ Some $ ULCExp $ 𝐴 () $ Var_ULC (duvar 1))
+      ,Trm_SSE (SubstElem null $ Some $ ULCExp $ 𝐴 () $ Var_ULC (duvar 1))
       ]) 0
   in equivULCSubstScoped @() d1 d2
 

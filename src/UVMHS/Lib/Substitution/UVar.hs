@@ -3,6 +3,7 @@ module UVMHS.Lib.Substitution.UVar where
 import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Rand
+import UVMHS.Lib.Fuzzy
 
 import UVMHS.Lib.Substitution.Var
 import UVMHS.Lib.Substitution.Subst

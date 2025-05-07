@@ -4,6 +4,7 @@ import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
+import UVMHS.Lib.Fuzzy
 
 -- =============== --
 -- SIMPLE VARIABLE --
@@ -120,3 +121,26 @@ instance Fuzzy 𝕏 where
     , (:*) one $ \ () → return N_SVar ⊡ fuzzy ⊡ fuzzy
     , (:*) one $ \ () → G_SVar ^$ fuzzy
     ]
+
+-- ======== --
+-- SVarView --
+-- ======== --
+
+class SVarView s e | e→s where
+  svarL ∷ s → e ⌲ 𝕏
+
+svarScopeL ∷ ∀ s e. (SVarView s e) ⇒ s → 𝑂 𝕎 → e ⌲ ℕ64
+svarScopeL s xO = 
+  let ctor ∷ ℕ64 → e
+      ctor = case xO of
+        None → \ n → construct (svarL s) $ D_SVar n
+        Some x → \ n → construct (svarL s) $ N_SVar n x
+      dtor ∷ e → 𝑂 ℕ64
+      dtor = case xO of
+        None → \ e → view (d_SVarL ⊚ svarL s) e
+        Some x → \ e → do
+          n :* x' ← view (n_SVarL ⊚ svarL s) e
+          guard $ x ≡ x'
+          return n
+  in prism ctor dtor
+    

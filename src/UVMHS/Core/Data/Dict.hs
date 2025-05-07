@@ -72,6 +72,8 @@ class
     dlteBy ∷ (a → a → 𝔹) → d a → d a → 𝔹 -- NO DEFAULT
     dunionBy ∷ (a → a → a) → d a → d a → d a
     dunionBy f = bimap id id f
+    dkunionBy ∷ (k → a → a → a) → d a → d a → d a
+    dkunionBy f = kbimap (const id) (const id) f
     dinterBy ∷ (a → b → c) → d a → d b → d c
     dinterBy f = obimap (const None) (const None) $ Some ∘∘ f
     dsdiffBy ∷ (a → b → 𝑂 a) → d a → d b → d a
@@ -106,6 +108,9 @@ class
 
 dunionByOn ∷ (Dict k s d) ⇒ d a → d a → (a → a → a) → d a
 dunionByOn = rotateL dunionBy
+
+dkunionByOn ∷ (Dict k s d) ⇒ d a → d a → (k → a → a → a) → d a
+dkunionByOn = rotateL dkunionBy
 
 dinterByOn ∷ (Dict k s d) ⇒ d a → d b → (a → b → c) → d c
 dinterByOn = rotateL dinterBy

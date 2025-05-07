@@ -7,6 +7,7 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Annotated
 import UVMHS.Lib.Substitution
 import UVMHS.Lib.Rand
+import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.THLiftInstances ()
 
 import qualified Language.Haskell.TH.Syntax as TH
@@ -17,13 +18,15 @@ import Control.Monad.Fail as HS
 
 newtype ULCExp 𝒸 = ULCExp { unULCExp ∷ 𝐴 𝒸 (ULCExp_R 𝒸) }
   deriving (Eq,Generic,Ord,Show)
+
 data ULCExp_R 𝒸 =
     Var_ULC (𝕐 () (ULCExp 𝒸))
   | Lam_ULC (𝑂 𝕎) (ULCExp 𝒸)
   | App_ULC (ULCExp 𝒸) (ULCExp 𝒸)
   deriving (Eq,HS.Generic,Ord,Show)
+makePrisms ''ULCExp_R
 
-type ULCExpSrc = ULCExp SrcCxt
+type ULCExpSrc = ULCExp (𝑃 SrcCxt)
 type ULCExpRaw = ULCExp ()
 
 lexULCExp ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
@@ -34,7 +37,7 @@ lexULCExp =
              null
 
 pULCExp ∷ CParser TokenBasic ULCExpSrc
-pULCExp = ULCExp ^$ fmixfixWithContext "exp" $ concat
+pULCExp = ULCExp ^$ fmixfixWithContextSet "exp" $ concat
   [ fmixTerminal $ do
       void $ cpSyntax "("
       e ← pULCExp
@@ -123,7 +126,15 @@ instance Fuzzy ULCExpRaw where
           ]
       ]
 
-instance Substy () (ULCExp 𝒸) (ULCExp 𝒸) where
+instance (Null 𝒸) ⇒ SVarView () (ULCExp 𝒸) where
+  svarL () = 
+    let ctor ∷ 𝕏 → ULCExp 𝒸
+        ctor = ULCExp ∘ 𝐴 null ∘ Var_ULC ∘ S_UVar
+        dtor ∷ ULCExp 𝒸 → 𝑂 𝕏
+        dtor e = view (s_UVarL ⊚ var_ULCL) $ aval $ unULCExp e
+    in prism ctor dtor
+
+instance (Null 𝒸) ⇒ Substy () (ULCExp 𝒸) (ULCExp 𝒸) where
   substy = pipe unULCExp $ \ (𝐴 𝒸 e₀) → ULCExp ^$ case e₀ of
     Var_ULC x → unULCExp ^$ substy𝕐 () (ULCExp ∘  𝐴 𝒸 ∘ Var_ULC) x
     Lam_ULC xO e → ureset $ do

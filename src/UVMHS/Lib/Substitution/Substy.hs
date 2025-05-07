@@ -90,7 +90,7 @@ evalSubstM γ = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ evalUContT 
 ------------
 
 -- TODO: make this return a delayed subst elem?
-class Substy s e a | a→s,a→e where
+class (SVarView s e) ⇒ Substy s e a | a→e,e→s where
   substy ∷ a → SubstyM s e a
 
 -- These are the big top level API point of entry for applying a substy action,
@@ -129,9 +129,7 @@ nullSubst ∷ Subst s e
 nullSubst = Subst $ SubstSpaced null null
 
 appendSubst ∷ (Ord s,Substy s e e) ⇒ Subst s e → Subst s e → Subst s e
-appendSubst 𝓈₂ 𝓈₁ = Subst $ appendSubstSpaced (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
-
--- appendMetaSubst??
+appendSubst 𝓈₂ 𝓈₁ = Subst $ appendSubstSpaced (curry svarScopeL) (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
 
 instance                        Null   (Subst s e) where null = nullSubst
 instance (Ord s,Substy s e e) ⇒ Append (Subst s e) where (⧺)  = appendSubst
@@ -191,7 +189,7 @@ substyVar xO s mkVar n = do
         None → return $ mkVar n
         Some 𝓈 → case lookupSubstScoped 𝓈 n of
           Var_SSE n' → return $ mkVar n'
-          Trm_SSE (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ introSubstSpaced 𝑠) *$ ueO ()
+          Trm_SSE (SubstElem ιs eO) → failEff $ subst (Subst $ introSubstSpaced ιs) *$ eO
     MetaSubst_SA{} → return $ mkVar n -- I think we just don't apply meta-substitutions to D/NVars?
 
 substyDVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstyM s e e
@@ -213,7 +211,7 @@ substyGVar s mkVar x = do
       let gsᴳ =  substSpacedUnscoped $ unSubst $ substActionSubst 𝓈A
       case gsᴳ ⋕? (s :* x) of
         None → return $ mkVar x
-        Some (SubstElem 𝑠 ueO) → failEff $ subst (Subst $ introSubstSpaced 𝑠) *$ ueO ()
+        Some (SubstElem ιs eO) → failEff $ subst (Subst $ introSubstSpaced ιs) *$ eO
     MetaSubst_SA{} → return $ mkVar x -- I think we just don't apply meta-substitutions to GVars?
 
 substyMVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕎 → Subst s e → e) → 𝕎 → Subst s e → SubstyM s e e
@@ -236,8 +234,8 @@ substyMVar s mkVar x 𝓈₀ = do
     MetaSubst_SA (MetaSubst gs) →
       case gs ⋕? (s :* x) of
         None → return $ mkVar x 𝓈₀
-        Some (SubstElem 𝑠 ueO) →
-          failEff $ subst (Subst (introSubstSpaced 𝑠) ⧺ 𝓈₀) *$ ueO ()
+        Some (SubstElem ιs eO) →
+          failEff $ subst (Subst (introSubstSpaced ιs) ⧺ 𝓈₀) *$ eO
 
 -- subst (𝓈₁ ∘ 𝓈₂) e ≡ subst 𝓈₁ (subst 𝓈₂ e)
 --
