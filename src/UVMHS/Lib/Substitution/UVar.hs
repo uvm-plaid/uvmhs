@@ -2,6 +2,7 @@ module UVMHS.Lib.Substitution.UVar where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty
+import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
 
@@ -53,10 +54,14 @@ instance Functor (𝕐 s) where
   map _ (S_UVar x) = S_UVar x
   map f (M_UVar x 𝓈) = M_UVar x $ map f 𝓈
 
+---------------------
+-- PRETTY PRINTING --
+---------------------
+
 instance (Ord s,Pretty e, Pretty s) ⇒ Pretty (𝕐 s e) where
   pretty = \case
     S_UVar x → pretty x
-    M_UVar x 𝓈 → concat [pretty x,ppPun "†",pretty 𝓈]
+    M_UVar x 𝓈 → concat [pretty x,ppPun ":m",ppGA $ pretty 𝓈]
 
 -------------------------
 -- FUZZY for Variables --

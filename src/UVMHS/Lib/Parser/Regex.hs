@@ -624,56 +624,71 @@ mkTokenBasic cs = \case
   Some DoubleCBasic → (:*) False $ DoubleTBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some CharCBasic → (:*) False $ CharTBasic $ read𝕊 $ stringCS cs
 
-lSyntaxBasic ∷ (Ord u,Additive u) ⇒ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassBasic u
-lSyntaxBasic puns kws prims ops = concat
+data LexerBasicSyntax = LexerBasicSyntax
+  { lexerBasicSyntaxPuns ∷ 𝑃 𝕊 -- ^ punctuation (default color gray)
+  , lexerBasicSyntaxKeys ∷ 𝑃 𝕊 -- ^ keywords    (default color bold yellow)
+  , lexerBasicSyntaxPrms ∷ 𝑃 𝕊 -- ^ primitives  (default color blue)
+  , lexerBasicSyntaxOprs ∷ 𝑃 𝕊 -- ^ operators   (default color teal)
+  } deriving (Eq,Ord,Show)
+makeLenses ''LexerBasicSyntax
+
+instance Null LexerBasicSyntax where 
+  null = LexerBasicSyntax null null null null
+instance Append LexerBasicSyntax where 
+  LexerBasicSyntax puns₁ keys₁ prms₁ oprs₁ ⧺ LexerBasicSyntax puns₂ keys₂ prms₂ oprs₂ =
+    LexerBasicSyntax (puns₁ ⧺ puns₂) (keys₁ ⧺ keys₂) (prms₁ ⧺ prms₂) $ oprs₁ ⧺ oprs₂
+instance Monoid LexerBasicSyntax
+
+lSyntaxBasic ∷ (Ord c,Ord u,Additive u) ⇒ LexerBasicSyntax → Regex CharClass ℂ c u
+lSyntaxBasic (LexerBasicSyntax puns keys prms oprs) = concat
   -- punctuation
   [ sequence
-    [ concat $ map lWord puns
+    [ concat $ map lWord $ iter puns
     , fepsRegex $ formats [FG grayDark]
     ]
   -- keywords
   , sequence
-    [ concat $ map lWord kws
+    [ concat $ map lWord $ iter keys
     , fepsRegex $ formats [FG yellow,BD]
     ]
   -- primitives
   , sequence
-    [ concat $ map lWord prims
+    [ concat $ map lWord $ iter prms
     , fepsRegex $ formats [FG blue]
     ]
   -- operators
   , sequence
-    [ concat $ map lWord ops
+    [ concat $ map lWord $ iter oprs
     , fepsRegex $ formats [FG teal]
     ]
   ]
 
-lTokenBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassBasic ℕ64
-lTokenBasic puns kws prims ops = concat
-  [ lNatCoded                       ▷ oepsRegex NaturalCBasic
-  , lInt                            ▷ oepsRegex IntegerCBasic
-  , lDbl                            ▷ oepsRegex DoubleCBasic
-  , lSyntaxBasic puns kws prims ops ▷ oepsRegex SyntaxCBasic
-  , lString                         ▷ oepsRegex StringCBasic
-  , lName                           ▷ oepsRegex NameCBasic
-  , lSpaceOrNl                      ▷ oepsRegex SpaceCBasic
-  , lComment                        ▷ oepsRegex CommentCBasic
-  , lCommentMLOpen                  ▷ oepsRegex CommentCBasic
+lTokenBasic ∷ LexerBasicSyntax → Regex CharClass ℂ TokenClassBasic ℕ64
+lTokenBasic syntax = concat
+  [ lNatCoded           ▷ oepsRegex NaturalCBasic
+  , lInt                ▷ oepsRegex IntegerCBasic
+  , lDbl                ▷ oepsRegex DoubleCBasic
+  , lSyntaxBasic syntax ▷ oepsRegex SyntaxCBasic
+  , lString             ▷ oepsRegex StringCBasic
+  , lName               ▷ oepsRegex NameCBasic
+  , lSpaceOrNl          ▷ oepsRegex SpaceCBasic
+  , lComment            ▷ oepsRegex CommentCBasic
+  , lCommentMLOpen      ▷ oepsRegex CommentCBasic
   ]
 
 lCommentMLBasic ∷ Regex CharClass ℂ TokenClassBasic ℕ64
 lCommentMLBasic = lCommentMLBody ▷ oepsRegex CommentCBasic
 
-dfaBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → ℕ64 → DFA CharClass ℂ TokenClassBasic ℕ64
-dfaBasic puns kws prims ops =
-  let dfaTokenBasic = compileRegex $ lTokenBasic puns kws prims ops
+dfaBasic ∷ LexerBasicSyntax → ℕ64 → DFA CharClass ℂ TokenClassBasic ℕ64
+dfaBasic syntax =
+  let dfaTokenBasic = compileRegex $ lTokenBasic syntax
       dfaCommentMLBasic = compileRegex lCommentMLBasic
       dfa n | n ≡ 𝕟64 0 = dfaTokenBasic
             | otherwise = dfaCommentMLBasic
   in dfa
 
-lexerBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexerBasic puns kws prims ops = Lexer (dfaBasic puns kws prims ops) mkTokenBasic zero
+lexerBasic ∷ LexerBasicSyntax → Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
+lexerBasic syntax = Lexer (dfaBasic syntax) mkTokenBasic zero
 
 -----------------------------------------------
 -- Basic Whitespace-sensitive Language Lexer --
@@ -928,64 +943,53 @@ mkTokenWSBasic cs = \case
   Some IntegerCWSBasic → (:*) False $ IntegerTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some DoubleCWSBasic → (:*) False $ DoubleTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs
 
-lSyntaxWSBasic ∷ (Ord u,Additive u) ⇒ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassWSBasic u
-lSyntaxWSBasic puns kws prims ops = concat
-  -- punctuation
-  [ sequence
-    [ concat $ map lWord puns
-    , fepsRegex $ formats [FG grayDark]
-    ]
-  -- keywords
-  , sequence
-    [ concat $ map lWord kws
-    , fepsRegex $ formats [FG yellow,BD]
-    ]
-  -- primitives
-  , sequence
-    [ concat $ map lWord prims
-    , fepsRegex $ formats [FG blue]
-    ]
-  -- operators
-  , sequence
-    [ concat $ map lWord ops
-    , fepsRegex $ formats [FG teal]
-    ]
-  ]
-
-lBlocksWSBasic ∷ (Ord u,Additive u) ⇒ 𝐿 𝕊 → Regex CharClass ℂ TokenClassWSBasic u
+lBlocksWSBasic ∷ (Ord u,Additive u) ⇒ 𝑃 𝕊 → Regex CharClass ℂ TokenClassWSBasic u
 lBlocksWSBasic blocks = sequence
-  [ concat $ map lWord blocks
+  [ concat $ map lWord $ iter blocks
   , fepsRegex $ formats [BG white,FG yellow,BD]
   ]
 
-lTokenWSBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Regex CharClass ℂ TokenClassWSBasic ℕ64
-lTokenWSBasic puns kws prims ops blocks = concat
-  [ lNatCoded                         ▷ oepsRegex NaturalCWSBasic
-  , lInt                              ▷ oepsRegex IntegerCWSBasic
-  , lDbl                              ▷ oepsRegex DoubleCWSBasic
-  , lSyntaxWSBasic puns kws prims ops ▷ oepsRegex SyntaxCWSBasic
-  , lBlocksWSBasic blocks             ▷ oepsRegex BlockCWSBasic
-  , lString                           ▷ oepsRegex StringCWSBasic
-  , lName                             ▷ oepsRegex NameCWSBasic
-  , lSpace                            ▷ oepsRegex SpaceCWSBasic
-  , lNl                               ▷ oepsRegex NewlineCWSBasic
-  , lComment                          ▷ oepsRegex CommentCWSBasic
-  , lCommentMLOpen                    ▷ oepsRegex CommentCWSBasic
+lTokenWSBasic ∷ LexerWSBasicSyntax → Regex CharClass ℂ TokenClassWSBasic ℕ64
+lTokenWSBasic (LexerWSBasicSyntax base blocks) = concat
+  [ lNatCoded             ▷ oepsRegex NaturalCWSBasic
+  , lInt                  ▷ oepsRegex IntegerCWSBasic
+  , lDbl                  ▷ oepsRegex DoubleCWSBasic
+  , lSyntaxBasic base     ▷ oepsRegex SyntaxCWSBasic
+  , lBlocksWSBasic blocks ▷ oepsRegex BlockCWSBasic
+  , lString               ▷ oepsRegex StringCWSBasic
+  , lName                 ▷ oepsRegex NameCWSBasic
+  , lSpace                ▷ oepsRegex SpaceCWSBasic
+  , lNl                   ▷ oepsRegex NewlineCWSBasic
+  , lComment              ▷ oepsRegex CommentCWSBasic
+  , lCommentMLOpen        ▷ oepsRegex CommentCWSBasic
   ]
 
 lCommentMLWSBasic ∷ Regex CharClass ℂ TokenClassWSBasic ℕ64
 lCommentMLWSBasic = lCommentMLBody ▷ oepsRegex CommentCWSBasic
 
-dfaWSBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → ℕ64 → DFA CharClass ℂ TokenClassWSBasic ℕ64
-dfaWSBasic puns kws prims ops blocks =
-  let dfaTokenBasic = compileRegex $ lTokenWSBasic puns kws prims ops blocks
+dfaWSBasic ∷ LexerWSBasicSyntax → ℕ64 → DFA CharClass ℂ TokenClassWSBasic ℕ64
+dfaWSBasic syntax =
+  let dfaTokenBasic = compileRegex $ lTokenWSBasic syntax
       dfaCommentMLBasic = compileRegex lCommentMLWSBasic
       dfa n | n ≡ 𝕟64 0 = dfaTokenBasic
             | otherwise = dfaCommentMLBasic
   in dfa
 
-lexerWSBasic ∷ 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → 𝐿 𝕊 → Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
-lexerWSBasic puns kws prims ops blocks = Lexer (dfaWSBasic puns kws prims ops blocks) mkTokenWSBasic zero
+data LexerWSBasicSyntax = LexerWSBasicSyntax
+  { lexerWSBasicSyntaxBase   ∷ LexerBasicSyntax
+  , lexerWSBasicSyntaxBlocks ∷ 𝑃 𝕊 -- ^ block keywords (default color bold yellow)
+  } deriving (Eq,Ord,Show)
+makeLenses ''LexerWSBasicSyntax
+
+instance Null LexerWSBasicSyntax where 
+  null = LexerWSBasicSyntax null null
+instance Append LexerWSBasicSyntax where 
+  LexerWSBasicSyntax base₁ blocks₁ ⧺ LexerWSBasicSyntax base₂ blocks₂ =
+    LexerWSBasicSyntax (base₁ ⧺ base₂) $ blocks₁ ⧺ blocks₂
+instance Monoid LexerWSBasicSyntax
+
+lexerWSBasic ∷ LexerWSBasicSyntax → Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
+lexerWSBasic syntax = Lexer (dfaWSBasic syntax) mkTokenWSBasic zero
 
 mkIndentTokenWSBasic ∷ IndentCommand → TokenWSBasic
 mkIndentTokenWSBasic = \case

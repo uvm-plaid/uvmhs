@@ -2,6 +2,7 @@ module UVMHS.Lib.Substitution.Substy where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty
+import UVMHS.Lib.Parser
 
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstScoped
@@ -125,6 +126,13 @@ msubst 𝓈 = snd ∘ evalSubstM (MetaSubst_SA 𝓈) ∘ substy
 -- SUBST MONOID --
 ------------------
 
+canonSubst ∷ (Ord s,Eq e,Substy s e e) ⇒ Subst s e → Subst s e
+canonSubst 𝓈 = 
+  let introE ιs = subst $ concat $ mapOn (iter ιs) $ \ (s :* xO :* n) → case xO of
+        None → sdintroSubst $ s ↦ n
+        Some x → snintroSubst $ s ↦ x ↦ n
+  in canonSubstWith (curry svarScopeL) introE 𝓈
+
 nullSubst ∷ Subst s e
 nullSubst = Subst $ SubstSpaced null null
 
@@ -190,7 +198,7 @@ substyVar xO s mkVar n = do
         Some 𝓈 → case lookupSubstScoped 𝓈 n of
           Var_SSE n' → return $ mkVar n'
           Trm_SSE (SubstElem ιs eO) → failEff $ subst (Subst $ introSubstSpaced ιs) *$ eO
-    MetaSubst_SA{} → return $ mkVar n -- I think we just don't apply meta-substitutions to D/NVars?
+    MetaSubst_SA _ → return $ mkVar n
 
 substyDVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstyM s e e
 substyDVar = substyVar None
@@ -212,7 +220,7 @@ substyGVar s mkVar x = do
       case gsᴳ ⋕? (s :* x) of
         None → return $ mkVar x
         Some (SubstElem ιs eO) → failEff $ subst (Subst $ introSubstSpaced ιs) *$ eO
-    MetaSubst_SA{} → return $ mkVar x -- I think we just don't apply meta-substitutions to GVars?
+    MetaSubst_SA _ → return $ mkVar x
 
 substyMVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕎 → Subst s e → e) → 𝕎 → Subst s e → SubstyM s e e
 substyMVar s mkVar x 𝓈₀ = do
@@ -266,3 +274,98 @@ substy𝕐 ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕐 s e 
 substy𝕐 s mkVar = \case
   S_UVar x   → substy𝕏    s (mkVar ∘ S_UVar)  x
   M_UVar x 𝓈 → substyMVar s (mkVar ∘∘ M_UVar) x 𝓈
+
+-------------
+-- PARSING --
+-------------
+
+syntaxUVar ∷ LexerBasicSyntax
+syntaxUVar = concat
+  [ syntaxVar
+  , null { lexerBasicSyntaxPuns = pow 
+             [ ",","...","…"
+             , "{","}","[","]","|_","⌊","_|","⌋"
+             , "|->","↦"
+             , "^",":g",":m"
+             , "==","≡","+"
+             ] }
+  ]
+
+cpUVarNGMVar ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
+cpUVarNGMVar pE = do
+  x ← cpVar
+  concat
+    [ do n ← ifNone 0 ^$ cpOptional $ do
+           void $ cpSyntax "^"
+           n ← failEff ∘ natO64 *$ cpInteger
+           return n
+         return $ nuvar n x
+    , do void $ cpSyntax ":g"
+         return $ guvar x
+    , do void $ cpSyntax ":m"
+         s ← ifNone null ^$ cpOptional $ do
+           void $ cpSyntax "{"
+           𝓈 ← concat ^$ cpManySepBy (void $ cpSyntax ",") $ concat
+             [ do x₁ ← cpSVarRaw
+                  void $ concat $ map cpSyntax ["...","…"]
+                  x₂ ← cpSVarRaw
+                  void $ concat $ map cpSyntax ["|->","↦"]
+                  void $ concat $ map cpSyntax ["["]
+                  void $ concat $ map cpSyntax ["==","≡"]
+                  void $ concat $ map cpSyntax ["]"]
+                  case (x₁,x₂) of
+                    (D_SVar n₁,D_SVar n₂) 
+                      | n₁ ≡ 0 → return $ dshiftSubst n₂ null
+                    (N_SVar n₁ w₁,N_SVar n₂ w₂) 
+                      | w₁ ≡ w₂ ⩓ n₁ ≡ 0 → return $ nshiftSubst (w₂ ↦ n₂) null
+                    _ → abort
+             , do x₁ ← cpSVarRaw
+                  void $ concat $ map cpSyntax ["...","…"]
+                  x₂ ← cpSVarRawInf
+                  void $ concat $ map cpSyntax ["|->","↦"]
+                  void $ concat $ map cpSyntax ["["]
+                  i ← concat
+                    [ do void $ concat $ map cpSyntax ["==","≡"]
+                         return 0
+                    , do i ← failEff ∘ intO64 *$ cpInteger
+                         guard $ i < 0
+                         return i
+                    , do void $ cpSyntax "+"
+                         i ← failEff ∘ intO64 *$ cpInteger
+                         guard $ i > 0
+                         return i
+                    ]
+                  void $ concat $ map cpSyntax ["]"]
+                  case (x₁,x₂) of
+                    (D_SVar n₁,Inr None) → 
+                      return $ dshiftSubst n₁ $ dzintroSubst i
+                    (N_SVar n₁ w₁,Inr (Some w₂)) | w₁ ≡ w₂ → 
+                      return $ nshiftSubst (w₁ ↦ n₁) $ dzintroSubst i
+                    _ → abort
+             , do x' ← cpSVarRaw
+                  void $ concat $ map cpSyntax ["|->","↦"]
+                  e ← pE ()
+                  return $ case x' of
+                    D_SVar n     → dshiftSubst n $ dbindSubst e
+                    N_SVar n w → nshiftSubst (w ↦ n) $ nbindSubst w e
+                    G_SVar   w → gbindSubst w e
+             ]
+           void $ cpSyntax "}"
+           return $ {- canonSubst $ -} 𝓈
+             
+         return $ M_UVar x s
+   ]
+
+cpUVar ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
+cpUVar pE = concat
+  [ do n ← cpDVar
+       return $ duvar n
+  , cpUVarNGMVar pE
+  ]
+
+cpUVarRaw ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
+cpUVarRaw pE = concat
+  [ do n ← cpDVarRaw
+       return $ duvar n
+  , cpUVarNGMVar pE
+  ]

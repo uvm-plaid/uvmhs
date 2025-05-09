@@ -118,14 +118,23 @@ canonSubstScoped ℓvar substE = canonElems ∘ collapseNullShift ∘ expandIncs
 isNullSubstScoped ∷ SubstScoped s e → 𝔹
 isNullSubstScoped (SubstScoped _ρ es ι) = csize es ≡ 0 ⩓ ι ≡ 0
 
+zintroSubstScoped ∷ ℤ64 → SubstScoped s e
+zintroSubstScoped = SubstScoped 0 null
+
 introSubstScoped ∷ ℕ64 → SubstScoped s e
-introSubstScoped = SubstScoped 0 null ∘ intΩ64
+introSubstScoped = zintroSubstScoped ∘ intΩ64
 
 shiftSubstScoped ∷ (Ord s) ⇒ s ⇰ ℕ64 → s → SubstScoped s e → SubstScoped s e
 shiftSubstScoped ιs s (SubstScoped ρ es ι) = 
   let ρ'  = (+) ρ $ ifNone 0 $ ιs ⋕? s
       es' = mapOn es $ introSSubstElem s ιs
   in SubstScoped ρ' es' ι
+
+bindSubstScoped ∷ 𝕍 e → SubstScoped s e
+bindSubstScoped es = 
+  let es' = map (Trm_SSE ∘ SubstElem null ∘ Some) es
+      ι = neg $ intΩ64 $ csize es
+  in SubstScoped null es' ι
 
 -- -- | If we get a `SubstScoped` where some `dsubstElems` elements are merely emulating what happens under
 -- -- a shift, or under an intro, we simplify it to instead use those, making the vector of elements
@@ -213,7 +222,7 @@ ppSubstScoped ιD xD (SubstScoped ρ es ι) =
   ppDict kvs
 
 ppSubstScopedNamed ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → 𝕊 → SubstScoped s e → Doc
-ppSubstScopedNamed ιD x = ppSubstScoped ιD $ ppBdr ∘ ((⧺) x)
+ppSubstScopedNamed ιD x = ppSubstScoped ιD $ (⧺) (concat [ppBdr x,ppPun "@"]) ∘ ppBdr
 
 instance (Pretty e, Pretty s) ⇒ Pretty (SubstScoped s e) where
   pretty = ppSubstScopedNamed pretty ""

@@ -2,7 +2,6 @@ module UVMHS.Lib.Substitution.Subst where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty
-import UVMHS.Lib.Parser
 import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Shrinky
 
@@ -31,8 +30,8 @@ newtype Subst s e = Subst { unSubst ∷ SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 �
   deriving (Eq,Ord,Show,Fuzzy,Functor)
 makeLenses ''Subst
 
-canonSubst ∷ (Eq s,Eq e) ⇒ e ⌲ ℕ64 → (s ∧ 𝑂 𝕎 ⇰ ℕ64 → e → 𝑂 e) → Subst s e → Subst s e
-canonSubst ℓvar intro (Subst 𝓈) = Subst $ canonSubstSpaced ℓvar intro 𝓈
+canonSubstWith ∷ (Ord s,Eq e) ⇒ (s ∧ 𝑂 𝕎 → e ⌲ ℕ64) → (s ∧ 𝑂 𝕎 ⇰ ℕ64 → e → 𝑂 e) → Subst s e → Subst s e
+canonSubstWith ℓvar intro (Subst 𝓈) = Subst $ canonSubstSpaced ℓvar intro 𝓈
 
 --------------------
 -- SHIFT NAMELESS --
@@ -82,6 +81,20 @@ sdintroSubst = Subst ∘ introSubstSpaced ∘ assoc ∘ map (mapFst $ flip (:*) 
 dintroSubst ∷ ℕ64 → Subst () e
 dintroSubst = sdintroSubst ∘ (↦) ()
 
+-- s     = (name)spaced
+-- d     = nameless (scoped) (i.e., de bruijn)
+-- z     = allow negative increment
+-- intro = "a new variable has been introduced"
+sdzintroSubst ∷ (Ord s) ⇒ s ⇰ ℤ64 → Subst s e
+sdzintroSubst = Subst ∘ zintroSubstSpaced ∘ assoc ∘ map (mapFst $ flip (:*) None) ∘ iter
+
+-- d     = nameless (scoped) (i.e., de bruijn)
+-- z     = allow negative increment
+-- intro = "a new variable has been introduced"
+-- intro = "a new variable has been introduced"
+dzintroSubst ∷ ℤ64 → Subst () e
+dzintroSubst = sdzintroSubst ∘ (↦) ()
+
 -----------------
 -- INTRO NAMED --
 -----------------
@@ -99,6 +112,22 @@ snintroSubst 𝑠 = Subst $ introSubstSpaced $ assoc $ do
 -- intro = "a new variable has been introduced"
 nintroSubst ∷ 𝕎 ⇰ ℕ64 → Subst () e
 nintroSubst = snintroSubst ∘ (↦) ()
+
+-- s     = (name)spaced
+-- d     = named (scoped)
+-- z     = allow negative increment
+-- intro = "a new variable has been introduced"
+snzintroSubst ∷ (Ord s) ⇒ s ⇰ 𝕎 ⇰ ℤ64 → Subst s e
+snzintroSubst 𝑠 = Subst $ zintroSubstSpaced $ assoc $ do
+  s :* xis ← iter 𝑠
+  x :* i ← iter xis
+  return $ s :* Some x :* i
+
+-- d     = named (scoped)
+-- z     = allow negative increment
+-- intro = "a new variable has been introduced"
+nzintroSubst ∷ 𝕎 ⇰ ℤ64 → Subst () e
+nzintroSubst = snzintroSubst ∘ (↦) ()
 
 ----------
 -- BIND --
@@ -180,22 +209,26 @@ gbindSubst = sgbindSubst ()
 -- PRETTY --
 ------------
 
-instance (Ord s,Pretty s,Pretty e) ⇒ Pretty (Subst s e) where
+instance ∀ s e. (Ord s,Pretty s,Pretty e) ⇒ Pretty (Subst s e) where
   pretty ∷ Subst s e → Doc
   pretty (Subst (SubstSpaced 𝓈U 𝓈S)) = 
     let sD ∷ s ∧ 𝑂 𝕎 ⇰ ℕ64 → Doc
-        sD sιs = pretty $ concat $ mapOn (iter sιs) $ \ (s :* xO :* n) → 
-          (↦♭) s $ case xO of
-            Some x → ppRecord (ppPun "⇈") [ppBdr (ppshow x) :* pretty n]
-            None → ppPre pTOP (ppPun "⇈") $ pretty n
+        sD sιs = pretty $ map ppSet $ concat $ mapOn (iter sιs) $ \ (s :* xO :* n) → 
+          (↦♭) s $ single𝐼 $ case xO of
+            Some x → concat [ppBdr $ ppshow x,ppPun "⇈",pretty n]
+            None → concat [ppPun "⇈",pretty n]
+        xD ∷ 𝑂 𝕎 → 𝕊 → Doc
+        xD xO n = case xO of
+          None → ppBdr n
+          Some x → concat [ppBdr (ppshow x),ppPun "@",ppBdr n]
     in 
     ppDict $ concat
       [ if csize 𝓈U ≡ 0 then null𝐼 else 
-          single $ (:*) (ppCon "𝐔") $ pretty $ concat $ mapOn (iter 𝓈U) $ \ (s :* e) →
-            (↦♭) s $ ppSubstElemNamed sD e
+          single𝐼 $ (:*) (ppCon "𝐔") $ pretty $ map ppDict $ concat $ mapOn (iter 𝓈U) $ \ ((s :* x) :* e) →
+            (↦♭) s $ single𝐼 $ (ppBdr $ ppshow x) :* (ppSubstElemNamed sD e)
       , if csize 𝓈S ≡ 0 then null𝐼 else 
-          single $ (:*) (ppCon "𝐒") $ pretty $ concat $ mapOn (iter 𝓈S) $ \ (s :* xO :* 𝓈) →
-            (↦♭) s $ ppSubstScoped sD (\ x → ppBdr $ elim𝑂 (const id) (⧺) (map ppshow xO) x) 𝓈
+          single𝐼 $ (:*) (ppCon "𝐒") $ pretty $ concat $ mapOn (iter 𝓈S) $ \ (s :* xO :* 𝓈) →
+            (↦♭) s $ ppSubstScoped sD (xD xO) 𝓈
       ]
 
 -- ========== --

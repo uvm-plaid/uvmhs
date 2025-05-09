@@ -2,8 +2,17 @@ module Examples.Lang.ArithBlocks where
 
 import UVMHS
 
+syntax ∷ LexerWSBasicSyntax
+syntax = null
+  { lexerWSBasicSyntaxBase = null
+    { lexerBasicSyntaxPuns = pow ["(",")"]
+    , lexerBasicSyntaxOprs = pow ["==","+","*","-","^","!"]
+    }
+  , lexerWSBasicSyntaxBlocks = pow ["local"]
+  }
+
 lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
-lexer = lexerWSBasic (list ["(",")"]) null null (list ["==","+","*","-","^","!"]) (list ["local"])
+lexer = lexerWSBasic syntax
 
 testTokenizerSuccess ∷ IO ()
 testTokenizerSuccess =

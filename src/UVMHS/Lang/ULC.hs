@@ -29,12 +29,16 @@ makePrisms ''ULCExp_R
 type ULCExpSrc = ULCExp (𝑃 SrcCxt)
 type ULCExpRaw = ULCExp ()
 
+syntaxULC ∷ LexerBasicSyntax
+syntaxULC = concat
+  [ syntaxUVar
+  , null { lexerBasicSyntaxPuns = pow ["(",")","->","→"] 
+         , lexerBasicSyntaxKeys = pow ["lam","λ"]
+         }
+  ]
+
 lexULCExp ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexULCExp =
-  lexerBasic (list ["(",")","->","→","^","↑",":","[","]"])
-             (list ["lam","λ"])
-             (list ["glbl","𝔤","meta","𝔪"])
-             null
+lexULCExp = lexerBasic syntaxULC
 
 pULCExp ∷ CParser TokenBasic ULCExpSrc
 pULCExp = ULCExp ^$ fmixfixWithContextSet "exp" $ concat
@@ -44,30 +48,8 @@ pULCExp = ULCExp ^$ fmixfixWithContextSet "exp" $ concat
       void $ cpSyntax ")"
       return $ aval $ unULCExp e
   , fmixTerminal $ do
-      n ← failEff ∘ natO64 *$ cpInteger
-      return $ Var_ULC $ duvar n
-  , fmixTerminal $ do
-      fO ← cpOptional $ concat
-        [ do void $ concat $ map cpSyntax ["glbl","𝔤"]
-             void $ cpSyntax ":"
-             return guvar
-        , do void $ concat $ map cpSyntax ["meta","𝔪"]
-             void $ cpSyntax ":"
-             s ← elim𝑂 (const null) dintroSubst ^$ cpOptional $ do
-                void $ cpSyntax "["
-                n ← failEff ∘ natO64 *$ cpInteger
-                void $ cpSyntax "]"
-                return n
-             return $ flip M_UVar s
-        ]
-      x ← cpVar
-      case fO of
-        Some f → return $ Var_ULC $ f x
-        None → do
-          n ← ifNone 0 ^$ cpOptional $ do
-            void $ concat $ map cpSyntax ["^","↑"]
-            failEff ∘ natO64 *$ cpInteger
-          return $ Var_ULC $ nuvar n x
+      x ← cpUVarRaw $ \ () → pULCExp
+      return $ Var_ULC x
   , fmixPrefix pLET $ do
       void $ concat $ map cpSyntax ["lam","λ"]
       xO ← cpOptional $ cpVar
@@ -96,13 +78,26 @@ ulc ∷ TH.QuasiQuoter
 ulc = TH.QuasiQuoter qe qp qt qd
   where
     qe s = do
-      let sourceName = ""
-      ts ← io $ tokenizeIO lexULCExp sourceName $ tokens $ frhsChars s
-      let eC = parse pULCExp sourceName ts
+      l ← TH.location
+      let lS = concat [frhsChars $ TH.loc_module l,":",show𝕊 $ fst $ frhs $ TH.loc_start l]
+      ts ← case tokenize lexULCExp lS $ tokens $ frhsChars s of
+        Inl r → do
+          -- [hack] call to `replaced𝕊` required to make the whole error show
+          -- up when using ghcid
+          HS.fail $ tohsChars $ replace𝕊 "\n" "\n        " $ ppRender $ ppVertical
+            [ ppHeader "[Lexing Failure]"
+            , r
+            ]
+        Inr xs → return $ finalizeTokens xs
+      let eC = parse pULCExp lS ts
       case eC of
         Inl r → do
-          TH.reportError $ tohsChars $ ppRenderNoFmt r
-          HS.fail "Parse Failure"
+          -- [hack] call to `replace𝕊` is required to make the whole error show
+          -- up when using ghcid
+          HS.fail $ tohsChars $ replace𝕊 "\n" "\n        " $ ppRender $ ppVertical
+            [ ppHeader "[Parsing Failure]"
+            , r
+            ]
         Inr e → [| e |]
     qp = const $ HS.fail "quoting patterns not supported"
     qt = const $ HS.fail "quoting types not supported"

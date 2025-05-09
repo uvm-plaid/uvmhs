@@ -4,7 +4,6 @@ import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
-import UVMHS.Lib.Parser
 import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.Var

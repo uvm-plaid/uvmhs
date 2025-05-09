@@ -2,8 +2,14 @@ module Examples.Lang.Arith where
 
 import UVMHS
 
+syntax ∷ LexerBasicSyntax
+syntax = null
+  { lexerBasicSyntaxPuns = pow ["(",")"]
+  , lexerBasicSyntaxOprs = pow ["==","+","*","-","^","!"]
+  }
+
 lexer ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexer = lexerBasic (list ["(",")"]) null null (list ["==","+","*","-","^","!"])
+lexer = lexerBasic syntax
 
 testTokenizerSuccess ∷ IO ()
 testTokenizerSuccess =

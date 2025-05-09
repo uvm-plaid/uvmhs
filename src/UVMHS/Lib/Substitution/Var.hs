@@ -28,11 +28,48 @@ gensymVar ℓ s = do
 -- PARSING --
 -------------
 
+syntaxVar ∷ LexerBasicSyntax
+syntaxVar = concat
+  [ null { lexerBasicSyntaxPuns = pow ["#"] }
+  ]
+
 cpVar ∷ CParser TokenBasic 𝕎
-cpVar = var ^$ cpShaped $ view nameTBasicL
+cpVar = do
+  x ← cpShaped $ view nameTBasicL
+  nO ← cpOptional $ do
+    void $ cpSyntax "#"
+    failEff ∘ natO64 *$ cpInteger
+  return $ 𝕎 nO x
 
 cpVarWS ∷ CParser TokenWSBasic 𝕎
-cpVarWS = var ^$ cpShaped $ view nameTWSBasicL
+cpVarWS = do
+  x ← cpShaped $ view nameTWSBasicL
+  nO ← cpOptional $ do
+    void $ cpSyntaxWS "#"
+    failEff ∘ natO64 *$ cpIntegerWS
+  return $ 𝕎 nO x
+
+syntaxDVar ∷ LexerBasicSyntax
+syntaxDVar = concat
+  [ null { lexerBasicSyntaxPuns = pow ["|_","_|","⌊","⌋","&","∞"] }
+  ]
+
+cpDVarRaw ∷ CParser TokenBasic ℕ64
+cpDVarRaw = do failEff ∘ natO64 *$ cpInteger
+
+cpDVarRawInf ∷ CParser TokenBasic (𝑂 ℕ64)
+cpDVarRawInf = concat
+  [ Some ^$ cpDVarRaw
+  , do void $ concat $ map cpSyntax ["&","∞"]
+       return None
+  ]
+
+cpDVar ∷ CParser TokenBasic ℕ64
+cpDVar = do 
+  void $ concat $ map cpSyntax ["|_","⌊"]
+  n ← cpDVar
+  void $ concat $ map cpSyntax ["_|","⌋"]
+  return n
 
 ---------------------
 -- PRETTY PRINTING --
@@ -84,16 +121,86 @@ gensymSVar ℓ s = znsvar ^$ gensymVar ℓ s
 -------------
 
 cpZNSVar ∷ CParser TokenBasic 𝕏
-cpZNSVar = znsvar ∘ var ^$ cpShaped $ view nameTBasicL
+cpZNSVar = znsvar ^$ cpVar
 
 cpGSVar ∷ CParser TokenBasic 𝕏
-cpGSVar = G_SVar ∘ var ^$ cpShaped $ view nameTBasicL
+cpGSVar = G_SVar ^$ cpVar
 
 cpNSVarWS ∷ CParser TokenWSBasic 𝕏
-cpNSVarWS = znsvar ∘ var ^$ cpShaped $ view nameTWSBasicL
+cpNSVarWS = znsvar ^$ cpVarWS
 
 cpGSVarWS ∷ CParser TokenWSBasic 𝕏
-cpGSVarWS = G_SVar ∘ var ^$ cpShaped $ view nameTWSBasicL
+cpGSVarWS = G_SVar ^$ cpVarWS
+
+syntaxSVar ∷ LexerBasicSyntax
+syntaxSVar = concat
+  [ syntaxVar
+  , syntaxDVar
+  , null { lexerBasicSyntaxPuns = pow ["^",":g"] }
+  ]
+
+cpSVarNGVar ∷ CParser TokenBasic ((ℕ64 ∧ 𝕎) ∨ 𝕎)
+cpSVarNGVar = do
+  x ← cpVar
+  concat
+    [ do n ← ifNone 0 ^$ cpOptional $ do
+           void $ cpSyntax "^"
+           n ← failEff ∘ natO64 *$ cpInteger
+           return n
+         return $ Inl $ n :* x
+    , do void $ cpSyntax ":g"
+         return $ Inr x
+    ]
+
+cpSVarNGVarInf ∷ CParser TokenBasic ((𝑂 ℕ64 ∧ 𝕎) ∨ 𝕎)
+cpSVarNGVarInf = do
+  x ← cpVar
+  concat
+    [ do n ← ifNone (Some 0) ^$ cpOptional $ do
+           void $ cpSyntax "^"
+           concat
+             [ Some ^∘ failEff ∘ natO64 *$ cpInteger
+             , do void $ concat $ map cpSyntax ["&","∞"]
+                  return None
+             ]
+         return $ Inl $ n :* x
+    , do void $ cpSyntax ":g"
+         return $ Inr x
+    ]
+
+cpSVarRaw ∷ CParser TokenBasic 𝕏
+cpSVarRaw = concat
+  [ do n ← cpDVarRaw
+       return $ D_SVar n
+  , do nww ← cpSVarNGVar
+       return $ case nww of
+         Inl (n :* w) → N_SVar n w
+         Inr w        → G_SVar w
+  ]
+
+cpSVarRawInf ∷ CParser TokenBasic (𝕏 ∨ 𝑂 𝕎)
+cpSVarRawInf = concat
+  [ do nO ← cpDVarRawInf
+       case nO of
+         None → return $ Inr None
+         Some n → return $ Inl $ D_SVar n
+  , do nww ← cpSVarNGVarInf
+       return $ case nww of
+         Inl (nO :* w) → case nO of
+            None → Inr $ Some w
+            Some n → Inl $ N_SVar n w
+         Inr w → Inl $ G_SVar w
+  ]
+
+cpSVar ∷ CParser TokenBasic 𝕏
+cpSVar = concat
+  [ do n ← cpDVar
+       return $ D_SVar n
+  , do nww ← cpSVarNGVar
+       return $ case nww of
+         Inl (n :* w) → N_SVar n w
+         Inr w        → G_SVar w
+  ]
 
 ---------------------
 -- PRETTY PRINTING --
@@ -109,7 +216,7 @@ instance Pretty 𝕏 where
   pretty = \case
     N_SVar n x → if n ≡ 0 then pretty x else ppNVar (pretty n) $ pretty x
     D_SVar n → ppDVar n
-    G_SVar x → pretty x
+    G_SVar x → concat [pretty x,ppPun ":g"]
 
 -------------
 -- FUZZING --

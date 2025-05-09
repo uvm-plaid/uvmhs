@@ -6,7 +6,22 @@ build:
 
 .PHONY: dev
 dev: .stack-work
-	ghcid --warnings --run=$E --command="stack ghci uvmhs:lib --ghc-options='-DUVMHS_TESTS'"
+	ghcid \
+		--warnings \
+		--clear \
+		--run=$E \
+		--command=" \
+			stack ghci uvmhs:lib \
+				--ghci-options=' \
+					-v1 \
+					-j \
+					-fno-hide-source-paths \
+					-fobject-code \
+					-fno-break-on-exception \
+					-fno-break-on-error \
+					-ferror-spans \
+					-fdiagnostics-color=always \
+					-DUVMHS_TESTS'"
 
 .stack-work:
 	stack setup

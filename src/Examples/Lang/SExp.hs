@@ -2,8 +2,16 @@ module Examples.Lang.SExp where
 
 import UVMHS
 
+syntax ∷ LexerBasicSyntax
+syntax = null
+  { lexerBasicSyntaxPuns = pow ["(",")"]
+  , lexerBasicSyntaxKeys = pow ["KEY"]
+  , lexerBasicSyntaxPrms = pow ["PRIM"]
+  , lexerBasicSyntaxOprs = pow ["+"]
+  }
+
 lexer ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexer = lexerBasic (list ["(",")"]) (list ["KEY"]) (list ["PRIM"]) (list ["+"])
+lexer = lexerBasic syntax
 
 testSExpTokenizerSuccess ∷ IO ()
 testSExpTokenizerSuccess =

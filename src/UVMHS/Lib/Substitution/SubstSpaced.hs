@@ -66,10 +66,10 @@ data SubstSpaced sU sS e = SubstSpaced
   deriving (Eq,Ord,Show)
 makeLenses ''SubstSpaced
 
-canonSubstSpaced ∷ (Eq sS,Eq e) ⇒ e ⌲ ℕ64 → (sS ⇰ ℕ64 → e → 𝑂 e) → SubstSpaced sU sS e → SubstSpaced sU sS e
+canonSubstSpaced ∷ (Ord sS,Eq e) ⇒ (sS → e ⌲ ℕ64) → (sS ⇰ ℕ64 → e → 𝑂 e) → SubstSpaced sU sS e → SubstSpaced sU sS e
 canonSubstSpaced ℓvar substE (SubstSpaced 𝓈U 𝓈S) = 
   let 𝓈U' = map (canonSubstElem substE) 𝓈U
-      𝓈S' = map (canonSubstScoped ℓvar substE) 𝓈S
+      𝓈S' = kmap (\ s → canonSubstScoped (ℓvar s) substE) 𝓈S
   in SubstSpaced 𝓈U' 𝓈S'
 
 -- Alter a substitution to "protect" the first n nameless indices. This
@@ -104,14 +104,14 @@ shiftSubstSpaced ιs (SubstSpaced 𝓈U 𝓈S) =
 --     , 2 ↦ 3 
 --     , …
 --     ]
+zintroSubstSpaced ∷ sS ⇰ ℤ64 → SubstSpaced sU sS e
+zintroSubstSpaced = SubstSpaced null ∘ map zintroSubstScoped
+
 introSubstSpaced ∷ sS ⇰ ℕ64 → SubstSpaced sU sS e
 introSubstSpaced = SubstSpaced null ∘ map introSubstScoped
 
 sbindsSubstSpaced ∷ sS ⇰ 𝕍 e → SubstSpaced sU sS e
-sbindsSubstSpaced ess = SubstSpaced null $ mapOn ess $ \ es →
-  let ℯs = map (Trm_SSE ∘ SubstElem null ∘ Some) es
-      ι  = neg $ intΩ64 $ csize es
-  in SubstScoped zero ℯs ι
+sbindsSubstSpaced ess = SubstSpaced null $ mapOn ess bindSubstScoped
 
 ubindsSubstSpaced ∷ sU ⇰ e → SubstSpaced sU sS e
 ubindsSubstSpaced es = SubstSpaced (map (SubstElem null ∘ Some) es) null
