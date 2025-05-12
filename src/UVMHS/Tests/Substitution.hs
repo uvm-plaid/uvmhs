@@ -10,7 +10,11 @@ import UVMHS.Lang.ULC
 
 -- substitutions --
 
-𝔱 "subst:subst" [| [ulc| χ:m{} |] |] [| [ulc| 0 |] |]
+-- 𝔱 "subst:subst" [| [ulc| χ:m{} |] |] [| [ulc| 0 |] |]
+𝔱 "subst:subst" [| concat 
+                     [ dshiftSubst 1 $ dbindSubst [ulc| 0 |] 
+                     , nshiftSubst (var "x" ↦ 1) $ nbindSubst (var "x") [ulc| 1 |]
+                     ] |] [| null |]
 
 -- basic --
 

@@ -13,6 +13,8 @@ import UVMHS.Core.Data.Stream
 import qualified Prelude as HS
 import qualified Data.List as HS
 
+instance (Eq a) ⇒ Eq (𝐼 a) where (==) = (≡) `on` stream
+instance (Ord a) ⇒ Ord (𝐼 a) where compare = compare `on` stream
 
 instance Null (𝐼 a) where null = empty𝐼
 instance Append (𝐼 a) where (⧺) = append𝐼

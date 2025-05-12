@@ -291,7 +291,126 @@ syntaxUVar = concat
              ] }
   ]
 
-cpUVarNGMVar ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
+data ParseSubstAction e = ParseSubstAction
+  { parseSubstActionShfts ∷ 𝐼 ℕ64          -- x^0…x^n ↦ [≡]
+  , parseSubstActionElems ∷ 𝑂 ℕ64 ⇰ 𝐼 e    -- x^n     ↦ e
+  , parseSubstActionIncrs ∷ 𝐼 (ℕ64 ∧ ℤ64)  -- x^n…x^∞ ↦ i
+  } deriving (Eq,Ord,Show)
+makeLenses ''ParseSubstAction
+
+parseSubstActionShft ∷ ℕ64 → ParseSubstAction e
+parseSubstActionShft n = null { parseSubstActionShfts = single n }
+
+parseSubstActionElem ∷ 𝑂 ℕ64 → e → ParseSubstAction e
+parseSubstActionElem nO e = null { parseSubstActionElems = nO ↦ single e }
+
+parseSubstActionIncr ∷ ℕ64 → ℤ64 → ParseSubstAction e
+parseSubstActionIncr n i = null { parseSubstActionIncrs = single $ n :* i }
+
+instance Null (ParseSubstAction e) where
+  null = ParseSubstAction null null null
+instance Append (ParseSubstAction e) where
+  ParseSubstAction shfts₁ elems₁ incrs₁ ⧺ ParseSubstAction shfts₂ elems₂ incrs₂ =
+    ParseSubstAction (shfts₁ ⧺ shfts₂) (elems₁ ⧺ elems₂) $ incrs₁ ⧺ incrs₂
+instance Monoid (ParseSubstAction e)
+
+type ParseSubstActions e = 𝑂 (𝕎 ∧ 𝔹) ⇰ ParseSubstAction e
+
+cpSubst ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (Subst () e)
+cpSubst pE = do
+  let pSubstIncr ∷ 𝕏 → CParser TokenBasic (ParseSubstActions e)
+      pSubstIncr x₁ = do
+        void $ concat $ map cpSyntax ["...","…"]
+        xxw₂ ← cpSVarRawInf
+        void $ concat $ map cpSyntax ["|->","↦"]
+        void $ concat $ map cpSyntax ["["]
+        i ← concat
+          [ do void $ concat $ map cpSyntax ["==","≡"]
+               return 0
+          , do i ← failEff ∘ intO64 *$ cpInteger
+               guard $ i < 0
+               return i
+          , do void $ cpSyntax "+"
+               i ← failEff ∘ intO64 *$ cpInteger
+               guard $ i > 0
+               return i
+          ]
+        a ← case (x₁,xxw₂) of
+          (D_SVar n  ,Inl (D_SVar n')   ) |      n≡0,i≡0 → return $ None               ↦ parseSubstActionShft n'
+          (N_SVar n w,Inl (N_SVar n' w')) | w≡w',n≡0,i≡0 → return $ Some (w' :* False) ↦ parseSubstActionShft n'
+          (D_SVar n  ,Inr None          )                → return $ None               ↦ parseSubstActionIncr n i
+          (N_SVar n w,Inr (Some w')     ) | w≡w'         → return $ Some (w  :* False) ↦ parseSubstActionIncr n i
+          _ → abort
+        void $ concat $ map cpSyntax ["]"]
+        return a
+      pSubstElem ∷ 𝕏 → CParser TokenBasic (ParseSubstActions e)
+      pSubstElem x = do
+        void $ concat $ map cpSyntax ["|->","↦"]
+        e ← pE ()
+        return $ case x of
+          D_SVar n   → None             ↦ parseSubstActionElem (Some n) e
+          N_SVar n w → Some (w :* True) ↦ parseSubstActionElem (Some n) e
+          G_SVar   w → Some (w :* True) ↦ parseSubstActionElem None     e
+  void $ cpSyntax "{"
+  xas ← concat ^$ cpManySepBy (void $ cpSyntax ",") $ do
+    x ← cpSVarRaw
+    concat 
+      [ pSubstIncr x
+      , pSubstElem x
+      ]
+  𝓈 ← 
+    concat ^$ mapMOn (iter xas) $ \ (wbO :* ParseSubstAction shfts elemss incrs) → do
+      let doScoped = do 
+            -- should only have one shift
+            nShft ← failEff $ view single𝐼L shfts
+            -- should only have one increment
+            nIncr :* iIncr ← failEff $ view single𝐼L incrs
+            -- elems should map names to only one element
+            elems ← failEff $ mapMOn elemss $ view single𝐼L
+            -- all names of element bindings should have an index
+            elemsKeys ← failEff $ exchange $ iter $ dkeys elems
+            let elemsVals = vec $ dvals elems
+            -- element bindings should fill gap between shift and incr
+            guard $ elemsKeys ≡ range nShft nIncr
+            -- biding N elements creates a -N incr
+            -- target incr I = -N + E for extra incr E
+            -- so E = I+N
+            -- target incr I shouldn't be less than negative number of elems
+            -- so E should be nonnegative
+            -- let numElems = nIncr - nShft
+            extraIncr ← failEff $ natO64 $ iIncr + neg (intΩ64 $ csize elemsVals)
+            return $ nShft :* elemsVals :* extraIncr
+      case wbO of
+        -- nameless
+        None → do
+          nShft :* elemsVals :* extraIncr ← doScoped
+          return $ concat
+            [ dshiftSubst (nShft + csize elemsVals) $ dintroSubst extraIncr
+            , dshiftSubst nShft $ dbindsSubst $ elemsVals
+            ]
+        -- named
+        Some (w :* False) → do
+          nShft :* elemsVals :* extraIncr ← doScoped
+          return $ concat
+            [ nshiftSubst (w ↦ nShft + csize elemsVals) $ nintroSubst $ w ↦ extraIncr
+            , nshiftSubst (w ↦ nShft) $ nbindsSubst $ w ↦ elemsVals
+            ]
+        -- global
+        Some (w :* True ) → do
+          -- global can't have shifts
+          guard $ isEmpty shfts
+          -- global can't have incrs
+          guard $ isEmpty incrs
+          -- should only map each name to one element
+          elems ← failEff $ mapMOn elemss $ view single𝐼L
+          concat ^$ mapMOn (iter elems) $ \ (nO :* e) → do
+            -- having an index for the name doesn't make sense
+            guard $ shape noneL nO
+            return $ gbindSubst w e
+  void $ cpSyntax "}"
+  return 𝓈
+
+cpUVarNGMVar ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
 cpUVarNGMVar pE = do
   x ← cpVar
   concat
@@ -303,56 +422,7 @@ cpUVarNGMVar pE = do
     , do void $ cpSyntax ":g"
          return $ guvar x
     , do void $ cpSyntax ":m"
-         s ← ifNone null ^$ cpOptional $ do
-           void $ cpSyntax "{"
-           𝓈 ← concat ^$ cpManySepBy (void $ cpSyntax ",") $ concat
-             [ do x₁ ← cpSVarRaw
-                  void $ concat $ map cpSyntax ["...","…"]
-                  x₂ ← cpSVarRaw
-                  void $ concat $ map cpSyntax ["|->","↦"]
-                  void $ concat $ map cpSyntax ["["]
-                  void $ concat $ map cpSyntax ["==","≡"]
-                  void $ concat $ map cpSyntax ["]"]
-                  case (x₁,x₂) of
-                    (D_SVar n₁,D_SVar n₂) 
-                      | n₁ ≡ 0 → return $ dshiftSubst n₂ null
-                    (N_SVar n₁ w₁,N_SVar n₂ w₂) 
-                      | w₁ ≡ w₂ ⩓ n₁ ≡ 0 → return $ nshiftSubst (w₂ ↦ n₂) null
-                    _ → abort
-             , do x₁ ← cpSVarRaw
-                  void $ concat $ map cpSyntax ["...","…"]
-                  x₂ ← cpSVarRawInf
-                  void $ concat $ map cpSyntax ["|->","↦"]
-                  void $ concat $ map cpSyntax ["["]
-                  i ← concat
-                    [ do void $ concat $ map cpSyntax ["==","≡"]
-                         return 0
-                    , do i ← failEff ∘ intO64 *$ cpInteger
-                         guard $ i < 0
-                         return i
-                    , do void $ cpSyntax "+"
-                         i ← failEff ∘ intO64 *$ cpInteger
-                         guard $ i > 0
-                         return i
-                    ]
-                  void $ concat $ map cpSyntax ["]"]
-                  case (x₁,x₂) of
-                    (D_SVar n₁,Inr None) → 
-                      return $ dshiftSubst n₁ $ dzintroSubst i
-                    (N_SVar n₁ w₁,Inr (Some w₂)) | w₁ ≡ w₂ → 
-                      return $ nshiftSubst (w₁ ↦ n₁) $ dzintroSubst i
-                    _ → abort
-             , do x' ← cpSVarRaw
-                  void $ concat $ map cpSyntax ["|->","↦"]
-                  e ← pE ()
-                  return $ case x' of
-                    D_SVar n     → dshiftSubst n $ dbindSubst e
-                    N_SVar n w → nshiftSubst (w ↦ n) $ nbindSubst w e
-                    G_SVar   w → gbindSubst w e
-             ]
-           void $ cpSyntax "}"
-           return $ {- canonSubst $ -} 𝓈
-             
+         s ← ifNone null ^$ cpOptional $ cpSubst pE
          return $ M_UVar x s
    ]
 

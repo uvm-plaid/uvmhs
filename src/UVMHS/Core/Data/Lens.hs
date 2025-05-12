@@ -107,6 +107,16 @@ consL = Prism (curry cons𝐿) uncons𝐿
 snocL ∷ 𝐿 a ⌲ (𝐿 a ∧ a)
 snocL = Prism (curry snoc𝐿) unsnoc𝐿
 
+single𝑆L ∷ 𝑆 a ⌲ a
+single𝑆L = Prism (stream ∘ single𝐼) $ \ xs → do
+  x :* xs' ← un𝑆 xs ()
+  case un𝑆 xs' () of
+    None → Some x
+    Some _ → None
+
+single𝐼L ∷ 𝐼 a ⌲ a
+single𝐼L = Prism single $ view single𝑆L ∘ stream
+
 single𝑃L ∷ (Ord a) ⇒ 𝑃 a ⌲ a
 single𝑃L = prism single𝑃 $ \ xs → case pminView𝑃 xs of
   Some (x :* xs') | isEmpty xs' → Some x
