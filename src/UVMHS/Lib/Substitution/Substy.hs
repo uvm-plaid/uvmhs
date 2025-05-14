@@ -327,11 +327,11 @@ cpSubst pE = do
         i ← concat
           [ do void $ concat $ map cpSyntax ["==","≡"]
                return 0
-          , do i ← failEff ∘ intO64 *$ cpInteger
+          , do i ← cpInt64
                guard $ i < 0
                return i
           , do void $ cpSyntax "+"
-               i ← failEff ∘ intO64 *$ cpInteger
+               i ← cpInt64
                guard $ i > 0
                return i
           ]
@@ -416,7 +416,7 @@ cpUVarNGMVar pE = do
   concat
     [ do n ← ifNone 0 ^$ cpOptional $ do
            void $ cpSyntax "^"
-           n ← failEff ∘ natO64 *$ cpInteger
+           n ← cpNat64
            return n
          return $ nuvar n x
     , do void $ cpSyntax ":g"

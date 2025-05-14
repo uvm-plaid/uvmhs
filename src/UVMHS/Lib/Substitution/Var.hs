@@ -38,7 +38,7 @@ cpVar = do
   x ← cpShaped $ view nameTBasicL
   nO ← cpOptional $ do
     void $ cpSyntax "#"
-    failEff ∘ natO64 *$ cpInteger
+    cpNat64
   return $ 𝕎 nO x
 
 cpVarWS ∷ CParser TokenWSBasic 𝕎
@@ -55,7 +55,7 @@ syntaxDVar = concat
   ]
 
 cpDVarRaw ∷ CParser TokenBasic ℕ64
-cpDVarRaw = do failEff ∘ natO64 *$ cpInteger
+cpDVarRaw = cpNat64
 
 cpDVarRawInf ∷ CParser TokenBasic (𝑂 ℕ64)
 cpDVarRawInf = concat
@@ -145,7 +145,7 @@ cpSVarNGVar = do
   concat
     [ do n ← ifNone 0 ^$ cpOptional $ do
            void $ cpSyntax "^"
-           n ← failEff ∘ natO64 *$ cpInteger
+           n ← cpNat64
            return n
          return $ Inl $ n :* x
     , do void $ cpSyntax ":g"
@@ -159,7 +159,7 @@ cpSVarNGVarInf = do
     [ do n ← ifNone (Some 0) ^$ cpOptional $ do
            void $ cpSyntax "^"
            concat
-             [ Some ^∘ failEff ∘ natO64 *$ cpInteger
+             [ Some ^$ cpNat64
              , do void $ concat $ map cpSyntax ["&","∞"]
                   return None
              ]

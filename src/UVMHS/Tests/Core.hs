@@ -3,39 +3,71 @@ module UVMHS.Tests.Core (g__TESTS__UVMHS__Tests__Core) where
 import UVMHS.Core
 import UVMHS.Lib.Testing
 
-𝔱 "core:iter" [| isEmpty []           |] [| True  |]
-𝔱 "core:iter" [| isEmpty [𝕟 1]        |] [| False |]
-𝔱 "core:iter" [| isEmpty Nil          |] [| True  |]
-𝔱 "core:iter" [| isEmpty (𝕟 1 :& Nil) |] [| False |]
+----------
+-- ITER --
+----------
 
-𝔱 "core:iter" [| list $ range (𝕟 0) (𝕟 0) |] [| list []        |]
-𝔱 "core:iter" [| list $ range (𝕟 1) (𝕟 1) |] [| list []        |]
-𝔱 "core:iter" [| list $ range (𝕟 0) (𝕟 1) |] [| list [𝕟 0]     |]
-𝔱 "core:iter" [| list $ range (𝕟 0) (𝕟 2) |] [| list [𝕟 0,𝕟 1] |]
-𝔱 "core:iter" [| list $ range (𝕟 1) (𝕟 3) |] [| list [𝕟 1,𝕟 2] |]
+𝔱 "core:iter:isEmpty" [| isEmpty $ id @(𝐼 ℕ) $ iter []  |] [| True  |]
+𝔱 "core:iter:isEmpty" [| isEmpty $ id @(𝐼 ℕ) $ iter [1] |] [| False |]
 
-𝔱 "core:iter" [| list $ upto (𝕟 0) |] [| list []        |]
-𝔱 "core:iter" [| list $ upto (𝕟 1) |] [| list [𝕟 0]     |]
-𝔱 "core:iter" [| list $ upto (𝕟 2) |] [| list [𝕟 0,𝕟 1] |]
+𝔱 "core:iter:range" [| id @(𝐼 ℕ) $ range 0 0 |] [| iter []    |]
+𝔱 "core:iter:range" [| id @(𝐼 ℕ) $ range 1 1 |] [| iter []    |]
+𝔱 "core:iter:range" [| id @(𝐼 ℕ) $ range 0 1 |] [| iter [0]   |]
+𝔱 "core:iter:range" [| id @(𝐼 ℕ) $ range 0 2 |] [| iter [0,1] |]
+𝔱 "core:iter:range" [| id @(𝐼 ℕ) $ range 1 3 |] [| iter [1,2] |]
 
-𝔱 "core:iter" [| list $ keepN (𝕟 0) [𝕟 0,𝕟 1] |] [| list []        |]
-𝔱 "core:iter" [| list $ keepN (𝕟 1) [𝕟 0,𝕟 1] |] [| list [𝕟 0]     |]
-𝔱 "core:iter" [| list $ keepN (𝕟 2) [𝕟 0,𝕟 1] |] [| list [𝕟 0,𝕟 1] |]
-𝔱 "core:iter" [| list $ keepN (𝕟 3) [𝕟 0,𝕟 1] |] [| list [𝕟 0,𝕟 1] |]
+𝔱 "core:iter:upto" [| id @(𝐼 ℕ) $ upto 0 |] [| iter []    |]
+𝔱 "core:iter:upto" [| id @(𝐼 ℕ) $ upto 1 |] [| iter [0]   |]
+𝔱 "core:iter:upto" [| id @(𝐼 ℕ) $ upto 2 |] [| iter [0,1] |]
 
-𝔱 "core:iter" [| list $ replicate (𝕟 0) $ 𝕟 42 |] [| list [] |]
-𝔱 "core:iter" [| list $ replicate (𝕟 2) $ 𝕟 42 |] [| list [𝕟 42,𝕟 42] |]
+𝔱 "core:iter:bind" [| id @(𝐼 ℕ) $ do m ← iter [1,2] ; n ← iter [10,20] ; return $ m + n |] [| iter [11,21,12,22] |]
 
-𝔱 "core:dict" [| dict𝐷 [𝕟 1 ↦♭ 𝕟 2,𝕟 1 ↦♭ 𝕟 3] |] [| dict𝐷 [𝕟 1 ↦♭ 𝕟 2] |]
+𝔱 "core:iter:reverse" [| id @(𝐼 ℕ) $ reverse $ upto 3 |] [| id @(𝐼 ℕ) $ iter [2,1,0] |]
 
-𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) ("x" ↦♭ 𝕟 1) |] [| "x" ↦♭ 𝕟 2 |]
-𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) ("y" ↦♭ 𝕟 1) |] [| "y" ↦♭ 𝕟 1 |]
-𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (map (+ 𝕟 1)) (dict𝐷 ["x" ↦♭ 𝕟 10,"y" ↦♭ 𝕟 20]) |]
-              [| dict𝐷 ["x" ↦♭ 𝕟 11,"y" ↦♭ 𝕟 20] |]
-𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) ("x" ↦♭ 𝕟 1) |] [| dø𝐷 |]
-𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) ("y" ↦♭ 𝕟 1) |] [| "y" ↦♭ 𝕟 1 |]
-𝔱 "core:lens" [| alter (keyL $ 𝕤 "x") (const None) (dict𝐷 ["x" ↦♭ 𝕟 10,"y" ↦♭ 𝕟 20]) |]
-              [| dict𝐷 ["y" ↦♭ 𝕟 20] |]
+𝔱 "core:iter:dropWhile" [| id @(𝐼 ℕ) $ dropWhile (< 3) $ concat [upto 5,reverse $ upto 5]                  |] [| iter [3,4,4,3,2,1,0]         |]
+𝔱 "core:iter:dropWhile" [| id @(𝐼 ℕ) $ dropWhile (< 3) (concat [upto 5,reverse $ upto 5]) ⧺ iter [100,101] |] [| iter [3,4,4,3,2,1,0,100,101] |]
+
+𝔱 "core:iter:takeWhile" [| id @(𝐼 ℕ) $ takeWhile (< 3) $ concat [upto 5,reverse $ upto 5]                  |] [| iter [0,1,2] |]
+𝔱 "core:iter:takeWhile" [| id @(𝐼 ℕ) $ takeWhile (< 3) (concat [upto 5,reverse $ upto 5]) ⧺ iter [100,101] |] [| iter [0,1,2,100,101] |]
+
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ keepN (𝕟 0) [0,1,2] |] [| iter []      |]
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ keepN (𝕟 1) [0,1,2] |] [| iter [0]     |]
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ keepN (𝕟 2) [0,1,2] |] [| iter [0,1]   |]
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ keepN (𝕟 3) [0,1,2] |] [| iter [0,1,2] |]
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ keepN (𝕟 4) [0,1,2] |] [| iter [0,1,2] |]
+
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ dropN (𝕟 0) [0,1,2] |] [| iter [0,1,2] |]
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ dropN (𝕟 1) [0,1,2] |] [| iter [1,2]   |]
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ dropN (𝕟 2) [0,1,2] |] [| iter [2]     |]
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ dropN (𝕟 3) [0,1,2] |] [| iter []      |]
+𝔱 "core:iter:keepN" [| id @(𝐼 ℕ) $ dropN (𝕟 4) [0,1,2] |] [| iter []      |]
+
+𝔱 "core:iter:replicate" [| id @(𝐼 ℕ) $ replicate (𝕟 0) 42 |] [| iter [] |]
+𝔱 "core:iter:replicate" [| id @(𝐼 ℕ) $ replicate (𝕟 2) 42 |] [| iter [42,42] |]
+
+𝔱 "core:iter:filterMap" [| id @(𝐼 ℕ) $ filterMap id [None,Some 0,None,Some 1,None] |] [| iter [0,1] |]
+
+𝔱 "core:iter:inbetween" [| id @(𝐼 ℕ) $ inbetween 3 (upto 3) |] [| iter [0,3,1,3,2] |]
+
+𝔱 "core:iter:mapM" [| id @(𝐼 ℕ ∧ 𝐼 ℕ) $ mapM (\ x → do tell (single x) ; return x) $ iter [0,1,2] |] [| iter [0,1,2] :* iter [0,1,2] |]
+
+𝔱 "core:iter:filterM" [| id @(𝐼 ℕ ∧ 𝐼 ℕ) $ filterM (\ x → do tell (single x) ; return $ x < 2) $ iter [0,1,2] |] [| iter [0,1,2] :* iter [0,1] |]
+
+-----------
+-- OTHER --
+-----------
+
+𝔱 "core:list:isEmpty" [| isEmpty $ id @(𝐿 ℕ) $ Nil      |] [| True  |]
+𝔱 "core:list:isEmpty" [| isEmpty $ id @(𝐿 ℕ) $ 1 :& Nil |] [| False |]
+
+𝔱 "core:dict:dict𝐷" [| id @(ℕ ⇰ ℕ) $ dict𝐷 [1 ↦♭ 2,1 ↦♭ 3] |] [| dict𝐷 [1 ↦♭ 2] |]
+
+𝔱 "core:lens:alter" [| id @(𝕊 ⇰ ℕ) $ alter (keyL "x") (map (+ 1)) ("x" ↦♭ 1)                     |] [| "x" ↦♭ 2                    |]
+𝔱 "core:lens:alter" [| id @(𝕊 ⇰ ℕ) $ alter (keyL "x") (map (+ 1)) ("y" ↦♭ 1)                     |] [| "y" ↦♭ 1                    |]
+𝔱 "core:lens:alter" [| id @(𝕊 ⇰ ℕ) $ alter (keyL "x") (map (+ 1)) (dict𝐷 ["x" ↦♭ 10,"y" ↦♭ 20])  |] [| dict𝐷 ["x" ↦♭ 11,"y" ↦♭ 20] |]
+𝔱 "core:lens:alter" [| id @(𝕊 ⇰ ℕ) $ alter (keyL "x") (const None) ("x" ↦♭ 1)                    |] [| dø𝐷                         |]
+𝔱 "core:lens:alter" [| id @(𝕊 ⇰ ℕ) $ alter (keyL "x") (const None) ("y" ↦♭ 1)                    |] [| "y" ↦♭ 1                    |]
+𝔱 "core:lens:alter" [| id @(𝕊 ⇰ ℕ) $ alter (keyL "x") (const None) (dict𝐷 ["x" ↦♭ 10,"y" ↦♭ 20]) |] [| dict𝐷 ["y" ↦♭ 20]           |]
 
 newtype CR a = CR { unCR ∷ ContT ℕ64 (ReaderT (ℕ64 ∧ ℕ64) ID) a }
   deriving

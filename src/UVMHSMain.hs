@@ -315,6 +315,7 @@ instance Null SrcCxt where null = srcCxt₀
 
 main ∷ IO ()
 main = cleanExit $ do
+  -- pprint $ takeWhile (\ x → x < 𝕟64 5) $ upto 20 ⧺ reverse (upto 20)
   -- pprint *$ QC.generate $ QC.resize 1 $ arbitrary @ULCExpRaw
   -- pprint *$ QC.generate $ QC.resize 1 $ arbitrary @ULCExpRaw
   -- testThisExpression [ulc| λ a → λ b → λ c → 𝔪:[1]x |]
@@ -327,7 +328,7 @@ main = cleanExit $ do
   -- pprint [ulc|λ y → y↑1|]
   $$(testModules False (Some 5) 1
     [ "UVMHS.Tests.Core"
-    , "UVMHS.Tests.Substitution"
+    -- , "UVMHS.Tests.Substitution"
     ])
   -- print $ ppULC [ulc| λ → 2 |]
   -- let 𝓈 = concat

@@ -221,7 +221,7 @@ map𝑃 ∷ (Ord b) ⇒ (a → b) → 𝑃 a → 𝑃 b
 map𝑃 = coerce Set.map
 
 uniques𝑃 ∷ (Ord a,ToIter a t) ⇒ t → 𝐼 a
-uniques𝑃 xs = filterMap id $ appto (iter xs) $ reiter pø𝑃 $ \ x seen →
+uniques𝑃 xs = filterMap id $ appto (iter xs) $ mapState𝐼 pø𝑃 $ \ x seen →
   if x ∈♭ seen
   then seen :* None
   else (single𝑃 x ∪♭ seen) :* Some x

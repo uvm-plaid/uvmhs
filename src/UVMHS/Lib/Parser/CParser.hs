@@ -126,11 +126,23 @@ cpOneOrMoreSepBy sepM xM = do
 cpSyntax ∷ 𝕊 → CParser TokenBasic TokenBasic
 cpSyntax = cpToken ∘ SyntaxTBasic
 
-cpNatural ∷ CParser TokenBasic ℕ
-cpNatural = cpShaped $ view naturalTBasicL
+cpNatN ∷ CParser TokenBasic ℕ
+cpNatN = cpShaped $ view naturalTBasicL
 
-cpInteger ∷ CParser TokenBasic ℤ
-cpInteger = cpShaped $ view integerTBasicL
+cpNat64N ∷ CParser TokenBasic ℕ64
+cpNat64N = failEff ∘ natO64 *$ cpNatN
+
+cpInt ∷ CParser TokenBasic ℤ
+cpInt = cpShaped $ view integerTBasicL
+
+cpInt64 ∷ CParser TokenBasic ℤ64
+cpInt64 = failEff ∘ intO64 *$ cpInt
+
+cpNat ∷ CParser TokenBasic ℕ
+cpNat = failEff ∘ natO *$ cpInt
+
+cpNat64 ∷ CParser TokenBasic ℕ64
+cpNat64 = failEff ∘ natO64 *$ cpInt
 
 cpDouble ∷ CParser TokenBasic 𝔻
 cpDouble = cpShaped $ view doubleTBasicL

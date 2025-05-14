@@ -110,11 +110,11 @@ stringCS ss = build𝕊CN (csize ss) ss
 stringSS ∷ (ToIter 𝕊 t,ASized t) ⇒ t → 𝕊
 stringSS ss = build𝕊SN (asize ss) ss
 
-reiterC ∷ (ToIterC a t) ⇒ s → (a → s → (s ∧ b)) → t → 𝐼C b
-reiterC s f (iterC → 𝐼C n xs) = 𝐼C n $ reiter s f xs
+mapState𝐼C ∷ (ToIterC a t) ⇒ s → (a → s → (s ∧ b)) → t → 𝐼C b
+mapState𝐼C s f (iterC → 𝐼C n xs) = 𝐼C n $ mapState𝐼 s f xs
 
 withIndexC ∷ ∀ t a. (ToIterC a t) ⇒ t → 𝐼C (ℕ64 ∧ a)
-withIndexC = reiterC zero $ \ x i → (i + one) :* (i :* x)
+withIndexC = mapState𝐼C zero $ \ x i → (i + one) :* (i :* x)
 
 zipWithC ∷ (ToIterC a t₁,ToIterC b t₂) ⇒ (a → b → c) → t₁ → t₂ → 𝐼C c
 zipWithC f (iterC → 𝐼C n₁ xs) (iterC → 𝐼C n₂ ys) = 𝐼C (n₁ ⊓ n₂) $ zipWith f xs ys
