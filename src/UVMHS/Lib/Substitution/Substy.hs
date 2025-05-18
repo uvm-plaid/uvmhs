@@ -282,11 +282,12 @@ substy𝕐 s mkVar = \case
 syntaxUVar ∷ LexerBasicSyntax
 syntaxUVar = concat
   [ syntaxVar
+  , syntaxSVar
   , null { lexerBasicSyntaxPuns = pow 
              [ ",","...","…"
              , "{","}","[","]","|_","⌊","_|","⌋"
              , "|->","↦"
-             , "^",":g",":m"
+             , ":",":g",":m"
              , "==","≡","+"
              ] }
   ]
@@ -317,30 +318,30 @@ instance Monoid (ParseSubstAction e)
 type ParseSubstActions e = 𝑂 (𝕎 ∧ 𝔹) ⇰ ParseSubstAction e
 
 cpSubst ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (Subst () e)
-cpSubst pE = do
+cpSubst pE = cpNewContext "subst" $ do
   let pSubstIncr ∷ 𝕏 → CParser TokenBasic (ParseSubstActions e)
       pSubstIncr x₁ = do
         void $ concat $ map cpSyntax ["...","…"]
         xxw₂ ← cpSVarRawInf
         void $ concat $ map cpSyntax ["|->","↦"]
         void $ concat $ map cpSyntax ["["]
-        i ← concat
+        i ← cpErr "valid subst shift/incr update" $ concat
           [ do void $ concat $ map cpSyntax ["==","≡"]
                return 0
           , do i ← cpInt64
-               guard $ i < 0
+               cpGuard $ i < 0
                return i
           , do void $ cpSyntax "+"
                i ← cpInt64
-               guard $ i > 0
+               cpGuard $ i > 0
                return i
           ]
-        a ← case (x₁,xxw₂) of
-          (D_SVar n  ,Inl (D_SVar n')   ) |      n≡0,i≡0 → return $ None               ↦ parseSubstActionShft n'
-          (N_SVar n w,Inl (N_SVar n' w')) | w≡w',n≡0,i≡0 → return $ Some (w' :* False) ↦ parseSubstActionShft n'
+        a ← cpErr "valid subst shift/incr range" $ case (x₁,xxw₂) of
+          (D_SVar n  ,Inl (D_SVar n')   ) |      n≡0,i≡0 → return $ None               ↦ parseSubstActionShft (n' + 1)
+          (N_SVar n w,Inl (N_SVar n' w')) | w≡w',n≡0,i≡0 → return $ Some (w' :* False) ↦ parseSubstActionShft (n' + 1)
           (D_SVar n  ,Inr None          )                → return $ None               ↦ parseSubstActionIncr n i
           (N_SVar n w,Inr (Some w')     ) | w≡w'         → return $ Some (w  :* False) ↦ parseSubstActionIncr n i
-          _ → abort
+          _ → cpDie
         void $ concat $ map cpSyntax ["]"]
         return a
       pSubstElem ∷ 𝕏 → CParser TokenBasic (ParseSubstActions e)
@@ -348,9 +349,9 @@ cpSubst pE = do
         void $ concat $ map cpSyntax ["|->","↦"]
         e ← pE ()
         return $ case x of
-          D_SVar n   → None             ↦ parseSubstActionElem (Some n) e
-          N_SVar n w → Some (w :* True) ↦ parseSubstActionElem (Some n) e
-          G_SVar   w → Some (w :* True) ↦ parseSubstActionElem None     e
+          D_SVar n   → None              ↦ parseSubstActionElem (Some n) e
+          N_SVar n w → Some (w :* False) ↦ parseSubstActionElem (Some n) e
+          G_SVar   w → Some (w :* True ) ↦ parseSubstActionElem None     e
   void $ cpSyntax "{"
   xas ← concat ^$ cpManySepBy (void $ cpSyntax ",") $ do
     x ← cpSVarRaw
@@ -358,55 +359,65 @@ cpSubst pE = do
       [ pSubstIncr x
       , pSubstElem x
       ]
-  𝓈 ← 
-    concat ^$ mapMOn (iter xas) $ \ (wbO :* ParseSubstAction shfts elemss incrs) → do
-      let doScoped = do 
-            -- should only have one shift
-            nShft ← failEff $ view single𝐼L shfts
-            -- should only have one increment
-            nIncr :* iIncr ← failEff $ view single𝐼L incrs
-            -- elems should map names to only one element
-            elems ← failEff $ mapMOn elemss $ view single𝐼L
-            -- all names of element bindings should have an index
-            elemsKeys ← failEff $ exchange $ iter $ dkeys elems
-            let elemsVals = vec $ dvals elems
-            -- element bindings should fill gap between shift and incr
-            guard $ elemsKeys ≡ range nShft nIncr
-            -- biding N elements creates a -N incr
-            -- target incr I = -N + E for extra incr E
-            -- so E = I+N
-            -- target incr I shouldn't be less than negative number of elems
-            -- so E should be nonnegative
-            -- let numElems = nIncr - nShft
-            extraIncr ← failEff $ natO64 $ iIncr + neg (intΩ64 $ csize elemsVals)
-            return $ nShft :* elemsVals :* extraIncr
-      case wbO of
-        -- nameless
-        None → do
-          nShft :* elemsVals :* extraIncr ← doScoped
-          return $ concat
-            [ dshiftSubst (nShft + csize elemsVals) $ dintroSubst extraIncr
-            , dshiftSubst nShft $ dbindsSubst $ elemsVals
+  𝓈 ← cpErr "all subst actions valid" $
+   concat ^$ mapMOn (iter xas) $ \ (wbO :* ParseSubstAction shfts elemss incrs) → do
+    let doScoped = do 
+          -- should only have zero or one shift
+          nShft ← cpErr "zero or one shift actions" $ cpFailEff $ tries
+            [ do view empty𝐼L shfts ; return 0
+            , view single𝐼L shfts
             ]
-        -- named
-        Some (w :* False) → do
-          nShft :* elemsVals :* extraIncr ← doScoped
-          return $ concat
-            [ nshiftSubst (w ↦ nShft + csize elemsVals) $ nintroSubst $ w ↦ extraIncr
-            , nshiftSubst (w ↦ nShft) $ nbindsSubst $ w ↦ elemsVals
+          -- elems should map names to only one element
+          elems ← cpErr "one bind per name (scoped)" $ cpFailEff $ mapMOn elemss $ view single𝐼L
+          -- all names of element bindings should have an index
+          elemsKeys ← cpErr "all variables must have index" $ cpFailEff $ exchange $ iter $ dkeys elems
+          let elemsVals = vec $ dvals elems
+          -- should only have zero or one increment
+          nIncr :* iIncr ← cpErr "zero or one incr actions" $ cpFailEff $ tries
+            [ do view empty𝐼L incrs ; return $ (nShft + csize elemsVals) :* 0
+            , view single𝐼L incrs
             ]
-        -- global
-        Some (w :* True ) → do
-          -- global can't have shifts
-          guard $ isEmpty shfts
-          -- global can't have incrs
-          guard $ isEmpty incrs
-          -- should only map each name to one element
-          elems ← failEff $ mapMOn elemss $ view single𝐼L
-          concat ^$ mapMOn (iter elems) $ \ (nO :* e) → do
-            -- having an index for the name doesn't make sense
-            guard $ shape noneL nO
-            return $ gbindSubst w e
+          -- element bindings should fill gap between shift and incr
+          cpErr "elements should fill gap" $ cpGuard $ elemsKeys ≡ range nShft nIncr
+          -- biding N elements creates a -N incr
+          -- target incr I = -N + E for extra incr E
+          -- so E = I+N
+          -- target incr I shouldn't be less than -N
+          -- so E should be nonnegative
+          -- let numElems = nIncr - nShft
+          when (iIncr < neg (intΩ64 $ csize elemsVals)) $ \ () →
+            cpErr "incr cannot be less than number of substitution elems" cpDie
+          let elemsVals' = mapOn elemsVals $ Trm_SSE ∘ SubstElem null ∘ Some
+          return $ nShft :* elemsVals' :* iIncr
+    case wbO of
+      -- nameless
+      None → do
+        nShft :* elemsVals :* incr  ← doScoped
+        return $ Subst $ SubstSpaced null $ (() :* None) ↦ SubstScoped nShft elemsVals incr
+        -- return $ concat
+        --   [ dshiftSubst (nShft + csize elemsVals) $ dintroSubst extraIncr
+        --   , dshiftSubst nShft $ dbindsSubst $ elemsVals
+        --   ]
+      -- named
+      Some (w :* False) → do
+        nShft :* elemsVals :* incr ← doScoped
+        return $ Subst $ SubstSpaced null $ (() :* Some w) ↦ SubstScoped nShft elemsVals incr
+        -- return $ concat
+        --   [ nshiftSubst (w ↦ nShft + csize elemsVals) $ nintroSubst $ w ↦ extraIncr
+        --   , nshiftSubst (w ↦ nShft) $ nbindsSubst $ w ↦ elemsVals
+        --   ]
+      -- global
+      Some (w :* True) → do
+        -- global can't have shifts
+        cpErr "global vars can't have shifts" $ cpGuard $ isEmpty shfts
+        -- global can't have incrs
+        cpErr "global vars can't have incrs" $ cpGuard $ isEmpty incrs
+        -- should only map each name to one element
+        elems ← cpErr "one bind per name (scoped)" $ cpFailEff $ mapMOn elemss $ view single𝐼L
+        concat ^$ mapMOn (iter elems) $ \ (nO :* e) → do
+          -- having an index for the name doesn't make sense
+          cpErr "global vars can't have index" $ cpGuard $ shape noneL nO
+          return $ gbindSubst w e
   void $ cpSyntax "}"
   return 𝓈
 
@@ -415,7 +426,7 @@ cpUVarNGMVar pE = do
   x ← cpVar
   concat
     [ do n ← ifNone 0 ^$ cpOptional $ do
-           void $ cpSyntax "^"
+           void $ cpSyntax ":"
            n ← cpNat64
            return n
          return $ nuvar n x

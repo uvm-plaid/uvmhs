@@ -204,15 +204,21 @@ pShaped {- msg -} sh = do
       pRecord t
       return x
 
+pDie ∷ Parser t a
+pDie = do
+  t ← pPluck
+  pFail (parserTokenContext t) $ parserTokenSuffix t
+
+pGuard ∷ 𝔹 → Parser t ()
+pGuard b = if b then skip else pDie
+
+pFailEff ∷ 𝑂 a → Parser t a
+pFailEff = elim𝑂 (const pDie) return
+
 pSatisfies ∷ {- 𝕊 → -} (t → 𝔹) → Parser t t
 pSatisfies {- msg -} p = pShaped {- msg -} $ \ x → case p x of
   True → Some x
   False → None
-
-pDie ∷ {- 𝕊 → -} Parser t a
-pDie {- msg -} = do
-  void $ pSatisfies {- msg -} $ const False
-  abort
 
 pToken ∷ (Eq t {- ,Pretty t -}) ⇒ t → Parser t t
 pToken l = pSatisfies {- (ppshow l) -} $ (≡) l

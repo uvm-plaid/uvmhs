@@ -157,7 +157,7 @@ ppRenderWith ∷ (RenderANSIM () → RenderANSIM ())
 ppRenderWith f₁ f₃ f₄ d = io_UNSAFE $ do
   b ← IORef.readIORef gv_PPRINT_COLOR
   let f₁' = appto f₁ $ if b then id else (∘) $ localL ansiEnvDoFormatL False
-  return $ appto d $
+  return $ appto (ppGroup d) $
     stringSS
     ∘ execRenderANSIWith f₁'
     ∘ summaryOContents
@@ -202,10 +202,10 @@ ppRenderNoFmtNarrow =
                id
 
 ppshow ∷ (Pretty a) ⇒ a → 𝕊
-ppshow = ppRenderNoFmtWide ∘ ppGroup ∘ pretty
+ppshow = ppRenderNoFmtWide ∘ pretty
 
 pprint ∷ (Pretty a) ⇒ a → IO ()
-pprint x = out $ ppRender $ ppGroup $ pretty x
+pprint x = out $ ppRender $ pretty x
 
 ppColorOn ∷ IO ()
 ppColorOn = IORef.writeIORef gv_PPRINT_COLOR True

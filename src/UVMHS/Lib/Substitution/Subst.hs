@@ -220,7 +220,7 @@ instance ∀ s e. (Ord s,Pretty s,Pretty e) ⇒ Pretty (Subst s e) where
         xD ∷ 𝑂 𝕎 → 𝕊 → Doc
         xD xO n = case xO of
           None → ppBdr n
-          Some x → concat [ppBdr (ppshow x),ppPun "@",ppBdr n]
+          Some x → concat [ppBdr (ppshow x),ppPun ":",ppBdr n]
     in 
     ppDict $ concat
       [ if csize 𝓈U ≡ 0 then null𝐼 else 

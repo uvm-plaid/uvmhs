@@ -328,7 +328,7 @@ main = cleanExit $ do
   -- pprint [ulc|λ y → y↑1|]
   $$(testModules False (Some 5) 1
     [ "UVMHS.Tests.Core"
-    -- , "UVMHS.Tests.Substitution"
+    , "UVMHS.Tests.Substitution"
     ])
   -- print $ ppULC [ulc| λ → 2 |]
   -- let 𝓈 = concat

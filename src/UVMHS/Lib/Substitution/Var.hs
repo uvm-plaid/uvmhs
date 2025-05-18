@@ -51,7 +51,7 @@ cpVarWS = do
 
 syntaxDVar ∷ LexerBasicSyntax
 syntaxDVar = concat
-  [ null { lexerBasicSyntaxPuns = pow ["|_","_|","⌊","⌋","&","∞"] }
+  [ null { lexerBasicSyntaxPuns = pow ["|_","_|","⌊","⌋","INF","∞"] }
   ]
 
 cpDVarRaw ∷ CParser TokenBasic ℕ64
@@ -60,7 +60,7 @@ cpDVarRaw = cpNat64
 cpDVarRawInf ∷ CParser TokenBasic (𝑂 ℕ64)
 cpDVarRawInf = concat
   [ Some ^$ cpDVarRaw
-  , do void $ concat $ map cpSyntax ["&","∞"]
+  , do void $ concat $ map cpSyntax ["INF","∞"]
        return None
   ]
 
@@ -136,7 +136,7 @@ syntaxSVar ∷ LexerBasicSyntax
 syntaxSVar = concat
   [ syntaxVar
   , syntaxDVar
-  , null { lexerBasicSyntaxPuns = pow ["^",":g"] }
+  , null { lexerBasicSyntaxPuns = pow ["INF","∞",":",":g"] }
   ]
 
 cpSVarNGVar ∷ CParser TokenBasic ((ℕ64 ∧ 𝕎) ∨ 𝕎)
@@ -144,7 +144,7 @@ cpSVarNGVar = do
   x ← cpVar
   concat
     [ do n ← ifNone 0 ^$ cpOptional $ do
-           void $ cpSyntax "^"
+           void $ cpSyntax ":"
            n ← cpNat64
            return n
          return $ Inl $ n :* x
@@ -157,10 +157,10 @@ cpSVarNGVarInf = do
   x ← cpVar
   concat
     [ do n ← ifNone (Some 0) ^$ cpOptional $ do
-           void $ cpSyntax "^"
+           void $ cpSyntax ":"
            concat
              [ Some ^$ cpNat64
-             , do void $ concat $ map cpSyntax ["&","∞"]
+             , do void $ concat $ map cpSyntax ["INF","∞"]
                   return None
              ]
          return $ Inl $ n :* x
@@ -210,7 +210,7 @@ ppDVar ∷ ℕ64 → Doc
 ppDVar n = concat [ppPun "⌊",pretty n,ppPun "⌋"]
 
 ppNVar ∷ Doc → Doc → Doc
-ppNVar n x = concat [x,ppPun "@",n]
+ppNVar n x = concat [x,ppPun ":",n]
 
 instance Pretty 𝕏 where
   pretty = \case

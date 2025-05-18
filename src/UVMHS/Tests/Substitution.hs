@@ -5,10 +5,72 @@ import UVMHS.Core
 import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Substitution
 import UVMHS.Lib.Testing
+import UVMHS.Lib.Annotated
+import UVMHS.Lib.Pretty
 
 import UVMHS.Lang.ULC
 
 -- substitutions --
+
+𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 0 (id @(𝕍 (SSubstElem () ())) $ null) 0 |] 
+                 [| "{}" |]
+𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 1 (id @(𝕍 (SSubstElem () ())) $ null) 0 |] 
+                 [| "{:0…:0↦[≡]}" |]
+𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 2 (id @(𝕍 (SSubstElem () ())) $ null) 0 |] 
+                 [| "{:0…:1↦[≡]}" |]
+𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 0 (id @(𝕍 (SSubstElem () ())) $ null) 1 |] 
+                 [| "{:0…:∞↦[+1]}" |]
+𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 0 (id @(𝕍 (SSubstElem () ())) $ null) $ neg 1 |] 
+                 [| "{:0…:∞↦[-1]}" |]
+𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ 
+                      SubstScoped 0 (id @(𝕍 (SSubstElem () ())) $ vec [Trm_SSE $ SubstElem null $ Some ()]) 0 
+                  |] 
+                 [| "{:0↦()}" |]
+𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ 
+                      SubstScoped 1 (id @(𝕍 (SSubstElem () ())) $ vec [Trm_SSE $ SubstElem null $ Some ()]) 3 
+                 |] 
+                 [| "{:0…:0↦[≡],:1↦(),:2…:∞↦[+3]}" |]
+
+𝔱 "subst:parse" [| [ulc| χ:m{} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") null |]
+𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:0↦[≡]} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* Some (var "x")) $ SubstScoped 1 null 0 
+                |]
+𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:1↦[≡]} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* Some (var "x")) $ SubstScoped 2 null 0 
+                |]
+𝔱 "subst:parse" [| [ulc| χ:m{x:0↦0} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* Some (var "x")) $ 
+                       let es = vec [Trm_SSE $ SubstElem null $ Some [ulc|0|]]
+                       in SubstScoped 0 es 0 
+                |]
+𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:∞↦[≡]} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* Some (var "x")) $ SubstScoped 0 null 0 
+                |]
+𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:∞↦[+1]} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* Some (var "x")) $ SubstScoped 0 null 1
+                |]
+𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:0↦[≡],x:1↦0,x:2…x:∞↦[+1]} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* Some (var "x")) $ 
+                       let es = vec [Trm_SSE $ SubstElem null $ Some [ulc|0|]]
+                       in SubstScoped 1 es 1 
+                |]
+
+-- 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:1↦[≡],x:1↦0,x:2↦1,x:3…x:∞↦[-2]} |] |] 
+--                 [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
+--                      (↦) (() :* Some (var "x")) $ 
+--                        let es = vec 
+--                              [ Trm_SSE $ SubstElem null $ Some [ulc|0|]
+--                              , Trm_SSE $ SubstElem null $ Some [ulc|1|]
+--                              ]
+--                        in SubstScoped 0 es (-1)
+--                 |]
 
 -- 𝔱 "subst:subst" [| [ulc| χ:m{} |] |] [| [ulc| 0 |] |]
 𝔱 "subst:subst" [| concat 
@@ -155,7 +217,7 @@ import UVMHS.Lang.ULC
 𝔱 "subst:fvs" [| fvs [ulc| λ x → (λ y → x) x y |] |] [| (↦♭) () $ pow𝑃 $ map (znuvar∘var) ["y"]     |]
 
 𝔱 "subst:metas" [| subst  (nbindSubst (var "x") [ulc| y |]) [ulc| x         |] |] [| Some [ulc| y         |] |]
-𝔱 "subst:metas" [| subst  (nbindSubst (var "x") [ulc| y |]) [ulc| λ y → x   |] |] [| Some [ulc| λ y → y^1 |] |]
+𝔱 "subst:metas" [| subst  (nbindSubst (var "x") [ulc| y |]) [ulc| λ y → x   |] |] [| Some [ulc| λ y → y:1 |] |]
 𝔱 "subst:metas" [| msubst (mbindSubst (var "x") [ulc| y |]) [ulc| x:m       |] |] [| Some [ulc| y         |] |]
 𝔱 "subst:metas" [| msubst (mbindSubst (var "x") [ulc| y |]) [ulc| λ y → x:m |] |] [| Some [ulc| λ y → y   |] |]
 

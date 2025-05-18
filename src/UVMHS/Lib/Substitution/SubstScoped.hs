@@ -194,15 +194,15 @@ bindSubstScoped es =
 ppSubstScoped ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → (𝕊 → Doc) → SubstScoped s e → Doc
 ppSubstScoped ιD xD (SubstScoped ρ es ι) = 
   let kvs = concat
-        [ if ρ ≡ null then null else single $
-            let k = concat [xD "0",ppPun "…",xD $ show𝕊 ρ] 
+        [ if ρ ≡ 0 then null else single $
+            let k = concat [xD "0",ppPun "…",xD $ show𝕊 $ ρ - 1] 
                 v = ppLit "[≡]"
             in k :* v
         , mapOn (withIndex @ℕ64 es) $ \ (n :* e) →
             let k = concat [xD $ show𝕊 $ ρ + n]
                 v = ppSSubstElemNamed ιD e
             in k :* v
-        , single $ 
+        , if ι ≡ 0 then null else single $ 
             let k = concat
                   [ xD $ show𝕊 $ ρ + csize es
                   , ppPun "…"
@@ -222,7 +222,7 @@ ppSubstScoped ιD xD (SubstScoped ρ es ι) =
   ppDict kvs
 
 ppSubstScopedNamed ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → 𝕊 → SubstScoped s e → Doc
-ppSubstScopedNamed ιD x = ppSubstScoped ιD $ (⧺) (concat [ppBdr x,ppPun "@"]) ∘ ppBdr
+ppSubstScopedNamed ιD x = ppSubstScoped ιD $ (⧺) (concat [ppBdr x,ppPun ":"]) ∘ ppBdr
 
 instance (Pretty e, Pretty s) ⇒ Pretty (SubstScoped s e) where
   pretty = ppSubstScopedNamed pretty ""

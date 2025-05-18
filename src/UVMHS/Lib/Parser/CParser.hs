@@ -105,7 +105,7 @@ cpOneOrMore ∷ (Ord t) ⇒ CParser t a → CParser t (𝐿 a)
 cpOneOrMore xM = do
   x ← xM
   xs ← cpMany xM
-  return $ x:&xs
+  return $ x :& xs
 
 cpManySepBy ∷ (Ord t) ⇒ CParser t () → CParser t a → CParser t (𝐿 a)
 cpManySepBy sepM xM = tries
@@ -116,8 +116,19 @@ cpManySepBy sepM xM = tries
 cpOneOrMoreSepBy ∷ (Ord t) ⇒ CParser t () → CParser t a → CParser t (𝐿 a)
 cpOneOrMoreSepBy sepM xM = do
   x ← xM
-  xs ← map snd ^$ cpMany $ sepM ⧆ xM
+  xs ← cpMany $ do
+    void sepM 
+    xM
   return $ x :& xs
+
+cpDie ∷ CParser t a
+cpDie = toCParser pDie
+
+cpGuard ∷ 𝔹 → CParser t ()
+cpGuard = toCParser ∘ pGuard
+
+cpFailEff ∷ 𝑂 a → CParser t a
+cpFailEff = toCParser ∘ pFailEff
 
 ----------------------------
 -- Basic Language Parsing --
