@@ -5,6 +5,7 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
+import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.Var
 import UVMHS.Lib.Substitution.Subst
@@ -18,6 +19,11 @@ data 𝕐 s e =
   | M_UVar 𝕎 (Subst s e)  -- meta variable
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
+
+wfUVar ∷ (Ord s) ⇒ 𝕐 s e → 𝔹
+wfUVar = \case
+  S_UVar _x → True
+  M_UVar _w 𝓈 → wfSubst 𝓈
 
 duvarL ∷ 𝕐 s e ⌲ ℕ64
 duvarL = d_SVarL ⊚ s_UVarL
@@ -74,3 +80,4 @@ instance (Pretty e,Pretty s,Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (𝕐 s e) where
       [ (:*) one $ \ () → S_UVar ^$ fuzzy
       , (:*) d $ \ () → return M_UVar ⊡ fuzzy ⊡ fuzzyRec fuzzy
       ]
+

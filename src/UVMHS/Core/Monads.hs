@@ -10,6 +10,10 @@ import UVMHS.Core.Transformers
 import qualified Prelude as HS
 
 newtype MU m = MU { unMU ∷ m () }
+
+onMU ∷ (m () → m ()) → MU m → MU m
+onMU f = MU ∘ f ∘ unMU
+
 instance (Return m) ⇒ Null (MU m) where null = MU $ return ()
 instance (Bind m) ⇒ Append (MU m) where x ⧺ y = MU $ unMU x ≫ unMU y
 instance (Monad m) ⇒ Monoid (MU m)

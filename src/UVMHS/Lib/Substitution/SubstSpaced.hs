@@ -4,6 +4,7 @@ import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Shrinky
+import UVMHS.Lib.TreeNested
 
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstScoped
@@ -66,10 +67,18 @@ data SubstSpaced sU sS e = SubstSpaced
   deriving (Eq,Ord,Show)
 makeLenses ''SubstSpaced
 
-canonSubstSpaced ∷ (Ord sS,Eq e) ⇒ (sS → e ⌲ ℕ64) → (sS ⇰ ℕ64 → e → 𝑂 e) → SubstSpaced sU sS e → SubstSpaced sU sS e
-canonSubstSpaced ℓvar substE (SubstSpaced 𝓈U 𝓈S) = 
-  let 𝓈U' = map (canonSubstElem substE) 𝓈U
-      𝓈S' = kmap (\ s → canonSubstScoped (ℓvar s) substE) 𝓈S
+wfSubstSpaced ∷ (Ord sS) ⇒ SubstSpaced sU sS e → 𝔹
+wfSubstSpaced (SubstSpaced _𝓈U 𝓈S) = and $ map wfSubstScoped $ dvals 𝓈S
+
+canonSubstSpaced ∷ (Ord sS,Eq e) ⇒ (sS → e ⌲ ℕ64) → (sS ⇰ ℕ64 → e → 𝑂 e) → (e → e) → SubstSpaced sU sS e → SubstSpaced sU sS e
+canonSubstSpaced ℓvar substE canonE (SubstSpaced 𝓈U 𝓈S) = 
+  let 𝓈U' = map (canonSubstElem substE canonE) 𝓈U
+      𝓈S' = okmapOn 𝓈S $ \ s 𝓈 → 
+        let 𝓈' = canonSubstScoped (ℓvar s) substE canonE 𝓈
+        in
+        if isNullSubstScoped 𝓈'
+        then None
+        else Some 𝓈'
   in SubstSpaced 𝓈U' 𝓈S'
 
 -- Alter a substitution to "protect" the first n nameless indices. This
@@ -104,9 +113,6 @@ shiftSubstSpaced ιs (SubstSpaced 𝓈U 𝓈S) =
 --     , 2 ↦ 3 
 --     , …
 --     ]
-zintroSubstSpaced ∷ sS ⇰ ℤ64 → SubstSpaced sU sS e
-zintroSubstSpaced = SubstSpaced null ∘ map zintroSubstScoped
-
 introSubstSpaced ∷ sS ⇰ ℕ64 → SubstSpaced sU sS e
 introSubstSpaced = SubstSpaced null ∘ map introSubstScoped
 
@@ -186,7 +192,9 @@ appendSubstSpaced ℓvars substE 𝓈P₂ 𝓈P₁ =
   let SubstSpaced 𝓈U₁ 𝓈S₁ = 𝓈P₁
       SubstSpaced 𝓈U₂ 𝓈S₂ = 𝓈P₂
       𝓈Uᵣ = map (substSubstElemSpaced ℓvars substE 𝓈P₂) 𝓈U₁ ⩌ 𝓈U₂
-      𝓈Sᵣ= dkunionByOn 𝓈S₁ 𝓈S₂ $ \ s 𝓈₁ 𝓈₂ →
+      𝓈S₁' = kmapOn 𝓈S₁ $ \ s 𝓈 → 
+        substSubstScoped (ℓvars s) (substSpacedExtended ℓvars substE 𝓈P₂) 𝓈
+      𝓈Sᵣ= dunionByOn 𝓈S₁' 𝓈S₂ $ \ 𝓈₁ 𝓈₂ →
         if
         | isNullSubstScoped 𝓈₁ → 𝓈₂
         | isNullSubstScoped 𝓈₂ → 𝓈₁
@@ -197,17 +205,21 @@ appendSubstSpaced ℓvars substE 𝓈P₂ 𝓈P₁ =
                 𝔰₂ = intΩ64 $ csize es₂
                 ρ₁ = intΩ64 ρ̇₁
                 ρ₂ = intΩ64 ρ̇₂
+                -- new shift is min of shifts
                 ρ̇  = ρ̇₁⊓ρ̇₂
                 ρ  = intΩ64 ρ̇
+                -- new incr is sum of incrs
                 ι  = ι₁+ι₂
+                -- new |es| is ???
                 𝔰  = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
                 δ  = ρ
                 es = vecF (natΩ64 𝔰) $ \ ṅ →
-                  let n = intΩ64 ṅ + δ in
+                  let n = intΩ64 ṅ + δ
+                  in
                   if
                   | n < ρ₁⊓(ρ₂+𝔰₂) → es₂ ⋕! natΩ64 (n-ρ₂)
                   | n < ρ₁         → Var_SSE $ natΩ64 $ n+ι₂
-                  | n < ρ₁+𝔰₁      → substSSubstElemSpaced ℓvars substE 𝓈P₂ s $ es₁ ⋕! natΩ64 (n-ρ₁)
+                  | n < ρ₁+𝔰₁      → es₁ ⋕! natΩ64 (n-ρ₁)
                   | n < ρ₂-ι₁      → Var_SSE $ natΩ64 $ n+ι₁
                   | n < ρ₂+𝔰₂-ι₁   → es₂ ⋕! natΩ64 (n+ι₁-ρ₂)
                   | otherwise      → error "bad"
@@ -246,6 +258,5 @@ instance (Ord sU,Ord sS,Fuzzy sU,Fuzzy sS,Fuzzy e) ⇒ Fuzzy (SubstSpaced sU sS 
 
 instance (Ord sU,Ord sS,Shrinky e) ⇒ Shrinky (SubstSpaced sU sS e) where
   shrink (SubstSpaced 𝓈U 𝓈S) = do
-    𝓈U' ← shrink 𝓈U
-    𝓈S' ← shrink 𝓈S
+    (𝓈U',𝓈S') ← shrink (𝓈U,𝓈S)
     return $ SubstSpaced 𝓈U' 𝓈S'

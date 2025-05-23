@@ -3,6 +3,7 @@ module UVMHS.Lib.Substitution.Substy where
 import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser
+import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstScoped
@@ -126,12 +127,17 @@ msubst 𝓈 = snd ∘ evalSubstM (MetaSubst_SA 𝓈) ∘ substy
 -- SUBST MONOID --
 ------------------
 
-canonSubst ∷ (Ord s,Eq e,Substy s e e) ⇒ Subst s e → Subst s e
-canonSubst 𝓈 = 
+canonSubst ∷ (Ord s,Eq e,Substy s e e) ⇒ (e → e) → Subst s e → Subst s e
+canonSubst canonE 𝓈 = 
   let introE ιs = subst $ concat $ mapOn (iter ιs) $ \ (s :* xO :* n) → case xO of
-        None → sdintroSubst $ s ↦ n
-        Some x → snintroSubst $ s ↦ x ↦ n
-  in canonSubstWith (curry svarScopeL) introE 𝓈
+        None → introDSSubst s n
+        Some x → introNSSubst s x n
+  in canonSubstWith (curry svarScopeL) introE canonE 𝓈
+
+canonUVar ∷ (Ord s,Eq e,Substy s e e) ⇒ (e → e) → 𝕐 s e → 𝕐 s e
+canonUVar canonE = \case
+  S_UVar x → S_UVar x
+  M_UVar x 𝓈 → M_UVar x $ canonSubst canonE 𝓈
 
 nullSubst ∷ Subst s e
 nullSubst = Subst $ SubstSpaced null null
@@ -149,13 +155,13 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 
 substyDBdr ∷ (Ord s,Ord e) ⇒ s → SubstyM s e ()
 substyDBdr s = umodifyEnv $ compose
-  [ alter subst_SAL $ alter substActionSubstL $ sdshiftSubst $ s ↦ 1
+  [ alter subst_SAL $ alter substActionSubstL $ shiftDSSubst s 1
   , alter freeVars_SAL $ alter freeVarsActionScopeL $ (⧺) $ (s :* None) ↦ 1
   ]
 
 substyNBdr ∷ (Ord s,Ord e) ⇒ s → 𝕎 → SubstyM s e ()
 substyNBdr s x = umodifyEnv $ compose
-  [ alter subst_SAL $ alter substActionSubstL $ snshiftSubst $ s ↦ x ↦ 1
+  [ alter subst_SAL $ alter substActionSubstL $ shiftNSSubst s x 1
   , alter freeVars_SAL $ alter freeVarsActionScopeL $ (⧺) $ (s :* Some x) ↦ 1
   ]
 
@@ -169,13 +175,13 @@ substyBdr s mkVar x = do
     Some ID_RA → skip
     Some AllNameless_RA → 
       umodifyEnv $ alter subst_SAL $ alter substActionSubstL $ flip (⧺) $ concat
-        [ snintroSubst $ s ↦ x ↦ 1
-        , snbindSubst s x $ mkVar $ duvar 0
+        [ introNSSubst s x 1
+        , bindNSSubst s x $ mkVar $ duvar 0
         ]
     Some AllNamed_RA → 
       umodifyEnv $ alter subst_SAL $ alter substActionSubstL $ flip (⧺) $ concat
-        [ sdintroSubst $ s ↦ 1
-        , sdbindSubst s $ mkVar $ znuvar x
+        [ introDSSubst s 1
+        , bindDSSubst s $ mkVar $ znuvar x
         ]
 
 -- ℕ64 parameter `n` is the de bruijn level/number
@@ -233,17 +239,12 @@ substyMVar s mkVar x 𝓈₀ = do
       return $ mkVar x 𝓈₀
     Subst_SA 𝓈A → do
       let 𝓈 = substActionSubst 𝓈A
-          -- This versions makes more intuitive sense, in that the incoming substitution action
-          -- should have the final word? (This assumes the append does RHS before LHS)
-          𝓈' = 𝓈 ⧺ 𝓈₀
-          -- This version seems to work better:
-          -- 𝓈' = 𝓈₀ ⧺ 𝓈
-      return $ mkVar x 𝓈'
+      return $ mkVar x $ 𝓈 ⧺ 𝓈₀
     MetaSubst_SA (MetaSubst gs) →
       case gs ⋕? (s :* x) of
         None → return $ mkVar x 𝓈₀
         Some (SubstElem ιs eO) →
-          failEff $ subst (Subst (introSubstSpaced ιs) ⧺ 𝓈₀) *$ eO
+          failEff $ subst (𝓈₀ ⧺ Subst (introSubstSpaced ιs)) *$ eO
 
 -- subst (𝓈₁ ∘ 𝓈₂) e ≡ subst 𝓈₁ (subst 𝓈₂ e)
 --
@@ -285,7 +286,7 @@ syntaxUVar = concat
   , syntaxSVar
   , null { lexerBasicSyntaxPuns = pow 
              [ ",","...","…"
-             , "{","}","[","]","|_","⌊","_|","⌋"
+             , "{","}","[","]"
              , "|->","↦"
              , ":",":g",":m"
              , "==","≡","+"
@@ -322,7 +323,7 @@ cpSubst pE = cpNewContext "subst" $ do
   let pSubstIncr ∷ 𝕏 → CParser TokenBasic (ParseSubstActions e)
       pSubstIncr x₁ = do
         void $ concat $ map cpSyntax ["...","…"]
-        xxw₂ ← cpSVarRawInf
+        xxw₂ ← cpSVarInf
         void $ concat $ map cpSyntax ["|->","↦"]
         void $ concat $ map cpSyntax ["["]
         i ← cpErr "valid subst shift/incr update" $ concat
@@ -354,7 +355,7 @@ cpSubst pE = cpNewContext "subst" $ do
           G_SVar   w → Some (w :* True ) ↦ parseSubstActionElem None     e
   void $ cpSyntax "{"
   xas ← concat ^$ cpManySepBy (void $ cpSyntax ",") $ do
-    x ← cpSVarRaw
+    x ← cpSVar
     concat 
       [ pSubstIncr x
       , pSubstElem x
@@ -394,18 +395,10 @@ cpSubst pE = cpNewContext "subst" $ do
       None → do
         nShft :* elemsVals :* incr  ← doScoped
         return $ Subst $ SubstSpaced null $ (() :* None) ↦ SubstScoped nShft elemsVals incr
-        -- return $ concat
-        --   [ dshiftSubst (nShft + csize elemsVals) $ dintroSubst extraIncr
-        --   , dshiftSubst nShft $ dbindsSubst $ elemsVals
-        --   ]
       -- named
       Some (w :* False) → do
         nShft :* elemsVals :* incr ← doScoped
         return $ Subst $ SubstSpaced null $ (() :* Some w) ↦ SubstScoped nShft elemsVals incr
-        -- return $ concat
-        --   [ nshiftSubst (w ↦ nShft + csize elemsVals) $ nintroSubst $ w ↦ extraIncr
-        --   , nshiftSubst (w ↦ nShft) $ nbindsSubst $ w ↦ elemsVals
-        --   ]
       -- global
       Some (w :* True) → do
         -- global can't have shifts
@@ -414,27 +407,25 @@ cpSubst pE = cpNewContext "subst" $ do
         cpErr "global vars can't have incrs" $ cpGuard $ isEmpty incrs
         -- should only map each name to one element
         elems ← cpErr "one bind per name (scoped)" $ cpFailEff $ mapMOn elemss $ view single𝐼L
-        concat ^$ mapMOn (iter elems) $ \ (nO :* e) → do
+        wes ← assoc𝐷 ^$ mapMOn (iter elems) $ \ (nO :* e) → do
           -- having an index for the name doesn't make sense
           cpErr "global vars can't have index" $ cpGuard $ shape noneL nO
-          return $ gbindSubst w e
+          return $ (:*) (() :* w) $ SubstElem null $ Some e
+        return $ Subst $ SubstSpaced wes null
   void $ cpSyntax "}"
   return 𝓈
 
 cpUVarNGMVar ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
 cpUVarNGMVar pE = do
-  x ← cpVar
+  w ← cpVar
   concat
-    [ do n ← ifNone 0 ^$ cpOptional $ do
-           void $ cpSyntax ":"
-           n ← cpNat64
-           return n
-         return $ nuvar n x
-    , do void $ cpSyntax ":g"
-         return $ guvar x
+    [ do nO ← cpSVarNGVarTail
+         return $ case nO of
+           Some n → nuvar n w
+           None   → guvar w
     , do void $ cpSyntax ":m"
          s ← ifNone null ^$ cpOptional $ cpSubst pE
-         return $ M_UVar x s
+         return $ M_UVar w s
    ]
 
 cpUVar ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
@@ -450,3 +441,10 @@ cpUVarRaw pE = concat
        return $ duvar n
   , cpUVarNGMVar pE
   ]
+
+instance (Ord s,Shrinky e) ⇒ Shrinky (𝕐 s e) where
+  shrink = \case
+    S_UVar x → S_UVar ^$ shrink x
+    M_UVar x 𝓈 → do
+      (x',𝓈') ← shrink (x,𝓈)
+      return $ M_UVar x' 𝓈'

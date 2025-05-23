@@ -17,6 +17,7 @@ module UVMHS
   , module UVMHS.Lib.TreeAnnote
   , module UVMHS.Lib.TreeNested
   , module UVMHS.Lib.Window
+  , module UVMHS.Lib.Shrinky
   ) where
 
 import UVMHS.Core
@@ -38,3 +39,4 @@ import UVMHS.Lib.Testing
 import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.TreeNested
 import UVMHS.Lib.Window
+import UVMHS.Lib.Shrinky

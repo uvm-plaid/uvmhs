@@ -5,6 +5,7 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
+import UVMHS.Lib.Shrinky
 
 -- =============== --
 -- SIMPLE VARIABLE --
@@ -51,7 +52,7 @@ cpVarWS = do
 
 syntaxDVar ∷ LexerBasicSyntax
 syntaxDVar = concat
-  [ null { lexerBasicSyntaxPuns = pow ["|_","_|","⌊","⌋","INF","∞"] }
+  [ null { lexerBasicSyntaxPuns = pow ["INF","∞"] }
   ]
 
 cpDVarRaw ∷ CParser TokenBasic ℕ64
@@ -66,10 +67,14 @@ cpDVarRawInf = concat
 
 cpDVar ∷ CParser TokenBasic ℕ64
 cpDVar = do 
-  void $ concat $ map cpSyntax ["|_","⌊"]
-  n ← cpDVar
-  void $ concat $ map cpSyntax ["_|","⌋"]
-  return n
+  void $ cpSyntax ":"
+  cpDVarRaw
+
+cpDVarInf ∷ CParser TokenBasic (𝑂 ℕ64)
+cpDVarInf = do
+  void $ cpSyntax ":"
+  cpDVarRawInf
+
 
 ---------------------
 -- PRETTY PRINTING --
@@ -89,6 +94,9 @@ instance Fuzzy 𝕎 where
   fuzzy = do
     nO ← fuzzy
     return $ 𝕎 nO "x"
+
+instance Shrinky 𝕎 where
+  shrink = const null
 
 -- =============== --
 -- SCOPED VARIABLE --
@@ -139,34 +147,47 @@ syntaxSVar = concat
   , null { lexerBasicSyntaxPuns = pow ["INF","∞",":",":g"] }
   ]
 
+cpSVarNGVarTail ∷ CParser TokenBasic (𝑂 ℕ64)
+cpSVarNGVarTail = concat
+  [ do n ← ifNone 0 ^$ cpOptional $ do
+         void $ cpSyntax ":"
+         n ← cpNat64
+         return n
+       return $ Some n
+  , do void $ cpSyntax ":g"
+       return None
+  ]
+
 cpSVarNGVar ∷ CParser TokenBasic ((ℕ64 ∧ 𝕎) ∨ 𝕎)
 cpSVarNGVar = do
-  x ← cpVar
-  concat
-    [ do n ← ifNone 0 ^$ cpOptional $ do
-           void $ cpSyntax ":"
-           n ← cpNat64
-           return n
-         return $ Inl $ n :* x
-    , do void $ cpSyntax ":g"
-         return $ Inr x
-    ]
+  w ← cpVar
+  nO ← cpSVarNGVarTail
+  return $ case nO of
+    Some n → Inl $ n :* w
+    None → Inr w
+
+cpSVarNGVarInfTail ∷ CParser TokenBasic (𝑂 (𝑂 ℕ64))
+cpSVarNGVarInfTail = concat
+  [ do nO ← ifNone (Some 0) ^$ cpOptional $ do
+         void $ cpSyntax ":"
+         concat
+           [ Some ^$ cpNat64
+           , do void $ concat $ map cpSyntax ["INF","∞"]
+                return None
+           ]
+       return $ Some nO
+  , do void $ cpSyntax ":g"
+       return $ None
+  ]
 
 cpSVarNGVarInf ∷ CParser TokenBasic ((𝑂 ℕ64 ∧ 𝕎) ∨ 𝕎)
 cpSVarNGVarInf = do
-  x ← cpVar
-  concat
-    [ do n ← ifNone (Some 0) ^$ cpOptional $ do
-           void $ cpSyntax ":"
-           concat
-             [ Some ^$ cpNat64
-             , do void $ concat $ map cpSyntax ["INF","∞"]
-                  return None
-             ]
-         return $ Inl $ n :* x
-    , do void $ cpSyntax ":g"
-         return $ Inr x
-    ]
+  w ← cpVar
+  nOO ← cpSVarNGVarInfTail
+  return $ case nOO of
+    Some (Some n) → Inl $ Some n :* w
+    Some None     → Inl $ None :* w
+    None          → Inr w
 
 cpSVarRaw ∷ CParser TokenBasic 𝕏
 cpSVarRaw = concat
@@ -202,12 +223,27 @@ cpSVar = concat
          Inr w        → G_SVar w
   ]
 
+cpSVarInf ∷ CParser TokenBasic (𝕏 ∨ 𝑂 𝕎)
+cpSVarInf = concat
+  [ do nO ← cpDVarInf
+       return $ case nO of
+         None → Inr None
+         Some n → Inl $ D_SVar n
+  , do nww ← cpSVarNGVarInf
+       return $ case nww of
+         Inl (nO :* w) → case nO of
+           None → Inr $ Some w
+           Some n → Inl $ N_SVar n w
+         Inr w → Inl $ G_SVar w
+
+  ]
+
 ---------------------
 -- PRETTY PRINTING --
 ---------------------
 
-ppDVar ∷ ℕ64 → Doc
-ppDVar n = concat [ppPun "⌊",pretty n,ppPun "⌋"]
+ppDVar ∷ 𝕊 → Doc
+ppDVar n = concat [ppPun ":",ppString n]
 
 ppNVar ∷ Doc → Doc → Doc
 ppNVar n x = concat [x,ppPun ":",n]
@@ -215,7 +251,7 @@ ppNVar n x = concat [x,ppPun ":",n]
 instance Pretty 𝕏 where
   pretty = \case
     N_SVar n x → if n ≡ 0 then pretty x else ppNVar (pretty n) $ pretty x
-    D_SVar n → ppDVar n
+    D_SVar n → ppDVar $ show𝕊 n
     G_SVar x → concat [pretty x,ppPun ":g"]
 
 -------------
@@ -228,6 +264,14 @@ instance Fuzzy 𝕏 where
     , (:*) one $ \ () → return N_SVar ⊡ fuzzy ⊡ fuzzy
     , (:*) one $ \ () → G_SVar ^$ fuzzy
     ]
+
+instance Shrinky 𝕏 where
+  shrink = \case
+    D_SVar n → D_SVar ^$ shrink n
+    N_SVar n w → do
+      n' ← shrink n
+      return $ N_SVar n' w
+    G_SVar _ → null
 
 -- ======== --
 -- SVarView --

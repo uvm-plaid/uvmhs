@@ -530,16 +530,16 @@ ppList ∷ (ToIter Doc t) ⇒ t → Doc
 ppList = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ iter
 
 ppLazyList ∷ (ToIter Doc t) ⇒ t → Doc
-ppLazyList xs = ppApp (ppString "LL") [ppList xs]
+ppLazyList xs = ppApp (ppCon "LL") [ppList xs]
 
 ppIter ∷ (ToIter Doc t) ⇒ t → Doc
-ppIter xs = ppApp (ppString "𝐼") [ppList xs]
+ppIter xs = ppApp (ppCon "𝐼") [ppList xs]
 
 ppIterC ∷ (ToIter Doc t) ⇒ t → Doc
-ppIterC xs = ppApp (ppString "𝐼C") [ppList xs]
+ppIterC xs = ppApp (ppCon "𝐼C") [ppList xs]
 
 ppSeq ∷ (ToIter Doc t) ⇒ t → Doc
-ppSeq xs = ppApp (ppString "𝑄") [ppList xs]
+ppSeq xs = ppApp (ppCon "𝑄") [ppList xs]
 
 ppSet ∷ (ToIter Doc t) ⇒ t → Doc
 ppSet = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") ∘ iter
@@ -548,16 +548,16 @@ ppDict ∷ (ToIter (Doc ∧ Doc) t) ⇒ t → Doc
 ppDict = ppRecord (ppPun "↦") ∘ iter
 
 ppVec ∷ (ToIter Doc t) ⇒ t → Doc
-ppVec xs = ppApp (ppString "𝕍") [ppList xs]
+ppVec xs = ppApp (ppCon "𝕍") [ppList xs]
 
 ppVecS ∷ (ToIter Doc t) ⇒ t → Doc
-ppVecS xs = ppApp (ppString "𝕍S") [ppList xs]
+ppVecS xs = ppApp (ppCon "𝕍S") [ppList xs]
 
 ppUVec ∷ (ToIter Doc t) ⇒ t → Doc
-ppUVec xs = ppApp (ppString "𝕌") [ppList xs]
+ppUVec xs = ppApp (ppCon "𝕌") [ppList xs]
 
 ppUVecS ∷ (ToIter Doc t) ⇒ t → Doc
-ppUVecS xs = ppApp (ppString "𝕌S") [ppList xs]
+ppUVecS xs = ppApp (ppCon "𝕌S") [ppList xs]
 
 ppAddNull ∷ AddNull Doc → Doc
 ppAddNull = \case

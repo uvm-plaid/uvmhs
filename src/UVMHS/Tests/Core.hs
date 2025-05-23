@@ -53,6 +53,20 @@ import UVMHS.Lib.Testing
 
 𝔱 "core:iter:filterM" [| id @(𝐼 ℕ ∧ 𝐼 ℕ) $ filterM (\ x → do tell (single x) ; return $ x < 2) $ iter [0,1,2] |] [| iter [0,1,2] :* iter [0,1] |]
 
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 1  |] [| iter [0,1,2,3,4,5,6,7,8,9] |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 2  |] [| iter [0,2,4,6,8]           |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 3  |] [| iter [0,3,6,9]             |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 4  |] [| iter [0,4,8]               |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 5  |] [| iter [0,5]                 |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 6  |] [| iter [0,6]                 |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 7  |] [| iter [0,7]                 |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 8  |] [| iter [0,8]                 |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 9  |] [| iter [0,9]                 |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 10 10 |] [| iter [0]                   |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 0  1  |] [| iter []                    |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 0  2  |] [| iter []                    |]
+𝔱 "core:iter:uptoStep" [| id @(𝐼 ℕ64) $ uptoStep 0  3  |] [| iter []                    |]
+
 -----------
 -- OTHER --
 -----------

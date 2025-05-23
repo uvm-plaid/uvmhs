@@ -320,9 +320,7 @@ tries ∷ (Monad m,MonadFail m,ToIter (m a) t) ⇒ t → m a
 tries = foldr abort (⎅)
 
 guard ∷ (Monad m,MonadFail m) ⇒ 𝔹 → m ()
-guard = \case
-  True → return ()
-  False → abort
+guard b = if b then skip else abort
 
 oneOrMoreSplit ∷ (Monad m,MonadFail m) ⇒ m a → m (a ∧ 𝐿 a)
 oneOrMoreSplit aM = do
@@ -353,6 +351,9 @@ throw𝑂 ∷ (Monad m,MonadError e m) ⇒ e → 𝑂 a → m a
 throw𝑂 e = elim𝑂 (const $ throw e) return
 
 -- Nondet --
+
+mzeroIfNot ∷ (Monad m,MonadNondet m) ⇒ 𝔹 → m ()
+mzeroIfNot b = if b then skip else mzero
 
 mconcat ∷ (MonadNondet m,ToIter (m a) t) ⇒ t → m a
 mconcat = foldr mzero (⊞)

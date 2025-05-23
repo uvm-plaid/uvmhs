@@ -4,6 +4,7 @@ import UVMHS.Core
 
 import System.Random as R
 
+
 --------
 -- RG --
 --------
@@ -17,6 +18,9 @@ instance MonadRand IO where
   rng f = R.getStdRandom $ \ ℊ →
     let RG ℊ' :* x = runState (RG ℊ) f
     in (x,ℊ')
+
+rngSeed ∷ ℕ64 → IO ()
+rngSeed = R.setStdGen ∘ R.mkStdGen ∘ tohs ∘ frBitsℤ64
 
 wrapPrimRandu ∷ (R.StdGen → (a,R.StdGen)) → State RG a
 wrapPrimRandu f = do

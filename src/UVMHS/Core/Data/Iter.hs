@@ -3,7 +3,7 @@ module UVMHS.Core.Data.Iter where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 
-import UVMHS.Core.Data.Arithmetic ()
+import UVMHS.Core.Data.Arithmetic
 import UVMHS.Core.Data.Choice
 import UVMHS.Core.Data.List ()
 import UVMHS.Core.Data.String
@@ -278,6 +278,11 @@ andf fs x = and $ map (appto x) $ iter fs
 and ∷ (ToIter 𝔹 t) ⇒ t → 𝔹
 and = foldk True $ \ b₁ b₂ k → if b₁ then k b₂ else False
 
+eqs ∷ (Eq a,ToIter a t) ⇒ t → 𝔹
+eqs xs = case un𝑆 (stream xs) () of
+  None → True
+  Some (x :* xs') → and $ map ((≡) x) xs'
+
 count ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → n
 count = fold zero $ const succ
 
@@ -312,11 +317,14 @@ build n₀ x₀ gen = 𝐼 HS.$ \ yield i₀ done →
             loop (succ n) (gen x) i'
   in loop zero x₀ i₀
 
-range ∷ (Eq n,Zero n,One n,Plus n,Minus n) ⇒ n → n → 𝐼 n
+range ∷ (Eq n,Additive n,One n,Minus n) ⇒ n → n → 𝐼 n
 range lb ub = build (ub - lb) lb succ
 
-upto ∷ (Eq n,Zero n,One n,Plus n) ⇒ n → 𝐼 n
+upto ∷ (Eq n,Additive n,One n) ⇒ n → 𝐼 n
 upto n = build n zero succ
+
+uptoStep ∷ ℕ64 → ℕ64 → 𝐼 ℕ64
+uptoStep n step = map ((×) step) $ upto $ natΩ64 $ ceiling $ dbl n / dbl step
 
 mapState𝐼 ∷ ∀ t a b s. (ToIter a t) ⇒ s → (a → s → (s ∧ b)) → t → 𝐼 b
 mapState𝐼 s₀ f xs₀ = 𝐼 HS.$ \ (yield ∷ b → i → (i → i) → i) (i₀ ∷ i) (done ∷ i → i) →

@@ -8,6 +8,7 @@ import UVMHS.Lib.Annotated
 import UVMHS.Lib.Substitution
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
+import UVMHS.Lib.Shrinky
 import UVMHS.Lib.THLiftInstances ()
 
 import qualified Language.Haskell.TH.Syntax as TH
@@ -19,6 +20,9 @@ import Control.Monad.Fail as HS
 newtype ULCExp 𝒸 = ULCExp { unULCExp ∷ 𝐴 𝒸 (ULCExp_R 𝒸) }
   deriving (Eq,Generic,Ord,Show)
 
+onULCExp ∷ (𝐴 𝒸 (ULCExp_R 𝒸) → 𝐴 𝒸' (ULCExp_R 𝒸')) → ULCExp 𝒸 → ULCExp 𝒸'
+onULCExp f = ULCExp ∘ f ∘ unULCExp
+
 data ULCExp_R 𝒸 =
     Var_ULC (𝕐 () (ULCExp 𝒸))
   | Lam_ULC (𝑂 𝕎) (ULCExp 𝒸)
@@ -28,6 +32,18 @@ makePrisms ''ULCExp_R
 
 type ULCExpSrc = ULCExp (𝑃 SrcCxt)
 type ULCExpRaw = ULCExp ()
+
+wfULC ∷ ULCExp 𝒸 → 𝔹
+wfULC = pipe (aval ∘ unULCExp) $ \case
+  Var_ULC y → wfUVar y
+  Lam_ULC _wO e → wfULC e
+  App_ULC e₁ e₂ → and [wfULC e₁,wfULC e₂]
+
+canonULC ∷ (Null 𝒸) ⇒ ULCExp 𝒸 → ULCExp 𝒸
+canonULC = onULCExp $ mapAVal $ \case
+  Var_ULC x → Var_ULC $ canonUVar canonULC x
+  Lam_ULC xO e → Lam_ULC xO $ canonULC e
+  App_ULC e₁ e₂ → App_ULC (canonULC e₁) $ canonULC e₂
 
 syntaxULC ∷ LexerBasicSyntax
 syntaxULC = concat
@@ -70,6 +86,21 @@ instance Pretty (ULCExp_R 𝒸) where
       , single𝐼 $ ppKey "→"
       ]
     App_ULC e₁ e₂ → ppInfl pAPP (ppSpace one) (pretty e₁) $ pretty e₂
+
+instance Shrinky (ULCExp 𝒸) where
+  shrink (ULCExp (𝐴 𝒸 e)) = ULCExp ∘ 𝐴 𝒸 ^$ shrink e
+instance Shrinky (ULCExp_R 𝒸) where
+  shrink = \case
+    Var_ULC x → Var_ULC ^$ shrink x
+    Lam_ULC xO e → concat
+      [ single $ aval $ unULCExp e
+      , do (xO',e') ← shrink (xO,e) ; return $ Lam_ULC xO' e'
+      ]
+    App_ULC e₁ e₂ → concat
+      [ single $ aval $ unULCExp e₁
+      , single $ aval $ unULCExp e₂
+      , do (e₁',e₂') ← shrink (e₁,e₂) ; return $ App_ULC e₁' e₂'
+      ]
 
 deriving instance (TH.Lift 𝒸) ⇒ TH.Lift (ULCExp 𝒸)
 deriving instance (TH.Lift 𝒸) ⇒ TH.Lift (ULCExp_R 𝒸)

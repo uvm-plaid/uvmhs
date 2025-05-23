@@ -72,18 +72,20 @@ lookupSubstScoped (SubstScoped ρ es ι) n =
 interpSubstScoped ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → ℕ64 → 𝑂 e
 interpSubstScoped ℓvar substE 𝓈 n = interpSSubstElem ℓvar substE $ lookupSubstScoped 𝓈 n
 
-canonSubstScoped ∷ ∀ s e. (Eq s,Eq e) ⇒ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → SubstScoped s e
-canonSubstScoped ℓvar substE = canonElems ∘ collapseNullShift ∘ expandIncs ∘ expandShifts
+wfSubstScoped ∷ SubstScoped s e → 𝔹
+wfSubstScoped (SubstScoped _ρ es ι) = ι ≥ neg (intΩ64 $ csize es)
+
+canonSubstScoped ∷ ∀ s e. (Eq s,Eq e) ⇒ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → (e → e) → SubstScoped s e → SubstScoped s e
+canonSubstScoped ℓvar substE canonE = collapseNullShift ∘ expandIncs ∘ expandShifts ∘ canonElems
   where
     expandShiftsM ∷ RWS (SubstScoped s e) () ℕ64 ()
     expandShiftsM = do
       SubstScoped ρ es _ι ← ask
       n ← get
-      let 𝔰 = csize es
-      if 𝔰 ≡ 0
+      if n ≡ csize es
       then skip
       else 
-        if canonSSubstElem ℓvar substE (es ⋕! n) ≡ Var_SSE (ρ+n+1)
+        if es ⋕! n ≡ Var_SSE (ρ+n)
         then do bump ; expandShiftsM
         else skip
     expandShifts ∷ SubstScoped s e → SubstScoped s e
@@ -95,12 +97,13 @@ canonSubstScoped ℓvar substE = canonElems ∘ collapseNullShift ∘ expandIncs
       SubstScoped ρ es ι ← ask
       n ← get
       let 𝔰 = csize es
-      if (𝔰 - n) ≡ 0
+      if n ≡ 𝔰
       then skip
       else
-        let 𝔰' = 𝔰 - n - 1
+        let i = 𝔰 - 1 - n
+            i' = intΩ64 ρ + intΩ64 i + ι
         in
-        if canonSSubstElem ℓvar substE (es ⋕! 𝔰') ≡ Var_SSE (natΩ64 $ intΩ64 (ρ + 𝔰') + ι)
+        if i' ≥ 0 ⩓ es ⋕! i ≡ Var_SSE (natΩ64 i')
         then do bump ; expandIncsM
         else skip
     expandIncs ∷ SubstScoped s e → SubstScoped s e
@@ -113,16 +116,13 @@ canonSubstScoped ℓvar substE = canonElems ∘ collapseNullShift ∘ expandIncs
       then SubstScoped 0 null 0
       else 𝓈
     canonElems ∷ SubstScoped s e → SubstScoped s e
-    canonElems (SubstScoped ρ es ι) = SubstScoped ρ (map (canonSSubstElem ℓvar substE) es) ι
+    canonElems (SubstScoped ρ es ι) = SubstScoped ρ (map (canonSSubstElem ℓvar substE canonE) es) ι
         
 isNullSubstScoped ∷ SubstScoped s e → 𝔹
 isNullSubstScoped (SubstScoped _ρ es ι) = csize es ≡ 0 ⩓ ι ≡ 0
 
-zintroSubstScoped ∷ ℤ64 → SubstScoped s e
-zintroSubstScoped = SubstScoped 0 null
-
 introSubstScoped ∷ ℕ64 → SubstScoped s e
-introSubstScoped = zintroSubstScoped ∘ intΩ64
+introSubstScoped = SubstScoped 0 null ∘ intΩ64
 
 shiftSubstScoped ∷ (Ord s) ⇒ s ⇰ ℕ64 → s → SubstScoped s e → SubstScoped s e
 shiftSubstScoped ιs s (SubstScoped ρ es ι) = 
@@ -135,6 +135,11 @@ bindSubstScoped es =
   let es' = map (Trm_SSE ∘ SubstElem null ∘ Some) es
       ι = neg $ intΩ64 $ csize es
   in SubstScoped null es' ι
+
+substSubstScoped ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → SubstScoped s e
+substSubstScoped ℓvar substE (SubstScoped ρ es ι) = 
+  let es' = map (substSSubstElem ℓvar substE) es
+  in SubstScoped ρ es' ι
 
 -- -- | If we get a `SubstScoped` where some `dsubstElems` elements are merely emulating what happens under
 -- -- a shift, or under an intro, we simplify it to instead use those, making the vector of elements
@@ -191,7 +196,7 @@ bindSubstScoped es =
 -- PRETTY PRINTING --
 ---------------------
 
-ppSubstScoped ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → (𝕊 → Doc) → SubstScoped s e → Doc
+ppSubstScoped ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → (𝕊 → Doc) → SubstScoped s e → 𝐼 (Doc ∧ Doc)
 ppSubstScoped ιD xD (SubstScoped ρ es ι) = 
   let kvs = concat
         [ if ρ ≡ 0 then null else single $
@@ -200,7 +205,7 @@ ppSubstScoped ιD xD (SubstScoped ρ es ι) =
             in k :* v
         , mapOn (withIndex @ℕ64 es) $ \ (n :* e) →
             let k = concat [xD $ show𝕊 $ ρ + n]
-                v = ppSSubstElemNamed ιD e
+                v = ppSSubstElemNamed ιD xD e
             in k :* v
         , if ι ≡ 0 then null else single $ 
             let k = concat
@@ -212,20 +217,21 @@ ppSubstScoped ιD xD (SubstScoped ρ es ι) =
                   [ "["
                   , case ι ⋚ 0 of
                       LT → show𝕊 ι 
-                      EQ → "≡"
+                      -- EQ pattern should never happen due to enclosing if condition
+                      EQ → "≡"    
                       GT → concat ["+",show𝕊 ι]
                   , "]"
                   ]
             in k :* v
         ]
   in
-  ppDict kvs
+  kvs
 
-ppSubstScopedNamed ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → 𝕊 → SubstScoped s e → Doc
+ppSubstScopedNamed ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → 𝕊 → SubstScoped s e → 𝐼 (Doc ∧ Doc)
 ppSubstScopedNamed ιD x = ppSubstScoped ιD $ (⧺) (concat [ppBdr x,ppPun ":"]) ∘ ppBdr
 
 instance (Pretty e, Pretty s) ⇒ Pretty (SubstScoped s e) where
-  pretty = ppSubstScopedNamed pretty ""
+  pretty = ppDict ∘ ppSubstScopedNamed pretty ""
 
 -------------
 -- FUNCTOR --
@@ -246,7 +252,8 @@ instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SubstScoped s e) where
     ι ← randr (neg $ intΩ64 𝔰) $ intΩ64 𝔰
     return $ SubstScoped ρ es ι
 
-instance (Shrinky e) ⇒ Shrinky (SubstScoped s e) where
+instance (Ord s,Shrinky e) ⇒ Shrinky (SubstScoped s e) where
   shrink (SubstScoped ρ es ι) = do
-    es' ← shrink es
-    return $ SubstScoped ρ es' ι
+    (ρ',es',ι') ← shrink (ρ,es,ι)
+    mzeroIfNot $ ι' ≥ neg (intΩ64 $ csize es')
+    return $ SubstScoped ρ' es' ι'

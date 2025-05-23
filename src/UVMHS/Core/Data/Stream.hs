@@ -62,7 +62,14 @@ zipWith𝑆 f = loop
 -- instance (Ord a) ⇒ Ord (𝑆 a) where compare = compareBy𝑆 (⋚)
 -- instance (Show a) ⇒ Show (𝑆 a) where show = chars ∘ showWith𝑆 show𝕊
 --
--- instance Functor 𝑆 where map = map𝑆
+map𝑆 ∷ (a → b) → 𝑆 a → 𝑆 b
+map𝑆 f xs = 𝑆 $ \ () →
+  case un𝑆 xs () of
+    None → None
+    Some (x :* xs') → Some (f x :* map f xs')
+
+instance Functor 𝑆 where map = map𝑆
+
 --
 -- instance Null (𝑆 a) where null = empty𝑆
 -- instance Append (𝑆 a) where (⧺) = append𝑆
@@ -95,13 +102,7 @@ zipWith𝑆 f = loop
 --   in case s of
 --     Inl s₁ → goLeft s₁
 --     Inr s₂ → goRight s₂
---
--- map𝑆 ∷ (a → b) → 𝑆 a → 𝑆 b
--- map𝑆 f (𝑆 s₀ g) = 𝑆 s₀ $ \ s →
---   case g s of
---     None → None
---     Some (x:*s') → Some (f x:*s')
---
+
 -- mjoin𝑆 ∷ ∀ a. 𝑆 (𝑆 a) → 𝑆 a
 -- mjoin𝑆 (𝑆 (s₀ ∷ s) (f ∷ s → 𝑂 (𝑆 a ∧ s))) = 𝑆 (𝑆 () (const None) :* s₀ ∷ 𝑆 a ∧ s) $ \ (𝑆 t g :* s) → loop₁ t g s
 --   where

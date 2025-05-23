@@ -1,6 +1,5 @@
 module UVMHS.Core.Init
   ( module UVMHS.Core.Init
-  , module Control.Exception
   , module Data.Coerce
   , module GHC.Exts
   , module GHC.Stack
@@ -24,9 +23,7 @@ import GHC.Stack
   ( type CallStack,callStack,withFrozenCallStack
   )
 
-import Control.Exception
-  ( assert
-  )
+import qualified Control.Exception as HS
 
 import Data.String
   ( fromString
@@ -350,6 +347,9 @@ type STACK = HS.HasCallStack
 
 error ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r). (STACK) ⇒ 𝕊 → a
 error s = HS.error (tohsChars s)
+
+assert ∷ 𝔹 → ()
+assert b = HS.assert b ()
 
 ------------------------------
 -- Basic Function Functions --

@@ -40,16 +40,33 @@ key𝑇A s x = 𝑇A null $ single $ s :* x
 val𝑇A ∷ a → 𝑇A a
 val𝑇A x = 𝑇A (single x) null
 
+𝐤 ∷ 𝕊 → 𝑇A a → 𝑇A a
+𝐤 = key𝑇A
+
+𝐯 ∷ a → 𝑇A a
+𝐯 = val𝑇A
+
 keys𝑇A ∷ 𝐿 𝕊 → 𝑇A a → 𝑇A a
 keys𝑇A = foldrWithOn key𝑇A
 
 instance (Pretty a) ⇒ Pretty (𝑇A a) where
   pretty (𝑇A v n) = ppVertical $ concat
-    [ map pretty v
-    , mapOn n $ \ (k :* v') → ppHorizontal
-        [ ppFG teal $ ppBD $ ppString k
-        , ppGA $ pretty v'
-        ]
+    [ map (ppGA ∘ pretty) v
+    , mapOn n $ \ (k :* v') →
+        if csize k < 2
+        then 
+          ppHorizontal 
+            [ ppFG teal $ ppBD $ ppString k
+            , ppGA $ pretty v'
+            ]
+        else
+          ppGA $ concat
+            [ ppFG teal $ ppBD $ ppString k
+            , ppSpaceNewlineIfBreak
+            , ppSpaceIfBreak
+            , ppSpaceIfBreak
+            , ppGA $ pretty v'
+            ]
     ]
 
 data 𝑇D a = 𝑇D
@@ -94,9 +111,20 @@ keys𝑇D = foldrWithOn key𝑇D
 
 instance (Pretty a) ⇒ Pretty (𝑇D a) where
   pretty (𝑇D v n) = ppVertical $ concat
-    [ map pretty v
-    , mapOn (iter n) $ \ (k :* v') → ppHorizontal
-        [ ppFG teal $ ppBD $ ppString k
-        , ppGA $ pretty v'
-        ]
+    [ map (ppGA ∘ pretty) v
+    , mapOn (iter n) $ \ (k :* v') →
+        if csize k < 2
+        then 
+          ppHorizontal 
+            [ ppFG teal $ ppBD $ ppString k
+            , ppGA $ pretty v'
+            ]
+        else
+          ppGA $ concat
+            [ ppFG teal $ ppBD $ ppString k
+            , ppSpaceNewlineIfBreak
+            , ppSpaceIfBreak
+            , ppSpaceIfBreak
+            , ppGA $ pretty v'
+            ]
     ]

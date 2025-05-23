@@ -1,5 +1,6 @@
 module UVMHS.Core
-  ( module UVMHS.Core.Classes
+  ( module UVMHS.Core.Chunky
+  , module UVMHS.Core.Classes
   , module UVMHS.Core.Data
   , module UVMHS.Core.Effects
   , module UVMHS.Core.FilePath
@@ -18,6 +19,7 @@ module UVMHS.Core
   , module UVMHS.Core.VectorStatic
   ) where
 
+import UVMHS.Core.Chunky
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 import UVMHS.Core.Effects

@@ -15,7 +15,7 @@ import UVMHS.Tests.Substitution
 import qualified Language.Haskell.TH as TH
 import qualified Language.Haskell.TH.Syntax as TH
 
-import Test.QuickCheck (Arbitrary, arbitrary, shrink)
+import Test.QuickCheck (Arbitrary, arbitrary)
 import qualified Test.QuickCheck as QC
 import qualified Data.Text as Text
 import qualified Data.Map as Map
@@ -48,13 +48,13 @@ instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (SubstElem s e) w
   shrink (SubstElem is v) =
     (if v ≡ None then [] else [ SubstElem null None ])
     ⧺ (if is ≡ null then [] else [ SubstElem null v])
-    ⧺ [SubstElem is' v' | is' <- shrink is, v' <- shrink v]
+    ⧺ [SubstElem is' v' | is' <- QC.shrink is, v' <- QC.shrink v]
 
 instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (SSubstElem s e) where
   arbitrary = QC.oneof [Var_SSE ^$ QC.arbitrarySizedBoundedIntegral, Trm_SSE ^$ arbitrary]
   shrink (Var_SSE 0) = []
   shrink (Var_SSE n) = [Var_SSE 0, Var_SSE (n `HS.div` 2)]
-  shrink (Trm_SSE s) = [Var_SSE 0] ⧺ (Trm_SSE ^$ shrink s)
+  shrink (Trm_SSE s) = [Var_SSE 0] ⧺ (Trm_SSE ^$ QC.shrink s)
 
 instance Arbitrary a ⇒ Arbitrary (𝕍 a) where
   arbitrary = 𝕍 ∘ V.fromList ^$ arbitrary @[_]
@@ -66,7 +66,7 @@ instance (Arbitrary s, Arbitrary e, Eq e, Ord s) ⇒ Arbitrary (SubstScoped s e)
     return SubstScoped ⊡ QC.arbitrarySizedBoundedIntegral ⊡ return es ⊡ QC.arbitrarySizedBoundedIntegral
   shrink (SubstScoped s es i) =
     (if s ≡ 0 then [] else [SubstScoped 0 es i, SubstScoped 0 es (i `HS.div` 2)])
-    ⧺ [SubstScoped s es' i | es' <- shrink es]
+    ⧺ [SubstScoped s es' i | es' <- QC.shrink es]
     ⧺ (if i ≡ 0 then [] else [SubstScoped s es 0, SubstScoped s es (i `HS.div` 2)]) -- No MonadFail [] instance!?
 
 instance (Arbitrary s1, Arbitrary s2, Arbitrary e, Eq e, Ord s1, Ord s2) ⇒ Arbitrary (SubstSpaced s1 s2 e) where
@@ -323,13 +323,34 @@ main = cleanExit $ do
   -- QC.quickCheck prop_simplify_SubstElem
   -- QC.quickCheck prop_todbr_tonmd
 
-  -- pprint $ ppHeader "COLOR TEST"
-  -- pprint colorsDemo
-  -- pprint [ulc|λ y → y↑1|]
-  $$(testModules False (Some 5) 1
+  pprint $ ppHeader "COLOR TEST"
+  pprint colorsDemo
+  rngSeed 0
+  $$(testModules True (fuzzParamsSml 10)
     [ "UVMHS.Tests.Core"
     , "UVMHS.Tests.Substitution"
     ])
+  -- eachOn (upto 100) $ \ s → do
+  --   rngSeed s
+  --   pprint $ 𝐤 "SEED" $ 𝐯 $ pretty s
+  --   $$(testModules False fuzzParamsTny
+  --     [ "UVMHS.Tests.Core"
+  --     , "UVMHS.Tests.Substitution"
+  --     ])
+  -- pprint $ shrink [ulc| x:m{x:0…x:1↦[≡],x:2↦(λ→λ→0),x:3…x:∞↦[-1]} 0 |]
+  -- pprint $ shrunk (const True) [ulc| x:m{x:0…x:1↦[≡],x:2↦(λ→λ→0),x:3…x:∞↦[-1]} 0 |]
+  -- let xss₁ ∷ [[ℕ64]]
+  --     xss₁ = [[1],[2]]
+  --     xss₂ ∷ [[ℕ64]]
+  --     xss₂ = [[1,2],[3,4]]
+  -- pprint $ frhs $ QC.shrink xss₁
+  -- pprint $ list $ shrink $ frhs xss₁
+  -- pprint $ frhs $ QC.shrink xss₂
+  -- pprint $ list $ shrink $ frhs xss₂
+  -- pprint $ frhs $ QC.shrink $ tohs @_ @HS.Int $ 𝕫64 9
+  -- pprint $ frhs $ QC.shrink $ tohs @_ @HS.Int $ neg $ 𝕫64 9
+  -- pprint $ shrink $ 𝕫64 9
+  -- pprint $ shrink $ neg $ 𝕫64 9
   -- print $ ppULC [ulc| λ → 2 |]
   -- let 𝓈 = concat
   --       -- , nintroSubst (var "x" ↦ 1)
