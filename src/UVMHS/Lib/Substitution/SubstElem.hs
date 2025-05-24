@@ -49,7 +49,7 @@ introSubstElem ∷ (Ord s) ⇒ s ⇰ ℕ64 → SubstElem s e → SubstElem s e
 introSubstElem = alter substElemIntroL ∘ (+)
 
 substSubstElemE ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → 𝑂 e
-substSubstElemE substE (SubstElem ιs e) = substE ιs *$ e
+substSubstElemE substE (SubstElem ιs eO) = substE ιs *$ eO
 
 substSubstElem ∷ (s ⇰ ℕ64 → e → 𝑂 e) → SubstElem s e → SubstElem s e
 substSubstElem substE = SubstElem null ∘ substSubstElemE substE

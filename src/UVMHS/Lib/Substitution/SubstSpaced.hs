@@ -172,12 +172,14 @@ ubindsSubstSpaced es = SubstSpaced (map (SubstElem null ∘ Some) es) null
 substSpacedExtended ∷ (Ord sU,Ord sS) ⇒ (sS → e ⌲ ℕ64) → (SubstSpaced sU sS e → e → 𝑂 e) → SubstSpaced sU sS e → sS ⇰ ℕ64 → e → 𝑂 e
 substSpacedExtended ℓvar substE 𝓈P ιs = substE $ appendSubstSpaced ℓvar substE 𝓈P $ introSubstSpaced ιs
 
+-- CURRENTLY NOT USED
 substSubstElemSpacedE ∷ (Ord sU,Ord sS) ⇒ (sS → e ⌲ ℕ64) → (SubstSpaced sU sS e → e → 𝑂 e) → SubstSpaced sU sS e → SubstElem sS e → 𝑂 e
 substSubstElemSpacedE ℓvar substE 𝓈P = substSubstElemE $ substSpacedExtended ℓvar substE 𝓈P
 
 substSubstElemSpaced ∷ (Ord sU,Ord sS) ⇒ (sS → e ⌲ ℕ64) → (SubstSpaced sU sS e → e → 𝑂 e) → SubstSpaced sU sS e → SubstElem sS e → SubstElem sS e
 substSubstElemSpaced ℓvars substE 𝓈P = substSubstElem $ substSpacedExtended ℓvars substE 𝓈P
 
+-- CURRENTLY NOT USED
 substSSubstElemSpaced ∷ (Ord sU,Ord sS) ⇒ (sS → e ⌲ ℕ64) → (SubstSpaced sU sS e → e → 𝑂 e) → SubstSpaced sU sS e → sS → SSubstElem sS e → SSubstElem sS e
 substSSubstElemSpaced ℓvars substE 𝓈P s = substSSubstElem (ℓvars s) $ substSpacedExtended ℓvars substE 𝓈P
 
@@ -205,12 +207,9 @@ appendSubstSpaced ℓvars substE 𝓈P₂ 𝓈P₁ =
                 𝔰₂ = intΩ64 $ csize es₂
                 ρ₁ = intΩ64 ρ̇₁
                 ρ₂ = intΩ64 ρ̇₂
-                -- new shift is min of shifts
                 ρ̇  = ρ̇₁⊓ρ̇₂
                 ρ  = intΩ64 ρ̇
-                -- new incr is sum of incrs
                 ι  = ι₁+ι₂
-                -- new |es| is ???
                 𝔰  = ((ρ₁+𝔰₁)⊔(ρ₂+𝔰₂-ι₁))-ρ
                 δ  = ρ
                 es = vecF (natΩ64 𝔰) $ \ ṅ →

@@ -1,0 +1,37 @@
+Fix:
+- Pretty Printer. I think it's buggy. There is a branch where I'm most the way
+  through solving it. Consider refactoring and adding test suite along the way.
+
+Refactor:
+- Parser Library. Reorganize, document, and give better variable names to things.
+- For core data structures (e.g., Iter), split out:
+  - Public API (in tutorial style)
+  - Test Suite
+- Make `Monad` a super class of all of the monad effect classes (via Val)
+
+New Feature:
+- Parser Library: 
+  - allow for two categories of errors, "invalid token" error (as
+    is not), and "validation error". Validation error should underline in red
+    '^'s the piece of syntax that failed to validate, in addition to a message
+    as to why.
+  - when color is off, print red '^'s as '!'s. (Requires new feature in pretty
+    printer that allows pretty printers to change their behavior for when color
+    is turned off.)
+- Substitution Library:
+  - in SubstElem type, support delayed shifts in addition to delayed incrs.
+    Right now the representation is `s ⇰ ℕ64`, which means "for each ⟨s,n⟩, do
+    an increment substitution in scope s for number of variables n" This should
+    really be `s ⇰ ℕ64 ⇰ ℕ64` which means "for each ⟨s,ρ,n⟩, do a shifted
+    increment substitution in scope s for shift level ρ and number of variables
+    n".
+  - Support the ability for the user's expression type to embed SSubstElem (or
+    SubstElem, and combined with the usual var type, provide a prism into
+    SSubstElem). This would allow applying an increment substitution to an
+    expression to lazily evaluate it, so you could do `canon $ incr 1 $ incr 1
+    e` and it would only traverse the expression once to push through the
+    increment logic.
+
+Test Suite Needed:
+- Parser Library
+- Pretty Printer Library
