@@ -1,7 +1,7 @@
 module UVMHS.Lib.Substitution 
     -- * Datatypes
     -- ** Raw Variables
-  ( 𝕎(..),varMarkL,varNameL,var,gensymVar
+  ( Name(..),varMarkL,varNameL,var,gensymVar
     -- ** Scoped Variables
   , 𝕏(..),d_SVarL,n_SVarL,g_SVarL,znsvar,znsvarL,gensymSVar
   , SVarView(..),svarScopeL

@@ -7,9 +7,6 @@ import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.Var
-import UVMHS.Lib.THLiftInstances
-
-import qualified Language.Haskell.TH.Syntax as TH
 
 -- ==================== --
 -- SUBSTITUTION ELEMENT --
@@ -31,7 +28,6 @@ data SubstElem s e = SubstElem
   , substelemValue ∷ 𝑂 e
   } deriving (Eq,Ord,Show)
 makeLenses ''SubstElem
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstElem s e)
 
 -- `substE ιs e`
 -- ≡ 
@@ -109,7 +105,6 @@ data SSubstElem s e =
     Var_SSE ℕ64
   | Trm_SSE (SubstElem s e)
   deriving (Eq,Ord,Show)
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SSubstElem s e)
 
 mkSSubstElem ∷ e ⌲ ℕ64 → 𝑂 e → SSubstElem s e
 mkSSubstElem ℓvar eO = case view (ℓvar ⊚ someL) eO of

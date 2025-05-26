@@ -10,7 +10,7 @@ import qualified Examples.Lang.SExp as SExp
 import qualified Prelude as HS
 
 import UVMHS.Tests.Core
-import UVMHS.Lib.Substitution.Tests
+import UVMHS.Tests.Substitution
 
 import qualified Language.Haskell.TH as TH
 import qualified Language.Haskell.TH.Syntax as TH
@@ -30,7 +30,7 @@ main = cleanExit $ do
   rngSeed 0
   $$(testModules True (fuzzParamsSml 10)
     [ "UVMHS.Tests.Core"
-    , "UVMHS.Lib.Substitution.Tests"
+    , "UVMHS.Tests.Substitution"
     ])
   -- eachOn (upto 100) $ \ s → do
   --   rngSeed s

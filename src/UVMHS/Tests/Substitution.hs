@@ -1,12 +1,12 @@
-module UVMHS.Lib.Substitution.Tests (g__TESTS__UVMHS__Lib__Substitution__Tests) where
+module UVMHS.Tests.Substitution (g__TESTS__UVMHS__Tests__Substitution) where
 
 import UVMHS.Core
 
-import UVMHS.Lib.Fuzzy
-import UVMHS.Lib.Testing
 import UVMHS.Lib.Annotated
+import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Shrinky
+import UVMHS.Lib.Testing
 import UVMHS.Lib.TreeNested
 
 import UVMHS.Lib.Substitution.Subst

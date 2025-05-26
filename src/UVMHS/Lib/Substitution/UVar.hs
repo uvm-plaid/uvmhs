@@ -2,15 +2,11 @@ module UVMHS.Lib.Substitution.UVar where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty
-import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
-import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.Var
 import UVMHS.Lib.Substitution.Subst
-
-import qualified Language.Haskell.TH.Syntax as TH
 
 -- =================== --
 -- UNIFIABLE VARIABLES --
@@ -18,10 +14,9 @@ import qualified Language.Haskell.TH.Syntax as TH
 
 data 𝕐 s e =
     S_UVar 𝕏              -- scoped variable
-  | M_UVar 𝕎 (Subst s e)  -- meta variable
+  | M_UVar Name (Subst s e)  -- meta variable
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (𝕐 s e)
 
 wfUVar ∷ (Ord s) ⇒ 𝕐 s e → 𝔹
 wfUVar = \case
@@ -34,22 +29,22 @@ duvarL = d_SVarL ⊚ s_UVarL
 duvar ∷ ℕ64 → 𝕐 s e
 duvar = construct duvarL
 
-nuvarL ∷ 𝕐 s e ⌲ ℕ64 ∧ 𝕎
+nuvarL ∷ 𝕐 s e ⌲ ℕ64 ∧ Name
 nuvarL = n_SVarL ⊚ s_UVarL
 
-nuvar ∷ ℕ64 → 𝕎 → 𝕐 s e
+nuvar ∷ ℕ64 → Name → 𝕐 s e
 nuvar = uncurry $ construct nuvarL
 
-znuvarL ∷ 𝕐 s e ⌲ 𝕎
+znuvarL ∷ 𝕐 s e ⌲ Name
 znuvarL = znsvarL ⊚ s_UVarL
 
-znuvar ∷ 𝕎 → 𝕐 s e
+znuvar ∷ Name → 𝕐 s e
 znuvar = construct znuvarL
 
-guvarL ∷ 𝕐 s e ⌲ 𝕎
+guvarL ∷ 𝕐 s e ⌲ Name
 guvarL = g_SVarL ⊚ s_UVarL
 
-guvar ∷ 𝕎 → 𝕐 s e
+guvar ∷ Name → 𝕐 s e
 guvar = construct guvarL
 
 gensymUVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m (𝕐 s e)

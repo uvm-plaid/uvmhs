@@ -7,6 +7,12 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.Window
 
+import UVMHS.Lib.Substitution
+import UVMHS.Lib.Substitution.Subst
+import UVMHS.Lib.Substitution.SubstElem
+import UVMHS.Lib.Substitution.SubstScoped
+import UVMHS.Lib.Substitution.SubstSpaced
+
 import Instances.TH.Lift ()
 
 import qualified Language.Haskell.TH.Syntax as TH
@@ -50,3 +56,11 @@ instance TH.Lift Doc where
     let d' = ppBake d
     [|| ppEmbed d' ||]
 
+deriving instance TH.Lift Name
+deriving instance TH.Lift 𝕏
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (𝕐 s e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstScoped s e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (Subst s e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstElem s e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SSubstElem s e)
+deriving instance (TH.Lift s₁,TH.Lift s₂,TH.Lift e) ⇒ TH.Lift (SubstSpaced s₁ s₂ e)

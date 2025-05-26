@@ -25,7 +25,7 @@ import UVMHS.Lib.Substitution.Subst
 --   so `⌊1⌋` is free but not `⌊0⌋` in the (nameless) lambda `λ. ⌊0⌋ ⌊1⌋`.
 data FreeVarsAction s e = FreeVarsAction
   { freeVarsActionFilter ∷ s → 𝕐 s e → 𝔹
-  , freeVarsActionScope  ∷ s ∧ 𝑂 𝕎 ⇰ ℕ64
+  , freeVarsActionScope  ∷ s ∧ 𝑂 Name ⇰ ℕ64
   }
 makeLenses ''FreeVarsAction
 
@@ -111,10 +111,10 @@ fvsS = fvsSWith $ const $ const True
 fvs ∷ (Ord s,Substy s e a) ⇒ s → a → 𝑃 (𝕐 s e)
 fvs s = fvsWith s $ const True
 
-fvsSMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕎 ∧ Subst s e)
+fvsSMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ a → s ⇰ 𝑃 (Name ∧ Subst s e)
 fvsSMetas = map (pow ∘ filterMap (view m_UVarL) ∘ iter) ∘ fvsSWith (\ _s y → shape m_UVarL y)
 
-fvsMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ s → a → 𝑃 (𝕎 ∧ Subst s e)
+fvsMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ s → a → 𝑃 (Name ∧ Subst s e)
 fvsMetas s = ifNone pø ∘ lup s ∘ fvsSMetas
 
 todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
@@ -165,13 +165,13 @@ substyDBdr s = umodifyEnv $ compose
   , alter freeVars_SAL $ alter freeVarsActionScopeL $ (⧺) $ (s :* None) ↦ 1
   ]
 
-substyNBdr ∷ (Ord s,Ord e) ⇒ s → 𝕎 → SubstyM s e ()
+substyNBdr ∷ (Ord s,Ord e) ⇒ s → Name → SubstyM s e ()
 substyNBdr s x = umodifyEnv $ compose
   [ alter subst_SAL $ alter substActionSubstL $ shiftNSSubst s x 1
   , alter freeVars_SAL $ alter freeVarsActionScopeL $ (⧺) $ (s :* Some x) ↦ 1
   ]
 
-substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e' → e) → 𝕎 → SubstyM s e ()
+substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e' → e) → Name → SubstyM s e ()
 substyBdr s mkVar x = do
   substyDBdr s
   substyNBdr s x
@@ -191,7 +191,7 @@ substyBdr s mkVar x = do
         ]
 
 -- ℕ64 parameter `n` is the de bruijn level/number
-substyVar ∷ (Ord s,Ord e,Substy s e e) ⇒ 𝑂 𝕎 → s → (ℕ64 → e) → ℕ64 → SubstyM s e e
+substyVar ∷ (Ord s,Ord e,Substy s e e) ⇒ 𝑂 Name → s → (ℕ64 → e) → ℕ64 → SubstyM s e e
 substyVar xO s mkVar n = do
   γ ← ask
   case γ of
@@ -215,10 +215,10 @@ substyVar xO s mkVar n = do
 substyDVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstyM s e e
 substyDVar = substyVar None
 
-substyNVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → 𝕎 → ℕ64 → SubstyM s e e
+substyNVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → Name → ℕ64 → SubstyM s e e
 substyNVar s mkVar x = substyVar (Some x) s mkVar
 
-substyGVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕎 → e) → 𝕎 → SubstyM s e e
+substyGVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (Name → e) → Name → SubstyM s e e
 substyGVar s mkVar x = do
   γ ← ask
   case γ of
@@ -234,7 +234,7 @@ substyGVar s mkVar x = do
         Some (SubstElem ιs eO) → failEff $ subst (Subst $ introSubstSpaced ιs) *$ eO
     MetaSubst_SA _ → return $ mkVar x
 
-substyMVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕎 → Subst s e → e) → 𝕎 → Subst s e → SubstyM s e e
+substyMVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (Name → Subst s e → e) → Name → Subst s e → SubstyM s e e
 substyMVar s mkVar x 𝓈₀ = do
   γ ← ask
   case γ of
@@ -322,7 +322,7 @@ instance Append (ParseSubstAction e) where
     ParseSubstAction (shfts₁ ⧺ shfts₂) (elems₁ ⧺ elems₂) $ incrs₁ ⧺ incrs₂
 instance Monoid (ParseSubstAction e)
 
-type ParseSubstActions e = 𝑂 (𝕎 ∧ 𝔹) ⇰ ParseSubstAction e
+type ParseSubstActions e = 𝑂 (Name ∧ 𝔹) ⇰ ParseSubstAction e
 
 cpSubst ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (Subst () e)
 cpSubst pE = cpNewContext "subst" $ do

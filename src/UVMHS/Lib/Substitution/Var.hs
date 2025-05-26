@@ -6,28 +6,24 @@ import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Shrinky
-import UVMHS.Lib.THLiftInstances ()
-
-import qualified Language.Haskell.TH.Syntax as TH
 
 -- =============== --
 -- SIMPLE VARIABLE --
 -- =============== --
 
-data 𝕎 = 𝕎
+data Name = Name
   { varMark ∷ 𝑂 ℕ64
   , varName ∷ 𝕊
   } deriving (Eq,Ord,Show)
-makeLenses ''𝕎
-deriving instance TH.Lift 𝕎
+makeLenses ''Name
 
-var ∷ 𝕊 → 𝕎
-var = 𝕎 None
+var ∷ 𝕊 → Name
+var = Name None
 
-gensymVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m 𝕎
+gensymVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m Name
 gensymVar ℓ s = do
   n ← nextL ℓ
-  return $ 𝕎 (Some n) s
+  return $ Name (Some n) s
 
 -------------
 -- PARSING --
@@ -38,21 +34,21 @@ syntaxVar = concat
   [ null { lexerBasicSyntaxPuns = pow ["#"] }
   ]
 
-cpVar ∷ CParser TokenBasic 𝕎
+cpVar ∷ CParser TokenBasic Name
 cpVar = do
   x ← cpShaped $ view nameTBasicL
   nO ← cpOptional $ do
     void $ cpSyntax "#"
     cpNat64
-  return $ 𝕎 nO x
+  return $ Name nO x
 
-cpVarWS ∷ CParser TokenWSBasic 𝕎
+cpVarWS ∷ CParser TokenWSBasic Name
 cpVarWS = do
   x ← cpShaped $ view nameTWSBasicL
   nO ← cpOptional $ do
     void $ cpSyntaxWS "#"
     failEff ∘ natO64 *$ cpIntegerWS
-  return $ 𝕎 nO x
+  return $ Name nO x
 
 syntaxDVar ∷ LexerBasicSyntax
 syntaxDVar = concat
@@ -84,8 +80,8 @@ cpDVarInf = do
 -- PRETTY PRINTING --
 ---------------------
 
-instance Pretty 𝕎 where
-  pretty (𝕎 nO x) = concat
+instance Pretty Name where
+  pretty (Name nO x) = concat
     [ ppString x
     , elim𝑂 null (\ n → ppPun $ concat ["#",show𝕊 n]) nO
     ]
@@ -94,12 +90,12 @@ instance Pretty 𝕎 where
 -- FUZZING --
 -------------
 
-instance Fuzzy 𝕎 where
+instance Fuzzy Name where
   fuzzy = do
     nO ← fuzzy
-    return $ 𝕎 nO "x"
+    return $ Name nO "x"
 
-instance Shrinky 𝕎 where
+instance Shrinky Name where
   shrink = const null
 
 -- =============== --
@@ -108,20 +104,19 @@ instance Shrinky 𝕎 where
 
 data 𝕏 =
     D_SVar ℕ64    -- nameless variable
-  | N_SVar ℕ64 𝕎  -- named (+ nameless index for that name)
+  | N_SVar ℕ64 Name  -- named (+ nameless index for that name)
                  -- λ x. λ x. x↑0
                  --        └───┘
                  -- λ x. λ x. x↑1
                  --   └────────┘
-  | G_SVar 𝕎      -- global variable
+  | G_SVar Name      -- global variable
   deriving (Eq,Ord,Show)
 makePrisms ''𝕏
-deriving instance TH.Lift 𝕏
 
-znsvar ∷ 𝕎 → 𝕏
+znsvar ∷ Name → 𝕏
 znsvar = N_SVar 0
 
-znsvarL ∷ 𝕏 ⌲ 𝕎
+znsvarL ∷ 𝕏 ⌲ Name
 znsvarL = prism znsvar $ \case
   N_SVar n x | n≡0 → Some x
   _ → None
@@ -163,7 +158,7 @@ cpSVarNGVarTail = concat
        return None
   ]
 
-cpSVarNGVar ∷ CParser TokenBasic ((ℕ64 ∧ 𝕎) ∨ 𝕎)
+cpSVarNGVar ∷ CParser TokenBasic ((ℕ64 ∧ Name) ∨ Name)
 cpSVarNGVar = do
   w ← cpVar
   nO ← cpSVarNGVarTail
@@ -185,7 +180,7 @@ cpSVarNGVarInfTail = concat
        return $ None
   ]
 
-cpSVarNGVarInf ∷ CParser TokenBasic ((𝑂 ℕ64 ∧ 𝕎) ∨ 𝕎)
+cpSVarNGVarInf ∷ CParser TokenBasic ((𝑂 ℕ64 ∧ Name) ∨ Name)
 cpSVarNGVarInf = do
   w ← cpVar
   nOO ← cpSVarNGVarInfTail
@@ -204,7 +199,7 @@ cpSVarRaw = concat
          Inr w        → G_SVar w
   ]
 
-cpSVarRawInf ∷ CParser TokenBasic (𝕏 ∨ 𝑂 𝕎)
+cpSVarRawInf ∷ CParser TokenBasic (𝕏 ∨ 𝑂 Name)
 cpSVarRawInf = concat
   [ do nO ← cpDVarRawInf
        case nO of
@@ -228,7 +223,7 @@ cpSVar = concat
          Inr w        → G_SVar w
   ]
 
-cpSVarInf ∷ CParser TokenBasic (𝕏 ∨ 𝑂 𝕎)
+cpSVarInf ∷ CParser TokenBasic (𝕏 ∨ 𝑂 Name)
 cpSVarInf = concat
   [ do nO ← cpDVarInf
        return $ case nO of
@@ -285,7 +280,7 @@ instance Shrinky 𝕏 where
 class SVarView s e | e→s where
   svarL ∷ s → e ⌲ 𝕏
 
-svarScopeL ∷ ∀ s e. (SVarView s e) ⇒ s → 𝑂 𝕎 → e ⌲ ℕ64
+svarScopeL ∷ ∀ s e. (SVarView s e) ⇒ s → 𝑂 Name → e ⌲ ℕ64
 svarScopeL s xO = 
   let ctor ∷ ℕ64 → e
       ctor = case xO of
