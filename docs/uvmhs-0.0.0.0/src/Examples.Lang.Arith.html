@@ -2,100 +2,91 @@
 </span><span id="line-2"></span><span>
 </span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.html"><span class="hs-identifier">UVMHS</span></a></span><span>
 </span><span id="line-4"></span><span>
-</span><span id="line-5"></span><span class="annot"><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-type">lexer</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#CharClass"><span class="hs-identifier hs-type">CharClass</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2102"><span class="hs-identifier hs-type">&#8450;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenClassBasic"><span class="hs-identifier hs-type">TokenClassBasic</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span>
-</span><span id="line-6"></span><span id="lexer"><span class="annot"><span class="annottext">lexer :: Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
-</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var hs-var">lexer</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119871; &#120138;
--&gt; &#119871; &#120138;
--&gt; &#119871; &#120138;
--&gt; &#119871; &#120138;
+</span><span id="line-5"></span><span class="annot"><a href="Examples.Lang.Arith.html#syntax"><span class="hs-identifier hs-type">syntax</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#LexerBasicSyntax"><span class="hs-identifier hs-type">LexerBasicSyntax</span></a></span><span>
+</span><span id="line-6"></span><span id="syntax"><span class="annot"><span class="annottext">syntax :: LexerBasicSyntax
+</span><a href="Examples.Lang.Arith.html#syntax"><span class="hs-identifier hs-var hs-var">syntax</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LexerBasicSyntax
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-special">{</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#lexerBasicSyntaxPuns"><span class="hs-identifier hs-var">lexerBasicSyntaxPuns</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Set.html#pow"><span class="hs-identifier hs-type">pow</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-string">&quot;(&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="hs-string">&quot;)&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-8"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#lexerBasicSyntaxOprs"><span class="hs-identifier hs-var">lexerBasicSyntaxOprs</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Set.html#pow"><span class="hs-identifier hs-type">pow</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="hs-string">&quot;==&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="hs-string">&quot;+&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="hs-string">&quot;*&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="hs-string">&quot;-&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="hs-string">&quot;^&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="hs-string">&quot;!&quot;</span></span><span class="hs-special">]</span><span>
+</span><span id="line-9"></span><span>  </span><span class="hs-special">}</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="annot"><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-type">lexer</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#Lexer"><span class="hs-identifier hs-type">Lexer</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#CharClass"><span class="hs-identifier hs-type">CharClass</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2102"><span class="hs-identifier hs-type">&#8450;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenClassBasic"><span class="hs-identifier hs-type">TokenClassBasic</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span>
+</span><span id="line-12"></span><span id="lexer"><span class="annot"><span class="annottext">lexer :: Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
+</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var hs-var">lexer</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">LexerBasicSyntax
 -&gt; Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
-</span><a href="UVMHS.Lib.Parser.Regex.html#lexerBasic"><span class="hs-identifier hs-var">lexerBasic</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[&#120138;] -&gt; &#119871; &#120138;
-forall a t. ToIter a t =&gt; t -&gt; &#119871; a
-</span><a href="UVMHS.Core.Data.Iter.html#list"><span class="hs-identifier hs-var">list</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;(&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;)&quot;</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119871; &#120138;
-forall a. Null a =&gt; a
-</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">&#119871; &#120138;
-forall a. Null a =&gt; a
-</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[&#120138;] -&gt; &#119871; &#120138;
-forall a t. ToIter a t =&gt; t -&gt; &#119871; a
-</span><a href="UVMHS.Core.Data.Iter.html#list"><span class="hs-identifier hs-var">list</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;==&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;+&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;*&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;-&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;^&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;!&quot;</span></span><span class="hs-special">]</span><span class="hs-special">)</span><span>
-</span><span id="line-7"></span><span>
-</span><span id="line-8"></span><span class="annot"><a href="Examples.Lang.Arith.html#testTokenizerSuccess"><span class="hs-identifier hs-type">testTokenizerSuccess</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-9"></span><span id="testTokenizerSuccess"><span class="annot"><span class="annottext">testTokenizerSuccess :: IO ()
-</span><a href="Examples.Lang.Arith.html#testTokenizerSuccess"><span class="hs-identifier hs-var hs-var">testTokenizerSuccess</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
-</span><span id="line-10"></span><span>  </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
--&gt; &#120138; -&gt; &#120141; (ParserToken &#8450;) -&gt; IO ()
+</span><a href="UVMHS.Lib.Parser.Regex.html#lexerBasic"><span class="hs-identifier hs-var">lexerBasic</span></a></span><span> </span><span class="annot"><span class="annottext">LexerBasicSyntax
+</span><a href="Examples.Lang.Arith.html#syntax"><span class="hs-identifier hs-var">syntax</span></a></span><span>
+</span><span id="line-13"></span><span>
+</span><span id="line-14"></span><span class="annot"><a href="Examples.Lang.Arith.html#testTokenizerSuccess"><span class="hs-identifier hs-type">testTokenizerSuccess</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span id="testTokenizerSuccess"><span class="annot"><span class="annottext">testTokenizerSuccess :: IO ()
+</span><a href="Examples.Lang.Arith.html#testTokenizerSuccess"><span class="hs-identifier hs-var hs-var">testTokenizerSuccess</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-16"></span><span>  </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
+-&gt; Text -&gt; &#120141; (ParserToken &#8450;) -&gt; IO ()
 forall c t o u w.
 (Show u, Ord c, Ord t, Pretty t, Classified c t, Eq o, Eq u,
  Plus u, Pretty w) =&gt;
-Lexer c t o u w -&gt; &#120138; -&gt; &#120141; (ParserToken t) -&gt; IO ()
+Lexer c t o u w -&gt; Text -&gt; &#120141; (ParserToken t) -&gt; IO ()
 </span><a href="UVMHS.Lib.Parser.Regex.html#tokenizeIOMain"><span class="hs-identifier hs-var">tokenizeIOMain</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
-</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var">lexer</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var">lexer</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken &#8450;) -&gt; IO ()) -&gt; &#120141; (ParserToken &#8450;) -&gt; IO ()
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#120141; (ParserToken &#8450;)
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#tokens"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;1 + 2 - 3 * 4 ^ 5 ! == 1 \n -- blah blah \n {- ml {{- ml --}-} -- blah\nb&quot;</span></span><span> </span><span>
-</span><span id="line-11"></span><span>
-</span><span id="line-12"></span><span class="hs-keyword">data</span><span> </span><span id="Lit"><span class="annot"><a href="Examples.Lang.Arith.html#Lit"><span class="hs-identifier hs-var">Lit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-13"></span><span>    </span><span id="IntegerL"><span class="annot"><a href="Examples.Lang.Arith.html#IntegerL"><span class="hs-identifier hs-var">IntegerL</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2124"><span class="hs-identifier hs-type">&#8484;</span></a></span><span>
-</span><span id="line-14"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="DoubleL"><span class="annot"><a href="Examples.Lang.Arith.html#DoubleL"><span class="hs-identifier hs-var">DoubleL</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D53B"><span class="hs-identifier hs-type">&#120123;</span></a></span><span>
-</span><span id="line-15"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="StringL"><span class="annot"><a href="Examples.Lang.Arith.html#StringL"><span class="hs-identifier hs-var">StringL</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span>
-</span><span id="line-16"></span><span id="local-6989586621680572620"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">Lit</span></span><span>
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; &#120141; (ParserToken &#8450;)
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#tokens"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;1 + 2 - 3 * 4 ^ 5 ! == 1 \n -- blah blah \n {- ml {{- ml --}-} -- blah\nb&quot;</span></span><span>
 </span><span id="line-17"></span><span>
-</span><span id="line-18"></span><span class="hs-keyword">data</span><span> </span><span id="Atom"><span class="annot"><a href="Examples.Lang.Arith.html#Atom"><span class="hs-identifier hs-var">Atom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-19"></span><span>    </span><span id="LitA"><span class="annot"><a href="Examples.Lang.Arith.html#LitA"><span class="hs-identifier hs-var">LitA</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Lit"><span class="hs-identifier hs-type">Lit</span></a></span><span>
-</span><span id="line-20"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="NameA"><span class="annot"><a href="Examples.Lang.Arith.html#NameA"><span class="hs-identifier hs-var">NameA</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span>
-</span><span id="line-21"></span><span id="local-6989586621680572646"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">Atom</span></span><span>
-</span><span id="line-22"></span><span>
-</span><span id="line-23"></span><span class="hs-keyword">type</span><span> </span><span id="Exp"><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-var">Exp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-type">&#119860;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#SrcCxt"><span class="hs-identifier hs-type">SrcCxt</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#ExpPre"><span class="hs-identifier hs-type">ExpPre</span></a></span><span>
-</span><span id="line-24"></span><span class="hs-keyword">data</span><span> </span><span id="ExpPre"><span class="annot"><a href="Examples.Lang.Arith.html#ExpPre"><span class="hs-identifier hs-var">ExpPre</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-25"></span><span>    </span><span id="AtomE"><span class="annot"><a href="Examples.Lang.Arith.html#AtomE"><span class="hs-identifier hs-var">AtomE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Atom"><span class="hs-identifier hs-type">Atom</span></a></span><span>
-</span><span id="line-26"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PlusE"><span class="annot"><a href="Examples.Lang.Arith.html#PlusE"><span class="hs-identifier hs-var">PlusE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
-</span><span id="line-27"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="TimesE"><span class="annot"><a href="Examples.Lang.Arith.html#TimesE"><span class="hs-identifier hs-var">TimesE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
-</span><span id="line-28"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="ExpoE"><span class="annot"><a href="Examples.Lang.Arith.html#ExpoE"><span class="hs-identifier hs-var">ExpoE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
-</span><span id="line-29"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="FactE"><span class="annot"><a href="Examples.Lang.Arith.html#FactE"><span class="hs-identifier hs-var">FactE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
-</span><span id="line-30"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="NegateE"><span class="annot"><a href="Examples.Lang.Arith.html#NegateE"><span class="hs-identifier hs-var">NegateE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
-</span><span id="line-31"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="EqualE"><span class="annot"><a href="Examples.Lang.Arith.html#EqualE"><span class="hs-identifier hs-var">EqualE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
-</span><span id="line-32"></span><span id="atomEL"><span id="plusEL"><span id="timesEL"><span id="expoEL"><span id="factEL"><span id="negateEL"><span id="equalEL"><span class="hs-identifier">makePrisms</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ExpPre</span></span></span></span></span></span></span></span><span>
-</span><span id="line-33"></span><span id="local-6989586621680572696"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ExpPre</span></span><span>
-</span><span id="line-34"></span><span>
-</span><span id="line-35"></span><span class="annot"><a href="Examples.Lang.Arith.html#cpLit"><span class="hs-identifier hs-type">cpLit</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.CParser.html#CParser"><span class="hs-identifier hs-type">CParser</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Lit"><span class="hs-identifier hs-type">Lit</span></a></span><span>
-</span><span id="line-36"></span><span id="cpLit"><span class="annot"><span class="annottext">cpLit :: CParser TokenBasic Lit
+</span><span id="line-18"></span><span class="hs-keyword">data</span><span> </span><span id="Lit"><span class="annot"><a href="Examples.Lang.Arith.html#Lit"><span class="hs-identifier hs-var">Lit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-19"></span><span>    </span><span id="IntegerL"><span class="annot"><a href="Examples.Lang.Arith.html#IntegerL"><span class="hs-identifier hs-var">IntegerL</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2124"><span class="hs-identifier hs-type">&#8484;</span></a></span><span>
+</span><span id="line-20"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="DoubleL"><span class="annot"><a href="Examples.Lang.Arith.html#DoubleL"><span class="hs-identifier hs-var">DoubleL</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D53B"><span class="hs-identifier hs-type">&#120123;</span></a></span><span>
+</span><span id="line-21"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="StringL"><span class="annot"><a href="Examples.Lang.Arith.html#StringL"><span class="hs-identifier hs-var">StringL</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span>
+</span><span id="line-22"></span><span id="local-6989586621680754122"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">Lit</span></span><span>
+</span><span id="line-23"></span><span>
+</span><span id="line-24"></span><span class="hs-keyword">data</span><span> </span><span id="Atom"><span class="annot"><a href="Examples.Lang.Arith.html#Atom"><span class="hs-identifier hs-var">Atom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-25"></span><span>    </span><span id="LitA"><span class="annot"><a href="Examples.Lang.Arith.html#LitA"><span class="hs-identifier hs-var">LitA</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Lit"><span class="hs-identifier hs-type">Lit</span></a></span><span>
+</span><span id="line-26"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="NameA"><span class="annot"><a href="Examples.Lang.Arith.html#NameA"><span class="hs-identifier hs-var">NameA</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span>
+</span><span id="line-27"></span><span id="local-6989586621680754149"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">Atom</span></span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">type</span><span> </span><span id="Exp"><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-var">Exp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="UVMHS.Lib.Annotated.html#%1D434"><span class="hs-identifier hs-type">&#119860;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#SrcCxt"><span class="hs-identifier hs-type">SrcCxt</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#ExpPre"><span class="hs-identifier hs-type">ExpPre</span></a></span><span>
+</span><span id="line-30"></span><span class="hs-keyword">data</span><span> </span><span id="ExpPre"><span class="annot"><a href="Examples.Lang.Arith.html#ExpPre"><span class="hs-identifier hs-var">ExpPre</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-31"></span><span>    </span><span id="AtomE"><span class="annot"><a href="Examples.Lang.Arith.html#AtomE"><span class="hs-identifier hs-var">AtomE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Atom"><span class="hs-identifier hs-type">Atom</span></a></span><span>
+</span><span id="line-32"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="PlusE"><span class="annot"><a href="Examples.Lang.Arith.html#PlusE"><span class="hs-identifier hs-var">PlusE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
+</span><span id="line-33"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="TimesE"><span class="annot"><a href="Examples.Lang.Arith.html#TimesE"><span class="hs-identifier hs-var">TimesE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
+</span><span id="line-34"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="ExpoE"><span class="annot"><a href="Examples.Lang.Arith.html#ExpoE"><span class="hs-identifier hs-var">ExpoE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
+</span><span id="line-35"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="FactE"><span class="annot"><a href="Examples.Lang.Arith.html#FactE"><span class="hs-identifier hs-var">FactE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
+</span><span id="line-36"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="NegateE"><span class="annot"><a href="Examples.Lang.Arith.html#NegateE"><span class="hs-identifier hs-var">NegateE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
+</span><span id="line-37"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="EqualE"><span class="annot"><a href="Examples.Lang.Arith.html#EqualE"><span class="hs-identifier hs-var">EqualE</span></a></span></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
+</span><span id="line-38"></span><span id="atomEL"><span id="plusEL"><span id="timesEL"><span id="expoEL"><span id="factEL"><span id="negateEL"><span id="equalEL"><span class="hs-identifier">makePrisms</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ExpPre</span></span></span></span></span></span></span></span><span>
+</span><span id="line-39"></span><span id="local-6989586621680754199"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ExpPre</span></span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span class="annot"><a href="Examples.Lang.Arith.html#cpLit"><span class="hs-identifier hs-type">cpLit</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.CParser.html#CParser"><span class="hs-identifier hs-type">CParser</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Lit"><span class="hs-identifier hs-type">Lit</span></a></span><span>
+</span><span id="line-42"></span><span id="cpLit"><span class="annot"><span class="annottext">cpLit :: CParser TokenBasic Lit
 </span><a href="Examples.Lang.Arith.html#cpLit"><span class="hs-identifier hs-var hs-var">cpLit</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[CParser TokenBasic Lit] -&gt; CParser TokenBasic Lit
 forall (m :: * -&gt; *) a t.
 (Monad m, MonadFail m, ToIter (m a) t) =&gt;
 t -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#tries"><span class="hs-identifier hs-var">tries</span></a></span><span>
-</span><span id="line-37"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">&#8484; -&gt; Lit
+</span><span id="line-43"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">&#8484; -&gt; Lit
 </span><a href="Examples.Lang.Arith.html#IntegerL"><span class="hs-identifier hs-var">IntegerL</span></a></span><span> </span><span class="annot"><span class="annottext">(&#8484; -&gt; Lit) -&gt; CParser TokenBasic &#8484; -&gt; CParser TokenBasic Lit
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#8484;
-</span><a href="UVMHS.Lib.Parser.CParser.html#cpInteger"><span class="hs-identifier hs-var">cpInteger</span></a></span><span>
-</span><span id="line-38"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#120123; -&gt; Lit
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpInt"><span class="hs-identifier hs-var">cpInt</span></a></span><span>
+</span><span id="line-44"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#120123; -&gt; Lit
 </span><a href="Examples.Lang.Arith.html#DoubleL"><span class="hs-identifier hs-var">DoubleL</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120123; -&gt; Lit) -&gt; CParser TokenBasic &#120123; -&gt; CParser TokenBasic Lit
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#120123;
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpDouble"><span class="hs-identifier hs-var">cpDouble</span></a></span><span>
-</span><span id="line-39"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Lit
-</span><a href="Examples.Lang.Arith.html#StringL"><span class="hs-identifier hs-var">StringL</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; Lit) -&gt; CParser TokenBasic &#120138; -&gt; CParser TokenBasic Lit
+</span><span id="line-45"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Lit
+</span><a href="Examples.Lang.Arith.html#StringL"><span class="hs-identifier hs-var">StringL</span></a></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Lit) -&gt; CParser TokenBasic Text -&gt; CParser TokenBasic Lit
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic &#120138;
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Text
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpString"><span class="hs-identifier hs-var">cpString</span></a></span><span>
-</span><span id="line-40"></span><span>  </span><span class="hs-special">]</span><span>
-</span><span id="line-41"></span><span>
-</span><span id="line-42"></span><span class="annot"><a href="Examples.Lang.Arith.html#cpAtom"><span class="hs-identifier hs-type">cpAtom</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.CParser.html#CParser"><span class="hs-identifier hs-type">CParser</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Atom"><span class="hs-identifier hs-type">Atom</span></a></span><span>
-</span><span id="line-43"></span><span id="cpAtom"><span class="annot"><span class="annottext">cpAtom :: CParser TokenBasic Atom
-</span><a href="Examples.Lang.Arith.html#cpAtom"><span class="hs-identifier hs-var hs-var">cpAtom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic Atom -&gt; CParser TokenBasic Atom
-forall t a. Ord t =&gt; &#120138; -&gt; CParser t a -&gt; CParser t a
-</span><a href="UVMHS.Lib.Parser.CParser.html#cpNewContext"><span class="hs-identifier hs-var">cpNewContext</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><span id="line-46"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-47"></span><span>
+</span><span id="line-48"></span><span class="annot"><a href="Examples.Lang.Arith.html#cpAtom"><span class="hs-identifier hs-type">cpAtom</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.CParser.html#CParser"><span class="hs-identifier hs-type">CParser</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Atom"><span class="hs-identifier hs-type">Atom</span></a></span><span>
+</span><span id="line-49"></span><span id="cpAtom"><span class="annot"><span class="annottext">cpAtom :: CParser TokenBasic Atom
+</span><a href="Examples.Lang.Arith.html#cpAtom"><span class="hs-identifier hs-var hs-var">cpAtom</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text -&gt; CParser TokenBasic Atom -&gt; CParser TokenBasic Atom
+forall t a. Ord t =&gt; Text -&gt; CParser t a -&gt; CParser t a
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpNewContext"><span class="hs-identifier hs-var">cpNewContext</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;atom&quot;</span></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic Atom -&gt; CParser TokenBasic Atom)
 -&gt; CParser TokenBasic Atom -&gt; CParser TokenBasic Atom
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -104,32 +95,34 @@ forall (m :: * -&gt; *) a t.
 (Monad m, MonadFail m, ToIter (m a) t) =&gt;
 t -&gt; m a
 </span><a href="UVMHS.Core.Effects.html#tries"><span class="hs-identifier hs-var">tries</span></a></span><span>
-</span><span id="line-44"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Lit -&gt; Atom
+</span><span id="line-50"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Lit -&gt; Atom
 </span><a href="Examples.Lang.Arith.html#LitA"><span class="hs-identifier hs-var">LitA</span></a></span><span> </span><span class="annot"><span class="annottext">(Lit -&gt; Atom) -&gt; CParser TokenBasic Lit -&gt; CParser TokenBasic Atom
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Lit
 </span><a href="Examples.Lang.Arith.html#cpLit"><span class="hs-identifier hs-var">cpLit</span></a></span><span>
-</span><span id="line-45"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Atom
-</span><a href="Examples.Lang.Arith.html#NameA"><span class="hs-identifier hs-var">NameA</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; Atom) -&gt; CParser TokenBasic &#120138; -&gt; CParser TokenBasic Atom
+</span><span id="line-51"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Text -&gt; Atom
+</span><a href="Examples.Lang.Arith.html#NameA"><span class="hs-identifier hs-var">NameA</span></a></span><span> </span><span class="annot"><span class="annottext">(Text -&gt; Atom)
+-&gt; CParser TokenBasic Text -&gt; CParser TokenBasic Atom
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">(TokenBasic -&gt; &#119874; &#120138;) -&gt; CParser TokenBasic &#120138;
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">(TokenBasic -&gt; &#119874; Text) -&gt; CParser TokenBasic Text
 forall t a. (t -&gt; &#119874; a) -&gt; CParser t a
-</span><a href="UVMHS.Lib.Parser.CParser.html#cpShaped"><span class="hs-identifier hs-var">cpShaped</span></a></span><span> </span><span class="annot"><span class="annottext">((TokenBasic -&gt; &#119874; &#120138;) -&gt; CParser TokenBasic &#120138;)
--&gt; (TokenBasic -&gt; &#119874; &#120138;) -&gt; CParser TokenBasic &#120138;
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpShaped"><span class="hs-identifier hs-var">cpShaped</span></a></span><span> </span><span class="annot"><span class="annottext">((TokenBasic -&gt; &#119874; Text) -&gt; CParser TokenBasic Text)
+-&gt; (TokenBasic -&gt; &#119874; Text) -&gt; CParser TokenBasic Text
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(TokenBasic &#9010; &#120138;) -&gt; TokenBasic -&gt; &#119874; &#120138;
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(TokenBasic &#9010; Text) -&gt; TokenBasic -&gt; &#119874; Text
 forall a b. (a &#9010; b) -&gt; a -&gt; &#119874; b
-</span><a href="UVMHS.Core.Data.Lens.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">TokenBasic &#9010; &#120138;
+</span><a href="UVMHS.Core.Data.Lens.html#view"><span class="hs-identifier hs-var">view</span></a></span><span> </span><span class="annot"><span class="annottext">TokenBasic &#9010; Text
 </span><a href="UVMHS.Lib.Parser.Regex.html#nameTBasicL"><span class="hs-identifier hs-var">nameTBasicL</span></a></span><span>
-</span><span id="line-46"></span><span>  </span><span class="hs-special">]</span><span>
-</span><span id="line-47"></span><span>
-</span><span id="line-48"></span><span class="annot"><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-type">cpExp</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.CParser.html#CParser"><span class="hs-identifier hs-type">CParser</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span> </span><span>
-</span><span id="line-49"></span><span id="cpExp"><span class="annot"><span class="annottext">cpExp :: CParser TokenBasic Exp
-</span><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-var hs-var">cpExp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre -&gt; CParser TokenBasic Exp
+</span><span id="line-52"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-53"></span><span>
+</span><span id="line-54"></span><span class="annot"><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-type">cpExp</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.CParser.html#CParser"><span class="hs-identifier hs-type">CParser</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Regex.html#TokenBasic"><span class="hs-identifier hs-type">TokenBasic</span></a></span><span> </span><span class="annot"><a href="Examples.Lang.Arith.html#Exp"><span class="hs-identifier hs-type">Exp</span></a></span><span>
+</span><span id="line-55"></span><span id="cpExp"><span class="annot"><span class="annottext">cpExp :: CParser TokenBasic Exp
+</span><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-var hs-var">cpExp</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Text
+-&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre -&gt; CParser TokenBasic Exp
 forall t a.
 Ord t =&gt;
-&#120138; -&gt; MixfixF t (&#119860; SrcCxt) a -&gt; CParser t (&#119860; SrcCxt a)
-</span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixfixWithContext"><span class="hs-identifier hs-var">fmixfixWithContext</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+Text -&gt; MixfixF t (&#119860; SrcCxt) a -&gt; CParser t (&#119860; SrcCxt a)
+</span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixfixWithContext"><span class="hs-identifier hs-var">fmixfixWithContext</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;exp&quot;</span></span><span> </span><span class="annot"><span class="annottext">(MixfixF TokenBasic (&#119860; SrcCxt) ExpPre -&gt; CParser TokenBasic Exp)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre -&gt; CParser TokenBasic Exp
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -137,14 +130,14 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
 </span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
-</span><span id="line-50"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic ExpPre -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
+</span><span id="line-56"></span><span>  </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic ExpPre -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall t a (f :: * -&gt; *). CParser t a -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixTerminal"><span class="hs-identifier hs-var">fmixTerminal</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic ExpPre -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre)
 -&gt; CParser TokenBasic ExpPre
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-51"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+</span><span id="line-57"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
 forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
 </span><a href="UVMHS.Core.Classes.Functors.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
 -&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
@@ -154,13 +147,13 @@ forall t. Ord t =&gt; t -&gt; CParser t t
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpToken"><span class="hs-identifier hs-var">cpToken</span></a></span><span> </span><span class="annot"><span class="annottext">(TokenBasic -&gt; CParser TokenBasic TokenBasic)
 -&gt; TokenBasic -&gt; CParser TokenBasic TokenBasic
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; TokenBasic
-</span><a href="UVMHS.Lib.Parser.Regex.html#SyntaxTBasic"><span class="hs-identifier hs-var">SyntaxTBasic</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; TokenBasic
+</span><a href="UVMHS.Lib.Parser.Regex.html#SyntaxTBasic"><span class="hs-identifier hs-var">SyntaxTBasic</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;(&quot;</span></span><span>
-</span><span id="line-52"></span><span>      </span><span id="local-6989586621680572758"><span class="annot"><span class="annottext">Exp
-</span><a href="#local-6989586621680572758"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
+</span><span id="line-58"></span><span>      </span><span id="local-6989586621680754261"><span class="annot"><span class="annottext">Exp
+</span><a href="#local-6989586621680754261"><span class="hs-identifier hs-var">e</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
 </span><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-var">cpExp</span></a></span><span>
-</span><span id="line-53"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
+</span><span id="line-59"></span><span>      </span><span class="annot"><span class="annottext">CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
 forall (m :: * -&gt; *) a. Functor m =&gt; m a -&gt; m ()
 </span><a href="UVMHS.Core.Classes.Functors.html#void"><span class="hs-identifier hs-var">void</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ())
 -&gt; CParser TokenBasic TokenBasic -&gt; CParser TokenBasic ()
@@ -170,10 +163,10 @@ forall t. Ord t =&gt; t -&gt; CParser t t
 </span><a href="UVMHS.Lib.Parser.CParser.html#cpToken"><span class="hs-identifier hs-var">cpToken</span></a></span><span> </span><span class="annot"><span class="annottext">(TokenBasic -&gt; CParser TokenBasic TokenBasic)
 -&gt; TokenBasic -&gt; CParser TokenBasic TokenBasic
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; TokenBasic
-</span><a href="UVMHS.Lib.Parser.Regex.html#SyntaxTBasic"><span class="hs-identifier hs-var">SyntaxTBasic</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; TokenBasic
+</span><a href="UVMHS.Lib.Parser.Regex.html#SyntaxTBasic"><span class="hs-identifier hs-var">SyntaxTBasic</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;)&quot;</span></span><span>
-</span><span id="line-54"></span><span>      </span><span class="annot"><span class="annottext">ExpPre -&gt; CParser TokenBasic ExpPre
+</span><span id="line-60"></span><span>      </span><span class="annot"><span class="annottext">ExpPre -&gt; CParser TokenBasic ExpPre
 forall a. a -&gt; CParser TokenBasic a
 forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
 </span><a href="UVMHS.Core.Classes.Functors.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(ExpPre -&gt; CParser TokenBasic ExpPre)
@@ -183,8 +176,8 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall a. &#119860; SrcCxt a -&gt; a
 forall (w :: * -&gt; *) a. Extract w =&gt; w a -&gt; a
 </span><a href="UVMHS.Core.Classes.Comonad.html#extract"><span class="hs-identifier hs-var">extract</span></a></span><span> </span><span class="annot"><span class="annottext">Exp
-</span><a href="#local-6989586621680572758"><span class="hs-identifier hs-var">e</span></a></span><span>
-</span><span id="line-55"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic ExpPre -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
+</span><a href="#local-6989586621680754261"><span class="hs-identifier hs-var">e</span></a></span><span>
+</span><span id="line-61"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic ExpPre -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall t a (f :: * -&gt; *). CParser t a -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixTerminal"><span class="hs-identifier hs-var">fmixTerminal</span></a></span><span>       </span><span class="annot"><span class="annottext">(CParser TokenBasic ExpPre -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre)
 -&gt; CParser TokenBasic ExpPre
@@ -196,13 +189,13 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Atom
 </span><a href="Examples.Lang.Arith.html#cpAtom"><span class="hs-identifier hs-var">cpAtom</span></a></span><span>
-</span><span id="line-56"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span id="line-62"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall t (f :: * -&gt; *) a.
 &#8469;64 -&gt; CParser t (f a -&gt; f a -&gt; a) -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixInfix"><span class="hs-identifier hs-var">fmixInfix</span></a></span><span>   </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="UVMHS.Lib.Parser.Mixfix.html#pCMP"><span class="hs-identifier hs-var">pCMP</span></a></span><span>   </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pCMP"><span class="hs-identifier hs-var">pCMP</span></a></span><span>   </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
  -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre)
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
@@ -214,16 +207,16 @@ forall a b. a -&gt; b -&gt; a
 -&gt; CParser TokenBasic TokenBasic
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
-</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;==&quot;</span></span><span>
-</span><span id="line-57"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span id="line-63"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall t (f :: * -&gt; *) a.
 &#8469;64 -&gt; CParser t (f a -&gt; f a -&gt; a) -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixInfixR"><span class="hs-identifier hs-var">fmixInfixR</span></a></span><span>  </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="UVMHS.Lib.Parser.Mixfix.html#pPLUS"><span class="hs-identifier hs-var">pPLUS</span></a></span><span>  </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pPLUS"><span class="hs-identifier hs-var">pPLUS</span></a></span><span>  </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
  -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre)
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
@@ -235,16 +228,16 @@ forall a b. a -&gt; b -&gt; a
 -&gt; CParser TokenBasic TokenBasic
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
-</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;+&quot;</span></span><span>
-</span><span id="line-58"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span id="line-64"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall t (f :: * -&gt; *) a.
 &#8469;64 -&gt; CParser t (f a -&gt; f a -&gt; a) -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixInfixR"><span class="hs-identifier hs-var">fmixInfixR</span></a></span><span>  </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="UVMHS.Lib.Parser.Mixfix.html#pTIMES"><span class="hs-identifier hs-var">pTIMES</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pTIMES"><span class="hs-identifier hs-var">pTIMES</span></a></span><span> </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
  -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre)
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
@@ -256,16 +249,16 @@ forall a b. a -&gt; b -&gt; a
 -&gt; CParser TokenBasic TokenBasic
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
-</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;*&quot;</span></span><span>
-</span><span id="line-59"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span id="line-65"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; CParser TokenBasic (Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall t (f :: * -&gt; *) a.
 &#8469;64 -&gt; CParser t (f a -&gt; a) -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixPrefix"><span class="hs-identifier hs-var">fmixPrefix</span></a></span><span>  </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="UVMHS.Lib.Parser.Mixfix.html#pNEG"><span class="hs-identifier hs-var">pNEG</span></a></span><span>   </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; ExpPre)
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pNEG"><span class="hs-identifier hs-var">pNEG</span></a></span><span>   </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; ExpPre)
  -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre)
 -&gt; CParser TokenBasic (Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
@@ -277,16 +270,16 @@ forall a b. a -&gt; b -&gt; a
 -&gt; CParser TokenBasic TokenBasic
 -&gt; CParser TokenBasic (Exp -&gt; ExpPre)
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
-</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;-&quot;</span></span><span>
-</span><span id="line-60"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span id="line-66"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall t (f :: * -&gt; *) a.
 &#8469;64 -&gt; CParser t (f a -&gt; f a -&gt; a) -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixInfixL"><span class="hs-identifier hs-var">fmixInfixL</span></a></span><span>  </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="UVMHS.Lib.Parser.Mixfix.html#pPOW"><span class="hs-identifier hs-var">pPOW</span></a></span><span>   </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pPOW"><span class="hs-identifier hs-var">pPOW</span></a></span><span>   </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
  -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre)
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
@@ -298,16 +291,16 @@ forall a b. a -&gt; b -&gt; a
 -&gt; CParser TokenBasic TokenBasic
 -&gt; CParser TokenBasic (Exp -&gt; Exp -&gt; ExpPre)
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
-</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;^&quot;</span></span><span>
-</span><span id="line-61"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span id="line-67"></span><span>  </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64
 -&gt; CParser TokenBasic (Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
 forall t (f :: * -&gt; *) a.
 &#8469;64 -&gt; CParser t (f a -&gt; a) -&gt; MixfixF t f a
 </span><a href="UVMHS.Lib.Parser.Mixfix.html#fmixPostfix"><span class="hs-identifier hs-var">fmixPostfix</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="UVMHS.Lib.Parser.Mixfix.html#pFAC"><span class="hs-identifier hs-var">pFAC</span></a></span><span>   </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; ExpPre)
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pFAC"><span class="hs-identifier hs-var">pFAC</span></a></span><span>   </span><span class="annot"><span class="annottext">(CParser TokenBasic (Exp -&gt; ExpPre)
  -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre)
 -&gt; CParser TokenBasic (Exp -&gt; ExpPre)
 -&gt; MixfixF TokenBasic (&#119860; SrcCxt) ExpPre
@@ -319,88 +312,93 @@ forall a b. a -&gt; b -&gt; a
 -&gt; CParser TokenBasic TokenBasic
 -&gt; CParser TokenBasic (Exp -&gt; ExpPre)
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; CParser TokenBasic TokenBasic
-</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; CParser TokenBasic TokenBasic
+</span><a href="UVMHS.Lib.Parser.CParser.html#cpSyntax"><span class="hs-identifier hs-var">cpSyntax</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;!&quot;</span></span><span>
-</span><span id="line-62"></span><span>  </span><span class="hs-special">]</span><span>
-</span><span id="line-63"></span><span>
-</span><span id="line-64"></span><span class="annot"><a href="Examples.Lang.Arith.html#testParserSuccess"><span class="hs-identifier hs-type">testParserSuccess</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-65"></span><span id="testParserSuccess"><span class="annot"><span class="annottext">testParserSuccess :: IO ()
+</span><span id="line-68"></span><span>  </span><span class="hs-special">]</span><span>
+</span><span id="line-69"></span><span>
+</span><span id="line-70"></span><span class="annot"><a href="Examples.Lang.Arith.html#testParserSuccess"><span class="hs-identifier hs-type">testParserSuccess</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-71"></span><span id="testParserSuccess"><span class="annot"><span class="annottext">testParserSuccess :: IO ()
 </span><a href="Examples.Lang.Arith.html#testParserSuccess"><span class="hs-identifier hs-var hs-var">testParserSuccess</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-66"></span><span>  </span><span class="annot"><span class="annottext">CParser TokenBasic Exp -&gt; &#120138; -&gt; &#120141; (ParserToken TokenBasic) -&gt; IO ()
+</span><span id="line-72"></span><span>  </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
+-&gt; Text -&gt; &#120141; (ParserToken TokenBasic) -&gt; IO ()
 forall a t ts.
 (Pretty a, ToIter (ParserToken t) ts, Ord t) =&gt;
-CParser t a -&gt; &#120138; -&gt; ts -&gt; IO ()
+CParser t a -&gt; Text -&gt; ts -&gt; IO ()
 </span><a href="UVMHS.Lib.Parser.CParser.html#parseIOMain"><span class="hs-identifier hs-var">parseIOMain</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
-</span><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-var">cpExp</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-var">cpExp</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken TokenBasic) -&gt; IO ())
 -&gt; IO (&#120141; (ParserToken TokenBasic)) -&gt; IO ()
 forall (m :: * -&gt; *) a b. Bind m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
 </span><a href="UVMHS.Core.Classes.Functors.html#%2A%24"><span class="hs-operator hs-var">*$</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
--&gt; &#120138; -&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
+-&gt; Text -&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
 forall c t o u w.
 (Show u, Ord c, Ord t, Pretty t, Classified c t, Eq o, Eq u,
  Plus u) =&gt;
-Lexer c t o u w -&gt; &#120138; -&gt; &#120141; (ParserToken t) -&gt; IO (&#120141; (ParserToken w))
+Lexer c t o u w
+-&gt; Text -&gt; &#120141; (ParserToken t) -&gt; IO (&#120141; (ParserToken w))
 </span><a href="UVMHS.Lib.Parser.Regex.html#tokenizeIO"><span class="hs-identifier hs-var">tokenizeIO</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
-</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var">lexer</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var">lexer</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic)))
 -&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#120141; (ParserToken &#8450;)
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#tokens"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; &#120141; (ParserToken &#8450;)
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#tokens"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">Text
 </span><span class="hs-string">&quot;(- 1) + - 2 + 3 * 4 ^ 5 ^ 6 !&quot;</span></span><span>
-</span><span id="line-67"></span><span>
-</span><span id="line-68"></span><span class="annot"><a href="Examples.Lang.Arith.html#testParserFailure1"><span class="hs-identifier hs-type">testParserFailure1</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-69"></span><span id="testParserFailure1"><span class="annot"><span class="annottext">testParserFailure1 :: IO ()
-</span><a href="Examples.Lang.Arith.html#testParserFailure1"><span class="hs-identifier hs-var hs-var">testParserFailure1</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp -&gt; &#120138; -&gt; &#120141; (ParserToken TokenBasic) -&gt; IO ()
-forall a t ts.
-(Pretty a, ToIter (ParserToken t) ts, Ord t) =&gt;
-CParser t a -&gt; &#120138; -&gt; ts -&gt; IO ()
-</span><a href="UVMHS.Lib.Parser.CParser.html#parseIOMain"><span class="hs-identifier hs-var">parseIOMain</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
-</span><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-var">cpExp</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken TokenBasic) -&gt; IO ())
--&gt; IO (&#120141; (ParserToken TokenBasic)) -&gt; IO ()
-forall (m :: * -&gt; *) a b. Bind m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
-</span><a href="UVMHS.Core.Classes.Functors.html#%2A%24"><span class="hs-operator hs-var">*$</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
--&gt; &#120138; -&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
-forall c t o u w.
-(Show u, Ord c, Ord t, Pretty t, Classified c t, Eq o, Eq u,
- Plus u) =&gt;
-Lexer c t o u w -&gt; &#120138; -&gt; &#120141; (ParserToken t) -&gt; IO (&#120141; (ParserToken w))
-</span><a href="UVMHS.Lib.Parser.Regex.html#tokenizeIO"><span class="hs-identifier hs-var">tokenizeIO</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
-</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var">lexer</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic)))
--&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#120141; (ParserToken &#8450;)
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#tokens"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;((9 == ((- 1))) + 2 + 3 * 4 ^ 5 ^ 6 !))&quot;</span></span><span>
-</span><span id="line-70"></span><span>
-</span><span id="line-71"></span><span class="annot"><a href="Examples.Lang.Arith.html#testParserFailure2"><span class="hs-identifier hs-type">testParserFailure2</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
-</span><span id="line-72"></span><span id="testParserFailure2"><span class="annot"><span class="annottext">testParserFailure2 :: IO ()
-</span><a href="Examples.Lang.Arith.html#testParserFailure2"><span class="hs-identifier hs-var hs-var">testParserFailure2</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp -&gt; &#120138; -&gt; &#120141; (ParserToken TokenBasic) -&gt; IO ()
-forall a t ts.
-(Pretty a, ToIter (ParserToken t) ts, Ord t) =&gt;
-CParser t a -&gt; &#120138; -&gt; ts -&gt; IO ()
-</span><a href="UVMHS.Lib.Parser.CParser.html#parseIOMain"><span class="hs-identifier hs-var">parseIOMain</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
-</span><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-var">cpExp</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken TokenBasic) -&gt; IO ())
--&gt; IO (&#120141; (ParserToken TokenBasic)) -&gt; IO ()
-forall (m :: * -&gt; *) a b. Bind m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
-</span><a href="UVMHS.Core.Classes.Functors.html#%2A%24"><span class="hs-operator hs-var">*$</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
--&gt; &#120138; -&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
-forall c t o u w.
-(Show u, Ord c, Ord t, Pretty t, Classified c t, Eq o, Eq u,
- Plus u) =&gt;
-Lexer c t o u w -&gt; &#120138; -&gt; &#120141; (ParserToken t) -&gt; IO (&#120141; (ParserToken w))
-</span><a href="UVMHS.Lib.Parser.Regex.html#tokenizeIO"><span class="hs-identifier hs-var">tokenizeIO</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
-</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var">lexer</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic)))
--&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#120141; (ParserToken &#8450;)
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#tokens"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;(((((- 1))) + 2 + 3 * 4 ^ 5 ^ ! == 0))&quot;</span></span><span>
 </span><span id="line-73"></span><span>
-</span><span id="line-74"></span></pre></body></html>
+</span><span id="line-74"></span><span class="annot"><a href="Examples.Lang.Arith.html#testParserFailure1"><span class="hs-identifier hs-type">testParserFailure1</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-75"></span><span id="testParserFailure1"><span class="annot"><span class="annottext">testParserFailure1 :: IO ()
+</span><a href="Examples.Lang.Arith.html#testParserFailure1"><span class="hs-identifier hs-var hs-var">testParserFailure1</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
+-&gt; Text -&gt; &#120141; (ParserToken TokenBasic) -&gt; IO ()
+forall a t ts.
+(Pretty a, ToIter (ParserToken t) ts, Ord t) =&gt;
+CParser t a -&gt; Text -&gt; ts -&gt; IO ()
+</span><a href="UVMHS.Lib.Parser.CParser.html#parseIOMain"><span class="hs-identifier hs-var">parseIOMain</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
+</span><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-var">cpExp</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken TokenBasic) -&gt; IO ())
+-&gt; IO (&#120141; (ParserToken TokenBasic)) -&gt; IO ()
+forall (m :: * -&gt; *) a b. Bind m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
+</span><a href="UVMHS.Core.Classes.Functors.html#%2A%24"><span class="hs-operator hs-var">*$</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
+-&gt; Text -&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
+forall c t o u w.
+(Show u, Ord c, Ord t, Pretty t, Classified c t, Eq o, Eq u,
+ Plus u) =&gt;
+Lexer c t o u w
+-&gt; Text -&gt; &#120141; (ParserToken t) -&gt; IO (&#120141; (ParserToken w))
+</span><a href="UVMHS.Lib.Parser.Regex.html#tokenizeIO"><span class="hs-identifier hs-var">tokenizeIO</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
+</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var">lexer</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic)))
+-&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; &#120141; (ParserToken &#8450;)
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#tokens"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;((9 == ((- 1))) + 2 + 3 * 4 ^ 5 ^ 6 !))&quot;</span></span><span>
+</span><span id="line-76"></span><span>
+</span><span id="line-77"></span><span class="annot"><a href="Examples.Lang.Arith.html#testParserFailure2"><span class="hs-identifier hs-type">testParserFailure2</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">IO</span></span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><span id="line-78"></span><span id="testParserFailure2"><span class="annot"><span class="annottext">testParserFailure2 :: IO ()
+</span><a href="Examples.Lang.Arith.html#testParserFailure2"><span class="hs-identifier hs-var hs-var">testParserFailure2</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
+-&gt; Text -&gt; &#120141; (ParserToken TokenBasic) -&gt; IO ()
+forall a t ts.
+(Pretty a, ToIter (ParserToken t) ts, Ord t) =&gt;
+CParser t a -&gt; Text -&gt; ts -&gt; IO ()
+</span><a href="UVMHS.Lib.Parser.CParser.html#parseIOMain"><span class="hs-identifier hs-var">parseIOMain</span></a></span><span> </span><span class="annot"><span class="annottext">CParser TokenBasic Exp
+</span><a href="Examples.Lang.Arith.html#cpExp"><span class="hs-identifier hs-var">cpExp</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken TokenBasic) -&gt; IO ())
+-&gt; IO (&#120141; (ParserToken TokenBasic)) -&gt; IO ()
+forall (m :: * -&gt; *) a b. Bind m =&gt; (a -&gt; m b) -&gt; m a -&gt; m b
+</span><a href="UVMHS.Core.Classes.Functors.html#%2A%24"><span class="hs-operator hs-var">*$</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
+-&gt; Text -&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
+forall c t o u w.
+(Show u, Ord c, Ord t, Pretty t, Classified c t, Eq o, Eq u,
+ Plus u) =&gt;
+Lexer c t o u w
+-&gt; Text -&gt; &#120141; (ParserToken t) -&gt; IO (&#120141; (ParserToken w))
+</span><a href="UVMHS.Lib.Parser.Regex.html#tokenizeIO"><span class="hs-identifier hs-var">tokenizeIO</span></a></span><span> </span><span class="annot"><span class="annottext">Lexer CharClass &#8450; TokenClassBasic &#8469;64 TokenBasic
+</span><a href="Examples.Lang.Arith.html#lexer"><span class="hs-identifier hs-var">lexer</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;&quot;</span></span><span> </span><span class="annot"><span class="annottext">(&#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic)))
+-&gt; &#120141; (ParserToken &#8450;) -&gt; IO (&#120141; (ParserToken TokenBasic))
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Text -&gt; &#120141; (ParserToken &#8450;)
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#tokens"><span class="hs-identifier hs-var">tokens</span></a></span><span> </span><span class="annot"><span class="annottext">Text
+</span><span class="hs-string">&quot;(((((- 1))) + 2 + 3 * 4 ^ 5 ^ ! == 0))&quot;</span></span><span>
+</span><span id="line-79"></span></pre></body></html>

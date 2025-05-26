@@ -8,6 +8,8 @@ import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.SubstElem
 
+import qualified Language.Haskell.TH.Syntax as TH
+
 -- ============================== --
 -- SCOPED (NAMELESS) SUBSTITUTION --
 -- ============================== --
@@ -34,6 +36,7 @@ data SubstScoped s e = SubstScoped
   --      the instantiations (es), simulate an introduction of this many new
   --      nameless variables by bumping all subsequent indices by this much.
   } deriving (Eq,Ord,Show)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstScoped s e)
 
 makeLenses ''SubstScoped
 

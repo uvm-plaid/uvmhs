@@ -84,7 +84,7 @@ thTyConIL = Prism
   , construct = TH.TyConI
   }
 
-thDataDL ∷ TH.Dec ⌲ TH.Cxt ∧ TH.Name ∧ 𝐿 (TH.TyVarBndr ()) ∧ 𝑂 TH.Kind ∧ 𝐿 TH.Con ∧ 𝐿 TH.DerivClause
+thDataDL ∷ TH.Dec ⌲ TH.Cxt ∧ TH.Name ∧ 𝐿 (TH.TyVarBndr TH.BndrVis) ∧ 𝑂 TH.Kind ∧ 𝐿 TH.Con ∧ 𝐿 TH.DerivClause
 thDataDL = Prism
   { view = \case
       TH.DataD cx t (frhs → args) (frhs → kM) (frhs → cs) (frhs → ders) → Some (cx :* t :* args :* kM :* cs :* ders)
@@ -92,7 +92,7 @@ thDataDL = Prism
   , construct = \ (cx :* t :* args :* kM :* cs :* ders) → TH.DataD cx t (tohs args) (tohs kM) (tohs cs) (tohs ders)
   }
 
-thNewtypeDL ∷ TH.Dec ⌲ TH.Cxt ∧ TH.Name ∧ 𝐿 (TH.TyVarBndr ()) ∧ 𝑂 TH.Kind ∧ TH.Con ∧ 𝐿 TH.DerivClause
+thNewtypeDL ∷ TH.Dec ⌲ TH.Cxt ∧ TH.Name ∧ 𝐿 (TH.TyVarBndr TH.BndrVis) ∧ 𝑂 TH.Kind ∧ TH.Con ∧ 𝐿 TH.DerivClause
 thNewtypeDL = Prism
   { view = \case
       TH.NewtypeD cx t (frhs → args) (frhs → kM) (frhs → c) (frhs → ders) → Some (cx :* t :* args :* kM :* c :* ders)
@@ -100,7 +100,7 @@ thNewtypeDL = Prism
   , construct = \ (cx :* t :* args :* kM :* c :* ders) → TH.NewtypeD cx t (tohs args) (tohs kM) (tohs c) (tohs ders)
   }
 
-thViewADT ∷ TH.Dec → 𝑂 (TH.Cxt ∧ TH.Name ∧ 𝐿 (TH.TyVarBndr ()) ∧ 𝑂 TH.Kind ∧ 𝐿 TH.Con ∧ 𝐿 TH.DerivClause)
+thViewADT ∷ TH.Dec → 𝑂 (TH.Cxt ∧ TH.Name ∧ 𝐿 (TH.TyVarBndr TH.BndrVis) ∧ 𝑂 TH.Kind ∧ 𝐿 TH.Con ∧ 𝐿 TH.DerivClause)
 thViewADT d =
   view thDataDL d
   ⎅
@@ -108,7 +108,7 @@ thViewADT d =
   where
     ff (cx :* t :* args :* kM :* c :* ders) = (cx :* t :* args :* kM :* single c :* ders)
 
-thViewSingleConADT ∷ TH.Dec → 𝑂 (TH.Cxt ∧ TH.Name ∧ 𝐿 (TH.TyVarBndr ()) ∧ 𝑂 TH.Kind ∧ TH.Con ∧ 𝐿 TH.DerivClause)
+thViewSingleConADT ∷ TH.Dec → 𝑂 (TH.Cxt ∧ TH.Name ∧ 𝐿 (TH.TyVarBndr TH.BndrVis) ∧ 𝑂 TH.Kind ∧ TH.Con ∧ 𝐿 TH.DerivClause)
 thViewSingleConADT dec = do
   (cx :* t :* args :* kM :* cs :* ders) ← thViewADT dec
   c ← view singleL cs

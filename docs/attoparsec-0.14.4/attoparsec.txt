@@ -34,8 +34,8 @@ module Data.Attoparsec.Internal.Types
 --   <li><a>Alternative</a>, which follows <a>MonadPlus</a>.</li>
 --   </ul>
 newtype Parser i a
-Parser :: (forall r. State i -> Pos -> More -> Failure i (State i) r -> Success i (State i) a r -> IResult i r) -> Parser i a
-[runParser] :: Parser i a -> forall r. State i -> Pos -> More -> Failure i (State i) r -> Success i (State i) a r -> IResult i r
+Parser :: (forall r. () => State i -> Pos -> More -> Failure i (State i) r -> Success i (State i) a r -> IResult i r) -> Parser i a
+[runParser] :: Parser i a -> forall r. () => State i -> Pos -> More -> Failure i (State i) r -> Success i (State i) a r -> IResult i r
 type family State i
 type Failure i t r = t -> Pos -> More -> [String] -> String -> IResult i r
 type Success i t a r = t -> Pos -> More -> a -> IResult i r
@@ -76,9 +76,21 @@ Incomplete :: More
 
 -- | An associative operation.
 --   
+--   <h4><b>Examples</b></h4>
+--   
 --   <pre>
 --   &gt;&gt;&gt; [1,2,3] &lt;&gt; [4,5,6]
 --   [1,2,3,4,5,6]
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; Just [1, 2, 3] &lt;&gt; Just [4, 5, 6]
+--   Just [1,2,3,4,5,6]
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; putStr "Hello, " &lt;&gt; putStrLn "World!"
+--   Hello, World!
 --   </pre>
 (<>) :: Semigroup a => a -> a -> a
 infixr 6 <>
@@ -103,27 +115,27 @@ bufferElemAt :: Chunk c => c -> Pos -> State c -> Maybe (ChunkElem c, Int)
 -- | Map an element to the corresponding character. The first argument is
 --   ignored.
 chunkElemToChar :: Chunk c => c -> ChunkElem c -> Char
-instance GHC.Num.Num Data.Attoparsec.Internal.Types.Pos
-instance GHC.Show.Show Data.Attoparsec.Internal.Types.Pos
-instance GHC.Classes.Ord Data.Attoparsec.Internal.Types.Pos
-instance GHC.Classes.Eq Data.Attoparsec.Internal.Types.Pos
-instance GHC.Show.Show Data.Attoparsec.Internal.Types.More
-instance GHC.Classes.Eq Data.Attoparsec.Internal.Types.More
+instance GHC.Base.Alternative (Data.Attoparsec.Internal.Types.Parser i)
+instance GHC.Base.Applicative (Data.Attoparsec.Internal.Types.Parser i)
 instance Data.Attoparsec.Internal.Types.Chunk Data.ByteString.Internal.Type.ByteString
 instance Data.Attoparsec.Internal.Types.Chunk Data.Text.Internal.Text
-instance GHC.Base.Monad (Data.Attoparsec.Internal.Types.Parser i)
-instance Control.Monad.Fail.MonadFail (Data.Attoparsec.Internal.Types.Parser i)
-instance GHC.Base.MonadPlus (Data.Attoparsec.Internal.Types.Parser i)
-instance GHC.Base.Functor (Data.Attoparsec.Internal.Types.Parser i)
-instance GHC.Base.Applicative (Data.Attoparsec.Internal.Types.Parser i)
-instance GHC.Base.Semigroup (Data.Attoparsec.Internal.Types.Parser i a)
-instance GHC.Base.Monoid (Data.Attoparsec.Internal.Types.Parser i a)
-instance GHC.Base.Alternative (Data.Attoparsec.Internal.Types.Parser i)
-instance GHC.Base.Semigroup Data.Attoparsec.Internal.Types.More
-instance GHC.Base.Monoid Data.Attoparsec.Internal.Types.More
-instance (GHC.Show.Show i, GHC.Show.Show r) => GHC.Show.Show (Data.Attoparsec.Internal.Types.IResult i r)
-instance (Control.DeepSeq.NFData i, Control.DeepSeq.NFData r) => Control.DeepSeq.NFData (Data.Attoparsec.Internal.Types.IResult i r)
+instance GHC.Classes.Eq Data.Attoparsec.Internal.Types.More
+instance GHC.Classes.Eq Data.Attoparsec.Internal.Types.Pos
 instance GHC.Base.Functor (Data.Attoparsec.Internal.Types.IResult i)
+instance GHC.Base.Functor (Data.Attoparsec.Internal.Types.Parser i)
+instance Control.Monad.Fail.MonadFail (Data.Attoparsec.Internal.Types.Parser i)
+instance GHC.Base.Monad (Data.Attoparsec.Internal.Types.Parser i)
+instance GHC.Base.MonadPlus (Data.Attoparsec.Internal.Types.Parser i)
+instance GHC.Base.Monoid Data.Attoparsec.Internal.Types.More
+instance GHC.Base.Monoid (Data.Attoparsec.Internal.Types.Parser i a)
+instance (Control.DeepSeq.NFData i, Control.DeepSeq.NFData r) => Control.DeepSeq.NFData (Data.Attoparsec.Internal.Types.IResult i r)
+instance GHC.Num.Num Data.Attoparsec.Internal.Types.Pos
+instance GHC.Classes.Ord Data.Attoparsec.Internal.Types.Pos
+instance GHC.Base.Semigroup Data.Attoparsec.Internal.Types.More
+instance GHC.Base.Semigroup (Data.Attoparsec.Internal.Types.Parser i a)
+instance (GHC.Show.Show i, GHC.Show.Show r) => GHC.Show.Show (Data.Attoparsec.Internal.Types.IResult i r)
+instance GHC.Show.Show Data.Attoparsec.Internal.Types.More
+instance GHC.Show.Show Data.Attoparsec.Internal.Types.Pos
 
 
 -- | Simple, efficient parser combinators, loosely based on the Parsec
@@ -153,10 +165,10 @@ demandInput_ :: Chunk t => Parser t t
 -- | This parser always succeeds. It returns <a>True</a> if any input is
 --   available either immediately or on demand, and <a>False</a> if the end
 --   of all input has been reached.
-wantInput :: forall t. Chunk t => Parser t Bool
+wantInput :: Chunk t => Parser t Bool
 
 -- | Match only if all input has been consumed.
-endOfInput :: forall t. Chunk t => Parser t ()
+endOfInput :: Chunk t => Parser t ()
 
 -- | Return an indication of whether the end of input has been reached.
 atEnd :: Chunk t => Parser t Bool
@@ -164,7 +176,7 @@ atEnd :: Chunk t => Parser t Bool
 -- | The parser <tt>satisfyElem p</tt> succeeds for any chunk element for
 --   which the predicate <tt>p</tt> returns <a>True</a>. Returns the
 --   element that is actually parsed.
-satisfyElem :: forall t. Chunk t => (ChunkElem t -> Bool) -> Parser t (ChunkElem t)
+satisfyElem :: Chunk t => (ChunkElem t -> Bool) -> Parser t (ChunkElem t)
 
 -- | Concatenate a monoid after reversing its elements. Used to glue
 --   together a series of textual chunks that have been accumulated
@@ -192,14 +204,14 @@ data Number
 I :: !Integer -> Number
 D :: {-# UNPACK #-} !Double -> Number
 instance Data.Data.Data Data.Attoparsec.Number.Number
-instance GHC.Show.Show Data.Attoparsec.Number.Number
-instance Control.DeepSeq.NFData Data.Attoparsec.Number.Number
 instance GHC.Classes.Eq Data.Attoparsec.Number.Number
-instance GHC.Classes.Ord Data.Attoparsec.Number.Number
-instance GHC.Num.Num Data.Attoparsec.Number.Number
-instance GHC.Real.Real Data.Attoparsec.Number.Number
 instance GHC.Real.Fractional Data.Attoparsec.Number.Number
+instance Control.DeepSeq.NFData Data.Attoparsec.Number.Number
+instance GHC.Num.Num Data.Attoparsec.Number.Number
+instance GHC.Classes.Ord Data.Attoparsec.Number.Number
 instance GHC.Real.RealFrac Data.Attoparsec.Number.Number
+instance GHC.Real.Real Data.Attoparsec.Number.Number
+instance GHC.Show.Show Data.Attoparsec.Number.Number
 
 
 -- | Simple, efficient parser combinators for strings, loosely based on the
@@ -279,7 +291,7 @@ type Parser a = ZeptoT Identity a
 --   This monad is strict in its state, and the monadic bind operator
 --   (<a>&gt;&gt;=</a>) evaluates each result to weak head normal form
 --   before passing it along.
-data ZeptoT m a
+data ZeptoT (m :: Type -> Type) a
 
 -- | Run a parser.
 parse :: Parser a -> ByteString -> Either String a
@@ -288,25 +300,25 @@ parse :: Parser a -> ByteString -> Either String a
 parseT :: Monad m => ZeptoT m a -> ByteString -> m (Either String a)
 
 -- | Indicate whether the end of the input has been reached.
-atEnd :: Monad m => ZeptoT m Bool
+atEnd :: forall (m :: Type -> Type). Monad m => ZeptoT m Bool
 
 -- | Match a string exactly.
-string :: Monad m => ByteString -> ZeptoT m ()
+string :: forall (m :: Type -> Type). Monad m => ByteString -> ZeptoT m ()
 
 -- | Consume <tt>n</tt> bytes of input.
-take :: Monad m => Int -> ZeptoT m ByteString
+take :: forall (m :: Type -> Type). Monad m => Int -> ZeptoT m ByteString
 
 -- | Consume input while the predicate returns <a>True</a>.
-takeWhile :: Monad m => (Word8 -> Bool) -> ZeptoT m ByteString
-instance GHC.Base.Monad m => GHC.Base.Functor (Data.Attoparsec.Zepto.ZeptoT m)
-instance Control.Monad.IO.Class.MonadIO m => Control.Monad.IO.Class.MonadIO (Data.Attoparsec.Zepto.ZeptoT m)
-instance GHC.Base.Monad m => GHC.Base.Monad (Data.Attoparsec.Zepto.ZeptoT m)
-instance GHC.Base.Monad m => Control.Monad.Fail.MonadFail (Data.Attoparsec.Zepto.ZeptoT m)
-instance GHC.Base.Monad m => GHC.Base.MonadPlus (Data.Attoparsec.Zepto.ZeptoT m)
-instance GHC.Base.Monad m => GHC.Base.Applicative (Data.Attoparsec.Zepto.ZeptoT m)
-instance GHC.Base.Monad m => GHC.Base.Semigroup (Data.Attoparsec.Zepto.ZeptoT m a)
-instance GHC.Base.Monad m => GHC.Base.Monoid (Data.Attoparsec.Zepto.ZeptoT m a)
+takeWhile :: forall (m :: Type -> Type). Monad m => (Word8 -> Bool) -> ZeptoT m ByteString
 instance GHC.Base.Monad m => GHC.Base.Alternative (Data.Attoparsec.Zepto.ZeptoT m)
+instance GHC.Base.Monad m => GHC.Base.Applicative (Data.Attoparsec.Zepto.ZeptoT m)
+instance GHC.Base.Monad m => GHC.Base.Functor (Data.Attoparsec.Zepto.ZeptoT m)
+instance GHC.Base.Monad m => Control.Monad.Fail.MonadFail (Data.Attoparsec.Zepto.ZeptoT m)
+instance Control.Monad.IO.Class.MonadIO m => Control.Monad.IO.Class.MonadIO (Data.Attoparsec.Zepto.ZeptoT m)
+instance GHC.Base.Monad m => GHC.Base.MonadPlus (Data.Attoparsec.Zepto.ZeptoT m)
+instance GHC.Base.Monad m => GHC.Base.Monad (Data.Attoparsec.Zepto.ZeptoT m)
+instance GHC.Base.Monad m => GHC.Base.Monoid (Data.Attoparsec.Zepto.ZeptoT m a)
+instance GHC.Base.Monad m => GHC.Base.Semigroup (Data.Attoparsec.Zepto.ZeptoT m a)
 
 
 -- | Useful parser combinators, similar to those provided by Parsec.
@@ -448,10 +460,10 @@ feed :: Monoid i => IResult i r -> i -> IResult i r
 -- | The parser <tt>satisfyElem p</tt> succeeds for any chunk element for
 --   which the predicate <tt>p</tt> returns <a>True</a>. Returns the
 --   element that is actually parsed.
-satisfyElem :: forall t. Chunk t => (ChunkElem t -> Bool) -> Parser t (ChunkElem t)
+satisfyElem :: Chunk t => (ChunkElem t -> Bool) -> Parser t (ChunkElem t)
 
 -- | Match only if all input has been consumed.
-endOfInput :: forall t. Chunk t => Parser t ()
+endOfInput :: Chunk t => Parser t ()
 
 -- | Return an indication of whether the end of input has been reached.
 atEnd :: Chunk t => Parser t Bool
@@ -958,7 +970,7 @@ eitherP :: Alternative f => f a -> f b -> f (Either a b)
 match :: Parser a -> Parser (Text, a)
 
 -- | Match only if all input has been consumed.
-endOfInput :: forall t. Chunk t => Parser t ()
+endOfInput :: Chunk t => Parser t ()
 
 -- | Return an indication of whether the end of input has been reached.
 atEnd :: Chunk t => Parser t Bool
@@ -994,16 +1006,6 @@ Fail :: Text -> [String] -> String -> Result r
 --   been consumed (if any) when the parse succeeded.
 Done :: Text -> r -> Result r
 
--- | A numeric type that can represent integers accurately, and floating
---   point numbers to the precision of a <a>Double</a>.
---   
---   <i>Note</i>: this type is deprecated, and will be removed in the next
---   major release. Use the <a>Scientific</a> type instead.
-data Number
-I :: !Integer -> Number
-D :: {-# UNPACK #-} !Double -> Number
-type Parser = Parser Text
-
 -- | Parse a scientific number.
 --   
 --   The syntax accepted by this parser is the same as for <a>double</a>.
@@ -1015,6 +1017,15 @@ scientific :: Parser Scientific
 --   This combinator is provided for compatibility with Parsec. attoparsec
 --   parsers always backtrack on failure.
 try :: Parser i a -> Parser i a
+
+-- | A numeric type that can represent integers accurately, and floating
+--   point numbers to the precision of a <a>Double</a>.
+--   
+--   <i>Note</i>: this type is deprecated, and will be removed in the next
+--   major release. Use the <a>Scientific</a> type instead.
+data Number
+I :: !Integer -> Number
+D :: {-# UNPACK #-} !Double -> Number
 
 -- | Consume input as long as the predicate returns <a>True</a>, and return
 --   the consumed input.
@@ -1210,6 +1221,7 @@ hexadecimal :: (Integral a, Bits a) => Parser a
 -- | Parse a number with an optional leading <tt>'+'</tt> or <tt>'-'</tt>
 --   sign character.
 signed :: Num a => Parser a -> Parser a
+type Parser = Parser Text
 
 -- | Compare two <a>IResult</a> values for equality.
 --   
@@ -1348,7 +1360,7 @@ sepBy1' :: MonadPlus m => m a -> m s -> m [a]
 eitherP :: Alternative f => f a -> f b -> f (Either a b)
 
 -- | Match only if all input has been consumed.
-endOfInput :: forall t. Chunk t => Parser t ()
+endOfInput :: Chunk t => Parser t ()
 
 -- | Return an indication of whether the end of input has been reached.
 atEnd :: Chunk t => Parser t Bool
@@ -1459,9 +1471,9 @@ maybeResult :: Result r -> Maybe r
 
 -- | Convert a <a>Result</a> value to an <a>Either</a> value.
 eitherResult :: Result r -> Either String r
-instance GHC.Show.Show r => GHC.Show.Show (Data.Attoparsec.Text.Lazy.Result r)
-instance Control.DeepSeq.NFData r => Control.DeepSeq.NFData (Data.Attoparsec.Text.Lazy.Result r)
 instance GHC.Base.Functor Data.Attoparsec.Text.Lazy.Result
+instance Control.DeepSeq.NFData r => Control.DeepSeq.NFData (Data.Attoparsec.Text.Lazy.Result r)
+instance GHC.Show.Show r => GHC.Show.Show (Data.Attoparsec.Text.Lazy.Result r)
 
 
 -- | Simple, efficient combinator parsing for <a>ByteString</a> strings,
@@ -1826,7 +1838,7 @@ eitherP :: Alternative f => f a -> f b -> f (Either a b)
 match :: Parser a -> Parser (ByteString, a)
 
 -- | Match only if all input has been consumed.
-endOfInput :: forall t. Chunk t => Parser t ()
+endOfInput :: Chunk t => Parser t ()
 
 -- | Return an indication of whether the end of input has been reached.
 atEnd :: Chunk t => Parser t Bool
@@ -1862,7 +1874,6 @@ Fail :: ByteString -> [String] -> String -> Result r
 -- | The parse succeeded. The <a>ByteString</a> is the input that had not
 --   yet been consumed (if any) when the parse succeeded.
 Done :: ByteString -> r -> Result r
-type Parser = Parser ByteString
 
 -- | Attempt a parse, and if it fails, rewind the input so that no input
 --   appears to have been consumed.
@@ -1991,6 +2002,7 @@ word8 :: Word8 -> Parser Word8
 -- | Return both the result of a parse and the portion of the input that
 --   was consumed while it was being parsed.
 match :: Parser a -> Parser (ByteString, a)
+type Parser = Parser ByteString
 
 -- | Compare two <a>IResult</a> values for equality.
 --   
@@ -2164,7 +2176,7 @@ sepBy1' :: MonadPlus m => m a -> m s -> m [a]
 eitherP :: Alternative f => f a -> f b -> f (Either a b)
 
 -- | Match only if all input has been consumed.
-endOfInput :: forall t. Chunk t => Parser t ()
+endOfInput :: Chunk t => Parser t ()
 
 -- | Return an indication of whether the end of input has been reached.
 atEnd :: Chunk t => Parser t Bool
@@ -2192,9 +2204,9 @@ maybeResult :: Result r -> Maybe r
 
 -- | Convert a <a>Result</a> value to an <a>Either</a> value.
 eitherResult :: Result r -> Either String r
+instance GHC.Base.Functor Data.Attoparsec.ByteString.Lazy.Result
 instance Control.DeepSeq.NFData r => Control.DeepSeq.NFData (Data.Attoparsec.ByteString.Lazy.Result r)
 instance GHC.Show.Show r => GHC.Show.Show (Data.Attoparsec.ByteString.Lazy.Result r)
-instance GHC.Base.Functor Data.Attoparsec.ByteString.Lazy.Result
 
 
 -- | Simple, efficient combinator parsing for lazy <tt>ByteString</tt>
@@ -2722,7 +2734,7 @@ eitherP :: Alternative f => f a -> f b -> f (Either a b)
 match :: Parser a -> Parser (ByteString, a)
 
 -- | Match only if all input has been consumed.
-endOfInput :: forall t. Chunk t => Parser t ()
+endOfInput :: Chunk t => Parser t ()
 
 -- | Return an indication of whether the end of input has been reached.
 atEnd :: Chunk t => Parser t Bool

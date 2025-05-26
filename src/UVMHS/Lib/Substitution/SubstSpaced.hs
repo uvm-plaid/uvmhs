@@ -9,6 +9,7 @@ import UVMHS.Lib.TreeNested
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstScoped
 
+import qualified Language.Haskell.TH.Syntax as TH
 
 -- =================================================================== --
 -- (NAME)SPACED SUBSTITUTION (NAMED AND NAMELESS, SCOPED AND UNSCOPED) --
@@ -66,6 +67,7 @@ data SubstSpaced sU sS e = SubstSpaced
   }
   deriving (Eq,Ord,Show)
 makeLenses ''SubstSpaced
+deriving instance (TH.Lift s₁,TH.Lift s₂,TH.Lift e) ⇒ TH.Lift (SubstSpaced s₁ s₂ e)
 
 wfSubstSpaced ∷ (Ord sS) ⇒ SubstSpaced sU sS e → 𝔹
 wfSubstSpaced (SubstSpaced _𝓈U 𝓈S) = and $ map wfSubstScoped $ dvals 𝓈S

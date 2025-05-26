@@ -2,50 +2,50 @@
 </span><span id="line-2"></span><span>
 </span><span id="line-3"></span><span class="hs-comment">-- import UVMHS.Core</span><span>
 </span><span id="line-4"></span><span class="hs-comment">-- import UVMHS.Lib.Pretty</span><span>
-</span><span id="line-5"></span><span class="hs-comment">-- </span><span>
-</span><span id="line-6"></span><span class="hs-comment">-- data GTree a = GTree </span><span>
+</span><span id="line-5"></span><span class="hs-comment">--</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- data GTree a = GTree</span><span>
 </span><span id="line-7"></span><span class="hs-comment">--   { gtreeValues &#8759; &#119868; a</span><span>
 </span><span id="line-8"></span><span class="hs-comment">--   , gtreeNested &#8759; &#120138; &#8688; GTree a</span><span>
 </span><span id="line-9"></span><span class="hs-comment">--   } deriving (Show)</span><span>
-</span><span id="line-10"></span><span class="hs-comment">-- </span><span>
-</span><span id="line-11"></span><span class="hs-comment">-- instance Null (GTree a) where </span><span>
+</span><span id="line-10"></span><span class="hs-comment">--</span><span>
+</span><span id="line-11"></span><span class="hs-comment">-- instance Null (GTree a) where</span><span>
 </span><span id="line-12"></span><span class="hs-comment">--   null = GTree null null</span><span>
-</span><span id="line-13"></span><span class="hs-comment">-- instance Append (GTree a) where </span><span>
+</span><span id="line-13"></span><span class="hs-comment">-- instance Append (GTree a) where</span><span>
 </span><span id="line-14"></span><span class="hs-comment">--   GTree m&#8321; n&#8321; &#10746; GTree m&#8322; n&#8322; = GTree (m&#8321; &#10746; m&#8322;) $ n&#8321; &#10746; n&#8322;</span><span>
 </span><span id="line-15"></span><span class="hs-comment">-- instance Monoid (GTree a)</span><span>
-</span><span id="line-16"></span><span class="hs-comment">-- </span><span>
-</span><span id="line-17"></span><span class="hs-comment">-- instance Eps (GTree a) where </span><span>
+</span><span id="line-16"></span><span class="hs-comment">--</span><span>
+</span><span id="line-17"></span><span class="hs-comment">-- instance Eps (GTree a) where</span><span>
 </span><span id="line-18"></span><span class="hs-comment">--   eps = GTree null null</span><span>
 </span><span id="line-19"></span><span class="hs-comment">-- instance Seq (GTree a) where</span><span>
 </span><span id="line-20"></span><span class="hs-comment">--   GTree v&#8321; n&#8321; &#9655; GTree v&#8322; n&#8322;</span><span>
 </span><span id="line-21"></span><span class="hs-comment">--     | isEmpty $ list n&#8321; = GTree (v&#8321; &#10746; v&#8322;) n&#8322;</span><span>
 </span><span id="line-22"></span><span class="hs-comment">--     | otherwise = GTree v&#8321; $ assoc $ map (mapSnd (&#9655; GTree v&#8322; n&#8322;)) $ iter n&#8321;</span><span>
 </span><span id="line-23"></span><span class="hs-comment">-- instance Seqoid (GTree a)</span><span>
-</span><span id="line-24"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-24"></span><span class="hs-comment">--</span><span>
 </span><span id="line-25"></span><span class="hs-comment">-- instance Single a (GTree a) where</span><span>
 </span><span id="line-26"></span><span class="hs-comment">--   single = gtv</span><span>
-</span><span id="line-27"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
 </span><span id="line-28"></span><span class="hs-comment">-- foldGTreeWith &#8759; (Monoid b) &#8658; (&#119868; a &#8594; b) &#8594; (&#120138; &#8594; b &#8594; b) &#8594; GTree a &#8594; b</span><span>
 </span><span id="line-29"></span><span class="hs-comment">-- foldGTreeWith f&#8343; f&#8345; = loop</span><span>
-</span><span id="line-30"></span><span class="hs-comment">--   where </span><span>
+</span><span id="line-30"></span><span class="hs-comment">--   where</span><span>
 </span><span id="line-31"></span><span class="hs-comment">--     loop (GTree vs sxs) = concat</span><span>
 </span><span id="line-32"></span><span class="hs-comment">--       [ f&#8343; vs</span><span>
 </span><span id="line-33"></span><span class="hs-comment">--       , concat $ mapOn (iter sxs) $ \ (s :* xs) &#8594;</span><span>
 </span><span id="line-34"></span><span class="hs-comment">--           f&#8345; s $ loop xs</span><span>
 </span><span id="line-35"></span><span class="hs-comment">--       ]</span><span>
-</span><span id="line-36"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-36"></span><span class="hs-comment">--</span><span>
 </span><span id="line-37"></span><span class="hs-comment">-- foldGTreeOn &#8759; (Monoid b) &#8658; GTree a &#8594; (&#119868; a &#8594; b) &#8594; (&#120138; &#8594; b &#8594; b) &#8594; b</span><span>
 </span><span id="line-38"></span><span class="hs-comment">-- foldGTreeOn = rotateR foldGTreeWith</span><span>
-</span><span id="line-39"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-39"></span><span class="hs-comment">--</span><span>
 </span><span id="line-40"></span><span class="hs-comment">-- gtk &#8759; &#120138; &#8594; GTree a &#8594; GTree a</span><span>
 </span><span id="line-41"></span><span class="hs-comment">-- gtk s x = GTree null $ single $ s :* x</span><span>
-</span><span id="line-42"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-42"></span><span class="hs-comment">--</span><span>
 </span><span id="line-43"></span><span class="hs-comment">-- gtks &#8759; &#119871; &#120138; &#8594; GTree a &#8594; GTree a</span><span>
 </span><span id="line-44"></span><span class="hs-comment">-- gtks ss x = foldrOnFrom ss x gtk</span><span>
-</span><span id="line-45"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-45"></span><span class="hs-comment">--</span><span>
 </span><span id="line-46"></span><span class="hs-comment">-- gtv &#8759; a &#8594; GTree a</span><span>
 </span><span id="line-47"></span><span class="hs-comment">-- gtv x = GTree (single x) null</span><span>
-</span><span id="line-48"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-48"></span><span class="hs-comment">--</span><span>
 </span><span id="line-49"></span><span class="hs-comment">-- instance (Pretty a) &#8658; Pretty (GTree a) where</span><span>
 </span><span id="line-50"></span><span class="hs-comment">--   pretty (GTree v n) = ppVertical $ concat</span><span>
 </span><span id="line-51"></span><span class="hs-comment">--     [ map pretty v</span><span>
@@ -54,5 +54,5 @@
 </span><span id="line-54"></span><span class="hs-comment">--         , ppGA $ pretty v'</span><span>
 </span><span id="line-55"></span><span class="hs-comment">--         ]</span><span>
 </span><span id="line-56"></span><span class="hs-comment">--     ]</span><span>
-</span><span id="line-57"></span><span class="hs-comment">-- </span><span>
+</span><span id="line-57"></span><span class="hs-comment">--</span><span>
 </span><span id="line-58"></span></pre></body></html>

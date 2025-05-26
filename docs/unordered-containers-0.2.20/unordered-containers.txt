@@ -89,7 +89,7 @@ sameArray1 :: (a -> b -> Bool) -> Array a -> Array b -> Bool
 unsafeFreeze :: MArray s a -> ST s (Array a)
 unsafeThaw :: Array a -> ST s (MArray s a)
 unsafeSameArray :: Array a -> Array b -> Bool
-run :: (forall s. ST s (MArray s e)) -> Array e
+run :: (forall s. () => ST s (MArray s e)) -> Array e
 
 -- | Unsafely copy the elements of an array. Array bounds are not checked.
 copy :: Array e -> Int -> MArray s e -> Int -> Int -> ST s ()
@@ -120,10 +120,10 @@ fromList' :: Int -> [a] -> Array a
 --   is the same as the array given, as it is shrunk in place. Otherwise a
 --   copy is made.
 shrink :: MArray s a -> Int -> ST s (MArray s a)
-instance GHC.Show.Show a => GHC.Show.Show (Data.HashMap.Internal.Array.Array a)
-instance Control.DeepSeq.NFData a => Control.DeepSeq.NFData (Data.HashMap.Internal.Array.Array a)
-instance Control.DeepSeq.NFData1 Data.HashMap.Internal.Array.Array
 instance Language.Haskell.TH.Syntax.Lift a => Language.Haskell.TH.Syntax.Lift (Data.HashMap.Internal.Array.Array a)
+instance Control.DeepSeq.NFData1 Data.HashMap.Internal.Array.Array
+instance Control.DeepSeq.NFData a => Control.DeepSeq.NFData (Data.HashMap.Internal.Array.Array a)
+instance GHC.Show.Show a => GHC.Show.Show (Data.HashMap.Internal.Array.Array a)
 
 
 -- | <h1>WARNING</h1>
@@ -529,7 +529,7 @@ filter :: (v -> Bool) -> HashMap k v -> HashMap k v
 
 -- | &lt;math&gt; Filter this map by retaining only elements satisfying a
 --   predicate.
-filterWithKey :: forall k v. (k -> v -> Bool) -> HashMap k v -> HashMap k v
+filterWithKey :: (k -> v -> Bool) -> HashMap k v -> HashMap k v
 
 -- | &lt;math&gt; Return a list of this map's keys. The list is produced
 --   lazily.
@@ -732,7 +732,7 @@ updateOrConcatWithKey :: Eq k => (k -> v -> v -> (# v #)) -> Array (Leaf k v) ->
 
 -- | Common implementation for <a>filterWithKey</a> and
 --   <a>mapMaybeWithKey</a>, allowing the former to former to reuse terms.
-filterMapAux :: forall k v1 v2. (HashMap k v1 -> Maybe (HashMap k v2)) -> (Leaf k v1 -> Maybe (Leaf k v2)) -> HashMap k v1 -> HashMap k v2
+filterMapAux :: (HashMap k v1 -> Maybe (HashMap k v2)) -> (Leaf k v1 -> Maybe (Leaf k v2)) -> HashMap k v1 -> HashMap k v2
 equalKeys :: Eq k => HashMap k v -> HashMap k v' -> Bool
 equalKeys1 :: (k -> k' -> Bool) -> HashMap k v -> HashMap k' v' -> Bool
 lookupRecordCollision :: Eq k => Hash -> k -> HashMap k v -> LookupRes v
@@ -770,37 +770,37 @@ ptrEq :: a -> a -> Bool
 
 -- | Much like <a>adjust</a>, but not inherently leaky.
 adjust# :: (Eq k, Hashable k) => (v -> (# v #)) -> k -> HashMap k v -> HashMap k v
-instance (GHC.Classes.Eq k, GHC.Classes.Eq v) => GHC.Classes.Eq (Data.HashMap.Internal.Leaf k v)
-instance (Language.Haskell.TH.Syntax.Lift k, Language.Haskell.TH.Syntax.Lift v) => Language.Haskell.TH.Syntax.Lift (Data.HashMap.Internal.HashMap k v)
-instance (Control.DeepSeq.NFData k, Control.DeepSeq.NFData v) => Control.DeepSeq.NFData (Data.HashMap.Internal.HashMap k v)
-instance Control.DeepSeq.NFData k => Control.DeepSeq.NFData1 (Data.HashMap.Internal.HashMap k)
-instance Control.DeepSeq.NFData2 Data.HashMap.Internal.HashMap
-instance GHC.Base.Functor (Data.HashMap.Internal.HashMap k)
-instance Data.Foldable.Foldable (Data.HashMap.Internal.HashMap k)
 instance Data.Bifoldable.Bifoldable Data.HashMap.Internal.HashMap
-instance (GHC.Classes.Eq k, Data.Hashable.Class.Hashable k) => GHC.Base.Semigroup (Data.HashMap.Internal.HashMap k v)
-instance (GHC.Classes.Eq k, Data.Hashable.Class.Hashable k) => GHC.Base.Monoid (Data.HashMap.Internal.HashMap k v)
 instance (Data.Data.Data k, Data.Data.Data v, GHC.Classes.Eq k, Data.Hashable.Class.Hashable k) => Data.Data.Data (Data.HashMap.Internal.HashMap k v)
-instance Data.Functor.Classes.Show2 Data.HashMap.Internal.HashMap
-instance GHC.Show.Show k => Data.Functor.Classes.Show1 (Data.HashMap.Internal.HashMap k)
-instance (GHC.Classes.Eq k, Data.Hashable.Class.Hashable k, GHC.Read.Read k) => Data.Functor.Classes.Read1 (Data.HashMap.Internal.HashMap k)
-instance (GHC.Classes.Eq k, Data.Hashable.Class.Hashable k, GHC.Read.Read k, GHC.Read.Read e) => GHC.Read.Read (Data.HashMap.Internal.HashMap k e)
-instance (GHC.Show.Show k, GHC.Show.Show v) => GHC.Show.Show (Data.HashMap.Internal.HashMap k v)
-instance Data.Traversable.Traversable (Data.HashMap.Internal.HashMap k)
-instance Data.Functor.Classes.Eq2 Data.HashMap.Internal.HashMap
 instance GHC.Classes.Eq k => Data.Functor.Classes.Eq1 (Data.HashMap.Internal.HashMap k)
+instance Data.Functor.Classes.Eq2 Data.HashMap.Internal.HashMap
 instance (GHC.Classes.Eq k, GHC.Classes.Eq v) => GHC.Classes.Eq (Data.HashMap.Internal.HashMap k v)
-instance Data.Functor.Classes.Ord2 Data.HashMap.Internal.HashMap
-instance GHC.Classes.Ord k => Data.Functor.Classes.Ord1 (Data.HashMap.Internal.HashMap k)
-instance (GHC.Classes.Ord k, GHC.Classes.Ord v) => GHC.Classes.Ord (Data.HashMap.Internal.HashMap k v)
-instance Data.Hashable.Class.Hashable2 Data.HashMap.Internal.HashMap
+instance (GHC.Classes.Eq k, GHC.Classes.Eq v) => GHC.Classes.Eq (Data.HashMap.Internal.Leaf k v)
+instance Data.Foldable.Foldable (Data.HashMap.Internal.HashMap k)
+instance GHC.Base.Functor (Data.HashMap.Internal.HashMap k)
 instance Data.Hashable.Class.Hashable k => Data.Hashable.Class.Hashable1 (Data.HashMap.Internal.HashMap k)
+instance Data.Hashable.Class.Hashable2 Data.HashMap.Internal.HashMap
 instance (Data.Hashable.Class.Hashable k, Data.Hashable.Class.Hashable v) => Data.Hashable.Class.Hashable (Data.HashMap.Internal.HashMap k v)
 instance (GHC.Classes.Eq k, Data.Hashable.Class.Hashable k) => GHC.IsList.IsList (Data.HashMap.Internal.HashMap k v)
-instance (Control.DeepSeq.NFData k, Control.DeepSeq.NFData v) => Control.DeepSeq.NFData (Data.HashMap.Internal.Leaf k v)
+instance (Language.Haskell.TH.Syntax.Lift k, Language.Haskell.TH.Syntax.Lift v) => Language.Haskell.TH.Syntax.Lift (Data.HashMap.Internal.HashMap k v)
 instance (Language.Haskell.TH.Syntax.Lift k, Language.Haskell.TH.Syntax.Lift v) => Language.Haskell.TH.Syntax.Lift (Data.HashMap.Internal.Leaf k v)
+instance (GHC.Classes.Eq k, Data.Hashable.Class.Hashable k) => GHC.Base.Monoid (Data.HashMap.Internal.HashMap k v)
+instance Control.DeepSeq.NFData k => Control.DeepSeq.NFData1 (Data.HashMap.Internal.HashMap k)
 instance Control.DeepSeq.NFData k => Control.DeepSeq.NFData1 (Data.HashMap.Internal.Leaf k)
+instance Control.DeepSeq.NFData2 Data.HashMap.Internal.HashMap
 instance Control.DeepSeq.NFData2 Data.HashMap.Internal.Leaf
+instance (Control.DeepSeq.NFData k, Control.DeepSeq.NFData v) => Control.DeepSeq.NFData (Data.HashMap.Internal.HashMap k v)
+instance (Control.DeepSeq.NFData k, Control.DeepSeq.NFData v) => Control.DeepSeq.NFData (Data.HashMap.Internal.Leaf k v)
+instance GHC.Classes.Ord k => Data.Functor.Classes.Ord1 (Data.HashMap.Internal.HashMap k)
+instance Data.Functor.Classes.Ord2 Data.HashMap.Internal.HashMap
+instance (GHC.Classes.Ord k, GHC.Classes.Ord v) => GHC.Classes.Ord (Data.HashMap.Internal.HashMap k v)
+instance (GHC.Classes.Eq k, Data.Hashable.Class.Hashable k, GHC.Read.Read k) => Data.Functor.Classes.Read1 (Data.HashMap.Internal.HashMap k)
+instance (GHC.Classes.Eq k, Data.Hashable.Class.Hashable k, GHC.Read.Read k, GHC.Read.Read e) => GHC.Read.Read (Data.HashMap.Internal.HashMap k e)
+instance (GHC.Classes.Eq k, Data.Hashable.Class.Hashable k) => GHC.Base.Semigroup (Data.HashMap.Internal.HashMap k v)
+instance GHC.Show.Show k => Data.Functor.Classes.Show1 (Data.HashMap.Internal.HashMap k)
+instance Data.Functor.Classes.Show2 Data.HashMap.Internal.HashMap
+instance (GHC.Show.Show k, GHC.Show.Show v) => GHC.Show.Show (Data.HashMap.Internal.HashMap k v)
+instance Data.Traversable.Traversable (Data.HashMap.Internal.HashMap k)
 
 
 -- | <h1>WARNING</h1>
@@ -842,14 +842,14 @@ INV10_Collision_duplicate_key :: k -> !Hash -> Error k
 -- | A part of a <a>Hash</a> with <a>bitsPerSubkey</a> bits.
 type SubHash = Word
 data SubHashPath
-instance GHC.Show.Show k => GHC.Show.Show (Data.HashMap.Internal.Debug.Error k)
 instance GHC.Classes.Eq k => GHC.Classes.Eq (Data.HashMap.Internal.Debug.Error k)
-instance GHC.Show.Show Data.HashMap.Internal.Debug.SubHashPath
 instance GHC.Classes.Eq Data.HashMap.Internal.Debug.SubHashPath
-instance GHC.Show.Show k => GHC.Show.Show (Data.HashMap.Internal.Debug.Validity k)
 instance GHC.Classes.Eq k => GHC.Classes.Eq (Data.HashMap.Internal.Debug.Validity k)
-instance GHC.Base.Semigroup (Data.HashMap.Internal.Debug.Validity k)
 instance GHC.Base.Monoid (Data.HashMap.Internal.Debug.Validity k)
+instance GHC.Base.Semigroup (Data.HashMap.Internal.Debug.Validity k)
+instance GHC.Show.Show k => GHC.Show.Show (Data.HashMap.Internal.Debug.Error k)
+instance GHC.Show.Show Data.HashMap.Internal.Debug.SubHashPath
+instance GHC.Show.Show k => GHC.Show.Show (Data.HashMap.Internal.Debug.Validity k)
 
 
 -- | <h1>WARNING</h1>
@@ -1180,7 +1180,7 @@ filter :: (v -> Bool) -> HashMap k v -> HashMap k v
 
 -- | &lt;math&gt; Filter this map by retaining only elements satisfying a
 --   predicate.
-filterWithKey :: forall k v. (k -> v -> Bool) -> HashMap k v -> HashMap k v
+filterWithKey :: (k -> v -> Bool) -> HashMap k v -> HashMap k v
 
 -- | &lt;math&gt; Transform this map by applying a function to every value
 --   and retaining only some of them.
@@ -1499,23 +1499,23 @@ fromMap :: HashMap a () -> HashSet a
 --   fromList [1,2]
 --   </pre>
 keysSet :: HashMap k a -> HashSet k
-instance Language.Haskell.TH.Syntax.Lift a => Language.Haskell.TH.Syntax.Lift (Data.HashSet.Internal.HashSet a)
-instance Control.DeepSeq.NFData a => Control.DeepSeq.NFData (Data.HashSet.Internal.HashSet a)
-instance Control.DeepSeq.NFData1 Data.HashSet.Internal.HashSet
-instance GHC.Classes.Eq a => GHC.Classes.Eq (Data.HashSet.Internal.HashSet a)
-instance Data.Functor.Classes.Eq1 Data.HashSet.Internal.HashSet
-instance GHC.Classes.Ord a => GHC.Classes.Ord (Data.HashSet.Internal.HashSet a)
-instance Data.Functor.Classes.Ord1 Data.HashSet.Internal.HashSet
-instance Data.Foldable.Foldable Data.HashSet.Internal.HashSet
-instance (Data.Hashable.Class.Hashable a, GHC.Classes.Eq a) => GHC.Base.Semigroup (Data.HashSet.Internal.HashSet a)
-instance (Data.Hashable.Class.Hashable a, GHC.Classes.Eq a) => GHC.Base.Monoid (Data.HashSet.Internal.HashSet a)
-instance (GHC.Classes.Eq a, Data.Hashable.Class.Hashable a, GHC.Read.Read a) => GHC.Read.Read (Data.HashSet.Internal.HashSet a)
-instance Data.Functor.Classes.Show1 Data.HashSet.Internal.HashSet
-instance GHC.Show.Show a => GHC.Show.Show (Data.HashSet.Internal.HashSet a)
 instance (Data.Data.Data a, GHC.Classes.Eq a, Data.Hashable.Class.Hashable a) => Data.Data.Data (Data.HashSet.Internal.HashSet a)
+instance Data.Functor.Classes.Eq1 Data.HashSet.Internal.HashSet
+instance GHC.Classes.Eq a => GHC.Classes.Eq (Data.HashSet.Internal.HashSet a)
+instance Data.Foldable.Foldable Data.HashSet.Internal.HashSet
 instance Data.Hashable.Class.Hashable1 Data.HashSet.Internal.HashSet
 instance Data.Hashable.Class.Hashable a => Data.Hashable.Class.Hashable (Data.HashSet.Internal.HashSet a)
 instance (GHC.Classes.Eq a, Data.Hashable.Class.Hashable a) => GHC.IsList.IsList (Data.HashSet.Internal.HashSet a)
+instance Language.Haskell.TH.Syntax.Lift a => Language.Haskell.TH.Syntax.Lift (Data.HashSet.Internal.HashSet a)
+instance (Data.Hashable.Class.Hashable a, GHC.Classes.Eq a) => GHC.Base.Monoid (Data.HashSet.Internal.HashSet a)
+instance Control.DeepSeq.NFData1 Data.HashSet.Internal.HashSet
+instance Control.DeepSeq.NFData a => Control.DeepSeq.NFData (Data.HashSet.Internal.HashSet a)
+instance Data.Functor.Classes.Ord1 Data.HashSet.Internal.HashSet
+instance GHC.Classes.Ord a => GHC.Classes.Ord (Data.HashSet.Internal.HashSet a)
+instance (GHC.Classes.Eq a, Data.Hashable.Class.Hashable a, GHC.Read.Read a) => GHC.Read.Read (Data.HashSet.Internal.HashSet a)
+instance (Data.Hashable.Class.Hashable a, GHC.Classes.Eq a) => GHC.Base.Semigroup (Data.HashSet.Internal.HashSet a)
+instance Data.Functor.Classes.Show1 Data.HashSet.Internal.HashSet
+instance GHC.Show.Show a => GHC.Show.Show (Data.HashSet.Internal.HashSet a)
 
 
 -- | <h1>Introduction</h1>
@@ -2107,7 +2107,7 @@ filter :: (v -> Bool) -> HashMap k v -> HashMap k v
 
 -- | &lt;math&gt; Filter this map by retaining only elements satisfying a
 --   predicate.
-filterWithKey :: forall k v. (k -> v -> Bool) -> HashMap k v -> HashMap k v
+filterWithKey :: (k -> v -> Bool) -> HashMap k v -> HashMap k v
 
 -- | &lt;math&gt; Transform this map by applying a function to every value
 --   and retaining only some of them.
@@ -2526,7 +2526,7 @@ filter :: (v -> Bool) -> HashMap k v -> HashMap k v
 
 -- | &lt;math&gt; Filter this map by retaining only elements satisfying a
 --   predicate.
-filterWithKey :: forall k v. (k -> v -> Bool) -> HashMap k v -> HashMap k v
+filterWithKey :: (k -> v -> Bool) -> HashMap k v -> HashMap k v
 
 -- | &lt;math&gt; Transform this map by applying a function to every value
 --   and retaining only some of them.

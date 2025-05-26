@@ -99,17 +99,23 @@ class (SVarView s e) ⇒ Substy s e a | a→e,e→s where
 -- which is either a free variables computation, a rebinding (named to namelss,
 -- or vice versa), a standard substitution, or a metavariable substitution.
 
-fvsWith ∷ (Substy s e a) ⇒ (s → 𝕐 s e → 𝔹) → a → s ⇰ 𝑃 (𝕐 s e)
-fvsWith f = fst ∘ evalSubstM (FreeVars_SA $ FreeVarsAction f null) ∘ substy
+fvsSWith ∷ (Substy s e a) ⇒ (s → 𝕐 s e → 𝔹) → a → s ⇰ 𝑃 (𝕐 s e)
+fvsSWith f = fst ∘ evalSubstM (FreeVars_SA $ FreeVarsAction f null) ∘ substy
 
-fvsSMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ 𝑃 s → a → s ⇰ 𝑃 (𝕎 ∧ Subst s e)
-fvsSMetas ss = map (pow ∘ filterMap (view m_UVarL) ∘ iter) ∘ fvsWith (\ s y → s ∈ ss ⩓ shape m_UVarL y)
+fvsWith ∷ (Ord s,Substy s e a) ⇒ s → (𝕐 s e → 𝔹) → a → 𝑃 (𝕐 s e)
+fvsWith s f = ifNone null ∘ lup s ∘ fvsSWith (\ s' x → s ≡ s' ⩓ f x)
+
+fvsS ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕐 s e)
+fvsS = fvsSWith $ const $ const True
+
+fvs ∷ (Ord s,Substy s e a) ⇒ s → a → 𝑃 (𝕐 s e)
+fvs s = fvsWith s $ const True
+
+fvsSMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕎 ∧ Subst s e)
+fvsSMetas = map (pow ∘ filterMap (view m_UVarL) ∘ iter) ∘ fvsSWith (\ _s y → shape m_UVarL y)
 
 fvsMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ s → a → 𝑃 (𝕎 ∧ Subst s e)
-fvsMetas s x = ifNone pø $ fvsSMetas (single s) x ⋕? s
-
-fvs ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕐 s e)
-fvs = fvsWith $ const $ const True
+fvsMetas s = ifNone pø ∘ lup s ∘ fvsSMetas
 
 todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
 todbr = snd ∘ evalSubstM (Subst_SA $ SubstAction AllNameless_RA null) ∘ substy

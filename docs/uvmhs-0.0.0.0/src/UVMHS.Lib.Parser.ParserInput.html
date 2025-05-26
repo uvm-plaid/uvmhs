@@ -8,22 +8,22 @@
 </span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Loc.html"><span class="hs-identifier">UVMHS.Lib.Parser.Loc</span></a></span><span>
 </span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html"><span class="hs-identifier">UVMHS.Lib.Parser.ParserContext</span></a></span><span>
 </span><span id="line-10"></span><span>
-</span><span id="line-11"></span><span class="hs-keyword">data</span><span> </span><span id="PreParserToken"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-var">PreParserToken</span></a></span></span><span> </span><span id="local-6989586621680553977"><span class="annot"><a href="#local-6989586621680553977"><span class="hs-identifier hs-type">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PreParserToken"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-var">PreParserToken</span></a></span></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">data</span><span> </span><span id="PreParserToken"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-var">PreParserToken</span></a></span></span><span> </span><span id="local-6989586621680730025"><span class="annot"><a href="#local-6989586621680730025"><span class="hs-identifier hs-type">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PreParserToken"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-var">PreParserToken</span></a></span></span><span>
 </span><span id="line-12"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="preParserTokenValue"><span class="annot"><span class="annottext">forall t. PreParserToken t -&gt; t
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#preParserTokenValue"><span class="hs-identifier hs-var hs-var">preParserTokenValue</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680553977"><span class="hs-identifier hs-type">t</span></a></span><span>
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#preParserTokenValue"><span class="hs-identifier hs-var hs-var">preParserTokenValue</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680730025"><span class="hs-identifier hs-type">t</span></a></span><span>
 </span><span id="line-13"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="preParserTokenSkip"><span class="annot"><span class="annottext">forall t. PreParserToken t -&gt; &#120121;
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#preParserTokenSkip"><span class="hs-identifier hs-var hs-var">preParserTokenSkip</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span>
 </span><span id="line-14"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="preParserTokenContext"><span class="annot"><span class="annottext">forall t. PreParserToken t -&gt; ParserContext
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#preParserTokenContext"><span class="hs-identifier hs-var hs-var">preParserTokenContext</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span>
 </span><span id="line-15"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-16"></span><span id="local-6989586621680553977"><span id="preParserTokenValueL"><span id="preParserTokenSkipL"><span id="preParserTokenContextL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">PreParserToken</span></span></span></span></span><span>
-</span><span id="line-17"></span><span id="local-6989586621680553977"><span id="local-6989586621680554103"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">PreParserToken</span></span></span><span>
+</span><span id="line-16"></span><span id="local-6989586621680730025"><span id="preParserTokenValueL"><span id="preParserTokenSkipL"><span id="preParserTokenContextL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">PreParserToken</span></span></span></span></span><span>
+</span><span id="line-17"></span><span id="local-6989586621680730025"><span id="local-6989586621680730151"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">PreParserToken</span></span></span><span>
 </span><span id="line-18"></span><span>
 </span><span id="line-19"></span><span class="hs-comment">-- # ParserToken</span><span>
 </span><span id="line-20"></span><span>
-</span><span id="line-21"></span><span class="hs-keyword">data</span><span> </span><span id="ParserToken"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#ParserToken"><span class="hs-identifier hs-var">ParserToken</span></a></span></span><span> </span><span id="local-6989586621680553997"><span class="annot"><a href="#local-6989586621680553997"><span class="hs-identifier hs-type">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ParserToken"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#ParserToken"><span class="hs-identifier hs-var">ParserToken</span></a></span></span><span>
+</span><span id="line-21"></span><span class="hs-keyword">data</span><span> </span><span id="ParserToken"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#ParserToken"><span class="hs-identifier hs-var">ParserToken</span></a></span></span><span> </span><span id="local-6989586621680730045"><span class="annot"><a href="#local-6989586621680730045"><span class="hs-identifier hs-type">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="ParserToken"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#ParserToken"><span class="hs-identifier hs-var">ParserToken</span></a></span></span><span>
 </span><span id="line-22"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="parserTokenValue"><span class="annot"><span class="annottext">forall t. ParserToken t -&gt; t
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#parserTokenValue"><span class="hs-identifier hs-var hs-var">parserTokenValue</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680553997"><span class="hs-identifier hs-type">t</span></a></span><span>
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#parserTokenValue"><span class="hs-identifier hs-var hs-var">parserTokenValue</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621680730045"><span class="hs-identifier hs-type">t</span></a></span><span>
 </span><span id="line-23"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="parserTokenSkip"><span class="annot"><span class="annottext">forall t. ParserToken t -&gt; &#120121;
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#parserTokenSkip"><span class="hs-identifier hs-var hs-var">parserTokenSkip</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span><span>
 </span><span id="line-24"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="parserTokenContext"><span class="annot"><span class="annottext">forall t. ParserToken t -&gt; ParserContext
@@ -31,8 +31,8 @@
 </span><span id="line-25"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="parserTokenSuffix"><span class="annot"><span class="annottext">forall t. ParserToken t -&gt; WindowL Doc Doc
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#parserTokenSuffix"><span class="hs-identifier hs-var hs-var">parserTokenSuffix</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Window.html#WindowL"><span class="hs-identifier hs-type">WindowL</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span>
 </span><span id="line-26"></span><span>  </span><span class="hs-special">}</span><span>
-</span><span id="line-27"></span><span id="local-6989586621680553997"><span id="parserTokenValueL"><span id="parserTokenSkipL"><span id="parserTokenContextL"><span id="parserTokenSuffixL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserToken</span></span></span></span></span></span><span>
-</span><span id="line-28"></span><span id="local-6989586621680553997"><span id="local-6989586621680554142"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserToken</span></span></span><span>
+</span><span id="line-27"></span><span id="local-6989586621680730045"><span id="parserTokenValueL"><span id="parserTokenSkipL"><span id="parserTokenContextL"><span id="parserTokenSuffixL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserToken</span></span></span></span></span></span><span>
+</span><span id="line-28"></span><span id="local-6989586621680730045"><span id="local-6989586621680730190"><span class="hs-identifier">makePrettySum</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">ParserToken</span></span></span><span>
 </span><span id="line-29"></span><span>
 </span><span id="line-30"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#renderNLDisplay"><span class="hs-identifier hs-type">renderNLDisplay</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Doc"><span class="hs-identifier hs-type">Doc</span></a></span><span>
 </span><span id="line-31"></span><span id="renderNLDisplay"><span class="annot"><span class="annottext">renderNLDisplay :: Doc
@@ -64,20 +64,20 @@ forall a. Null a =&gt; a
 </span><span id="line-41"></span><span>
 </span><span id="line-42"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#eofContext"><span class="hs-identifier hs-type">eofContext</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Pointed.html#AddBT"><span class="hs-identifier hs-type">AddBT</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Loc.html#Loc"><span class="hs-identifier hs-type">Loc</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span>
 </span><span id="line-43"></span><span id="eofContext"><span class="annot"><span class="annottext">eofContext :: AddBT Loc -&gt; ParserContext
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#eofContext"><span class="hs-identifier hs-var hs-var">eofContext</span></a></span></span><span> </span><span id="local-6989586621680554164"><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680554164"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
-</span><span id="line-44"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680554165"><span class="annot"><span class="annottext">lr :: LocRange
-</span><a href="#local-6989586621680554165"><span class="hs-identifier hs-var hs-var">lr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">AddBT Loc -&gt; AddBT Loc -&gt; LocRange
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#eofContext"><span class="hs-identifier hs-var hs-var">eofContext</span></a></span></span><span> </span><span id="local-6989586621680730212"><span class="annot"><span class="annottext">AddBT Loc
+</span><a href="#local-6989586621680730212"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-44"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680730213"><span class="annot"><span class="annottext">lr :: LocRange
+</span><a href="#local-6989586621680730213"><span class="hs-identifier hs-var hs-var">lr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">AddBT Loc -&gt; AddBT Loc -&gt; LocRange
 </span><a href="UVMHS.Lib.Parser.Loc.html#LocRange"><span class="hs-identifier hs-var">LocRange</span></a></span><span> </span><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680554164"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">AddBT Loc
-</span><a href="#local-6989586621680554164"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><a href="#local-6989586621680730212"><span class="hs-identifier hs-var">l</span></a></span><span> </span><span class="annot"><span class="annottext">AddBT Loc
+</span><a href="#local-6989586621680730212"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-45"></span><span>  </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">LocRange
 -&gt; WindowL Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; ParserContext
 </span><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-var">ParserContext</span></a></span><span> </span><span class="annot"><span class="annottext">LocRange
-</span><a href="#local-6989586621680554165"><span class="hs-identifier hs-var">lr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowL Doc Doc
+</span><a href="#local-6989586621680730213"><span class="hs-identifier hs-var">lr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowL Doc Doc
 forall a i. a -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#eWindowL"><span class="hs-identifier hs-var">eWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#renderEOFDisplay"><span class="hs-identifier hs-var">renderEOFDisplay</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowR Doc Doc
@@ -93,26 +93,26 @@ forall a i. a -&gt; WindowR i a
 </span><span id="line-46"></span><span>
 </span><span id="line-47"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#nlContext"><span class="hs-identifier hs-type">nlContext</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Loc.html#Loc"><span class="hs-identifier hs-type">Loc</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span>
 </span><span id="line-48"></span><span id="nlContext"><span class="annot"><span class="annottext">nlContext :: Loc -&gt; ParserContext
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#nlContext"><span class="hs-identifier hs-var hs-var">nlContext</span></a></span></span><span> </span><span id="local-6989586621680554172"><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554172"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-49"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680554173"><span class="annot"><span class="annottext">lr :: LocRange
-</span><a href="#local-6989586621680554173"><span class="hs-identifier hs-var hs-var">lr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">AddBT Loc -&gt; AddBT Loc -&gt; LocRange
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#nlContext"><span class="hs-identifier hs-var hs-var">nlContext</span></a></span></span><span> </span><span id="local-6989586621680730220"><span class="annot"><span class="annottext">Loc
+</span><a href="#local-6989586621680730220"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-49"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680730221"><span class="annot"><span class="annottext">lr :: LocRange
+</span><a href="#local-6989586621680730221"><span class="hs-identifier hs-var hs-var">lr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">AddBT Loc -&gt; AddBT Loc -&gt; LocRange
 </span><a href="UVMHS.Lib.Parser.Loc.html#LocRange"><span class="hs-identifier hs-var">LocRange</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Loc -&gt; AddBT Loc
 forall a. a -&gt; AddBT a
 </span><a href="UVMHS.Core.Pointed.html#AddBT"><span class="hs-identifier hs-var">AddBT</span></a></span><span> </span><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554172"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(AddBT Loc -&gt; LocRange) -&gt; AddBT Loc -&gt; LocRange
+</span><a href="#local-6989586621680730220"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(AddBT Loc -&gt; LocRange) -&gt; AddBT Loc -&gt; LocRange
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Loc -&gt; AddBT Loc
 forall a. a -&gt; AddBT a
 </span><a href="UVMHS.Core.Pointed.html#AddBT"><span class="hs-identifier hs-var">AddBT</span></a></span><span> </span><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554172"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><a href="#local-6989586621680730220"><span class="hs-identifier hs-var">l</span></a></span><span>
 </span><span id="line-50"></span><span>  </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">LocRange
 -&gt; WindowL Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; ParserContext
 </span><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-var">ParserContext</span></a></span><span> </span><span class="annot"><span class="annottext">LocRange
-</span><a href="#local-6989586621680554173"><span class="hs-identifier hs-var">lr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowL Doc Doc
+</span><a href="#local-6989586621680730221"><span class="hs-identifier hs-var">lr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowL Doc Doc
 forall a i. Null a =&gt; i -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#iWindowL"><span class="hs-identifier hs-var">iWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#renderNLDisplay"><span class="hs-identifier hs-var">renderNLDisplay</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowR Doc Doc
@@ -128,52 +128,52 @@ forall a i. Null a =&gt; i -&gt; WindowR i a
 </span><span id="line-51"></span><span>
 </span><span id="line-52"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#charContext"><span class="hs-identifier hs-type">charContext</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.Loc.html#Loc"><span class="hs-identifier hs-type">Loc</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2102"><span class="hs-identifier hs-type">&#8450;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-type">ParserContext</span></a></span><span>
 </span><span id="line-53"></span><span id="charContext"><span class="annot"><span class="annottext">charContext :: Loc -&gt; &#8450; -&gt; ParserContext
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#charContext"><span class="hs-identifier hs-var hs-var">charContext</span></a></span></span><span> </span><span id="local-6989586621680554178"><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554178"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621680554179"><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680554179"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-54"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680554180"><span class="annot"><span class="annottext">lr :: LocRange
-</span><a href="#local-6989586621680554180"><span class="hs-identifier hs-var hs-var">lr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">AddBT Loc -&gt; AddBT Loc -&gt; LocRange
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#charContext"><span class="hs-identifier hs-var hs-var">charContext</span></a></span></span><span> </span><span id="local-6989586621680730226"><span class="annot"><span class="annottext">Loc
+</span><a href="#local-6989586621680730226"><span class="hs-identifier hs-var">l</span></a></span></span><span> </span><span id="local-6989586621680730227"><span class="annot"><span class="annottext">&#8450;
+</span><a href="#local-6989586621680730227"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-54"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680730228"><span class="annot"><span class="annottext">lr :: LocRange
+</span><a href="#local-6989586621680730228"><span class="hs-identifier hs-var hs-var">lr</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">AddBT Loc -&gt; AddBT Loc -&gt; LocRange
 </span><a href="UVMHS.Lib.Parser.Loc.html#LocRange"><span class="hs-identifier hs-var">LocRange</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Loc -&gt; AddBT Loc
 forall a. a -&gt; AddBT a
 </span><a href="UVMHS.Core.Pointed.html#AddBT"><span class="hs-identifier hs-var">AddBT</span></a></span><span> </span><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554178"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(AddBT Loc -&gt; LocRange) -&gt; AddBT Loc -&gt; LocRange
+</span><a href="#local-6989586621680730226"><span class="hs-identifier hs-var">l</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(AddBT Loc -&gt; LocRange) -&gt; AddBT Loc -&gt; LocRange
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Loc -&gt; AddBT Loc
 forall a. a -&gt; AddBT a
 </span><a href="UVMHS.Core.Pointed.html#AddBT"><span class="hs-identifier hs-var">AddBT</span></a></span><span> </span><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554178"><span class="hs-identifier hs-var">l</span></a></span><span>
-</span><span id="line-55"></span><span>      </span><span id="local-6989586621680554181"><span class="annot"><span class="annottext">d :: Doc
-</span><a href="#local-6989586621680554181"><span class="hs-identifier hs-var hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
+</span><a href="#local-6989586621680730226"><span class="hs-identifier hs-var">l</span></a></span><span>
+</span><span id="line-55"></span><span>      </span><span id="local-6989586621680730229"><span class="annot"><span class="annottext">d :: Doc
+</span><a href="#local-6989586621680730229"><span class="hs-identifier hs-var hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; Doc) -&gt; &#120138; -&gt; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; &#120138;
 forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680554179"><span class="hs-identifier hs-var">c</span></a></span><span>
+</span><a href="#local-6989586621680730227"><span class="hs-identifier hs-var">c</span></a></span><span>
 </span><span id="line-56"></span><span>  </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">LocRange
 -&gt; WindowL Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; WindowR Doc Doc
 -&gt; ParserContext
 </span><a href="UVMHS.Lib.Parser.ParserContext.html#ParserContext"><span class="hs-identifier hs-var">ParserContext</span></a></span><span> </span><span class="annot"><span class="annottext">LocRange
-</span><a href="#local-6989586621680554180"><span class="hs-identifier hs-var">lr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowL Doc Doc
+</span><a href="#local-6989586621680730228"><span class="hs-identifier hs-var">lr</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowL Doc Doc
 forall a i. a -&gt; WindowL i a
 </span><a href="UVMHS.Lib.Window.html#eWindowL"><span class="hs-identifier hs-var">eWindowL</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
-</span><a href="#local-6989586621680554181"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowR Doc Doc
+</span><a href="#local-6989586621680730229"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; WindowR Doc Doc
 forall a i. a -&gt; WindowR i a
 </span><a href="UVMHS.Lib.Window.html#eWindowR"><span class="hs-identifier hs-var">eWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
-</span><a href="#local-6989586621680554181"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(WindowR Doc Doc -&gt; ParserContext)
+</span><a href="#local-6989586621680730229"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(WindowR Doc Doc -&gt; ParserContext)
 -&gt; WindowR Doc Doc -&gt; ParserContext
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Doc -&gt; WindowR Doc Doc
 forall a i. a -&gt; WindowR i a
 </span><a href="UVMHS.Lib.Window.html#eWindowR"><span class="hs-identifier hs-var">eWindowR</span></a></span><span> </span><span class="annot"><span class="annottext">Doc
-</span><a href="#local-6989586621680554181"><span class="hs-identifier hs-var">d</span></a></span><span>
+</span><a href="#local-6989586621680730229"><span class="hs-identifier hs-var">d</span></a></span><span>
 </span><span id="line-57"></span><span>
 </span><span id="line-58"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#preTokens"><span class="hs-identifier hs-type">preTokens</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Vector.html#%1D54D"><span class="hs-identifier hs-type">&#120141;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-type">PreParserToken</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2102"><span class="hs-identifier hs-type">&#8450;</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-59"></span><span id="preTokens"><span class="annot"><span class="annottext">preTokens :: &#120138; -&gt; &#120141; (PreParserToken &#8450;)
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#preTokens"><span class="hs-identifier hs-var hs-var">preTokens</span></a></span></span><span> </span><span id="local-6989586621680554184"><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680554184"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#preTokens"><span class="hs-identifier hs-var hs-var">preTokens</span></a></span></span><span> </span><span id="local-6989586621680730232"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621680730232"><span class="hs-identifier hs-var">cs</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-60"></span><span>  </span><span class="annot"><span class="annottext">&#119868;C (PreParserToken &#8450;) -&gt; &#120141; (PreParserToken &#8450;)
 forall a t. ToIterC a t =&gt; t -&gt; &#120141; a
 </span><a href="UVMHS.Core.Vector.html#vecC"><span class="hs-identifier hs-var">vecC</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868;C (PreParserToken &#8450;) -&gt; &#120141; (PreParserToken &#8450;))
@@ -191,7 +191,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 -&gt; Loc &#8743; &#119868;C (PreParserToken &#8450;)
 forall a t b. ToIter a t =&gt; t -&gt; b -&gt; (a -&gt; b -&gt; b) -&gt; b
 </span><a href="UVMHS.Core.Data.Iter.html#foldOnFrom"><span class="hs-identifier hs-var">foldOnFrom</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680554184"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Loc
+</span><a href="#local-6989586621680730232"><span class="hs-identifier hs-var">cs</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Loc
 forall a. Bot a =&gt; a
 </span><a href="UVMHS.Core.Classes.Lattice.html#bot"><span class="hs-identifier hs-var">bot</span></a></span><span> </span><span class="annot"><span class="annottext">Loc -&gt; &#119868;C (PreParserToken &#8450;) -&gt; Loc &#8743; &#119868;C (PreParserToken &#8450;)
 forall a b. a -&gt; b -&gt; a &#8743; b
@@ -203,52 +203,52 @@ forall a b. a -&gt; b -&gt; a &#8743; b
     -&gt; (Loc &#8743; &#119868;C (PreParserToken &#8450;)) -&gt; Loc &#8743; &#119868;C (PreParserToken &#8450;))
 -&gt; Loc &#8743; &#119868;C (PreParserToken &#8450;)
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680554190"><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680554190"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680554191"><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554191"><span class="hs-identifier hs-var">loc</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680554192"><span class="annot"><span class="annottext">&#119868;C (PreParserToken &#8450;)
-</span><a href="#local-6989586621680554192"><span class="hs-identifier hs-var">ts</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
-</span><span id="line-61"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680554193"><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554193"><span class="hs-identifier hs-var">loc'</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680554194"><span class="annot"><span class="annottext">ParserContext
-</span><a href="#local-6989586621680554194"><span class="hs-identifier hs-var">pc</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span>
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span id="local-6989586621680730238"><span class="annot"><span class="annottext">&#8450;
+</span><a href="#local-6989586621680730238"><span class="hs-identifier hs-var">c</span></a></span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680730239"><span class="annot"><span class="annottext">Loc
+</span><a href="#local-6989586621680730239"><span class="hs-identifier hs-var">loc</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680730240"><span class="annot"><span class="annottext">&#119868;C (PreParserToken &#8450;)
+</span><a href="#local-6989586621680730240"><span class="hs-identifier hs-var">ts</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
+</span><span id="line-61"></span><span>    </span><span class="hs-keyword">let</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680730241"><span class="annot"><span class="annottext">Loc
+</span><a href="#local-6989586621680730241"><span class="hs-identifier hs-var">loc'</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680730242"><span class="annot"><span class="annottext">ParserContext
+</span><a href="#local-6989586621680730242"><span class="hs-identifier hs-var">pc</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span>
 </span><span id="line-62"></span><span>          </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680554190"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; &#8450; -&gt; &#120121;
+</span><a href="#local-6989586621680730238"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; &#8450; -&gt; &#120121;
 forall a. Eq a =&gt; a -&gt; a -&gt; &#120121;
 </span><a href="UVMHS.Core.Classes.Order.html#%2261"><span class="hs-operator hs-var">&#8801;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450;
 </span><span class="hs-char">'\n'</span></span><span>
 </span><span id="line-63"></span><span>            </span><span class="hs-keyword">then</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Loc -&gt; Loc
 </span><a href="UVMHS.Lib.Parser.Loc.html#bumpRow%2081"><span class="hs-identifier hs-var">bumpRow&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554191"><span class="hs-identifier hs-var">loc</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Loc -&gt; ParserContext
+</span><a href="#local-6989586621680730239"><span class="hs-identifier hs-var">loc</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Loc -&gt; ParserContext
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#nlContext"><span class="hs-identifier hs-var">nlContext</span></a></span><span> </span><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554191"><span class="hs-identifier hs-var">loc</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680730239"><span class="hs-identifier hs-var">loc</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-64"></span><span>            </span><span class="hs-keyword">else</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Loc -&gt; Loc
 </span><a href="UVMHS.Lib.Parser.Loc.html#bumpCol%2081"><span class="hs-identifier hs-var">bumpCol&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554191"><span class="hs-identifier hs-var">loc</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Loc -&gt; &#8450; -&gt; ParserContext
+</span><a href="#local-6989586621680730239"><span class="hs-identifier hs-var">loc</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Loc -&gt; &#8450; -&gt; ParserContext
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#charContext"><span class="hs-identifier hs-var">charContext</span></a></span><span> </span><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554191"><span class="hs-identifier hs-var">loc</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680554190"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-65"></span><span>        </span><span id="local-6989586621680554198"><span class="annot"><span class="annottext">t :: PreParserToken &#8450;
-</span><a href="#local-6989586621680554198"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; &#120121; -&gt; ParserContext -&gt; PreParserToken &#8450;
+</span><a href="#local-6989586621680730239"><span class="hs-identifier hs-var">loc</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450;
+</span><a href="#local-6989586621680730238"><span class="hs-identifier hs-var">c</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-65"></span><span>        </span><span id="local-6989586621680730246"><span class="annot"><span class="annottext">t :: PreParserToken &#8450;
+</span><a href="#local-6989586621680730246"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8450; -&gt; &#120121; -&gt; ParserContext -&gt; PreParserToken &#8450;
 forall t. t -&gt; &#120121; -&gt; ParserContext -&gt; PreParserToken t
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-var">PreParserToken</span></a></span><span> </span><span class="annot"><span class="annottext">&#8450;
-</span><a href="#local-6989586621680554190"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">&#120121;
+</span><a href="#local-6989586621680730238"><span class="hs-identifier hs-var">c</span></a></span><span> </span><span class="annot"><span class="annottext">&#120121;
 </span><span class="hs-identifier hs-var">False</span></span><span> </span><span class="annot"><span class="annottext">ParserContext
-</span><a href="#local-6989586621680554194"><span class="hs-identifier hs-var">pc</span></a></span><span>
+</span><a href="#local-6989586621680730242"><span class="hs-identifier hs-var">pc</span></a></span><span>
 </span><span id="line-66"></span><span>    </span><span class="hs-keyword">in</span><span> </span><span class="annot"><span class="annottext">Loc
-</span><a href="#local-6989586621680554193"><span class="hs-identifier hs-var">loc'</span></a></span><span> </span><span class="annot"><span class="annottext">Loc -&gt; &#119868;C (PreParserToken &#8450;) -&gt; Loc &#8743; &#119868;C (PreParserToken &#8450;)
+</span><a href="#local-6989586621680730241"><span class="hs-identifier hs-var">loc'</span></a></span><span> </span><span class="annot"><span class="annottext">Loc -&gt; &#119868;C (PreParserToken &#8450;) -&gt; Loc &#8743; &#119868;C (PreParserToken &#8450;)
 forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119868;C (PreParserToken &#8450;)
-</span><a href="#local-6989586621680554192"><span class="hs-identifier hs-var">ts</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868;C (PreParserToken &#8450;)
+</span><a href="#local-6989586621680730240"><span class="hs-identifier hs-var">ts</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868;C (PreParserToken &#8450;)
 -&gt; &#119868;C (PreParserToken &#8450;) -&gt; &#119868;C (PreParserToken &#8450;)
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">PreParserToken &#8450; -&gt; &#119868;C (PreParserToken &#8450;)
 forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">PreParserToken &#8450;
-</span><a href="#local-6989586621680554198"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680730246"><span class="hs-identifier hs-var">t</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-67"></span><span>
-</span><span id="line-68"></span><span id="local-6989586621680554043"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#finalizeTokens"><span class="hs-identifier hs-type">finalizeTokens</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Vector.html#%1D54D"><span class="hs-identifier hs-type">&#120141;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-type">PreParserToken</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680554043"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Vector.html#%1D54D"><span class="hs-identifier hs-type">&#120141;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#ParserToken"><span class="hs-identifier hs-type">ParserToken</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680554043"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-68"></span><span id="local-6989586621680730091"><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#finalizeTokens"><span class="hs-identifier hs-type">finalizeTokens</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Vector.html#%1D54D"><span class="hs-identifier hs-type">&#120141;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-type">PreParserToken</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680730091"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Vector.html#%1D54D"><span class="hs-identifier hs-type">&#120141;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#ParserToken"><span class="hs-identifier hs-type">ParserToken</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680730091"><span class="hs-identifier hs-type">t</span></a></span><span class="hs-special">)</span></span><span>
 </span><span id="line-69"></span><span id="finalizeTokens"><span class="annot"><span class="annottext">finalizeTokens :: forall t. &#120141; (PreParserToken t) -&gt; &#120141; (ParserToken t)
-</span><a href="UVMHS.Lib.Parser.ParserInput.html#finalizeTokens"><span class="hs-identifier hs-var hs-var">finalizeTokens</span></a></span></span><span> </span><span id="local-6989586621680554213"><span class="annot"><span class="annottext">&#120141; (PreParserToken t)
-</span><a href="#local-6989586621680554213"><span class="hs-identifier hs-var">ts&#8320;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868;C (ParserToken t) -&gt; &#120141; (ParserToken t)
+</span><a href="UVMHS.Lib.Parser.ParserInput.html#finalizeTokens"><span class="hs-identifier hs-var hs-var">finalizeTokens</span></a></span></span><span> </span><span id="local-6989586621680730261"><span class="annot"><span class="annottext">&#120141; (PreParserToken t)
+</span><a href="#local-6989586621680730261"><span class="hs-identifier hs-var">ts&#8320;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868;C (ParserToken t) -&gt; &#120141; (ParserToken t)
 forall a t. ToIterC a t =&gt; t -&gt; &#120141; a
 </span><a href="UVMHS.Core.Vector.html#vecC"><span class="hs-identifier hs-var">vecC</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868;C (ParserToken t) -&gt; &#120141; (ParserToken t))
 -&gt; &#119868;C (ParserToken t) -&gt; &#120141; (ParserToken t)
@@ -266,7 +266,7 @@ forall a b. (a -&gt; b) -&gt; a -&gt; b
 -&gt; &#119868;C (ParserToken t) &#8743; WindowL Doc Doc
 forall a t b. ToIter a t =&gt; t -&gt; b -&gt; (a -&gt; b -&gt; b) -&gt; b
 </span><a href="UVMHS.Core.Data.Iter.html#foldrOnFrom"><span class="hs-identifier hs-var">foldrOnFrom</span></a></span><span> </span><span class="annot"><span class="annottext">&#120141; (PreParserToken t)
-</span><a href="#local-6989586621680554213"><span class="hs-identifier hs-var">ts&#8320;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
+</span><a href="#local-6989586621680730261"><span class="hs-identifier hs-var">ts&#8320;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">forall a. Null a =&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="hs-glyph">@</span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Sized.html#%1D43CC"><span class="hs-identifier hs-type">&#119868;C</span></a></span><span> </span><span class="annot"><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119868;C (ParserToken t)
 -&gt; WindowL Doc Doc -&gt; &#119868;C (ParserToken t) &#8743; WindowL Doc Doc
 forall a b. a -&gt; b -&gt; a &#8743; b
@@ -281,37 +281,37 @@ forall a. Null a =&gt; a
     -&gt; &#119868;C (ParserToken t) &#8743; WindowL Doc Doc)
 -&gt; &#119868;C (ParserToken t) &#8743; WindowL Doc Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-type">PreParserToken</span></a></span><span> </span><span id="local-6989586621680554216"><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621680554216"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680554217"><span class="annot"><span class="annottext">&#120121;
-</span><a href="#local-6989586621680554217"><span class="hs-identifier hs-var">sk</span></a></span></span><span> </span><span id="local-6989586621680554218"><span class="annot"><span class="annottext">ParserContext
-</span><a href="#local-6989586621680554218"><span class="hs-identifier hs-var">pc</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680554219"><span class="annot"><span class="annottext">&#119868;C (ParserToken t)
-</span><a href="#local-6989586621680554219"><span class="hs-identifier hs-var">ts</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680554220"><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680554220"><span class="hs-identifier hs-var">ps</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
-</span><span id="line-70"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680554221"><span class="annot"><span class="annottext">t :: ParserToken t
-</span><a href="#local-6989586621680554221"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">t -&gt; &#120121; -&gt; ParserContext -&gt; WindowL Doc Doc -&gt; ParserToken t
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#PreParserToken"><span class="hs-identifier hs-type">PreParserToken</span></a></span><span> </span><span id="local-6989586621680730264"><span class="annot"><span class="annottext">t
+</span><a href="#local-6989586621680730264"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680730265"><span class="annot"><span class="annottext">&#120121;
+</span><a href="#local-6989586621680730265"><span class="hs-identifier hs-var">sk</span></a></span></span><span> </span><span id="local-6989586621680730266"><span class="annot"><span class="annottext">ParserContext
+</span><a href="#local-6989586621680730266"><span class="hs-identifier hs-var">pc</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680730267"><span class="annot"><span class="annottext">&#119868;C (ParserToken t)
+</span><a href="#local-6989586621680730267"><span class="hs-identifier hs-var">ts</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621680730268"><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680730268"><span class="hs-identifier hs-var">ps</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
+</span><span id="line-70"></span><span>  </span><span class="hs-keyword">let</span><span> </span><span id="local-6989586621680730269"><span class="annot"><span class="annottext">t :: ParserToken t
+</span><a href="#local-6989586621680730269"><span class="hs-identifier hs-var hs-var">t</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">t -&gt; &#120121; -&gt; ParserContext -&gt; WindowL Doc Doc -&gt; ParserToken t
 forall t.
 t -&gt; &#120121; -&gt; ParserContext -&gt; WindowL Doc Doc -&gt; ParserToken t
 </span><a href="UVMHS.Lib.Parser.ParserInput.html#ParserToken"><span class="hs-identifier hs-var">ParserToken</span></a></span><span> </span><span class="annot"><span class="annottext">t
-</span><a href="#local-6989586621680554216"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">&#120121;
-</span><a href="#local-6989586621680554217"><span class="hs-identifier hs-var">sk</span></a></span><span> </span><span class="annot"><span class="annottext">ParserContext
-</span><a href="#local-6989586621680554218"><span class="hs-identifier hs-var">pc</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680554220"><span class="hs-identifier hs-var">ps</span></a></span><span>
+</span><a href="#local-6989586621680730264"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">&#120121;
+</span><a href="#local-6989586621680730265"><span class="hs-identifier hs-var">sk</span></a></span><span> </span><span class="annot"><span class="annottext">ParserContext
+</span><a href="#local-6989586621680730266"><span class="hs-identifier hs-var">pc</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
+</span><a href="#local-6989586621680730268"><span class="hs-identifier hs-var">ps</span></a></span><span>
 </span><span id="line-71"></span><span>  </span><span class="hs-keyword">in</span><span>
 </span><span id="line-72"></span><span>  </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ParserToken t -&gt; &#119868;C (ParserToken t)
 forall a t. Single a t =&gt; a -&gt; t
 </span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">ParserToken t
-</span><a href="#local-6989586621680554221"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868;C (ParserToken t) -&gt; &#119868;C (ParserToken t) -&gt; &#119868;C (ParserToken t)
+</span><a href="#local-6989586621680730269"><span class="hs-identifier hs-var">t</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868;C (ParserToken t) -&gt; &#119868;C (ParserToken t) -&gt; &#119868;C (ParserToken t)
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868;C (ParserToken t)
-</span><a href="#local-6989586621680554219"><span class="hs-identifier hs-var">ts</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119868;C (ParserToken t)
+</span><a href="#local-6989586621680730267"><span class="hs-identifier hs-var">ts</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119868;C (ParserToken t)
 -&gt; WindowL Doc Doc -&gt; &#119868;C (ParserToken t) &#8743; WindowL Doc Doc
 forall a b. a -&gt; b -&gt; a &#8743; b
 </span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">ParserContext -&gt; WindowL Doc Doc
 </span><a href="UVMHS.Lib.Parser.ParserContext.html#parserContextDisplayL"><span class="hs-identifier hs-var">parserContextDisplayL</span></a></span><span> </span><span class="annot"><span class="annottext">ParserContext
-</span><a href="#local-6989586621680554218"><span class="hs-identifier hs-var">pc</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; WindowL Doc Doc -&gt; WindowL Doc Doc
+</span><a href="#local-6989586621680730266"><span class="hs-identifier hs-var">pc</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc -&gt; WindowL Doc Doc -&gt; WindowL Doc Doc
 forall a. Append a =&gt; a -&gt; a -&gt; a
 </span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">WindowL Doc Doc
-</span><a href="#local-6989586621680554220"><span class="hs-identifier hs-var">ps</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621680730268"><span class="hs-identifier hs-var">ps</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-73"></span><span>
 </span><span id="line-74"></span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#tokens"><span class="hs-identifier hs-type">tokens</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Vector.html#%1D54D"><span class="hs-identifier hs-type">&#120141;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Parser.ParserInput.html#ParserToken"><span class="hs-identifier hs-type">ParserToken</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2102"><span class="hs-identifier hs-type">&#8450;</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-75"></span><span id="tokens"><span class="annot"><span class="annottext">tokens :: &#120138; -&gt; &#120141; (ParserToken &#8450;)

@@ -10,6 +10,8 @@ import UVMHS.Lib.Substitution.SubstSpaced
 import UVMHS.Lib.Substitution.SubstScoped
 import UVMHS.Lib.Substitution.Var
 
+import qualified Language.Haskell.TH.Syntax as TH
+
 -- ===== --
 -- SUBST --
 -- ===== --
@@ -29,6 +31,7 @@ import UVMHS.Lib.Substitution.Var
 newtype Subst s e = Subst { unSubst ∷ SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) e }
   deriving (Eq,Ord,Show,Fuzzy,Functor,Shrinky)
 makeLenses ''Subst
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (Subst s e)
 
 wfSubst ∷ (Ord s) ⇒ Subst s e → 𝔹
 wfSubst = wfSubstSpaced ∘ unSubst

@@ -10,6 +10,8 @@ import UVMHS.Lib.Shrinky
 import UVMHS.Lib.Substitution.Var
 import UVMHS.Lib.Substitution.Subst
 
+import qualified Language.Haskell.TH.Syntax as TH
+
 -- =================== --
 -- UNIFIABLE VARIABLES --
 -- =================== --
@@ -19,6 +21,7 @@ data 𝕐 s e =
   | M_UVar 𝕎 (Subst s e)  -- meta variable
   deriving (Eq,Ord,Show)
 makePrisms ''𝕐
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (𝕐 s e)
 
 wfUVar ∷ (Ord s) ⇒ 𝕐 s e → 𝔹
 wfUVar = \case

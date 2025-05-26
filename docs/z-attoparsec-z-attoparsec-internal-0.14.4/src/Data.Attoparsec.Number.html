@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679072691"><span id="local-6989586621679072692"><span id="local-6989586621679072693"></span></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679085838"><span id="local-6989586621679085839"><span id="local-6989586621679085840"></span></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
 </span><span id="line-2"></span><span class="hs-comment">-- |</span><span>
 </span><span id="line-3"></span><span class="hs-comment">-- Module      :  Data.Attoparsec.Number</span><span>
 </span><span id="line-4"></span><span class="hs-comment">-- Copyright   :  Bryan O'Sullivan 2007-2015</span><span>
@@ -33,7 +33,7 @@
 </span><span id="line-33"></span><span class="hs-comment">-- major release.  Use the 'Data.Scientific.Scientific' type instead.</span><span>
 </span><span id="line-34"></span><span class="hs-keyword">data</span><span> </span><span id="Number"><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-var">Number</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="I"><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-var">I</span></a></span></span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span>
 </span><span id="line-35"></span><span>            </span><span class="hs-glyph">|</span><span> </span><span id="D"><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-var">D</span></a></span></span><span> </span><span class="hs-pragma">{-# UNPACK</span><span> </span><span class="hs-pragma">#-}</span><span> </span><span class="hs-glyph">!</span><span class="annot"><span class="hs-identifier hs-type">Double</span></span><span>
-</span><span id="line-36"></span><span>              </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679072701"><span id="local-6989586621679072707"><span id="local-6989586621679072711"><span id="local-6989586621679072713"><span id="local-6989586621679072715"><span id="local-6989586621679072721"><span id="local-6989586621679072726"><span id="local-6989586621679072729"><span id="local-6989586621679072732"><span id="local-6989586621679072735"><span id="local-6989586621679072738"><span id="local-6989586621679072741"><span id="local-6989586621679072746"><span id="local-6989586621679072751"><span class="annot"><span class="annottext">Typeable Number
+</span><span id="line-36"></span><span>              </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679085848"><span id="local-6989586621679085854"><span id="local-6989586621679085858"><span id="local-6989586621679085860"><span id="local-6989586621679085862"><span id="local-6989586621679085868"><span id="local-6989586621679085873"><span id="local-6989586621679085876"><span id="local-6989586621679085879"><span id="local-6989586621679085882"><span id="local-6989586621679085885"><span id="local-6989586621679085888"><span id="local-6989586621679085893"><span id="local-6989586621679085898"><span class="annot"><span class="annottext">Typeable Number
 Typeable Number =&gt;
 (forall (c :: * -&gt; *).
  (forall d b. Data d =&gt; c (d -&gt; b) -&gt; d -&gt; c b)
@@ -191,72 +191,72 @@ MonadPlus m =&gt;
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
 </span><span id="line-37"></span><span class="hs-pragma">{-# DEPRECATED</span><span> </span><span class="hs-pragma">Number</span><span> </span><span class="hs-pragma">&quot;Use Scientific instead.&quot;</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-38"></span><span>
-</span><span id="line-39"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679072757"><span id="local-6989586621679072762"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-40"></span><span>    </span><span id="local-6989586621679072769"><span class="annot"><span class="annottext">show :: Number -&gt; String
-</span><a href="#local-6989586621679072769"><span class="hs-identifier hs-var hs-var hs-var hs-var">show</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072771"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072771"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; String
+</span><span id="line-39"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679085904"><span id="local-6989586621679085909"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-40"></span><span>    </span><span id="local-6989586621679085916"><span class="annot"><span class="annottext">show :: Number -&gt; String
+</span><a href="#local-6989586621679085916"><span class="hs-identifier hs-var hs-var hs-var hs-var">show</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679085918"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679085918"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; String
 forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072771"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-41"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072772"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072772"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; String
+</span><a href="#local-6989586621679085918"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-41"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679085919"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679085919"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; String
 forall a. Show a =&gt; a -&gt; String
 </span><span class="hs-identifier hs-var">show</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072772"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679085919"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-42"></span><span>
 </span><span id="line-43"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">NFData</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-44"></span><span>    </span><span id="local-6989586621679072776"><span class="annot"><span class="annottext">rnf :: Number -&gt; ()
+</span><span id="line-44"></span><span>    </span><span id="local-6989586621679085923"><span class="annot"><span class="annottext">rnf :: Number -&gt; ()
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">rnf</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-45"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">rnf</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span class="annot"><span class="annottext">Double
 </span><span class="hs-identifier">_</span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
 </span><span id="line-46"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">rnf</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-47"></span><span>
-</span><span id="line-48"></span><span id="local-6989586621679072641"><span class="annot"><a href="Data.Attoparsec.Number.html#binop"><span class="hs-identifier hs-type">binop</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679072641"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Double</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Double</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679072641"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-49"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679072641"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-48"></span><span id="local-6989586621679085788"><span class="annot"><a href="Data.Attoparsec.Number.html#binop"><span class="hs-identifier hs-type">binop</span></a></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Integer</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679085788"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Double</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Double</span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679085788"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span>      </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><a href="#local-6989586621679085788"><span class="hs-identifier hs-type">a</span></a></span></span><span>
 </span><span id="line-50"></span><span id="binop"><span class="annot"><span class="annottext">binop :: forall a.
 (Integer -&gt; Integer -&gt; a)
 -&gt; (Double -&gt; Double -&gt; a) -&gt; Number -&gt; Number -&gt; a
 </span><a href="Data.Attoparsec.Number.html#binop"><span class="hs-identifier hs-var hs-var">binop</span></a></span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; a
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679072784"><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
-</span><a href="#local-6989586621679072784"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072785"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072785"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072786"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072786"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
-</span><a href="#local-6989586621679072784"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072785"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072786"><span class="hs-identifier hs-var">b</span></a></span><span>
-</span><span id="line-51"></span><span class="annot"><a href="Data.Attoparsec.Number.html#binop"><span class="hs-identifier hs-var">binop</span></a></span><span> </span><span id="local-6989586621679072787"><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; a
-</span><a href="#local-6989586621679072787"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072788"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072788"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072789"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072789"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; a
-</span><a href="#local-6989586621679072787"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072788"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072789"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679085931"><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
+</span><a href="#local-6989586621679085931"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679085932"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679085932"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679085933"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679085933"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
+</span><a href="#local-6989586621679085931"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679085932"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679085933"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><span id="line-51"></span><span class="annot"><a href="Data.Attoparsec.Number.html#binop"><span class="hs-identifier hs-var">binop</span></a></span><span> </span><span id="local-6989586621679085934"><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; a
+</span><a href="#local-6989586621679085934"><span class="hs-identifier hs-var">i</span></a></span></span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679085935"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679085935"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679085936"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679085936"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; a
+</span><a href="#local-6989586621679085934"><span class="hs-identifier hs-var">i</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679085935"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679085936"><span class="hs-identifier hs-var">b</span></a></span><span>
 </span><span id="line-52"></span><span class="annot"><a href="Data.Attoparsec.Number.html#binop"><span class="hs-identifier hs-var">binop</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; a
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679072790"><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
-</span><a href="#local-6989586621679072790"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072791"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072791"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072792"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072792"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
-</span><a href="#local-6989586621679072790"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072791"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Double
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679085937"><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
+</span><a href="#local-6989586621679085937"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679085938"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679085938"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679085939"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679085939"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
+</span><a href="#local-6989586621679085937"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679085938"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Double
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072792"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679085939"><span class="hs-identifier hs-var">b</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-53"></span><span class="annot"><a href="Data.Attoparsec.Number.html#binop"><span class="hs-identifier hs-var">binop</span></a></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer -&gt; a
-</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679072793"><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
-</span><a href="#local-6989586621679072793"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072794"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072794"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072795"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072795"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
-</span><a href="#local-6989586621679072793"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Double
+</span><span class="hs-identifier">_</span></span><span> </span><span id="local-6989586621679085940"><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
+</span><a href="#local-6989586621679085940"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679085941"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679085941"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679085942"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679085942"><span class="hs-identifier hs-var">b</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double -&gt; a
+</span><a href="#local-6989586621679085940"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Double
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072794"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072795"><span class="hs-identifier hs-var">b</span></a></span><span>
+</span><a href="#local-6989586621679085941"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679085942"><span class="hs-identifier hs-var">b</span></a></span><span>
 </span><span id="line-54"></span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#binop"><span class="hs-pragma hs-type">binop</span></a></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-55"></span><span>
 </span><span id="line-56"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Eq</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-57"></span><span>    </span><span id="local-6989586621679072804"><span class="annot"><span class="annottext">== :: Number -&gt; Number -&gt; Bool
+</span><span id="line-57"></span><span>    </span><span id="local-6989586621679085951"><span class="annot"><span class="annottext">== :: Number -&gt; Number -&gt; Bool
 </span><span class="hs-operator hs-var hs-var hs-var hs-var">(==)</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
 -&gt; (Double -&gt; Double -&gt; Bool) -&gt; Number -&gt; Number -&gt; Bool
 forall a.
@@ -269,8 +269,8 @@ forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">(==)</span></span><span>
 </span><span id="line-58"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">==</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-59"></span><span>
-</span><span id="line-60"></span><span>    </span><span id="local-6989586621679072807"><span class="annot"><span class="annottext">/= :: Number -&gt; Number -&gt; Bool
-</span><a href="#local-6989586621679072807"><span class="hs-operator hs-var hs-var hs-var hs-var">(/=)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
+</span><span id="line-60"></span><span>    </span><span id="local-6989586621679085954"><span class="annot"><span class="annottext">/= :: Number -&gt; Number -&gt; Bool
+</span><a href="#local-6989586621679085954"><span class="hs-operator hs-var hs-var hs-var hs-var">(/=)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
 -&gt; (Double -&gt; Double -&gt; Bool) -&gt; Number -&gt; Number -&gt; Bool
 forall a.
 (Integer -&gt; Integer -&gt; a)
@@ -282,9 +282,9 @@ forall a. Eq a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">(/=)</span></span><span>
 </span><span id="line-61"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">/=</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-62"></span><span>
-</span><span id="line-63"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679072817"><span id="local-6989586621679072821"><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-64"></span><span>    </span><span id="local-6989586621679072828"><span class="annot"><span class="annottext">&lt; :: Number -&gt; Number -&gt; Bool
-</span><a href="#local-6989586621679072828"><span class="hs-operator hs-var hs-var hs-var hs-var">(&lt;)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
+</span><span id="line-63"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679085964"><span id="local-6989586621679085968"><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-64"></span><span>    </span><span id="local-6989586621679085975"><span class="annot"><span class="annottext">&lt; :: Number -&gt; Number -&gt; Bool
+</span><a href="#local-6989586621679085975"><span class="hs-operator hs-var hs-var hs-var hs-var">(&lt;)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
 -&gt; (Double -&gt; Double -&gt; Bool) -&gt; Number -&gt; Number -&gt; Bool
 forall a.
 (Integer -&gt; Integer -&gt; a)
@@ -296,8 +296,8 @@ forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">(&lt;)</span></span><span>
 </span><span id="line-65"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">&lt;</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-66"></span><span>
-</span><span id="line-67"></span><span>    </span><span id="local-6989586621679072832"><span class="annot"><span class="annottext">&lt;= :: Number -&gt; Number -&gt; Bool
-</span><a href="#local-6989586621679072832"><span class="hs-operator hs-var hs-var hs-var hs-var">(&lt;=)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
+</span><span id="line-67"></span><span>    </span><span id="local-6989586621679085979"><span class="annot"><span class="annottext">&lt;= :: Number -&gt; Number -&gt; Bool
+</span><a href="#local-6989586621679085979"><span class="hs-operator hs-var hs-var hs-var hs-var">(&lt;=)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
 -&gt; (Double -&gt; Double -&gt; Bool) -&gt; Number -&gt; Number -&gt; Bool
 forall a.
 (Integer -&gt; Integer -&gt; a)
@@ -309,8 +309,8 @@ forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">(&lt;=)</span></span><span>
 </span><span id="line-68"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">&lt;=</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-69"></span><span>
-</span><span id="line-70"></span><span>    </span><span id="local-6989586621679072836"><span class="annot"><span class="annottext">&gt; :: Number -&gt; Number -&gt; Bool
-</span><a href="#local-6989586621679072836"><span class="hs-operator hs-var hs-var hs-var hs-var">(&gt;)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
+</span><span id="line-70"></span><span>    </span><span id="local-6989586621679085983"><span class="annot"><span class="annottext">&gt; :: Number -&gt; Number -&gt; Bool
+</span><a href="#local-6989586621679085983"><span class="hs-operator hs-var hs-var hs-var hs-var">(&gt;)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
 -&gt; (Double -&gt; Double -&gt; Bool) -&gt; Number -&gt; Number -&gt; Bool
 forall a.
 (Integer -&gt; Integer -&gt; a)
@@ -322,7 +322,7 @@ forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">(&gt;)</span></span><span>
 </span><span id="line-71"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">&gt;</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-72"></span><span>
-</span><span id="line-73"></span><span>    </span><span id="local-6989586621679072840"><span class="annot"><span class="annottext">&gt;= :: Number -&gt; Number -&gt; Bool
+</span><span id="line-73"></span><span>    </span><span id="local-6989586621679085987"><span class="annot"><span class="annottext">&gt;= :: Number -&gt; Number -&gt; Bool
 </span><span class="hs-operator hs-var hs-var hs-var hs-var">(&gt;=)</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Bool)
 -&gt; (Double -&gt; Double -&gt; Bool) -&gt; Number -&gt; Number -&gt; Bool
 forall a.
@@ -335,8 +335,8 @@ forall a. Ord a =&gt; a -&gt; a -&gt; Bool
 </span><span class="hs-operator hs-var">(&gt;=)</span></span><span>
 </span><span id="line-74"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">&gt;=</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-75"></span><span>
-</span><span id="line-76"></span><span>    </span><span id="local-6989586621679072843"><span class="annot"><span class="annottext">compare :: Number -&gt; Number -&gt; Ordering
-</span><a href="#local-6989586621679072843"><span class="hs-identifier hs-var hs-var hs-var hs-var">compare</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Ordering)
+</span><span id="line-76"></span><span>    </span><span id="local-6989586621679085990"><span class="annot"><span class="annottext">compare :: Number -&gt; Number -&gt; Ordering
+</span><a href="#local-6989586621679085990"><span class="hs-identifier hs-var hs-var hs-var hs-var">compare</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Ordering)
 -&gt; (Double -&gt; Double -&gt; Ordering) -&gt; Number -&gt; Number -&gt; Ordering
 forall a.
 (Integer -&gt; Integer -&gt; a)
@@ -349,8 +349,8 @@ forall a. Ord a =&gt; a -&gt; a -&gt; Ordering
 </span><span id="line-77"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">compare</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-78"></span><span>
 </span><span id="line-79"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Num</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-80"></span><span>    </span><span id="local-6989586621679072857"><span class="annot"><span class="annottext">+ :: Number -&gt; Number -&gt; Number
-</span><a href="#local-6989586621679072857"><span class="hs-operator hs-var hs-var hs-var hs-var">(+)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Number)
+</span><span id="line-80"></span><span>    </span><span id="local-6989586621679086004"><span class="annot"><span class="annottext">+ :: Number -&gt; Number -&gt; Number
+</span><a href="#local-6989586621679086004"><span class="hs-operator hs-var hs-var hs-var hs-var">(+)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Number)
 -&gt; (Double -&gt; Double -&gt; Number) -&gt; Number -&gt; Number -&gt; Number
 forall a.
 (Integer -&gt; Integer -&gt; a)
@@ -378,7 +378,7 @@ forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">(+)</span></span><span class="hs-special">)</span><span>
 </span><span id="line-81"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">+</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-82"></span><span>
-</span><span id="line-83"></span><span>    </span><span id="local-6989586621679072863"><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-special">)</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Number)
+</span><span id="line-83"></span><span>    </span><span id="local-6989586621679086010"><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-special">)</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Number)
 -&gt; (Double -&gt; Double -&gt; Number) -&gt; Number -&gt; Number -&gt; Number
 forall a.
 (Integer -&gt; Integer -&gt; a)
@@ -402,8 +402,8 @@ forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
 </span><span class="hs-operator hs-var">.</span></span><span> </span><span class="hs-special">(</span><span class="hs-glyph">-</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
 </span><span id="line-84"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">-</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-85"></span><span>
-</span><span id="line-86"></span><span>    </span><span id="local-6989586621679072866"><span class="annot"><span class="annottext">* :: Number -&gt; Number -&gt; Number
-</span><a href="#local-6989586621679072866"><span class="hs-operator hs-var hs-var hs-var hs-var">(*)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Number)
+</span><span id="line-86"></span><span>    </span><span id="local-6989586621679086013"><span class="annot"><span class="annottext">* :: Number -&gt; Number -&gt; Number
+</span><a href="#local-6989586621679086013"><span class="hs-operator hs-var hs-var hs-var hs-var">(*)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Number)
 -&gt; (Double -&gt; Double -&gt; Number) -&gt; Number -&gt; Number -&gt; Number
 forall a.
 (Integer -&gt; Integer -&gt; a)
@@ -431,64 +431,64 @@ forall a. Num a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">(*)</span></span><span class="hs-special">)</span><span>
 </span><span id="line-87"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">*</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-88"></span><span>
-</span><span id="line-89"></span><span>    </span><span id="local-6989586621679072870"><span class="annot"><span class="annottext">abs :: Number -&gt; Number
-</span><a href="#local-6989586621679072870"><span class="hs-identifier hs-var hs-var hs-var hs-var">abs</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072872"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072872"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Number
+</span><span id="line-89"></span><span>    </span><span id="local-6989586621679086017"><span class="annot"><span class="annottext">abs :: Number -&gt; Number
+</span><a href="#local-6989586621679086017"><span class="hs-identifier hs-var hs-var hs-var hs-var">abs</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086019"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086019"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-var">I</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Number) -&gt; Integer -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
 forall a. Num a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">abs</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072872"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-90"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">abs</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072873"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072873"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
+</span><a href="#local-6989586621679086019"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-90"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">abs</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086020"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086020"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-var">D</span></a></span><span> </span><span class="annot"><span class="annottext">(Double -&gt; Number) -&gt; Double -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double
 forall a. Num a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">abs</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072873"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679086020"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-91"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">abs</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-92"></span><span>
-</span><span id="line-93"></span><span>    </span><span id="local-6989586621679072876"><span class="annot"><span class="annottext">negate :: Number -&gt; Number
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">negate</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072877"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072877"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Number
+</span><span id="line-93"></span><span>    </span><span id="local-6989586621679086023"><span class="annot"><span class="annottext">negate :: Number -&gt; Number
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">negate</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086024"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086024"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-var">I</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Number) -&gt; Integer -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
 forall a. Num a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">negate</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072877"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-94"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">negate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072878"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072878"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
+</span><a href="#local-6989586621679086024"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-94"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">negate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086025"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086025"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-var">D</span></a></span><span> </span><span class="annot"><span class="annottext">(Double -&gt; Number) -&gt; Double -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double
 forall a. Num a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">negate</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072878"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679086025"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-95"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">negate</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-96"></span><span>
-</span><span id="line-97"></span><span>    </span><span id="local-6989586621679072881"><span class="annot"><span class="annottext">signum :: Number -&gt; Number
-</span><a href="#local-6989586621679072881"><span class="hs-identifier hs-var hs-var hs-var hs-var">signum</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072883"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072883"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Number
+</span><span id="line-97"></span><span>    </span><span id="local-6989586621679086028"><span class="annot"><span class="annottext">signum :: Number -&gt; Number
+</span><a href="#local-6989586621679086028"><span class="hs-identifier hs-var hs-var hs-var hs-var">signum</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086030"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086030"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-var">I</span></a></span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Number) -&gt; Integer -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Integer
 forall a. Num a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">signum</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072883"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-98"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">signum</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072884"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072884"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
+</span><a href="#local-6989586621679086030"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-98"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">signum</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086031"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086031"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-var">D</span></a></span><span> </span><span class="annot"><span class="annottext">(Double -&gt; Number) -&gt; Double -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double
 forall a. Num a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">signum</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072884"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679086031"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-99"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">signum</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-100"></span><span>
-</span><span id="line-101"></span><span>    </span><span id="local-6989586621679072886"><span class="annot"><span class="annottext">fromInteger :: Integer -&gt; Number
+</span><span id="line-101"></span><span>    </span><span id="local-6989586621679086033"><span class="annot"><span class="annottext">fromInteger :: Integer -&gt; Number
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">fromInteger</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-var">I</span></a></span><span class="annot"><span class="annottext">(Integer -&gt; Number) -&gt; Integer -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -500,21 +500,21 @@ forall a. Num a =&gt; Integer -&gt; a
 </span><span id="line-102"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">fromInteger</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-103"></span><span>
 </span><span id="line-104"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Real</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-105"></span><span>    </span><span id="local-6989586621679072899"><span class="annot"><span class="annottext">toRational :: Number -&gt; Rational
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toRational</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072900"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072900"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Rational
+</span><span id="line-105"></span><span>    </span><span id="local-6989586621679086046"><span class="annot"><span class="annottext">toRational :: Number -&gt; Rational
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">toRational</span></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086047"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086047"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; Rational
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072900"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-106"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">toRational</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072901"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072901"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Rational
+</span><a href="#local-6989586621679086047"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-106"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">toRational</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086048"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086048"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Rational
 forall a. Real a =&gt; a -&gt; Rational
 </span><span class="hs-identifier hs-var">toRational</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072901"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679086048"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-107"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">toRational</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-108"></span><span>
 </span><span id="line-109"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Fractional</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-110"></span><span>    </span><span id="local-6989586621679072911"><span class="annot"><span class="annottext">fromRational :: Rational -&gt; Number
+</span><span id="line-110"></span><span>    </span><span id="local-6989586621679086058"><span class="annot"><span class="annottext">fromRational :: Rational -&gt; Number
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">fromRational</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Double -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-var">D</span></a></span><span class="annot"><span class="annottext">(Double -&gt; Number) -&gt; Double -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
@@ -525,8 +525,8 @@ forall a. Fractional a =&gt; Rational -&gt; a
 </span><span class="hs-identifier hs-var">fromRational</span></span><span>
 </span><span id="line-111"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">fromRational</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-112"></span><span>
-</span><span id="line-113"></span><span>    </span><span id="local-6989586621679072916"><span class="annot"><span class="annottext">/ :: Number -&gt; Number -&gt; Number
-</span><a href="#local-6989586621679072916"><span class="hs-operator hs-var hs-var hs-var hs-var">(/)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Number)
+</span><span id="line-113"></span><span>    </span><span id="local-6989586621679086063"><span class="annot"><span class="annottext">/ :: Number -&gt; Number -&gt; Number
+</span><a href="#local-6989586621679086063"><span class="hs-operator hs-var hs-var hs-var hs-var">(/)</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Integer -&gt; Integer -&gt; Number)
 -&gt; (Double -&gt; Double -&gt; Number) -&gt; Number -&gt; Number -&gt; Number
 forall a.
 (Integer -&gt; Integer -&gt; a)
@@ -560,9 +560,9 @@ forall a. Fractional a =&gt; a -&gt; a -&gt; a
 </span><span class="hs-operator hs-var">(/)</span></span><span class="hs-special">)</span><span>
 </span><span id="line-115"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="hs-pragma">(</span><span class="hs-pragma">/</span><span class="hs-pragma">)</span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-116"></span><span>
-</span><span id="line-117"></span><span>    </span><span id="local-6989586621679072922"><span class="annot"><span class="annottext">recip :: Number -&gt; Number
-</span><a href="#local-6989586621679072922"><span class="hs-identifier hs-var hs-var hs-var hs-var">recip</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072924"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072924"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
+</span><span id="line-117"></span><span>    </span><span id="local-6989586621679086069"><span class="annot"><span class="annottext">recip :: Number -&gt; Number
+</span><a href="#local-6989586621679086069"><span class="hs-identifier hs-var hs-var hs-var hs-var">recip</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086071"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086071"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-var">D</span></a></span><span> </span><span class="annot"><span class="annottext">(Double -&gt; Number) -&gt; Double -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double
@@ -570,88 +570,88 @@ forall a. Fractional a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">recip</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; Double
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072924"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span>
-</span><span id="line-118"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">recip</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072925"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072925"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
+</span><a href="#local-6989586621679086071"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-118"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">recip</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086072"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086072"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-var">D</span></a></span><span> </span><span class="annot"><span class="annottext">(Double -&gt; Number) -&gt; Double -&gt; Number
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><span class="hs-operator hs-var">$!</span></span><span> </span><span class="annot"><span class="annottext">Double -&gt; Double
 forall a. Fractional a =&gt; a -&gt; a
 </span><span class="hs-identifier hs-var">recip</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072925"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679086072"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-119"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">recip</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-120"></span><span>
 </span><span id="line-121"></span><span class="hs-keyword">instance</span><span> </span><span class="annot"><span class="hs-identifier hs-type">RealFrac</span></span><span> </span><span class="annot"><a href="Data.Attoparsec.Number.html#Number"><span class="hs-identifier hs-type">Number</span></a></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-122"></span><span>    </span><span id="local-6989586621679072948"><span class="annot"><span class="annottext">properFraction :: forall b. Integral b =&gt; Number -&gt; (b, Number)
-</span><a href="#local-6989586621679072948"><span class="hs-identifier hs-var hs-var hs-var hs-var">properFraction</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072950"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072950"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; b
+</span><span id="line-122"></span><span>    </span><span id="local-6989586621679086095"><span class="annot"><span class="annottext">properFraction :: forall b. Integral b =&gt; Number -&gt; (b, Number)
+</span><a href="#local-6989586621679086095"><span class="hs-identifier hs-var hs-var hs-var hs-var">properFraction</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086097"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086097"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Integer -&gt; b
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072950"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Number
+</span><a href="#local-6989586621679086097"><span class="hs-identifier hs-var">a</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Number
 </span><span class="hs-number">0</span></span><span class="hs-special">)</span><span>
-</span><span id="line-123"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">properFraction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072951"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072951"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Double -&gt; (b, Double)
+</span><span id="line-123"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">properFraction</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086098"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086098"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">case</span><span> </span><span class="annot"><span class="annottext">Double -&gt; (b, Double)
 forall b. Integral b =&gt; Double -&gt; (b, Double)
 forall a b. (RealFrac a, Integral b) =&gt; a -&gt; (b, a)
 </span><span class="hs-identifier hs-var">properFraction</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072951"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="hs-keyword">of</span><span>
-</span><span id="line-124"></span><span>                             </span><span class="hs-special">(</span><span id="local-6989586621679072952"><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621679072952"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679072953"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072953"><span class="hs-identifier hs-var">d</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">b
-</span><a href="#local-6989586621679072952"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Double -&gt; Number
+</span><a href="#local-6989586621679086098"><span class="hs-identifier hs-var">a</span></a></span><span> </span><span class="hs-keyword">of</span><span>
+</span><span id="line-124"></span><span>                             </span><span class="hs-special">(</span><span id="local-6989586621679086099"><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621679086099"><span class="hs-identifier hs-var">i</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621679086100"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086100"><span class="hs-identifier hs-var">d</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">b
+</span><a href="#local-6989586621679086099"><span class="hs-identifier hs-var">i</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Double -&gt; Number
 </span><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-var">D</span></a></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072953"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span>
+</span><a href="#local-6989586621679086100"><span class="hs-identifier hs-var">d</span></a></span><span class="hs-special">)</span><span>
 </span><span id="line-125"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">properFraction</span></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-126"></span><span>    </span><span id="local-6989586621679072961"><span class="annot"><span class="annottext">truncate :: forall b. Integral b =&gt; Number -&gt; b
-</span><a href="#local-6989586621679072961"><span class="hs-identifier hs-var hs-var hs-var hs-var">truncate</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072963"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072963"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; b
+</span><span id="line-126"></span><span>    </span><span id="local-6989586621679086108"><span class="annot"><span class="annottext">truncate :: forall b. Integral b =&gt; Number -&gt; b
+</span><a href="#local-6989586621679086108"><span class="hs-identifier hs-var hs-var hs-var hs-var">truncate</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086110"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086110"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; b
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072963"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-127"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">truncate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072964"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072964"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; b
+</span><a href="#local-6989586621679086110"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-127"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">truncate</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086111"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086111"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; b
 forall b. Integral b =&gt; Double -&gt; b
 forall a b. (RealFrac a, Integral b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">truncate</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072964"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679086111"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-128"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">truncate</span></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-129"></span><span>    </span><span id="local-6989586621679072972"><span class="annot"><span class="annottext">round :: forall b. Integral b =&gt; Number -&gt; b
-</span><a href="#local-6989586621679072972"><span class="hs-identifier hs-var hs-var hs-var hs-var">round</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072974"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072974"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; b
+</span><span id="line-129"></span><span>    </span><span id="local-6989586621679086119"><span class="annot"><span class="annottext">round :: forall b. Integral b =&gt; Number -&gt; b
+</span><a href="#local-6989586621679086119"><span class="hs-identifier hs-var hs-var hs-var hs-var">round</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086121"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086121"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; b
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072974"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-130"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">round</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072975"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072975"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; b
+</span><a href="#local-6989586621679086121"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-130"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">round</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086122"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086122"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; b
 forall b. Integral b =&gt; Double -&gt; b
 forall a b. (RealFrac a, Integral b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">round</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072975"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679086122"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-131"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">round</span></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-132"></span><span>    </span><span id="local-6989586621679072983"><span class="annot"><span class="annottext">ceiling :: forall b. Integral b =&gt; Number -&gt; b
-</span><a href="#local-6989586621679072983"><span class="hs-identifier hs-var hs-var hs-var hs-var">ceiling</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072985"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072985"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; b
+</span><span id="line-132"></span><span>    </span><span id="local-6989586621679086130"><span class="annot"><span class="annottext">ceiling :: forall b. Integral b =&gt; Number -&gt; b
+</span><a href="#local-6989586621679086130"><span class="hs-identifier hs-var hs-var hs-var hs-var">ceiling</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086132"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086132"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; b
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072985"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-133"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">ceiling</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072986"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072986"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; b
+</span><a href="#local-6989586621679086132"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-133"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">ceiling</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086133"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086133"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; b
 forall b. Integral b =&gt; Double -&gt; b
 forall a b. (RealFrac a, Integral b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">ceiling</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072986"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679086133"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-134"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">ceiling</span></span><span> </span><span class="hs-pragma">#-}</span><span>
-</span><span id="line-135"></span><span>    </span><span id="local-6989586621679072994"><span class="annot"><span class="annottext">floor :: forall b. Integral b =&gt; Number -&gt; b
-</span><a href="#local-6989586621679072994"><span class="hs-identifier hs-var hs-var hs-var hs-var">floor</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679072996"><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072996"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; b
+</span><span id="line-135"></span><span>    </span><span id="local-6989586621679086141"><span class="annot"><span class="annottext">floor :: forall b. Integral b =&gt; Number -&gt; b
+</span><a href="#local-6989586621679086141"><span class="hs-identifier hs-var hs-var hs-var hs-var">floor</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#I"><span class="hs-identifier hs-type">I</span></a></span><span> </span><span id="local-6989586621679086143"><span class="annot"><span class="annottext">Integer
+</span><a href="#local-6989586621679086143"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Integer -&gt; b
 forall a b. (Integral a, Num b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">fromIntegral</span></span><span> </span><span class="annot"><span class="annottext">Integer
-</span><a href="#local-6989586621679072996"><span class="hs-identifier hs-var">a</span></a></span><span>
-</span><span id="line-136"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">floor</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679072997"><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072997"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; b
+</span><a href="#local-6989586621679086143"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><span id="line-136"></span><span>    </span><span class="annot"><span class="hs-identifier hs-var">floor</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Attoparsec.Number.html#D"><span class="hs-identifier hs-type">D</span></a></span><span> </span><span id="local-6989586621679086144"><span class="annot"><span class="annottext">Double
+</span><a href="#local-6989586621679086144"><span class="hs-identifier hs-var">a</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Double -&gt; b
 forall b. Integral b =&gt; Double -&gt; b
 forall a b. (RealFrac a, Integral b) =&gt; a -&gt; b
 </span><span class="hs-identifier hs-var">floor</span></span><span> </span><span class="annot"><span class="annottext">Double
-</span><a href="#local-6989586621679072997"><span class="hs-identifier hs-var">a</span></a></span><span>
+</span><a href="#local-6989586621679086144"><span class="hs-identifier hs-var">a</span></a></span><span>
 </span><span id="line-137"></span><span>    </span><span class="hs-pragma">{-# INLINE</span><span> </span><span class="annot"><span class="hs-pragma hs-type">floor</span></span><span> </span><span class="hs-pragma">#-}</span><span>
 </span><span id="line-138"></span></pre></body></html>

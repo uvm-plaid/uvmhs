@@ -39,10 +39,10 @@ newtype Only a
 Only :: a -> Only a
 [fromOnly] :: Only a -> a
 instance Data.Data.Data a => Data.Data.Data (Data.Tuple.Only.Only a)
+instance GHC.Classes.Eq a => GHC.Classes.Eq (Data.Tuple.Only.Only a)
 instance GHC.Base.Functor Data.Tuple.Only.Only
 instance GHC.Generics.Generic (Data.Tuple.Only.Only a)
-instance GHC.Show.Show a => GHC.Show.Show (Data.Tuple.Only.Only a)
-instance GHC.Read.Read a => GHC.Read.Read (Data.Tuple.Only.Only a)
-instance GHC.Classes.Ord a => GHC.Classes.Ord (Data.Tuple.Only.Only a)
-instance GHC.Classes.Eq a => GHC.Classes.Eq (Data.Tuple.Only.Only a)
 instance Control.DeepSeq.NFData a => Control.DeepSeq.NFData (Data.Tuple.Only.Only a)
+instance GHC.Classes.Ord a => GHC.Classes.Ord (Data.Tuple.Only.Only a)
+instance GHC.Read.Read a => GHC.Read.Read (Data.Tuple.Only.Only a)
+instance GHC.Show.Show a => GHC.Show.Show (Data.Tuple.Only.Only a)

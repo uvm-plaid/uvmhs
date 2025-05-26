@@ -17,7 +17,7 @@ import qualified Data.Text as Text
 --          …
 --          pretty (conₘ (xₘ₁ ∷ contyₘ₁) … xₘ⸤nₘ⸥) = app [con "conₘ",pretty xₘ₁,…,pretty xₘ⸤nₘ⸥]
 --   |]
-makePrettySumLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr ()) → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → TH.Q (𝐿 TH.Dec)
+makePrettySumLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → TH.Q (𝐿 TH.Dec)
 makePrettySumLogic cx ty tyargs concontys = do
   conxs ∷ 𝐿 (TH.Name ∧ 𝐿 TH.Name) ← mapMOn concontys $ \ (con :* contys) → do
     tmpˣˢ ← mapMOn contys $ const $ TH.newName $ tohsChars "x"
@@ -54,7 +54,7 @@ makePrettySum name = do
 --          …
 --          pretty (conₘ (xₘ₁ ∷ contyₘ₁) … xₘ⸤nₘ⸥) = tup [pretty xₘ₁,…,pretty xₘ⸤nₘ⸥]
 --   |]
-makePrettyUnionLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr ()) → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → TH.Q (𝐿 TH.Dec)
+makePrettyUnionLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → TH.Q (𝐿 TH.Dec)
 makePrettyUnionLogic cx ty tyargs concontys = do
   conxs ∷ 𝐿 (TH.Name ∧ 𝐿 TH.Name) ← mapMOn concontys $ \ (con :* fieldtys) → do
     tmpˣˢ ← mapMOn fieldtys $ const $ TH.newName $ tohsChars "x"
@@ -93,7 +93,7 @@ makePrettyUnion name = do
 --        ) ⇒ Pretty (ty a₁ … aₙ) where
 --          pretty (con {field₁ = tmp₁;fieldₙ = tmpₙ}) = app [con "con",record [("field₁",tmp₁),…,("fieldₙ",tmpₙ)
 --   |]
-makePrettyRecordLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr ()) → TH.Name → 𝐿 (TH.Name ∧ TH.Type) → TH.Q (𝐿 TH.Dec)
+makePrettyRecordLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → TH.Name → 𝐿 (TH.Name ∧ TH.Type) → TH.Q (𝐿 TH.Dec)
 makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
   let conName = string $ TH.nameBase con
       conNameFirstLower = string $ mapFirst toLower $ iter conName

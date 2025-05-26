@@ -5,7 +5,6 @@ import UVMHS.Lib.Annotated
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.TreeAnnote
-import UVMHS.Lib.Substitution
 import UVMHS.Lib.Window
 
 import Instances.TH.Lift ()
@@ -22,19 +21,11 @@ deriving instance TH.Lift SrcCxt
 deriving instance TH.Lift LocRange
 deriving instance (TH.Lift 𝒸,TH.Lift a) ⇒ TH.Lift (𝐴 𝒸 a)
 deriving instance TH.Lift Loc
-deriving instance TH.Lift 𝕎
-deriving instance TH.Lift 𝕏
 instance (TH.Lift a) ⇒ TH.Lift (() → a) where
   liftTyped ∷ ∀ m. TH.Quote m ⇒ (() → a) → TH.Code m (() → a)
   liftTyped f = 
     let x = f ()
     in [|| \ () → x ||]
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstElem s e)
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SSubstElem s e)
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstScoped s e)
-deriving instance (TH.Lift s₁,TH.Lift s₂,TH.Lift e) ⇒ TH.Lift (SubstSpaced s₁ s₂ e)
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (Subst s e)
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (𝕐 s e)
 deriving instance (TH.Lift a,TH.Lift b) ⇒ TH.Lift (a ∧ b)
 deriving instance TH.Lift Annotation
 deriving instance TH.Lift Formats

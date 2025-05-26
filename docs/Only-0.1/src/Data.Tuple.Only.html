@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679036953"><span id="local-6989586621679036954"></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span id="local-6989586621679042447"><span id="local-6989586621679042448"></span></span><span class="hs-pragma">{-# LANGUAGE DeriveDataTypeable #-}</span><span>
 </span><span id="line-2"></span><span class="hs-pragma">{-# LANGUAGE DeriveFunctor      #-}</span><span>
 </span><span id="line-3"></span><span class="hs-pragma">{-# LANGUAGE DeriveGeneric      #-}</span><span>
 </span><span id="line-4"></span><span class="hs-pragma">{-# LANGUAGE Safe               #-}</span><span>
@@ -26,9 +26,9 @@
 </span><span id="line-26"></span><span class="hs-comment">-- @xs &lt;- decodeSomething</span><span>
 </span><span id="line-27"></span><span class="hs-comment">--forM_ xs $ \\('Only' id) -&gt; {- ... -}@</span><span>
 </span><span id="line-28"></span><span class="hs-comment">--</span><span>
-</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="Only"><span class="annot"><a href="Data.Tuple.Only.html#Only"><span class="hs-identifier hs-var">Only</span></a></span></span><span> </span><span id="local-6989586621679036856"><span class="annot"><a href="#local-6989586621679036856"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Only"><span class="annot"><a href="Data.Tuple.Only.html#Only"><span class="hs-identifier hs-var">Only</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="fromOnly"><span class="annot"><span class="annottext">forall a. Only a -&gt; a
-</span><a href="Data.Tuple.Only.html#fromOnly"><span class="hs-identifier hs-var hs-var">fromOnly</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679036856"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-special">}</span><span>
-</span><span id="line-30"></span><span>               </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679036960"><span id="local-6989586621679036964"><span class="annot"><span class="annottext">Only a -&gt; Only a -&gt; Bool
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="Only"><span class="annot"><a href="Data.Tuple.Only.html#Only"><span class="hs-identifier hs-var">Only</span></a></span></span><span> </span><span id="local-6989586621679042350"><span class="annot"><a href="#local-6989586621679042350"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="Only"><span class="annot"><a href="Data.Tuple.Only.html#Only"><span class="hs-identifier hs-var">Only</span></a></span></span><span> </span><span class="hs-special">{</span><span> </span><span id="fromOnly"><span class="annot"><span class="annottext">forall a. Only a -&gt; a
+</span><a href="Data.Tuple.Only.html#fromOnly"><span class="hs-identifier hs-var hs-var">fromOnly</span></a></span></span><span> </span><span class="hs-glyph">::</span><span> </span><span class="annot"><a href="#local-6989586621679042350"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-special">}</span><span>
+</span><span id="line-30"></span><span>               </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679042454"><span id="local-6989586621679042458"><span class="annot"><span class="annottext">Only a -&gt; Only a -&gt; Bool
 (Only a -&gt; Only a -&gt; Bool)
 -&gt; (Only a -&gt; Only a -&gt; Bool) -&gt; Eq (Only a)
 forall a. Eq a =&gt; Only a -&gt; Only a -&gt; Bool
@@ -37,7 +37,7 @@ $c== :: forall a. Eq a =&gt; Only a -&gt; Only a -&gt; Bool
 == :: Only a -&gt; Only a -&gt; Bool
 $c/= :: forall a. Eq a =&gt; Only a -&gt; Only a -&gt; Bool
 /= :: Only a -&gt; Only a -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679036974"><span id="local-6989586621679036978"><span id="local-6989586621679036982"><span id="local-6989586621679036986"><span id="local-6989586621679036990"><span id="local-6989586621679036994"><span id="local-6989586621679036998"><span class="annot"><span class="annottext">Eq (Only a)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679042468"><span id="local-6989586621679042472"><span id="local-6989586621679042476"><span id="local-6989586621679042480"><span id="local-6989586621679042484"><span id="local-6989586621679042488"><span id="local-6989586621679042492"><span class="annot"><span class="annottext">Eq (Only a)
 Eq (Only a) =&gt;
 (Only a -&gt; Only a -&gt; Ordering)
 -&gt; (Only a -&gt; Only a -&gt; Bool)
@@ -78,7 +78,7 @@ $cmax :: forall a. Ord a =&gt; Only a -&gt; Only a -&gt; Only a
 max :: Only a -&gt; Only a -&gt; Only a
 $cmin :: forall a. Ord a =&gt; Only a -&gt; Only a -&gt; Only a
 min :: Only a -&gt; Only a -&gt; Only a
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679037006"><span id="local-6989586621679037010"><span id="local-6989586621679037013"><span id="local-6989586621679037022"><span class="annot"><span class="annottext">ReadPrec [Only a]
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679042500"><span id="local-6989586621679042504"><span id="local-6989586621679042507"><span id="local-6989586621679042516"><span class="annot"><span class="annottext">ReadPrec [Only a]
 ReadPrec (Only a)
 Int -&gt; ReadS (Only a)
 ReadS [Only a]
@@ -102,7 +102,7 @@ $creadPrec :: forall a. Read a =&gt; ReadPrec (Only a)
 readPrec :: ReadPrec (Only a)
 $creadListPrec :: forall a. Read a =&gt; ReadPrec [Only a]
 readListPrec :: ReadPrec [Only a]
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679037027"><span id="local-6989586621679037032"><span id="local-6989586621679037036"><span class="annot"><span class="annottext">Int -&gt; Only a -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Read</span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679042521"><span id="local-6989586621679042526"><span id="local-6989586621679042530"><span class="annot"><span class="annottext">Int -&gt; Only a -&gt; ShowS
 [Only a] -&gt; ShowS
 Only a -&gt; String
 (Int -&gt; Only a -&gt; ShowS)
@@ -118,7 +118,7 @@ $cshow :: forall a. Show a =&gt; Only a -&gt; String
 show :: Only a -&gt; String
 $cshowList :: forall a. Show a =&gt; [Only a] -&gt; ShowS
 showList :: [Only a] -&gt; ShowS
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679037040"><span id="local-6989586621679037042"><span class="annot"><span class="annottext">(forall x. Only a -&gt; Rep (Only a) x)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679042534"><span id="local-6989586621679042536"><span class="annot"><span class="annottext">(forall x. Only a -&gt; Rep (Only a) x)
 -&gt; (forall x. Rep (Only a) x -&gt; Only a) -&gt; Generic (Only a)
 forall x. Rep (Only a) x -&gt; Only a
 forall x. Only a -&gt; Rep (Only a) x
@@ -130,7 +130,7 @@ $cfrom :: forall a x. Only a -&gt; Rep (Only a) x
 from :: forall x. Only a -&gt; Rep (Only a) x
 $cto :: forall a x. Rep (Only a) x -&gt; Only a
 to :: forall x. Rep (Only a) x -&gt; Only a
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679037046"><span id="local-6989586621679037048"><span class="annot"><span class="annottext">(forall a b. (a -&gt; b) -&gt; Only a -&gt; Only b)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Generic</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679042540"><span id="local-6989586621679042542"><span class="annot"><span class="annottext">(forall a b. (a -&gt; b) -&gt; Only a -&gt; Only b)
 -&gt; (forall a b. a -&gt; Only b -&gt; Only a) -&gt; Functor Only
 forall a b. a -&gt; Only b -&gt; Only a
 forall a b. (a -&gt; b) -&gt; Only a -&gt; Only b
@@ -141,7 +141,7 @@ $cfmap :: forall a b. (a -&gt; b) -&gt; Only a -&gt; Only b
 fmap :: forall a b. (a -&gt; b) -&gt; Only a -&gt; Only b
 $c&lt;$ :: forall a b. a -&gt; Only b -&gt; Only a
 &lt;$ :: forall a b. a -&gt; Only b -&gt; Only a
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Functor</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679037057"><span id="local-6989586621679037060"><span id="local-6989586621679037063"><span id="local-6989586621679037065"><span id="local-6989586621679037067"><span id="local-6989586621679037073"><span id="local-6989586621679037079"><span id="local-6989586621679037082"><span id="local-6989586621679037085"><span id="local-6989586621679037088"><span id="local-6989586621679037091"><span id="local-6989586621679037094"><span id="local-6989586621679037099"><span id="local-6989586621679037104"><span class="annot"><span class="annottext">Typeable (Only a)
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Functor</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679042551"><span id="local-6989586621679042554"><span id="local-6989586621679042557"><span id="local-6989586621679042559"><span id="local-6989586621679042561"><span id="local-6989586621679042567"><span id="local-6989586621679042573"><span id="local-6989586621679042576"><span id="local-6989586621679042579"><span id="local-6989586621679042582"><span id="local-6989586621679042585"><span id="local-6989586621679042588"><span id="local-6989586621679042593"><span id="local-6989586621679042598"><span class="annot"><span class="annottext">Typeable (Only a)
 Typeable (Only a) =&gt;
 (forall (c :: * -&gt; *).
  (forall d b. Data d =&gt; c (d -&gt; b) -&gt; d -&gt; c b)
@@ -342,8 +342,8 @@ MonadPlus m =&gt;
 (forall d. Data d =&gt; d -&gt; m d) -&gt; Only a -&gt; m (Only a)
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Data</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-identifier hs-type">Typeable</span></span><span class="hs-special">)</span><span>
 </span><span id="line-31"></span><span>
-</span><span id="line-32"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679036929"><span class="annot"><span class="hs-identifier hs-type">NFData</span></span><span> </span><span class="annot"><a href="#local-6989586621679036929"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">NFData</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Tuple.Only.html#Only"><span class="hs-identifier hs-type">Only</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679036929"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-33"></span><span>    </span><span id="local-6989586621679037115"><span class="annot"><span class="annottext">rnf :: Only a -&gt; ()
+</span><span id="line-32"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679042423"><span class="annot"><span class="hs-identifier hs-type">NFData</span></span><span> </span><span class="annot"><a href="#local-6989586621679042423"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">NFData</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Data.Tuple.Only.html#Only"><span class="hs-identifier hs-type">Only</span></a></span><span> </span><span class="annot"><a href="#local-6989586621679042423"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-33"></span><span>    </span><span id="local-6989586621679042609"><span class="annot"><span class="annottext">rnf :: Only a -&gt; ()
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var">rnf</span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; ()
 forall a. NFData a =&gt; a -&gt; ()
 </span><span class="hs-identifier hs-var">rnf</span></span><span> </span><span class="annot"><span class="annottext">(a -&gt; ()) -&gt; (Only a -&gt; a) -&gt; Only a -&gt; ()

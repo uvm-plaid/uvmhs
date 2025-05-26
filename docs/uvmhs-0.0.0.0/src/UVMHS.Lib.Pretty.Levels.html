@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHS.Lib.Pretty.Levels</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Core.html"><span class="hs-identifier">UVMHS.Core</span></a></span><span>
+</span><span id="line-4"></span><span>
+</span><span id="line-5"></span><span class="hs-comment">-------------------</span><span>
+</span><span id="line-6"></span><span class="hs-comment">-- STATIC LEVELS --</span><span>
+</span><span id="line-7"></span><span class="hs-comment">-------------------</span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pDEF"><span class="hs-identifier hs-type">pDEF</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
+</span><span id="line-10"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pLET"><span class="hs-identifier hs-type">pLET</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pSEP"><span class="hs-identifier hs-type">pSEP</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pASC"><span class="hs-identifier hs-type">pASC</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pARR"><span class="hs-identifier hs-type">pARR</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pOR"><span class="hs-identifier hs-type">pOR</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pAND"><span class="hs-identifier hs-type">pAND</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pCMP"><span class="hs-identifier hs-type">pCMP</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pCONS"><span class="hs-identifier hs-type">pCONS</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
+</span><span id="line-11"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pBWAND"><span class="hs-identifier hs-type">pBWAND</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pBWOR"><span class="hs-identifier hs-type">pBWOR</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pBSHFT"><span class="hs-identifier hs-type">pBSHFT</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
+</span><span id="line-12"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pPLUS"><span class="hs-identifier hs-type">pPLUS</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pTIMES"><span class="hs-identifier hs-type">pTIMES</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pNEG"><span class="hs-identifier hs-type">pNEG</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pPOW"><span class="hs-identifier hs-type">pPOW</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pFAC"><span class="hs-identifier hs-type">pFAC</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pAPP"><span class="hs-identifier hs-type">pAPP</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pREF"><span class="hs-identifier hs-type">pREF</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pIDX"><span class="hs-identifier hs-type">pIDX</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
+</span><span id="line-13"></span><span class="annot"><a href="UVMHS.Lib.Pretty.Levels.html#pTOP"><span class="hs-identifier hs-type">pTOP</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span>
+</span><span id="line-14"></span><span>
+</span><span id="line-15"></span><span id="pDEF"><span class="annot"><span class="annottext">pDEF :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pDEF"><span class="hs-identifier hs-var hs-var">pDEF</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">001</span></span><span>  </span><span class="hs-comment">--  x = e</span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span id="pLET"><span class="annot"><span class="annottext">pLET :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pLET"><span class="hs-identifier hs-var hs-var">pLET</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">005</span></span><span>  </span><span class="hs-comment">--  let fun</span><span>
+</span><span id="line-18"></span><span id="pSEP"><span class="annot"><span class="annottext">pSEP :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pSEP"><span class="hs-identifier hs-var hs-var">pSEP</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">006</span></span><span>  </span><span class="hs-comment">--  , ;</span><span>
+</span><span id="line-19"></span><span id="pASC"><span class="annot"><span class="annottext">pASC :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pASC"><span class="hs-identifier hs-var hs-var">pASC</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">007</span></span><span>  </span><span class="hs-comment">--  e : &#964;</span><span>
+</span><span id="line-20"></span><span id="pARR"><span class="annot"><span class="annottext">pARR :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pARR"><span class="hs-identifier hs-var hs-var">pARR</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">010</span></span><span>  </span><span class="hs-comment">--  &#8594;</span><span>
+</span><span id="line-21"></span><span id="pOR"><span class="annot"><span class="annottext">pOR :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pOR"><span class="hs-identifier hs-var hs-var">pOR</span></a></span></span><span>     </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">020</span></span><span>  </span><span class="hs-comment">--  &#8744;</span><span>
+</span><span id="line-22"></span><span id="pAND"><span class="annot"><span class="annottext">pAND :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pAND"><span class="hs-identifier hs-var hs-var">pAND</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">030</span></span><span>  </span><span class="hs-comment">--  &#8743;</span><span>
+</span><span id="line-23"></span><span id="pCMP"><span class="annot"><span class="annottext">pCMP :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pCMP"><span class="hs-identifier hs-var hs-var">pCMP</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">040</span></span><span>  </span><span class="hs-comment">--  ==</span><span>
+</span><span id="line-24"></span><span id="pCONS"><span class="annot"><span class="annottext">pCONS :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pCONS"><span class="hs-identifier hs-var hs-var">pCONS</span></a></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">041</span></span><span>  </span><span class="hs-comment">--  &#8759;</span><span>
+</span><span id="line-25"></span><span>
+</span><span id="line-26"></span><span id="pBWOR"><span class="annot"><span class="annottext">pBWOR :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pBWOR"><span class="hs-identifier hs-var hs-var">pBWOR</span></a></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">045</span></span><span>  </span><span class="hs-comment">-- &#8891; &#10836;</span><span>
+</span><span id="line-27"></span><span id="pBWAND"><span class="annot"><span class="annottext">pBWAND :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pBWAND"><span class="hs-identifier hs-var hs-var">pBWAND</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">046</span></span><span>  </span><span class="hs-comment">-- &#10835;</span><span>
+</span><span id="line-28"></span><span id="pBSHFT"><span class="annot"><span class="annottext">pBSHFT :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pBSHFT"><span class="hs-identifier hs-var hs-var">pBSHFT</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">047</span></span><span>  </span><span class="hs-comment">-- &#8921; &#8920;</span><span>
+</span><span id="line-29"></span><span>
+</span><span id="line-30"></span><span id="pPLUS"><span class="annot"><span class="annottext">pPLUS :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pPLUS"><span class="hs-identifier hs-var hs-var">pPLUS</span></a></span></span><span>   </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">050</span></span><span>  </span><span class="hs-comment">--  + - &#10836; &#8891;</span><span>
+</span><span id="line-31"></span><span id="pTIMES"><span class="annot"><span class="annottext">pTIMES :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pTIMES"><span class="hs-identifier hs-var hs-var">pTIMES</span></a></span></span><span>  </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">060</span></span><span>  </span><span class="hs-comment">--  * / &#10835;</span><span>
+</span><span id="line-32"></span><span id="pNEG"><span class="annot"><span class="annottext">pNEG :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pNEG"><span class="hs-identifier hs-var hs-var">pNEG</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">065</span></span><span>  </span><span class="hs-comment">--  - (negation)</span><span>
+</span><span id="line-33"></span><span id="pPOW"><span class="annot"><span class="annottext">pPOW :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pPOW"><span class="hs-identifier hs-var hs-var">pPOW</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">070</span></span><span>  </span><span class="hs-comment">--  ^ &#8921; &#8920;</span><span>
+</span><span id="line-34"></span><span id="pFAC"><span class="annot"><span class="annottext">pFAC :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pFAC"><span class="hs-identifier hs-var hs-var">pFAC</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">090</span></span><span>  </span><span class="hs-comment">--  !</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span id="pAPP"><span class="annot"><span class="annottext">pAPP :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pAPP"><span class="hs-identifier hs-var hs-var">pAPP</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">200</span></span><span>  </span><span class="hs-comment">--  &#9251;</span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span id="pREF"><span class="annot"><span class="annottext">pREF :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pREF"><span class="hs-identifier hs-var hs-var">pREF</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">250</span></span><span>  </span><span class="hs-comment">--  *x &amp;x</span><span>
+</span><span id="line-39"></span><span id="pIDX"><span class="annot"><span class="annottext">pIDX :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pIDX"><span class="hs-identifier hs-var hs-var">pIDX</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">300</span></span><span>  </span><span class="hs-comment">--  x.y x@y</span><span>
+</span><span id="line-40"></span><span>
+</span><span id="line-41"></span><span>
+</span><span id="line-42"></span><span id="pTOP"><span class="annot"><span class="annottext">pTOP :: &#8469;64
+</span><a href="UVMHS.Lib.Pretty.Levels.html#pTOP"><span class="hs-identifier hs-var hs-var">pTOP</span></a></span></span><span>    </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">999</span></span><span>
+</span><span id="line-43"></span><span>
+</span><span id="line-44"></span><span>
+</span><span id="line-45"></span></pre></body></html>

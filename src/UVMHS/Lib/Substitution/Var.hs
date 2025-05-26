@@ -6,16 +6,20 @@ import UVMHS.Lib.Parser
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Shrinky
+import UVMHS.Lib.THLiftInstances ()
+
+import qualified Language.Haskell.TH.Syntax as TH
 
 -- =============== --
 -- SIMPLE VARIABLE --
 -- =============== --
 
 data 𝕎 = 𝕎
-  { markVar ∷ 𝑂 ℕ64
-  , nameVar ∷ 𝕊
+  { varMark ∷ 𝑂 ℕ64
+  , varName ∷ 𝕊
   } deriving (Eq,Ord,Show)
 makeLenses ''𝕎
+deriving instance TH.Lift 𝕎
 
 var ∷ 𝕊 → 𝕎
 var = 𝕎 None
@@ -112,6 +116,7 @@ data 𝕏 =
   | G_SVar 𝕎      -- global variable
   deriving (Eq,Ord,Show)
 makePrisms ''𝕏
+deriving instance TH.Lift 𝕏
 
 znsvar ∷ 𝕎 → 𝕏
 znsvar = N_SVar 0
@@ -134,8 +139,8 @@ cpZNSVar = znsvar ^$ cpVar
 cpGSVar ∷ CParser TokenBasic 𝕏
 cpGSVar = G_SVar ^$ cpVar
 
-cpNSVarWS ∷ CParser TokenWSBasic 𝕏
-cpNSVarWS = znsvar ^$ cpVarWS
+cpZNSVarWS ∷ CParser TokenWSBasic 𝕏
+cpZNSVarWS = znsvar ^$ cpVarWS
 
 cpGSVarWS ∷ CParser TokenWSBasic 𝕏
 cpGSVarWS = G_SVar ^$ cpVarWS
@@ -294,4 +299,3 @@ svarScopeL s xO =
           guard $ x ≡ x'
           return n
   in prism ctor dtor
-    
