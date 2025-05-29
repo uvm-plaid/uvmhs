@@ -586,8 +586,8 @@ ppZOM = \case
   OneZOM x → x
   MoreZOM → ppCon "⊤"
 
-instance (Pretty a,Pretty b)   ⇒ Pretty (a , b)     where pretty = curry ppTupHS2 ∘ mapPair pretty pretty ∘ frhs
-instance (Pretty a,Pretty b)   ⇒ Pretty (a ∧ b)     where pretty = curry ppTup ∘ mapPair pretty pretty
+instance (Pretty a,Pretty b)   ⇒ Pretty (a , b)     where pretty = uncurry ppTupHS2 ∘ mapPair pretty pretty ∘ frhs
+instance (Pretty a,Pretty b)   ⇒ Pretty (a ∧ b)     where pretty = uncurry ppTup ∘ mapPair pretty pretty
 instance (Pretty a)            ⇒ Pretty (() → a)    where pretty = pretty ∘ appto ()
 instance (Pretty a)            ⇒ Pretty (𝐿 a)       where pretty = ppList ∘ map pretty ∘ iter
 instance (Pretty a)            ⇒ Pretty [a]         where pretty = ppLazyList ∘ map pretty ∘ iter

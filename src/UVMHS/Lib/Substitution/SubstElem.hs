@@ -102,37 +102,37 @@ instance (Ord s,Shrinky e) ⇒ Shrinky (SubstElem s e) where
 -- NOTE: The `Eq` instance is strictly weaker than semantic equality. To
 -- compare semantic equality, you should just compare their interpretations.
 data SSubstElem s e =
-    Var_SSE ℕ64
+    Var_SSE DVar
   | Trm_SSE (SubstElem s e)
   deriving (Eq,Ord,Show)
 
-mkSSubstElem ∷ e ⌲ ℕ64 → 𝑂 e → SSubstElem s e
+mkSSubstElem ∷ e ⌲ DVar → 𝑂 e → SSubstElem s e
 mkSSubstElem ℓvar eO = case view (ℓvar ⊚ someL) eO of
   Some n → Var_SSE n
   None → Trm_SSE $ SubstElem null eO
 
-interpSSubstElem ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → 𝑂 e
+interpSSubstElem ∷ e ⌲ DVar → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → 𝑂 e
 interpSSubstElem ℓvar substE = \case
   Var_SSE i → Some $ construct ℓvar i
   Trm_SSE e → interpSubstElem substE e
 
-canonSSubstElem ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → (e → e) → SSubstElem s e → SSubstElem s e
+canonSSubstElem ∷ e ⌲ DVar → (s ⇰ ℕ64 → e → 𝑂 e) → (e → e) → SSubstElem s e → SSubstElem s e
 canonSSubstElem ℓvar substE canonE = \case
   Var_SSE n → Var_SSE n
   Trm_SSE e → mkSSubstElem ℓvar $ canonE ^$ interpSubstElem substE e
 
-eqSSubstElem ∷ (Eq e) ⇒ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e → 𝔹
+eqSSubstElem ∷ (Eq e) ⇒ e ⌲ DVar → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e → 𝔹
 eqSSubstElem ℓvar substE e₁ e₂ = interpSSubstElem ℓvar substE e₁ ≡ interpSSubstElem ℓvar substE e₂
 
-compareSSubstElem ∷ (Ord e) ⇒ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e → Ordering
+compareSSubstElem ∷ (Ord e) ⇒ e ⌲ DVar → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e → Ordering
 compareSSubstElem ℓvar substE e₁ e₂ = interpSSubstElem ℓvar substE e₁ ⋚ interpSSubstElem ℓvar substE e₂
 
 introSSubstElem ∷ (Ord s) ⇒ s → s ⇰ ℕ64 → SSubstElem s e → SSubstElem s e
 introSSubstElem s ιs = \case
-  Var_SSE n → Var_SSE $ n + ifNone 0 (ιs ⋕? s)
+  Var_SSE n → Var_SSE $ DVar $ unDVar n + ifNone 0 (ιs ⋕? s)
   Trm_SSE e → Trm_SSE $ introSubstElem ιs e
 
-substSSubstElem ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e
+substSSubstElem ∷ e ⌲ DVar → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e
 substSSubstElem ℓvar substE = \case
   Var_SSE n → mkSSubstElem ℓvar $ substE null $ construct ℓvar n
   Trm_SSE e → mkSSubstElem ℓvar $ substSubstElemE substE e
@@ -150,22 +150,22 @@ instance Functor (SSubstElem s) where
 -- PRETTY PRINTING --
 ---------------------
 
-ppSSubstElemNamed ∷ (Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → (𝕊 → Doc) → SSubstElem s e → Doc
+ppSSubstElemNamed ∷ (Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → (DVarInf → Doc) → SSubstElem s e → Doc
 ppSSubstElemNamed ιD xD = \case
-  Var_SSE i → xD $ show𝕊 i
+  Var_SSE n → xD $ Var_DVI n
   Trm_SSE e → ppSubstElemNamed ιD e
 
 instance (Pretty s,Pretty e) ⇒ Pretty (SSubstElem s e) where
-  pretty = ppSSubstElemNamed pretty ppDVar
+  pretty = ppSSubstElemNamed pretty pretty
 
 -------------
 -- FUZZING --
 -------------
 
 instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SSubstElem s e) where
-  fuzzy = rchoose $ map const
-    [ Var_SSE ^$ fuzzy
-    , Trm_SSE ^$ fuzzy
+  fuzzy = rchoose
+    [ \ () → Var_SSE ^$ fuzzy
+    , \ () → Trm_SSE ^$ fuzzy
     ]
 
 ---------------

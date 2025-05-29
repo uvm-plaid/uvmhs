@@ -32,8 +32,14 @@ runFuzzyMRG γ xM = mkState $ \ ℊ → runFuzzyM γ ℊ xM
 -- | Use this to ensure termination when building recursive datatypes.  Note that this will
 -- underflow to the maximum natural when `d` is zero, so you should only every use this when you're
 -- sure `d` is not zero, e.g. guarded behind a `wrchoose` with coefficient `d`.
-fuzzyRec ∷ FuzzyM a → FuzzyM a
-fuzzyRec = mapEnvL fuzzyEnvDepthL (\ d → d-1)
+fuzzyDec ∷ FuzzyM a → FuzzyM a
+fuzzyDec xM = do
+  d ← askL fuzzyEnvDepthL
+  let _ = assert $ d ≢ 0
+  localL fuzzyEnvDepthL (d - 1) xM
+
+fuzzyRec ∷ (Fuzzy a) ⇒ FuzzyM a
+fuzzyRec = fuzzyDec fuzzy
 
 instance MonadRand FuzzyM where
   rng xM = FuzzyM $ mkRWS $ \ _γ ℊ → mapFst (flip (:*) ()) $ runState ℊ xM
@@ -53,9 +59,18 @@ randMed = rand 16 16
 randLrg ∷ ∀ a m. (MonadRand m,Fuzzy a) ⇒ m a
 randLrg = rand 64 64
 
+fuzzyRadius ∷ FuzzyM ℕ64
+fuzzyRadius = randr 0 *$ askL fuzzyEnvRadiusL
+
+fuzzyDepth ∷ FuzzyM ℕ64
+fuzzyDepth = randr 0 *$ askL fuzzyEnvDepthL
+
 ---------------------
 -- FUZZY INSTANCES --
 ---------------------
+
+isoFuzzy ∷ (a ⇄ b,Fuzzy b) ⇒ FuzzyM a
+isoFuzzy = isofr ^$ fuzzy
 
 instance Fuzzy ℕ64 where fuzzy = randr zero          ∘ (×2) *$ askL fuzzyEnvRadiusL
 instance Fuzzy ℕ32 where fuzzy = randr zero ∘ natΩ32 ∘ (×2) *$ askL fuzzyEnvRadiusL
@@ -72,21 +87,21 @@ instance Fuzzy 𝔻   where fuzzy = randrRadius ∘ dbl    *$ askL fuzzyEnvRadiu
 instance Fuzzy () where fuzzy = return ()
 
 instance Fuzzy 𝔹 where
-  fuzzy = rchoose $ map (const ∘ return)
-    [ True
-    , False
+  fuzzy = rchoose
+    [ \ () → return True
+    , \ () → return False
     ]
 
 instance (Fuzzy a) ⇒ Fuzzy (𝑂 a) where
-  fuzzy = rchoose $ map const
-    [ return None
-    , Some ^$ fuzzy
+  fuzzy = rchoose
+    [ \ () → return None
+    , \ () → Some ^$ fuzzy
     ]
 
 instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∨ b) where
-  fuzzy = rchoose $ map const
-    [ Inl ^$ fuzzy
-    , Inr ^$ fuzzy
+  fuzzy = rchoose
+    [ \ () → Inl ^$ fuzzy
+    , \ () → Inr ^$ fuzzy
     ]
 
 instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∧ b) where
@@ -97,7 +112,7 @@ instance (Fuzzy a,Fuzzy b) ⇒ Fuzzy (a ∧ b) where
 
 instance (Fuzzy a) ⇒ Fuzzy (𝐿 a) where
   fuzzy = do
-    w ← (×2) ^$ askL fuzzyEnvRadiusL
+    w ← fuzzyDepth
     list ^$ mapMOn (upto w) $ const fuzzy
 
 instance (Ord k,Fuzzy k,Fuzzy v) ⇒ Fuzzy (k ⇰ v) where

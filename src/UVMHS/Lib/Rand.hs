@@ -44,6 +44,7 @@ class RandUniform a where
   prandu ∷ State RG a
 
 class RandRange a where
+  -- both bounds inclusive
   prandr ∷ a → a → State RG a
 
 prandrRadius ∷ (RandRange a,Zero a,Minus a) ⇒ a → State RG a
@@ -84,6 +85,7 @@ instance RandRange 𝔻     where prandr = wrapPrimRandr R.uniformR
 randu ∷ ∀ a m. (MonadRand m,RandUniform a) ⇒ m a
 randu = rng prandu
 
+-- both bounds inclusive
 randr ∷ ∀ a m. (MonadRand m,RandRange a) ⇒ a → a → m a
 randr lb hb = rng $ prandr lb hb
 
@@ -94,8 +96,9 @@ wrchoose ∷ ∀ t m a. (Monad m,MonadRand m,ToIter (ℕ64 ∧ (() → m a)) t) 
 wrchoose wxs
   | isEmpty wxs = error "wrchoose not defined for zero elements"
   | otherwise   = do
-      let w₀ = sum $ map fst $ iter wxs
-      let _ = if w₀ ≡ 0 then error "wrchoose not defined for zero total weight" else ()
+      let ws = map fst $ iter wxs
+          w₀ = sum ws
+      let _ = if w₀ ≡ 0 then error $ "wrchoose not defined for zero total weight: " ⧺ show𝕊 ws else ()
       n ← randr 1 w₀
       runContT (\ n' → error $ "impossible" ⧺ show𝕊 n') $ mfoldOnFrom wxs 0 $ \ (w :* xM) wᵢ →
         let wᵢ' = wᵢ+w

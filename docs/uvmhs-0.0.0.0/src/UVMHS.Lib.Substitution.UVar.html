@@ -2,44 +2,47 @@
 </span><span id="line-2"></span><span>
 </span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Core.html"><span class="hs-identifier">UVMHS.Core</span></a></span><span>
 </span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.html"><span class="hs-identifier">UVMHS.Lib.Pretty</span></a></span><span>
-</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Parser.html"><span class="hs-identifier">UVMHS.Lib.Parser</span></a></span><span>
-</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Rand.html"><span class="hs-identifier">UVMHS.Lib.Rand</span></a></span><span>
-</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html"><span class="hs-identifier">UVMHS.Lib.Fuzzy</span></a></span><span>
-</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Shrinky.html"><span class="hs-identifier">UVMHS.Lib.Shrinky</span></a></span><span>
-</span><span id="line-9"></span><span>
-</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html"><span class="hs-identifier">UVMHS.Lib.Substitution.Var</span></a></span><span>
-</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Subst.html"><span class="hs-identifier">UVMHS.Lib.Substitution.Subst</span></a></span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Rand.html"><span class="hs-identifier">UVMHS.Lib.Rand</span></a></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html"><span class="hs-identifier">UVMHS.Lib.Fuzzy</span></a></span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Shrinky.html"><span class="hs-identifier">UVMHS.Lib.Shrinky</span></a></span><span>
+</span><span id="line-8"></span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Name.html"><span class="hs-identifier">UVMHS.Lib.Substitution.Name</span></a></span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Subst.html"><span class="hs-identifier">UVMHS.Lib.Substitution.Subst</span></a></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html"><span class="hs-identifier">UVMHS.Lib.Substitution.Var</span></a></span><span>
 </span><span id="line-12"></span><span>
-</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH.Syntax</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">TH</span></span><span>
-</span><span id="line-14"></span><span>
-</span><span id="line-15"></span><span class="hs-comment">-- =================== --</span><span>
-</span><span id="line-16"></span><span class="hs-comment">-- UNIFIABLE VARIABLES --</span><span>
-</span><span id="line-17"></span><span class="hs-comment">-- =================== --</span><span>
+</span><span id="line-13"></span><span class="hs-comment">---------------------------------------------------------------------</span><span>
+</span><span id="line-14"></span><span class="hs-comment">-- ==== --</span><span>
+</span><span id="line-15"></span><span class="hs-comment">-- MVar --</span><span>
+</span><span id="line-16"></span><span class="hs-comment">-- ==== --</span><span>
+</span><span id="line-17"></span><span class="hs-comment">---------------------------------------------------------------------</span><span>
 </span><span id="line-18"></span><span>
-</span><span id="line-19"></span><span class="hs-keyword">data</span><span> </span><span id="%1D550"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-var">&#120144;</span></a></span></span><span> </span><span id="local-6989586621680745101"><span class="annot"><a href="#local-6989586621680745101"><span class="hs-identifier hs-type">s</span></a></span></span><span> </span><span id="local-6989586621680745102"><span class="annot"><a href="#local-6989586621680745102"><span class="hs-identifier hs-type">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-20"></span><span>    </span><span id="S_UVar"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#S_UVar"><span class="hs-identifier hs-var">S_UVar</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#%1D54F"><span class="hs-identifier hs-type">&#120143;</span></a></span><span>              </span><span class="hs-comment">-- scoped variable</span><span>
-</span><span id="line-21"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="M_UVar"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-var">M_UVar</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#%1D54E"><span class="hs-identifier hs-type">&#120142;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.Subst.html#Subst"><span class="hs-identifier hs-type">Subst</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745101"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745102"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span>  </span><span class="hs-comment">-- meta variable</span><span>
-</span><span id="line-22"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680745248"><span id="local-6989586621680745256"><span class="annot"><span class="annottext">&#120144; s e -&gt; &#120144; s e -&gt; Bool
-(&#120144; s e -&gt; &#120144; s e -&gt; Bool) -&gt; (&#120144; s e -&gt; &#120144; s e -&gt; Bool) -&gt; Eq (&#120144; s e)
+</span><span id="line-19"></span><span class="hs-keyword">data</span><span> </span><span id="MVar"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-var">MVar</span></a></span></span><span> </span><span id="local-6989586621680780733"><span class="annot"><a href="#local-6989586621680780733"><span class="hs-identifier hs-type">s</span></a></span></span><span> </span><span id="local-6989586621680780734"><span class="annot"><a href="#local-6989586621680780734"><span class="hs-identifier hs-type">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="MVar"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-var">MVar</span></a></span></span><span>
+</span><span id="line-20"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="mvarSubst"><span class="annot"><span class="annottext">forall s e. MVar s e -&gt; Subst s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#mvarSubst"><span class="hs-identifier hs-var hs-var">mvarSubst</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Subst.html#Subst"><span class="hs-identifier hs-type">Subst</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780733"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780734"><span class="hs-identifier hs-type">e</span></a></span><span>
+</span><span id="line-21"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="mvarName"><span class="annot"><span class="annottext">forall s e. MVar s e -&gt; Name
+</span><a href="UVMHS.Lib.Substitution.UVar.html#mvarName"><span class="hs-identifier hs-var hs-var">mvarName</span></a></span></span><span>  </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Name.html#Name"><span class="hs-identifier hs-type">Name</span></a></span><span>
+</span><span id="line-22"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680780942"><span id="local-6989586621680780948"><span class="annot"><span class="annottext">MVar s e -&gt; MVar s e -&gt; Bool
+(MVar s e -&gt; MVar s e -&gt; Bool)
+-&gt; (MVar s e -&gt; MVar s e -&gt; Bool) -&gt; Eq (MVar s e)
 forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
-forall s e. (Eq s, Eq e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Bool
-$c== :: forall s e. (Eq s, Eq e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Bool
-== :: &#120144; s e -&gt; &#120144; s e -&gt; Bool
-$c/= :: forall s e. (Eq s, Eq e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Bool
-/= :: &#120144; s e -&gt; &#120144; s e -&gt; Bool
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680745267"><span id="local-6989586621680745275"><span id="local-6989586621680745280"><span id="local-6989586621680745284"><span id="local-6989586621680745287"><span id="local-6989586621680745290"><span id="local-6989586621680745293"><span class="annot"><span class="annottext">Eq (&#120144; s e)
-Eq (&#120144; s e) =&gt;
-(&#120144; s e -&gt; &#120144; s e -&gt; Ordering)
--&gt; (&#120144; s e -&gt; &#120144; s e -&gt; Bool)
--&gt; (&#120144; s e -&gt; &#120144; s e -&gt; Bool)
--&gt; (&#120144; s e -&gt; &#120144; s e -&gt; Bool)
--&gt; (&#120144; s e -&gt; &#120144; s e -&gt; Bool)
--&gt; (&#120144; s e -&gt; &#120144; s e -&gt; &#120144; s e)
--&gt; (&#120144; s e -&gt; &#120144; s e -&gt; &#120144; s e)
--&gt; Ord (&#120144; s e)
-&#120144; s e -&gt; &#120144; s e -&gt; Bool
-&#120144; s e -&gt; &#120144; s e -&gt; Ordering
-&#120144; s e -&gt; &#120144; s e -&gt; &#120144; s e
+forall s e. (Eq s, Eq e) =&gt; MVar s e -&gt; MVar s e -&gt; Bool
+$c== :: forall s e. (Eq s, Eq e) =&gt; MVar s e -&gt; MVar s e -&gt; Bool
+== :: MVar s e -&gt; MVar s e -&gt; Bool
+$c/= :: forall s e. (Eq s, Eq e) =&gt; MVar s e -&gt; MVar s e -&gt; Bool
+/= :: MVar s e -&gt; MVar s e -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680780959"><span id="local-6989586621680780965"><span id="local-6989586621680780969"><span id="local-6989586621680780973"><span id="local-6989586621680780976"><span id="local-6989586621680780979"><span id="local-6989586621680780982"><span class="annot"><span class="annottext">Eq (MVar s e)
+Eq (MVar s e) =&gt;
+(MVar s e -&gt; MVar s e -&gt; Ordering)
+-&gt; (MVar s e -&gt; MVar s e -&gt; Bool)
+-&gt; (MVar s e -&gt; MVar s e -&gt; Bool)
+-&gt; (MVar s e -&gt; MVar s e -&gt; Bool)
+-&gt; (MVar s e -&gt; MVar s e -&gt; Bool)
+-&gt; (MVar s e -&gt; MVar s e -&gt; MVar s e)
+-&gt; (MVar s e -&gt; MVar s e -&gt; MVar s e)
+-&gt; Ord (MVar s e)
+MVar s e -&gt; MVar s e -&gt; Bool
+MVar s e -&gt; MVar s e -&gt; Ordering
+MVar s e -&gt; MVar s e -&gt; MVar s e
 forall a.
 Eq a =&gt;
 (a -&gt; a -&gt; Ordering)
@@ -50,271 +53,477 @@ Eq a =&gt;
 -&gt; (a -&gt; a -&gt; a)
 -&gt; (a -&gt; a -&gt; a)
 -&gt; Ord a
-forall s e. (Ord s, Ord e) =&gt; Eq (&#120144; s e)
-forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Bool
-forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Ordering
-forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; &#120144; s e
-$ccompare :: forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Ordering
-compare :: &#120144; s e -&gt; &#120144; s e -&gt; Ordering
-$c&lt; :: forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Bool
-&lt; :: &#120144; s e -&gt; &#120144; s e -&gt; Bool
-$c&lt;= :: forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Bool
-&lt;= :: &#120144; s e -&gt; &#120144; s e -&gt; Bool
-$c&gt; :: forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Bool
-&gt; :: &#120144; s e -&gt; &#120144; s e -&gt; Bool
-$c&gt;= :: forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; Bool
-&gt;= :: &#120144; s e -&gt; &#120144; s e -&gt; Bool
-$cmax :: forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; &#120144; s e
-max :: &#120144; s e -&gt; &#120144; s e -&gt; &#120144; s e
-$cmin :: forall s e. (Ord s, Ord e) =&gt; &#120144; s e -&gt; &#120144; s e -&gt; &#120144; s e
-min :: &#120144; s e -&gt; &#120144; s e -&gt; &#120144; s e
-</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680745300"><span id="local-6989586621680745311"><span id="local-6989586621680745315"><span class="annot"><span class="annottext">Int -&gt; &#120144; s e -&gt; ShowS
-[&#120144; s e] -&gt; ShowS
-&#120144; s e -&gt; String
-(Int -&gt; &#120144; s e -&gt; ShowS)
--&gt; (&#120144; s e -&gt; String) -&gt; ([&#120144; s e] -&gt; ShowS) -&gt; Show (&#120144; s e)
+forall s e. (Ord s, Ord e) =&gt; Eq (MVar s e)
+forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; Bool
+forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; Ordering
+forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; MVar s e
+$ccompare :: forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; Ordering
+compare :: MVar s e -&gt; MVar s e -&gt; Ordering
+$c&lt; :: forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; Bool
+&lt; :: MVar s e -&gt; MVar s e -&gt; Bool
+$c&lt;= :: forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; Bool
+&lt;= :: MVar s e -&gt; MVar s e -&gt; Bool
+$c&gt; :: forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; Bool
+&gt; :: MVar s e -&gt; MVar s e -&gt; Bool
+$c&gt;= :: forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; Bool
+&gt;= :: MVar s e -&gt; MVar s e -&gt; Bool
+$cmax :: forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; MVar s e
+max :: MVar s e -&gt; MVar s e -&gt; MVar s e
+$cmin :: forall s e. (Ord s, Ord e) =&gt; MVar s e -&gt; MVar s e -&gt; MVar s e
+min :: MVar s e -&gt; MVar s e -&gt; MVar s e
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680780989"><span id="local-6989586621680780997"><span id="local-6989586621680781001"><span class="annot"><span class="annottext">Int -&gt; MVar s e -&gt; ShowS
+[MVar s e] -&gt; ShowS
+MVar s e -&gt; String
+(Int -&gt; MVar s e -&gt; ShowS)
+-&gt; (MVar s e -&gt; String) -&gt; ([MVar s e] -&gt; ShowS) -&gt; Show (MVar s e)
 forall a.
 (Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
-forall s e. (Show s, Show e) =&gt; Int -&gt; &#120144; s e -&gt; ShowS
-forall s e. (Show s, Show e) =&gt; [&#120144; s e] -&gt; ShowS
-forall s e. (Show s, Show e) =&gt; &#120144; s e -&gt; String
-$cshowsPrec :: forall s e. (Show s, Show e) =&gt; Int -&gt; &#120144; s e -&gt; ShowS
-showsPrec :: Int -&gt; &#120144; s e -&gt; ShowS
-$cshow :: forall s e. (Show s, Show e) =&gt; &#120144; s e -&gt; String
-show :: &#120144; s e -&gt; String
-$cshowList :: forall s e. (Show s, Show e) =&gt; [&#120144; s e] -&gt; ShowS
-showList :: [&#120144; s e] -&gt; ShowS
+forall s e. (Show s, Show e) =&gt; Int -&gt; MVar s e -&gt; ShowS
+forall s e. (Show s, Show e) =&gt; [MVar s e] -&gt; ShowS
+forall s e. (Show s, Show e) =&gt; MVar s e -&gt; String
+$cshowsPrec :: forall s e. (Show s, Show e) =&gt; Int -&gt; MVar s e -&gt; ShowS
+showsPrec :: Int -&gt; MVar s e -&gt; ShowS
+$cshow :: forall s e. (Show s, Show e) =&gt; MVar s e -&gt; String
+show :: MVar s e -&gt; String
+$cshowList :: forall s e. (Show s, Show e) =&gt; [MVar s e] -&gt; ShowS
+showList :: [MVar s e] -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-23"></span><span id="local-6989586621680745101"><span id="local-6989586621680745102"><span id="s_UVarL"><span id="m_UVarL"><span class="hs-identifier">makePrisms</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">&#120144;</span></span></span></span></span><span>
-</span><span id="line-24"></span><span id="local-6989586621680745125"><span id="local-6989586621680745126"><span id="local-6989586621680745332"><span id="local-6989586621680745346"><span class="hs-keyword">deriving</span><span> </span><span class="hs-keyword">instance</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="annot"><a href="#local-6989586621680745125"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="annot"><a href="#local-6989586621680745126"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><span class="hs-identifier hs-type">TH.Lift</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745125"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745126"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span></span></span><span>
-</span><span id="line-25"></span><span>
-</span><span id="line-26"></span><span id="local-6989586621680745127"><span id="local-6989586621680745128"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#wfUVar"><span class="hs-identifier hs-type">wfUVar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621680745127"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745127"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745128"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span></span></span><span>
-</span><span id="line-27"></span><span id="wfUVar"><span class="annot"><span class="annottext">wfUVar :: forall s e. Ord s =&gt; &#120144; s e -&gt; Bool
-</span><a href="UVMHS.Lib.Substitution.UVar.html#wfUVar"><span class="hs-identifier hs-var hs-var">wfUVar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-28"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#S_UVar"><span class="hs-identifier hs-type">S_UVar</span></a></span><span> </span><span id="local-6989586621680745362"><span class="annot"><span class="annottext">&#120143;
-</span><a href="#local-6989586621680745362"><span class="hs-identifier hs-var">_x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Bool
-</span><span class="hs-identifier hs-var">True</span></span><span>
-</span><span id="line-29"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-type">M_UVar</span></a></span><span> </span><span id="local-6989586621680745363"><span class="annot"><span class="annottext">&#120142;
-</span><a href="#local-6989586621680745363"><span class="hs-identifier hs-var">_w</span></a></span></span><span> </span><span id="local-6989586621680745364"><span class="annot"><span class="annottext">Subst s e
-</span><a href="#local-6989586621680745364"><span class="hs-identifier hs-var">&#120008;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Subst s e -&gt; Bool
-forall s e. Ord s =&gt; Subst s e -&gt; Bool
-</span><a href="UVMHS.Lib.Substitution.Subst.html#wfSubst"><span class="hs-identifier hs-var">wfSubst</span></a></span><span> </span><span class="annot"><span class="annottext">Subst s e
-</span><a href="#local-6989586621680745364"><span class="hs-identifier hs-var">&#120008;</span></a></span><span>
-</span><span id="line-30"></span><span>
-</span><span id="line-31"></span><span id="local-6989586621680745133"><span id="local-6989586621680745134"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#duvarL"><span class="hs-identifier hs-type">duvarL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745133"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745134"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Lens.html#%2332"><span class="hs-operator hs-type">&#9010;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span></span></span><span>
-</span><span id="line-32"></span><span id="duvarL"><span class="annot"><span class="annottext">duvarL :: forall s e. &#120144; s e &#9010; &#8469;64
-</span><a href="UVMHS.Lib.Substitution.UVar.html#duvarL"><span class="hs-identifier hs-var hs-var">duvarL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120143; &#9010; &#8469;64
-</span><a href="UVMHS.Lib.Substitution.Var.html#d_SVarL"><span class="hs-identifier hs-var">d_SVarL</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120143; &#9010; &#8469;64) -&gt; (&#120144; s e &#9010; &#120143;) -&gt; &#120144; s e &#9010; &#8469;64
-forall b c a. (b &#9010; c) -&gt; (a &#9010; b) -&gt; a &#9010; c
-forall {k} (t :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
-Transitive t =&gt;
-t b c -&gt; t a b -&gt; t a c
-</span><a href="UVMHS.Core.Classes.Morphism.html#%229A"><span class="hs-operator hs-var">&#8858;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; s e &#9010; &#120143;
-forall s e. &#120144; s e &#9010; &#120143;
-</span><a href="UVMHS.Lib.Substitution.UVar.html#s_UVarL"><span class="hs-identifier hs-var">s_UVarL</span></a></span><span>
-</span><span id="line-33"></span><span>
-</span><span id="line-34"></span><span id="local-6989586621680745144"><span id="local-6989586621680745145"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#duvar"><span class="hs-identifier hs-type">duvar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745144"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745145"><span class="hs-identifier hs-type">e</span></a></span></span></span><span>
-</span><span id="line-35"></span><span id="duvar"><span class="annot"><span class="annottext">duvar :: forall s e. &#8469;64 -&gt; &#120144; s e
-</span><a href="UVMHS.Lib.Substitution.UVar.html#duvar"><span class="hs-identifier hs-var hs-var">duvar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&#120144; s e &#9010; &#8469;64) -&gt; &#8469;64 -&gt; &#120144; s e
-forall a b. (a &#9010; b) -&gt; b -&gt; a
-</span><a href="UVMHS.Core.Data.Lens.html#construct"><span class="hs-identifier hs-var">construct</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; s e &#9010; &#8469;64
-forall s e. &#120144; s e &#9010; &#8469;64
-</span><a href="UVMHS.Lib.Substitution.UVar.html#duvarL"><span class="hs-identifier hs-var">duvarL</span></a></span><span>
-</span><span id="line-36"></span><span>
-</span><span id="line-37"></span><span id="local-6989586621680745150"><span id="local-6989586621680745151"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#nuvarL"><span class="hs-identifier hs-type">nuvarL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745150"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745151"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Lens.html#%2332"><span class="hs-operator hs-type">&#9010;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2227"><span class="hs-operator hs-type">&#8743;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#%1D54E"><span class="hs-identifier hs-type">&#120142;</span></a></span></span></span><span>
-</span><span id="line-38"></span><span id="nuvarL"><span class="annot"><span class="annottext">nuvarL :: forall s e. &#120144; s e &#9010; (&#8469;64 &#8743; &#120142;)
-</span><a href="UVMHS.Lib.Substitution.UVar.html#nuvarL"><span class="hs-identifier hs-var hs-var">nuvarL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120143; &#9010; (&#8469;64 &#8743; &#120142;)
-</span><a href="UVMHS.Lib.Substitution.Var.html#n_SVarL"><span class="hs-identifier hs-var">n_SVarL</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120143; &#9010; (&#8469;64 &#8743; &#120142;)) -&gt; (&#120144; s e &#9010; &#120143;) -&gt; &#120144; s e &#9010; (&#8469;64 &#8743; &#120142;)
-forall b c a. (b &#9010; c) -&gt; (a &#9010; b) -&gt; a &#9010; c
-forall {k} (t :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
-Transitive t =&gt;
-t b c -&gt; t a b -&gt; t a c
-</span><a href="UVMHS.Core.Classes.Morphism.html#%229A"><span class="hs-operator hs-var">&#8858;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; s e &#9010; &#120143;
-forall s e. &#120144; s e &#9010; &#120143;
-</span><a href="UVMHS.Lib.Substitution.UVar.html#s_UVarL"><span class="hs-identifier hs-var">s_UVarL</span></a></span><span>
-</span><span id="line-39"></span><span>
-</span><span id="line-40"></span><span id="local-6989586621680745154"><span id="local-6989586621680745155"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#nuvar"><span class="hs-identifier hs-type">nuvar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#%1D54E"><span class="hs-identifier hs-type">&#120142;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745154"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745155"><span class="hs-identifier hs-type">e</span></a></span></span></span><span>
-</span><span id="line-41"></span><span id="nuvar"><span class="annot"><span class="annottext">nuvar :: forall s e. &#8469;64 -&gt; &#120142; -&gt; &#120144; s e
-</span><a href="UVMHS.Lib.Substitution.UVar.html#nuvar"><span class="hs-identifier hs-var hs-var">nuvar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((&#8469;64 &#8743; &#120142;) -&gt; &#120144; s e) -&gt; &#8469;64 -&gt; &#120142; -&gt; &#120144; s e
-forall a b c. ((a &#8743; b) -&gt; c) -&gt; a -&gt; b -&gt; c
-</span><a href="UVMHS.Core.Init.html#uncurry"><span class="hs-identifier hs-var">uncurry</span></a></span><span> </span><span class="annot"><span class="annottext">(((&#8469;64 &#8743; &#120142;) -&gt; &#120144; s e) -&gt; &#8469;64 -&gt; &#120142; -&gt; &#120144; s e)
--&gt; ((&#8469;64 &#8743; &#120142;) -&gt; &#120144; s e) -&gt; &#8469;64 -&gt; &#120142; -&gt; &#120144; s e
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120144; s e &#9010; (&#8469;64 &#8743; &#120142;)) -&gt; (&#8469;64 &#8743; &#120142;) -&gt; &#120144; s e
-forall a b. (a &#9010; b) -&gt; b -&gt; a
-</span><a href="UVMHS.Core.Data.Lens.html#construct"><span class="hs-identifier hs-var">construct</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; s e &#9010; (&#8469;64 &#8743; &#120142;)
-forall s e. &#120144; s e &#9010; (&#8469;64 &#8743; &#120142;)
-</span><a href="UVMHS.Lib.Substitution.UVar.html#nuvarL"><span class="hs-identifier hs-var">nuvarL</span></a></span><span>
-</span><span id="line-42"></span><span>
-</span><span id="line-43"></span><span id="local-6989586621680745164"><span id="local-6989586621680745165"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#znuvarL"><span class="hs-identifier hs-type">znuvarL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745164"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745165"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Lens.html#%2332"><span class="hs-operator hs-type">&#9010;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#%1D54E"><span class="hs-identifier hs-type">&#120142;</span></a></span></span></span><span>
-</span><span id="line-44"></span><span id="znuvarL"><span class="annot"><span class="annottext">znuvarL :: forall s e. &#120144; s e &#9010; &#120142;
-</span><a href="UVMHS.Lib.Substitution.UVar.html#znuvarL"><span class="hs-identifier hs-var hs-var">znuvarL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120143; &#9010; &#120142;
-</span><a href="UVMHS.Lib.Substitution.Var.html#znsvarL"><span class="hs-identifier hs-var">znsvarL</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120143; &#9010; &#120142;) -&gt; (&#120144; s e &#9010; &#120143;) -&gt; &#120144; s e &#9010; &#120142;
-forall b c a. (b &#9010; c) -&gt; (a &#9010; b) -&gt; a &#9010; c
-forall {k} (t :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
-Transitive t =&gt;
-t b c -&gt; t a b -&gt; t a c
-</span><a href="UVMHS.Core.Classes.Morphism.html#%229A"><span class="hs-operator hs-var">&#8858;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; s e &#9010; &#120143;
-forall s e. &#120144; s e &#9010; &#120143;
-</span><a href="UVMHS.Lib.Substitution.UVar.html#s_UVarL"><span class="hs-identifier hs-var">s_UVarL</span></a></span><span>
-</span><span id="line-45"></span><span>
-</span><span id="line-46"></span><span id="local-6989586621680745168"><span id="local-6989586621680745169"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#znuvar"><span class="hs-identifier hs-type">znuvar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#%1D54E"><span class="hs-identifier hs-type">&#120142;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745168"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745169"><span class="hs-identifier hs-type">e</span></a></span></span></span><span>
-</span><span id="line-47"></span><span id="znuvar"><span class="annot"><span class="annottext">znuvar :: forall s e. &#120142; -&gt; &#120144; s e
-</span><a href="UVMHS.Lib.Substitution.UVar.html#znuvar"><span class="hs-identifier hs-var hs-var">znuvar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&#120144; s e &#9010; &#120142;) -&gt; &#120142; -&gt; &#120144; s e
-forall a b. (a &#9010; b) -&gt; b -&gt; a
-</span><a href="UVMHS.Core.Data.Lens.html#construct"><span class="hs-identifier hs-var">construct</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; s e &#9010; &#120142;
-forall s e. &#120144; s e &#9010; &#120142;
-</span><a href="UVMHS.Lib.Substitution.UVar.html#znuvarL"><span class="hs-identifier hs-var">znuvarL</span></a></span><span>
-</span><span id="line-48"></span><span>
-</span><span id="line-49"></span><span id="local-6989586621680745383"><span id="local-6989586621680745384"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#guvarL"><span class="hs-identifier hs-type">guvarL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745383"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745384"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Lens.html#%2332"><span class="hs-operator hs-type">&#9010;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#%1D54E"><span class="hs-identifier hs-type">&#120142;</span></a></span></span></span><span>
-</span><span id="line-50"></span><span id="guvarL"><span class="annot"><span class="annottext">guvarL :: forall s e. &#120144; s e &#9010; &#120142;
-</span><a href="UVMHS.Lib.Substitution.UVar.html#guvarL"><span class="hs-identifier hs-var hs-var">guvarL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120143; &#9010; &#120142;
-</span><a href="UVMHS.Lib.Substitution.Var.html#g_SVarL"><span class="hs-identifier hs-var">g_SVarL</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120143; &#9010; &#120142;) -&gt; (&#120144; s e &#9010; &#120143;) -&gt; &#120144; s e &#9010; &#120142;
-forall b c a. (b &#9010; c) -&gt; (a &#9010; b) -&gt; a &#9010; c
-forall {k} (t :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
-Transitive t =&gt;
-t b c -&gt; t a b -&gt; t a c
-</span><a href="UVMHS.Core.Classes.Morphism.html#%229A"><span class="hs-operator hs-var">&#8858;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; s e &#9010; &#120143;
-forall s e. &#120144; s e &#9010; &#120143;
-</span><a href="UVMHS.Lib.Substitution.UVar.html#s_UVarL"><span class="hs-identifier hs-var">s_UVarL</span></a></span><span>
-</span><span id="line-51"></span><span>
-</span><span id="line-52"></span><span id="local-6989586621680745388"><span id="local-6989586621680745389"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#guvar"><span class="hs-identifier hs-type">guvar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#%1D54E"><span class="hs-identifier hs-type">&#120142;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745388"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745389"><span class="hs-identifier hs-type">e</span></a></span></span></span><span>
-</span><span id="line-53"></span><span id="guvar"><span class="annot"><span class="annottext">guvar :: forall s e. &#120142; -&gt; &#120144; s e
-</span><a href="UVMHS.Lib.Substitution.UVar.html#guvar"><span class="hs-identifier hs-var hs-var">guvar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&#120144; s e &#9010; &#120142;) -&gt; &#120142; -&gt; &#120144; s e
-forall a b. (a &#9010; b) -&gt; b -&gt; a
-</span><a href="UVMHS.Core.Data.Lens.html#construct"><span class="hs-identifier hs-var">construct</span></a></span><span> </span><span class="annot"><span class="annottext">&#120144; s e &#9010; &#120142;
-forall s e. &#120144; s e &#9010; &#120142;
-</span><a href="UVMHS.Lib.Substitution.UVar.html#guvarL"><span class="hs-identifier hs-var">guvarL</span></a></span><span>
-</span><span id="line-54"></span><span>
-</span><span id="line-55"></span><span id="local-6989586621680745176"><span id="local-6989586621680745178"><span id="local-6989586621680745182"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#gensymUVar"><span class="hs-identifier hs-type">gensymUVar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Functors.html#Monad"><span class="hs-identifier hs-type">Monad</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745176"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Effects.html#MonadState"><span class="hs-identifier hs-type">MonadState</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745178"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745176"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680745178"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Lens.html#%27E2"><span class="hs-operator hs-type">&#10210;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680745176"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745178"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745182"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span></span><span>
-</span><span id="line-56"></span><span id="gensymUVar"><span class="annot"><span class="annottext">gensymUVar :: forall (m :: * -&gt; *) s e.
-(Monad m, MonadState s m) =&gt;
-(s &#10210; &#8469;64) -&gt; &#120138; -&gt; m (&#120144; s e)
-</span><a href="UVMHS.Lib.Substitution.UVar.html#gensymUVar"><span class="hs-identifier hs-var hs-var">gensymUVar</span></a></span></span><span> </span><span id="local-6989586621680745399"><span class="annot"><span class="annottext">s &#10210; &#8469;64
-</span><a href="#local-6989586621680745399"><span class="hs-identifier hs-var">&#8467;</span></a></span></span><span> </span><span id="local-6989586621680745400"><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680745400"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120143; -&gt; &#120144; s e
-forall s e. &#120143; -&gt; &#120144; s e
-</span><a href="UVMHS.Lib.Substitution.UVar.html#S_UVar"><span class="hs-identifier hs-var">S_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120143; -&gt; &#120144; s e) -&gt; m &#120143; -&gt; m (&#120144; s e)
-forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">(s &#10210; &#8469;64) -&gt; &#120138; -&gt; m &#120143;
-forall (m :: * -&gt; *) s.
-(Monad m, MonadState s m) =&gt;
-(s &#10210; &#8469;64) -&gt; &#120138; -&gt; m &#120143;
-</span><a href="UVMHS.Lib.Substitution.Var.html#gensymSVar"><span class="hs-identifier hs-var">gensymSVar</span></a></span><span> </span><span class="annot"><span class="annottext">s &#10210; &#8469;64
-</span><a href="#local-6989586621680745399"><span class="hs-identifier hs-var">&#8467;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><a href="#local-6989586621680745400"><span class="hs-identifier hs-var">s</span></a></span><span>
-</span><span id="line-57"></span><span>
-</span><span id="line-58"></span><span class="hs-comment">-------------</span><span>
-</span><span id="line-59"></span><span class="hs-comment">-- FUNCTOR --</span><span>
-</span><span id="line-60"></span><span class="hs-comment">-------------</span><span>
-</span><span id="line-61"></span><span>
-</span><span id="line-62"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680745197"><span class="annot"><a href="UVMHS.Core.Classes.Functors.html#Functor"><span class="hs-identifier hs-type">Functor</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745197"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-63"></span><span>  </span><span id="local-6989586621680745408"><span class="annot"><span class="annottext">map :: forall a b. (a -&gt; b) -&gt; &#120144; s a -&gt; &#120144; s b
-</span><a href="#local-6989586621680745408"><span class="hs-identifier hs-var hs-var hs-var hs-var">map</span></a></span></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
-</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#S_UVar"><span class="hs-identifier hs-type">S_UVar</span></a></span><span> </span><span id="local-6989586621680745410"><span class="annot"><span class="annottext">&#120143;
-</span><a href="#local-6989586621680745410"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120143; -&gt; &#120144; s b
-forall s e. &#120143; -&gt; &#120144; s e
-</span><a href="UVMHS.Lib.Substitution.UVar.html#S_UVar"><span class="hs-identifier hs-var">S_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">&#120143;
-</span><a href="#local-6989586621680745410"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-64"></span><span>  </span><span class="annot"><a href="UVMHS.Core.Classes.Functors.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span id="local-6989586621680745411"><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680745411"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-type">M_UVar</span></a></span><span> </span><span id="local-6989586621680745412"><span class="annot"><span class="annottext">&#120142;
-</span><a href="#local-6989586621680745412"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680745413"><span class="annot"><span class="annottext">Subst s a
-</span><a href="#local-6989586621680745413"><span class="hs-identifier hs-var">&#120008;</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120142; -&gt; Subst s b -&gt; &#120144; s b
-forall s e. &#120142; -&gt; Subst s e -&gt; &#120144; s e
-</span><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-var">M_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">&#120142;
-</span><a href="#local-6989586621680745412"><span class="hs-identifier hs-var">x</span></a></span><span> </span><span class="annot"><span class="annottext">(Subst s b -&gt; &#120144; s b) -&gt; Subst s b -&gt; &#120144; s b
-forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; b) -&gt; Subst s a -&gt; Subst s b
+</span><span id="line-23"></span><span id="local-6989586621680780733"><span id="local-6989586621680780734"><span id="mvarSubstL"><span id="mvarNameL"><span class="hs-identifier">makeLenses</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">MVar</span></span></span></span></span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span class="hs-comment">-------------</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- FUNCTOR --</span><span>
+</span><span id="line-27"></span><span class="hs-comment">-------------</span><span>
+</span><span id="line-28"></span><span>
+</span><span id="line-29"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680780776"><span class="annot"><a href="UVMHS.Core.Classes.Functors.html#Functor"><span class="hs-identifier hs-type">Functor</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-type">MVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780776"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-30"></span><span>  </span><span id="local-6989586621680781016"><span class="annot"><span class="annottext">map :: forall a b. (a -&gt; b) -&gt; MVar s a -&gt; MVar s b
+</span><a href="#local-6989586621680781016"><span class="hs-identifier hs-var hs-var hs-var hs-var">map</span></a></span></span><span> </span><span id="local-6989586621680781018"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680781018"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-type">MVar</span></a></span><span> </span><span id="local-6989586621680781019"><span class="annot"><span class="annottext">Subst s a
+</span><a href="#local-6989586621680781019"><span class="hs-identifier hs-var">&#120008;</span></a></span></span><span> </span><span id="local-6989586621680781020"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680781020"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Subst s b -&gt; Name -&gt; MVar s b
+forall s e. Subst s e -&gt; Name -&gt; MVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-var">MVar</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(a -&gt; b) -&gt; Subst s a -&gt; Subst s b
 forall a b. (a -&gt; b) -&gt; Subst s a -&gt; Subst s b
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
 </span><a href="UVMHS.Core.Classes.Functors.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
-</span><a href="#local-6989586621680745411"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Subst s a
-</span><a href="#local-6989586621680745413"><span class="hs-identifier hs-var">&#120008;</span></a></span><span>
-</span><span id="line-65"></span><span>
-</span><span id="line-66"></span><span class="hs-comment">---------------------</span><span>
-</span><span id="line-67"></span><span class="hs-comment">-- PRETTY PRINTING --</span><span>
-</span><span id="line-68"></span><span class="hs-comment">---------------------</span><span>
-</span><span id="line-69"></span><span>
-</span><span id="line-70"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680745206"><span id="local-6989586621680745207"><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621680745206"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745207"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">,</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745206"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745206"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745207"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-71"></span><span>  </span><span id="local-6989586621680745432"><span class="annot"><span class="annottext">pretty :: &#120144; s e -&gt; Doc
-</span><a href="#local-6989586621680745432"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
-</span><span id="line-72"></span><span>    </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#S_UVar"><span class="hs-identifier hs-type">S_UVar</span></a></span><span> </span><span id="local-6989586621680745434"><span class="annot"><span class="annottext">&#120143;
-</span><a href="#local-6989586621680745434"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#120143; -&gt; Doc
-forall a. Pretty a =&gt; a -&gt; Doc
-</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">&#120143;
-</span><a href="#local-6989586621680745434"><span class="hs-identifier hs-var">x</span></a></span><span>
-</span><span id="line-73"></span><span>    </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-type">M_UVar</span></a></span><span> </span><span id="local-6989586621680745435"><span class="annot"><span class="annottext">&#120142;
-</span><a href="#local-6989586621680745435"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span id="local-6989586621680745436"><span class="annot"><span class="annottext">Subst s e
-</span><a href="#local-6989586621680745436"><span class="hs-identifier hs-var">&#120008;</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
+</span><a href="#local-6989586621680781018"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">Subst s a
+</span><a href="#local-6989586621680781019"><span class="hs-identifier hs-var">&#120008;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680781020"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">------------------</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- WELL FOUNDED --</span><span>
+</span><span id="line-34"></span><span class="hs-comment">------------------</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span id="local-6989586621680780780"><span id="local-6989586621680780781"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#wfMVar"><span class="hs-identifier hs-type">wfMVar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621680780780"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-type">MVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780780"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780781"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span></span></span><span>
+</span><span id="line-37"></span><span id="wfMVar"><span class="annot"><span class="annottext">wfMVar :: forall s e. Ord s =&gt; MVar s e -&gt; Bool
+</span><a href="UVMHS.Lib.Substitution.UVar.html#wfMVar"><span class="hs-identifier hs-var hs-var">wfMVar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">Subst s e -&gt; Bool
+forall s e. Ord s =&gt; Subst s e -&gt; Bool
+</span><a href="UVMHS.Lib.Substitution.Subst.html#wfSubst"><span class="hs-identifier hs-var">wfSubst</span></a></span><span> </span><span class="annot"><span class="annottext">(Subst s e -&gt; Bool) -&gt; (MVar s e -&gt; Subst s e) -&gt; MVar s e -&gt; Bool
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">MVar s e -&gt; Subst s e
+forall s e. MVar s e -&gt; Subst s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#mvarSubst"><span class="hs-identifier hs-var">mvarSubst</span></a></span><span>
+</span><span id="line-38"></span><span>
+</span><span id="line-39"></span><span class="hs-comment">-----------</span><span>
+</span><span id="line-40"></span><span class="hs-comment">-- FUZZY --</span><span>
+</span><span id="line-41"></span><span class="hs-comment">-----------</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680780794"><span id="local-6989586621680780795"><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621680780794"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780794"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780795"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-type">MVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780794"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780795"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-44"></span><span>  </span><span id="local-6989586621680781042"><span class="annot"><span class="annottext">fuzzy :: FuzzyM (MVar s e)
+</span><a href="#local-6989586621680781042"><span class="hs-identifier hs-var hs-var hs-var hs-var">fuzzy</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Subst s e -&gt; Name -&gt; MVar s e)
+-&gt; FuzzyM (Subst s e -&gt; Name -&gt; MVar s e)
+forall a. a -&gt; FuzzyM a
+forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
+</span><a href="UVMHS.Core.Classes.Functors.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">Subst s e -&gt; Name -&gt; MVar s e
+forall s e. Subst s e -&gt; Name -&gt; MVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-var">MVar</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM (Subst s e -&gt; Name -&gt; MVar s e)
+-&gt; FuzzyM (Subst s e) -&gt; FuzzyM (Name -&gt; MVar s e)
+forall (m :: * -&gt; *) a b. Monad m =&gt; m (a -&gt; b) -&gt; m a -&gt; m b
+</span><a href="UVMHS.Core.Classes.Functors.html#%22A1"><span class="hs-operator hs-var">&#8865;</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM (Subst s e)
+forall a. Fuzzy a =&gt; FuzzyM a
+</span><a href="UVMHS.Lib.Fuzzy.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM (Name -&gt; MVar s e) -&gt; FuzzyM Name -&gt; FuzzyM (MVar s e)
+forall (m :: * -&gt; *) a b. Monad m =&gt; m (a -&gt; b) -&gt; m a -&gt; m b
+</span><a href="UVMHS.Core.Classes.Functors.html#%22A1"><span class="hs-operator hs-var">&#8865;</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM Name
+forall a. Fuzzy a =&gt; FuzzyM a
+</span><a href="UVMHS.Lib.Fuzzy.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680780810"><span id="local-6989586621680780811"><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621680780810"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Shrinky.html#Shrinky"><span class="hs-identifier hs-type">Shrinky</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780811"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Shrinky.html#Shrinky"><span class="hs-identifier hs-type">Shrinky</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-type">MVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780810"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780811"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-47"></span><span>  </span><span id="local-6989586621680781061"><span class="annot"><span class="annottext">shrink :: MVar s e -&gt; &#119868; (MVar s e)
+</span><a href="#local-6989586621680781061"><span class="hs-identifier hs-var hs-var hs-var hs-var">shrink</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-type">MVar</span></a></span><span> </span><span id="local-6989586621680781063"><span class="annot"><span class="annottext">Subst s e
+</span><a href="#local-6989586621680781063"><span class="hs-identifier hs-var">&#120008;</span></a></span></span><span> </span><span id="local-6989586621680781064"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680781064"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
+</span><span id="line-48"></span><span>    </span><span class="hs-special">(</span><span id="local-6989586621680781065"><span class="annot"><span class="annottext">Subst s e
+</span><a href="#local-6989586621680781065"><span class="hs-identifier hs-var">&#120008;'</span></a></span></span><span class="hs-special">,</span><span id="local-6989586621680781066"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680781066"><span class="hs-identifier hs-var">x'</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">(Subst s e, Name) -&gt; &#119868; (Subst s e, Name)
+forall a. Shrinky a =&gt; a -&gt; &#119868; a
+</span><a href="UVMHS.Lib.Shrinky.html#shrink"><span class="hs-identifier hs-var">shrink</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Subst s e
+</span><a href="#local-6989586621680781063"><span class="hs-identifier hs-var">&#120008;</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680781064"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-49"></span><span>    </span><span class="annot"><span class="annottext">MVar s e -&gt; &#119868; (MVar s e)
+forall a. a -&gt; &#119868; a
+forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
+</span><a href="UVMHS.Core.Classes.Functors.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">(MVar s e -&gt; &#119868; (MVar s e)) -&gt; MVar s e -&gt; &#119868; (MVar s e)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Subst s e -&gt; Name -&gt; MVar s e
+forall s e. Subst s e -&gt; Name -&gt; MVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-var">MVar</span></a></span><span> </span><span class="annot"><span class="annottext">Subst s e
+</span><a href="#local-6989586621680781065"><span class="hs-identifier hs-var">&#120008;'</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680781066"><span class="hs-identifier hs-var">x'</span></a></span><span>
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span><span class="hs-comment">---------------------</span><span>
+</span><span id="line-52"></span><span class="hs-comment">-- PRETTY PRINTING --</span><span>
+</span><span id="line-53"></span><span class="hs-comment">---------------------</span><span>
+</span><span id="line-54"></span><span>
+</span><span id="line-55"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680780825"><span id="local-6989586621680780826"><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621680780825"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780825"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780826"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-type">MVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780825"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780826"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-56"></span><span>  </span><span id="local-6989586621680781087"><span class="annot"><span class="annottext">pretty :: MVar s e -&gt; Doc
+</span><a href="#local-6989586621680781087"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-type">MVar</span></a></span><span> </span><span id="local-6989586621680781089"><span class="annot"><span class="annottext">Subst s e
+</span><a href="#local-6989586621680781089"><span class="hs-identifier hs-var">&#120008;</span></a></span></span><span> </span><span id="local-6989586621680781090"><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680781090"><span class="hs-identifier hs-var">x</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
 forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
-</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="hs-special">[</span><span class="annot"><span class="annottext">&#120142; -&gt; Doc
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span>
+</span><span id="line-57"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Name -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
-</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">&#120142;
-</span><a href="#local-6989586621680745435"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">,</span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">Name
+</span><a href="#local-6989586621680781090"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-58"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppPun"><span class="hs-identifier hs-var">ppPun</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
-</span><span class="hs-string">&quot;:m&quot;</span></span><span class="hs-special">,</span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><span class="hs-string">&quot;:m&quot;</span></span><span>
+</span><span id="line-59"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">Subst s e -&gt; Bool
+forall s e. Ord s =&gt; Subst s e -&gt; Bool
+</span><a href="UVMHS.Lib.Substitution.Subst.html#isNullSubst"><span class="hs-identifier hs-var">isNullSubst</span></a></span><span> </span><span class="annot"><span class="annottext">Subst s e
+</span><a href="#local-6989586621680781089"><span class="hs-identifier hs-var">&#120008;</span></a></span><span> </span><span class="hs-keyword">then</span><span> </span><span class="annot"><span class="annottext">Doc
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="hs-keyword">else</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#ppGA"><span class="hs-identifier hs-var">ppGA</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
 forall a b. (a -&gt; b) -&gt; a -&gt; b
 </span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Subst s e -&gt; Doc
 forall a. Pretty a =&gt; a -&gt; Doc
 </span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">Subst s e
-</span><a href="#local-6989586621680745436"><span class="hs-identifier hs-var">&#120008;</span></a></span><span class="hs-special">]</span><span>
-</span><span id="line-74"></span><span>
-</span><span id="line-75"></span><span class="hs-comment">-------------------------</span><span>
-</span><span id="line-76"></span><span class="hs-comment">-- FUZZY for Variables --</span><span>
-</span><span id="line-77"></span><span class="hs-comment">-------------------------</span><span>
-</span><span id="line-78"></span><span>
-</span><span id="line-79"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680745220"><span id="local-6989586621680745221"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745220"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745221"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621680745221"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745221"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745220"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#%1D550"><span class="hs-identifier hs-type">&#120144;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745221"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680745220"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
-</span><span id="line-80"></span><span>  </span><span id="local-6989586621680745471"><span class="annot"><span class="annottext">fuzzy :: FuzzyM (&#120144; s e)
-</span><a href="#local-6989586621680745471"><span class="hs-identifier hs-var hs-var hs-var hs-var">fuzzy</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-keyword">do</span><span>
-</span><span id="line-81"></span><span>    </span><span id="local-6989586621680745473"><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680745473"><span class="hs-identifier hs-var">d</span></a></span></span><span> </span><span class="hs-glyph">&#8592;</span><span> </span><span class="annot"><span class="annottext">(FuzzyEnv &#10210; &#8469;64) -&gt; FuzzyM &#8469;64
-forall r'. (FuzzyEnv &#10210; r') -&gt; FuzzyM r'
-forall r (m :: * -&gt; *) r'. MonadReader r m =&gt; (r &#10210; r') -&gt; m r'
-</span><a href="UVMHS.Core.Effects.html#askL"><span class="hs-identifier hs-var">askL</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyEnv &#10210; &#8469;64
-</span><a href="UVMHS.Lib.Fuzzy.html#fuzzyEnvDepthL"><span class="hs-identifier hs-var">fuzzyEnvDepthL</span></a></span><span>
-</span><span id="line-82"></span><span>    </span><span class="annot"><span class="annottext">[&#8469;64 &#8743; (() -&gt; FuzzyM (&#120144; s e))] -&gt; FuzzyM (&#120144; s e)
-forall t (m :: * -&gt; *) a.
-(Monad m, MonadRand m, ToIter (&#8469;64 &#8743; (() -&gt; m a)) t) =&gt;
-t -&gt; m a
-</span><a href="UVMHS.Lib.Rand.html#wrchoose"><span class="hs-identifier hs-var">wrchoose</span></a></span><span>
-</span><span id="line-83"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; (() -&gt; FuzzyM (&#120144; s e)) -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (&#120144; s e))
-forall a b. a -&gt; b -&gt; a &#8743; b
-</span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">(:*)</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-forall a. One a =&gt; a
-</span><a href="UVMHS.Core.Classes.Arithmetic.html#one"><span class="hs-identifier hs-var">one</span></a></span><span> </span><span class="annot"><span class="annottext">((() -&gt; FuzzyM (&#120144; s e)) -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (&#120144; s e)))
--&gt; (() -&gt; FuzzyM (&#120144; s e)) -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (&#120144; s e))
+</span><a href="#local-6989586621680781089"><span class="hs-identifier hs-var">&#120008;</span></a></span><span>
+</span><span id="line-60"></span><span>    </span><span class="hs-special">]</span><span>
+</span><span id="line-61"></span><span>
+</span><span id="line-62"></span><span class="hs-comment">---------------------------------------------------------------------</span><span>
+</span><span id="line-63"></span><span class="hs-comment">-- ==== --</span><span>
+</span><span id="line-64"></span><span class="hs-comment">-- UVar --</span><span>
+</span><span id="line-65"></span><span class="hs-comment">-- ==== --</span><span>
+</span><span id="line-66"></span><span class="hs-comment">---------------------------------------------------------------------</span><span>
+</span><span id="line-67"></span><span>
+</span><span id="line-68"></span><span class="hs-keyword">data</span><span> </span><span id="UVar"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-var">UVar</span></a></span></span><span> </span><span id="local-6989586621680780853"><span class="annot"><a href="#local-6989586621680780853"><span class="hs-identifier hs-type">s</span></a></span></span><span> </span><span id="local-6989586621680780854"><span class="annot"><a href="#local-6989586621680780854"><span class="hs-identifier hs-type">e</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-69"></span><span>    </span><span id="D_UVar"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#D_UVar"><span class="hs-identifier hs-var">D_UVar</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#DVar"><span class="hs-identifier hs-type">DVar</span></a></span><span>
+</span><span id="line-70"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="N_UVar"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-var">N_UVar</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#NVar"><span class="hs-identifier hs-type">NVar</span></a></span><span>
+</span><span id="line-71"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="G_UVar"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#G_UVar"><span class="hs-identifier hs-var">G_UVar</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#GVar"><span class="hs-identifier hs-type">GVar</span></a></span><span>
+</span><span id="line-72"></span><span>  </span><span class="hs-glyph">|</span><span> </span><span id="M_UVar"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-var">M_UVar</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#MVar"><span class="hs-identifier hs-type">MVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780853"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780854"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-73"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621680781103"><span id="local-6989586621680781112"><span class="annot"><span class="annottext">UVar s e -&gt; UVar s e -&gt; Bool
+(UVar s e -&gt; UVar s e -&gt; Bool)
+-&gt; (UVar s e -&gt; UVar s e -&gt; Bool) -&gt; Eq (UVar s e)
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+forall s e. (Eq s, Eq e) =&gt; UVar s e -&gt; UVar s e -&gt; Bool
+$c== :: forall s e. (Eq s, Eq e) =&gt; UVar s e -&gt; UVar s e -&gt; Bool
+== :: UVar s e -&gt; UVar s e -&gt; Bool
+$c/= :: forall s e. (Eq s, Eq e) =&gt; UVar s e -&gt; UVar s e -&gt; Bool
+/= :: UVar s e -&gt; UVar s e -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680781122"><span id="local-6989586621680781131"><span id="local-6989586621680781135"><span id="local-6989586621680781138"><span id="local-6989586621680781141"><span id="local-6989586621680781144"><span id="local-6989586621680781147"><span class="annot"><span class="annottext">Eq (UVar s e)
+Eq (UVar s e) =&gt;
+(UVar s e -&gt; UVar s e -&gt; Ordering)
+-&gt; (UVar s e -&gt; UVar s e -&gt; Bool)
+-&gt; (UVar s e -&gt; UVar s e -&gt; Bool)
+-&gt; (UVar s e -&gt; UVar s e -&gt; Bool)
+-&gt; (UVar s e -&gt; UVar s e -&gt; Bool)
+-&gt; (UVar s e -&gt; UVar s e -&gt; UVar s e)
+-&gt; (UVar s e -&gt; UVar s e -&gt; UVar s e)
+-&gt; Ord (UVar s e)
+UVar s e -&gt; UVar s e -&gt; Bool
+UVar s e -&gt; UVar s e -&gt; Ordering
+UVar s e -&gt; UVar s e -&gt; UVar s e
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+forall s e. (Ord s, Ord e) =&gt; Eq (UVar s e)
+forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; Bool
+forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; Ordering
+forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; UVar s e
+$ccompare :: forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; Ordering
+compare :: UVar s e -&gt; UVar s e -&gt; Ordering
+$c&lt; :: forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; Bool
+&lt; :: UVar s e -&gt; UVar s e -&gt; Bool
+$c&lt;= :: forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; Bool
+&lt;= :: UVar s e -&gt; UVar s e -&gt; Bool
+$c&gt; :: forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; Bool
+&gt; :: UVar s e -&gt; UVar s e -&gt; Bool
+$c&gt;= :: forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; Bool
+&gt;= :: UVar s e -&gt; UVar s e -&gt; Bool
+$cmax :: forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; UVar s e
+max :: UVar s e -&gt; UVar s e -&gt; UVar s e
+$cmin :: forall s e. (Ord s, Ord e) =&gt; UVar s e -&gt; UVar s e -&gt; UVar s e
+min :: UVar s e -&gt; UVar s e -&gt; UVar s e
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span id="local-6989586621680781152"><span id="local-6989586621680781165"><span id="local-6989586621680781169"><span class="annot"><span class="annottext">Int -&gt; UVar s e -&gt; ShowS
+[UVar s e] -&gt; ShowS
+UVar s e -&gt; String
+(Int -&gt; UVar s e -&gt; ShowS)
+-&gt; (UVar s e -&gt; String) -&gt; ([UVar s e] -&gt; ShowS) -&gt; Show (UVar s e)
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+forall s e. (Show s, Show e) =&gt; Int -&gt; UVar s e -&gt; ShowS
+forall s e. (Show s, Show e) =&gt; [UVar s e] -&gt; ShowS
+forall s e. (Show s, Show e) =&gt; UVar s e -&gt; String
+$cshowsPrec :: forall s e. (Show s, Show e) =&gt; Int -&gt; UVar s e -&gt; ShowS
+showsPrec :: Int -&gt; UVar s e -&gt; ShowS
+$cshow :: forall s e. (Show s, Show e) =&gt; UVar s e -&gt; String
+show :: UVar s e -&gt; String
+$cshowList :: forall s e. (Show s, Show e) =&gt; [UVar s e] -&gt; ShowS
+showList :: [UVar s e] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-74"></span><span id="local-6989586621680780853"><span id="local-6989586621680780854"><span id="d_UVarL"><span id="n_UVarL"><span id="g_UVarL"><span id="m_UVarL"><span class="hs-identifier">makePrisms</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">UVar</span></span></span></span></span></span></span><span>
+</span><span id="line-75"></span><span id="local-6989586621680780853"><span id="local-6989586621680780854"><span id="local-6989586621680781191"><span class="hs-identifier">makePrettyUnion</span><span> </span><span class="hs-special">''</span><span class="hs-identifier">UVar</span></span></span></span><span>
+</span><span id="line-76"></span><span>
+</span><span id="line-77"></span><span id="local-6989586621680780870"><span id="local-6989586621680780871"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#nameUVarL"><span class="hs-identifier hs-type">nameUVarL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780870"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780871"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Lens.html#%2332"><span class="hs-operator hs-type">&#9010;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Name.html#Name"><span class="hs-identifier hs-type">Name</span></a></span></span></span><span>
+</span><span id="line-78"></span><span id="nameUVarL"><span class="annot"><span class="annottext">nameUVarL :: forall s e. UVar s e &#9010; Name
+</span><a href="UVMHS.Lib.Substitution.UVar.html#nameUVarL"><span class="hs-identifier hs-var hs-var">nameUVarL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">NVar &#9010; Name
+</span><a href="UVMHS.Lib.Substitution.Var.html#nameNVarL"><span class="hs-identifier hs-var">nameNVarL</span></a></span><span> </span><span class="annot"><span class="annottext">(NVar &#9010; Name) -&gt; (UVar s e &#9010; NVar) -&gt; UVar s e &#9010; Name
+forall b c a. (b &#9010; c) -&gt; (a &#9010; b) -&gt; a &#9010; c
+forall {k} (t :: k -&gt; k -&gt; *) (b :: k) (c :: k) (a :: k).
+Transitive t =&gt;
+t b c -&gt; t a b -&gt; t a c
+</span><a href="UVMHS.Core.Classes.Morphism.html#%229A"><span class="hs-operator hs-var">&#8858;</span></a></span><span> </span><span class="annot"><span class="annottext">UVar s e &#9010; NVar
+forall s e. UVar s e &#9010; NVar
+</span><a href="UVMHS.Lib.Substitution.UVar.html#n_UVarL"><span class="hs-identifier hs-var">n_UVarL</span></a></span><span>
+</span><span id="line-79"></span><span>
+</span><span id="line-80"></span><span id="local-6989586621680780880"><span id="local-6989586621680780881"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#nameUVar"><span class="hs-identifier hs-type">nameUVar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Name.html#Name"><span class="hs-identifier hs-type">Name</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780880"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780881"><span class="hs-identifier hs-type">e</span></a></span></span></span><span>
+</span><span id="line-81"></span><span id="nameUVar"><span class="annot"><span class="annottext">nameUVar :: forall s e. Name -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#nameUVar"><span class="hs-identifier hs-var hs-var">nameUVar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(UVar s e &#9010; Name) -&gt; Name -&gt; UVar s e
+forall a b. (a &#9010; b) -&gt; b -&gt; a
+</span><a href="UVMHS.Core.Data.Lens.html#construct"><span class="hs-identifier hs-var">construct</span></a></span><span> </span><span class="annot"><span class="annottext">UVar s e &#9010; Name
+forall s e. UVar s e &#9010; Name
+</span><a href="UVMHS.Lib.Substitution.UVar.html#nameUVarL"><span class="hs-identifier hs-var">nameUVarL</span></a></span><span>
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span><span id="local-6989586621680780887"><span id="local-6989586621680780888"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#svar_UVar"><span class="hs-identifier hs-type">svar_UVar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#SVar"><span class="hs-identifier hs-type">SVar</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780887"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780888"><span class="hs-identifier hs-type">e</span></a></span></span></span><span>
+</span><span id="line-84"></span><span id="svar_UVar"><span class="annot"><span class="annottext">svar_UVar :: forall s e. SVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#svar_UVar"><span class="hs-identifier hs-var hs-var">svar_UVar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-85"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#D_SVar"><span class="hs-identifier hs-type">D_SVar</span></a></span><span> </span><span id="local-6989586621680781210"><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781210"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">DVar -&gt; UVar s e
+forall s e. DVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#D_UVar"><span class="hs-identifier hs-var">D_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781210"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-86"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#N_SVar"><span class="hs-identifier hs-type">N_SVar</span></a></span><span> </span><span id="local-6989586621680781212"><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781212"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">NVar -&gt; UVar s e
+forall s e. NVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-var">N_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781212"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-87"></span><span>
+</span><span id="line-88"></span><span id="local-6989586621680780891"><span id="local-6989586621680780892"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#svar_UVarL"><span class="hs-identifier hs-type">svar_UVarL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780891"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780892"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Lens.html#%2332"><span class="hs-operator hs-type">&#9010;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#SVar"><span class="hs-identifier hs-type">SVar</span></a></span></span></span><span>
+</span><span id="line-89"></span><span id="svar_UVarL"><span class="annot"><span class="annottext">svar_UVarL :: forall s e. UVar s e &#9010; SVar
+</span><a href="UVMHS.Lib.Substitution.UVar.html#svar_UVarL"><span class="hs-identifier hs-var hs-var">svar_UVarL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(SVar -&gt; UVar s e) -&gt; (UVar s e -&gt; &#119874; SVar) -&gt; UVar s e &#9010; SVar
+forall b a. (b -&gt; a) -&gt; (a -&gt; &#119874; b) -&gt; a &#9010; b
+</span><a href="UVMHS.Core.Data.Lens.html#prism"><span class="hs-identifier hs-var">prism</span></a></span><span> </span><span class="annot"><span class="annottext">SVar -&gt; UVar s e
+forall s e. SVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#svar_UVar"><span class="hs-identifier hs-var">svar_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">((UVar s e -&gt; &#119874; SVar) -&gt; UVar s e &#9010; SVar)
+-&gt; (UVar s e -&gt; &#119874; SVar) -&gt; UVar s e &#9010; SVar
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#120143; -&gt; &#120144; s e
-forall s e. &#120143; -&gt; &#120144; s e
-</span><a href="UVMHS.Lib.Substitution.UVar.html#S_UVar"><span class="hs-identifier hs-var">S_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120143; -&gt; &#120144; s e) -&gt; FuzzyM &#120143; -&gt; FuzzyM (&#120144; s e)
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-90"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#D_UVar"><span class="hs-identifier hs-type">D_UVar</span></a></span><span> </span><span id="local-6989586621680781215"><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781215"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">SVar -&gt; &#119874; SVar
+forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">(SVar -&gt; &#119874; SVar) -&gt; SVar -&gt; &#119874; SVar
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">DVar -&gt; SVar
+</span><a href="UVMHS.Lib.Substitution.Var.html#D_SVar"><span class="hs-identifier hs-var">D_SVar</span></a></span><span> </span><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781215"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-91"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-type">N_UVar</span></a></span><span> </span><span id="local-6989586621680781216"><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781216"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">SVar -&gt; &#119874; SVar
+forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">(SVar -&gt; &#119874; SVar) -&gt; SVar -&gt; &#119874; SVar
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">NVar -&gt; SVar
+</span><a href="UVMHS.Lib.Substitution.Var.html#N_SVar"><span class="hs-identifier hs-var">N_SVar</span></a></span><span> </span><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781216"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-92"></span><span>  </span><span class="annot"><span class="annottext">UVar s e
+</span><span class="hs-identifier">_</span></span><span>        </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#119874; SVar
+forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
+</span><span id="line-93"></span><span>
+</span><span id="line-94"></span><span id="local-6989586621680780898"><span id="local-6989586621680780899"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#var_UVar"><span class="hs-identifier hs-type">var_UVar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#Var"><span class="hs-identifier hs-type">Var</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780898"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780899"><span class="hs-identifier hs-type">e</span></a></span></span></span><span>
+</span><span id="line-95"></span><span id="var_UVar"><span class="annot"><span class="annottext">var_UVar :: forall s e. Var -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#var_UVar"><span class="hs-identifier hs-var hs-var">var_UVar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-96"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#D_Var"><span class="hs-identifier hs-type">D_Var</span></a></span><span> </span><span id="local-6989586621680781219"><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781219"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">DVar -&gt; UVar s e
+forall s e. DVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#D_UVar"><span class="hs-identifier hs-var">D_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781219"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-97"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#N_Var"><span class="hs-identifier hs-type">N_Var</span></a></span><span> </span><span id="local-6989586621680781221"><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781221"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">NVar -&gt; UVar s e
+forall s e. NVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-var">N_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781221"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-98"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#G_Var"><span class="hs-identifier hs-type">G_Var</span></a></span><span> </span><span id="local-6989586621680781223"><span class="annot"><span class="annottext">GVar
+</span><a href="#local-6989586621680781223"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">GVar -&gt; UVar s e
+forall s e. GVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#G_UVar"><span class="hs-identifier hs-var">G_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">GVar
+</span><a href="#local-6989586621680781223"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-99"></span><span>
+</span><span id="line-100"></span><span id="local-6989586621680780902"><span id="local-6989586621680780903"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#var_UVarL"><span class="hs-identifier hs-type">var_UVarL</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780902"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780903"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Lens.html#%2332"><span class="hs-operator hs-type">&#9010;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Var.html#Var"><span class="hs-identifier hs-type">Var</span></a></span></span></span><span>
+</span><span id="line-101"></span><span id="var_UVarL"><span class="annot"><span class="annottext">var_UVarL :: forall s e. UVar s e &#9010; Var
+</span><a href="UVMHS.Lib.Substitution.UVar.html#var_UVarL"><span class="hs-identifier hs-var hs-var">var_UVarL</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(Var -&gt; UVar s e) -&gt; (UVar s e -&gt; &#119874; Var) -&gt; UVar s e &#9010; Var
+forall b a. (b -&gt; a) -&gt; (a -&gt; &#119874; b) -&gt; a &#9010; b
+</span><a href="UVMHS.Core.Data.Lens.html#prism"><span class="hs-identifier hs-var">prism</span></a></span><span> </span><span class="annot"><span class="annottext">Var -&gt; UVar s e
+forall s e. Var -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#var_UVar"><span class="hs-identifier hs-var">var_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">((UVar s e -&gt; &#119874; Var) -&gt; UVar s e &#9010; Var)
+-&gt; (UVar s e -&gt; &#119874; Var) -&gt; UVar s e &#9010; Var
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-102"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#D_UVar"><span class="hs-identifier hs-type">D_UVar</span></a></span><span> </span><span id="local-6989586621680781225"><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781225"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Var -&gt; &#119874; Var
+forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">(Var -&gt; &#119874; Var) -&gt; Var -&gt; &#119874; Var
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">DVar -&gt; Var
+</span><a href="UVMHS.Lib.Substitution.Var.html#D_Var"><span class="hs-identifier hs-var">D_Var</span></a></span><span> </span><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781225"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-103"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-type">N_UVar</span></a></span><span> </span><span id="local-6989586621680781226"><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781226"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Var -&gt; &#119874; Var
+forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">(Var -&gt; &#119874; Var) -&gt; Var -&gt; &#119874; Var
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">NVar -&gt; Var
+</span><a href="UVMHS.Lib.Substitution.Var.html#N_Var"><span class="hs-identifier hs-var">N_Var</span></a></span><span> </span><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781226"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-104"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#G_UVar"><span class="hs-identifier hs-type">G_UVar</span></a></span><span> </span><span id="local-6989586621680781227"><span class="annot"><span class="annottext">GVar
+</span><a href="#local-6989586621680781227"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Var -&gt; &#119874; Var
+forall a. a -&gt; &#119874; a
+</span><a href="UVMHS.Core.Init.html#Some"><span class="hs-identifier hs-var">Some</span></a></span><span> </span><span class="annot"><span class="annottext">(Var -&gt; &#119874; Var) -&gt; Var -&gt; &#119874; Var
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">GVar -&gt; Var
+</span><a href="UVMHS.Lib.Substitution.Var.html#G_Var"><span class="hs-identifier hs-var">G_Var</span></a></span><span> </span><span class="annot"><span class="annottext">GVar
+</span><a href="#local-6989586621680781227"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-105"></span><span>  </span><span class="annot"><span class="annottext">UVar s e
+</span><span class="hs-identifier">_</span></span><span>        </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">&#119874; Var
+forall a. &#119874; a
+</span><a href="UVMHS.Core.Init.html#None"><span class="hs-identifier hs-var">None</span></a></span><span>
+</span><span id="line-106"></span><span>  </span><span>
+</span><span id="line-107"></span><span>
+</span><span id="line-108"></span><span id="local-6989586621680780906"><span id="local-6989586621680780907"><span id="local-6989586621680780910"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#gensymUVar"><span class="hs-identifier hs-type">gensymUVar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Functors.html#Monad"><span class="hs-identifier hs-type">Monad</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780906"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Core.Effects.html#MonadState"><span class="hs-identifier hs-type">MonadState</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780907"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780906"><span class="hs-identifier hs-type">m</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="#local-6989586621680780907"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Data.Lens.html#%27E2"><span class="hs-operator hs-type">&#10210;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%211564"><span class="hs-identifier hs-type">&#8469;64</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621680780906"><span class="hs-identifier hs-type">m</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780907"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780910"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span></span><span>
+</span><span id="line-109"></span><span id="gensymUVar"><span class="annot"><span class="annottext">gensymUVar :: forall (m :: * -&gt; *) s e.
+(Monad m, MonadState s m) =&gt;
+(s &#10210; &#8469;64) -&gt; &#120138; -&gt; m (UVar s e)
+</span><a href="UVMHS.Lib.Substitution.UVar.html#gensymUVar"><span class="hs-identifier hs-var hs-var">gensymUVar</span></a></span></span><span> </span><span id="local-6989586621680781236"><span class="annot"><span class="annottext">s &#10210; &#8469;64
+</span><a href="#local-6989586621680781236"><span class="hs-identifier hs-var">&#8467;</span></a></span></span><span> </span><span id="local-6989586621680781237"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621680781237"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">NVar -&gt; UVar s e
+forall s e. NVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-var">N_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">(NVar -&gt; UVar s e) -&gt; m NVar -&gt; m (UVar s e)
 forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
-</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM &#120143;
-forall a. Fuzzy a =&gt; FuzzyM a
-</span><a href="UVMHS.Lib.Fuzzy.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
-</span><span id="line-84"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; (() -&gt; FuzzyM (&#120144; s e)) -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (&#120144; s e))
-forall a b. a -&gt; b -&gt; a &#8743; b
-</span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">(:*)</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
-</span><a href="#local-6989586621680745473"><span class="hs-identifier hs-var">d</span></a></span><span> </span><span class="annot"><span class="annottext">((() -&gt; FuzzyM (&#120144; s e)) -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (&#120144; s e)))
--&gt; (() -&gt; FuzzyM (&#120144; s e)) -&gt; &#8469;64 &#8743; (() -&gt; FuzzyM (&#120144; s e))
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">(s &#10210; &#8469;64) -&gt; &#120138; -&gt; m NVar
+forall (m :: * -&gt; *) s.
+(Monad m, MonadState s m) =&gt;
+(s &#10210; &#8469;64) -&gt; &#120138; -&gt; m NVar
+</span><a href="UVMHS.Lib.Substitution.Var.html#gensymNVar"><span class="hs-identifier hs-var">gensymNVar</span></a></span><span> </span><span class="annot"><span class="annottext">s &#10210; &#8469;64
+</span><a href="#local-6989586621680781236"><span class="hs-identifier hs-var">&#8467;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621680781237"><span class="hs-identifier hs-var">s</span></a></span><span>
+</span><span id="line-110"></span><span>
+</span><span id="line-111"></span><span class="hs-comment">-------------</span><span>
+</span><span id="line-112"></span><span class="hs-comment">-- FUNCTOR --</span><span>
+</span><span id="line-113"></span><span class="hs-comment">-------------</span><span>
+</span><span id="line-114"></span><span>
+</span><span id="line-115"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680780921"><span class="annot"><a href="UVMHS.Core.Classes.Functors.html#Functor"><span class="hs-identifier hs-type">Functor</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780921"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-116"></span><span>  </span><span id="local-6989586621680781243"><span class="annot"><span class="annottext">map :: forall a b. (a -&gt; b) -&gt; UVar s a -&gt; UVar s b
+</span><a href="UVMHS.Core.Classes.Functors.html#map"><span class="hs-identifier hs-var hs-var hs-var hs-var">map</span></a></span></span><span> </span><span id="local-6989586621680781244"><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680781244"><span class="hs-identifier hs-var">f</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-117"></span><span>    </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#D_UVar"><span class="hs-identifier hs-type">D_UVar</span></a></span><span> </span><span id="local-6989586621680781245"><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781245"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">DVar -&gt; UVar s b
+forall s e. DVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#D_UVar"><span class="hs-identifier hs-var">D_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">DVar
+</span><a href="#local-6989586621680781245"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-118"></span><span>    </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-type">N_UVar</span></a></span><span> </span><span id="local-6989586621680781246"><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781246"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">NVar -&gt; UVar s b
+forall s e. NVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-var">N_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">NVar
+</span><a href="#local-6989586621680781246"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-119"></span><span>    </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#G_UVar"><span class="hs-identifier hs-type">G_UVar</span></a></span><span> </span><span id="local-6989586621680781247"><span class="annot"><span class="annottext">GVar
+</span><a href="#local-6989586621680781247"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">GVar -&gt; UVar s b
+forall s e. GVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#G_UVar"><span class="hs-identifier hs-var">G_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">GVar
+</span><a href="#local-6989586621680781247"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-120"></span><span>    </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-type">M_UVar</span></a></span><span> </span><span id="local-6989586621680781248"><span class="annot"><span class="annottext">MVar s a
+</span><a href="#local-6989586621680781248"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">MVar s b -&gt; UVar s b
+forall s e. MVar s e -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-var">M_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">(MVar s b -&gt; UVar s b) -&gt; MVar s b -&gt; UVar s b
 forall a b. (a -&gt; b) -&gt; a -&gt; b
-</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">(&#120142; -&gt; Subst s e -&gt; &#120144; s e) -&gt; FuzzyM (&#120142; -&gt; Subst s e -&gt; &#120144; s e)
-forall a. a -&gt; FuzzyM a
-forall (m :: * -&gt; *) a. Return m =&gt; a -&gt; m a
-</span><a href="UVMHS.Core.Classes.Functors.html#return"><span class="hs-identifier hs-var">return</span></a></span><span> </span><span class="annot"><span class="annottext">&#120142; -&gt; Subst s e -&gt; &#120144; s e
-forall s e. &#120142; -&gt; Subst s e -&gt; &#120144; s e
-</span><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-var">M_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM (&#120142; -&gt; Subst s e -&gt; &#120144; s e)
--&gt; FuzzyM &#120142; -&gt; FuzzyM (Subst s e -&gt; &#120144; s e)
-forall (m :: * -&gt; *) a b. Monad m =&gt; m (a -&gt; b) -&gt; m a -&gt; m b
-</span><a href="UVMHS.Core.Classes.Functors.html#%22A1"><span class="hs-operator hs-var">&#8865;</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM &#120142;
-forall a. Fuzzy a =&gt; FuzzyM a
-</span><a href="UVMHS.Lib.Fuzzy.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM (Subst s e -&gt; &#120144; s e) -&gt; FuzzyM (Subst s e) -&gt; FuzzyM (&#120144; s e)
-forall (m :: * -&gt; *) a b. Monad m =&gt; m (a -&gt; b) -&gt; m a -&gt; m b
-</span><a href="UVMHS.Core.Classes.Functors.html#%22A1"><span class="hs-operator hs-var">&#8865;</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM (Subst s e) -&gt; FuzzyM (Subst s e)
-forall a. FuzzyM a -&gt; FuzzyM a
-</span><a href="UVMHS.Lib.Fuzzy.html#fuzzyRec"><span class="hs-identifier hs-var">fuzzyRec</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM (Subst s e)
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(a -&gt; b) -&gt; MVar s a -&gt; MVar s b
+forall a b. (a -&gt; b) -&gt; MVar s a -&gt; MVar s b
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; b
+</span><a href="#local-6989586621680781244"><span class="hs-identifier hs-var">f</span></a></span><span> </span><span class="annot"><span class="annottext">MVar s a
+</span><a href="#local-6989586621680781248"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-121"></span><span>
+</span><span id="line-122"></span><span class="hs-comment">------------------</span><span>
+</span><span id="line-123"></span><span class="hs-comment">-- WELL FOUNDED --</span><span>
+</span><span id="line-124"></span><span class="hs-comment">------------------</span><span>
+</span><span id="line-125"></span><span>
+</span><span id="line-126"></span><span id="local-6989586621680780924"><span id="local-6989586621680780925"><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#wfUVar"><span class="hs-identifier hs-type">wfUVar</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621680780924"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780924"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780925"><span class="hs-identifier hs-type">e</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D539"><span class="hs-identifier hs-type">&#120121;</span></a></span></span></span><span>
+</span><span id="line-127"></span><span id="wfUVar"><span class="annot"><span class="annottext">wfUVar :: forall s e. Ord s =&gt; UVar s e -&gt; Bool
+</span><a href="UVMHS.Lib.Substitution.UVar.html#wfUVar"><span class="hs-identifier hs-var hs-var">wfUVar</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-128"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#D_UVar"><span class="hs-identifier hs-type">D_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">DVar
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">True</span></span><span>
+</span><span id="line-129"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-type">N_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">NVar
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">True</span></span><span>
+</span><span id="line-130"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#G_UVar"><span class="hs-identifier hs-type">G_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">GVar
+</span><span class="hs-identifier">_</span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">Bool
+</span><span class="hs-identifier hs-var">True</span></span><span>
+</span><span id="line-131"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-type">M_UVar</span></a></span><span> </span><span id="local-6989586621680781252"><span class="annot"><span class="annottext">MVar s e
+</span><a href="#local-6989586621680781252"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">MVar s e -&gt; Bool
+forall s e. Ord s =&gt; MVar s e -&gt; Bool
+</span><a href="UVMHS.Lib.Substitution.UVar.html#wfMVar"><span class="hs-identifier hs-var">wfMVar</span></a></span><span> </span><span class="annot"><span class="annottext">MVar s e
+</span><a href="#local-6989586621680781252"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-132"></span><span>
+</span><span id="line-133"></span><span class="hs-comment">---------------------</span><span>
+</span><span id="line-134"></span><span class="hs-comment">-- PRETTY PRINTING --</span><span>
+</span><span id="line-135"></span><span class="hs-comment">---------------------</span><span>
+</span><span id="line-136"></span><span>
+</span><span id="line-137"></span><span class="hs-comment">-------------------------</span><span>
+</span><span id="line-138"></span><span class="hs-comment">-- FUZZY for Variables --</span><span>
+</span><span id="line-139"></span><span class="hs-comment">-------------------------</span><span>
+</span><span id="line-140"></span><span>
+</span><span id="line-141"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680780930"><span id="local-6989586621680780931"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780930"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780931"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><span class="hs-identifier hs-type">Ord</span></span><span> </span><span class="annot"><a href="#local-6989586621680780931"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780931"><span class="hs-identifier hs-type">s</span></a></span><span class="hs-special">,</span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780930"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Fuzzy.html#Fuzzy"><span class="hs-identifier hs-type">Fuzzy</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Substitution.UVar.html#UVar"><span class="hs-identifier hs-type">UVar</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780931"><span class="hs-identifier hs-type">s</span></a></span><span> </span><span class="annot"><a href="#local-6989586621680780930"><span class="hs-identifier hs-type">e</span></a></span><span class="hs-special">)</span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-142"></span><span>  </span><span id="local-6989586621680781276"><span class="annot"><span class="annottext">fuzzy :: FuzzyM (UVar s e)
+</span><a href="UVMHS.Lib.Fuzzy.html#fuzzy"><span class="hs-identifier hs-var hs-var hs-var hs-var">fuzzy</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[() -&gt; FuzzyM (UVar s e)] -&gt; FuzzyM (UVar s e)
+forall (m :: * -&gt; *) a t.
+(Monad m, MonadRand m, ToIter (() -&gt; m a) t) =&gt;
+t -&gt; m a
+</span><a href="UVMHS.Lib.Rand.html#rchoose"><span class="hs-identifier hs-var">rchoose</span></a></span><span>
+</span><span id="line-143"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">DVar -&gt; UVar s e
+forall s e. DVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#D_UVar"><span class="hs-identifier hs-var">D_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">(DVar -&gt; UVar s e) -&gt; FuzzyM DVar -&gt; FuzzyM (UVar s e)
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM DVar
 forall a. Fuzzy a =&gt; FuzzyM a
 </span><a href="UVMHS.Lib.Fuzzy.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
-</span><span id="line-85"></span><span>      </span><span class="hs-special">]</span><span>
-</span><span id="line-86"></span><span>
-</span><span id="line-87"></span></pre></body></html>
+</span><span id="line-144"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">NVar -&gt; UVar s e
+forall s e. NVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#N_UVar"><span class="hs-identifier hs-var">N_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">(NVar -&gt; UVar s e) -&gt; FuzzyM NVar -&gt; FuzzyM (UVar s e)
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM NVar
+forall a. Fuzzy a =&gt; FuzzyM a
+</span><a href="UVMHS.Lib.Fuzzy.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
+</span><span id="line-145"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">GVar -&gt; UVar s e
+forall s e. GVar -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#G_UVar"><span class="hs-identifier hs-var">G_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">(GVar -&gt; UVar s e) -&gt; FuzzyM GVar -&gt; FuzzyM (UVar s e)
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM GVar
+forall a. Fuzzy a =&gt; FuzzyM a
+</span><a href="UVMHS.Lib.Fuzzy.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
+</span><span id="line-146"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><span class="annottext">MVar s e -&gt; UVar s e
+forall s e. MVar s e -&gt; UVar s e
+</span><a href="UVMHS.Lib.Substitution.UVar.html#M_UVar"><span class="hs-identifier hs-var">M_UVar</span></a></span><span> </span><span class="annot"><span class="annottext">(MVar s e -&gt; UVar s e) -&gt; FuzzyM (MVar s e) -&gt; FuzzyM (UVar s e)
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#%5E%24"><span class="hs-operator hs-var">^$</span></a></span><span> </span><span class="annot"><span class="annottext">FuzzyM (MVar s e)
+forall a. Fuzzy a =&gt; FuzzyM a
+</span><a href="UVMHS.Lib.Fuzzy.html#fuzzy"><span class="hs-identifier hs-var">fuzzy</span></a></span><span>
+</span><span id="line-147"></span><span>    </span><span class="hs-special">]</span><span>
+</span><span id="line-148"></span><span>
+</span><span id="line-149"></span></pre></body></html>

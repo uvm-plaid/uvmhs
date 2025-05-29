@@ -102,7 +102,7 @@ nilL = Prism (const Nil) $ \case
   _ → None
 
 consL ∷ 𝐿 a ⌲ (a ∧ 𝐿 a)
-consL = Prism (curry cons𝐿) uncons𝐿
+consL = Prism (uncurry cons𝐿) uncons𝐿
 
 singleL ∷ 𝐿 a ⌲ a
 singleL = Prism single $ \case
@@ -110,7 +110,7 @@ singleL = Prism single $ \case
   _ → None
 
 snocL ∷ 𝐿 a ⌲ (𝐿 a ∧ a)
-snocL = Prism (curry snoc𝐿) unsnoc𝐿
+snocL = Prism (uncurry snoc𝐿) unsnoc𝐿
 
 single𝑆L ∷ 𝑆 a ⌲ a
 single𝑆L = Prism (stream ∘ single𝐼) $ \ xs → do
@@ -139,7 +139,7 @@ single𝑄L = prism single𝑄 $ \ xs → case uncons𝑄 xs of
   _ → None
 
 single𝐷L ∷ (Ord k) ⇒ (k ⇰ v) ⌲ (k ∧ v)
-single𝐷L = prism (curry (↦♭)) $ \ kvs → case dminView𝐷 kvs of
+single𝐷L = prism (uncurry (↦♭)) $ \ kvs → case dminView𝐷 kvs of
   Some (kv :* kvs') | isEmpty kvs' → Some kv
   _ → None
 

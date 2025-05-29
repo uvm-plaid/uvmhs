@@ -5,12 +5,13 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Shrinky
 
+import UVMHS.Lib.Substitution.Name
+import UVMHS.Lib.Substitution.Subst
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstScoped
 import UVMHS.Lib.Substitution.SubstSpaced
-import UVMHS.Lib.Substitution.Var
 import UVMHS.Lib.Substitution.UVar
-import UVMHS.Lib.Substitution.Subst
+import UVMHS.Lib.Substitution.Var
 
 -- ====== --
 -- SUBSTY --
@@ -24,8 +25,8 @@ import UVMHS.Lib.Substitution.Subst
 --   binders are in scope, e.g., free variables are those which are not bound,
 --   so `⌊1⌋` is free but not `⌊0⌋` in the (nameless) lambda `λ. ⌊0⌋ ⌊1⌋`.
 data FreeVarsAction s e = FreeVarsAction
-  { freeVarsActionFilter ∷ s → 𝕐 s e → 𝔹
-  , freeVarsActionScope  ∷ s ∧ 𝑂 Name ⇰ ℕ64
+  { freeVarsActionFilter ∷ s → UVar s e → 𝔹
+  , freeVarsActionScope  ∷ s ∧ SName ⇰ ℕ64
   }
 makeLenses ''FreeVarsAction
 
@@ -54,19 +55,19 @@ makePrisms ''SubstyAction
 --   pretty (MetaSubst_SA s) = pretty s
 
 newtype SubstyM s e a = SubstyM
-  { unSubstyM ∷ UContT (ReaderT (SubstyAction s e) (FailT (WriterT (s ⇰ 𝑃 (𝕐 s e)) ID))) a
+  { unSubstyM ∷ UContT (ReaderT (SubstyAction s e) (FailT (WriterT (s ⇰ 𝑃 (UVar s e)) ID))) a
   } deriving
   ( Return,Bind,Functor,Monad
   , MonadUCont
   , MonadReader (SubstyAction s e)
-  , MonadWriter (s ⇰ 𝑃 (𝕐 s e))
+  , MonadWriter (s ⇰ 𝑃 (UVar s e))
   , MonadFail
   )
 
 mkSubstM 
   ∷ (∀ u. SubstyAction s e 
-        → (a → SubstyAction s e → (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u) 
-        → (s ⇰ 𝑃 (𝕐 s e)) 
+        → (a → SubstyAction s e → (s ⇰ 𝑃 (UVar s e)) ∧ 𝑂 u) 
+        → (s ⇰ 𝑃 (UVar s e)) 
         ∧ 𝑂 u)
   → SubstyM s e a
 mkSubstM f = SubstyM $ UContT (\ 𝓀 → ReaderT $ \ γ → FailT $ WriterT $ ID $ f γ $ \ x γ' →
@@ -74,9 +75,9 @@ mkSubstM f = SubstyM $ UContT (\ 𝓀 → ReaderT $ \ γ → FailT $ WriterT $ I
 
 runSubstM 
   ∷ SubstyAction s e
-  → (a → SubstyAction s e → (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u)
+  → (a → SubstyAction s e → (s ⇰ 𝑃 (UVar s e)) ∧ 𝑂 u)
   → SubstyM s e a
-  → (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u
+  → (s ⇰ 𝑃 (UVar s e)) ∧ 𝑂 u
 runSubstM γ 𝓀 = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ runUContT 𝓀' ∘ unSubstyM
   where
     𝓀' x = ReaderT $ \ γ' → FailT $ WriterT $ ID $ 𝓀 x γ'
@@ -84,38 +85,33 @@ runSubstM γ 𝓀 = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ runUCon
 evalSubstM
   ∷ SubstyAction s e
   → SubstyM s e a
-  → (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 a
+  → (s ⇰ 𝑃 (UVar s e)) ∧ 𝑂 a
 evalSubstM γ = unID ∘ unWriterT ∘ unFailT ∘ runReaderT γ ∘ evalUContT ∘ unSubstyM
 
 ------------
 -- Substy --
 ------------
 
--- TODO: make this return a delayed subst elem?
 class (SVarView s e) ⇒ Substy s e a | a→e,e→s where
   substy ∷ a → SubstyM s e a
 
--- These are the big top level API point of entry for applying a substy action,
--- which is either a free variables computation, a rebinding (named to namelss,
--- or vice versa), a standard substitution, or a metavariable substitution.
+fvssWith ∷ (Substy s e a) ⇒ (s → UVar s e → 𝔹) → a → s ⇰ 𝑃 (UVar s e)
+fvssWith f = fst ∘ evalSubstM (FreeVars_SA $ FreeVarsAction f null) ∘ substy
 
-fvsSWith ∷ (Substy s e a) ⇒ (s → 𝕐 s e → 𝔹) → a → s ⇰ 𝑃 (𝕐 s e)
-fvsSWith f = fst ∘ evalSubstM (FreeVars_SA $ FreeVarsAction f null) ∘ substy
+fvsWith ∷ (Ord s,Substy s e a) ⇒ s → (UVar s e → 𝔹) → a → 𝑃 (UVar s e)
+fvsWith s f = ifNone null ∘ lup s ∘ fvssWith (\ s' x → s ≡ s' ⩓ f x)
 
-fvsWith ∷ (Ord s,Substy s e a) ⇒ s → (𝕐 s e → 𝔹) → a → 𝑃 (𝕐 s e)
-fvsWith s f = ifNone null ∘ lup s ∘ fvsSWith (\ s' x → s ≡ s' ⩓ f x)
+fvss ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 (UVar s e)
+fvss = fvssWith $ const $ const True
 
-fvsS ∷ (Substy s e a) ⇒ a → s ⇰ 𝑃 (𝕐 s e)
-fvsS = fvsSWith $ const $ const True
-
-fvs ∷ (Ord s,Substy s e a) ⇒ s → a → 𝑃 (𝕐 s e)
+fvs ∷ (Ord s,Substy s e a) ⇒ s → a → 𝑃 (UVar s e)
 fvs s = fvsWith s $ const True
 
-fvsSMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ a → s ⇰ 𝑃 (Name ∧ Subst s e)
-fvsSMetas = map (pow ∘ filterMap (view m_UVarL) ∘ iter) ∘ fvsSWith (\ _s y → shape m_UVarL y)
+fvssMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ a → s ⇰ 𝑃 (MVar s e)
+fvssMetas = map (pow ∘ filterMap (view m_UVarL) ∘ iter) ∘ fvssWith (\ _s y → shape m_UVarL y)
 
-fvsMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ s → a → 𝑃 (Name ∧ Subst s e)
-fvsMetas s = ifNone pø ∘ lup s ∘ fvsSMetas
+fvsMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ s → a → 𝑃 (MVar s e)
+fvsMetas s = ifNone pø ∘ lup s ∘ fvssMetas
 
 todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
 todbr = snd ∘ evalSubstM (Subst_SA $ SubstAction AllNameless_RA null) ∘ substy
@@ -136,20 +132,28 @@ msubst 𝓈 = snd ∘ evalSubstM (MetaSubst_SA 𝓈) ∘ substy
 canonSubst ∷ (Ord s,Eq e,Substy s e e) ⇒ (e → e) → Subst s e → Subst s e
 canonSubst canonE 𝓈 = 
   let introE ιs = subst $ concat $ mapOn (iter ιs) $ \ (s :* xO :* n) → case xO of
-        None → introDSSubst s n
-        Some x → introNSSubst s x n
-  in canonSubstWith (curry svarScopeL) introE canonE 𝓈
+        D_SName → dintroSubst s n
+        N_SName x → nintroSubst s x n
+  in canonSubstWith (uncurry svarScopeL) introE canonE 𝓈
 
-canonUVar ∷ (Ord s,Eq e,Substy s e e) ⇒ (e → e) → 𝕐 s e → 𝕐 s e
+canonMVar ∷ (Ord s,Eq e,Substy s e e) ⇒ (e → e) → MVar s e → MVar s e
+canonMVar canonE (MVar 𝓈 x) = MVar (canonSubst canonE 𝓈) x
+
+substMVar ∷ (Ord s,Substy s e e) ⇒ Subst s e → MVar s e → MVar s e
+substMVar 𝓈 (MVar 𝓈ₓ x) = MVar (𝓈 ⧺ 𝓈ₓ) x
+
+canonUVar ∷ (Ord s,Eq e,Substy s e e) ⇒ (e → e) → UVar s e → UVar s e
 canonUVar canonE = \case
-  S_UVar x → S_UVar x
-  M_UVar x 𝓈 → M_UVar x $ canonSubst canonE 𝓈
+  D_UVar x → D_UVar x
+  N_UVar x → N_UVar x
+  G_UVar x → G_UVar x
+  M_UVar x → M_UVar $ canonMVar canonE x
 
 nullSubst ∷ Subst s e
 nullSubst = Subst $ SubstSpaced null null
 
 appendSubst ∷ (Ord s,Substy s e e) ⇒ Subst s e → Subst s e → Subst s e
-appendSubst 𝓈₂ 𝓈₁ = Subst $ appendSubstSpaced (curry svarScopeL) (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
+appendSubst 𝓈₂ 𝓈₁ = Subst $ appendSubstSpaced (uncurry svarScopeL) (subst ∘ Subst) (unSubst 𝓈₂) $ unSubst 𝓈₁
 
 instance                        Null   (Subst s e) where null = nullSubst
 instance (Ord s,Substy s e e) ⇒ Append (Subst s e) where (⧺)  = appendSubst
@@ -161,17 +165,17 @@ instance (Ord s,Substy s e e) ⇒ Monoid (Subst s e)
 
 substyDBdr ∷ (Ord s,Ord e) ⇒ s → SubstyM s e ()
 substyDBdr s = umodifyEnv $ compose
-  [ alter subst_SAL $ alter substActionSubstL $ shiftDSSubst s 1
-  , alter freeVars_SAL $ alter freeVarsActionScopeL $ (⧺) $ (s :* None) ↦ 1
+  [ alter subst_SAL $ alter substActionSubstL $ dshiftSubst s 1
+  , alter freeVars_SAL $ alter freeVarsActionScopeL $ (⧺) $ (s :* D_SName) ↦ 1
   ]
 
 substyNBdr ∷ (Ord s,Ord e) ⇒ s → Name → SubstyM s e ()
 substyNBdr s x = umodifyEnv $ compose
-  [ alter subst_SAL $ alter substActionSubstL $ shiftNSSubst s x 1
-  , alter freeVars_SAL $ alter freeVarsActionScopeL $ (⧺) $ (s :* Some x) ↦ 1
+  [ alter subst_SAL $ alter substActionSubstL $ nshiftSubst s x 1
+  , alter freeVars_SAL $ alter freeVarsActionScopeL $ (⧺) $ (s :* N_SName x) ↦ 1
   ]
 
-substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (𝕐 s e' → e) → Name → SubstyM s e ()
+substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (UVar s e → e) → Name → SubstyM s e ()
 substyBdr s mkVar x = do
   substyDBdr s
   substyNBdr s x
@@ -181,135 +185,164 @@ substyBdr s mkVar x = do
     Some ID_RA → skip
     Some AllNameless_RA → 
       umodifyEnv $ alter subst_SAL $ alter substActionSubstL $ flip (⧺) $ concat
-        [ introNSSubst s x 1
-        , bindNSSubst s x $ mkVar $ duvar 0
+        [ nintroSubst s x 1
+        , nbindSubst s x $ mkVar $ D_UVar $ DVar 0
         ]
     Some AllNamed_RA → 
       umodifyEnv $ alter subst_SAL $ alter substActionSubstL $ flip (⧺) $ concat
-        [ introDSSubst s 1
-        , bindDSSubst s $ mkVar $ znuvar x
+        [ dintroSubst s 1
+        , dbindSubst s $ mkVar $ nameUVar x
         ]
 
--- ℕ64 parameter `n` is the de bruijn level/number
-substyVar ∷ (Ord s,Ord e,Substy s e e) ⇒ 𝑂 Name → s → (ℕ64 → e) → ℕ64 → SubstyM s e e
-substyVar xO s mkVar n = do
+-- TRICKY: 
+-- it should always be the case that `(mkVar n $ svarLevel x) ≈ x`
+-- i.e., if `x` is an `NVar`, then `mkVar` should create named variables with
+-- the same name as `x`, just with a new level.
+substySVarG ∷ ∀ s e. (Ord s,Ord e,Substy s e e) ⇒ (DVar → e) → s → SVar → SubstyM s e e
+substySVarG mkVar s x = do
+  let xName = svarName x
+      xLevel = svarLevel x
   γ ← ask
   case γ of
     FreeVars_SA a → do
-      let n₀ = ifNone 0 (freeVarsActionScope a ⋕? (s :* xO))
-      when (n ≥ n₀) $ \ () → do
-        let n' = n-n₀
-            y = elim𝑂 (const duvar) (flip nuvar) xO n'
+      let -- `m` is the number of binders we are underneath
+          m ∷ ℕ64
+          m = ifNone 0 $ freeVarsActionScope a ⋕? (s :* xName)
+      -- when `xLevel ≥ m` it is a free variable
+      when (unDVar xLevel ≥ m) $ \ () → do
+        let -- create the free variable to accumulate, whose variable level
+            -- must be recalculated to be the found variable's level minus `m`
+            y = svar_UVar $ mkSVar xName $ DVar $ unDVar xLevel - m
+        -- only accumulate the free variable when it passes the filter
         when (freeVarsActionFilter a s y) $ \ () →
           tell $ s ↦ single y
-      return $ mkVar n
+      -- return the variable we found unchanged
+      return $ mkVar xLevel
     Subst_SA a → do
-      let 𝓈s = substSpacedScoped $ unSubst $ substActionSubst a
-      case 𝓈s ⋕? (s :* xO) of
-        None → return $ mkVar n
-        Some 𝓈 → case lookupSubstScoped 𝓈 n of
-          Var_SSE n' → return $ mkVar n'
-          Trm_SSE (SubstElem ιs eO) → failEff $ subst (Subst $ introSubstSpaced ιs) *$ eO
-    MetaSubst_SA _ → return $ mkVar n
+      let 𝓈Ss ∷ (s ∧ SName) ⇰ SubstScoped (s ∧ SName) e
+          𝓈Ss = substSpacedScoped $ unSubst $ substActionSubst a
+      case 𝓈Ss ⋕? (s :* xName) of
+        None → 
+          -- there is no substitution for this scope and name
+          -- return the variable we found unchanged
+          return $ mkVar xLevel
+        Some 𝓈 → case lookupSubstScoped 𝓈 xLevel of
+          Var_SSE xLevel' → 
+            -- rename the found variable to same name but new level
+            return $ mkVar xLevel'
+          Trm_SSE (SubstElem ιs eO) → 
+            -- substitute the found variable for expression `eO` with delayed
+            -- increment `ιs`
+            failEff $ subst (Subst $ introSubstSpaced ιs) *$ eO
+    MetaSubst_SA _ → 
+      -- the substitution is only looking for meta-variables, so return the
+      -- found variable unchanged
+      return $ mkVar xLevel
 
-substyDVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → ℕ64 → SubstyM s e e
-substyDVar = substyVar None
+substyDVar ∷ (Ord s,Ord e,Substy s e e) ⇒ (DVar → e) → s → DVar → SubstyM s e e
+substyDVar mkVar s = substySVarG mkVar s ∘ D_SVar
 
-substyNVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (ℕ64 → e) → Name → ℕ64 → SubstyM s e e
-substyNVar s mkVar x = substyVar (Some x) s mkVar
+substyNVar ∷ (Ord s,Ord e,Substy s e e) ⇒ (NVar → e) → s → NVar → SubstyM s e e
+substyNVar mkVar s x = substySVarG (\ n → mkVar $ NVar n $ nvarName x) s $ N_SVar x
 
-substyGVar ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (Name → e) → Name → SubstyM s e e
-substyGVar s mkVar x = do
+substyGVar ∷ ∀ s e. (Ord s,Ord e,Substy s e e) ⇒ (GVar → e) → s → GVar → SubstyM s e e
+substyGVar mkVar s x = do
   γ ← ask
   case γ of
     FreeVars_SA a → do
-      let y = guvar x
+      -- global variables are always free...
+      -- create the free variable to accumulate
+      let y = G_UVar  x
+      -- only accumulate the free variable when it passes the filter
       when (freeVarsActionFilter a s y) $ \ () →
         tell $ s ↦ single y
       return $ mkVar x
     Subst_SA 𝓈A → do
-      let gsᴳ =  substSpacedUnscoped $ unSubst $ substActionSubst 𝓈A
-      case gsᴳ ⋕? (s :* x) of
+      let 𝓈Gs ∷ (s ∧ Name) ⇰ SubstElem (s ∧ SName) e
+          𝓈Gs =  substSpacedUnscoped $ unSubst $ substActionSubst 𝓈A
+      case 𝓈Gs ⋕? (s :* unGVar x) of
         None → return $ mkVar x
         Some (SubstElem ιs eO) → failEff $ subst (Subst $ introSubstSpaced ιs) *$ eO
     MetaSubst_SA _ → return $ mkVar x
 
-substyMVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (Name → Subst s e → e) → Name → Subst s e → SubstyM s e e
-substyMVar s mkVar x 𝓈₀ = do
+substySVar ∷ (Ord s,Ord e,Substy s e e) ⇒ (SVar → e) → s → SVar → SubstyM s e e
+substySVar mkVar s x = substySVarG (mkVar ∘ mkSVar (svarName x)) s x
+
+substyVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ (Var → e) → s → Var → SubstyM s e e
+substyVar mkVar s = \case
+  D_Var x → substyDVar (mkVar ∘ D_Var) s x
+  N_Var x → substyNVar (mkVar ∘ N_Var) s x
+  G_Var x → substyGVar (mkVar ∘ G_Var) s x
+
+substyMVar ∷ ∀ s e. (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ (MVar s e → e) → s → MVar s e → SubstyM s e e
+substyMVar mkVar s x = do
   γ ← ask
   case γ of
     FreeVars_SA a → do
-      let y = M_UVar x 𝓈₀
+      -- meta variables are always free...
+      -- create the free variable to accumulate
+      let y = M_UVar x
+      -- only accumulate the free variable when it passes the filter
       when (freeVarsActionFilter a s y) $ \ () →
         tell $ s ↦ single y
-      return $ mkVar x 𝓈₀
+      return $ mkVar x
     Subst_SA 𝓈A → do
-      let 𝓈 = substActionSubst 𝓈A
-      return $ mkVar x $ 𝓈 ⧺ 𝓈₀
-    MetaSubst_SA (MetaSubst gs) →
-      case gs ⋕? (s :* x) of
-        None → return $ mkVar x 𝓈₀
+      let 𝓈 ∷ Subst s e
+          𝓈 = substActionSubst 𝓈A
+      return $ mkVar $ substMVar 𝓈 x
+    MetaSubst_SA (MetaSubst 𝓈M) →
+      case 𝓈M ⋕? (s :* mvarName x) of
+        None → return $ mkVar x
         Some (SubstElem ιs eO) →
-          failEff $ subst (𝓈₀ ⧺ Subst (introSubstSpaced ιs)) *$ eO
+          failEff $ subst (mvarSubst x ⧺ Subst (introSubstSpaced ιs)) *$ eO
 
--- subst (𝓈₁ ∘ 𝓈₂) e ≡ subst 𝓈₁ (subst 𝓈₂ e)
---
--- subst (apply 𝓈₁ 𝓈₂) e ≡ subst (mapOn 𝓈₂ (\ x e′ → apply 𝓈₁ e′)) e
--- apply 𝓈₁ id ≡ 𝓈₁
--- apply 𝓈 {0 ↦ 1 , 1 ↦ 2}
--- 𝓈₂(χ⋅𝓈₁)
---
--- (𝓈₂∘𝓈₁)(χ)
---
--- 𝓈₂(χ) = e
---
--- 𝓈₁(e) ← result
---
--- χ⋅id
---
--- 𝓈(χ⋅id) = χ⋅𝓈
---
--- 𝓈₁(𝓈₂(χ⋅id)) ≡ 𝓈₁(χ⋅𝓈₂) ≡ (𝓈₁∘𝓈₂)(χ)
-
-substy𝕏 ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕏 → e) → 𝕏 → SubstyM s e e
-substy𝕏 s mkVar = \case
-  D_SVar n   → substyDVar s (mkVar ∘ D_SVar)        n
-  N_SVar n x → substyNVar s (mkVar ∘ flip N_SVar x) x n
-  G_SVar   x → substyGVar s (mkVar ∘ G_SVar)        x
-
-substy𝕐 ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ s → (𝕐 s e → e) → 𝕐 s e → SubstyM s e e
-substy𝕐 s mkVar = \case
-  S_UVar x   → substy𝕏    s (mkVar ∘ S_UVar)  x
-  M_UVar x 𝓈 → substyMVar s (mkVar ∘∘ M_UVar) x 𝓈
+substyUVar ∷ (Ord s,Ord e,Pretty e,Pretty s,Substy s e e) ⇒ (UVar s e → e) → s → UVar s e → SubstyM s e e
+substyUVar mkVar s = \case
+  D_UVar x → substyDVar (mkVar ∘ D_UVar) s x
+  N_UVar x → substyNVar (mkVar ∘ N_UVar) s x
+  G_UVar x → substyGVar (mkVar ∘ G_UVar) s x
+  M_UVar x → substyMVar (mkVar ∘ M_UVar) s x
 
 -------------
 -- PARSING --
 -------------
 
-syntaxUVar ∷ LexerBasicSyntax
-syntaxUVar = concat
-  [ syntaxVar
-  , syntaxSVar
+syntaxSubst ∷ LexerBasicSyntax
+syntaxSubst = concat
+  [ syntaxVarInf
   , null { lexerBasicSyntaxPuns = pow 
              [ ",","...","…"
              , "{","}","[","]"
              , "|->","↦"
-             , ":",":g",":m"
              , "==","≡","+"
              ] }
   ]
 
+syntaxMVar ∷ LexerBasicSyntax
+syntaxMVar = concat
+  [ syntaxSubst
+  , null { lexerBasicSyntaxPuns = pow 
+             [ ":m"
+             ] }
+  ]
+
+syntaxUVar ∷ LexerBasicSyntax
+syntaxUVar = concat
+  [ syntaxVar
+  , syntaxMVar
+  ]
+
 data ParseSubstAction e = ParseSubstAction
-  { parseSubstActionShfts ∷ 𝐼 ℕ64          -- x^0…x^n ↦ [≡]
-  , parseSubstActionElems ∷ 𝑂 ℕ64 ⇰ 𝐼 e    -- x^n     ↦ e
-  , parseSubstActionIncrs ∷ 𝐼 (ℕ64 ∧ ℤ64)  -- x^n…x^∞ ↦ i
+  { parseSubstActionShfts ∷ 𝐼 ℕ64          -- x:0…x:n ↦ [≡]
+  , parseSubstActionElems ∷ 𝑂 DVar ⇰ 𝐼 e   -- x:n     ↦ e
+  , parseSubstActionIncrs ∷ 𝐼 (ℕ64 ∧ ℤ64)  -- x:n…x:∞ ↦ i
   } deriving (Eq,Ord,Show)
 makeLenses ''ParseSubstAction
 
 parseSubstActionShft ∷ ℕ64 → ParseSubstAction e
 parseSubstActionShft n = null { parseSubstActionShfts = single n }
 
-parseSubstActionElem ∷ 𝑂 ℕ64 → e → ParseSubstAction e
+parseSubstActionElem ∷ 𝑂 DVar → e → ParseSubstAction e
 parseSubstActionElem nO e = null { parseSubstActionElems = nO ↦ single e }
 
 parseSubstActionIncr ∷ ℕ64 → ℤ64 → ParseSubstAction e
@@ -322,14 +355,14 @@ instance Append (ParseSubstAction e) where
     ParseSubstAction (shfts₁ ⧺ shfts₂) (elems₁ ⧺ elems₂) $ incrs₁ ⧺ incrs₂
 instance Monoid (ParseSubstAction e)
 
-type ParseSubstActions e = 𝑂 (Name ∧ 𝔹) ⇰ ParseSubstAction e
+type ParseSubstActions e = SGName ⇰ ParseSubstAction e
 
-cpSubst ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (Subst () e)
-cpSubst pE = cpNewContext "subst" $ do
-  let pSubstIncr ∷ 𝕏 → CParser TokenBasic (ParseSubstActions e)
+pSubst ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (Subst () e)
+pSubst pE = cpNewContext "subst" $ do
+  let pSubstIncr ∷ Var → CParser TokenBasic (ParseSubstActions e)
       pSubstIncr x₁ = do
         void $ concat $ map cpSyntax ["...","…"]
-        xxw₂ ← cpSVarInf
+        x₂ ← cpErr "parsing varinf" pVarInf
         void $ concat $ map cpSyntax ["|->","↦"]
         void $ concat $ map cpSyntax ["["]
         i ← cpErr "valid subst shift/incr update" $ concat
@@ -343,25 +376,25 @@ cpSubst pE = cpNewContext "subst" $ do
                cpGuard $ i > 0
                return i
           ]
-        a ← cpErr "valid subst shift/incr range" $ case (x₁,xxw₂) of
-          (D_SVar n  ,Inl (D_SVar n')   ) |      n≡0,i≡0 → return $ None               ↦ parseSubstActionShft (n' + 1)
-          (N_SVar n w,Inl (N_SVar n' w')) | w≡w',n≡0,i≡0 → return $ Some (w' :* False) ↦ parseSubstActionShft (n' + 1)
-          (D_SVar n  ,Inr None          )                → return $ None               ↦ parseSubstActionIncr n i
-          (N_SVar n w,Inr (Some w')     ) | w≡w'         → return $ Some (w  :* False) ↦ parseSubstActionIncr n i
+        a ← cpErr "valid subst shift/incr range" $ case (x₁,x₂) of
+          (D_Var(DVar n)         ,D_VarInf(Var_DVI(DVar n'))             ) | n≡0,i≡0      → return $ D_SGName    ↦ parseSubstActionShft (n' + 1)
+          (N_Var(NVar (DVar n) x),N_VarInf(NVarInf(Var_DVI (DVar n')) x')) | n≡0,i≡0,x≡x' → return $ N_SGName x' ↦ parseSubstActionShft (n' + 1)
+          (D_Var(DVar n)         ,D_VarInf Inf_DVI                       )                → return $ D_SGName    ↦ parseSubstActionIncr n i
+          (N_Var(NVar (DVar n) x),N_VarInf(NVarInf Inf_DVI x')           ) |         x≡x' → return $ N_SGName x' ↦ parseSubstActionIncr n i
           _ → cpDie
         void $ concat $ map cpSyntax ["]"]
         return a
-      pSubstElem ∷ 𝕏 → CParser TokenBasic (ParseSubstActions e)
-      pSubstElem x = do
+      pSubstElem ∷ Var → CParser TokenBasic (ParseSubstActions e)
+      pSubstElem x₀ = do
         void $ concat $ map cpSyntax ["|->","↦"]
         e ← pE ()
-        return $ case x of
-          D_SVar n   → None              ↦ parseSubstActionElem (Some n) e
-          N_SVar n w → Some (w :* False) ↦ parseSubstActionElem (Some n) e
-          G_SVar   w → Some (w :* True ) ↦ parseSubstActionElem None     e
+        return $ case x₀ of
+          D_Var n          → D_SGName   ↦ parseSubstActionElem (Some n) e
+          N_Var (NVar n x) → N_SGName x ↦ parseSubstActionElem (Some n) e
+          G_Var (GVar x)   → G_SGName x ↦ parseSubstActionElem None     e
   void $ cpSyntax "{"
   xas ← concat ^$ cpManySepBy (void $ cpSyntax ",") $ do
-    x ← cpSVar
+    x ← pVar
     concat 
       [ pSubstIncr x
       , pSubstElem x
@@ -370,22 +403,27 @@ cpSubst pE = cpNewContext "subst" $ do
    concat ^$ mapMOn (iter xas) $ \ (wbO :* ParseSubstAction shfts elemss incrs) → do
     let doScoped = do 
           -- should only have zero or one shift
-          nShft ← cpErr "zero or one shift actions" $ cpFailEff $ tries
+          nShft ∷ ℕ64  
+                ← cpErr "zero or one shift actions" $ cpFailEff $ tries
             [ do view empty𝐼L shfts ; return 0
             , view single𝐼L shfts
             ]
           -- elems should map names to only one element
-          elems ← cpErr "one bind per name (scoped)" $ cpFailEff $ mapMOn elemss $ view single𝐼L
+          elems ∷ 𝑂 DVar ⇰ e
+                ← cpErr "one bind per name (scoped)" $ cpFailEff $ mapMOn elemss $ view single𝐼L
           -- all names of element bindings should have an index
-          elemsKeys ← cpErr "all variables must have index" $ cpFailEff $ exchange $ iter $ dkeys elems
-          let elemsVals = vec $ dvals elems
+          elemsKeys ∷ 𝐼 DVar
+                    ← cpErr "all variables must have index" $ cpFailEff $ exchange $ iter $ dkeys elems
+          let elemsVals ∷ 𝕍 e
+              elemsVals = vec $ dvals elems
           -- should only have zero or one increment
-          nIncr :* iIncr ← cpErr "zero or one incr actions" $ cpFailEff $ tries
+          nIncr :* iIncr ∷ ℕ64 ∧ ℤ64
+                         ← cpErr "zero or one incr actions" $ cpFailEff $ tries
             [ do view empty𝐼L incrs ; return $ (nShft + csize elemsVals) :* 0
             , view single𝐼L incrs
             ]
           -- element bindings should fill gap between shift and incr
-          cpErr "elements should fill gap" $ cpGuard $ elemsKeys ≡ range nShft nIncr
+          cpErr "elements should fill gap" $ cpGuard $ map unDVar elemsKeys ≡ range nShft nIncr
           -- biding N elements creates a -N incr
           -- target incr I = -N + E for extra incr E
           -- so E = I+N
@@ -394,19 +432,20 @@ cpSubst pE = cpNewContext "subst" $ do
           -- let numElems = nIncr - nShft
           when (iIncr < neg (intΩ64 $ csize elemsVals)) $ \ () →
             cpErr "incr cannot be less than number of substitution elems" cpDie
-          let elemsVals' = mapOn elemsVals $ Trm_SSE ∘ SubstElem null ∘ Some
+          let elemsVals' ∷ 𝕍 (SSubstElem s e)
+              elemsVals' = mapOn elemsVals $ Trm_SSE ∘ SubstElem null ∘ Some
           return $ nShft :* elemsVals' :* iIncr
     case wbO of
       -- nameless
-      None → do
+      D_SGName → do
         nShft :* elemsVals :* incr  ← doScoped
-        return $ Subst $ SubstSpaced null $ (() :* None) ↦ SubstScoped nShft elemsVals incr
+        return $ Subst $ SubstSpaced null $ (() :* D_SName) ↦ SubstScoped nShft elemsVals incr
       -- named
-      Some (w :* False) → do
+      N_SGName x → do
         nShft :* elemsVals :* incr ← doScoped
-        return $ Subst $ SubstSpaced null $ (() :* Some w) ↦ SubstScoped nShft elemsVals incr
+        return $ Subst $ SubstSpaced null $ (() :* N_SName x) ↦ SubstScoped nShft elemsVals incr
       -- global
-      Some (w :* True) → do
+      G_SGName x → do
         -- global can't have shifts
         cpErr "global vars can't have shifts" $ cpGuard $ isEmpty shfts
         -- global can't have incrs
@@ -416,41 +455,37 @@ cpSubst pE = cpNewContext "subst" $ do
         wes ← assoc𝐷 ^$ mapMOn (iter elems) $ \ (nO :* e) → do
           -- having an index for the name doesn't make sense
           cpErr "global vars can't have index" $ cpGuard $ shape noneL nO
-          return $ (:*) (() :* w) $ SubstElem null $ Some e
+          return $ (:*) (() :* x) $ SubstElem null $ Some e
         return $ Subst $ SubstSpaced wes null
   void $ cpSyntax "}"
   return 𝓈
 
-cpUVarNGMVar ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
-cpUVarNGMVar pE = do
-  w ← cpVar
-  concat
-    [ do nO ← cpSVarNGVarTail
-         return $ case nO of
-           Some n → nuvar n w
-           None   → guvar w
-    , do void $ cpSyntax ":m"
-         s ← ifNone null ^$ cpOptional $ cpSubst pE
-         return $ M_UVar w s
-   ]
+pMVarTail ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → Name → CParser TokenBasic (MVar () e)
+pMVarTail pE x = do
+  void $ cpSyntax ":m"
+  𝓈 ← ifNone null ^$ cpOptional $ pSubst pE
+  return $ MVar 𝓈 x
 
-cpUVar ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
-cpUVar pE = concat
-  [ do n ← cpDVar
-       return $ duvar n
-  , cpUVarNGMVar pE
+pMVar ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (MVar () e)
+pMVar pE = do
+  x ← pName
+  pMVarTail pE x
+
+pUVar ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (UVar () e)
+pUVar pE = concat
+  [ do x ← pDVar
+       return $ D_UVar x
+  , do x ← pName
+       concat
+         [ N_UVar ^$ pNVarTail x
+         , G_UVar ^$ pGVarTail x
+         , M_UVar ^$ pMVarTail pE x
+         ]
   ]
 
-cpUVarRaw ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (𝕐 () e)
-cpUVarRaw pE = concat
-  [ do n ← cpDVarRaw
-       return $ duvar n
-  , cpUVarNGMVar pE
-  ]
-
-instance (Ord s,Shrinky e) ⇒ Shrinky (𝕐 s e) where
+instance (Ord s,Shrinky e) ⇒ Shrinky (UVar s e) where
   shrink = \case
-    S_UVar x → S_UVar ^$ shrink x
-    M_UVar x 𝓈 → do
-      (x',𝓈') ← shrink (x,𝓈)
-      return $ M_UVar x' 𝓈'
+    D_UVar x → D_UVar ^$ shrink x
+    N_UVar x → N_UVar ^$ shrink x
+    G_UVar x → G_UVar ^$ shrink x
+    M_UVar x → M_UVar ^$ shrink x

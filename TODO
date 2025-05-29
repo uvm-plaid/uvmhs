@@ -3,7 +3,8 @@ Fix:
   through solving it. Consider refactoring and adding test suite along the way.
 
 Refactor:
-- Parser Library. Reorganize, document, and give better variable names to things.
+- Parser Library. 
+  - Reorganize, document, and give better variable names to things.
 - For core data structures (e.g., Iter), split out:
   - Public API (in tutorial style)
   - Test Suite
@@ -18,6 +19,8 @@ New Feature:
   - when color is off, print red '^'s as '!'s. (Requires new feature in pretty
     printer that allows pretty printers to change their behavior for when color
     is turned off.)
+  - combine `<parser>` and `<parser>WS` functionality into a single interface
+    (likely some sort of typeclass)
 - Substitution Library:
   - in SubstElem type, support delayed shifts in addition to delayed incrs.
     Right now the representation is `s ⇰ ℕ64`, which means "for each ⟨s,n⟩, do
@@ -31,6 +34,8 @@ New Feature:
     expression to lazily evaluate it, so you could do `canon $ incr 1 $ incr 1
     e` and it would only traverse the expression once to push through the
     increment logic.
+  - Make substitution failure a proper error type with Doc error message that
+    describes failure, rather than just an option
 
 Test Suite Needed:
 - Parser Library

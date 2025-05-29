@@ -7,6 +7,7 @@ import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Shrinky
 
 import UVMHS.Lib.Substitution.SubstElem
+import UVMHS.Lib.Substitution.Var
 
 -- ============================== --
 -- SCOPED (NAMELESS) SUBSTITUTION --
@@ -61,21 +62,21 @@ makeLenses ''SubstScoped
 -- ,  4 ↦ ⌊3⌋    |
 -- , …
 -- ]
-lookupSubstScoped ∷ SubstScoped s e → ℕ64 → SSubstElem s e
-lookupSubstScoped (SubstScoped ρ es ι) n =
+lookupSubstScoped ∷ SubstScoped s e → DVar → SSubstElem s e
+lookupSubstScoped (SubstScoped ρ es ι) (DVar n) =
   let 𝔰̇  = csize es
   in
-  if | n < ρ     → Var_SSE n
+  if | n < ρ     → Var_SSE $ DVar n
      | n < 𝔰̇+ρ   → es ⋕! (n-ρ)
-     | otherwise → Var_SSE $ natΩ64 $ intΩ64 n+ι
+     | otherwise → Var_SSE $ DVar $ natΩ64 $ intΩ64 n+ι
 
-interpSubstScoped ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → ℕ64 → 𝑂 e
+interpSubstScoped ∷ e ⌲ DVar → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → DVar → 𝑂 e
 interpSubstScoped ℓvar substE 𝓈 n = interpSSubstElem ℓvar substE $ lookupSubstScoped 𝓈 n
 
 wfSubstScoped ∷ SubstScoped s e → 𝔹
 wfSubstScoped (SubstScoped _ρ es ι) = ι ≥ neg (intΩ64 $ csize es)
 
-canonSubstScoped ∷ ∀ s e. (Eq s,Eq e) ⇒ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → (e → e) → SubstScoped s e → SubstScoped s e
+canonSubstScoped ∷ ∀ s e. (Eq s,Eq e) ⇒ e ⌲ DVar → (s ⇰ ℕ64 → e → 𝑂 e) → (e → e) → SubstScoped s e → SubstScoped s e
 canonSubstScoped ℓvar substE canonE = collapseNullShift ∘ expandIncs ∘ expandShifts ∘ canonElems
   where
     expandShiftsM ∷ RWS (SubstScoped s e) () ℕ64 ()
@@ -85,7 +86,7 @@ canonSubstScoped ℓvar substE canonE = collapseNullShift ∘ expandIncs ∘ exp
       if n ≡ csize es
       then skip
       else 
-        if es ⋕! n ≡ Var_SSE (ρ+n)
+        if es ⋕! n ≡ Var_SSE (DVar $ ρ+n)
         then do bump ; expandShiftsM
         else skip
     expandShifts ∷ SubstScoped s e → SubstScoped s e
@@ -103,7 +104,7 @@ canonSubstScoped ℓvar substE canonE = collapseNullShift ∘ expandIncs ∘ exp
         let i = 𝔰 - 1 - n
             i' = intΩ64 ρ + intΩ64 i + ι
         in
-        if i' ≥ 0 ⩓ es ⋕! i ≡ Var_SSE (natΩ64 i')
+        if i' ≥ 0 ⩓ es ⋕! i ≡ Var_SSE (DVar $ natΩ64 i')
         then do bump ; expandIncsM
         else skip
     expandIncs ∷ SubstScoped s e → SubstScoped s e
@@ -136,7 +137,7 @@ bindSubstScoped es =
       ι = neg $ intΩ64 $ csize es
   in SubstScoped null es' ι
 
-substSubstScoped ∷ e ⌲ ℕ64 → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → SubstScoped s e
+substSubstScoped ∷ e ⌲ DVar → (s ⇰ ℕ64 → e → 𝑂 e) → SubstScoped s e → SubstScoped s e
 substSubstScoped ℓvar substE (SubstScoped ρ es ι) = 
   let es' = map (substSSubstElem ℓvar substE) es
   in SubstScoped ρ es' ι
@@ -196,22 +197,22 @@ substSubstScoped ℓvar substE (SubstScoped ρ es ι) =
 -- PRETTY PRINTING --
 ---------------------
 
-ppSubstScoped ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → (𝕊 → Doc) → SubstScoped s e → 𝐼 (Doc ∧ Doc)
-ppSubstScoped ιD xD (SubstScoped ρ es ι) = 
+ppSubstScopedWith ∷ (Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → (DVarInf → Doc) → SubstScoped s e → 𝐼 (Doc ∧ Doc)
+ppSubstScopedWith ιD xD (SubstScoped ρ es ι) = 
   let kvs = concat
         [ if ρ ≡ 0 then null else single $
-            let k = concat [xD "0",ppPun "…",xD $ show𝕊 $ ρ - 1] 
+            let k = concat [xD $ Var_DVI $ DVar 0,ppPun "…",xD $ Var_DVI $ DVar $ ρ - 1] 
                 v = ppLit "[≡]"
             in k :* v
         , mapOn (withIndex @ℕ64 es) $ \ (n :* e) →
-            let k = concat [xD $ show𝕊 $ ρ + n]
+            let k = concat [xD $ Var_DVI $ DVar $ ρ + n]
                 v = ppSSubstElemNamed ιD xD e
             in k :* v
         , if ι ≡ 0 then null else single $ 
             let k = concat
-                  [ xD $ show𝕊 $ ρ + csize es
+                  [ xD $ Var_DVI $ DVar $ ρ + csize es
                   , ppPun "…"
-                  , xD "∞" 
+                  , xD Inf_DVI
                   ]
                 v = ppLit $ concat 
                   [ "["
@@ -227,11 +228,11 @@ ppSubstScoped ιD xD (SubstScoped ρ es ι) =
   in
   kvs
 
-ppSubstScopedNamed ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → 𝕊 → SubstScoped s e → 𝐼 (Doc ∧ Doc)
-ppSubstScopedNamed ιD x = ppSubstScoped ιD $ (⧺) (concat [ppBdr x,ppPun ":"]) ∘ ppBdr
+-- ppSubstScopedNamed ∷ (Pretty s,Pretty e) ⇒ (s ⇰ ℕ64 → Doc) → Name → SubstScoped s e → 𝐼 (Doc ∧ Doc)
+-- ppSubstScopedNamed ιD x = ppSubstScoped ιD $ \ n → pretty $ NVarInf n x
 
 instance (Pretty e, Pretty s) ⇒ Pretty (SubstScoped s e) where
-  pretty = ppDict ∘ ppSubstScopedNamed pretty ""
+  pretty = ppDict ∘ ppSubstScopedWith pretty pretty
 
 -------------
 -- FUNCTOR --
@@ -247,8 +248,8 @@ instance Functor (SubstScoped s) where
 instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (SubstScoped s e) where
   fuzzy = do
     ρ ← fuzzy
-    𝔰 ← fuzzy
-    es ← mapMOn (vecF 𝔰 id) $ const fuzzy
+    𝔰 ← fuzzyDepth
+    es ← mapMOn (vecF 𝔰 id) $ \ _ → fuzzyRec
     ι ← randr (neg $ intΩ64 𝔰) $ intΩ64 𝔰
     return $ SubstScoped ρ es ι
 

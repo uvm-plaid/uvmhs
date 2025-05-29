@@ -4,10 +4,10 @@ import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Shrinky
-import UVMHS.Lib.TreeNested
 
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstScoped
+import UVMHS.Lib.Substitution.Var
 
 -- =================================================================== --
 -- (NAME)SPACED SUBSTITUTION (NAMED AND NAMELESS, SCOPED AND UNSCOPED) --
@@ -41,8 +41,8 @@ import UVMHS.Lib.Substitution.SubstScoped
 --
 -- Say you have two scope namespaces: one for expressions and one for types,
 -- and we have a simple enum type `data Scope = Exp | Type`.
--- Then, you could instantiate `SubstSpaced sU sS e` with:
--- - `sU = Scope ∧ 𝕎`  
+-- Then, you could instantiate `SubstSpaced sG sS e` with:
+-- - `sG = Scope ∧ 𝕎`  
 --   - i.e., an unscoped substitution for each (global) raw variable name and
 --   `Scope`
 -- - `sS = Scope ∧ 𝑂 𝕏` 
@@ -58,27 +58,33 @@ import UVMHS.Lib.Substitution.SubstScoped
 --    variables
 --------------------------------------------------------------------------------
 
--- 𝓈 = ⟨𝓈U,𝓈S⟩
-data SubstSpaced sU sS e = SubstSpaced
-  { substSpacedUnscoped ∷ sU ⇰ SubstElem sS e
+-- 𝓈 = ⟨𝓈G,𝓈S⟩
+data SubstSpaced sG sS e = SubstSpaced
+  { substSpacedUnscoped ∷ sG ⇰ SubstElem sS e
   , substSpacedScoped   ∷ sS ⇰ SubstScoped sS e
   }
   deriving (Eq,Ord,Show)
 makeLenses ''SubstSpaced
 
-wfSubstSpaced ∷ (Ord sS) ⇒ SubstSpaced sU sS e → 𝔹
-wfSubstSpaced (SubstSpaced _𝓈U 𝓈S) = and $ map wfSubstScoped $ dvals 𝓈S
+isNullSubstSpaced ∷ (Ord sS) ⇒ SubstSpaced sG sS e → 𝔹
+isNullSubstSpaced (SubstSpaced 𝓈G 𝓈S) = and
+  [ isEmpty 𝓈G
+  , and $ map isNullSubstScoped $ dvals 𝓈S
+  ]
 
-canonSubstSpaced ∷ (Ord sS,Eq e) ⇒ (sS → e ⌲ ℕ64) → (sS ⇰ ℕ64 → e → 𝑂 e) → (e → e) → SubstSpaced sU sS e → SubstSpaced sU sS e
-canonSubstSpaced ℓvar substE canonE (SubstSpaced 𝓈U 𝓈S) = 
-  let 𝓈U' = map (canonSubstElem substE canonE) 𝓈U
+wfSubstSpaced ∷ (Ord sS) ⇒ SubstSpaced sG sS e → 𝔹
+wfSubstSpaced (SubstSpaced _𝓈G 𝓈S) = and $ map wfSubstScoped $ dvals 𝓈S
+
+canonSubstSpaced ∷ (Ord sS,Eq e) ⇒ (sS → e ⌲ DVar) → (sS ⇰ ℕ64 → e → 𝑂 e) → (e → e) → SubstSpaced sG sS e → SubstSpaced sG sS e
+canonSubstSpaced ℓvar substE canonE (SubstSpaced 𝓈G 𝓈S) = 
+  let 𝓈G' = map (canonSubstElem substE canonE) 𝓈G
       𝓈S' = okmapOn 𝓈S $ \ s 𝓈 → 
         let 𝓈' = canonSubstScoped (ℓvar s) substE canonE 𝓈
         in
         if isNullSubstScoped 𝓈'
         then None
         else Some 𝓈'
-  in SubstSpaced 𝓈U' 𝓈S'
+  in SubstSpaced 𝓈G' 𝓈S'
 
 -- Alter a substitution to "protect" the first n nameless indices. This
 -- commonly occurs when moving a substitution underneath a binder.
@@ -95,11 +101,11 @@ canonSubstSpaced ℓvar substE canonE (SubstSpaced 𝓈U 𝓈S) =
 --     , 2 ↦ 3
 --     , 3 ↦ 4
 --     ]
-shiftSubstSpaced ∷ (Ord sS) ⇒ sS ⇰ ℕ64 → SubstSpaced sU sS e → SubstSpaced sU sS e
-shiftSubstSpaced ιs (SubstSpaced 𝓈U 𝓈S) =
-  let 𝓈U' = map (introSubstElem ιs) 𝓈U
+shiftSubstSpaced ∷ (Ord sS) ⇒ sS ⇰ ℕ64 → SubstSpaced sG sS e → SubstSpaced sG sS e
+shiftSubstSpaced ιs (SubstSpaced 𝓈G 𝓈S) =
+  let 𝓈G' = map (introSubstElem ιs) 𝓈G
       𝓈S' = kmap (shiftSubstScoped ιs) 𝓈S
-  in SubstSpaced 𝓈U' 𝓈S'
+  in SubstSpaced 𝓈G' 𝓈S'
 
 -- The substitution that introduces de bruijn variable 0, and shifts everything
 -- else up by one.
@@ -112,16 +118,16 @@ shiftSubstSpaced ιs (SubstSpaced 𝓈U 𝓈S) =
 --     , 2 ↦ 3 
 --     , …
 --     ]
-introSubstSpaced ∷ sS ⇰ ℕ64 → SubstSpaced sU sS e
+introSubstSpaced ∷ sS ⇰ ℕ64 → SubstSpaced sG sS e
 introSubstSpaced = SubstSpaced null ∘ map introSubstScoped
 
-sbindsSubstSpaced ∷ sS ⇰ 𝕍 e → SubstSpaced sU sS e
+sbindsSubstSpaced ∷ sS ⇰ 𝕍 e → SubstSpaced sG sS e
 sbindsSubstSpaced ess = SubstSpaced null $ mapOn ess bindSubstScoped
 
-ubindsSubstSpaced ∷ sU ⇰ e → SubstSpaced sU sS e
+ubindsSubstSpaced ∷ sG ⇰ e → SubstSpaced sG sS e
 ubindsSubstSpaced es = SubstSpaced (map (SubstElem null ∘ Some) es) null
 
--- 𝓈smbindsG ∷ sU ⇰ e → SubstSpaced sU sS e
+-- 𝓈smbindsG ∷ sG ⇰ e → SubstSpaced sG sS e
 -- 𝓈smbindsG esᴳ = SubstSpaced null (map (SubstElem null ∘ const ∘ return) esᴳ) null
 
 -- 𝓈₁ ≜ ⟨ρ₁,es₁,ι₁⟩
@@ -168,31 +174,31 @@ ubindsSubstSpaced es = SubstSpaced (map (SubstElem null ∘ Some) es) null
 
 
 -- substSpacedExtended _ _ 𝓈 ιs e ≈ 𝓈(e⇈ιs)
-substSpacedExtended ∷ (Ord sU,Ord sS) ⇒ (sS → e ⌲ ℕ64) → (SubstSpaced sU sS e → e → 𝑂 e) → SubstSpaced sU sS e → sS ⇰ ℕ64 → e → 𝑂 e
+substSpacedExtended ∷ (Ord sG,Ord sS) ⇒ (sS → e ⌲ DVar) → (SubstSpaced sG sS e → e → 𝑂 e) → SubstSpaced sG sS e → sS ⇰ ℕ64 → e → 𝑂 e
 substSpacedExtended ℓvar substE 𝓈P ιs = substE $ appendSubstSpaced ℓvar substE 𝓈P $ introSubstSpaced ιs
 
 -- CURRENTLY NOT USED
-substSubstElemSpacedE ∷ (Ord sU,Ord sS) ⇒ (sS → e ⌲ ℕ64) → (SubstSpaced sU sS e → e → 𝑂 e) → SubstSpaced sU sS e → SubstElem sS e → 𝑂 e
+substSubstElemSpacedE ∷ (Ord sG,Ord sS) ⇒ (sS → e ⌲ DVar) → (SubstSpaced sG sS e → e → 𝑂 e) → SubstSpaced sG sS e → SubstElem sS e → 𝑂 e
 substSubstElemSpacedE ℓvar substE 𝓈P = substSubstElemE $ substSpacedExtended ℓvar substE 𝓈P
 
-substSubstElemSpaced ∷ (Ord sU,Ord sS) ⇒ (sS → e ⌲ ℕ64) → (SubstSpaced sU sS e → e → 𝑂 e) → SubstSpaced sU sS e → SubstElem sS e → SubstElem sS e
+substSubstElemSpaced ∷ (Ord sG,Ord sS) ⇒ (sS → e ⌲ DVar) → (SubstSpaced sG sS e → e → 𝑂 e) → SubstSpaced sG sS e → SubstElem sS e → SubstElem sS e
 substSubstElemSpaced ℓvars substE 𝓈P = substSubstElem $ substSpacedExtended ℓvars substE 𝓈P
 
 -- CURRENTLY NOT USED
-substSSubstElemSpaced ∷ (Ord sU,Ord sS) ⇒ (sS → e ⌲ ℕ64) → (SubstSpaced sU sS e → e → 𝑂 e) → SubstSpaced sU sS e → sS → SSubstElem sS e → SSubstElem sS e
+substSSubstElemSpaced ∷ (Ord sG,Ord sS) ⇒ (sS → e ⌲ DVar) → (SubstSpaced sG sS e → e → 𝑂 e) → SubstSpaced sG sS e → sS → SSubstElem sS e → SSubstElem sS e
 substSSubstElemSpaced ℓvars substE 𝓈P s = substSSubstElem (ℓvars s) $ substSpacedExtended ℓvars substE 𝓈P
 
 appendSubstSpaced ∷
-  ∀ sU sS e. (Ord sU,Ord sS)
-  ⇒ (sS → e ⌲ ℕ64)
-  → (SubstSpaced sU sS e → e → 𝑂 e)
-  → SubstSpaced sU sS e
-  → SubstSpaced sU sS e
-  → SubstSpaced sU sS e
+  ∀ sG sS e. (Ord sG,Ord sS)
+  ⇒ (sS → e ⌲ DVar)
+  → (SubstSpaced sG sS e → e → 𝑂 e)
+  → SubstSpaced sG sS e
+  → SubstSpaced sG sS e
+  → SubstSpaced sG sS e
 appendSubstSpaced ℓvars substE 𝓈P₂ 𝓈P₁ =
-  let SubstSpaced 𝓈U₁ 𝓈S₁ = 𝓈P₁
-      SubstSpaced 𝓈U₂ 𝓈S₂ = 𝓈P₂
-      𝓈Uᵣ = map (substSubstElemSpaced ℓvars substE 𝓈P₂) 𝓈U₁ ⩌ 𝓈U₂
+  let SubstSpaced 𝓈G₁ 𝓈S₁ = 𝓈P₁
+      SubstSpaced 𝓈G₂ 𝓈S₂ = 𝓈P₂
+      𝓈Gᵣ = map (substSubstElemSpaced ℓvars substE 𝓈P₂) 𝓈G₁ ⩌ 𝓈G₂
       𝓈S₁' = kmapOn 𝓈S₁ $ \ s 𝓈 → 
         substSubstScoped (ℓvars s) (substSpacedExtended ℓvars substE 𝓈P₂) 𝓈
       𝓈Sᵣ= dunionByOn 𝓈S₁' 𝓈S₂ $ \ 𝓈₁ 𝓈₂ →
@@ -216,29 +222,29 @@ appendSubstSpaced ℓvars substE 𝓈P₂ 𝓈P₁ =
                   in
                   if
                   | n < ρ₁⊓(ρ₂+𝔰₂) → es₂ ⋕! natΩ64 (n-ρ₂)
-                  | n < ρ₁         → Var_SSE $ natΩ64 $ n+ι₂
+                  | n < ρ₁         → Var_SSE $ DVar $ natΩ64 $ n+ι₂
                   | n < ρ₁+𝔰₁      → es₁ ⋕! natΩ64 (n-ρ₁)
-                  | n < ρ₂-ι₁      → Var_SSE $ natΩ64 $ n+ι₁
+                  | n < ρ₂-ι₁      → Var_SSE $ DVar $ natΩ64 $ n+ι₁
                   | n < ρ₂+𝔰₂-ι₁   → es₂ ⋕! natΩ64 (n+ι₁-ρ₂)
                   | otherwise      → error "bad"
             in
             SubstScoped ρ̇ es ι
-  in SubstSpaced 𝓈Uᵣ 𝓈Sᵣ
+  in SubstSpaced 𝓈Gᵣ 𝓈Sᵣ
 
 -------------
 -- FUNCTOR --
 -------------
 
-instance Functor (SubstSpaced sU sS) where
-  map f (SubstSpaced 𝓈U 𝓈S) = SubstSpaced (mapp f 𝓈U) $ mapp f 𝓈S
+instance Functor (SubstSpaced sG sS) where
+  map f (SubstSpaced 𝓈G 𝓈S) = SubstSpaced (mapp f 𝓈G) $ mapp f 𝓈S
 
 ---------------------
 -- PRETTY PRINTING --
 ---------------------
 
 instance (Pretty s₁,Pretty s₂,Pretty e) ⇒ Pretty (SubstSpaced s₁ s₂ e) where
-  pretty (SubstSpaced 𝓈U 𝓈S) = ppDict $ concat
-    [ if csize 𝓈U ≡ 0 then null𝐼 else single $ ppCon "𝐔" :* pretty 𝓈U
+  pretty (SubstSpaced 𝓈G 𝓈S) = ppDict $ concat
+    [ if csize 𝓈G ≡ 0 then null𝐼 else single $ ppCon "𝐔" :* pretty 𝓈G
     , if csize 𝓈S ≡ 0 then null𝐼 else single $ ppCon "𝐒" :* pretty 𝓈S
     ]
 
@@ -247,14 +253,14 @@ instance (Pretty s₁,Pretty s₂,Pretty e) ⇒ Pretty (SubstSpaced s₁ s₂ e)
 -------------
 
 -- generates random substitutions for property based testing
-instance (Ord sU,Ord sS,Fuzzy sU,Fuzzy sS,Fuzzy e) ⇒ Fuzzy (SubstSpaced sU sS e) where
+instance (Ord sG,Ord sS,Fuzzy sG,Fuzzy sS,Fuzzy e) ⇒ Fuzzy (SubstSpaced sG sS e) where
   fuzzy = return SubstSpaced ⊡ fuzzy ⊡ fuzzy
 
 ---------------
 -- SHRINKING --
 ---------------
 
-instance (Ord sU,Ord sS,Shrinky e) ⇒ Shrinky (SubstSpaced sU sS e) where
-  shrink (SubstSpaced 𝓈U 𝓈S) = do
-    (𝓈U',𝓈S') ← shrink (𝓈U,𝓈S)
-    return $ SubstSpaced 𝓈U' 𝓈S'
+instance (Ord sG,Ord sS,Shrinky e) ⇒ Shrinky (SubstSpaced sG sS e) where
+  shrink (SubstSpaced 𝓈G 𝓈S) = do
+    (𝓈G',𝓈S') ← shrink (𝓈G,𝓈S)
+    return $ SubstSpaced 𝓈G' 𝓈S'

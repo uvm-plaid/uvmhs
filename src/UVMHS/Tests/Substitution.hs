@@ -9,6 +9,7 @@ import UVMHS.Lib.Shrinky
 import UVMHS.Lib.Testing
 import UVMHS.Lib.TreeNested
 
+import UVMHS.Lib.Substitution.Name
 import UVMHS.Lib.Substitution.Subst
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstScoped
@@ -24,54 +25,54 @@ import UVMHS.Lang.ULC
 𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 0 (id @(𝕍 (SSubstElem () ())) $ null) 0 |] 
                  [| "{}" |]
 𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 1 (id @(𝕍 (SSubstElem () ())) $ null) 0 |] 
-                 [| "{:0…:0↦[≡]}" |]
+                 [| "{•:0…•:0↦[≡]}" |]
 𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 2 (id @(𝕍 (SSubstElem () ())) $ null) 0 |] 
-                 [| "{:0…:1↦[≡]}" |]
+                 [| "{•:0…•:1↦[≡]}" |]
 𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 0 (id @(𝕍 (SSubstElem () ())) $ null) 1 |] 
-                 [| "{:0…:∞↦[+1]}" |]
+                 [| "{•:0…•:∞↦[+1]}" |]
 𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 0 (id @(𝕍 (SSubstElem () ())) $ null) $ neg 1 |] 
-                 [| "{:0…:∞↦[-1]}" |]
+                 [| "{•:0…•:∞↦[-1]}" |]
 𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ 
                       SubstScoped 0 (id @(𝕍 (SSubstElem () ())) $ vec [Trm_SSE $ SubstElem null $ Some ()]) 0 
                   |] 
-                 [| "{:0↦()}" |]
+                 [| "{•:0↦()}" |]
 𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ 
                       SubstScoped 1 (id @(𝕍 (SSubstElem () ())) $ vec [Trm_SSE $ SubstElem null $ Some ()]) 3 
                  |] 
-                 [| "{:0…:0↦[≡],:1↦(),:2…:∞↦[+3]}" |]
+                 [| "{•:0…•:0↦[≡],•:1↦(),•:2…•:∞↦[+3]}" |]
 
 𝔱 "subst:parse" [| [ulc| χ:m{} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") null |]
-𝔱 "subst:parse" [| [ulc| χ:m{:0…:0↦[≡]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* None) $ SubstScoped 1 null 0 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") null |]
+𝔱 "subst:parse" [| [ulc| χ:m{•:0…•:0↦[≡]} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* D_SName) $ SubstScoped 1 null 0 
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:0↦[≡]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* Some (var "x")) $ SubstScoped 1 null 0 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (name "x")) $ SubstScoped 1 null 0 
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:1↦[≡]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* Some (var "x")) $ SubstScoped 2 null 0 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (name "x")) $ SubstScoped 2 null 0 
                 |]
-𝔱 "subst:parse" [| [ulc| χ:m{x:0↦0} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* Some (var "x")) $ 
-                       let es = vec [Trm_SSE $ SubstElem null $ Some [ulc|0|]]
+𝔱 "subst:parse" [| [ulc| χ:m{x:0↦•:0} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (name "x")) $ 
+                       let es = vec [Trm_SSE $ SubstElem null $ Some [ulc|•:0|]]
                        in SubstScoped 0 es 0 
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:∞↦[≡]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* Some (var "x")) $ SubstScoped 0 null 0 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (name "x")) $ SubstScoped 0 null 0 
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:∞↦[+1]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* Some (var "x")) $ SubstScoped 0 null 1
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (name "x")) $ SubstScoped 0 null 1
                 |]
-𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:0↦[≡],x:1↦0,x:2…x:∞↦[+1]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar (var "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* Some (var "x")) $ 
-                       let es = vec [Trm_SSE $ SubstElem null $ Some [ulc|0|]]
+𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:0↦[≡],x:1↦•:0,x:2…x:∞↦[+1]} |] |] 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (name "x")) $ 
+                       let es = vec [Trm_SSE $ SubstElem null $ Some [ulc|•:0|]]
                        in SubstScoped 1 es 1 
                 |]
 
@@ -83,171 +84,171 @@ import UVMHS.Lang.ULC
 𝔱 "subst:canon" [| canonULC [ulc| χ:m{x:0↦x:0}                 |] |] [| [ulc| χ:m{}             |] |]
 𝔱 "subst:canon" [| canonULC [ulc| χ:m{x:0↦x:0,x:1↦x:1}         |] |] [| [ulc| χ:m{}             |] |]
 𝔱 "subst:canon" [| canonULC [ulc| χ:m{x:0↦x:1,x:1…x:∞↦[+1]}    |] |] [| [ulc| χ:m{x:0…x:∞↦[+1]} |] |]
-𝔱 "subst:canon" [| canonULC [ulc| χ:m{x:0…x:1↦[≡],x:2↦x:2,x:3↦x:3,x:4↦(λ→0),x:5↦x:6,x:6↦x:7,x:7…x:∞↦[+1]} |] |] 
-                [|          [ulc| χ:m{x:0…x:3↦[≡],x:4↦(λ→0),x:5…x:∞↦[+1]} |] |]
+𝔱 "subst:canon" [| canonULC [ulc| χ:m{x:0…x:1↦[≡],x:2↦x:2,x:3↦x:3,x:4↦(λ→•:0),x:5↦x:6,x:6↦x:7,x:7…x:∞↦[+1]} |] |] 
+                [|          [ulc| χ:m{x:0…x:3↦[≡],x:4↦(λ→•:0),x:5…x:∞↦[+1]} |] |]
 
 -- basic --
 
-𝔱 "subst:id" [| subst null [ulc| λ → 0   |] |] [| Some [ulc| λ → 0   |] |]
-𝔱 "subst:id" [| subst null [ulc| λ → 1   |] |] [| Some [ulc| λ → 1   |] |]
-𝔱 "subst:id" [| subst null [ulc| λ → 2   |] |] [| Some [ulc| λ → 2   |] |]
-𝔱 "subst:id" [| subst null [ulc| λ → 0 2 |] |] [| Some [ulc| λ → 0 2 |] |]
+𝔱 "subst:id" [| subst null [ulc| λ → •:0    |] |] [| Some [ulc| λ → •:0    |] |]
+𝔱 "subst:id" [| subst null [ulc| λ → •:1    |] |] [| Some [ulc| λ → •:1    |] |]
+𝔱 "subst:id" [| subst null [ulc| λ → •:2    |] |] [| Some [ulc| λ → •:2    |] |]
+𝔱 "subst:id" [| subst null [ulc| λ → •:0 •:2 |] |] [| Some [ulc| λ → •:0 •:2 |] |]
 
-𝔱 "subst:intro" [| subst (introDSubst 1) [ulc| λ → 0   |] |] [| Some [ulc| λ → 0   |] |]
-𝔱 "subst:intro" [| subst (introDSubst 1) [ulc| λ → 1   |] |] [| Some [ulc| λ → 2   |] |]
-𝔱 "subst:intro" [| subst (introDSubst 1) [ulc| λ → 2   |] |] [| Some [ulc| λ → 3   |] |]
-𝔱 "subst:intro" [| subst (introDSubst 1) [ulc| λ → 0 2 |] |] [| Some [ulc| λ → 0 3 |] |]
+𝔱 "subst:intro" [| subst (dintroSubst () 1) [ulc| λ → •:0    |] |] [| Some [ulc| λ → •:0    |] |]
+𝔱 "subst:intro" [| subst (dintroSubst () 1) [ulc| λ → •:1    |] |] [| Some [ulc| λ → •:2    |] |]
+𝔱 "subst:intro" [| subst (dintroSubst () 1) [ulc| λ → •:2    |] |] [| Some [ulc| λ → •:3    |] |]
+𝔱 "subst:intro" [| subst (dintroSubst () 1) [ulc| λ → •:0 •:2 |] |] [| Some [ulc| λ → •:0 •:3 |] |]
 
-𝔱 "subst:intro" [| subst (introDSubst 2) [ulc| λ → 0   |] |] [| Some [ulc| λ → 0   |] |]
-𝔱 "subst:intro" [| subst (introDSubst 2) [ulc| λ → 1   |] |] [| Some [ulc| λ → 3   |] |]
-𝔱 "subst:intro" [| subst (introDSubst 2) [ulc| λ → 2   |] |] [| Some [ulc| λ → 4   |] |]
-𝔱 "subst:intro" [| subst (introDSubst 2) [ulc| λ → 0 2 |] |] [| Some [ulc| λ → 0 4 |] |]
+𝔱 "subst:intro" [| subst (dintroSubst () 2) [ulc| λ → •:0    |] |] [| Some [ulc| λ → •:0    |] |]
+𝔱 "subst:intro" [| subst (dintroSubst () 2) [ulc| λ → •:1    |] |] [| Some [ulc| λ → •:3    |] |]
+𝔱 "subst:intro" [| subst (dintroSubst () 2) [ulc| λ → •:2    |] |] [| Some [ulc| λ → •:4    |] |]
+𝔱 "subst:intro" [| subst (dintroSubst () 2) [ulc| λ → •:0 •:2 |] |] [| Some [ulc| λ → •:0 •:4 |] |]
 
-𝔱 "subst:bind" [| subst (bindDSubst [ulc| λ → 0 |]) [ulc| λ → 0 |] |] [| Some [ulc| λ → 0     |] |]
-𝔱 "subst:bind" [| subst (bindDSubst [ulc| λ → 1 |]) [ulc| λ → 0 |] |] [| Some [ulc| λ → 0     |] |]
-𝔱 "subst:bind" [| subst (bindDSubst [ulc| λ → 0 |]) [ulc| λ → 1 |] |] [| Some [ulc| λ → λ → 0 |] |]
-𝔱 "subst:bind" [| subst (bindDSubst [ulc| λ → 1 |]) [ulc| λ → 1 |] |] [| Some [ulc| λ → λ → 2 |] |]
+𝔱 "subst:bind" [| subst (dbindSubst () [ulc| λ → •:0 |]) [ulc| λ → •:0 |] |] [| Some [ulc| λ → •:0     |] |]
+𝔱 "subst:bind" [| subst (dbindSubst () [ulc| λ → •:1 |]) [ulc| λ → •:0 |] |] [| Some [ulc| λ → •:0     |] |]
+𝔱 "subst:bind" [| subst (dbindSubst () [ulc| λ → •:0 |]) [ulc| λ → •:1 |] |] [| Some [ulc| λ → λ → •:0 |] |]
+𝔱 "subst:bind" [| subst (dbindSubst () [ulc| λ → •:1 |]) [ulc| λ → •:1 |] |] [| Some [ulc| λ → λ → •:2 |] |]
 
-𝔱 "subst:shift" [| subst (shiftDSubst 1 $ bindDSubst [ulc| λ → 0 |]) [ulc| λ → 0 |] |]
-                [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (shiftDSubst 1 $ bindDSubst [ulc| λ → 1 |]) [ulc| λ → 0 |] |]
-                [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (shiftDSubst 1 $ bindDSubst [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
-                [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (shiftDSubst 1 $ bindDSubst [ulc| λ → 1 |]) [ulc| λ → 1 |] |]
-                [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (shiftDSubst 1 $ bindDSubst [ulc| λ → 2 |]) [ulc| λ → 0 |] |]
-                [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:shift" [| subst (shiftDSubst 1 $ bindDSubst [ulc| λ → 2 |]) [ulc| λ → 1 |] |]
-                [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:shift" [| subst (shiftDSubst 1 $ bindDSubst [ulc| λ → 1 |]) [ulc| λ → 2 |] |]
-                [| Some [ulc| λ → λ → 3 |] |]
-𝔱 "subst:shift" [| subst (shiftDSubst 1 $ bindDSubst [ulc| λ → 2 |]) [ulc| λ → 2 |] |]
-                [| Some [ulc| λ → λ → 4 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst () 1 $ dbindSubst () [ulc| λ → •:0 |]) [ulc| λ → •:0 |] |]
+                [| Some [ulc| λ → •:0 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst () 1 $ dbindSubst () [ulc| λ → •:1 |]) [ulc| λ → •:0 |] |]
+                [| Some [ulc| λ → •:0 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst () 1 $ dbindSubst () [ulc| λ → •:0 |]) [ulc| λ → •:1 |] |]
+                [| Some [ulc| λ → •:1 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst () 1 $ dbindSubst () [ulc| λ → •:1 |]) [ulc| λ → •:1 |] |]
+                [| Some [ulc| λ → •:1 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst () 1 $ dbindSubst () [ulc| λ → •:2 |]) [ulc| λ → •:0 |] |]
+                [| Some [ulc| λ → •:0 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst () 1 $ dbindSubst () [ulc| λ → •:2 |]) [ulc| λ → •:1 |] |]
+                [| Some [ulc| λ → •:1 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst () 1 $ dbindSubst () [ulc| λ → •:1 |]) [ulc| λ → •:2 |] |]
+                [| Some [ulc| λ → λ → •:3 |] |]
+𝔱 "subst:shift" [| subst (dshiftSubst () 1 $ dbindSubst () [ulc| λ → •:2 |]) [ulc| λ → •:2 |] |]
+                [| Some [ulc| λ → λ → •:4 |] |]
 
 -- append --
 
-𝔱 "subst:⧺" [| subst null                          [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ null)                 [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (shiftDSubst 1 null)          [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (shiftDSubst 2 null)          [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
+𝔱 "subst:⧺" [| subst null                          [ulc| λ → •:0 |] |] [| Some [ulc| λ → •:0 |] |]
+𝔱 "subst:⧺" [| subst (null ⧺ null)                 [ulc| λ → •:0 |] |] [| Some [ulc| λ → •:0 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst () 1 null)          [ulc| λ → •:0 |] |] [| Some [ulc| λ → •:0 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst () 2 null)          [ulc| λ → •:0 |] |] [| Some [ulc| λ → •:0 |] |]
 
-𝔱 "subst:⧺" [| subst null                          [ulc| λ → 1 |] |] [| Some [ulc| λ → 1 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ null)                 [ulc| λ → 1 |] |] [| Some [ulc| λ → 1 |] |]
+𝔱 "subst:⧺" [| subst null                          [ulc| λ → •:1 |] |] [| Some [ulc| λ → •:1 |] |]
+𝔱 "subst:⧺" [| subst (null ⧺ null)                 [ulc| λ → •:1 |] |] [| Some [ulc| λ → •:1 |] |]
 
-𝔱 "subst:⧺" [| subst (introDSubst 1)               [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ introDSubst 1 ⧺ null) [ulc| λ → 0 |] |] [| Some [ulc| λ → 0 |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst () 1)               [ulc| λ → •:0 |] |] [| Some [ulc| λ → •:0 |] |]
+𝔱 "subst:⧺" [| subst (null ⧺ dintroSubst () 1 ⧺ null) [ulc| λ → •:0 |] |] [| Some [ulc| λ → •:0 |] |]
 
-𝔱 "subst:⧺" [| subst (introDSubst 1)               [ulc| λ → 1 |] |] [| Some [ulc| λ → 2 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ introDSubst 1 ⧺ null) [ulc| λ → 1 |] |] [| Some [ulc| λ → 2 |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst () 1)               [ulc| λ → •:1 |] |] [| Some [ulc| λ → •:2 |] |]
+𝔱 "subst:⧺" [| subst (null ⧺ dintroSubst () 1 ⧺ null) [ulc| λ → •:1 |] |] [| Some [ulc| λ → •:2 |] |]
 
-𝔱 "subst:⧺" [| subst (bindDSubst [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
-            [| Some [ulc| λ → λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (null ⧺ bindDSubst [ulc| λ → 0 |] ⧺ null) [ulc| λ → 1 |] |]
-            [| Some [ulc| λ → λ → 0 |] |]
+𝔱 "subst:⧺" [| subst (dbindSubst () [ulc| λ → •:0 |]) [ulc| λ → •:1 |] |]
+            [| Some [ulc| λ → λ → •:0 |] |]
+𝔱 "subst:⧺" [| subst (null ⧺ dbindSubst () [ulc| λ → •:0 |] ⧺ null) [ulc| λ → •:1 |] |]
+            [| Some [ulc| λ → λ → •:0 |] |]
 
-𝔱 "subst:⧺" [| subst (introDSubst 2)                 [ulc| λ → 1 |] |] [| Some [ulc| λ → 3 |] |]
-𝔱 "subst:⧺" [| subst (introDSubst 1 ⧺ introDSubst 1) [ulc| λ → 1 |] |] [| Some [ulc| λ → 3 |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst () 2)                 [ulc| λ → •:1 |] |] [| Some [ulc| λ → •:3 |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst () 1 ⧺ dintroSubst () 1) [ulc| λ → •:1 |] |] [| Some [ulc| λ → •:3 |] |]
 
-𝔱 "subst:⧺" [| subst (bindDSubst [ulc| λ → 0 |]) [ulc| λ → 1 |] |]
-            [| Some [ulc| λ → λ → 0 |] |]
-𝔱 "subst:⧺" [| subst (shiftDSubst 1 (bindDSubst [ulc| λ → 0 |]) ⧺ introDSubst 1) [ulc| λ → 1 |] |]
-            [| Some [ulc| λ → λ → 0 |] |]
+𝔱 "subst:⧺" [| subst (dbindSubst () [ulc| λ → •:0 |]) [ulc| λ → •:1 |] |]
+            [| Some [ulc| λ → λ → •:0 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst () 1 (dbindSubst () [ulc| λ → •:0 |]) ⧺ dintroSubst () 1) [ulc| λ → •:1 |] |]
+            [| Some [ulc| λ → λ → •:0 |] |]
 
-𝔱 "subst:⧺" [| subst (introDSubst 1 ⧺ bindDSubst [ulc| 1 |]) [ulc| 0 (λ → 2) |] |]
-            [| Some [ulc| 2 (λ → 2) |] |]
-𝔱 "subst:⧺" [| subst (shiftDSubst 1 (bindDSubst [ulc| 1 |]) ⧺ introDSubst 1) [ulc| 0 (λ → 2) |] |]
-            [| Some [ulc| 2 (λ → 2) |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst () 1 ⧺ dbindSubst () [ulc| •:1 |]) [ulc| •:0 (λ → •:2) |] |]
+            [| Some [ulc| •:2 (λ → •:2) |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst () 1 (dbindSubst () [ulc| •:1 |]) ⧺ dintroSubst () 1) [ulc| •:0 (λ → •:2) |] |]
+            [| Some [ulc| •:2 (λ → •:2) |] |]
 
-𝔱 "subst:⧺" [| subst (introDSubst 1) *$ subst (shiftDSubst 1 null) [ulc| 0 |] |]
-            [| subst (introDSubst 1 ⧺ shiftDSubst 1 null) [ulc| 0 |] |]
+𝔱 "subst:⧺" [| subst (dintroSubst () 1) *$ subst (dshiftSubst () 1 null) [ulc| •:0 |] |]
+            [| subst (dintroSubst () 1 ⧺ dshiftSubst () 1 null)          [ulc| •:0 |] |]
 
-𝔱 "subst:⧺" [| subst (bindDSubst [ulc| 1 |]) *$ subst (shiftDSubst 1 (introDSubst 1)) [ulc| 0 |] |]
-            [| subst (bindDSubst [ulc| 1 |] ⧺ shiftDSubst 1 (introDSubst 1)) [ulc| 0 |] |]
+𝔱 "subst:⧺" [| subst (dbindSubst () [ulc| •:1 |]) *$ subst (dshiftSubst () 1 (dintroSubst () 1)) [ulc| •:0 |] |]
+            [| subst (dbindSubst () [ulc| •:1 |] ⧺ dshiftSubst () 1 (dintroSubst () 1))          [ulc| •:0 |] |]
 
-𝔱 "subst:⧺" [| subst (shiftDSubst 1 (bindDSubst [ulc| 1 |])) *$ subst (shiftDSubst 1 null) [ulc| 1 |] |]
-            [| subst (shiftDSubst 1 (bindDSubst [ulc| 1 |]) ⧺ shiftDSubst 1 null) [ulc| 1 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst () 1 (dbindSubst () [ulc| •:1 |])) *$ subst (dshiftSubst () 1 null) [ulc| •:1 |] |]
+            [| subst (dshiftSubst () 1 (dbindSubst () [ulc| •:1 |]) ⧺ dshiftSubst () 1 null)          [ulc| •:1 |] |]
 
-𝔱 "subst:⧺" [| subst (shiftDSubst 1 (bindDSubst [ulc| 3 |]) ⧺ null) [ulc| 0 |] |]
-            [| subst (shiftDSubst 1 (bindDSubst [ulc| 3 |])) [ulc| 0 |] |]
+𝔱 "subst:⧺" [| subst (dshiftSubst () 1 (dbindSubst () [ulc| •:3 |]) ⧺ null) [ulc| •:0 |] |]
+            [| subst (dshiftSubst () 1 (dbindSubst () [ulc| •:3 |]))        [ulc| •:0 |] |]
 
 -- de bruijn conversion --
 
-𝔱 "subst:todbr" [| todbr [ulc| λ x → x             |] |] [| Some [ulc| λ x → 0             |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ x → 0             |] |] [| Some [ulc| λ x → 0             |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ x → x 0           |] |] [| Some [ulc| λ x → 0 0           |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ x → x 0 1         |] |] [| Some [ulc| λ x → 0 0 1         |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ x → x 0 y         |] |] [| Some [ulc| λ x → 0 0 y         |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ x → x 0 1 y       |] |] [| Some [ulc| λ x → 0 0 1 y       |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ x → x               |] |] [| Some [ulc| λ x → •:0             |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ x → •:0              |] |] [| Some [ulc| λ x → •:0             |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ x → x •:0            |] |] [| Some [ulc| λ x → •:0 •:0          |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ x → x •:0 •:1         |] |] [| Some [ulc| λ x → •:0 •:0 •:1       |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ x → x •:0 y          |] |] [| Some [ulc| λ x → •:0 •:0 y        |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ x → x •:0 •:1 y       |] |] [| Some [ulc| λ x → •:0 •:0 •:1 y     |] |]
 
-𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x       |] |] [| Some [ulc| λ y → λ x → 0       |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → 0       |] |] [| Some [ulc| λ y → λ x → 0       |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x 0     |] |] [| Some [ulc| λ y → λ x → 0 0     |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x 0 1   |] |] [| Some [ulc| λ y → λ x → 0 0 1   |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x 0 y   |] |] [| Some [ulc| λ y → λ x → 0 0 1   |] |]
-𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x 0 1 y |] |] [| Some [ulc| λ y → λ x → 0 0 1 1 |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x         |] |] [| Some [ulc| λ y → λ x → •:0          |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → •:0        |] |] [| Some [ulc| λ y → λ x → •:0          |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x •:0      |] |] [| Some [ulc| λ y → λ x → •:0 •:0       |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x •:0 •:1   |] |] [| Some [ulc| λ y → λ x → •:0 •:0 •:1    |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x •:0 y    |] |] [| Some [ulc| λ y → λ x → •:0 •:0 •:1    |] |]
+𝔱 "subst:todbr" [| todbr [ulc| λ y → λ x → x •:0 •:1 y |] |] [| Some [ulc| λ y → λ x → •:0 •:0 •:1 •:1 |] |]
 
-𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x             |] |] [| Some [ulc| λ x → x             |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ x → 0             |] |] [| Some [ulc| λ x → x             |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x 0           |] |] [| Some [ulc| λ x → x x           |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x 0 1         |] |] [| Some [ulc| λ x → x x 1         |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x 0 y         |] |] [| Some [ulc| λ x → x x y         |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x 0 1 y       |] |] [| Some [ulc| λ x → x x 1 y       |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x              |] |] [| Some [ulc| λ x → x              |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ x → •:0             |] |] [| Some [ulc| λ x → x              |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x •:0           |] |] [| Some [ulc| λ x → x x            |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x •:0 •:1        |] |] [| Some [ulc| λ x → x x •:1         |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x •:0 y         |] |] [| Some [ulc| λ x → x x y          |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ x → x •:0 •:1 y      |] |] [| Some [ulc| λ x → x x •:1 y       |] |]
 
-𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x       |] |] [| Some [ulc| λ y → λ x → x       |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → 0       |] |] [| Some [ulc| λ y → λ x → x       |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x 0     |] |] [| Some [ulc| λ y → λ x → x x     |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x 0 1   |] |] [| Some [ulc| λ y → λ x → x x y   |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x 0 y   |] |] [| Some [ulc| λ y → λ x → x x y   |] |]
-𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x 0 1 y |] |] [| Some [ulc| λ y → λ x → x x y y |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x         |] |] [| Some [ulc| λ y → λ x → x       |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → •:0        |] |] [| Some [ulc| λ y → λ x → x       |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x •:0      |] |] [| Some [ulc| λ y → λ x → x x     |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x •:0 •:1   |] |] [| Some [ulc| λ y → λ x → x x y   |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x •:0 y    |] |] [| Some [ulc| λ y → λ x → x x y   |] |]
+𝔱 "subst:tonmd" [| tonmd [ulc| λ y → λ x → x •:0 •:1 y |] |] [| Some [ulc| λ y → λ x → x x y y |] |]
 
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → 0           |] |] [| null |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → x           |] |] [| null |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → λ y → 1 0   |] |] [| null |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → λ y → x 0   |] |] [| null |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → λ y → 1 y   |] |] [| null |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → λ y → x y   |] |] [| null |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → 0) 0 |] |] [| null |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → y) 0 |] |] [| null |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → 0) x |] |] [| null |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → y) x |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → •:0            |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → x             |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → λ y → •:1 •:0   |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → λ y → x •:0    |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → λ y → •:1 y    |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → λ y → x y     |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → •:0) •:0 |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → y) •:0  |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → •:0) x  |] |] [| null |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → y) x   |] |] [| null |]
 
-𝔱 "subst:fvs" [| fvs () [ulc| 0                   |] |] [| pow𝑃 $ map duvar        [0]       |]
-𝔱 "subst:fvs" [| fvs () [ulc| 0 1                 |] |] [| pow𝑃 $ map duvar        [0,1]     |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → 0 1           |] |] [| pow𝑃 $ map duvar        [0]       |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → 2) 0   |] |] [| pow𝑃 $ map duvar        [0]       |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → 1) 1   |] |] [| pow𝑃 $ map duvar        [0]       |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → 2) 1   |] |] [| pow𝑃 $ map duvar        [0]       |]
-𝔱 "subst:fvs" [| fvs () [ulc| x                   |] |] [| pow𝑃 $ map (znuvar∘var) ["x"]     |]
-𝔱 "subst:fvs" [| fvs () [ulc| x y                 |] |] [| pow𝑃 $ map (znuvar∘var) ["x","y"] |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → y             |] |] [| pow𝑃 $ map (znuvar∘var) ["y"]     |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → x) y   |] |] [| pow𝑃 $ map (znuvar∘var) ["y"]     |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → x) x y |] |] [| pow𝑃 $ map (znuvar∘var) ["y"]     |]
+𝔱 "subst:fvs" [| fvs () [ulc| •:0                    |] |] [| pow𝑃 $ map (D_UVar∘DVar) [0]   |]
+𝔱 "subst:fvs" [| fvs () [ulc| •:0 •:1                 |] |] [| pow𝑃 $ map (D_UVar∘DVar) [0,1] |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → •:0 •:1           |] |] [| pow𝑃 $ map (D_UVar∘DVar) [0]   |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → •:2) •:0   |] |] [| pow𝑃 $ map (D_UVar∘DVar) [0]   |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → •:1) •:1   |] |] [| pow𝑃 $ map (D_UVar∘DVar) [0]   |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → •:2) •:1   |] |] [| pow𝑃 $ map (D_UVar∘DVar) [0]   |]
+𝔱 "subst:fvs" [| fvs () [ulc| x                   |] |] [| pow𝑃 $ map (nameUVar∘name) ["x"]     |]
+𝔱 "subst:fvs" [| fvs () [ulc| x y                 |] |] [| pow𝑃 $ map (nameUVar∘name) ["x","y"] |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → y             |] |] [| pow𝑃 $ map (nameUVar∘name) ["y"]     |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → x) y   |] |] [| pow𝑃 $ map (nameUVar∘name) ["y"]     |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → x) x y |] |] [| pow𝑃 $ map (nameUVar∘name) ["y"]     |]
 
-𝔱 "subst:metas" [| subst  (bindNSubst (var "x") [ulc| y |]) [ulc| x         |] |] [| Some [ulc| y         |] |]
-𝔱 "subst:metas" [| subst  (bindNSubst (var "x") [ulc| y |]) [ulc| λ y → x   |] |] [| Some [ulc| λ y → y:1 |] |]
-𝔱 "subst:metas" [| msubst (bindMSubst (var "x") [ulc| y |]) [ulc| x:m       |] |] [| Some [ulc| y         |] |]
-𝔱 "subst:metas" [| msubst (bindMSubst (var "x") [ulc| y |]) [ulc| λ y → x:m |] |] [| Some [ulc| λ y → y   |] |]
-
-𝔱 "subst:metas"
-  [| msubst (bindMSubst (var "x") [ulc| 0 |]) [ulc| x:m{} (λ → x:m) |] |]
-  [| Some [ulc| 0 (λ → 0) |] |]
+𝔱 "subst:metas" [| subst  (nbindSubst () (name "x") [ulc| y |]) [ulc| x         |] |] [| Some [ulc| y         |] |]
+𝔱 "subst:metas" [| subst  (nbindSubst () (name "x") [ulc| y |]) [ulc| λ y → x   |] |] [| Some [ulc| λ y → y:1 |] |]
+𝔱 "subst:metas" [| msubst (mbindSubst () (name "x") [ulc| y |]) [ulc| x:m       |] |] [| Some [ulc| y         |] |]
+𝔱 "subst:metas" [| msubst (mbindSubst () (name "x") [ulc| y |]) [ulc| λ y → x:m |] |] [| Some [ulc| λ y → y   |] |]
 
 𝔱 "subst:metas"
-  [| msubst (bindMSubst (var "x") [ulc| 0 |]) [ulc| x:m{} (λ → x:m{:0…:∞↦[+1]}) |] |]
-  [| Some [ulc| 0 (λ → 1) |] |]
+  [| msubst (mbindSubst () (name "x") [ulc| •:0 |]) [ulc| x:m{} (λ → x:m) |] |]
+  [| Some [ulc| •:0 (λ → •:0) |] |]
 
 𝔱 "subst:metas"
-  [| msubst (bindMSubst (var "x") [ulc| 0 |]) [ulc| x:m{} (λ → x:m{:0↦y,:1…:∞↦[-1]}) |] |]
-  [| Some [ulc| 0 (λ → y) |] |]
+  [| msubst (mbindSubst () (name "x") [ulc| •:0 |]) [ulc| x:m{} (λ → x:m{•:0…•:∞↦[+1]}) |] |]
+  [| Some [ulc| •:0 (λ → •:1) |] |]
 
 𝔱 "subst:metas"
-  [| msubst (bindMSubst (var "x") [ulc| 1 |]) [ulc| x:m{} (λ → x:m{:0↦y,:1…:∞↦[-1]}) |] |]
-  [| Some [ulc| 1 (λ → 0) |] |]
+  [| msubst (mbindSubst () (name "x") [ulc| •:0 |]) [ulc| x:m{} (λ → x:m{•:0↦y,•:1…•:∞↦[-1]}) |] |]
+  [| Some [ulc| •:0 (λ → y) |] |]
 
 𝔱 "subst:metas"
-  [| subst (bindDSubst [ulc| 1 |]) [ulc| χ:m |] |]
-  [| Some [ulc| χ:m{:0↦1,:1…:∞↦[-1]} |] |]
+  [| msubst (mbindSubst () (name "x") [ulc| •:1 |]) [ulc| x:m{} (λ → x:m{•:0↦y,•:1…•:∞↦[-1]}) |] |]
+  [| Some [ulc| •:1 (λ → •:0) |] |]
+
+𝔱 "subst:metas"
+  [| subst (dbindSubst () [ulc| •:1 |]) [ulc| χ:m |] |]
+  [| Some [ulc| χ:m{•:0↦•:1,•:1…•:∞↦[-1]} |] |]
 
 𝔣 "zzz:subst:fuzzy"
   [| do e ← fuzzy @(Subst () ULCExpRaw)
@@ -385,14 +386,14 @@ import UVMHS.Lang.ULC
         return $ i :* e
   |]
   [| \ (i :* e) → eqs
-       [ canonULC ^$ subst (shiftDSubst i null) e 
+       [ canonULC ^$ subst (dshiftSubst () i null) e 
        , canonULC ^$ Some e 
        ]
   |]
   [| \ (i :* e) → pretty $ concat
        [ 𝐤 "i"    $ 𝐯 $ pretty i 
        , 𝐤 "e"    $ 𝐯 $ pretty e
-       , 𝐤 "LHS"  $ 𝐯 $ pretty $ canonULC ^$ subst (shiftDSubst i null) e 
+       , 𝐤 "LHS"  $ 𝐯 $ pretty $ canonULC ^$ subst (dshiftSubst () i null) e 
        , 𝐤 "RHS"  $ 𝐯 $ pretty $ canonULC ^$ Some e 
        ]
   |]
@@ -402,13 +403,13 @@ import UVMHS.Lang.ULC
         return e
   |]
   [| \ e  → eqs
-       [ canonSubst canonULC $ bindDSubst e ⧺ introDSubst 1
+       [ canonSubst canonULC $ dbindSubst () e ⧺ dintroSubst () 1
        , null
        ] 
   |]
   [| \ e → pretty $ concat
        [ 𝐤 "e"    $ 𝐯 $ pretty e
-       , 𝐤 "LHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ bindDSubst e ⧺ introDSubst 1
+       , 𝐤 "LHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ dbindSubst () e ⧺ dintroSubst () 1
        , 𝐤 "RHS"  $ 𝐯 $ pretty $ null @(Subst () ULCExpRaw)
        ]
   |]
@@ -418,14 +419,14 @@ import UVMHS.Lang.ULC
         return e
   |]
   [| \ e → eqs
-       [ canonSubst canonULC $ introDSubst 1 ⧺ bindDSubst e
-       , canonSubst canonULC $ (shiftDSubst 1 $ bindDSubst e) ⧺ introDSubst 1
+       [ canonSubst canonULC $ dintroSubst () 1 ⧺ dbindSubst () e
+       , canonSubst canonULC $ (dshiftSubst () 1 $ dbindSubst () e) ⧺ dintroSubst () 1
        ]
   |]
   [| \ e → pretty $ concat
        [ 𝐤 "e"    $ 𝐯 $ pretty e
-       , 𝐤 "LHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ introDSubst 1 ⧺ bindDSubst e
-       , 𝐤 "RHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ (shiftDSubst 1 $ bindDSubst e) ⧺ introDSubst 1
+       , 𝐤 "LHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ dintroSubst () 1 ⧺ dbindSubst () e
+       , 𝐤 "RHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ (dshiftSubst () 1 $ dbindSubst () e) ⧺ dintroSubst () 1
        ]
   |]
 
@@ -436,16 +437,16 @@ import UVMHS.Lang.ULC
         return $ n :* 𝓈₁ :* 𝓈₂
   |]
   [| \ (n :* 𝓈₁ :* 𝓈₂) → eqs
-       [ canonSubst canonULC $ shiftDSubst n $ 𝓈₁ ⧺ 𝓈₂
-       , canonSubst canonULC $ shiftDSubst n 𝓈₁ ⧺ shiftDSubst n 𝓈₂
+       [ canonSubst canonULC $ dshiftSubst () n $ 𝓈₁ ⧺ 𝓈₂
+       , canonSubst canonULC $ dshiftSubst () n 𝓈₁ ⧺ dshiftSubst () n 𝓈₂
        ]
   |]
   [| \ (n :* 𝓈₁ :* 𝓈₂) → pretty $ concat
        [ 𝐤 "n"    $ 𝐯 $ pretty n
        , 𝐤 "𝓈₁"   $ 𝐯 $ pretty 𝓈₁
        , 𝐤 "𝓈₂"   $ 𝐯 $ pretty 𝓈₂
-       , 𝐤 "LHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ shiftDSubst n $ 𝓈₁ ⧺ 𝓈₂
-       , 𝐤 "RHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ shiftDSubst n 𝓈₁ ⧺ shiftDSubst n 𝓈₂
+       , 𝐤 "LHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ dshiftSubst () n $ 𝓈₁ ⧺ 𝓈₂
+       , 𝐤 "RHS"  $ 𝐯 $ pretty $ canonSubst canonULC $ dshiftSubst () n 𝓈₁ ⧺ dshiftSubst () n 𝓈₂
        ]
   |]
 

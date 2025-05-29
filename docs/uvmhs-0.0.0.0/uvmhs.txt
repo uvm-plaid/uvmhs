@@ -24,7 +24,7 @@ fromRational :: Rational -> 𝔻
 infixr 0 $
 fail :: forall a m. STACK => [ℂ] -> m a
 error :: STACK => 𝕊 -> a
-uncurry :: ((a ∧ b) -> c) -> a -> b -> c
+uncurry :: (a -> b -> c) -> (a ∧ b) -> c
 id :: a -> a
 with :: W c -> (c => a) -> a
 const :: a -> b -> a
@@ -33,7 +33,7 @@ not :: 𝔹 -> 𝔹
 flip :: (a -> b -> c) -> b -> a -> c
 rotateL :: (a -> b -> c -> d) -> b -> c -> a -> d
 rotateR :: (a -> b -> c -> d) -> c -> a -> b -> d
-curry :: (a -> b -> c) -> (a ∧ b) -> c
+curry :: ((a ∧ b) -> c) -> a -> b -> c
 on :: (b -> b -> c) -> (a -> b) -> a -> a -> c
 data (a :: k) ≟ (b :: k)
 [Refl] :: forall k (a :: k). a ≟ a
@@ -3936,12 +3936,16 @@ runFuzzyMRG :: FuzzyEnv -> FuzzyM a -> State RG a
 --   zero, so you should only every use this when you're sure <tt>d</tt> is
 --   not zero, e.g. guarded behind a <a>wrchoose</a> with coefficient
 --   <tt>d</tt>.
-fuzzyRec :: FuzzyM a -> FuzzyM a
+fuzzyDec :: FuzzyM a -> FuzzyM a
+fuzzyRec :: Fuzzy a => FuzzyM a
 rand :: forall a m. (MonadRand m, Fuzzy a) => ℕ64 -> ℕ64 -> m a
 randTny :: forall a m. (MonadRand m, Fuzzy a) => m a
 randSml :: forall a m. (MonadRand m, Fuzzy a) => m a
 randMed :: forall a m. (MonadRand m, Fuzzy a) => m a
 randLrg :: forall a m. (MonadRand m, Fuzzy a) => m a
+fuzzyRadius :: FuzzyM ℕ64
+fuzzyDepth :: FuzzyM ℕ64
+isoFuzzy :: (a ⇄ b, Fuzzy b) => FuzzyM a
 instance UVMHS.Core.Classes.Functors.Bind UVMHS.Lib.Fuzzy.FuzzyM
 instance UVMHS.Core.Classes.Functors.Functor UVMHS.Lib.Fuzzy.FuzzyM
 instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Core.Init.𝔹
@@ -3984,6 +3988,7 @@ instance UVMHS.Core.Classes.Collections.ToIter a (UVMHS.Lib.Sep.Sep a a)
 module UVMHS.Lib.Shrinky
 class Shrinky a
 shrink :: Shrinky a => a -> 𝐼 a
+isoShrink :: (a ⇄ b, Shrinky b) => a -> 𝐼 a
 shrinkAssoc :: Shrinky v => 𝐿 (k ∧ v) -> 𝐼 (𝐿 (k ∧ v))
 shrunkR :: Shrinky a => (a -> 𝔹) -> ℕ64 -> a -> 𝑆 a -> ℕ64 ∧ a
 shrunk :: Shrinky a => (a -> 𝔹) -> a -> ℕ64 ∧ a
@@ -5383,18 +5388,620 @@ testTokenizeFailure2 :: IO ()
 
 module UVMHS.Lib.Parser
 
+module UVMHS.Lib.Substitution.Name
+data Name
+Name :: 𝑂 ℕ64 -> 𝕊 -> Name
+[nameMark] :: Name -> 𝑂 ℕ64
+[nameName] :: Name -> 𝕊
+nameMarkL :: Name ⟢ 𝑂 ℕ64
+nameNameL :: Name ⟢ 𝕊
+name :: 𝕊 -> Name
+gensymName :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Name
+syntaxName :: LexerBasicSyntax
+pName :: CParser TokenBasic Name
+pNameWS :: CParser TokenWSBasic Name
+data SName
+D_SName :: SName
+N_SName :: Name -> SName
+data SGName
+D_SGName :: SGName
+N_SGName :: Name -> SGName
+G_SGName :: Name -> SGName
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Name.Name
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Name.SGName
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Name.SName
+instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Name.Name
+instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Name.SGName
+instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Name.SName
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Name.Name
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Name.SGName
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Name.SName
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Name.Name
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Name.SGName
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Name.SName
+instance GHC.Show.Show UVMHS.Lib.Substitution.Name.Name
+instance GHC.Show.Show UVMHS.Lib.Substitution.Name.SGName
+instance GHC.Show.Show UVMHS.Lib.Substitution.Name.SName
+instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Name.Name
+instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Name.SGName
+instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Name.SName
+
+module UVMHS.Lib.Substitution.Var
+newtype DVar
+DVar :: ℕ64 -> DVar
+[unDVar] :: DVar -> ℕ64
+unDVarL :: DVar ⟢ ℕ64
+syntaxDVar :: LexerBasicSyntax
+pDVarTail :: CParser TokenBasic DVar
+pDVar :: CParser TokenBasic DVar
+data NVar
+NVar :: DVar -> Name -> NVar
+[nvarIndex] :: NVar -> DVar
+[nvarName] :: NVar -> Name
+nvarIndexL :: NVar ⟢ DVar
+nvarNameL :: NVar ⟢ Name
+nameNVar :: Name -> NVar
+nameNVarL :: NVar ⌲ Name
+gensymNVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m NVar
+syntaxNVar :: LexerBasicSyntax
+pNVarTail :: Name -> CParser TokenBasic NVar
+pNVar :: CParser TokenBasic NVar
+newtype GVar
+GVar :: Name -> GVar
+[unGVar] :: GVar -> Name
+unGVarL :: GVar ⟢ Name
+syntaxGVar :: LexerBasicSyntax
+pGVarTail :: Name -> CParser TokenBasic GVar
+pGVar :: CParser TokenBasic GVar
+data SVar
+D_SVar :: DVar -> SVar
+N_SVar :: NVar -> SVar
+d_SVarL :: SVar ⌲ DVar
+n_SVarL :: SVar ⌲ NVar
+mkSVar :: SName -> DVar -> SVar
+svarName :: SVar -> SName
+svarLevel :: SVar -> DVar
+data Var
+D_Var :: DVar -> Var
+N_Var :: NVar -> Var
+G_Var :: GVar -> Var
+d_VarL :: Var ⌲ DVar
+n_VarL :: Var ⌲ NVar
+g_VarL :: Var ⌲ GVar
+nameVar :: Name -> Var
+nameVarL :: Var ⌲ Name
+gensymVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Var
+syntaxVar :: LexerBasicSyntax
+pVar :: CParser TokenBasic Var
+data DVarInf
+Var_DVI :: DVar -> DVarInf
+Inf_DVI :: DVarInf
+var_DVIL :: DVarInf ⌲ DVar
+inf_DVIL :: DVarInf ⌲ ()
+syntaxDVarInf :: LexerBasicSyntax
+pDVarInfTail :: CParser TokenBasic DVarInf
+pDVarInf :: CParser TokenBasic DVarInf
+data NVarInf
+NVarInf :: DVarInf -> Name -> NVarInf
+[nvarInfIndex] :: NVarInf -> DVarInf
+[nvarInfName] :: NVarInf -> Name
+nvarInfIndexL :: NVarInf ⟢ DVarInf
+nvarInfNameL :: NVarInf ⟢ Name
+syntaxNVarInf :: LexerBasicSyntax
+pNVarInfTail :: Name -> CParser TokenBasic NVarInf
+pNVarInf :: CParser TokenBasic NVarInf
+data VarInf
+D_VarInf :: DVarInf -> VarInf
+N_VarInf :: NVarInf -> VarInf
+G_VarInf :: GVar -> VarInf
+d_VarInfL :: VarInf ⌲ DVarInf
+n_VarInfL :: VarInf ⌲ NVarInf
+g_VarInfL :: VarInf ⌲ GVar
+syntaxVarInf :: LexerBasicSyntax
+pVarInf :: CParser TokenBasic VarInf
+class SVarView s e | e -> s
+svarL :: SVarView s e => s -> e ⌲ SVar
+svarScopeL :: SVarView s e => s -> SName -> e ⌲ DVar
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.DVar
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.DVarInf
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.GVar
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.NVar
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.NVarInf
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.SVar
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.Var
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.VarInf
+instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Var.DVar
+instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Var.GVar
+instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Var.NVar
+instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Var.SVar
+instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Var.Var
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.DVar
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.DVarInf
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.GVar
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.NVar
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.NVarInf
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.SVar
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.Var
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.VarInf
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.DVar
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.DVarInf
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.GVar
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.NVar
+instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.NVarInf
+instance (UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.DVar, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.NVar) => UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.SVar
+instance (UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.DVar, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.NVar, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.GVar) => UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.Var
+instance (UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.DVarInf, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.NVarInf, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.GVar) => UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.VarInf
+instance GHC.Show.Show UVMHS.Lib.Substitution.Var.DVar
+instance GHC.Show.Show UVMHS.Lib.Substitution.Var.DVarInf
+instance GHC.Show.Show UVMHS.Lib.Substitution.Var.GVar
+instance GHC.Show.Show UVMHS.Lib.Substitution.Var.NVar
+instance GHC.Show.Show UVMHS.Lib.Substitution.Var.NVarInf
+instance GHC.Show.Show UVMHS.Lib.Substitution.Var.SVar
+instance GHC.Show.Show UVMHS.Lib.Substitution.Var.Var
+instance GHC.Show.Show UVMHS.Lib.Substitution.Var.VarInf
+instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Var.DVar
+instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Var.GVar
+instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Var.NVar
+instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Var.SVar
+instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Var.Var
+
+module UVMHS.Lib.Substitution.SubstElem
+data SubstElem s e
+SubstElem :: (s ⇰ ℕ64) -> 𝑂 e -> SubstElem s e
+
+-- | delayed renaming , substElemValue ∷ () → 𝑂 e -- ^ delayed element
+[substElemIntro] :: SubstElem s e -> s ⇰ ℕ64
+[substelemValue] :: SubstElem s e -> 𝑂 e
+substElemIntroL :: SubstElem s e ⟢ (s ⇰ ℕ64)
+substelemValueL :: SubstElem s e ⟢ 𝑂 e
+interpSubstElem :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> 𝑂 e
+canonSubstElem :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> SubstElem s e -> SubstElem s e
+eqSubstElem :: Eq e => ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> SubstElem s e -> 𝔹
+compareSubstElem :: Ord e => ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> SubstElem s e -> Ordering
+introSubstElem :: Ord s => (s ⇰ ℕ64) -> SubstElem s e -> SubstElem s e
+substSubstElemE :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> 𝑂 e
+substSubstElem :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> SubstElem s e
+ppSubstElemNamed :: Pretty e => ((s ⇰ ℕ64) -> Doc) -> SubstElem s e -> Doc
+data SSubstElem s e
+Var_SSE :: DVar -> SSubstElem s e
+Trm_SSE :: SubstElem s e -> SSubstElem s e
+mkSSubstElem :: (e ⌲ DVar) -> 𝑂 e -> SSubstElem s e
+interpSSubstElem :: (e ⌲ DVar) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SSubstElem s e -> 𝑂 e
+canonSSubstElem :: (e ⌲ DVar) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> SSubstElem s e -> SSubstElem s e
+eqSSubstElem :: Eq e => (e ⌲ DVar) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SSubstElem s e -> SSubstElem s e -> 𝔹
+compareSSubstElem :: Ord e => (e ⌲ DVar) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SSubstElem s e -> SSubstElem s e -> Ordering
+introSSubstElem :: Ord s => s -> (s ⇰ ℕ64) -> SSubstElem s e -> SSubstElem s e
+substSSubstElem :: (e ⌲ DVar) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SSubstElem s e -> SSubstElem s e
+ppSSubstElemNamed :: Pretty e => ((s ⇰ ℕ64) -> Doc) -> (DVarInf -> Doc) -> SSubstElem s e -> Doc
+instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
+instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
+instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.SubstElem.SSubstElem s)
+instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.SubstElem.SubstElem s)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
+instance (UVMHS.Lib.Pretty.Doc.Pretty s, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
+instance (UVMHS.Lib.Pretty.Doc.Pretty s, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
+instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
+instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
+
+module UVMHS.Lib.Substitution.SubstScoped
+data SubstScoped s e
+SubstScoped :: ℕ64 -> 𝕍 (SSubstElem s e) -> ℤ64 -> SubstScoped s e
+
+-- | ρ: De Bruijn indices lower than this number will be untouched by this
+--   substitution. Think of it as a substitution working over all natural
+--   numbers being shifted to the right to ignore this many first indices.
+[substScopedShift] :: SubstScoped s e -> ℕ64
+
+-- | es: Instantiates as many of the first indices (post-shift by ρ) as the
+--   length of this vector with the values in the vector.
+[substScopeElems] :: SubstScoped s e -> 𝕍 (SSubstElem s e)
+
+-- | ι: Starting at the nameless variable index after all the shifts (ρ)
+--   and all the instantiations (es), simulate an introduction of this many
+--   new nameless variables by bumping all subsequent indices by this much.
+[substScopeIntro] :: SubstScoped s e -> ℤ64
+substScopedShiftL :: SubstScoped s e ⟢ ℕ64
+substScopeElemsL :: SubstScoped s e ⟢ 𝕍 (SSubstElem s e)
+substScopeIntroL :: SubstScoped s e ⟢ ℤ64
+lookupSubstScoped :: SubstScoped s e -> DVar -> SSubstElem s e
+interpSubstScoped :: (e ⌲ DVar) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstScoped s e -> DVar -> 𝑂 e
+wfSubstScoped :: SubstScoped s e -> 𝔹
+canonSubstScoped :: (Eq s, Eq e) => (e ⌲ DVar) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> SubstScoped s e -> SubstScoped s e
+isNullSubstScoped :: SubstScoped s e -> 𝔹
+introSubstScoped :: ℕ64 -> SubstScoped s e
+shiftSubstScoped :: Ord s => (s ⇰ ℕ64) -> s -> SubstScoped s e -> SubstScoped s e
+bindSubstScoped :: 𝕍 e -> SubstScoped s e
+substSubstScoped :: (e ⌲ DVar) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstScoped s e -> SubstScoped s e
+ppSubstScopedWith :: Pretty e => ((s ⇰ ℕ64) -> Doc) -> (DVarInf -> Doc) -> SubstScoped s e -> 𝐼 (Doc ∧ Doc)
+instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
+instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
+instance (UVMHS.Lib.Pretty.Doc.Pretty e, UVMHS.Lib.Pretty.Doc.Pretty s) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
+instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
+
+module UVMHS.Lib.Substitution.SubstSpaced
+data SubstSpaced sG sS e
+SubstSpaced :: (sG ⇰ SubstElem sS e) -> (sS ⇰ SubstScoped sS e) -> SubstSpaced sG sS e
+[substSpacedUnscoped] :: SubstSpaced sG sS e -> sG ⇰ SubstElem sS e
+[substSpacedScoped] :: SubstSpaced sG sS e -> sS ⇰ SubstScoped sS e
+substSpacedUnscopedL :: SubstSpaced sG sS e ⟢ (sG ⇰ SubstElem sS e)
+substSpacedScopedL :: SubstSpaced sG sS e ⟢ (sS ⇰ SubstScoped sS e)
+isNullSubstSpaced :: Ord sS => SubstSpaced sG sS e -> 𝔹
+wfSubstSpaced :: Ord sS => SubstSpaced sG sS e -> 𝔹
+canonSubstSpaced :: (Ord sS, Eq e) => (sS -> e ⌲ DVar) -> ((sS ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> SubstSpaced sG sS e -> SubstSpaced sG sS e
+shiftSubstSpaced :: Ord sS => (sS ⇰ ℕ64) -> SubstSpaced sG sS e -> SubstSpaced sG sS e
+introSubstSpaced :: (sS ⇰ ℕ64) -> SubstSpaced sG sS e
+sbindsSubstSpaced :: (sS ⇰ 𝕍 e) -> SubstSpaced sG sS e
+ubindsSubstSpaced :: (sG ⇰ e) -> SubstSpaced sG sS e
+substSpacedExtended :: (Ord sG, Ord sS) => (sS -> e ⌲ DVar) -> (SubstSpaced sG sS e -> e -> 𝑂 e) -> SubstSpaced sG sS e -> (sS ⇰ ℕ64) -> e -> 𝑂 e
+substSubstElemSpacedE :: (Ord sG, Ord sS) => (sS -> e ⌲ DVar) -> (SubstSpaced sG sS e -> e -> 𝑂 e) -> SubstSpaced sG sS e -> SubstElem sS e -> 𝑂 e
+substSubstElemSpaced :: (Ord sG, Ord sS) => (sS -> e ⌲ DVar) -> (SubstSpaced sG sS e -> e -> 𝑂 e) -> SubstSpaced sG sS e -> SubstElem sS e -> SubstElem sS e
+substSSubstElemSpaced :: (Ord sG, Ord sS) => (sS -> e ⌲ DVar) -> (SubstSpaced sG sS e -> e -> 𝑂 e) -> SubstSpaced sG sS e -> sS -> SSubstElem sS e -> SSubstElem sS e
+appendSubstSpaced :: (Ord sG, Ord sS) => (sS -> e ⌲ DVar) -> (SubstSpaced sG sS e -> e -> 𝑂 e) -> SubstSpaced sG sS e -> SubstSpaced sG sS e -> SubstSpaced sG sS e
+instance (GHC.Classes.Eq sG, GHC.Classes.Eq sS, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sG sS e)
+instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sG sS)
+instance (GHC.Classes.Ord sG, GHC.Classes.Ord sS, UVMHS.Lib.Fuzzy.Fuzzy sG, UVMHS.Lib.Fuzzy.Fuzzy sS, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sG sS e)
+instance (GHC.Classes.Ord sG, GHC.Classes.Ord sS, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sG sS e)
+instance (UVMHS.Lib.Pretty.Doc.Pretty s₁, UVMHS.Lib.Pretty.Doc.Pretty s₂, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced s₁ s₂ e)
+instance (GHC.Show.Show sG, GHC.Show.Show sS, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sG sS e)
+instance (GHC.Classes.Ord sG, GHC.Classes.Ord sS, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sG sS e)
+
+module UVMHS.Lib.Substitution.Subst
+newtype Subst s e
+Subst :: SubstSpaced (s ∧ Name) (s ∧ SName) e -> Subst s e
+[unSubst] :: Subst s e -> SubstSpaced (s ∧ Name) (s ∧ SName) e
+unSubstL :: Subst s e ⟢ SubstSpaced (s ∧ Name) (s ∧ SName) e
+isNullSubst :: Ord s => Subst s e -> 𝔹
+wfSubst :: Ord s => Subst s e -> 𝔹
+canonSubstWith :: (Ord s, Eq e) => ((s ∧ SName) -> e ⌲ DVar) -> (((s ∧ SName) ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> Subst s e -> Subst s e
+dshiftsSubst :: Ord s => (s ⇰ ℕ64) -> Subst s e -> Subst s e
+dshiftSubst :: Ord s => s -> ℕ64 -> Subst s e -> Subst s e
+dintrosSubst :: Ord s => (s ⇰ ℕ64) -> Subst s e
+dintroSubst :: Ord s => s -> ℕ64 -> Subst s e
+dbindsSubst :: Ord s => (s ⇰ 𝕍 e) -> Subst s e
+dbindSubst :: Ord s => s -> e -> Subst s e
+nshiftsSubst :: Ord s => (s ⇰ (Name ⇰ ℕ64)) -> Subst s e -> Subst s e
+nshiftSubst :: Ord s => s -> Name -> ℕ64 -> Subst s e -> Subst s e
+nintrosSubst :: Ord s => (s ⇰ (Name ⇰ ℕ64)) -> Subst s e
+nintroSubst :: Ord s => s -> Name -> ℕ64 -> Subst s e
+nbindsSubst :: Ord s => (s ⇰ (Name ⇰ 𝕍 e)) -> Subst s e
+nbindSubst :: Ord s => s -> Name -> e -> Subst s e
+gbindsSubst :: Ord s => (s ⇰ (Name ⇰ e)) -> Subst s e
+gbindSubst :: Ord s => s -> Name -> e -> Subst s e
+newtype MetaSubst s e
+MetaSubst :: ((s ∧ Name) ⇰ SubstElem (s ∧ SName) e) -> MetaSubst s e
+[unMetaSubst] :: MetaSubst s e -> (s ∧ Name) ⇰ SubstElem (s ∧ SName) e
+unMetaSubstL :: MetaSubst s e ⟢ ((s ∧ Name) ⇰ SubstElem (s ∧ SName) e)
+mbindsSubst :: Ord s => (s ⇰ (Name ⇰ e)) -> MetaSubst s e
+mbindSubst :: Ord s => s -> Name -> e -> MetaSubst s e
+instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
+instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.Subst.Subst s e)
+instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.Subst.Subst s)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.Subst.Subst s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.Subst.Subst s e)
+instance (UVMHS.Lib.Pretty.Doc.Pretty s, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Pretty.Doc.Pretty s, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.Subst.Subst s e)
+instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
+instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.Subst.Subst s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.Subst.Subst s e)
+
+module UVMHS.Lib.Substitution.UVar
+data MVar s e
+MVar :: Subst s e -> Name -> MVar s e
+[mvarSubst] :: MVar s e -> Subst s e
+[mvarName] :: MVar s e -> Name
+mvarSubstL :: MVar s e ⟢ Subst s e
+mvarNameL :: MVar s e ⟢ Name
+wfMVar :: Ord s => MVar s e -> 𝔹
+data UVar s e
+D_UVar :: DVar -> UVar s e
+N_UVar :: NVar -> UVar s e
+G_UVar :: GVar -> UVar s e
+M_UVar :: MVar s e -> UVar s e
+d_UVarL :: UVar s e ⌲ DVar
+n_UVarL :: UVar s e ⌲ NVar
+g_UVarL :: UVar s e ⌲ GVar
+m_UVarL :: UVar s e ⌲ MVar s e
+nameUVarL :: UVar s e ⌲ Name
+nameUVar :: Name -> UVar s e
+svar_UVar :: SVar -> UVar s e
+svar_UVarL :: UVar s e ⌲ SVar
+var_UVar :: Var -> UVar s e
+var_UVarL :: UVar s e ⌲ Var
+gensymUVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m (UVar s e)
+wfUVar :: Ord s => UVar s e -> 𝔹
+instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.UVar.MVar s e)
+instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.UVar.UVar s e)
+instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.UVar.MVar s)
+instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.UVar.UVar s)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.UVar.MVar s e)
+instance (UVMHS.Lib.Pretty.Doc.Pretty e, UVMHS.Lib.Pretty.Doc.Pretty s, GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.UVar.UVar s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.UVar.MVar s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.UVar.UVar s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Pretty.Doc.Pretty s, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.UVar.MVar s e)
+instance (UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.DVar, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.NVar, UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.GVar, UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.UVar.MVar s e)) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.UVar.UVar s e)
+instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.UVar.MVar s e)
+instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.UVar.UVar s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.UVar.MVar s e)
+
+module UVMHS.Lib.Substitution.Substy
+data FreeVarsAction s e
+FreeVarsAction :: (s -> UVar s e -> 𝔹) -> ((s ∧ SName) ⇰ ℕ64) -> FreeVarsAction s e
+[freeVarsActionFilter] :: FreeVarsAction s e -> s -> UVar s e -> 𝔹
+[freeVarsActionScope] :: FreeVarsAction s e -> (s ∧ SName) ⇰ ℕ64
+freeVarsActionFilterL :: FreeVarsAction s e ⟢ (s -> UVar s e -> 𝔹)
+freeVarsActionScopeL :: FreeVarsAction s e ⟢ ((s ∧ SName) ⇰ ℕ64)
+data RebindAction
+ID_RA :: RebindAction
+AllNameless_RA :: RebindAction
+AllNamed_RA :: RebindAction
+data SubstAction s e
+SubstAction :: RebindAction -> Subst s e -> SubstAction s e
+[substActionRebind] :: SubstAction s e -> RebindAction
+[substActionSubst] :: SubstAction s e -> Subst s e
+substActionRebindL :: SubstAction s e ⟢ RebindAction
+substActionSubstL :: SubstAction s e ⟢ Subst s e
+data SubstyAction s e
+FreeVars_SA :: FreeVarsAction s e -> SubstyAction s e
+Subst_SA :: SubstAction s e -> SubstyAction s e
+MetaSubst_SA :: MetaSubst s e -> SubstyAction s e
+freeVars_SAL :: SubstyAction s e ⌲ FreeVarsAction s e
+subst_SAL :: SubstyAction s e ⌲ SubstAction s e
+metaSubst_SAL :: SubstyAction s e ⌲ MetaSubst s e
+newtype SubstyM s e a
+SubstyM :: UContT (ReaderT (SubstyAction s e) (FailT (WriterT (s ⇰ 𝑃 (UVar s e)) ID))) a -> SubstyM s e a
+[unSubstyM] :: SubstyM s e a -> UContT (ReaderT (SubstyAction s e) (FailT (WriterT (s ⇰ 𝑃 (UVar s e)) ID))) a
+mkSubstM :: (forall u. () => SubstyAction s e -> (a -> SubstyAction s e -> (s ⇰ 𝑃 (UVar s e)) ∧ 𝑂 u) -> (s ⇰ 𝑃 (UVar s e)) ∧ 𝑂 u) -> SubstyM s e a
+runSubstM :: SubstyAction s e -> (a -> SubstyAction s e -> (s ⇰ 𝑃 (UVar s e)) ∧ 𝑂 u) -> SubstyM s e a -> (s ⇰ 𝑃 (UVar s e)) ∧ 𝑂 u
+evalSubstM :: SubstyAction s e -> SubstyM s e a -> (s ⇰ 𝑃 (UVar s e)) ∧ 𝑂 a
+class SVarView s e => Substy s e a | a -> e, e -> s
+substy :: Substy s e a => a -> SubstyM s e a
+fvssWith :: Substy s e a => (s -> UVar s e -> 𝔹) -> a -> s ⇰ 𝑃 (UVar s e)
+fvsWith :: (Ord s, Substy s e a) => s -> (UVar s e -> 𝔹) -> a -> 𝑃 (UVar s e)
+fvss :: Substy s e a => a -> s ⇰ 𝑃 (UVar s e)
+fvs :: (Ord s, Substy s e a) => s -> a -> 𝑃 (UVar s e)
+fvssMetas :: (Ord s, Ord e, Substy s e a) => a -> s ⇰ 𝑃 (MVar s e)
+fvsMetas :: (Ord s, Ord e, Substy s e a) => s -> a -> 𝑃 (MVar s e)
+todbr :: Substy s e a => a -> 𝑂 a
+tonmd :: Substy s e a => a -> 𝑂 a
+subst :: Substy s e a => Subst s e -> a -> 𝑂 a
+msubst :: Substy s e a => MetaSubst s e -> a -> 𝑂 a
+canonSubst :: (Ord s, Eq e, Substy s e e) => (e -> e) -> Subst s e -> Subst s e
+canonMVar :: (Ord s, Eq e, Substy s e e) => (e -> e) -> MVar s e -> MVar s e
+substMVar :: (Ord s, Substy s e e) => Subst s e -> MVar s e -> MVar s e
+canonUVar :: (Ord s, Eq e, Substy s e e) => (e -> e) -> UVar s e -> UVar s e
+nullSubst :: Subst s e
+appendSubst :: (Ord s, Substy s e e) => Subst s e -> Subst s e -> Subst s e
+substyDBdr :: (Ord s, Ord e) => s -> SubstyM s e ()
+substyNBdr :: (Ord s, Ord e) => s -> Name -> SubstyM s e ()
+substyBdr :: (Ord s, Ord e, Substy s e e) => s -> (UVar s e -> e) -> Name -> SubstyM s e ()
+substySVarG :: (Ord s, Ord e, Substy s e e) => (DVar -> e) -> s -> SVar -> SubstyM s e e
+substyDVar :: (Ord s, Ord e, Substy s e e) => (DVar -> e) -> s -> DVar -> SubstyM s e e
+substyNVar :: (Ord s, Ord e, Substy s e e) => (NVar -> e) -> s -> NVar -> SubstyM s e e
+substyGVar :: (Ord s, Ord e, Substy s e e) => (GVar -> e) -> s -> GVar -> SubstyM s e e
+substySVar :: (Ord s, Ord e, Substy s e e) => (SVar -> e) -> s -> SVar -> SubstyM s e e
+substyVar :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => (Var -> e) -> s -> Var -> SubstyM s e e
+substyMVar :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => (MVar s e -> e) -> s -> MVar s e -> SubstyM s e e
+substyUVar :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => (UVar s e -> e) -> s -> UVar s e -> SubstyM s e e
+syntaxSubst :: LexerBasicSyntax
+syntaxMVar :: LexerBasicSyntax
+syntaxUVar :: LexerBasicSyntax
+data ParseSubstAction e
+ParseSubstAction :: 𝐼 ℕ64 -> (𝑂 DVar ⇰ 𝐼 e) -> 𝐼 (ℕ64 ∧ ℤ64) -> ParseSubstAction e
+[parseSubstActionShfts] :: ParseSubstAction e -> 𝐼 ℕ64
+[parseSubstActionElems] :: ParseSubstAction e -> 𝑂 DVar ⇰ 𝐼 e
+[parseSubstActionIncrs] :: ParseSubstAction e -> 𝐼 (ℕ64 ∧ ℤ64)
+parseSubstActionShftsL :: ParseSubstAction e ⟢ 𝐼 ℕ64
+parseSubstActionElemsL :: ParseSubstAction e ⟢ (𝑂 DVar ⇰ 𝐼 e)
+parseSubstActionIncrsL :: ParseSubstAction e ⟢ 𝐼 (ℕ64 ∧ ℤ64)
+parseSubstActionShft :: ℕ64 -> ParseSubstAction e
+parseSubstActionElem :: 𝑂 DVar -> e -> ParseSubstAction e
+parseSubstActionIncr :: ℕ64 -> ℤ64 -> ParseSubstAction e
+type ParseSubstActions e = SGName ⇰ ParseSubstAction e
+pSubst :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (Subst () e)
+pMVarTail :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> Name -> CParser TokenBasic (MVar () e)
+pMVar :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (MVar () e)
+pUVar :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (UVar () e)
+instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Substitution.Substy.Substy s e e) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.Substitution.Subst.Subst s e)
+instance UVMHS.Core.Classes.Functors.Bind (UVMHS.Lib.Substitution.Substy.SubstyM s e)
+instance GHC.Classes.Eq e => GHC.Classes.Eq (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
+instance GHC.Classes.Eq UVMHS.Lib.Substitution.Substy.RebindAction
+instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.Substy.SubstAction s e)
+instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.Substy.SubstyM s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => UVMHS.Core.Effects.MonadFail (UVMHS.Lib.Substitution.Substy.SubstyM s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => UVMHS.Core.Effects.MonadReader (UVMHS.Lib.Substitution.Substy.SubstyAction s e) (UVMHS.Lib.Substitution.Substy.SubstyM s e)
+instance UVMHS.Core.Classes.Functors.Monad (UVMHS.Lib.Substitution.Substy.SubstyM s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => UVMHS.Core.Effects.MonadUCont (UVMHS.Lib.Substitution.Substy.SubstyM s e)
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => UVMHS.Core.Effects.MonadWriter (s UVMHS.Core.Init.⇰ UVMHS.Core.Init.𝑃 (UVMHS.Lib.Substitution.UVar.UVar s e)) (UVMHS.Lib.Substitution.Substy.SubstyM s e)
+instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Substitution.Substy.Substy s e e) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.Substitution.Subst.Subst s e)
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
+instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.Substitution.Subst.Subst s e)
+instance GHC.Classes.Ord e => GHC.Classes.Ord (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
+instance GHC.Classes.Ord UVMHS.Lib.Substitution.Substy.RebindAction
+instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.Substy.SubstAction s e)
+instance UVMHS.Core.Classes.Functors.Return (UVMHS.Lib.Substitution.Substy.SubstyM s e)
+instance GHC.Show.Show e => GHC.Show.Show (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
+instance GHC.Show.Show UVMHS.Lib.Substitution.Substy.RebindAction
+instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.Substy.SubstAction s e)
+instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.UVar.UVar s e)
+
+module UVMHS.Lib.Substitution
+data Name
+Name :: 𝑂 ℕ64 -> 𝕊 -> Name
+[nameMark] :: Name -> 𝑂 ℕ64
+[nameName] :: Name -> 𝕊
+nameMarkL :: Name ⟢ 𝑂 ℕ64
+nameNameL :: Name ⟢ 𝕊
+name :: 𝕊 -> Name
+gensymName :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Name
+syntaxName :: LexerBasicSyntax
+pName :: CParser TokenBasic Name
+pNameWS :: CParser TokenWSBasic Name
+newtype DVar
+DVar :: ℕ64 -> DVar
+[unDVar] :: DVar -> ℕ64
+unDVarL :: DVar ⟢ ℕ64
+syntaxDVar :: LexerBasicSyntax
+pDVarTail :: CParser TokenBasic DVar
+pDVar :: CParser TokenBasic DVar
+data NVar
+NVar :: DVar -> Name -> NVar
+[nvarIndex] :: NVar -> DVar
+[nvarName] :: NVar -> Name
+nvarIndexL :: NVar ⟢ DVar
+nvarNameL :: NVar ⟢ Name
+nameNVar :: Name -> NVar
+nameNVarL :: NVar ⌲ Name
+gensymNVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m NVar
+syntaxNVar :: LexerBasicSyntax
+pNVarTail :: Name -> CParser TokenBasic NVar
+pNVar :: CParser TokenBasic NVar
+newtype GVar
+GVar :: Name -> GVar
+[unGVar] :: GVar -> Name
+unGVarL :: GVar ⟢ Name
+syntaxGVar :: LexerBasicSyntax
+pGVarTail :: Name -> CParser TokenBasic GVar
+pGVar :: CParser TokenBasic GVar
+data MVar s e
+MVar :: Subst s e -> Name -> MVar s e
+[mvarSubst] :: MVar s e -> Subst s e
+[mvarName] :: MVar s e -> Name
+mvarSubstL :: MVar s e ⟢ Subst s e
+mvarNameL :: MVar s e ⟢ Name
+wfMVar :: Ord s => MVar s e -> 𝔹
+canonMVar :: (Ord s, Eq e, Substy s e e) => (e -> e) -> MVar s e -> MVar s e
+substMVar :: (Ord s, Substy s e e) => Subst s e -> MVar s e -> MVar s e
+syntaxMVar :: LexerBasicSyntax
+pMVarTail :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> Name -> CParser TokenBasic (MVar () e)
+pMVar :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (MVar () e)
+data SVar
+D_SVar :: DVar -> SVar
+N_SVar :: NVar -> SVar
+d_SVarL :: SVar ⌲ DVar
+n_SVarL :: SVar ⌲ NVar
+mkSVar :: SName -> DVar -> SVar
+svarName :: SVar -> SName
+svarLevel :: SVar -> DVar
+data Var
+D_Var :: DVar -> Var
+N_Var :: NVar -> Var
+G_Var :: GVar -> Var
+d_VarL :: Var ⌲ DVar
+n_VarL :: Var ⌲ NVar
+g_VarL :: Var ⌲ GVar
+nameVar :: Name -> Var
+nameVarL :: Var ⌲ Name
+gensymVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Var
+syntaxVar :: LexerBasicSyntax
+pVar :: CParser TokenBasic Var
+data UVar s e
+D_UVar :: DVar -> UVar s e
+N_UVar :: NVar -> UVar s e
+G_UVar :: GVar -> UVar s e
+M_UVar :: MVar s e -> UVar s e
+d_UVarL :: UVar s e ⌲ DVar
+n_UVarL :: UVar s e ⌲ NVar
+g_UVarL :: UVar s e ⌲ GVar
+m_UVarL :: UVar s e ⌲ MVar s e
+nameUVarL :: UVar s e ⌲ Name
+nameUVar :: Name -> UVar s e
+svar_UVar :: SVar -> UVar s e
+svar_UVarL :: UVar s e ⌲ SVar
+var_UVar :: Var -> UVar s e
+var_UVarL :: UVar s e ⌲ Var
+gensymUVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m (UVar s e)
+wfUVar :: Ord s => UVar s e -> 𝔹
+canonUVar :: (Ord s, Eq e, Substy s e e) => (e -> e) -> UVar s e -> UVar s e
+syntaxUVar :: LexerBasicSyntax
+pUVar :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (UVar () e)
+class SVarView s e | e -> s
+svarL :: SVarView s e => s -> e ⌲ SVar
+svarScopeL :: SVarView s e => s -> SName -> e ⌲ DVar
+data Subst s e
+isNullSubst :: Ord s => Subst s e -> 𝔹
+wfSubst :: Ord s => Subst s e -> 𝔹
+canonSubst :: (Ord s, Eq e, Substy s e e) => (e -> e) -> Subst s e -> Subst s e
+syntaxSubst :: LexerBasicSyntax
+pSubst :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (Subst () e)
+dshiftsSubst :: Ord s => (s ⇰ ℕ64) -> Subst s e -> Subst s e
+dshiftSubst :: Ord s => s -> ℕ64 -> Subst s e -> Subst s e
+dintrosSubst :: Ord s => (s ⇰ ℕ64) -> Subst s e
+dintroSubst :: Ord s => s -> ℕ64 -> Subst s e
+dbindsSubst :: Ord s => (s ⇰ 𝕍 e) -> Subst s e
+dbindSubst :: Ord s => s -> e -> Subst s e
+nshiftsSubst :: Ord s => (s ⇰ (Name ⇰ ℕ64)) -> Subst s e -> Subst s e
+nshiftSubst :: Ord s => s -> Name -> ℕ64 -> Subst s e -> Subst s e
+nintrosSubst :: Ord s => (s ⇰ (Name ⇰ ℕ64)) -> Subst s e
+nintroSubst :: Ord s => s -> Name -> ℕ64 -> Subst s e
+nbindsSubst :: Ord s => (s ⇰ (Name ⇰ 𝕍 e)) -> Subst s e
+nbindSubst :: Ord s => s -> Name -> e -> Subst s e
+gbindsSubst :: Ord s => (s ⇰ (Name ⇰ e)) -> Subst s e
+gbindSubst :: Ord s => s -> Name -> e -> Subst s e
+data MetaSubst s e
+mbindsSubst :: Ord s => (s ⇰ (Name ⇰ e)) -> MetaSubst s e
+mbindSubst :: Ord s => s -> Name -> e -> MetaSubst s e
+data SubstyM s e a
+class SVarView s e => Substy s e a | a -> e, e -> s
+substy :: Substy s e a => a -> SubstyM s e a
+substyDBdr :: (Ord s, Ord e) => s -> SubstyM s e ()
+substyNBdr :: (Ord s, Ord e) => s -> Name -> SubstyM s e ()
+substyBdr :: (Ord s, Ord e, Substy s e e) => s -> (UVar s e -> e) -> Name -> SubstyM s e ()
+substyDVar :: (Ord s, Ord e, Substy s e e) => (DVar -> e) -> s -> DVar -> SubstyM s e e
+substyNVar :: (Ord s, Ord e, Substy s e e) => (NVar -> e) -> s -> NVar -> SubstyM s e e
+substyGVar :: (Ord s, Ord e, Substy s e e) => (GVar -> e) -> s -> GVar -> SubstyM s e e
+substySVar :: (Ord s, Ord e, Substy s e e) => (SVar -> e) -> s -> SVar -> SubstyM s e e
+substyVar :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => (Var -> e) -> s -> Var -> SubstyM s e e
+substyMVar :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => (MVar s e -> e) -> s -> MVar s e -> SubstyM s e e
+substyUVar :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => (UVar s e -> e) -> s -> UVar s e -> SubstyM s e e
+fvssWith :: Substy s e a => (s -> UVar s e -> 𝔹) -> a -> s ⇰ 𝑃 (UVar s e)
+fvsWith :: (Ord s, Substy s e a) => s -> (UVar s e -> 𝔹) -> a -> 𝑃 (UVar s e)
+fvss :: Substy s e a => a -> s ⇰ 𝑃 (UVar s e)
+fvs :: (Ord s, Substy s e a) => s -> a -> 𝑃 (UVar s e)
+fvssMetas :: (Ord s, Ord e, Substy s e a) => a -> s ⇰ 𝑃 (MVar s e)
+fvsMetas :: (Ord s, Ord e, Substy s e a) => s -> a -> 𝑃 (MVar s e)
+todbr :: Substy s e a => a -> 𝑂 a
+tonmd :: Substy s e a => a -> 𝑂 a
+subst :: Substy s e a => Subst s e -> a -> 𝑂 a
+msubst :: Substy s e a => MetaSubst s e -> a -> 𝑂 a
+
 module UVMHS.Lib.THLiftInstances
 instance Language.Haskell.TH.Syntax.Lift a => Language.Haskell.TH.Syntax.Lift (UVMHS.Core.Pointed.AddBT a)
 instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Pretty.Annotation.Annotation
 instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Pretty.Common.ChunkI
 instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Pretty.Color.Color
 instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Pretty.Color.Color3Bit
+instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Substitution.Var.DVar
 instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Pretty.Doc.Doc
 instance Language.Haskell.TH.Syntax.Lift a => Language.Haskell.TH.Syntax.Lift (() -> a)
 instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Pretty.Annotation.Formats
+instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Substitution.Var.GVar
 instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Parser.Loc.Loc
 instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Parser.Loc.LocRange
+instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.UVar.MVar s e)
+instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Substitution.Var.NVar
+instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Substitution.Name.Name
+instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Substitution.Name.SName
+instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
 instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Parser.ParserContext.SrcCxt
+instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.Subst.Subst s e)
+instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
+instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
+instance (Language.Haskell.TH.Syntax.Lift s₁, Language.Haskell.TH.Syntax.Lift s₂, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced s₁ s₂ e)
+instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.UVar.UVar s e)
+instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Substitution.Var.Var
 instance (Language.Haskell.TH.Syntax.Lift i, Language.Haskell.TH.Syntax.Lift a) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Window.WindowL i a)
 instance (Language.Haskell.TH.Syntax.Lift i, Language.Haskell.TH.Syntax.Lift a) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Window.WindowR i a)
 instance (Language.Haskell.TH.Syntax.Lift k, Language.Haskell.TH.Syntax.Lift v) => Language.Haskell.TH.Syntax.Lift (k UVMHS.Core.Init.⇰ v)
@@ -5408,7 +6015,6 @@ instance (Language.Haskell.TH.Syntax.Lift i, Language.Haskell.TH.Syntax.Lift a) 
 instance Language.Haskell.TH.Syntax.Lift a => Language.Haskell.TH.Syntax.Lift (UVMHS.Core.Vector.𝕍 a)
 
 module UVMHS.Lib.Testing
-𝔱 :: 𝕊 -> ExpQ -> ExpQ -> Q [Dec]
 data FuzzParams
 FuzzParams :: ℕ64 -> ℕ64 -> ℕ64 -> ℕ64 -> ℕ64 -> FuzzParams
 [fuzzParamsRadiusMax] :: FuzzParams -> ℕ64
@@ -5416,6 +6022,7 @@ FuzzParams :: ℕ64 -> ℕ64 -> ℕ64 -> ℕ64 -> ℕ64 -> FuzzParams
 [fuzzParamsDepthMax] :: FuzzParams -> ℕ64
 [fuzzParamsDepthStep] :: FuzzParams -> ℕ64
 [fuzzParamsSpread] :: FuzzParams -> ℕ64
+𝔱 :: 𝕊 -> ExpQ -> ExpQ -> Q [Dec]
 data Test
 Test :: Doc -> (() -> ErrorT (() -> 𝑇A Doc) (RWST FuzzParams ℕ64 () IO) ()) -> Test
 [testSrcLoc] :: Test -> Doc
@@ -5448,403 +6055,6 @@ instance UVMHS.Core.Classes.Monoid.Null UVMHS.Lib.Testing.TestsOut
 instance GHC.Classes.Ord UVMHS.Lib.Testing.FuzzParams
 instance GHC.Show.Show UVMHS.Lib.Testing.FuzzParams
 
-module UVMHS.Lib.Substitution.Var
-data 𝕎
-𝕎 :: 𝑂 ℕ64 -> 𝕊 -> 𝕎
-[varMark] :: 𝕎 -> 𝑂 ℕ64
-[varName] :: 𝕎 -> 𝕊
-varMarkL :: 𝕎 ⟢ 𝑂 ℕ64
-varNameL :: 𝕎 ⟢ 𝕊
-var :: 𝕊 -> 𝕎
-gensymVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m 𝕎
-syntaxVar :: LexerBasicSyntax
-cpVar :: CParser TokenBasic 𝕎
-cpVarWS :: CParser TokenWSBasic 𝕎
-syntaxDVar :: LexerBasicSyntax
-cpDVarRaw :: CParser TokenBasic ℕ64
-cpDVarRawInf :: CParser TokenBasic (𝑂 ℕ64)
-cpDVar :: CParser TokenBasic ℕ64
-cpDVarInf :: CParser TokenBasic (𝑂 ℕ64)
-data 𝕏
-D_SVar :: ℕ64 -> 𝕏
-N_SVar :: ℕ64 -> 𝕎 -> 𝕏
-G_SVar :: 𝕎 -> 𝕏
-d_SVarL :: 𝕏 ⌲ ℕ64
-n_SVarL :: 𝕏 ⌲ (ℕ64 ∧ 𝕎)
-g_SVarL :: 𝕏 ⌲ 𝕎
-znsvar :: 𝕎 -> 𝕏
-znsvarL :: 𝕏 ⌲ 𝕎
-gensymSVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m 𝕏
-cpZNSVar :: CParser TokenBasic 𝕏
-cpGSVar :: CParser TokenBasic 𝕏
-cpNSVarWS :: CParser TokenWSBasic 𝕏
-cpGSVarWS :: CParser TokenWSBasic 𝕏
-syntaxSVar :: LexerBasicSyntax
-cpSVarNGVarTail :: CParser TokenBasic (𝑂 ℕ64)
-cpSVarNGVar :: CParser TokenBasic ((ℕ64 ∧ 𝕎) ∨ 𝕎)
-cpSVarNGVarInfTail :: CParser TokenBasic (𝑂 (𝑂 ℕ64))
-cpSVarNGVarInf :: CParser TokenBasic ((𝑂 ℕ64 ∧ 𝕎) ∨ 𝕎)
-cpSVarRaw :: CParser TokenBasic 𝕏
-cpSVarRawInf :: CParser TokenBasic (𝕏 ∨ 𝑂 𝕎)
-cpSVar :: CParser TokenBasic 𝕏
-cpSVarInf :: CParser TokenBasic (𝕏 ∨ 𝑂 𝕎)
-ppDVar :: 𝕊 -> Doc
-ppNVar :: Doc -> Doc -> Doc
-class SVarView s e | e -> s
-svarL :: SVarView s e => s -> e ⌲ 𝕏
-svarScopeL :: SVarView s e => s -> 𝑂 𝕎 -> e ⌲ ℕ64
-instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.𝕎
-instance GHC.Classes.Eq UVMHS.Lib.Substitution.Var.𝕏
-instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Var.𝕎
-instance UVMHS.Lib.Fuzzy.Fuzzy UVMHS.Lib.Substitution.Var.𝕏
-instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Substitution.Var.𝕎
-instance Language.Haskell.TH.Syntax.Lift UVMHS.Lib.Substitution.Var.𝕏
-instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.𝕎
-instance GHC.Classes.Ord UVMHS.Lib.Substitution.Var.𝕏
-instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.𝕎
-instance UVMHS.Lib.Pretty.Doc.Pretty UVMHS.Lib.Substitution.Var.𝕏
-instance GHC.Show.Show UVMHS.Lib.Substitution.Var.𝕎
-instance GHC.Show.Show UVMHS.Lib.Substitution.Var.𝕏
-instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Var.𝕎
-instance UVMHS.Lib.Shrinky.Shrinky UVMHS.Lib.Substitution.Var.𝕏
-
-module UVMHS.Lib.Substitution.SubstElem
-data SubstElem s e
-SubstElem :: (s ⇰ ℕ64) -> 𝑂 e -> SubstElem s e
-
--- | delayed renaming , substElemValue ∷ () → 𝑂 e -- ^ delayed element
-[substElemIntro] :: SubstElem s e -> s ⇰ ℕ64
-[substelemValue] :: SubstElem s e -> 𝑂 e
-substElemIntroL :: SubstElem s e ⟢ (s ⇰ ℕ64)
-substelemValueL :: SubstElem s e ⟢ 𝑂 e
-interpSubstElem :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> 𝑂 e
-canonSubstElem :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> SubstElem s e -> SubstElem s e
-eqSubstElem :: Eq e => ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> SubstElem s e -> 𝔹
-compareSubstElem :: Ord e => ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> SubstElem s e -> Ordering
-introSubstElem :: Ord s => (s ⇰ ℕ64) -> SubstElem s e -> SubstElem s e
-substSubstElemE :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> 𝑂 e
-substSubstElem :: ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstElem s e -> SubstElem s e
-ppSubstElemNamed :: Pretty e => ((s ⇰ ℕ64) -> Doc) -> SubstElem s e -> Doc
-data SSubstElem s e
-Var_SSE :: ℕ64 -> SSubstElem s e
-Trm_SSE :: SubstElem s e -> SSubstElem s e
-mkSSubstElem :: (e ⌲ ℕ64) -> 𝑂 e -> SSubstElem s e
-interpSSubstElem :: (e ⌲ ℕ64) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SSubstElem s e -> 𝑂 e
-canonSSubstElem :: (e ⌲ ℕ64) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> SSubstElem s e -> SSubstElem s e
-eqSSubstElem :: Eq e => (e ⌲ ℕ64) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SSubstElem s e -> SSubstElem s e -> 𝔹
-compareSSubstElem :: Ord e => (e ⌲ ℕ64) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SSubstElem s e -> SSubstElem s e -> Ordering
-introSSubstElem :: Ord s => s -> (s ⇰ ℕ64) -> SSubstElem s e -> SSubstElem s e
-substSSubstElem :: (e ⌲ ℕ64) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SSubstElem s e -> SSubstElem s e
-ppSSubstElemNamed :: Pretty e => ((s ⇰ ℕ64) -> Doc) -> (𝕊 -> Doc) -> SSubstElem s e -> Doc
-instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
-instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
-instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.SubstElem.SSubstElem s)
-instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.SubstElem.SubstElem s)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
-instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
-instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
-instance (UVMHS.Lib.Pretty.Doc.Pretty s, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
-instance (UVMHS.Lib.Pretty.Doc.Pretty s, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
-instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
-instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.SubstElem.SSubstElem s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.SubstElem.SubstElem s e)
-
-module UVMHS.Lib.Substitution.SubstScoped
-data SubstScoped s e
-SubstScoped :: ℕ64 -> 𝕍 (SSubstElem s e) -> ℤ64 -> SubstScoped s e
-
--- | ρ: De Bruijn indices lower than this number will be untouched by this
---   substitution. Think of it as a substitution working over all natural
---   numbers being shifted to the right to ignore this many first indices.
-[substScopedShift] :: SubstScoped s e -> ℕ64
-
--- | es: Instantiates as many of the first indices (post-shift by ρ) as the
---   length of this vector with the values in the vector.
-[substScopeElems] :: SubstScoped s e -> 𝕍 (SSubstElem s e)
-
--- | ι: Starting at the nameless variable index after all the shifts (ρ)
---   and all the instantiations (es), simulate an introduction of this many
---   new nameless variables by bumping all subsequent indices by this much.
-[substScopeIntro] :: SubstScoped s e -> ℤ64
-substScopedShiftL :: SubstScoped s e ⟢ ℕ64
-substScopeElemsL :: SubstScoped s e ⟢ 𝕍 (SSubstElem s e)
-substScopeIntroL :: SubstScoped s e ⟢ ℤ64
-lookupSubstScoped :: SubstScoped s e -> ℕ64 -> SSubstElem s e
-interpSubstScoped :: (e ⌲ ℕ64) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstScoped s e -> ℕ64 -> 𝑂 e
-wfSubstScoped :: SubstScoped s e -> 𝔹
-canonSubstScoped :: (Eq s, Eq e) => (e ⌲ ℕ64) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> SubstScoped s e -> SubstScoped s e
-isNullSubstScoped :: SubstScoped s e -> 𝔹
-introSubstScoped :: ℕ64 -> SubstScoped s e
-shiftSubstScoped :: Ord s => (s ⇰ ℕ64) -> s -> SubstScoped s e -> SubstScoped s e
-bindSubstScoped :: 𝕍 e -> SubstScoped s e
-substSubstScoped :: (e ⌲ ℕ64) -> ((s ⇰ ℕ64) -> e -> 𝑂 e) -> SubstScoped s e -> SubstScoped s e
-ppSubstScoped :: (Pretty s, Pretty e) => ((s ⇰ ℕ64) -> Doc) -> (𝕊 -> Doc) -> SubstScoped s e -> 𝐼 (Doc ∧ Doc)
-ppSubstScopedNamed :: (Pretty s, Pretty e) => ((s ⇰ ℕ64) -> Doc) -> 𝕊 -> SubstScoped s e -> 𝐼 (Doc ∧ Doc)
-instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
-instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
-instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
-instance (UVMHS.Lib.Pretty.Doc.Pretty e, UVMHS.Lib.Pretty.Doc.Pretty s) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
-instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.SubstScoped.SubstScoped s e)
-
-module UVMHS.Lib.Substitution.SubstSpaced
-data SubstSpaced sU sS e
-SubstSpaced :: (sU ⇰ SubstElem sS e) -> (sS ⇰ SubstScoped sS e) -> SubstSpaced sU sS e
-[substSpacedUnscoped] :: SubstSpaced sU sS e -> sU ⇰ SubstElem sS e
-[substSpacedScoped] :: SubstSpaced sU sS e -> sS ⇰ SubstScoped sS e
-substSpacedUnscopedL :: SubstSpaced sU sS e ⟢ (sU ⇰ SubstElem sS e)
-substSpacedScopedL :: SubstSpaced sU sS e ⟢ (sS ⇰ SubstScoped sS e)
-wfSubstSpaced :: Ord sS => SubstSpaced sU sS e -> 𝔹
-canonSubstSpaced :: (Ord sS, Eq e) => (sS -> e ⌲ ℕ64) -> ((sS ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> SubstSpaced sU sS e -> SubstSpaced sU sS e
-shiftSubstSpaced :: Ord sS => (sS ⇰ ℕ64) -> SubstSpaced sU sS e -> SubstSpaced sU sS e
-introSubstSpaced :: (sS ⇰ ℕ64) -> SubstSpaced sU sS e
-sbindsSubstSpaced :: (sS ⇰ 𝕍 e) -> SubstSpaced sU sS e
-ubindsSubstSpaced :: (sU ⇰ e) -> SubstSpaced sU sS e
-substSpacedExtended :: (Ord sU, Ord sS) => (sS -> e ⌲ ℕ64) -> (SubstSpaced sU sS e -> e -> 𝑂 e) -> SubstSpaced sU sS e -> (sS ⇰ ℕ64) -> e -> 𝑂 e
-substSubstElemSpacedE :: (Ord sU, Ord sS) => (sS -> e ⌲ ℕ64) -> (SubstSpaced sU sS e -> e -> 𝑂 e) -> SubstSpaced sU sS e -> SubstElem sS e -> 𝑂 e
-substSubstElemSpaced :: (Ord sU, Ord sS) => (sS -> e ⌲ ℕ64) -> (SubstSpaced sU sS e -> e -> 𝑂 e) -> SubstSpaced sU sS e -> SubstElem sS e -> SubstElem sS e
-substSSubstElemSpaced :: (Ord sU, Ord sS) => (sS -> e ⌲ ℕ64) -> (SubstSpaced sU sS e -> e -> 𝑂 e) -> SubstSpaced sU sS e -> sS -> SSubstElem sS e -> SSubstElem sS e
-appendSubstSpaced :: (Ord sU, Ord sS) => (sS -> e ⌲ ℕ64) -> (SubstSpaced sU sS e -> e -> 𝑂 e) -> SubstSpaced sU sS e -> SubstSpaced sU sS e -> SubstSpaced sU sS e
-instance (GHC.Classes.Eq sU, GHC.Classes.Eq sS, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sU sS e)
-instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sU sS)
-instance (GHC.Classes.Ord sU, GHC.Classes.Ord sS, UVMHS.Lib.Fuzzy.Fuzzy sU, UVMHS.Lib.Fuzzy.Fuzzy sS, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sU sS e)
-instance (Language.Haskell.TH.Syntax.Lift s₁, Language.Haskell.TH.Syntax.Lift s₂, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced s₁ s₂ e)
-instance (GHC.Classes.Ord sU, GHC.Classes.Ord sS, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sU sS e)
-instance (UVMHS.Lib.Pretty.Doc.Pretty s₁, UVMHS.Lib.Pretty.Doc.Pretty s₂, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced s₁ s₂ e)
-instance (GHC.Show.Show sU, GHC.Show.Show sS, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sU sS e)
-instance (GHC.Classes.Ord sU, GHC.Classes.Ord sS, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.SubstSpaced.SubstSpaced sU sS e)
-
-module UVMHS.Lib.Substitution.Subst
-newtype Subst s e
-Subst :: SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) e -> Subst s e
-[unSubst] :: Subst s e -> SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) e
-unSubstL :: Subst s e ⟢ SubstSpaced (s ∧ 𝕎) (s ∧ 𝑂 𝕎) e
-wfSubst :: Ord s => Subst s e -> 𝔹
-canonSubstWith :: (Ord s, Eq e) => ((s ∧ 𝑂 𝕎) -> e ⌲ ℕ64) -> (((s ∧ 𝑂 𝕎) ⇰ ℕ64) -> e -> 𝑂 e) -> (e -> e) -> Subst s e -> Subst s e
-shiftDSsSubst :: Ord s => (s ⇰ ℕ64) -> Subst s e -> Subst s e
-shiftDSSubst :: Ord s => s -> ℕ64 -> Subst s e -> Subst s e
-shiftDSubst :: ℕ64 -> Subst () e -> Subst () e
-shiftNsSsSubst :: Ord s => (s ⇰ (𝕎 ⇰ ℕ64)) -> Subst s e -> Subst s e
-shiftNsSSubst :: Ord s => s -> (𝕎 ⇰ ℕ64) -> Subst s e -> Subst s e
-shiftNsSubst :: (𝕎 ⇰ ℕ64) -> Subst () e -> Subst () e
-shiftNSSubst :: Ord s => s -> 𝕎 -> ℕ64 -> Subst s e -> Subst s e
-shiftNSubst :: 𝕎 -> ℕ64 -> Subst () e -> Subst () e
-introDSsSubst :: Ord s => (s ⇰ ℕ64) -> Subst s e
-introDSSubst :: Ord s => s -> ℕ64 -> Subst s e
-introDSubst :: ℕ64 -> Subst () e
-introNsSsSubst :: Ord s => (s ⇰ (𝕎 ⇰ ℕ64)) -> Subst s e
-introNsSSubst :: Ord s => s -> (𝕎 ⇰ ℕ64) -> Subst s e
-introNsSubst :: (𝕎 ⇰ ℕ64) -> Subst () e
-introNSSubst :: Ord s => s -> 𝕎 -> ℕ64 -> Subst s e
-introNSubst :: 𝕎 -> ℕ64 -> Subst () e
-bindsDSsSubst :: Ord s => (s ⇰ 𝕍 e) -> Subst s e
-bindsDSSubst :: Ord s => s -> 𝕍 e -> Subst s e
-bindsDSubst :: 𝕍 e -> Subst () e
-bindDSsSubst :: Ord s => (s ⇰ e) -> Subst s e
-bindDSSubst :: Ord s => s -> e -> Subst s e
-bindDSubst :: e -> Subst () e
-bindsNsSsSubst :: Ord s => (s ⇰ (𝕎 ⇰ 𝕍 e)) -> Subst s e
-bindsNsSSubst :: Ord s => s -> (𝕎 ⇰ 𝕍 e) -> Subst s e
-bindsNsSubst :: (𝕎 ⇰ 𝕍 e) -> Subst () e
-bindsNSSubst :: Ord s => s -> 𝕎 -> 𝕍 e -> Subst s e
-bindsNSubst :: 𝕎 -> 𝕍 e -> Subst () e
-bindNsSsSubst :: Ord s => (s ⇰ (𝕎 ⇰ e)) -> Subst s e
-bindNsSSubst :: Ord s => s -> (𝕎 ⇰ e) -> Subst s e
-bindNsSubst :: (𝕎 ⇰ e) -> Subst () e
-bindNSSubst :: Ord s => s -> 𝕎 -> e -> Subst s e
-bindNSubst :: 𝕎 -> e -> Subst () e
-bindGsSsSubst :: Ord s => (s ⇰ (𝕎 ⇰ e)) -> Subst s e
-bindGsSSubst :: Ord s => s -> (𝕎 ⇰ e) -> Subst s e
-bindGsSubst :: (𝕎 ⇰ e) -> Subst () e
-bindGSSubst :: Ord s => s -> 𝕎 -> e -> Subst s e
-bindGSubst :: 𝕎 -> e -> Subst () e
-newtype MetaSubst s e
-MetaSubst :: ((s ∧ 𝕎) ⇰ SubstElem (s ∧ 𝑂 𝕎) e) -> MetaSubst s e
-[unMetaSubst] :: MetaSubst s e -> (s ∧ 𝕎) ⇰ SubstElem (s ∧ 𝑂 𝕎) e
-unMetaSubstL :: MetaSubst s e ⟢ ((s ∧ 𝕎) ⇰ SubstElem (s ∧ 𝑂 𝕎) e)
-bindMsSsSubst :: Ord s => (s ⇰ (𝕎 ⇰ e)) -> MetaSubst s e
-bindMsSSubst :: Ord s => s -> (𝕎 ⇰ e) -> MetaSubst s e
-bindMsSubst :: (𝕎 ⇰ e) -> MetaSubst () e
-bindMSSubst :: Ord s => s -> 𝕎 -> e -> MetaSubst s e
-bindMSubst :: 𝕎 -> e -> MetaSubst () e
-instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
-instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.Subst.Subst s e)
-instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.Subst.Subst s)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.Subst.Subst s e)
-instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.Subst.Subst s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.Subst.Subst s e)
-instance (UVMHS.Lib.Pretty.Doc.Pretty s, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Pretty.Doc.Pretty s, UVMHS.Lib.Pretty.Doc.Pretty e) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.Subst.Subst s e)
-instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
-instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.Subst.Subst s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.Subst.MetaSubst s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.Subst.Subst s e)
-
-module UVMHS.Lib.Substitution.UVar
-data 𝕐 s e
-S_UVar :: 𝕏 -> 𝕐 s e
-M_UVar :: 𝕎 -> Subst s e -> 𝕐 s e
-s_UVarL :: 𝕐 s e ⌲ 𝕏
-m_UVarL :: 𝕐 s e ⌲ (𝕎 ∧ Subst s e)
-wfUVar :: Ord s => 𝕐 s e -> 𝔹
-duvarL :: 𝕐 s e ⌲ ℕ64
-duvar :: ℕ64 -> 𝕐 s e
-nuvarL :: 𝕐 s e ⌲ (ℕ64 ∧ 𝕎)
-nuvar :: ℕ64 -> 𝕎 -> 𝕐 s e
-znuvarL :: 𝕐 s e ⌲ 𝕎
-znuvar :: 𝕎 -> 𝕐 s e
-guvarL :: 𝕐 s e ⌲ 𝕎
-guvar :: 𝕎 -> 𝕐 s e
-gensymUVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m (𝕐 s e)
-instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.UVar.𝕐 s e)
-instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.UVar.𝕐 s)
-instance (UVMHS.Lib.Pretty.Doc.Pretty e, UVMHS.Lib.Pretty.Doc.Pretty s, GHC.Classes.Ord s, UVMHS.Lib.Fuzzy.Fuzzy s, UVMHS.Lib.Fuzzy.Fuzzy e) => UVMHS.Lib.Fuzzy.Fuzzy (UVMHS.Lib.Substitution.UVar.𝕐 s e)
-instance (Language.Haskell.TH.Syntax.Lift s, Language.Haskell.TH.Syntax.Lift e) => Language.Haskell.TH.Syntax.Lift (UVMHS.Lib.Substitution.UVar.𝕐 s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.UVar.𝕐 s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Pretty.Doc.Pretty e, UVMHS.Lib.Pretty.Doc.Pretty s) => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lib.Substitution.UVar.𝕐 s e)
-instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.UVar.𝕐 s e)
-
-module UVMHS.Lib.Substitution.Substy
-data FreeVarsAction s e
-FreeVarsAction :: (s -> 𝕐 s e -> 𝔹) -> ((s ∧ 𝑂 𝕎) ⇰ ℕ64) -> FreeVarsAction s e
-[freeVarsActionFilter] :: FreeVarsAction s e -> s -> 𝕐 s e -> 𝔹
-[freeVarsActionScope] :: FreeVarsAction s e -> (s ∧ 𝑂 𝕎) ⇰ ℕ64
-freeVarsActionFilterL :: FreeVarsAction s e ⟢ (s -> 𝕐 s e -> 𝔹)
-freeVarsActionScopeL :: FreeVarsAction s e ⟢ ((s ∧ 𝑂 𝕎) ⇰ ℕ64)
-data RebindAction
-ID_RA :: RebindAction
-AllNameless_RA :: RebindAction
-AllNamed_RA :: RebindAction
-data SubstAction s e
-SubstAction :: RebindAction -> Subst s e -> SubstAction s e
-[substActionRebind] :: SubstAction s e -> RebindAction
-[substActionSubst] :: SubstAction s e -> Subst s e
-substActionRebindL :: SubstAction s e ⟢ RebindAction
-substActionSubstL :: SubstAction s e ⟢ Subst s e
-data SubstyAction s e
-FreeVars_SA :: FreeVarsAction s e -> SubstyAction s e
-Subst_SA :: SubstAction s e -> SubstyAction s e
-MetaSubst_SA :: MetaSubst s e -> SubstyAction s e
-freeVars_SAL :: SubstyAction s e ⌲ FreeVarsAction s e
-subst_SAL :: SubstyAction s e ⌲ SubstAction s e
-metaSubst_SAL :: SubstyAction s e ⌲ MetaSubst s e
-newtype SubstyM s e a
-SubstyM :: UContT (ReaderT (SubstyAction s e) (FailT (WriterT (s ⇰ 𝑃 (𝕐 s e)) ID))) a -> SubstyM s e a
-[unSubstyM] :: SubstyM s e a -> UContT (ReaderT (SubstyAction s e) (FailT (WriterT (s ⇰ 𝑃 (𝕐 s e)) ID))) a
-mkSubstM :: (forall u. () => SubstyAction s e -> (a -> SubstyAction s e -> (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u) -> (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u) -> SubstyM s e a
-runSubstM :: SubstyAction s e -> (a -> SubstyAction s e -> (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u) -> SubstyM s e a -> (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 u
-evalSubstM :: SubstyAction s e -> SubstyM s e a -> (s ⇰ 𝑃 (𝕐 s e)) ∧ 𝑂 a
-class SVarView s e => Substy s e a | a -> e, e -> s
-substy :: Substy s e a => a -> SubstyM s e a
-fvsWith :: Substy s e a => (s -> 𝕐 s e -> 𝔹) -> a -> s ⇰ 𝑃 (𝕐 s e)
-fvsSMetas :: (Ord s, Ord e, Substy s e a) => 𝑃 s -> a -> s ⇰ 𝑃 (𝕎 ∧ Subst s e)
-fvsMetas :: (Ord s, Ord e, Substy s e a) => s -> a -> 𝑃 (𝕎 ∧ Subst s e)
-fvs :: Substy s e a => a -> s ⇰ 𝑃 (𝕐 s e)
-todbr :: Substy s e a => a -> 𝑂 a
-tonmd :: Substy s e a => a -> 𝑂 a
-subst :: Substy s e a => Subst s e -> a -> 𝑂 a
-msubst :: Substy s e a => MetaSubst s e -> a -> 𝑂 a
-canonSubst :: (Ord s, Eq e, Substy s e e) => (e -> e) -> Subst s e -> Subst s e
-canonUVar :: (Ord s, Eq e, Substy s e e) => (e -> e) -> 𝕐 s e -> 𝕐 s e
-nullSubst :: Subst s e
-appendSubst :: (Ord s, Substy s e e) => Subst s e -> Subst s e -> Subst s e
-substyDBdr :: (Ord s, Ord e) => s -> SubstyM s e ()
-substyNBdr :: (Ord s, Ord e) => s -> 𝕎 -> SubstyM s e ()
-substyBdr :: (Ord s, Ord e, Substy s e e) => s -> (𝕐 s e' -> e) -> 𝕎 -> SubstyM s e ()
-substyVar :: (Ord s, Ord e, Substy s e e) => 𝑂 𝕎 -> s -> (ℕ64 -> e) -> ℕ64 -> SubstyM s e e
-substyDVar :: (Ord s, Ord e, Substy s e e) => s -> (ℕ64 -> e) -> ℕ64 -> SubstyM s e e
-substyNVar :: (Ord s, Ord e, Substy s e e) => s -> (ℕ64 -> e) -> 𝕎 -> ℕ64 -> SubstyM s e e
-substyGVar :: (Ord s, Ord e, Substy s e e) => s -> (𝕎 -> e) -> 𝕎 -> SubstyM s e e
-substyMVar :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => s -> (𝕎 -> Subst s e -> e) -> 𝕎 -> Subst s e -> SubstyM s e e
-substy𝕏 :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => s -> (𝕏 -> e) -> 𝕏 -> SubstyM s e e
-substy𝕐 :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => s -> (𝕐 s e -> e) -> 𝕐 s e -> SubstyM s e e
-syntaxUVar :: LexerBasicSyntax
-data ParseSubstAction e
-ParseSubstAction :: 𝐼 ℕ64 -> (𝑂 ℕ64 ⇰ 𝐼 e) -> 𝐼 (ℕ64 ∧ ℤ64) -> ParseSubstAction e
-[parseSubstActionShfts] :: ParseSubstAction e -> 𝐼 ℕ64
-[parseSubstActionElems] :: ParseSubstAction e -> 𝑂 ℕ64 ⇰ 𝐼 e
-[parseSubstActionIncrs] :: ParseSubstAction e -> 𝐼 (ℕ64 ∧ ℤ64)
-parseSubstActionShftsL :: ParseSubstAction e ⟢ 𝐼 ℕ64
-parseSubstActionElemsL :: ParseSubstAction e ⟢ (𝑂 ℕ64 ⇰ 𝐼 e)
-parseSubstActionIncrsL :: ParseSubstAction e ⟢ 𝐼 (ℕ64 ∧ ℤ64)
-parseSubstActionShft :: ℕ64 -> ParseSubstAction e
-parseSubstActionElem :: 𝑂 ℕ64 -> e -> ParseSubstAction e
-parseSubstActionIncr :: ℕ64 -> ℤ64 -> ParseSubstAction e
-type ParseSubstActions e = 𝑂 𝕎 ∧ 𝔹 ⇰ ParseSubstAction e
-cpSubst :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (Subst () e)
-cpUVarNGMVar :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (𝕐 () e)
-cpUVar :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (𝕐 () e)
-cpUVarRaw :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (𝕐 () e)
-instance UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Substitution.Substy.Substy s e e) => UVMHS.Core.Classes.Monoid.Append (UVMHS.Lib.Substitution.Subst.Subst s e)
-instance UVMHS.Core.Classes.Functors.Bind (UVMHS.Lib.Substitution.Substy.SubstyM s e)
-instance GHC.Classes.Eq e => GHC.Classes.Eq (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
-instance GHC.Classes.Eq UVMHS.Lib.Substitution.Substy.RebindAction
-instance (GHC.Classes.Eq s, GHC.Classes.Eq e) => GHC.Classes.Eq (UVMHS.Lib.Substitution.Substy.SubstAction s e)
-instance UVMHS.Core.Classes.Functors.Functor (UVMHS.Lib.Substitution.Substy.SubstyM s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => UVMHS.Core.Effects.MonadFail (UVMHS.Lib.Substitution.Substy.SubstyM s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => UVMHS.Core.Effects.MonadReader (UVMHS.Lib.Substitution.Substy.SubstyAction s e) (UVMHS.Lib.Substitution.Substy.SubstyM s e)
-instance UVMHS.Core.Classes.Functors.Monad (UVMHS.Lib.Substitution.Substy.SubstyM s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => UVMHS.Core.Effects.MonadUCont (UVMHS.Lib.Substitution.Substy.SubstyM s e)
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => UVMHS.Core.Effects.MonadWriter (s UVMHS.Core.Init.⇰ UVMHS.Core.Init.𝑃 (UVMHS.Lib.Substitution.UVar.𝕐 s e)) (UVMHS.Lib.Substitution.Substy.SubstyM s e)
-instance UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Substitution.Substy.Substy s e e) => UVMHS.Core.Classes.Monoid.Monoid (UVMHS.Lib.Substitution.Subst.Subst s e)
-instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
-instance UVMHS.Core.Classes.Monoid.Null (UVMHS.Lib.Substitution.Subst.Subst s e)
-instance GHC.Classes.Ord e => GHC.Classes.Ord (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
-instance GHC.Classes.Ord UVMHS.Lib.Substitution.Substy.RebindAction
-instance (GHC.Classes.Ord s, GHC.Classes.Ord e) => GHC.Classes.Ord (UVMHS.Lib.Substitution.Substy.SubstAction s e)
-instance UVMHS.Core.Classes.Functors.Return (UVMHS.Lib.Substitution.Substy.SubstyM s e)
-instance GHC.Show.Show e => GHC.Show.Show (UVMHS.Lib.Substitution.Substy.ParseSubstAction e)
-instance GHC.Show.Show UVMHS.Lib.Substitution.Substy.RebindAction
-instance (GHC.Show.Show s, GHC.Show.Show e) => GHC.Show.Show (UVMHS.Lib.Substitution.Substy.SubstAction s e)
-instance (GHC.Classes.Ord s, UVMHS.Lib.Shrinky.Shrinky e) => UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lib.Substitution.UVar.𝕐 s e)
-
-module UVMHS.Lib.Substitution
-data 𝕎
-𝕎 :: 𝑂 ℕ64 -> 𝕊 -> 𝕎
-[varMark] :: 𝕎 -> 𝑂 ℕ64
-[varName] :: 𝕎 -> 𝕊
-varMarkL :: 𝕎 ⟢ 𝑂 ℕ64
-varNameL :: 𝕎 ⟢ 𝕊
-var :: 𝕊 -> 𝕎
-gensymVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m 𝕎
-data 𝕏
-D_SVar :: ℕ64 -> 𝕏
-N_SVar :: ℕ64 -> 𝕎 -> 𝕏
-G_SVar :: 𝕎 -> 𝕏
-class SVarView s e | e -> s
-svarL :: SVarView s e => s -> e ⌲ 𝕏
-data 𝕐 s e
-S_UVar :: 𝕏 -> 𝕐 s e
-M_UVar :: 𝕎 -> Subst s e -> 𝕐 s e
-s_UVarL :: 𝕐 s e ⌲ 𝕏
-data Subst s e
-data MetaSubst s e
-class SVarView s e => Substy s e a | a -> e, e -> s
-substy :: Substy s e a => a -> SubstyM s e a
-wfUVar :: Ord s => 𝕐 s e -> 𝔹
-canonUVar :: (Ord s, Eq e, Substy s e e) => (e -> e) -> 𝕐 s e -> 𝕐 s e
-wfSubst :: Ord s => Subst s e -> 𝔹
-canonSubst :: (Ord s, Eq e, Substy s e e) => (e -> e) -> Subst s e -> Subst s e
-introDSubst :: ℕ64 -> Subst () e
-subst :: Substy s e a => Subst s e -> a -> 𝑂 a
-substyDBdr :: (Ord s, Ord e) => s -> SubstyM s e ()
-substyBdr :: (Ord s, Ord e, Substy s e e) => s -> (𝕐 s e' -> e) -> 𝕎 -> SubstyM s e ()
-substy𝕏 :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => s -> (𝕏 -> e) -> 𝕏 -> SubstyM s e e
-substy𝕐 :: (Ord s, Ord e, Pretty e, Pretty s, Substy s e e) => s -> (𝕐 s e -> e) -> 𝕐 s e -> SubstyM s e e
-syntaxUVar :: LexerBasicSyntax
-cpVar :: CParser TokenBasic 𝕎
-cpUVarRaw :: (Eq e, Substy () e e) => (() -> CParser TokenBasic e) -> CParser TokenBasic (𝕐 () e)
-
 module UVMHS.Lib.MMSP
 newtype MMSP
 MMSP :: MMSPMaxs -> MMSP
@@ -5865,14 +6075,14 @@ data MMSPProds
 MMSPProds :: (MMSPAtom ⇰ ℕ) -> MMSPProds
 [mmspProdsExps] :: MMSPProds -> MMSPAtom ⇰ ℕ
 data MMSPAtom
-Var_MMSPAtom :: 𝐴 (𝑃 SrcCxt) 𝕎 -> MMSPAtom
-var_MMSPAtomL :: MMSPAtom ⌲ 𝐴 (𝑃 SrcCxt) 𝕎
+Var_MMSPAtom :: 𝐴 (𝑃 SrcCxt) Name -> MMSPAtom
+var_MMSPAtomL :: MMSPAtom ⌲ 𝐴 (𝑃 SrcCxt) Name
 maxsMMSPL :: MMSP ⌲ MMSPMaxs
 minsMMSPL :: MMSP ⌲ MMSPMins
 sumsMMSPL :: MMSP ⌲ MMSPSums
 prodsMMSPL :: MMSP ⌲ MMSPProds
 atomMMSPL :: MMSP ⌲ MMSPAtom
-varMMSPL :: MMSP ⌲ 𝐴 (𝑃 SrcCxt) 𝕎
+varMMSPL :: MMSP ⌲ 𝐴 (𝑃 SrcCxt) Name
 litMMSPL :: MMSP ⌲ ℕ
 topMMSPL :: MMSP ⌲ ()
 littMMSPL :: MMSP ⌲ AddTop ℕ
@@ -5881,7 +6091,7 @@ minsMMSP :: MMSPMins -> MMSP
 sumsMMSP :: MMSPSums -> MMSP
 prodsMMSP :: MMSPProds -> MMSP
 atomMMSP :: MMSPAtom -> MMSP
-varMMSP :: 𝐴 (𝑃 SrcCxt) 𝕎 -> MMSP
+varMMSP :: 𝐴 (𝑃 SrcCxt) Name -> MMSP
 litMMSP :: ℕ -> MMSP
 topMMSP :: MMSP
 joinMMSP :: MMSP -> MMSP -> MMSP
@@ -5984,16 +6194,16 @@ ULCExp :: 𝐴 𝒸 (ULCExp_R 𝒸) -> ULCExp 𝒸
 [unULCExp] :: ULCExp 𝒸 -> 𝐴 𝒸 (ULCExp_R 𝒸)
 onULCExp :: (𝐴 𝒸 (ULCExp_R 𝒸) -> 𝐴 𝒸' (ULCExp_R 𝒸')) -> ULCExp 𝒸 -> ULCExp 𝒸'
 data ULCExp_R 𝒸
-Var_ULC :: 𝕐 () (ULCExp 𝒸) -> ULCExp_R 𝒸
-Lam_ULC :: 𝑂 𝕎 -> ULCExp 𝒸 -> ULCExp_R 𝒸
+Var_ULC :: UVar () (ULCExp 𝒸) -> ULCExp_R 𝒸
+Lam_ULC :: 𝑂 Name -> ULCExp 𝒸 -> ULCExp_R 𝒸
 App_ULC :: ULCExp 𝒸 -> ULCExp 𝒸 -> ULCExp_R 𝒸
-var_ULCL :: ULCExp_R 𝒸 ⌲ 𝕐 () (ULCExp 𝒸)
-lam_ULCL :: ULCExp_R 𝒸 ⌲ (𝑂 𝕎 ∧ ULCExp 𝒸)
+var_ULCL :: ULCExp_R 𝒸 ⌲ UVar () (ULCExp 𝒸)
+lam_ULCL :: ULCExp_R 𝒸 ⌲ (𝑂 Name ∧ ULCExp 𝒸)
 app_ULCL :: ULCExp_R 𝒸 ⌲ (ULCExp 𝒸 ∧ ULCExp 𝒸)
 type ULCExpSrc = ULCExp 𝑃 SrcCxt
 type ULCExpRaw = ULCExp ()
 wfULC :: ULCExp 𝒸 -> 𝔹
-canonULC :: Null 𝒸 => ULCExp 𝒸 -> ULCExp 𝒸
+canonULC :: (Null 𝒸, Show 𝒸) => ULCExp 𝒸 -> ULCExp 𝒸
 syntaxULC :: LexerBasicSyntax
 lexULCExp :: Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
 pULCExp :: CParser TokenBasic ULCExpSrc
@@ -6007,17 +6217,14 @@ instance Language.Haskell.TH.Syntax.Lift 𝒸 => Language.Haskell.TH.Syntax.Lift
 instance Language.Haskell.TH.Syntax.Lift 𝒸 => Language.Haskell.TH.Syntax.Lift (UVMHS.Lang.ULC.ULCExp_R 𝒸)
 instance GHC.Classes.Ord (UVMHS.Lang.ULC.ULCExp 𝒸)
 instance GHC.Classes.Ord (UVMHS.Lang.ULC.ULCExp_R 𝒸)
-instance UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lang.ULC.ULCExp 𝒸)
-instance UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lang.ULC.ULCExp_R 𝒸)
+instance GHC.Show.Show 𝒸 => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lang.ULC.ULCExp 𝒸)
+instance GHC.Show.Show 𝒸 => UVMHS.Lib.Pretty.Doc.Pretty (UVMHS.Lang.ULC.ULCExp_R 𝒸)
 instance UVMHS.Core.Classes.Monoid.Null 𝒸 => UVMHS.Lib.Substitution.Var.SVarView () (UVMHS.Lang.ULC.ULCExp 𝒸)
 instance GHC.Show.Show 𝒸 => GHC.Show.Show (UVMHS.Lang.ULC.ULCExp 𝒸)
 instance GHC.Show.Show 𝒸 => GHC.Show.Show (UVMHS.Lang.ULC.ULCExp_R 𝒸)
 instance UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lang.ULC.ULCExp 𝒸)
 instance UVMHS.Lib.Shrinky.Shrinky (UVMHS.Lang.ULC.ULCExp_R 𝒸)
-instance UVMHS.Core.Classes.Monoid.Null 𝒸 => UVMHS.Lib.Substitution.Substy.Substy () (UVMHS.Lang.ULC.ULCExp 𝒸) (UVMHS.Lang.ULC.ULCExp 𝒸)
-
-module UVMHS.Lib.Substitution.Tests
-g__TESTS__UVMHS__Lib__Substitution__Tests :: 𝑇D Test
+instance (UVMHS.Core.Classes.Monoid.Null 𝒸, GHC.Show.Show 𝒸) => UVMHS.Lib.Substitution.Substy.Substy () (UVMHS.Lang.ULC.ULCExp 𝒸) (UVMHS.Lang.ULC.ULCExp 𝒸)
 
 module UVMHS
 
@@ -6228,6 +6435,9 @@ instance UVMHS.Core.Classes.Functors.Monad UVMHS.Tests.Core.CR
 instance UVMHS.Core.Classes.Functors.Monad UVMHS.Tests.Core.UR
 instance UVMHS.Core.Classes.Functors.Return UVMHS.Tests.Core.CR
 instance UVMHS.Core.Classes.Functors.Return UVMHS.Tests.Core.UR
+
+module UVMHS.Tests.Substitution
+g__TESTS__UVMHS__Tests__Substitution :: 𝑇D Test
 
 module UVMHSMain
 main :: IO ()

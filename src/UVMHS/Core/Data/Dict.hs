@@ -122,7 +122,7 @@ dict ∷ ∀ d t a k s. (Dict k s d,ToIter (d a) t) ⇒ t → d a
 dict = foldr dø (⩌)
 
 assoc ∷ ∀ d t a k s. (Dict k s d,ToIter (k ∧ a) t) ⇒ t → d a
-assoc = foldr dø $ curry dadd
+assoc = foldr dø $ uncurry dadd
 
 ---------------------------
 -- STANDARD DICT DATATYPE --
@@ -357,7 +357,7 @@ iter𝐷 = coerce @(Map.Map k a → 𝐼 (k ∧ a)) $ map frhs ∘ iterLL ∘ Ma
 -- CLASS DEFINITIONS: Single --
 
 single𝐷 ∷ k ∧ a → k ⇰ a
-single𝐷 = curry (↦♭)
+single𝐷 = uncurry (↦♭)
 
 -- CLASS DEFINITIONS: Lookup --
 

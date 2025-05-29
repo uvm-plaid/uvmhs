@@ -5,6 +5,9 @@ import UVMHS.Core
 class Shrinky a where
   shrink ∷ a → 𝐼 a
 
+isoShrink ∷ (a ⇄ b,Shrinky b) ⇒ a → 𝐼 a
+isoShrink = isofr ^∘ shrink ∘ isoto
+
 instance Shrinky () where shrink = const null
 
 instance Shrinky ℕ64 where

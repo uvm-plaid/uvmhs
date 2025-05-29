@@ -7,290 +7,345 @@ import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
 import UVMHS.Lib.Shrinky
 
--- =============== --
--- SIMPLE VARIABLE --
--- =============== --
+import UVMHS.Lib.Substitution.Name
 
-data Name = Name
-  { varMark ∷ 𝑂 ℕ64
-  , varName ∷ 𝕊
-  } deriving (Eq,Ord,Show)
-makeLenses ''Name
+---------------------------------------------------------------------
+-- ==== --
+-- DVar --
+-- ==== --
+---------------------------------------------------------------------
 
-var ∷ 𝕊 → Name
-var = Name None
+-- De Bruijn Index
+newtype DVar = DVar { unDVar ∷ ℕ64 }
+  deriving (Eq,Ord,Show,Fuzzy,Shrinky)
+makeLenses ''DVar
 
-gensymVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m Name
-gensymVar ℓ s = do
-  n ← nextL ℓ
-  return $ Name (Some n) s
-
--------------
--- PARSING --
--------------
-
-syntaxVar ∷ LexerBasicSyntax
-syntaxVar = concat
-  [ null { lexerBasicSyntaxPuns = pow ["#"] }
-  ]
-
-cpVar ∷ CParser TokenBasic Name
-cpVar = do
-  x ← cpShaped $ view nameTBasicL
-  nO ← cpOptional $ do
-    void $ cpSyntax "#"
-    cpNat64
-  return $ Name nO x
-
-cpVarWS ∷ CParser TokenWSBasic Name
-cpVarWS = do
-  x ← cpShaped $ view nameTWSBasicL
-  nO ← cpOptional $ do
-    void $ cpSyntaxWS "#"
-    failEff ∘ natO64 *$ cpIntegerWS
-  return $ Name nO x
+instance Pretty DVar where
+  pretty (DVar n) = ppPun $ concat ["•:",show𝕊 n]
 
 syntaxDVar ∷ LexerBasicSyntax
 syntaxDVar = concat
-  [ null { lexerBasicSyntaxPuns = pow ["INF","∞"] }
+  [ null { lexerBasicSyntaxPuns = pow ["•",":"] }
   ]
 
-cpDVarRaw ∷ CParser TokenBasic ℕ64
-cpDVarRaw = cpNat64
+pDVarTail ∷ CParser TokenBasic DVar
+pDVarTail = DVar ^$ cpNat64
 
-cpDVarRawInf ∷ CParser TokenBasic (𝑂 ℕ64)
-cpDVarRawInf = concat
-  [ Some ^$ cpDVarRaw
-  , do void $ concat $ map cpSyntax ["INF","∞"]
-       return None
-  ]
-
-cpDVar ∷ CParser TokenBasic ℕ64
-cpDVar = do 
+pDVar ∷ CParser TokenBasic DVar
+pDVar = do 
+  void $ cpSyntax "•"
   void $ cpSyntax ":"
-  cpDVarRaw
+  pDVarTail
 
-cpDVarInf ∷ CParser TokenBasic (𝑂 ℕ64)
-cpDVarInf = do
-  void $ cpSyntax ":"
-  cpDVarRawInf
+---------------------------------------------------------------------
+-- ==== --
+-- NVar --
+-- ==== --
+---------------------------------------------------------------------
 
+-- Named variables with a De Bruijn index
+-- λ x. λ x. x:0
+--        └───┘
+-- λ x. λ x. x:1
+--   └────────┘
+data NVar = NVar
+  { nvarIndex ∷ DVar
+  , nvarName  ∷ Name
+  } deriving (Eq,Ord,Show)
+makeLenses ''NVar
 
----------------------
--- PRETTY PRINTING --
----------------------
+nameNVar ∷ Name → NVar
+nameNVar = NVar $ DVar 0
 
-instance Pretty Name where
-  pretty (Name nO x) = concat
-    [ ppString x
-    , elim𝑂 null (\ n → ppPun $ concat ["#",show𝕊 n]) nO
+nameNVarL ∷ NVar ⌲ Name
+nameNVarL = prism nameNVar $ \ (NVar n x) → if n ≡ DVar 0 then Some x else None
+
+gensymNVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m NVar
+gensymNVar ℓ s = nameNVar ^$ gensymName ℓ s
+
+instance Fuzzy NVar where 
+  fuzzy = return NVar ⊡ fuzzy ⊡ fuzzy
+
+instance Shrinky NVar where 
+  shrink (NVar n x) = do
+    (n',x') ← shrink (n,x)
+    return $ NVar n' x'
+
+instance Pretty NVar where
+  pretty (NVar n x) = concat
+    [ pretty x
+    , if n ≡ DVar 0 then null else ppPun $ concat [":",show𝕊 $ unDVar n]
     ]
 
--------------
--- FUZZING --
--------------
-
-instance Fuzzy Name where
-  fuzzy = do
-    nO ← fuzzy
-    return $ Name nO "x"
-
-instance Shrinky Name where
-  shrink = const null
-
--- =============== --
--- SCOPED VARIABLE --
--- =============== --
-
-data 𝕏 =
-    D_SVar ℕ64    -- nameless variable
-  | N_SVar ℕ64 Name  -- named (+ nameless index for that name)
-                 -- λ x. λ x. x↑0
-                 --        └───┘
-                 -- λ x. λ x. x↑1
-                 --   └────────┘
-  | G_SVar Name      -- global variable
-  deriving (Eq,Ord,Show)
-makePrisms ''𝕏
-
-znsvar ∷ Name → 𝕏
-znsvar = N_SVar 0
-
-znsvarL ∷ 𝕏 ⌲ Name
-znsvarL = prism znsvar $ \case
-  N_SVar n x | n≡0 → Some x
-  _ → None
-
-gensymSVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m 𝕏
-gensymSVar ℓ s = znsvar ^$ gensymVar ℓ s
-
--------------
--- PARSING --
--------------
-
-cpZNSVar ∷ CParser TokenBasic 𝕏
-cpZNSVar = znsvar ^$ cpVar
-
-cpGSVar ∷ CParser TokenBasic 𝕏
-cpGSVar = G_SVar ^$ cpVar
-
-cpZNSVarWS ∷ CParser TokenWSBasic 𝕏
-cpZNSVarWS = znsvar ^$ cpVarWS
-
-cpGSVarWS ∷ CParser TokenWSBasic 𝕏
-cpGSVarWS = G_SVar ^$ cpVarWS
-
-syntaxSVar ∷ LexerBasicSyntax
-syntaxSVar = concat
-  [ syntaxVar
+syntaxNVar ∷ LexerBasicSyntax
+syntaxNVar = concat
+  [ syntaxName
   , syntaxDVar
-  , null { lexerBasicSyntaxPuns = pow ["INF","∞",":",":g"] }
   ]
 
-cpSVarNGVarTail ∷ CParser TokenBasic (𝑂 ℕ64)
-cpSVarNGVarTail = concat
-  [ do n ← ifNone 0 ^$ cpOptional $ do
-         void $ cpSyntax ":"
-         n ← cpNat64
-         return n
-       return $ Some n
-  , do void $ cpSyntax ":g"
-       return None
+pNVarTail ∷ Name → CParser TokenBasic NVar
+pNVarTail x = do
+  n ← ifNone (DVar 0) ^$ cpOptional $ do
+    void $ cpSyntax ":"
+    pDVarTail
+  return $ NVar n x
+
+pNVar ∷ CParser TokenBasic NVar
+pNVar = do
+  x ← pName
+  pNVarTail x
+
+---------------------------------------------------------------------
+-- ==== --
+-- GVar --
+-- ==== --
+---------------------------------------------------------------------
+
+-- Global Variables
+newtype GVar = GVar { unGVar ∷ Name }
+  deriving (Eq,Ord,Show,Fuzzy,Shrinky)
+makeLenses ''GVar
+
+instance Pretty GVar where
+  pretty (GVar x) = concat [pretty x,ppPun ":g"]
+
+syntaxGVar ∷ LexerBasicSyntax
+syntaxGVar = concat
+  [ syntaxName
+  , null { lexerBasicSyntaxPuns = pow [":g"] }
   ]
 
-cpSVarNGVar ∷ CParser TokenBasic ((ℕ64 ∧ Name) ∨ Name)
-cpSVarNGVar = do
-  w ← cpVar
-  nO ← cpSVarNGVarTail
-  return $ case nO of
-    Some n → Inl $ n :* w
-    None → Inr w
+pGVarTail ∷ Name → CParser TokenBasic GVar
+pGVarTail x = do
+  void $ cpSyntax ":g"
+  return $ GVar x
 
-cpSVarNGVarInfTail ∷ CParser TokenBasic (𝑂 (𝑂 ℕ64))
-cpSVarNGVarInfTail = concat
-  [ do nO ← ifNone (Some 0) ^$ cpOptional $ do
-         void $ cpSyntax ":"
-         concat
-           [ Some ^$ cpNat64
-           , do void $ concat $ map cpSyntax ["INF","∞"]
-                return None
-           ]
-       return $ Some nO
-  , do void $ cpSyntax ":g"
-       return $ None
-  ]
+pGVar ∷ CParser TokenBasic GVar
+pGVar = do
+  x ← pName
+  pGVarTail x
 
-cpSVarNGVarInf ∷ CParser TokenBasic ((𝑂 ℕ64 ∧ Name) ∨ Name)
-cpSVarNGVarInf = do
-  w ← cpVar
-  nOO ← cpSVarNGVarInfTail
-  return $ case nOO of
-    Some (Some n) → Inl $ Some n :* w
-    Some None     → Inl $ None :* w
-    None          → Inr w
+---------------------------------------------------------------------
+-- ==== --
+-- SVar --
+-- ==== --
+---------------------------------------------------------------------
 
-cpSVarRaw ∷ CParser TokenBasic 𝕏
-cpSVarRaw = concat
-  [ do n ← cpDVarRaw
-       return $ D_SVar n
-  , do nww ← cpSVarNGVar
-       return $ case nww of
-         Inl (n :* w) → N_SVar n w
-         Inr w        → G_SVar w
-  ]
+-- Scoped Variables: either De Bruijn scoped or Named scoped
+data SVar =
+    D_SVar DVar
+  | N_SVar NVar
+  deriving (Eq,Ord,Show)
+makePrisms ''SVar
+makePrettyUnion ''SVar
 
-cpSVarRawInf ∷ CParser TokenBasic (𝕏 ∨ 𝑂 Name)
-cpSVarRawInf = concat
-  [ do nO ← cpDVarRawInf
-       case nO of
-         None → return $ Inr None
-         Some n → return $ Inl $ D_SVar n
-  , do nww ← cpSVarNGVarInf
-       return $ case nww of
-         Inl (nO :* w) → case nO of
-            None → Inr $ Some w
-            Some n → Inl $ N_SVar n w
-         Inr w → Inl $ G_SVar w
-  ]
+mkSVar ∷ SName → DVar → SVar
+mkSVar xO n = case xO of
+  D_SName → D_SVar n
+  N_SName x → N_SVar $ NVar n x
 
-cpSVar ∷ CParser TokenBasic 𝕏
-cpSVar = concat
-  [ do n ← cpDVar
-       return $ D_SVar n
-  , do nww ← cpSVarNGVar
-       return $ case nww of
-         Inl (n :* w) → N_SVar n w
-         Inr w        → G_SVar w
-  ]
+svarName ∷ SVar → SName
+svarName = \case
+  D_SVar _          → D_SName
+  N_SVar (NVar _ x) → N_SName x
 
-cpSVarInf ∷ CParser TokenBasic (𝕏 ∨ 𝑂 Name)
-cpSVarInf = concat
-  [ do nO ← cpDVarInf
-       return $ case nO of
-         None → Inr None
-         Some n → Inl $ D_SVar n
-  , do nww ← cpSVarNGVarInf
-       return $ case nww of
-         Inl (nO :* w) → case nO of
-           None → Inr $ Some w
-           Some n → Inl $ N_SVar n w
-         Inr w → Inl $ G_SVar w
+svarLevel ∷ SVar → DVar
+svarLevel = \case
+  D_SVar n → n
+  N_SVar (NVar n _x) → n
 
-  ]
-
----------------------
--- PRETTY PRINTING --
----------------------
-
-ppDVar ∷ 𝕊 → Doc
-ppDVar n = concat [ppPun ":",ppString n]
-
-ppNVar ∷ Doc → Doc → Doc
-ppNVar n x = concat [x,ppPun ":",n]
-
-instance Pretty 𝕏 where
-  pretty = \case
-    N_SVar n x → if n ≡ 0 then pretty x else ppNVar (pretty n) $ pretty x
-    D_SVar n → ppDVar $ show𝕊 n
-    G_SVar x → concat [pretty x,ppPun ":g"]
-
--------------
--- FUZZING --
--------------
-
-instance Fuzzy 𝕏 where
-  fuzzy = wrchoose
-    [ (:*) one $ \ () → D_SVar ^$ fuzzy
-    , (:*) one $ \ () → return N_SVar ⊡ fuzzy ⊡ fuzzy
-    , (:*) one $ \ () → G_SVar ^$ fuzzy
+instance Fuzzy SVar where 
+  fuzzy = rchoose
+    [ \ () → D_SVar ^$ fuzzy
+    , \ () → N_SVar ^$ fuzzy
     ]
 
-instance Shrinky 𝕏 where
+instance Shrinky SVar where 
   shrink = \case
-    D_SVar n → D_SVar ^$ shrink n
-    N_SVar n w → do
-      n' ← shrink n
-      return $ N_SVar n' w
-    G_SVar _ → null
+    D_SVar x → D_SVar ^$ shrink x
+    N_SVar x → N_SVar ^$ shrink x
 
+---------------------------------------------------------------------
+-- === --
+-- Var --
+-- === --
+---------------------------------------------------------------------
+
+-- Variables: either De Bruijn, Named or Global
+data Var =
+    D_Var DVar
+  | N_Var NVar
+  | G_Var GVar
+  deriving (Eq,Ord,Show)
+makePrisms ''Var
+makePrettyUnion ''Var
+
+nameVar ∷ Name → Var
+nameVar = N_Var ∘ nameNVar
+
+nameVarL ∷ Var ⌲ Name
+nameVarL = nameNVarL ⊚ n_VarL
+
+gensymVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m Var
+gensymVar ℓ s = N_Var ^$ gensymNVar ℓ s
+
+instance Fuzzy Var where
+  fuzzy = rchoose
+    [ \ () → D_Var ^$ fuzzy
+    , \ () → N_Var ^$ fuzzy
+    , \ () → G_Var ^$ fuzzy
+    ]
+
+instance Shrinky Var where
+  shrink = \case
+    D_Var x → D_Var ^$ shrink x
+    N_Var x → N_Var ^$ shrink x
+    G_Var x → G_Var ^$ shrink x
+
+syntaxVar ∷ LexerBasicSyntax
+syntaxVar = concat
+  [ syntaxName
+  , syntaxDVar
+  , syntaxNVar
+  , syntaxGVar
+  ]
+
+pVar ∷ CParser TokenBasic Var
+pVar = concat
+  [ D_Var ^$ pDVar
+  , do x ← pName
+       concat 
+         [ N_Var ^$ pNVarTail x
+         , G_Var ^$ pGVarTail x
+         ]
+  ]
+
+---------------------------------------------------------------------
+-- ======= --
+-- DVarInf --
+-- ======= --
+---------------------------------------------------------------------
+
+-- De Bruijn Variables with an extra "∞" element
+data DVarInf =
+    Var_DVI DVar
+  | Inf_DVI
+  deriving (Eq,Ord,Show)
+makePrisms ''DVarInf
+
+instance Pretty DVarInf where
+  pretty = \case
+    Var_DVI x → pretty x
+    Inf_DVI   → ppPun "•:∞"
+
+syntaxDVarInf ∷ LexerBasicSyntax
+syntaxDVarInf = concat
+  [ syntaxDVar
+  , null { lexerBasicSyntaxPuns = pow ["INF","∞"] }
+  ]
+
+pDVarInfTail ∷ CParser  TokenBasic DVarInf
+pDVarInfTail = concat
+  [ Var_DVI ^$ pDVarTail
+  , do void $ concat $ map cpSyntax ["INF","∞"]
+       return Inf_DVI
+  ]
+
+pDVarInf ∷ CParser TokenBasic DVarInf
+pDVarInf = do
+  void $ cpSyntax "•"
+  void $ cpSyntax ":"
+  pDVarInfTail
+
+---------------------------------------------------------------------
+-- ======= --
+-- NVarInf --
+-- ======= --
+---------------------------------------------------------------------
+
+-- Named Variables where indices have an extra ∞ element
+data NVarInf = NVarInf
+  { nvarInfIndex ∷ DVarInf
+  , nvarInfName  ∷ Name
+  } deriving (Eq,Ord,Show)
+makeLenses ''NVarInf
+
+instance Pretty NVarInf where
+  pretty (NVarInf n x) = concat
+    [ pretty x
+    , case n of
+        Var_DVI n' | n' ≢ DVar 0 → ppBdr $ concat [":",show𝕊 $ unDVar n']
+        _ → null
+    ]
+
+syntaxNVarInf ∷ LexerBasicSyntax
+syntaxNVarInf = concat
+  [ syntaxName
+  , syntaxDVarInf
+  ]
+
+pNVarInfTail ∷ Name → CParser TokenBasic NVarInf
+pNVarInfTail x = do
+  void $ cpSyntax ":"
+  n ← pDVarInfTail
+  return $ NVarInf n x
+
+pNVarInf ∷ CParser TokenBasic NVarInf
+pNVarInf = do
+  x ← pName
+  pNVarInfTail x
+
+---------------------------------------------------------------------
+-- ====== --
+-- VarInf --
+-- ====== --
+---------------------------------------------------------------------
+
+data VarInf =
+    D_VarInf DVarInf
+  | N_VarInf NVarInf
+  | G_VarInf GVar
+  deriving (Eq,Ord,Show)
+makePrisms ''VarInf
+makePrettyUnion ''VarInf
+
+syntaxVarInf ∷ LexerBasicSyntax
+syntaxVarInf = concat
+  [ syntaxDVarInf
+  , syntaxNVarInf
+  , syntaxGVar
+  ]
+
+pVarInf ∷ CParser TokenBasic VarInf
+pVarInf = concat
+  [ D_VarInf ^$ pDVarInf
+  , do x ← pName
+       concat
+         [ N_VarInf ^$ pNVarInfTail x
+         , G_VarInf ^$ pGVarTail x
+         ]
+  ]
+
+---------------------------------------------------------------------
 -- ======== --
 -- SVarView --
 -- ======== --
+---------------------------------------------------------------------
 
 class SVarView s e | e→s where
-  svarL ∷ s → e ⌲ 𝕏
+  svarL ∷ s → e ⌲ SVar
 
-svarScopeL ∷ ∀ s e. (SVarView s e) ⇒ s → 𝑂 Name → e ⌲ ℕ64
+svarScopeL ∷ ∀ s e. (SVarView s e) ⇒ s → SName → e ⌲ DVar
 svarScopeL s xO = 
-  let ctor ∷ ℕ64 → e
+  let ctor ∷ DVar → e
       ctor = case xO of
-        None → \ n → construct (svarL s) $ D_SVar n
-        Some x → \ n → construct (svarL s) $ N_SVar n x
-      dtor ∷ e → 𝑂 ℕ64
+        D_SName → \ n → construct (svarL s) $ D_SVar n
+        N_SName x → \ n → construct (svarL s) $ N_SVar $ NVar n x
+      dtor ∷ e → 𝑂 DVar
       dtor = case xO of
-        None → \ e → view (d_SVarL ⊚ svarL s) e
-        Some x → \ e → do
-          n :* x' ← view (n_SVarL ⊚ svarL s) e
+        D_SName → \ e → view (d_SVarL ⊚ svarL s) e
+        N_SName x → \ e → do
+          NVar n x' ← view (n_SVarL ⊚ svarL s) e
           guard $ x ≡ x'
           return n
   in prism ctor dtor

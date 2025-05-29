@@ -24,7 +24,7 @@ onULCExp ∷ (𝐴 𝒸 (ULCExp_R 𝒸) → 𝐴 𝒸' (ULCExp_R 𝒸')) → ULC
 onULCExp f = ULCExp ∘ f ∘ unULCExp
 
 data ULCExp_R 𝒸 =
-    Var_ULC (𝕐 () (ULCExp 𝒸))
+    Var_ULC (UVar () (ULCExp 𝒸))
   | Lam_ULC (𝑂 Name) (ULCExp 𝒸)
   | App_ULC (ULCExp 𝒸) (ULCExp 𝒸)
   deriving (Eq,HS.Generic,Ord,Show)
@@ -39,7 +39,7 @@ wfULC = pipe (aval ∘ unULCExp) $ \case
   Lam_ULC _wO e → wfULC e
   App_ULC e₁ e₂ → and [wfULC e₁,wfULC e₂]
 
-canonULC ∷ (Null 𝒸) ⇒ ULCExp 𝒸 → ULCExp 𝒸
+canonULC ∷ (Null 𝒸,Show 𝒸) ⇒ ULCExp 𝒸 → ULCExp 𝒸
 canonULC = onULCExp $ mapAVal $ \case
   Var_ULC x → Var_ULC $ canonUVar canonULC x
   Lam_ULC xO e → Lam_ULC xO $ canonULC e
@@ -64,20 +64,20 @@ pULCExp = ULCExp ^$ fmixfixWithContextSet "exp" $ concat
       void $ cpSyntax ")"
       return $ aval $ unULCExp e
   , fmixTerminal $ do
-      x ← cpUVarRaw $ \ () → pULCExp
+      x ← pUVar $ \ () → pULCExp
       return $ Var_ULC x
   , fmixPrefix pLET $ do
       void $ concat $ map cpSyntax ["lam","λ"]
-      xO ← cpOptional $ cpVar
+      xO ← cpOptional $ pName
       void $ concat $ map cpSyntax ["->","→"]
       return $ \ e → Lam_ULC xO $ ULCExp e
   , fmixInfixL pAPP $ return $ \ e₁ e₂ →
       App_ULC (ULCExp e₁) $ ULCExp e₂
   ]
 
-instance Pretty (ULCExp 𝒸) where pretty = pretty ∘ aval ∘ unULCExp
+instance (Show 𝒸) ⇒ Pretty (ULCExp 𝒸) where pretty = pretty ∘ aval ∘ unULCExp
 
-instance Pretty (ULCExp_R 𝒸) where
+instance (Show 𝒸) ⇒ Pretty (ULCExp_R 𝒸) where
   pretty = \case
     Var_ULC x → pretty x
     Lam_ULC xO e → flip (ppPreSep pLET) (pretty e) $ ppHorizontal $ concat
@@ -142,27 +142,27 @@ instance Fuzzy ULCExpRaw where
       , (:*) d   $ \ () → rchoose
           [ \ () → do
                 xO ← fuzzy
-                e ← fuzzyRec fuzzy
+                e ← fuzzyRec
                 return $ Lam_ULC xO e
 
           , \ () → do
-              e₁ ← fuzzyRec fuzzy
-              e₂ ← fuzzyRec fuzzy
+              e₁ ← fuzzyRec
+              e₂ ← fuzzyRec
               return $ App_ULC e₁ e₂
           ]
       ]
 
 instance (Null 𝒸) ⇒ SVarView () (ULCExp 𝒸) where
   svarL () = 
-    let ctor ∷ 𝕏 → ULCExp 𝒸
-        ctor = ULCExp ∘ 𝐴 null ∘ Var_ULC ∘ S_UVar
-        dtor ∷ ULCExp 𝒸 → 𝑂 𝕏
-        dtor e = view (s_UVarL ⊚ var_ULCL) $ aval $ unULCExp e
+    let ctor ∷ SVar → ULCExp 𝒸
+        ctor = ULCExp ∘ 𝐴 null ∘ Var_ULC ∘ construct svar_UVarL
+        dtor ∷ ULCExp 𝒸 → 𝑂 SVar
+        dtor e = view (svar_UVarL ⊚ var_ULCL) $ aval $ unULCExp e
     in prism ctor dtor
 
-instance (Null 𝒸) ⇒ Substy () (ULCExp 𝒸) (ULCExp 𝒸) where
+instance (Null 𝒸,Show 𝒸) ⇒ Substy () (ULCExp 𝒸) (ULCExp 𝒸) where
   substy = pipe unULCExp $ \ (𝐴 𝒸 e₀) → ULCExp ^$ case e₀ of
-    Var_ULC x → unULCExp ^$ substy𝕐 () (ULCExp ∘  𝐴 𝒸 ∘ Var_ULC) x
+    Var_ULC x → unULCExp ^$ substyUVar (ULCExp ∘  𝐴 𝒸 ∘ Var_ULC) () x
     Lam_ULC xO e → ureset $ do
       case xO of
         None → substyDBdr ()

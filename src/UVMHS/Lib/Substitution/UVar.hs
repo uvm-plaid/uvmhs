@@ -4,78 +4,145 @@ import UVMHS.Core
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Rand
 import UVMHS.Lib.Fuzzy
+import UVMHS.Lib.Shrinky
 
-import UVMHS.Lib.Substitution.Var
+import UVMHS.Lib.Substitution.Name
 import UVMHS.Lib.Substitution.Subst
+import UVMHS.Lib.Substitution.Var
 
--- =================== --
--- UNIFIABLE VARIABLES --
--- =================== --
+---------------------------------------------------------------------
+-- ==== --
+-- MVar --
+-- ==== --
+---------------------------------------------------------------------
 
-data 𝕐 s e =
-    S_UVar 𝕏              -- scoped variable
-  | M_UVar Name (Subst s e)  -- meta variable
-  deriving (Eq,Ord,Show)
-makePrisms ''𝕐
-
-wfUVar ∷ (Ord s) ⇒ 𝕐 s e → 𝔹
-wfUVar = \case
-  S_UVar _x → True
-  M_UVar _w 𝓈 → wfSubst 𝓈
-
-duvarL ∷ 𝕐 s e ⌲ ℕ64
-duvarL = d_SVarL ⊚ s_UVarL
-
-duvar ∷ ℕ64 → 𝕐 s e
-duvar = construct duvarL
-
-nuvarL ∷ 𝕐 s e ⌲ ℕ64 ∧ Name
-nuvarL = n_SVarL ⊚ s_UVarL
-
-nuvar ∷ ℕ64 → Name → 𝕐 s e
-nuvar = uncurry $ construct nuvarL
-
-znuvarL ∷ 𝕐 s e ⌲ Name
-znuvarL = znsvarL ⊚ s_UVarL
-
-znuvar ∷ Name → 𝕐 s e
-znuvar = construct znuvarL
-
-guvarL ∷ 𝕐 s e ⌲ Name
-guvarL = g_SVarL ⊚ s_UVarL
-
-guvar ∷ Name → 𝕐 s e
-guvar = construct guvarL
-
-gensymUVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m (𝕐 s e)
-gensymUVar ℓ s = S_UVar ^$ gensymSVar ℓ s
+data MVar s e = MVar
+  { mvarSubst ∷ Subst s e
+  , mvarName  ∷ Name
+  } deriving (Eq,Ord,Show)
+makeLenses ''MVar
 
 -------------
 -- FUNCTOR --
 -------------
 
-instance Functor (𝕐 s) where
-  map _ (S_UVar x) = S_UVar x
-  map f (M_UVar x 𝓈) = M_UVar x $ map f 𝓈
+instance Functor (MVar s) where
+  map f (MVar 𝓈 x) = MVar (map f 𝓈) x
+
+------------------
+-- WELL FOUNDED --
+------------------
+
+wfMVar ∷ (Ord s) ⇒ MVar s e → 𝔹
+wfMVar = wfSubst ∘ mvarSubst
+
+-----------
+-- FUZZY --
+-----------
+
+instance (Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (MVar s e) where
+  fuzzy = return MVar ⊡ fuzzy ⊡ fuzzy
+
+instance (Ord s,Shrinky e) ⇒ Shrinky (MVar s e) where
+  shrink (MVar 𝓈 x) = do
+    (𝓈',x') ← shrink (𝓈,x)
+    return $ MVar 𝓈' x'
 
 ---------------------
 -- PRETTY PRINTING --
 ---------------------
 
-instance (Ord s,Pretty e, Pretty s) ⇒ Pretty (𝕐 s e) where
-  pretty = \case
-    S_UVar x → pretty x
-    M_UVar x 𝓈 → concat [pretty x,ppPun ":m",ppGA $ pretty 𝓈]
+instance (Ord s,Pretty s,Pretty e) ⇒ Pretty (MVar s e) where
+  pretty (MVar 𝓈 x) = concat 
+    [ pretty x
+    , ppPun ":m"
+    , if isNullSubst 𝓈 then null else ppGA $ pretty 𝓈
+    ]
+
+---------------------------------------------------------------------
+-- ==== --
+-- UVar --
+-- ==== --
+---------------------------------------------------------------------
+
+data UVar s e =
+    D_UVar DVar
+  | N_UVar NVar
+  | G_UVar GVar
+  | M_UVar (MVar s e)
+  deriving (Eq,Ord,Show)
+makePrisms ''UVar
+makePrettyUnion ''UVar
+
+nameUVarL ∷ UVar s e ⌲ Name
+nameUVarL = nameNVarL ⊚ n_UVarL
+
+nameUVar ∷ Name → UVar s e
+nameUVar = construct nameUVarL
+
+svar_UVar ∷ SVar → UVar s e
+svar_UVar = \case
+  D_SVar x → D_UVar x
+  N_SVar x → N_UVar x
+
+svar_UVarL ∷ UVar s e ⌲ SVar
+svar_UVarL = prism svar_UVar $ \case
+  D_UVar x → Some $ D_SVar x
+  N_UVar x → Some $ N_SVar x
+  _        → None
+
+var_UVar ∷ Var → UVar s e
+var_UVar = \case
+  D_Var x → D_UVar x
+  N_Var x → N_UVar x
+  G_Var x → G_UVar x
+
+var_UVarL ∷ UVar s e ⌲ Var
+var_UVarL = prism var_UVar $ \case
+  D_UVar x → Some $ D_Var x
+  N_UVar x → Some $ N_Var x
+  G_UVar x → Some $ G_Var x
+  _        → None
+  
+
+gensymUVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m (UVar s e)
+gensymUVar ℓ s = N_UVar ^$ gensymNVar ℓ s
+
+-------------
+-- FUNCTOR --
+-------------
+
+instance Functor (UVar s) where
+  map f = \case
+    D_UVar x → D_UVar x
+    N_UVar x → N_UVar x
+    G_UVar x → G_UVar x
+    M_UVar x → M_UVar $ map f x
+
+------------------
+-- WELL FOUNDED --
+------------------
+
+wfUVar ∷ (Ord s) ⇒ UVar s e → 𝔹
+wfUVar = \case
+  D_UVar _ → True
+  N_UVar _ → True
+  G_UVar _ → True
+  M_UVar x → wfMVar x
+
+---------------------
+-- PRETTY PRINTING --
+---------------------
 
 -------------------------
 -- FUZZY for Variables --
 -------------------------
 
-instance (Pretty e,Pretty s,Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (𝕐 s e) where
-  fuzzy = do
-    d ← askL fuzzyEnvDepthL
-    wrchoose
-      [ (:*) one $ \ () → S_UVar ^$ fuzzy
-      , (:*) d $ \ () → return M_UVar ⊡ fuzzy ⊡ fuzzyRec fuzzy
-      ]
+instance (Pretty e,Pretty s,Ord s,Fuzzy s,Fuzzy e) ⇒ Fuzzy (UVar s e) where
+  fuzzy = rchoose
+    [ \ () → D_UVar ^$ fuzzy
+    , \ () → N_UVar ^$ fuzzy
+    , \ () → G_UVar ^$ fuzzy
+    , \ () → M_UVar ^$ fuzzy
+    ]
 

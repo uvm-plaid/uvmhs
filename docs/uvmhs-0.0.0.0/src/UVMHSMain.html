@@ -10,7 +10,7 @@
 </span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Prelude</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">HS</span></span><span>
 </span><span id="line-11"></span><span>
 </span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Tests.Core.html"><span class="hs-identifier">UVMHS.Tests.Core</span></a></span><span>
-</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Substitution.Tests.html"><span class="hs-identifier">UVMHS.Lib.Substitution.Tests</span></a></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Tests.Substitution.html"><span class="hs-identifier">UVMHS.Tests.Substitution</span></a></span><span>
 </span><span id="line-14"></span><span>
 </span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">TH</span></span><span>
 </span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="hs-keyword">qualified</span><span> </span><span class="annot"><span class="hs-identifier">Language.Haskell.TH.Syntax</span></span><span> </span><span class="hs-keyword">as</span><span> </span><span class="annot"><span class="hs-identifier">TH</span></span><span>
@@ -46,7 +46,7 @@ forall a. Pretty a =&gt; a -&gt; IO ()
 </span><span class="hs-number">0</span></span><span>
 </span><span id="line-31"></span><span>  </span><span class="hs-special">$$</span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Testing.html#testModules"><span class="hs-identifier hs-type">testModules</span></a></span><span> </span><span class="annot"><span class="hs-identifier hs-type">True</span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Testing.html#fuzzParamsSml"><span class="hs-identifier hs-type">fuzzParamsSml</span></a></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span class="hs-special">)</span><span>
 </span><span id="line-32"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="hs-string">&quot;UVMHS.Tests.Core&quot;</span></span><span>
-</span><span id="line-33"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;UVMHS.Lib.Substitution.Tests&quot;</span></span><span>
+</span><span id="line-33"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="hs-string">&quot;UVMHS.Tests.Substitution&quot;</span></span><span>
 </span><span id="line-34"></span><span>    </span><span class="hs-special">]</span><span class="hs-special">)</span><span>
 </span><span id="line-35"></span><span>  </span><span class="hs-comment">-- eachOn (upto 100) $ \ s &#8594; do</span><span>
 </span><span id="line-36"></span><span>  </span><span class="hs-comment">--   rngSeed s</span><span>

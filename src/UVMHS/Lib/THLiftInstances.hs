@@ -8,6 +8,7 @@ import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.Window
 
 import UVMHS.Lib.Substitution
+import UVMHS.Lib.Substitution.Name
 import UVMHS.Lib.Substitution.Subst
 import UVMHS.Lib.Substitution.SubstElem
 import UVMHS.Lib.Substitution.SubstScoped
@@ -57,8 +58,13 @@ instance TH.Lift Doc where
     [|| ppEmbed d' ||]
 
 deriving instance TH.Lift Name
-deriving instance TH.Lift 𝕏
-deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (𝕐 s e)
+deriving instance TH.Lift SName
+deriving instance TH.Lift DVar
+deriving instance TH.Lift NVar
+deriving instance TH.Lift GVar
+deriving instance TH.Lift Var
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (MVar s e)
+deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (UVar s e)
 deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstScoped s e)
 deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (Subst s e)
 deriving instance (TH.Lift s,TH.Lift e) ⇒ TH.Lift (SubstElem s e)
