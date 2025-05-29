@@ -6,7 +6,7 @@ module UVMHS.Lib.Substitution
   , NVar(..),nvarIndexL,nvarNameL,nameNVar,nameNVarL,gensymNVar,syntaxNVar,pNVarTail,pNVar
   , GVar(..),unGVarL,syntaxGVar,pGVarTail,pGVar
   , MVar(..),mvarSubstL,mvarNameL,wfMVar,canonMVar,substMVar,syntaxMVar,pMVarTail,pMVar
-  -- * Union Variable Types
+  -- * Combined Variable Types
   , SVar(..),d_SVarL,n_SVarL,mkSVar,svarName,svarLevel
   , Var(..),d_VarL,n_VarL,g_VarL,nameVar,nameVarL,gensymVar,syntaxVar,pVar
   , UVar(..),d_UVarL,n_UVarL,g_UVarL,m_UVarL,nameUVarL,nameUVar,svar_UVar,svar_UVarL,var_UVar,var_UVarL
