@@ -13,6 +13,9 @@ Refactor:
 - Fuzzing Library:
   - Rename `Shrinky` to `Shrink`
 
+Improve:
+- Work on Chunky
+
 New Feature:
 - Parser Library: 
   - allow for two categories of errors, "invalid token" error (as
@@ -39,7 +42,23 @@ New Feature:
     increment logic.
   - Make substitution failure a proper error type with Doc error message that
     describes failure, rather than just an option
+  - change printing and parsing of "x:0…x:4" to be "x:0…4"
 
 Test Suite Needed:
 - Parser Library
 - Pretty Printer Library
+
+Naming Conventions:
+  - convThingAToThingB -- A → B
+  - convThingBToThingA -- B → A
+
+  - makeThingAFrThingB -- B → A
+  - viewThingBInThingA -- A → 𝑂 B
+  - thingAToThingBL    -- A ⌲ B
+
+  - projThingAToThingB -- A → B
+  - altrThingBInThingA -- (B → B) → A → A
+  - thingAToThingBL    -- A ⟢ B
+
+  - fieldNameL
+  - constNameL

@@ -5459,6 +5459,7 @@ N_SVar :: NVar -> SVar
 d_SVarL :: SVar ⌲ DVar
 n_SVarL :: SVar ⌲ NVar
 mkSVar :: SName -> DVar -> SVar
+svar_Name :: Name -> SVar
 svarName :: SVar -> SName
 svarLevel :: SVar -> DVar
 data Var
@@ -5469,6 +5470,7 @@ d_VarL :: Var ⌲ DVar
 n_VarL :: Var ⌲ NVar
 g_VarL :: Var ⌲ GVar
 var_Name :: Name -> Var
+var_SVar :: SVar -> Var
 name_VarL :: Var ⌲ Name
 gensymVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Var
 syntaxVar :: LexerBasicSyntax
@@ -5784,7 +5786,7 @@ nullSubst :: Subst s e
 appendSubst :: (Ord s, Substy s e e) => Subst s e -> Subst s e -> Subst s e
 substyDBdr :: (Ord s, Ord e) => s -> SubstyM s e ()
 substyNBdr :: (Ord s, Ord e) => s -> Name -> SubstyM s e ()
-substyBdr :: (Ord s, Ord e, Substy s e e) => s -> (UVar s e -> e) -> Name -> SubstyM s e ()
+substyBdr :: (Ord s, Ord e, Substy s e e) => s -> (SVar -> e) -> Name -> SubstyM s e ()
 substySVarG :: (Ord s, Ord e, Substy s e e) => (DVar -> e) -> s -> SVar -> SubstyM s e e
 substyDVar :: (Ord s, Ord e, Substy s e e) => (DVar -> e) -> s -> DVar -> SubstyM s e e
 substyNVar :: (Ord s, Ord e, Substy s e e) => (NVar -> e) -> s -> NVar -> SubstyM s e e
@@ -5895,6 +5897,7 @@ n_SVarL :: SVar ⌲ NVar
 mkSVar :: SName -> DVar -> SVar
 svarName :: SVar -> SName
 svarLevel :: SVar -> DVar
+svar_Name :: Name -> SVar
 data Var
 D_Var :: DVar -> Var
 N_Var :: NVar -> Var
@@ -5903,6 +5906,7 @@ d_VarL :: Var ⌲ DVar
 n_VarL :: Var ⌲ NVar
 g_VarL :: Var ⌲ GVar
 var_Name :: Name -> Var
+var_SVar :: SVar -> Var
 name_VarL :: Var ⌲ Name
 gensymVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Var
 syntaxVar :: LexerBasicSyntax
@@ -5958,7 +5962,7 @@ class SVarView s e => Substy s e a | a -> e, e -> s
 substy :: Substy s e a => a -> SubstyM s e a
 substyDBdr :: (Ord s, Ord e) => s -> SubstyM s e ()
 substyNBdr :: (Ord s, Ord e) => s -> Name -> SubstyM s e ()
-substyBdr :: (Ord s, Ord e, Substy s e e) => s -> (UVar s e -> e) -> Name -> SubstyM s e ()
+substyBdr :: (Ord s, Ord e, Substy s e e) => s -> (SVar -> e) -> Name -> SubstyM s e ()
 substyDVar :: (Ord s, Ord e, Substy s e e) => (DVar -> e) -> s -> DVar -> SubstyM s e e
 substyNVar :: (Ord s, Ord e, Substy s e e) => (NVar -> e) -> s -> NVar -> SubstyM s e e
 substyGVar :: (Ord s, Ord e, Substy s e e) => (GVar -> e) -> s -> GVar -> SubstyM s e e
