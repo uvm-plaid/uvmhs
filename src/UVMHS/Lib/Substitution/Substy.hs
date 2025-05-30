@@ -191,7 +191,7 @@ substyBdr s mkVar x = do
     Some AllNamed_RA → 
       umodifyEnv $ alter subst_SAL $ alter substActionSubstL $ flip (⧺) $ concat
         [ dintroSubst s 1
-        , dbindSubst s $ mkVar $ nameUVar x
+        , dbindSubst s $ mkVar $ uvar_Name x
         ]
 
 -- TRICKY: 
@@ -212,7 +212,7 @@ substySVarG mkVar s x = do
       when (unDVar xLevel ≥ m) $ \ () → do
         let -- create the free variable to accumulate, whose variable level
             -- must be recalculated to be the found variable's level minus `m`
-            y = svar_UVar $ mkSVar xName $ DVar $ unDVar xLevel - m
+            y = uvar_SVar $ mkSVar xName $ DVar $ unDVar xLevel - m
         -- only accumulate the free variable when it passes the filter
         when (freeVarsActionFilter a s y) $ \ () →
           tell $ s ↦ single y

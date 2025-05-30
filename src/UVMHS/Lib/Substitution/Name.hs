@@ -19,8 +19,8 @@ data Name = Name
   } deriving (Eq,Ord,Show)
 makeLenses ''Name
 
-name ∷ 𝕊 → Name
-name = Name None
+mkName ∷ 𝕊 → Name
+mkName = Name None
 
 gensymName ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m Name
 gensymName ℓ s = do

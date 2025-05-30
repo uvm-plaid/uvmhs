@@ -74,31 +74,31 @@ data UVar s e =
 makePrisms ''UVar
 makePrettyUnion ''UVar
 
-nameUVarL ∷ UVar s e ⌲ Name
-nameUVarL = nameNVarL ⊚ n_UVarL
+name_UVarL ∷ UVar s e ⌲ Name
+name_UVarL = name_NVarL ⊚ n_UVarL
 
-nameUVar ∷ Name → UVar s e
-nameUVar = construct nameUVarL
+uvar_Name ∷ Name → UVar s e
+uvar_Name = construct name_UVarL
 
-svar_UVar ∷ SVar → UVar s e
-svar_UVar = \case
+uvar_SVar ∷ SVar → UVar s e
+uvar_SVar = \case
   D_SVar x → D_UVar x
   N_SVar x → N_UVar x
 
 svar_UVarL ∷ UVar s e ⌲ SVar
-svar_UVarL = prism svar_UVar $ \case
+svar_UVarL = prism uvar_SVar $ \case
   D_UVar x → Some $ D_SVar x
   N_UVar x → Some $ N_SVar x
   _        → None
 
-var_UVar ∷ Var → UVar s e
-var_UVar = \case
+uvar_Var ∷ Var → UVar s e
+uvar_Var = \case
   D_Var x → D_UVar x
   N_Var x → N_UVar x
   G_Var x → G_UVar x
 
 var_UVarL ∷ UVar s e ⌲ Var
-var_UVarL = prism var_UVar $ \case
+var_UVarL = prism uvar_Var $ \case
   D_UVar x → Some $ D_Var x
   N_UVar x → Some $ N_Var x
   G_UVar x → Some $ G_Var x

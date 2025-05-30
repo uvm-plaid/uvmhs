@@ -5395,7 +5395,7 @@ Name :: 𝑂 ℕ64 -> 𝕊 -> Name
 [nameName] :: Name -> 𝕊
 nameMarkL :: Name ⟢ 𝑂 ℕ64
 nameNameL :: Name ⟢ 𝕊
-name :: 𝕊 -> Name
+mkName :: 𝕊 -> Name
 gensymName :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Name
 syntaxName :: LexerBasicSyntax
 pName :: CParser TokenBasic Name
@@ -5440,8 +5440,8 @@ NVar :: DVar -> Name -> NVar
 [nvarName] :: NVar -> Name
 nvarIndexL :: NVar ⟢ DVar
 nvarNameL :: NVar ⟢ Name
-nameNVar :: Name -> NVar
-nameNVarL :: NVar ⌲ Name
+nvar_Name :: Name -> NVar
+name_NVarL :: NVar ⌲ Name
 gensymNVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m NVar
 syntaxNVar :: LexerBasicSyntax
 pNVarTail :: Name -> CParser TokenBasic NVar
@@ -5468,8 +5468,8 @@ G_Var :: GVar -> Var
 d_VarL :: Var ⌲ DVar
 n_VarL :: Var ⌲ NVar
 g_VarL :: Var ⌲ GVar
-nameVar :: Name -> Var
-nameVarL :: Var ⌲ Name
+var_Name :: Name -> Var
+name_VarL :: Var ⌲ Name
 gensymVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Var
 syntaxVar :: LexerBasicSyntax
 pVar :: CParser TokenBasic Var
@@ -5712,11 +5712,11 @@ d_UVarL :: UVar s e ⌲ DVar
 n_UVarL :: UVar s e ⌲ NVar
 g_UVarL :: UVar s e ⌲ GVar
 m_UVarL :: UVar s e ⌲ MVar s e
-nameUVarL :: UVar s e ⌲ Name
-nameUVar :: Name -> UVar s e
-svar_UVar :: SVar -> UVar s e
+name_UVarL :: UVar s e ⌲ Name
+uvar_Name :: Name -> UVar s e
+uvar_SVar :: SVar -> UVar s e
 svar_UVarL :: UVar s e ⌲ SVar
-var_UVar :: Var -> UVar s e
+uvar_Var :: Var -> UVar s e
 var_UVarL :: UVar s e ⌲ Var
 gensymUVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m (UVar s e)
 wfUVar :: Ord s => UVar s e -> 𝔹
@@ -5844,7 +5844,7 @@ Name :: 𝑂 ℕ64 -> 𝕊 -> Name
 [nameName] :: Name -> 𝕊
 nameMarkL :: Name ⟢ 𝑂 ℕ64
 nameNameL :: Name ⟢ 𝕊
-name :: 𝕊 -> Name
+mkName :: 𝕊 -> Name
 gensymName :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Name
 syntaxName :: LexerBasicSyntax
 pName :: CParser TokenBasic Name
@@ -5862,8 +5862,8 @@ NVar :: DVar -> Name -> NVar
 [nvarName] :: NVar -> Name
 nvarIndexL :: NVar ⟢ DVar
 nvarNameL :: NVar ⟢ Name
-nameNVar :: Name -> NVar
-nameNVarL :: NVar ⌲ Name
+nvar_Name :: Name -> NVar
+name_NVarL :: NVar ⌲ Name
 gensymNVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m NVar
 syntaxNVar :: LexerBasicSyntax
 pNVarTail :: Name -> CParser TokenBasic NVar
@@ -5902,8 +5902,8 @@ G_Var :: GVar -> Var
 d_VarL :: Var ⌲ DVar
 n_VarL :: Var ⌲ NVar
 g_VarL :: Var ⌲ GVar
-nameVar :: Name -> Var
-nameVarL :: Var ⌲ Name
+var_Name :: Name -> Var
+name_VarL :: Var ⌲ Name
 gensymVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m Var
 syntaxVar :: LexerBasicSyntax
 pVar :: CParser TokenBasic Var
@@ -5916,11 +5916,11 @@ d_UVarL :: UVar s e ⌲ DVar
 n_UVarL :: UVar s e ⌲ NVar
 g_UVarL :: UVar s e ⌲ GVar
 m_UVarL :: UVar s e ⌲ MVar s e
-nameUVarL :: UVar s e ⌲ Name
-nameUVar :: Name -> UVar s e
-svar_UVar :: SVar -> UVar s e
+name_UVarL :: UVar s e ⌲ Name
+uvar_Name :: Name -> UVar s e
+uvar_SVar :: SVar -> UVar s e
 svar_UVarL :: UVar s e ⌲ SVar
-var_UVar :: Var -> UVar s e
+uvar_Var :: Var -> UVar s e
 var_UVarL :: UVar s e ⌲ Var
 gensymUVar :: (Monad m, MonadState s m) => (s ⟢ ℕ64) -> 𝕊 -> m (UVar s e)
 wfUVar :: Ord s => UVar s e -> 𝔹

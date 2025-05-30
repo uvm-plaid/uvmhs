@@ -42,36 +42,36 @@ import UVMHS.Lang.ULC
                  [| "{•:0…•:0↦[≡],•:1↦(),•:2…•:∞↦[+3]}" |]
 
 𝔱 "subst:parse" [| [ulc| χ:m{} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") null |]
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (mkName "χ") null |]
 𝔱 "subst:parse" [| [ulc| χ:m{•:0…•:0↦[≡]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (mkName "χ") $ Subst $ SubstSpaced null $ 
                      (↦) (() :* D_SName) $ SubstScoped 1 null 0 
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:0↦[≡]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* N_SName (name "x")) $ SubstScoped 1 null 0 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (mkName "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (mkName "x")) $ SubstScoped 1 null 0 
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:1↦[≡]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* N_SName (name "x")) $ SubstScoped 2 null 0 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (mkName "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (mkName "x")) $ SubstScoped 2 null 0 
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0↦•:0} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* N_SName (name "x")) $ 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (mkName "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (mkName "x")) $ 
                        let es = vec [Trm_SSE $ SubstElem null $ Some [ulc|•:0|]]
                        in SubstScoped 0 es 0 
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:∞↦[≡]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* N_SName (name "x")) $ SubstScoped 0 null 0 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (mkName "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (mkName "x")) $ SubstScoped 0 null 0 
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:∞↦[+1]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* N_SName (name "x")) $ SubstScoped 0 null 1
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (mkName "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (mkName "x")) $ SubstScoped 0 null 1
                 |]
 𝔱 "subst:parse" [| [ulc| χ:m{x:0…x:0↦[≡],x:1↦•:0,x:2…x:∞↦[+1]} |] |] 
-                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (name "χ") $ Subst $ SubstSpaced null $ 
-                     (↦) (() :* N_SName (name "x")) $ 
+                [| ULCExp $ 𝐴 null $ Var_ULC $ M_UVar $ flip MVar (mkName "χ") $ Subst $ SubstSpaced null $ 
+                     (↦) (() :* N_SName (mkName "x")) $ 
                        let es = vec [Trm_SSE $ SubstElem null $ Some [ulc|•:0|]]
                        in SubstScoped 1 es 1 
                 |]
@@ -219,31 +219,31 @@ import UVMHS.Lang.ULC
 𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → •:2) •:0   |] |] [| pow𝑃 $ map (D_UVar∘DVar) [0]   |]
 𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → •:1) •:1   |] |] [| pow𝑃 $ map (D_UVar∘DVar) [0]   |]
 𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → •:2) •:1   |] |] [| pow𝑃 $ map (D_UVar∘DVar) [0]   |]
-𝔱 "subst:fvs" [| fvs () [ulc| x                   |] |] [| pow𝑃 $ map (nameUVar∘name) ["x"]     |]
-𝔱 "subst:fvs" [| fvs () [ulc| x y                 |] |] [| pow𝑃 $ map (nameUVar∘name) ["x","y"] |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → y             |] |] [| pow𝑃 $ map (nameUVar∘name) ["y"]     |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → x) y   |] |] [| pow𝑃 $ map (nameUVar∘name) ["y"]     |]
-𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → x) x y |] |] [| pow𝑃 $ map (nameUVar∘name) ["y"]     |]
+𝔱 "subst:fvs" [| fvs () [ulc| x                   |] |] [| pow𝑃 $ map (uvar_Name∘mkName) ["x"]     |]
+𝔱 "subst:fvs" [| fvs () [ulc| x y                 |] |] [| pow𝑃 $ map (uvar_Name∘mkName) ["x","y"] |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → y             |] |] [| pow𝑃 $ map (uvar_Name∘mkName) ["y"]     |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → x) y   |] |] [| pow𝑃 $ map (uvar_Name∘mkName) ["y"]     |]
+𝔱 "subst:fvs" [| fvs () [ulc| λ x → (λ y → x) x y |] |] [| pow𝑃 $ map (uvar_Name∘mkName) ["y"]     |]
 
-𝔱 "subst:metas" [| subst  (nbindSubst () (name "x") [ulc| y |]) [ulc| x         |] |] [| Some [ulc| y         |] |]
-𝔱 "subst:metas" [| subst  (nbindSubst () (name "x") [ulc| y |]) [ulc| λ y → x   |] |] [| Some [ulc| λ y → y:1 |] |]
-𝔱 "subst:metas" [| msubst (mbindSubst () (name "x") [ulc| y |]) [ulc| x:m       |] |] [| Some [ulc| y         |] |]
-𝔱 "subst:metas" [| msubst (mbindSubst () (name "x") [ulc| y |]) [ulc| λ y → x:m |] |] [| Some [ulc| λ y → y   |] |]
+𝔱 "subst:metas" [| subst  (nbindSubst () (mkName "x") [ulc| y |]) [ulc| x         |] |] [| Some [ulc| y         |] |]
+𝔱 "subst:metas" [| subst  (nbindSubst () (mkName "x") [ulc| y |]) [ulc| λ y → x   |] |] [| Some [ulc| λ y → y:1 |] |]
+𝔱 "subst:metas" [| msubst (mbindSubst () (mkName "x") [ulc| y |]) [ulc| x:m       |] |] [| Some [ulc| y         |] |]
+𝔱 "subst:metas" [| msubst (mbindSubst () (mkName "x") [ulc| y |]) [ulc| λ y → x:m |] |] [| Some [ulc| λ y → y   |] |]
 
 𝔱 "subst:metas"
-  [| msubst (mbindSubst () (name "x") [ulc| •:0 |]) [ulc| x:m{} (λ → x:m) |] |]
+  [| msubst (mbindSubst () (mkName "x") [ulc| •:0 |]) [ulc| x:m{} (λ → x:m) |] |]
   [| Some [ulc| •:0 (λ → •:0) |] |]
 
 𝔱 "subst:metas"
-  [| msubst (mbindSubst () (name "x") [ulc| •:0 |]) [ulc| x:m{} (λ → x:m{•:0…•:∞↦[+1]}) |] |]
+  [| msubst (mbindSubst () (mkName "x") [ulc| •:0 |]) [ulc| x:m{} (λ → x:m{•:0…•:∞↦[+1]}) |] |]
   [| Some [ulc| •:0 (λ → •:1) |] |]
 
 𝔱 "subst:metas"
-  [| msubst (mbindSubst () (name "x") [ulc| •:0 |]) [ulc| x:m{} (λ → x:m{•:0↦y,•:1…•:∞↦[-1]}) |] |]
+  [| msubst (mbindSubst () (mkName "x") [ulc| •:0 |]) [ulc| x:m{} (λ → x:m{•:0↦y,•:1…•:∞↦[-1]}) |] |]
   [| Some [ulc| •:0 (λ → y) |] |]
 
 𝔱 "subst:metas"
-  [| msubst (mbindSubst () (name "x") [ulc| •:1 |]) [ulc| x:m{} (λ → x:m{•:0↦y,•:1…•:∞↦[-1]}) |] |]
+  [| msubst (mbindSubst () (mkName "x") [ulc| •:1 |]) [ulc| x:m{} (λ → x:m{•:0↦y,•:1…•:∞↦[-1]}) |] |]
   [| Some [ulc| •:1 (λ → •:0) |] |]
 
 𝔱 "subst:metas"

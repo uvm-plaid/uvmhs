@@ -54,14 +54,14 @@ data NVar = NVar
   } deriving (Eq,Ord,Show)
 makeLenses ''NVar
 
-nameNVar ∷ Name → NVar
-nameNVar = NVar $ DVar 0
+nvar_Name ∷ Name → NVar
+nvar_Name = NVar $ DVar 0
 
-nameNVarL ∷ NVar ⌲ Name
-nameNVarL = prism nameNVar $ \ (NVar n x) → if n ≡ DVar 0 then Some x else None
+name_NVarL ∷ NVar ⌲ Name
+name_NVarL = prism nvar_Name $ \ (NVar n x) → if n ≡ DVar 0 then Some x else None
 
 gensymNVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m NVar
-gensymNVar ℓ s = nameNVar ^$ gensymName ℓ s
+gensymNVar ℓ s = nvar_Name ^$ gensymName ℓ s
 
 instance Fuzzy NVar where 
   fuzzy = return NVar ⊡ fuzzy ⊡ fuzzy
@@ -180,11 +180,11 @@ data Var =
 makePrisms ''Var
 makePrettyUnion ''Var
 
-nameVar ∷ Name → Var
-nameVar = N_Var ∘ nameNVar
+var_Name ∷ Name → Var
+var_Name = N_Var ∘ nvar_Name
 
-nameVarL ∷ Var ⌲ Name
-nameVarL = nameNVarL ⊚ n_VarL
+name_VarL ∷ Var ⌲ Name
+name_VarL = name_NVarL ⊚ n_VarL
 
 gensymVar ∷ (Monad m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m Var
 gensymVar ℓ s = N_Var ^$ gensymNVar ℓ s
