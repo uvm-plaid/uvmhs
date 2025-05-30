@@ -186,6 +186,11 @@ makePrettyUnion ''Var
 var_Name ∷ Name → Var
 var_Name = N_Var ∘ nvar_Name
 
+var_SVar ∷ SVar → Var
+var_SVar = \case
+  D_SVar x → D_Var x
+  N_SVar x → N_Var x
+
 name_VarL ∷ Var ⌲ Name
 name_VarL = name_NVarL ⊚ n_VarL
 

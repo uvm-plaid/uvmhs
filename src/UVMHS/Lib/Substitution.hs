@@ -7,8 +7,8 @@ module UVMHS.Lib.Substitution
   , GVar(..),unGVarL,syntaxGVar,pGVarTail,pGVar
   , MVar(..),mvarSubstL,mvarNameL,wfMVar,canonMVar,substMVar,syntaxMVar,pMVarTail,pMVar
   -- * Combined Variable Types
-  , SVar(..),d_SVarL,n_SVarL,mkSVar,svarName,svarLevel
-  , Var(..),d_VarL,n_VarL,g_VarL,var_Name,name_VarL,gensymVar,syntaxVar,pVar
+  , SVar(..),d_SVarL,n_SVarL,mkSVar,svarName,svarLevel,svar_Name
+  , Var(..),d_VarL,n_VarL,g_VarL,var_Name,var_SVar,name_VarL,gensymVar,syntaxVar,pVar
   , UVar(..),d_UVarL,n_UVarL,g_UVarL,m_UVarL,name_UVarL,uvar_Name,uvar_SVar,svar_UVarL,uvar_Var,var_UVarL
   , gensymUVar,wfUVar,canonUVar
   , syntaxUVar,pUVar
