@@ -20,8 +20,7 @@ dev: .stack-work
 					-fno-break-on-exception \
 					-fno-break-on-error \
 					-ferror-spans \
-					-fdiagnostics-color=always \
-					-DUVMHS_TESTS'"
+					-fdiagnostics-color=always'"
 
 .stack-work:
 	stack setup

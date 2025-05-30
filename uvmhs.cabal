@@ -8,8 +8,8 @@ name:           uvmhs
 version:        0.0.0.0
 build-type:     Simple
 
-flag uvmhs-tests
-  description: Disables building all tests, which increases compile times
+flag no-uvmhs-tests
+  description: Disables building tests, which increases compile times
   manual: True
   default: False
 
@@ -192,8 +192,8 @@ library
     , time
     , vector
   default-language: Haskell2010
-  if (flag(uvmhs-tests))
-    cpp-options: -DUVMHS_TESTS
+  if (flag(no-uvmhs-tests))
+    cpp-options: -DNO_UVMHS_TESTS
 
 executable uvmhs
   main-is: Main.hs

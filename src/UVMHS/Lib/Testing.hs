@@ -141,10 +141,10 @@ runTests noisy γ tests = do
       ]
 
 𝔱 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → TH.Q [TH.Dec]
-#ifdef UVMHS_TESTS
-𝔱 tag xEQ yEQ = 𝔱T @() tag (TH.unsafeCodeCoerce xEQ) (TH.unsafeCodeCoerce yEQ)
-#else
+#ifdef NO_UVMHS_TESTS
 𝔱 _ _ _ = return []
+#else
+𝔱 tag xEQ yEQ = 𝔱T @() tag (TH.unsafeCodeCoerce xEQ) (TH.unsafeCodeCoerce yEQ)
 #endif
 
 𝔱T ∷ (Eq a,Pretty a) ⇒ 𝕊 → TH.CodeQ a → TH.CodeQ a → TH.Q [TH.Dec]
@@ -159,10 +159,10 @@ runTests noisy γ tests = do
   return []
 
 𝔣 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → TH.ExpQ → TH.Q [TH.Dec]
-#ifdef UVMHS_TESTS
-𝔣 tag xIO p xD = 𝔣T @() tag (TH.unsafeCodeCoerce xIO) (TH.unsafeCodeCoerce p) $ TH.unsafeCodeCoerce xD
-#else
+#ifdef NO_UVMHS_TESTS
 𝔣 _ _ _ _ = return []
+#else
+𝔣 tag xIO p xD = 𝔣T @() tag (TH.unsafeCodeCoerce xIO) (TH.unsafeCodeCoerce p) $ TH.unsafeCodeCoerce xD
 #endif
 
 𝔣T ∷ (Pretty a,Shrinky a) ⇒ 𝕊 → TH.CodeQ (FuzzyM a) → TH.CodeQ (a → 𝔹) → TH.CodeQ (a → Doc) → TH.Q [TH.Dec]
