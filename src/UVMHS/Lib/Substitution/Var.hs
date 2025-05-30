@@ -144,6 +144,9 @@ mkSVar xO n = case xO of
   D_SName → D_SVar n
   N_SName x → N_SVar $ NVar n x
 
+svar_Name ∷ Name → SVar
+svar_Name = N_SVar ∘ nvar_Name
+
 svarName ∷ SVar → SName
 svarName = \case
   D_SVar _          → D_SName

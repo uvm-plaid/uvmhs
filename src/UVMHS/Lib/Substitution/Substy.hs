@@ -175,7 +175,7 @@ substyNBdr s x = umodifyEnv $ compose
   , alter freeVars_SAL $ alter freeVarsActionScopeL $ (⧺) $ (s :* N_SName x) ↦ 1
   ]
 
-substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (UVar s e → e) → Name → SubstyM s e ()
+substyBdr ∷ (Ord s,Ord e,Substy s e e) ⇒ s → (SVar → e) → Name → SubstyM s e ()
 substyBdr s mkVar x = do
   substyDBdr s
   substyNBdr s x
@@ -186,12 +186,12 @@ substyBdr s mkVar x = do
     Some AllNameless_RA → 
       umodifyEnv $ alter subst_SAL $ alter substActionSubstL $ flip (⧺) $ concat
         [ nintroSubst s x 1
-        , nbindSubst s x $ mkVar $ D_UVar $ DVar 0
+        , nbindSubst s x $ mkVar $ D_SVar $ DVar 0
         ]
     Some AllNamed_RA → 
       umodifyEnv $ alter subst_SAL $ alter substActionSubstL $ flip (⧺) $ concat
         [ dintroSubst s 1
-        , dbindSubst s $ mkVar $ uvar_Name x
+        , dbindSubst s $ mkVar $ svar_Name x
         ]
 
 -- TRICKY: 
