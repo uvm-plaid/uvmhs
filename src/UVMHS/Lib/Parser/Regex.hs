@@ -907,6 +907,7 @@ data TokenClassWSBasic =
   | NaturalCWSBasic
   | IntegerCWSBasic
   | DoubleCWSBasic
+  | CharCWSBasic
   deriving (Eq,Ord,Show)
 makePrisms ''TokenClassWSBasic
 makePrettySum ''TokenClassWSBasic
@@ -922,6 +923,7 @@ data TokenWSBasic =
   | NaturalTWSBasic ℕ
   | IntegerTWSBasic ℤ
   | DoubleTWSBasic 𝔻
+  | CharTWSBasic ℂ
   | OpenTWSBasic
   | CloseTWSBasic
   | DelimiterTWSBasic
@@ -942,6 +944,7 @@ mkTokenWSBasic cs = \case
   Some NaturalCWSBasic → (:*) False $ NaturalTWSBasic $ read𝕊 $ string $ filter (\ c → c ∉ pow𝑃 ['_','n']) cs
   Some IntegerCWSBasic → (:*) False $ IntegerTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs
   Some DoubleCWSBasic → (:*) False $ DoubleTWSBasic $ read𝕊 $ string $ filter ((≢) '_') cs
+  Some CharCWSBasic → (:*) False $ CharTWSBasic $ read𝕊 $ stringCS cs
 
 lBlocksWSBasic ∷ (Ord u,Additive u) ⇒ 𝑃 𝕊 → Regex CharClass ℂ TokenClassWSBasic u
 lBlocksWSBasic blocks = sequence

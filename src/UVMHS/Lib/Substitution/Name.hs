@@ -59,7 +59,7 @@ pNameWS = do
   x ← cpShaped $ view nameTWSBasicL
   nO ← cpOptional $ do
     void $ cpSyntaxWS "#"
-    failEff ∘ natO64 *$ cpIntegerWS
+    cpNat64WS
   return $ Name nO x
 
 ---------------------------------------------------------------------

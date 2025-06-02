@@ -134,50 +134,71 @@ cpFailEff = toCParser ∘ pFailEff
 -- Basic Language Parsing --
 ----------------------------
 
+cpName ∷ CParser TokenBasic 𝕊
+cpName = cpShaped $ view nameTBasicL
+
+cpNameWS ∷ CParser TokenWSBasic 𝕊
+cpNameWS = cpShaped $ view nameTWSBasicL
+
 cpSyntax ∷ 𝕊 → CParser TokenBasic TokenBasic
 cpSyntax = cpToken ∘ SyntaxTBasic
-
-cpNatN ∷ CParser TokenBasic ℕ
-cpNatN = cpShaped $ view naturalTBasicL
-
-cpNat64N ∷ CParser TokenBasic ℕ64
-cpNat64N = failEff ∘ natO64 *$ cpNatN
-
-cpInt ∷ CParser TokenBasic ℤ
-cpInt = cpShaped $ view integerTBasicL
-
-cpInt64 ∷ CParser TokenBasic ℤ64
-cpInt64 = failEff ∘ intO64 *$ cpInt
-
-cpNat ∷ CParser TokenBasic ℕ
-cpNat = failEff ∘ natO *$ cpInt
-
-cpNat64 ∷ CParser TokenBasic ℕ64
-cpNat64 = failEff ∘ natO64 *$ cpInt
-
-cpDouble ∷ CParser TokenBasic 𝔻
-cpDouble = cpShaped $ view doubleTBasicL
-
-cpString ∷ CParser TokenBasic 𝕊
-cpString = cpShaped $ view stringTBasicL
-
-cpChar ∷ CParser TokenBasic ℂ
-cpChar = cpShaped $ view charTBasicL
 
 cpSyntaxWS ∷ 𝕊 → CParser TokenWSBasic TokenWSBasic
 cpSyntaxWS = cpToken ∘ SyntaxTWSBasic
 
-cpNaturalWS ∷ CParser TokenWSBasic ℕ
-cpNaturalWS = cpShaped $ view naturalTWSBasicL
+cpNatN ∷ CParser TokenBasic ℕ
+cpNatN = cpShaped $ view naturalTBasicL
 
-cpIntegerWS ∷ CParser TokenWSBasic ℤ
-cpIntegerWS = cpShaped $ view integerTWSBasicL
+cpNatNWS ∷ CParser TokenWSBasic ℕ
+cpNatNWS = cpShaped $ view naturalTWSBasicL
+
+cpNatN64 ∷ CParser TokenBasic ℕ64
+cpNatN64 = failEff ∘ natO64 *$ cpNatN
+
+cpNat64NWS ∷ CParser TokenWSBasic ℕ64
+cpNat64NWS = failEff ∘ natO64 *$ cpNatNWS
+
+cpInt ∷ CParser TokenBasic ℤ
+cpInt = cpShaped $ view integerTBasicL
+
+cpIntWS ∷ CParser TokenWSBasic ℤ
+cpIntWS = cpShaped $ view integerTWSBasicL
+
+cpInt64 ∷ CParser TokenBasic ℤ64
+cpInt64 = failEff ∘ intO64 *$ cpInt
+
+cpInt64WS ∷ CParser TokenWSBasic ℤ64
+cpInt64WS = failEff ∘ intO64 *$ cpIntWS
+
+cpNat ∷ CParser TokenBasic ℕ
+cpNat = failEff ∘ natO *$ cpInt
+
+cpNatWS ∷ CParser TokenWSBasic ℕ
+cpNatWS = failEff ∘ natO *$ cpIntWS
+
+cpNat64 ∷ CParser TokenBasic ℕ64
+cpNat64 = failEff ∘ natO64 *$ cpInt
+
+cpNat64WS ∷ CParser TokenWSBasic ℕ64
+cpNat64WS = failEff ∘ natO64 *$ cpIntWS
+
+cpDouble ∷ CParser TokenBasic 𝔻
+cpDouble = cpShaped $ view doubleTBasicL
 
 cpDoubleWS ∷ CParser TokenWSBasic 𝔻
 cpDoubleWS = cpShaped $ view doubleTWSBasicL
 
+cpString ∷ CParser TokenBasic 𝕊
+cpString = cpShaped $ view stringTBasicL
+
 cpStringWS ∷ CParser TokenWSBasic 𝕊
 cpStringWS = cpShaped $ view stringTWSBasicL
+
+cpChar ∷ CParser TokenBasic ℂ
+cpChar = cpShaped $ view charTBasicL
+
+cpCharWS ∷ CParser TokenWSBasic ℂ
+cpCharWS = cpShaped $ view charTWSBasicL
 
 cpBlockWS ∷ 𝕊 → CParser TokenWSBasic TokenWSBasic
 cpBlockWS = cpToken ∘ BlockTWSBasic

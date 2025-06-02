@@ -29,6 +29,7 @@ New Feature:
     is turned off.)
   - combine `<parser>` and `<parser>WS` functionality into a single interface
     (likely some sort of typeclass)
+  - lexer doesn't properly support character tokens
 - Substitution Library:
   - in SubstElem type, support delayed shifts in addition to delayed incrs.
     Right now the representation is `s ⇰ ℕ64`, which means "for each ⟨s,n⟩, do
@@ -76,3 +77,5 @@ Small things to fix:
 Things to Rename:
   - errMsg
   - pow𝑃 -> pow
+  - deconflict `cpName` in `CParser.hs` with `pName` and notion of `Name` in
+    substitution library

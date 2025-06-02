@@ -57,7 +57,7 @@ makePrettySum ''ExpPre
 
 cpLit ∷ CParser TokenWSBasic Lit
 cpLit = tries
-  [ IntegerL ^$ cpIntegerWS
+  [ IntegerL ^$ cpIntWS
   , DoubleL ^$ cpDoubleWS
   , StringL ^$ cpStringWS
   ]

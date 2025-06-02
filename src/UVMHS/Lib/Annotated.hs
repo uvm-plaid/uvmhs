@@ -55,3 +55,11 @@ retag ∷ (Monad m) ⇒ m e → a → m (𝐴 e a)
 retag eM x = do
   e ← eM
   return $ 𝐴 e x
+
+class HasRaw r a | a → r where
+  toRaw ∷ a → r
+  frRaw ∷ r → a
+
+instance (Null e) ⇒ HasRaw a (𝐴 e a) where
+  toRaw = aval
+  frRaw = 𝐴 null
