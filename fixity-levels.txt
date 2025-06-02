@@ -3,17 +3,19 @@
 0 ^$, ^^$ [r]
 0 ⊙$ [r]
 1 :⇒: [r]
-1 =≫  [r]
+1 =≫ [r]
+1 ↢ []
 1 ↦ [r]
 1 ⇨ [r]
 1 ⇰ [r]
 1 ⌲ [r]
 1 ⟢ [r]
-1 ≫=, ≫ [r]
+1 ≫=, ≫ [l]
 1 →⁻,→⁼,⇄,⇄⁻,⇄⁼ [r]
 2 ⩔ [l]
 3 :∧: [l]
 3 ⩓ [l]
+4 ⫑,⋿ []
 4 ∇,⊑,⊒,⪤ []
 4 ⊆,⊇,∈,∉ []
 4 ≍,≺,≼,≻,<,≤ []
@@ -26,6 +28,7 @@
 5 ⊞,⎅ [l]
 5 ⟇,⊻ [l]
 5 ⨺,⨹ [l]
+5 ⩌,⧅ [l]
 6 ×,⨵,/,⌿,÷ [l]
 6 ∧ [l]
 6 ∩ [l]
@@ -33,6 +36,7 @@
 6 ⟑ [l]
 6 ⧆ [l]
 6 ⨳ [l]
+6 ⩍ [l]
 6 ⋅,✖ [l]
 7 *∘ [l]
 7 :∘: [l]
@@ -67,7 +71,7 @@ src/UVMHS/Core/Classes/Constraints.hs:infixl 7 :∘:
 src/UVMHS/Core/Classes/Bitty.hs:infixl 5 ⟇,⊻
 src/UVMHS/Core/Classes/Bitty.hs:infixl 6 ⟑
 src/UVMHS/Core/Classes/Bitty.hs:infixl 7 ⋘,⋙
-src/UVMHS/Core/Classes/Comonad.hs:infixr 1 =≫ 
+src/UVMHS/Core/Classes/Comonad.hs:infixr 1 =≫
 src/UVMHS/Core/Classes/DSL.hs:infixr 0 ⊙$
 src/UVMHS/Core/Classes/DSL.hs:infixr 1 ⇨
 src/UVMHS/Core/Classes/DSL.hs:infixl 7 ⊙
@@ -75,13 +79,13 @@ src/UVMHS/Core/Classes/DSL.hs:infixl 7 ⊙⋆
 src/UVMHS/Core/Classes/Arithmetic.hs:infixl 5 +,-
 src/UVMHS/Core/Classes/Arithmetic.hs:infixl 6 ×,⨵,/,⌿,÷
 src/UVMHS/Core/Classes/Arithmetic.hs:infixl 7 ^
-src/UVMHS/Core/Classes/Monad.hs:infixr 0 *$
-src/UVMHS/Core/Classes/Monad.hs:infixr 1 ≫=, ≫
-src/UVMHS/Core/Classes/Monad.hs:infixl 6 ⧆
-src/UVMHS/Core/Classes/Monad.hs:infixl 7 *∘
-src/UVMHS/Core/Classes/Functor.hs:infixr 0 ^$, ^^$
-src/UVMHS/Core/Classes/Functor.hs:infixl 7 ^∘, ^^∘
 src/UVMHS/Core/Classes/Order.hs:infix 4 ≡,≢,⋚,≤,≥,<,>
+src/UVMHS/Core/Classes/Functors.hs:infixr 0 ^$, ^^$
+src/UVMHS/Core/Classes/Functors.hs:infixl 7 ^∘, ^^∘
+src/UVMHS/Core/Classes/Functors.hs:infixr 0 *$
+src/UVMHS/Core/Classes/Functors.hs:infixl 1 ≫=, ≫
+src/UVMHS/Core/Classes/Functors.hs:infixl 6 ⧆
+src/UVMHS/Core/Classes/Functors.hs:infixl 7 *∘
 src/UVMHS/Core/VectorStatic.hs:infixl 6 ⋅,✖
 src/UVMHS/Core/Init.hs:infixr 0 $
 src/UVMHS/Core/Init.hs:infixr 1 ⇰
@@ -99,5 +103,9 @@ src/UVMHS/Core/Data/Set.hs:infix 4 ⊆,⊇,∈,∉
 src/UVMHS/Core/Data/Set.hs:infixl 5 ∪,∖
 src/UVMHS/Core/Data/Set.hs:infixl 6 ∩
 src/UVMHS/Core/Data/Dict.hs:infixr 1 ↦
+src/UVMHS/Core/Data/Dict.hs:infix 4 ⫑,⋿
+src/UVMHS/Core/Data/Dict.hs:infixl 5 ⩌,⧅
+src/UVMHS/Core/Data/Dict.hs:infixl 6 ⩍
 src/UVMHS/Core/Data/Lens.hs:infixr 1 ⟢
 src/UVMHS/Core/Data/Lens.hs:infixr 1 ⌲
+src/UVMHS/Core/IO.hs:infix 1 ↢

@@ -24,7 +24,10 @@ import qualified Data.Vector as V
 import UVMHS.Lang.ULC
 
 main ∷ IO ()
-main = cleanExit $ do
+main = out "<UVMHS>"
+
+test ∷ IO ()
+test = do
   pprint $ ppHeader "COLOR TEST"
   pprint colorsDemo
   rngSeed 0
@@ -39,3 +42,6 @@ main = cleanExit $ do
   --     [ "UVMHS.Tests.Core"
   --     , "UVMHS.Tests.Substitution"
   --     ])
+
+dev ∷ IO ()
+dev = cleanExit test

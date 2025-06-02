@@ -559,6 +559,3 @@ instance (All a,All b) ⇒ All (a ∨ b) where
 
 instance (All a,All b) ⇒ All (a ∧ b) where
   all = do x ← all ; y ← all ; return $ x :* y
-
-
-----

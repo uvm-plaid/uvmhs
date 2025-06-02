@@ -2,7 +2,7 @@ verbatim:
   cabal-version: 2.2
 
 name: uvmhs
-version: 0.0.0.0
+version: 0.0.1.0
 
 default-extensions:
   - ConstraintKinds
@@ -94,6 +94,12 @@ library:
     cpp-options: -DNO_UVMHS_TESTS
 
 executable:
-  source-dirs: main
+  source-dirs: src_run
   main: Main.hs
   dependencies: uvmhs
+
+tests:
+  all:
+    source-dirs: src_test
+    main: Main.hs
+    dependencies: uvmhs

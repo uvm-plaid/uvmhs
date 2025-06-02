@@ -1,3 +1,5 @@
+# David's Notes for Fixes, Improvements and Enhancements
+
 Fix:
 - Pretty Printer. I think it's buggy. There is a branch where I'm most the way
   through solving it. Consider refactoring and adding test suite along the way.
@@ -48,6 +50,9 @@ Test Suite Needed:
 - Parser Library
 - Pretty Printer Library
 
+Other:
+- Turn on QualifiedDo
+
 Naming Conventions:
   - convThingAToThingB -- A → B
   - convThingBToThingA -- B → A
@@ -62,3 +67,11 @@ Naming Conventions:
 
   - fieldNameL
   - constNameL
+
+Small things to fix:
+  - whenM should take a delayed argument
+  - make lazy lists instance of csized
+
+Things to Rename:
+  - errMsg
+  - pow𝑃 -> pow

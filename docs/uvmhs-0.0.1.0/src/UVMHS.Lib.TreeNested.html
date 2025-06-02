@@ -1,0 +1,577 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">UVMHS.Lib.TreeNested</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-2"></span><span>
+</span><span id="line-3"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Core.html"><span class="hs-identifier">UVMHS.Core</span></a></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.html"><span class="hs-identifier">UVMHS.Lib.Pretty</span></a></span><span>
+</span><span id="line-5"></span><span>
+</span><span id="line-6"></span><span class="hs-keyword">data</span><span> </span><span id="%1D447A"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span></span><span> </span><span id="local-6989586621687317369"><span class="annot"><a href="#local-6989586621687317369"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="%1D447A"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span></span><span>
+</span><span id="line-7"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="vals%1D447A"><span class="annot"><span class="annottext">forall a. &#119879;A a -&gt; &#119868; a
+</span><a href="UVMHS.Lib.TreeNested.html#vals%1D447A"><span class="hs-identifier hs-var hs-var">vals&#119879;A</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317369"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-8"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="nest%1D447A"><span class="annot"><span class="annottext">forall a. &#119879;A a -&gt; &#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="UVMHS.Lib.TreeNested.html#nest%1D447A"><span class="hs-identifier hs-var hs-var">nest&#119879;A</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%2227"><span class="hs-operator hs-type">&#8743;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317369"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621687317537"><span id="local-6989586621687317545"><span id="local-6989586621687317549"><span class="annot"><span class="annottext">Int -&gt; &#119879;A a -&gt; ShowS
+[&#119879;A a] -&gt; ShowS
+&#119879;A a -&gt; String
+(Int -&gt; &#119879;A a -&gt; ShowS)
+-&gt; (&#119879;A a -&gt; String) -&gt; ([&#119879;A a] -&gt; ShowS) -&gt; Show (&#119879;A a)
+forall a. Show a =&gt; Int -&gt; &#119879;A a -&gt; ShowS
+forall a. Show a =&gt; [&#119879;A a] -&gt; ShowS
+forall a. Show a =&gt; &#119879;A a -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: forall a. Show a =&gt; Int -&gt; &#119879;A a -&gt; ShowS
+showsPrec :: Int -&gt; &#119879;A a -&gt; ShowS
+$cshow :: forall a. Show a =&gt; &#119879;A a -&gt; String
+show :: &#119879;A a -&gt; String
+$cshowList :: forall a. Show a =&gt; [&#119879;A a] -&gt; ShowS
+showList :: [&#119879;A a] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span>
+</span><span id="line-11"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317386"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317386"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-12"></span><span>  </span><span id="local-6989586621687317562"><span class="annot"><span class="annottext">null :: &#119879;A a
+</span><a href="#local-6989586621687317562"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a. &#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
+</span><span id="line-13"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317391"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317391"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-14"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span id="local-6989586621687317570"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317570"><span class="hs-identifier hs-var">m&#8321;</span></a></span></span><span> </span><span id="local-6989586621687317571"><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317571"><span class="hs-identifier hs-var">n&#8321;</span></a></span></span><span> </span><span id="local-6989586621687317572"><span class="annot"><span class="annottext">&#10746; :: &#119879;A a -&gt; &#119879;A a -&gt; &#119879;A a
+</span><a href="#local-6989586621687317572"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span id="local-6989586621687317574"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317574"><span class="hs-identifier hs-var">m&#8322;</span></a></span></span><span> </span><span id="local-6989586621687317575"><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317575"><span class="hs-identifier hs-var">n&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a. &#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317570"><span class="hs-identifier hs-var">m&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; a -&gt; &#119868; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317574"><span class="hs-identifier hs-var">m&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(&#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317571"><span class="hs-identifier hs-var">n&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a)
+forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317575"><span class="hs-identifier hs-var">n&#8322;</span></a></span><span>
+</span><span id="line-15"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317399"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317399"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-16"></span><span>
+</span><span id="line-17"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317403"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Eps"><span class="hs-identifier hs-type">Eps</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317403"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-18"></span><span>  </span><span id="local-6989586621687317588"><span class="annot"><span class="annottext">eps :: &#119879;A a
+</span><a href="#local-6989586621687317588"><span class="hs-identifier hs-var hs-var hs-var hs-var">eps</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a. &#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
+</span><span id="line-19"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317407"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Seq"><span class="hs-identifier hs-type">Seq</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317407"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-20"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span id="local-6989586621687317599"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317599"><span class="hs-identifier hs-var">v&#8321;</span></a></span></span><span> </span><span id="local-6989586621687317600"><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317600"><span class="hs-identifier hs-var">n&#8321;</span></a></span></span><span> </span><span id="local-6989586621687317601"><span class="annot"><span class="annottext">&#9655; :: &#119879;A a -&gt; &#119879;A a -&gt; &#119879;A a
+</span><a href="#local-6989586621687317601"><span class="hs-operator hs-var hs-var hs-var hs-var">&#9655;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span id="local-6989586621687317603"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317603"><span class="hs-identifier hs-var">v&#8322;</span></a></span></span><span> </span><span id="local-6989586621687317604"><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317604"><span class="hs-identifier hs-var">n&#8322;</span></a></span></span><span>
+</span><span id="line-21"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#120121;
+forall a t. ToIter a t =&gt; t -&gt; &#120121;
+</span><a href="UVMHS.Core.Data.Iter.html#isEmpty"><span class="hs-identifier hs-var">isEmpty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317600"><span class="hs-identifier hs-var">n&#8321;</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a. &#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317599"><span class="hs-identifier hs-var">v&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; a -&gt; &#119868; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317603"><span class="hs-identifier hs-var">v&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317604"><span class="hs-identifier hs-var">n&#8322;</span></a></span><span>
+</span><span id="line-22"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">&#120121;
+</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a. &#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317599"><span class="hs-identifier hs-var">v&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">((&#120138; &#8743; &#119879;A a) -&gt; &#120138; &#8743; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a)
+forall a b. (a -&gt; b) -&gt; &#119868; a -&gt; &#119868; b
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&#119879;A a -&gt; &#119879;A a) -&gt; (&#120138; &#8743; &#119879;A a) -&gt; &#120138; &#8743; &#119879;A a
+forall b&#8321; b&#8322; a. (b&#8321; -&gt; b&#8322;) -&gt; (a &#8743; b&#8321;) -&gt; a &#8743; b&#8322;
+</span><a href="UVMHS.Core.Data.Pair.html#mapSnd"><span class="hs-identifier hs-var">mapSnd</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119879;A a -&gt; &#119879;A a -&gt; &#119879;A a
+forall a. Seq a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%25B7"><span class="hs-operator hs-var">&#9655;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a. &#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317603"><span class="hs-identifier hs-var">v&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317604"><span class="hs-identifier hs-var">n&#8322;</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317600"><span class="hs-identifier hs-var">n&#8321;</span></a></span><span>
+</span><span id="line-23"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317431"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Seqoid"><span class="hs-identifier hs-type">Seqoid</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317431"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-24"></span><span>
+</span><span id="line-25"></span><span id="local-6989586621687317432"><span id="local-6989586621687317433"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#fold%1D447AWith"><span class="hs-identifier hs-type">fold&#119879;AWith</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317432"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317433"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317432"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317432"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317432"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317433"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317432"><span class="hs-identifier hs-type">b</span></a></span></span></span><span>
+</span><span id="line-26"></span><span id="fold%1D447AWith"><span class="annot"><span class="annottext">fold&#119879;AWith :: forall b a. Monoid b =&gt; (&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; &#119879;A a -&gt; b
+</span><a href="UVMHS.Lib.TreeNested.html#fold%1D447AWith"><span class="hs-identifier hs-var hs-var">fold&#119879;AWith</span></a></span></span><span> </span><span id="local-6989586621687317623"><span class="annot"><span class="annottext">&#119868; a -&gt; b
+</span><a href="#local-6989586621687317623"><span class="hs-identifier hs-var">f&#8343;</span></a></span></span><span> </span><span id="local-6989586621687317624"><span class="annot"><span class="annottext">&#120138; -&gt; b -&gt; b
+</span><a href="#local-6989586621687317624"><span class="hs-identifier hs-var">f&#8345;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119879;A a -&gt; b
+</span><a href="#local-6989586621687317625"><span class="hs-identifier hs-var">loop</span></a></span><span>
+</span><span id="line-27"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-28"></span><span>    </span><span id="local-6989586621687317625"><span class="annot"><span class="annottext">loop :: &#119879;A a -&gt; b
+</span><a href="#local-6989586621687317625"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span id="local-6989586621687317626"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317626"><span class="hs-identifier hs-var">vs</span></a></span></span><span> </span><span id="local-6989586621687317627"><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317627"><span class="hs-identifier hs-var">sxs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[b] -&gt; b
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
+</span><span id="line-29"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; b
+</span><a href="#local-6989586621687317623"><span class="hs-identifier hs-var">f&#8343;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317626"><span class="hs-identifier hs-var">vs</span></a></span><span>
+</span><span id="line-30"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#119868; b -&gt; b
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; b -&gt; b) -&gt; &#119868; b -&gt; b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a) -&gt; ((&#120138; &#8743; &#119879;A a) -&gt; b) -&gt; &#119868; b
+forall (t :: * -&gt; *) a b. Functor t =&gt; t a -&gt; (a -&gt; b) -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#mapOn"><span class="hs-identifier hs-var">mapOn</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a)
+forall a t. ToIter a t =&gt; t -&gt; &#119868; a
+</span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317627"><span class="hs-identifier hs-var">sxs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(((&#120138; &#8743; &#119879;A a) -&gt; b) -&gt; &#119868; b) -&gt; ((&#120138; &#8743; &#119879;A a) -&gt; b) -&gt; &#119868; b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621687317631"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317631"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621687317633"><span class="annot"><span class="annottext">&#119879;A a
+</span><a href="#local-6989586621687317633"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
+</span><span id="line-31"></span><span>          </span><span class="annot"><span class="annottext">&#120138; -&gt; b -&gt; b
+</span><a href="#local-6989586621687317624"><span class="hs-identifier hs-var">f&#8345;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317631"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; b -&gt; b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;A a -&gt; b
+</span><a href="#local-6989586621687317625"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;A a
+</span><a href="#local-6989586621687317633"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-32"></span><span>      </span><span class="hs-special">]</span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span id="local-6989586621687317444"><span id="local-6989586621687317445"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#fold%1D447AOn"><span class="hs-identifier hs-type">fold&#119879;AOn</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317444"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317445"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317445"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317444"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317444"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317444"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317444"><span class="hs-identifier hs-type">b</span></a></span></span></span><span>
+</span><span id="line-35"></span><span id="fold%1D447AOn"><span class="annot"><span class="annottext">fold&#119879;AOn :: forall b a. Monoid b =&gt; &#119879;A a -&gt; (&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; b
+</span><a href="UVMHS.Lib.TreeNested.html#fold%1D447AOn"><span class="hs-identifier hs-var hs-var">fold&#119879;AOn</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; &#119879;A a -&gt; b)
+-&gt; &#119879;A a -&gt; (&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; b
+forall a b c d. (a -&gt; b -&gt; c -&gt; d) -&gt; c -&gt; a -&gt; b -&gt; d
+</span><a href="UVMHS.Core.Init.html#rotateR"><span class="hs-identifier hs-var">rotateR</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; &#119879;A a -&gt; b
+forall b a. Monoid b =&gt; (&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; &#119879;A a -&gt; b
+</span><a href="UVMHS.Lib.TreeNested.html#fold%1D447AWith"><span class="hs-identifier hs-var">fold&#119879;AWith</span></a></span><span>
+</span><span id="line-36"></span><span>
+</span><span id="line-37"></span><span id="local-6989586621687317452"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#key%1D447A"><span class="hs-identifier hs-type">key&#119879;A</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317452"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317452"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-38"></span><span id="key%1D447A"><span class="annot"><span class="annottext">key&#119879;A :: forall a. &#120138; -&gt; &#119879;A a -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#key%1D447A"><span class="hs-identifier hs-var hs-var">key&#119879;A</span></a></span></span><span> </span><span id="local-6989586621687317642"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317642"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621687317643"><span class="annot"><span class="annottext">&#119879;A a
+</span><a href="#local-6989586621687317643"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a. &#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; &#8743; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a)
+forall a t. Single a t =&gt; a -&gt; t
+</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">((&#120138; &#8743; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a)) -&gt; (&#120138; &#8743; &#119879;A a) -&gt; &#119868; (&#120138; &#8743; &#119879;A a)
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317642"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#119879;A a -&gt; &#120138; &#8743; &#119879;A a
+forall a b. a -&gt; b -&gt; a &#8743; b
+</span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;A a
+</span><a href="#local-6989586621687317643"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-39"></span><span>
+</span><span id="line-40"></span><span id="local-6989586621687317460"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#val%1D447A"><span class="hs-identifier hs-type">val&#119879;A</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621687317460"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317460"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-41"></span><span id="val%1D447A"><span class="annot"><span class="annottext">val&#119879;A :: forall a. a -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#val%1D447A"><span class="hs-identifier hs-var hs-var">val&#119879;A</span></a></span></span><span> </span><span id="local-6989586621687317648"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621687317648"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+forall a. &#119868; a -&gt; &#119868; (&#120138; &#8743; &#119879;A a) -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-var">&#119879;A</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; &#119868; a
+forall a t. Single a t =&gt; a -&gt; t
+</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621687317648"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span id="local-6989586621687317649"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D424"><span class="hs-identifier hs-type">&#119844;</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317649"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317649"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-44"></span><span id="%1D424"><span class="annot"><span class="annottext">&#119844; :: forall a. &#120138; -&gt; &#119879;A a -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D424"><span class="hs-identifier hs-var hs-var">&#119844;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#119879;A a -&gt; &#119879;A a
+forall a. &#120138; -&gt; &#119879;A a -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#key%1D447A"><span class="hs-identifier hs-var">key&#119879;A</span></a></span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span><span id="local-6989586621687317651"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D42F"><span class="hs-identifier hs-type">&#119855;</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621687317651"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317651"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-47"></span><span id="%1D42F"><span class="annot"><span class="annottext">&#119855; :: forall a. a -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D42F"><span class="hs-identifier hs-var hs-var">&#119855;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">a -&gt; &#119879;A a
+forall a. a -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#val%1D447A"><span class="hs-identifier hs-var">val&#119879;A</span></a></span><span>
+</span><span id="line-48"></span><span>
+</span><span id="line-49"></span><span id="local-6989586621687317465"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#keys%1D447A"><span class="hs-identifier hs-type">keys&#119879;A</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43F"><span class="hs-identifier hs-type">&#119871;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317465"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317465"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-50"></span><span id="keys%1D447A"><span class="annot"><span class="annottext">keys&#119879;A :: forall a. &#119871; &#120138; -&gt; &#119879;A a -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#keys%1D447A"><span class="hs-identifier hs-var hs-var">keys&#119879;A</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#119879;A a -&gt; &#119879;A a) -&gt; &#119871; &#120138; -&gt; &#119879;A a -&gt; &#119879;A a
+forall a t b. ToIter a t =&gt; (a -&gt; b -&gt; b) -&gt; t -&gt; b -&gt; b
+</span><a href="UVMHS.Core.Data.Iter.html#foldrWithOn"><span class="hs-identifier hs-var">foldrWithOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#119879;A a -&gt; &#119879;A a
+forall a. &#120138; -&gt; &#119879;A a -&gt; &#119879;A a
+</span><a href="UVMHS.Lib.TreeNested.html#key%1D447A"><span class="hs-identifier hs-var">key&#119879;A</span></a></span><span>
+</span><span id="line-51"></span><span>
+</span><span id="line-52"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317475"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317475"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317475"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-53"></span><span>  </span><span id="local-6989586621687317680"><span class="annot"><span class="annottext">pretty :: &#119879;A a -&gt; Doc
+</span><a href="#local-6989586621687317680"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447A"><span class="hs-identifier hs-type">&#119879;A</span></a></span><span> </span><span id="local-6989586621687317682"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317682"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span id="local-6989586621687317683"><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317683"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; Doc -&gt; Doc
+forall t. ToIter Doc t =&gt; t -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppVertical"><span class="hs-identifier hs-var">ppVertical</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; Doc -&gt; Doc) -&gt; &#119868; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">[&#119868; Doc] -&gt; &#119868; Doc
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
+</span><span id="line-54"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">(a -&gt; Doc) -&gt; &#119868; a -&gt; &#119868; Doc
+forall a b. (a -&gt; b) -&gt; &#119868; a -&gt; &#119868; b
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppGA"><span class="hs-identifier hs-var">ppGA</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; (a -&gt; Doc) -&gt; a -&gt; Doc
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; Doc
+forall a. Pretty a =&gt; a -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317682"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span id="line-55"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a) -&gt; ((&#120138; &#8743; &#119879;A a) -&gt; Doc) -&gt; &#119868; Doc
+forall (t :: * -&gt; *) a b. Functor t =&gt; t a -&gt; (a -&gt; b) -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#mapOn"><span class="hs-identifier hs-var">mapOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;A a)
+</span><a href="#local-6989586621687317683"><span class="hs-identifier hs-var">n</span></a></span><span> </span><span class="annot"><span class="annottext">(((&#120138; &#8743; &#119879;A a) -&gt; Doc) -&gt; &#119868; Doc) -&gt; ((&#120138; &#8743; &#119879;A a) -&gt; Doc) -&gt; &#119868; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621687317687"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317687"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621687317688"><span class="annot"><span class="annottext">&#119879;A a
+</span><a href="#local-6989586621687317688"><span class="hs-identifier hs-var">v'</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
+</span><span id="line-56"></span><span>        </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#8469;64
+forall a. CSized a =&gt; a -&gt; &#8469;64
+</span><a href="UVMHS.Core.Classes.Collections.html#csize"><span class="hs-identifier hs-var">csize</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317687"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#120121;
+forall a. Ord a =&gt; a -&gt; a -&gt; &#120121;
+</span><a href="UVMHS.Core.Classes.Order.html#%3C"><span class="hs-operator hs-var">&lt;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">2</span></span><span>
+</span><span id="line-57"></span><span>        </span><span class="hs-keyword">then</span><span> </span><span>
+</span><span id="line-58"></span><span>          </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
+forall t. ToIter Doc t =&gt; t -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppHorizontal"><span class="hs-identifier hs-var">ppHorizontal</span></a></span><span> </span><span>
+</span><span id="line-59"></span><span>            </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Color -&gt; Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppFG"><span class="hs-identifier hs-var">ppFG</span></a></span><span> </span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-var">teal</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppBD"><span class="hs-identifier hs-var">ppBD</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317687"><span class="hs-identifier hs-var">k</span></a></span><span>
+</span><span id="line-60"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppGA"><span class="hs-identifier hs-var">ppGA</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;A a -&gt; Doc
+forall a. Pretty a =&gt; a -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;A a
+</span><a href="#local-6989586621687317688"><span class="hs-identifier hs-var">v'</span></a></span><span>
+</span><span id="line-61"></span><span>            </span><span class="hs-special">]</span><span>
+</span><span id="line-62"></span><span>        </span><span class="hs-keyword">else</span><span>
+</span><span id="line-63"></span><span>          </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppGA"><span class="hs-identifier hs-var">ppGA</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
+</span><span id="line-64"></span><span>            </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Color -&gt; Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppFG"><span class="hs-identifier hs-var">ppFG</span></a></span><span> </span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-var">teal</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppBD"><span class="hs-identifier hs-var">ppBD</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317687"><span class="hs-identifier hs-var">k</span></a></span><span>
+</span><span id="line-65"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppSpaceNewlineIfBreak"><span class="hs-identifier hs-var">ppSpaceNewlineIfBreak</span></a></span><span>
+</span><span id="line-66"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppSpaceIfBreak"><span class="hs-identifier hs-var">ppSpaceIfBreak</span></a></span><span>
+</span><span id="line-67"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppSpaceIfBreak"><span class="hs-identifier hs-var">ppSpaceIfBreak</span></a></span><span>
+</span><span id="line-68"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppGA"><span class="hs-identifier hs-var">ppGA</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;A a -&gt; Doc
+forall a. Pretty a =&gt; a -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;A a
+</span><a href="#local-6989586621687317688"><span class="hs-identifier hs-var">v'</span></a></span><span>
+</span><span id="line-69"></span><span>            </span><span class="hs-special">]</span><span>
+</span><span id="line-70"></span><span>    </span><span class="hs-special">]</span><span>
+</span><span id="line-71"></span><span>
+</span><span id="line-72"></span><span class="hs-keyword">data</span><span> </span><span id="%1D447D"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span></span><span> </span><span id="local-6989586621687317486"><span class="annot"><a href="#local-6989586621687317486"><span class="hs-identifier hs-type">a</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="%1D447D"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span></span><span>
+</span><span id="line-73"></span><span>  </span><span class="hs-special">{</span><span> </span><span id="vals%1D447D"><span class="annot"><span class="annottext">forall a. &#119879;D a -&gt; &#119868; a
+</span><a href="UVMHS.Lib.TreeNested.html#vals%1D447D"><span class="hs-identifier hs-var hs-var">vals&#119879;D</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317486"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-74"></span><span>  </span><span class="hs-special">,</span><span> </span><span id="nest%1D447D"><span class="annot"><span class="annottext">forall a. &#119879;D a -&gt; &#120138; &#8688; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#nest%1D447D"><span class="hs-identifier hs-var hs-var">nest&#119879;D</span></a></span></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%21F0"><span class="hs-operator hs-type">&#8688;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317486"><span class="hs-identifier hs-type">a</span></a></span><span>
+</span><span id="line-75"></span><span>  </span><span class="hs-special">}</span><span> </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621687317703"><span id="local-6989586621687317711"><span id="local-6989586621687317715"><span class="annot"><span class="annottext">Int -&gt; &#119879;D a -&gt; ShowS
+[&#119879;D a] -&gt; ShowS
+&#119879;D a -&gt; String
+(Int -&gt; &#119879;D a -&gt; ShowS)
+-&gt; (&#119879;D a -&gt; String) -&gt; ([&#119879;D a] -&gt; ShowS) -&gt; Show (&#119879;D a)
+forall a. Show a =&gt; Int -&gt; &#119879;D a -&gt; ShowS
+forall a. Show a =&gt; [&#119879;D a] -&gt; ShowS
+forall a. Show a =&gt; &#119879;D a -&gt; String
+forall a.
+(Int -&gt; a -&gt; ShowS) -&gt; (a -&gt; String) -&gt; ([a] -&gt; ShowS) -&gt; Show a
+$cshowsPrec :: forall a. Show a =&gt; Int -&gt; &#119879;D a -&gt; ShowS
+showsPrec :: Int -&gt; &#119879;D a -&gt; ShowS
+$cshow :: forall a. Show a =&gt; &#119879;D a -&gt; String
+show :: &#119879;D a -&gt; String
+$cshowList :: forall a. Show a =&gt; [&#119879;D a] -&gt; ShowS
+showList :: [&#119879;D a] -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-76"></span><span>
+</span><span id="line-77"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317496"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Null"><span class="hs-identifier hs-type">Null</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317496"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-78"></span><span>  </span><span id="local-6989586621687317722"><span class="annot"><span class="annottext">null :: &#119879;D a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var hs-var hs-var hs-var">null</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a. &#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
+</span><span id="line-79"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317500"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Append"><span class="hs-identifier hs-type">Append</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317500"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-80"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span id="local-6989586621687317731"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317731"><span class="hs-identifier hs-var">m&#8321;</span></a></span></span><span> </span><span id="local-6989586621687317732"><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317732"><span class="hs-identifier hs-var">n&#8321;</span></a></span></span><span> </span><span id="local-6989586621687317733"><span class="annot"><span class="annottext">&#10746; :: &#119879;D a -&gt; &#119879;D a -&gt; &#119879;D a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var hs-var hs-var hs-var">&#10746;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span id="local-6989586621687317734"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317734"><span class="hs-identifier hs-var">m&#8322;</span></a></span></span><span> </span><span id="local-6989586621687317735"><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317735"><span class="hs-identifier hs-var">n&#8322;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a. &#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317731"><span class="hs-identifier hs-var">m&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; a -&gt; &#119868; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317734"><span class="hs-identifier hs-var">m&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">((&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a) -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317732"><span class="hs-identifier hs-var">n&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; &#8688; &#119879;D a) -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#120138; &#8688; &#119879;D a
+forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317735"><span class="hs-identifier hs-var">n&#8322;</span></a></span><span>
+</span><span id="line-81"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317504"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317504"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-82"></span><span>
+</span><span id="line-83"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317506"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Eps"><span class="hs-identifier hs-type">Eps</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317506"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-84"></span><span>  </span><span id="local-6989586621687317745"><span class="annot"><span class="annottext">eps :: &#119879;D a
+</span><a href="UVMHS.Core.Classes.Monoid.html#eps"><span class="hs-identifier hs-var hs-var hs-var hs-var">eps</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a. &#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
+</span><span id="line-85"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317508"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Seq"><span class="hs-identifier hs-type">Seq</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317508"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-86"></span><span>  </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span id="local-6989586621687317754"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317754"><span class="hs-identifier hs-var">v&#8321;</span></a></span></span><span> </span><span id="local-6989586621687317755"><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317755"><span class="hs-identifier hs-var">n&#8321;</span></a></span></span><span> </span><span id="local-6989586621687317756"><span class="annot"><span class="annottext">&#9655; :: &#119879;D a -&gt; &#119879;D a -&gt; &#119879;D a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%25B7"><span class="hs-operator hs-var hs-var hs-var hs-var">&#9655;</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span id="local-6989586621687317757"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317757"><span class="hs-identifier hs-var">v&#8322;</span></a></span></span><span> </span><span id="local-6989586621687317758"><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317758"><span class="hs-identifier hs-var">n&#8322;</span></a></span></span><span>
+</span><span id="line-87"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">(&#120138; &#8688; &#119879;D a) -&gt; &#120121;
+forall a t. ToIter a t =&gt; t -&gt; &#120121;
+</span><a href="UVMHS.Core.Data.Iter.html#isEmpty"><span class="hs-identifier hs-var">isEmpty</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317755"><span class="hs-identifier hs-var">n&#8321;</span></a></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a. &#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317754"><span class="hs-identifier hs-var">v&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; &#119868; a -&gt; &#119868; a
+forall a. Append a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%29FA"><span class="hs-operator hs-var">&#10746;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317757"><span class="hs-identifier hs-var">v&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317758"><span class="hs-identifier hs-var">n&#8322;</span></a></span><span>
+</span><span id="line-88"></span><span>    </span><span class="hs-glyph">|</span><span> </span><span class="annot"><span class="annottext">&#120121;
+</span><span class="hs-identifier hs-var">otherwise</span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a. &#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317754"><span class="hs-identifier hs-var">v&#8321;</span></a></span><span> </span><span class="annot"><span class="annottext">((&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a) -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119879;D a -&gt; &#119879;D a) -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#120138; &#8688; &#119879;D a
+forall a b. (a -&gt; b) -&gt; (&#120138; &#8688; a) -&gt; &#120138; &#8688; b
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">&#119879;D a -&gt; &#119879;D a -&gt; &#119879;D a
+forall a. Seq a =&gt; a -&gt; a -&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#%25B7"><span class="hs-operator hs-var">&#9655;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a. &#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317757"><span class="hs-identifier hs-var">v&#8322;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317758"><span class="hs-identifier hs-var">n&#8322;</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317755"><span class="hs-identifier hs-var">n&#8321;</span></a></span><span>
+</span><span id="line-89"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317513"><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Seqoid"><span class="hs-identifier hs-type">Seqoid</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317513"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span>
+</span><span id="line-90"></span><span>
+</span><span id="line-91"></span><span id="local-6989586621687317514"><span id="local-6989586621687317515"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#fold%1D447DWith"><span class="hs-identifier hs-type">fold&#119879;DWith</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317514"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317515"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317514"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317514"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317514"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317515"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317514"><span class="hs-identifier hs-type">b</span></a></span></span></span><span>
+</span><span id="line-92"></span><span id="fold%1D447DWith"><span class="annot"><span class="annottext">fold&#119879;DWith :: forall b a. Monoid b =&gt; (&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; &#119879;D a -&gt; b
+</span><a href="UVMHS.Lib.TreeNested.html#fold%1D447DWith"><span class="hs-identifier hs-var hs-var">fold&#119879;DWith</span></a></span></span><span> </span><span id="local-6989586621687317772"><span class="annot"><span class="annottext">&#119868; a -&gt; b
+</span><a href="#local-6989586621687317772"><span class="hs-identifier hs-var">f&#8343;</span></a></span></span><span> </span><span id="local-6989586621687317773"><span class="annot"><span class="annottext">&#120138; -&gt; b -&gt; b
+</span><a href="#local-6989586621687317773"><span class="hs-identifier hs-var">f&#8345;</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119879;D a -&gt; b
+</span><a href="#local-6989586621687317774"><span class="hs-identifier hs-var">loop</span></a></span><span>
+</span><span id="line-93"></span><span>  </span><span class="hs-keyword">where</span><span>
+</span><span id="line-94"></span><span>    </span><span id="local-6989586621687317774"><span class="annot"><span class="annottext">loop :: &#119879;D a -&gt; b
+</span><a href="#local-6989586621687317774"><span class="hs-identifier hs-var hs-var">loop</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span id="local-6989586621687317775"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317775"><span class="hs-identifier hs-var">vs</span></a></span></span><span> </span><span id="local-6989586621687317776"><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317776"><span class="hs-identifier hs-var">sxs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">[b] -&gt; b
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
+</span><span id="line-95"></span><span>      </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; b
+</span><a href="#local-6989586621687317772"><span class="hs-identifier hs-var">f&#8343;</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317775"><span class="hs-identifier hs-var">vs</span></a></span><span>
+</span><span id="line-96"></span><span>      </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#119868; b -&gt; b
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; b -&gt; b) -&gt; &#119868; b -&gt; b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;D a) -&gt; ((&#120138; &#8743; &#119879;D a) -&gt; b) -&gt; &#119868; b
+forall (t :: * -&gt; *) a b. Functor t =&gt; t a -&gt; (a -&gt; b) -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#mapOn"><span class="hs-identifier hs-var">mapOn</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&#120138; &#8688; &#119879;D a) -&gt; &#119868; (&#120138; &#8743; &#119879;D a)
+forall a t. ToIter a t =&gt; t -&gt; &#119868; a
+</span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317776"><span class="hs-identifier hs-var">sxs</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(((&#120138; &#8743; &#119879;D a) -&gt; b) -&gt; &#119868; b) -&gt; ((&#120138; &#8743; &#119879;D a) -&gt; b) -&gt; &#119868; b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621687317777"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317777"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621687317778"><span class="annot"><span class="annottext">&#119879;D a
+</span><a href="#local-6989586621687317778"><span class="hs-identifier hs-var">xs</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
+</span><span id="line-97"></span><span>          </span><span class="annot"><span class="annottext">&#120138; -&gt; b -&gt; b
+</span><a href="#local-6989586621687317773"><span class="hs-identifier hs-var">f&#8345;</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317777"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">(b -&gt; b) -&gt; b -&gt; b
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;D a -&gt; b
+</span><a href="#local-6989586621687317774"><span class="hs-identifier hs-var">loop</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;D a
+</span><a href="#local-6989586621687317778"><span class="hs-identifier hs-var">xs</span></a></span><span>
+</span><span id="line-98"></span><span>      </span><span class="hs-special">]</span><span>
+</span><span id="line-99"></span><span>
+</span><span id="line-100"></span><span id="local-6989586621687317518"><span id="local-6989586621687317519"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#fold%1D447DOn"><span class="hs-identifier hs-type">fold&#119879;DOn</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Classes.Monoid.html#Monoid"><span class="hs-identifier hs-type">Monoid</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317518"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317519"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43C"><span class="hs-identifier hs-type">&#119868;</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317519"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317518"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317518"><span class="hs-identifier hs-type">b</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317518"><span class="hs-identifier hs-type">b</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="#local-6989586621687317518"><span class="hs-identifier hs-type">b</span></a></span></span></span><span>
+</span><span id="line-101"></span><span id="fold%1D447DOn"><span class="annot"><span class="annottext">fold&#119879;DOn :: forall b a. Monoid b =&gt; &#119879;D a -&gt; (&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; b
+</span><a href="UVMHS.Lib.TreeNested.html#fold%1D447DOn"><span class="hs-identifier hs-var hs-var">fold&#119879;DOn</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">((&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; &#119879;D a -&gt; b)
+-&gt; &#119879;D a -&gt; (&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; b
+forall a b c d. (a -&gt; b -&gt; c -&gt; d) -&gt; c -&gt; a -&gt; b -&gt; d
+</span><a href="UVMHS.Core.Init.html#rotateR"><span class="hs-identifier hs-var">rotateR</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; &#119879;D a -&gt; b
+forall b a. Monoid b =&gt; (&#119868; a -&gt; b) -&gt; (&#120138; -&gt; b -&gt; b) -&gt; &#119879;D a -&gt; b
+</span><a href="UVMHS.Lib.TreeNested.html#fold%1D447DWith"><span class="hs-identifier hs-var">fold&#119879;DWith</span></a></span><span>
+</span><span id="line-102"></span><span>
+</span><span id="line-103"></span><span id="local-6989586621687317522"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#key%1D447D"><span class="hs-identifier hs-type">key&#119879;D</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317522"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317522"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-104"></span><span id="key%1D447D"><span class="annot"><span class="annottext">key&#119879;D :: forall a. &#120138; -&gt; &#119879;D a -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#key%1D447D"><span class="hs-identifier hs-var hs-var">key&#119879;D</span></a></span></span><span> </span><span id="local-6989586621687317787"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317787"><span class="hs-identifier hs-var">s</span></a></span></span><span> </span><span id="local-6989586621687317788"><span class="annot"><span class="annottext">&#119879;D a
+</span><a href="#local-6989586621687317788"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a. &#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span><span> </span><span class="annot"><span class="annottext">&#119868; a
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span> </span><span class="annot"><span class="annottext">((&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a) -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">(&#120138; &#8743; &#119879;D a) -&gt; &#120138; &#8688; &#119879;D a
+forall a t. Single a t =&gt; a -&gt; t
+</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">((&#120138; &#8743; &#119879;D a) -&gt; &#120138; &#8688; &#119879;D a) -&gt; (&#120138; &#8743; &#119879;D a) -&gt; &#120138; &#8688; &#119879;D a
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317787"><span class="hs-identifier hs-var">s</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#119879;D a -&gt; &#120138; &#8743; &#119879;D a
+forall a b. a -&gt; b -&gt; a &#8743; b
+</span><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-var">:*</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;D a
+</span><a href="#local-6989586621687317788"><span class="hs-identifier hs-var">x</span></a></span><span>
+</span><span id="line-105"></span><span>
+</span><span id="line-106"></span><span id="local-6989586621687317526"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#val%1D447D"><span class="hs-identifier hs-type">val&#119879;D</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="#local-6989586621687317526"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317526"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-107"></span><span id="val%1D447D"><span class="annot"><span class="annottext">val&#119879;D :: forall a. a -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#val%1D447D"><span class="hs-identifier hs-var hs-var">val&#119879;D</span></a></span></span><span> </span><span id="local-6989586621687317792"><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621687317792"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+forall a. &#119868; a -&gt; (&#120138; &#8688; &#119879;D a) -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-var">&#119879;D</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">a -&gt; &#119868; a
+forall a t. Single a t =&gt; a -&gt; t
+</span><a href="UVMHS.Core.Classes.Collections.html#single"><span class="hs-identifier hs-var">single</span></a></span><span> </span><span class="annot"><span class="annottext">a
+</span><a href="#local-6989586621687317792"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+forall a. Null a =&gt; a
+</span><a href="UVMHS.Core.Classes.Monoid.html#null"><span class="hs-identifier hs-var">null</span></a></span><span>
+</span><span id="line-108"></span><span>
+</span><span id="line-109"></span><span id="local-6989586621687317528"><span class="annot"><a href="UVMHS.Lib.TreeNested.html#keys%1D447D"><span class="hs-identifier hs-type">keys&#119879;D</span></a></span><span> </span><span class="hs-glyph">&#8759;</span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D43F"><span class="hs-identifier hs-type">&#119871;</span></a></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%1D54A"><span class="hs-identifier hs-type">&#120138;</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317528"><span class="hs-identifier hs-type">a</span></a></span><span> </span><span class="hs-glyph">&#8594;</span><span> </span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317528"><span class="hs-identifier hs-type">a</span></a></span></span><span>
+</span><span id="line-110"></span><span id="keys%1D447D"><span class="annot"><span class="annottext">keys&#119879;D :: forall a. &#119871; &#120138; -&gt; &#119879;D a -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#keys%1D447D"><span class="hs-identifier hs-var hs-var">keys&#119879;D</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">(&#120138; -&gt; &#119879;D a -&gt; &#119879;D a) -&gt; &#119871; &#120138; -&gt; &#119879;D a -&gt; &#119879;D a
+forall a t b. ToIter a t =&gt; (a -&gt; b -&gt; b) -&gt; t -&gt; b -&gt; b
+</span><a href="UVMHS.Core.Data.Iter.html#foldrWithOn"><span class="hs-identifier hs-var">foldrWithOn</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#119879;D a -&gt; &#119879;D a
+forall a. &#120138; -&gt; &#119879;D a -&gt; &#119879;D a
+</span><a href="UVMHS.Lib.TreeNested.html#key%1D447D"><span class="hs-identifier hs-var">key&#119879;D</span></a></span><span>
+</span><span id="line-111"></span><span>
+</span><span id="line-112"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621687317531"><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317531"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8658;</span><span> </span><span class="annot"><a href="UVMHS.Lib.Pretty.Doc.html#Pretty"><span class="hs-identifier hs-type">Pretty</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span class="annot"><a href="#local-6989586621687317531"><span class="hs-identifier hs-type">a</span></a></span><span class="hs-special">)</span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-113"></span><span>  </span><span id="local-6989586621687317813"><span class="annot"><span class="annottext">pretty :: &#119879;D a -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var hs-var hs-var hs-var">pretty</span></a></span></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="UVMHS.Lib.TreeNested.html#%1D447D"><span class="hs-identifier hs-type">&#119879;D</span></a></span><span> </span><span id="local-6989586621687317814"><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317814"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span id="local-6989586621687317815"><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317815"><span class="hs-identifier hs-var">n</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">&#119868; Doc -&gt; Doc
+forall t. ToIter Doc t =&gt; t -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppVertical"><span class="hs-identifier hs-var">ppVertical</span></a></span><span> </span><span class="annot"><span class="annottext">(&#119868; Doc -&gt; Doc) -&gt; &#119868; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">[&#119868; Doc] -&gt; &#119868; Doc
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
+</span><span id="line-114"></span><span>    </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">(a -&gt; Doc) -&gt; &#119868; a -&gt; &#119868; Doc
+forall a b. (a -&gt; b) -&gt; &#119868; a -&gt; &#119868; b
+forall (t :: * -&gt; *) a b. Functor t =&gt; (a -&gt; b) -&gt; t a -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#map"><span class="hs-identifier hs-var">map</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppGA"><span class="hs-identifier hs-var">ppGA</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; (a -&gt; Doc) -&gt; a -&gt; Doc
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><a href="UVMHS.Core.Init.html#%2218"><span class="hs-operator hs-var">&#8728;</span></a></span><span> </span><span class="annot"><span class="annottext">a -&gt; Doc
+forall a. Pretty a =&gt; a -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">&#119868; a
+</span><a href="#local-6989586621687317814"><span class="hs-identifier hs-var">v</span></a></span><span>
+</span><span id="line-115"></span><span>    </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">&#119868; (&#120138; &#8743; &#119879;D a) -&gt; ((&#120138; &#8743; &#119879;D a) -&gt; Doc) -&gt; &#119868; Doc
+forall (t :: * -&gt; *) a b. Functor t =&gt; t a -&gt; (a -&gt; b) -&gt; t b
+</span><a href="UVMHS.Core.Classes.Functors.html#mapOn"><span class="hs-identifier hs-var">mapOn</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">(&#120138; &#8688; &#119879;D a) -&gt; &#119868; (&#120138; &#8743; &#119879;D a)
+forall a t. ToIter a t =&gt; t -&gt; &#119868; a
+</span><a href="UVMHS.Core.Classes.Collections.html#iter"><span class="hs-identifier hs-var">iter</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; &#8688; &#119879;D a
+</span><a href="#local-6989586621687317815"><span class="hs-identifier hs-var">n</span></a></span><span class="hs-special">)</span><span> </span><span class="annot"><span class="annottext">(((&#120138; &#8743; &#119879;D a) -&gt; Doc) -&gt; &#119868; Doc) -&gt; ((&#120138; &#8743; &#119879;D a) -&gt; Doc) -&gt; &#119868; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="hs-glyph">\</span><span> </span><span class="hs-special">(</span><span id="local-6989586621687317816"><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317816"><span class="hs-identifier hs-var">k</span></a></span></span><span> </span><span class="annot"><a href="UVMHS.Core.Init.html#%3A%2A"><span class="hs-operator hs-type">:*</span></a></span><span> </span><span id="local-6989586621687317817"><span class="annot"><span class="annottext">&#119879;D a
+</span><a href="#local-6989586621687317817"><span class="hs-identifier hs-var">v'</span></a></span></span><span class="hs-special">)</span><span> </span><span class="hs-glyph">&#8594;</span><span>
+</span><span id="line-116"></span><span>        </span><span class="hs-keyword">if</span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; &#8469;64
+forall a. CSized a =&gt; a -&gt; &#8469;64
+</span><a href="UVMHS.Core.Classes.Collections.html#csize"><span class="hs-identifier hs-var">csize</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317816"><span class="hs-identifier hs-var">k</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64 -&gt; &#8469;64 -&gt; &#120121;
+forall a. Ord a =&gt; a -&gt; a -&gt; &#120121;
+</span><a href="UVMHS.Core.Classes.Order.html#%3C"><span class="hs-operator hs-var">&lt;</span></a></span><span> </span><span class="annot"><span class="annottext">&#8469;64
+</span><span class="hs-number">2</span></span><span>
+</span><span id="line-117"></span><span>        </span><span class="hs-keyword">then</span><span> </span><span>
+</span><span id="line-118"></span><span>          </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
+forall t. ToIter Doc t =&gt; t -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppHorizontal"><span class="hs-identifier hs-var">ppHorizontal</span></a></span><span> </span><span>
+</span><span id="line-119"></span><span>            </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Color -&gt; Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppFG"><span class="hs-identifier hs-var">ppFG</span></a></span><span> </span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-var">teal</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppBD"><span class="hs-identifier hs-var">ppBD</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317816"><span class="hs-identifier hs-var">k</span></a></span><span>
+</span><span id="line-120"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppGA"><span class="hs-identifier hs-var">ppGA</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;D a -&gt; Doc
+forall a. Pretty a =&gt; a -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;D a
+</span><a href="#local-6989586621687317817"><span class="hs-identifier hs-var">v'</span></a></span><span>
+</span><span id="line-121"></span><span>            </span><span class="hs-special">]</span><span>
+</span><span id="line-122"></span><span>        </span><span class="hs-keyword">else</span><span>
+</span><span id="line-123"></span><span>          </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppGA"><span class="hs-identifier hs-var">ppGA</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">[Doc] -&gt; Doc
+forall a t. (Monoid a, ToIter a t) =&gt; t -&gt; a
+</span><a href="UVMHS.Core.Data.Iter.html#concat"><span class="hs-identifier hs-var">concat</span></a></span><span>
+</span><span id="line-124"></span><span>            </span><span class="hs-special">[</span><span> </span><span class="annot"><span class="annottext">Color -&gt; Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppFG"><span class="hs-identifier hs-var">ppFG</span></a></span><span> </span><span class="annot"><span class="annottext">Color
+</span><a href="UVMHS.Lib.Pretty.Color.html#teal"><span class="hs-identifier hs-var">teal</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppBD"><span class="hs-identifier hs-var">ppBD</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138; -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppString"><span class="hs-identifier hs-var">ppString</span></a></span><span> </span><span class="annot"><span class="annottext">&#120138;
+</span><a href="#local-6989586621687317816"><span class="hs-identifier hs-var">k</span></a></span><span>
+</span><span id="line-125"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppSpaceNewlineIfBreak"><span class="hs-identifier hs-var">ppSpaceNewlineIfBreak</span></a></span><span>
+</span><span id="line-126"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppSpaceIfBreak"><span class="hs-identifier hs-var">ppSpaceIfBreak</span></a></span><span>
+</span><span id="line-127"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppSpaceIfBreak"><span class="hs-identifier hs-var">ppSpaceIfBreak</span></a></span><span>
+</span><span id="line-128"></span><span>            </span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">Doc -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#ppGA"><span class="hs-identifier hs-var">ppGA</span></a></span><span> </span><span class="annot"><span class="annottext">(Doc -&gt; Doc) -&gt; Doc -&gt; Doc
+forall a b. (a -&gt; b) -&gt; a -&gt; b
+</span><a href="UVMHS.Core.Init.html#%24"><span class="hs-operator hs-var">$</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;D a -&gt; Doc
+forall a. Pretty a =&gt; a -&gt; Doc
+</span><a href="UVMHS.Lib.Pretty.Doc.html#pretty"><span class="hs-identifier hs-var">pretty</span></a></span><span> </span><span class="annot"><span class="annottext">&#119879;D a
+</span><a href="#local-6989586621687317817"><span class="hs-identifier hs-var">v'</span></a></span><span>
+</span><span id="line-129"></span><span>            </span><span class="hs-special">]</span><span>
+</span><span id="line-130"></span><span>    </span><span class="hs-special">]</span><span>
+</span><span id="line-131"></span></pre></body></html>

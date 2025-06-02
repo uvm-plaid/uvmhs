@@ -1,5 +1,24 @@
 HTML documentation [here](https://uvm-plaid.github.io/uvmhs/).
 
+# Contributing and Versioning
+
+Current Version: 0.0.1.0
+
+- The `master` branch tracks with library versions, as specified in the
+  `package.yaml`.
+- The `future` branch is were new changes are made and collected before being
+  rolled up into version releases. The `CHANGELOG.md` in that branch will track
+  changes. Any merge of `future` into `master` should bump the version in
+  `package.yaml` and at the top of this README. Version bumps should be at
+  least in `X` position for the version structure `*.*.X.*`.
+- Every single commit to `master` that isn't a version bump to `*.*.X.*` (e.g.,
+  by merging `future`) must bump the minor version `*.*.*.X` and document
+  changes in `CHANGELOG.md`. These minor version bumps are intended to be
+  reserved only for hotfixes, and should be upstreamed to `future` ASAP.
+- Things to do before cutting a version:
+  - run `make docs`
+  - run `make fixity-levels`
+
 # Getting Started
 
 ## Unicode
@@ -14,7 +33,7 @@ U+2A4F (Double Square Union) `⩏` and U+2A4E (Double Square Intersection)
 `⩎`, and Symbola is sometimes used as a default fallback font in Linux
 distributions.
 
-## Cross-Reference Table
+# Quick Reference
 
 Here is a cross-reference table between common datatypes and their
 equivalents in both standard Haskell and UVMHS:
@@ -58,9 +77,9 @@ classes upon which the rest of the library builds.
 | UVMHS Type Class Function       |
 |---------------------------------|
 | `zero ∷ (Zero a) ⇒ a`           |
+| `one  ∷ (One a) ⇒ a`            |
 | `(+)  ∷ (Plus a) ⇒ a → a → a`   |
 | `(-)  ∷ (Minus a) ⇒ a → a → a`  |
-| `one  ∷ (One a) ⇒ a`            |
 | `(×)  ∷ (Times a) ⇒ a → a → a`  |
 | `(/)  ∷ (Divide a) ⇒ a → a → a` |
 | `(⌿)  ∷ (DivMod a) ⇒ a → a → a` |

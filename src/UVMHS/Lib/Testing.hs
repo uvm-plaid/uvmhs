@@ -129,7 +129,7 @@ runTests noisy γ tests = do
             ]
 
       ]
-  when (not $ isEmpty $ iter $ testsOutFailures o) $ \ () →
+  when (not $ isEmpty $ iter $ testsOutFailures o) $ \ () → do
     pprint $ ppVertical
       [ ppHeader "FAILED TESTS"
       , pretty $ concat $ mapOn (iter $ testsOutFailures o) $ \ (tags :* lDerrDs) →
@@ -139,6 +139,7 @@ runTests noisy γ tests = do
               , errD ()
               ]
       ]
+    abortIO
 
 𝔱 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → TH.Q [TH.Dec]
 #ifdef NO_UVMHS_TESTS
