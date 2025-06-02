@@ -46,6 +46,20 @@ New Feature:
   - Make substitution failure a proper error type with Doc error message that
     describes failure, rather than just an option
   - change printing and parsing of "x:0…x:4" to be "x:0…4"
+  - add something like:
+
+        dbindUnusedSubst ∷ (Ord s) ⇒ s → Subst s e
+
+    to go along with the current
+
+        dbindSubst ∷ (Ord s) ⇒ s → e → Subst s e
+
+    (+ variants for named substitutions...)
+    and where `dbindUnusedSubst` just puts a `None` in the substitution vector.
+  - longer term, would e good to differentiate between "substitution failed"
+    and "we expect this variable to not exist in whatever we apply this
+    substitution to", as after adopting prior bullet, these are both
+    represented as `None` in the substitution vector.
 - Streams and Iterators that perform monadic actions "as they go"
 
 Test Suite Needed:
