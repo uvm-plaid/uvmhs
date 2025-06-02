@@ -220,6 +220,9 @@ pow𝑃 = pow𝐼𝑃 ∘ iter
 map𝑃 ∷ (Ord b) ⇒ (a → b) → 𝑃 a → 𝑃 b
 map𝑃 = coerce Set.map
 
+extend𝑃 ∷ (Ord b) ⇒ (a → 𝑃 b) → 𝑃 a → 𝑃 b
+extend𝑃 f = pow ∘ extend (iter ∘ f) ∘ iter
+
 uniques𝑃 ∷ (Ord a,ToIter a t) ⇒ t → 𝐼 a
 uniques𝑃 xs = filterMap id $ appto (iter xs) $ mapState𝐼 pø𝑃 $ \ x seen →
   if x ∈♭ seen
