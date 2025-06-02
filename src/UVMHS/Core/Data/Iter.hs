@@ -55,6 +55,12 @@ zipWith f xs ys = iter $ zipWith𝑆 f (stream xs) $ stream ys
 zip ∷ (ToIter a t₁,ToIter b t₂) ⇒ t₁ → t₂ → 𝐼 (a ∧ b)
 zip = zipWith (:*)
 
+zipAllWith ∷ (ToIter a t₁,ToIter b t₂) ⇒ (a → c) → (b → c) → (a → b → c) → t₁ → t₂ → 𝐼 c
+zipAllWith f₁ f₂ f₃ xs ys = iter $ zipAllWith𝑆 f₁ f₂ f₃ (stream xs) $ stream ys
+
+zipAll ∷ (ToIter a t₁,ToIter b t₂) ⇒ t₁ → t₂ → 𝐼 ((a ∨ b) ∨ a ∧ b)
+zipAll = zipAllWith (Inl ∘ Inl) (Inl ∘ Inr) $ Inr ∘∘ (:*)
+
 snoc𝐼 ∷ 𝐼 a → a → 𝐼 a
 snoc𝐼 xs x = 𝐼 HS.$ \ yield i done →
   un𝐼 xs yield i $ \ i' →

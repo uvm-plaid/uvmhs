@@ -48,6 +48,15 @@ zipWith𝑆 f = loop
         (Some (x :* xs'),Some (y :* ys')) → Some (f x y :* loop xs' ys')
         _ → None
 
+zipAllWith𝑆 ∷ (a → c) → (b → c) → (a → b → c) → 𝑆 a → 𝑆 b → 𝑆 c
+zipAllWith𝑆 f₁ f₂ f₃ = loop
+  where
+    loop xs ys = 𝑆 $ \ () → case (un𝑆 xs (),un𝑆 ys ()) of
+      (Some (x :* xs'),None           ) → Some (f₁ x   :* map f₁ xs'  )
+      (None           ,Some (y :* ys')) → Some (f₂ y   :* map f₂ ys'  )
+      (Some (x :* xs'),Some (y :* ys')) → Some (f₃ x y :* loop xs' ys')
+      (None           ,None           ) → None
+
 -- import UVMHS.Core.Init
 -- import UVMHS.Core.Classes
 --

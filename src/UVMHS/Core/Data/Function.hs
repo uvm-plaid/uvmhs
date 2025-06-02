@@ -27,6 +27,12 @@ instance (Show a) ⇒ Show (() → a) where
 pipe ∷ (a → b) → (b → c) → a → c
 pipe = flip (∘)
 
+wrapAB ∷ (c → d) → (a → b) → (b → c) → a → d
+wrapAB h f g = h ∘ g ∘ f
+
+wrapBA ∷ (a → b) → (c → d) → (b → c) → a → d
+wrapBA f h g = h ∘ g ∘ f
+
 iterateWith ∷ (a → 𝑂 a) → a → a
 iterateWith f =
   let loop' x = case f x of
