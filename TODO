@@ -17,6 +17,7 @@ Refactor:
 
 Improve:
 - Work on Chunky
+- Rethink tohs/frhs, consider `toChars` and `fromChars`.
 
 New Feature:
 - Parser Library: 
@@ -84,12 +85,21 @@ Naming Conventions:
   - fieldNameL
   - constNameL
 
+  - when deviating from a standard haskell name for something, have a good
+    reason for it
+    - map instead of fmap: a good reason
+    - each instead of for_: a good reason
+    - exchange -> rename back to sequence
+
 Small things to fix:
   - whenM should take a delayed argument
   - make lazy lists instance of csized
 
 Things to Rename:
-  - errMsg
+  - don't name anything:
+    - errMsg
+    - range
+    - rng
   - pow𝑃 -> pow
   - deconflict `cpName` in `CParser.hs` with `pName` and notion of `Name` in
     substitution library

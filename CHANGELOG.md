@@ -18,6 +18,9 @@
         zipAll ∷ (ToIter a t₁,ToIter b t₂) ⇒ t₁ → t₂ → 𝐼 ((a ∨ b) ∨ a ∧ b)
         zipAll = zipAllWith (Inl ∘ Inl) (Inl ∘ Inr) $ Inr ∘∘ (:*)
 
+        apply ∷ (a → a → a) → a → [a] → a
+        apply f x xs = foldOnFrom xs x $ \ xᵢ xₐ → f xₐ xᵢ
+
 - changes to Core.Data.Stream:
   - added:
 

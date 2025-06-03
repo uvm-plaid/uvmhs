@@ -44,4 +44,9 @@ test = do
   --     ])
 
 dev ∷ IO ()
-dev = cleanExit test
+dev = cleanExit $ do
+  test
+  out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''𝐿)
+  out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''OtherList)
+  out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance ["a"] ''OtherList)
+  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createMonoidInstance ''(∧))

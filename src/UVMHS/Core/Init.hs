@@ -284,6 +284,9 @@ fromRational = HS.fromRational
 fail ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r) m. (STACK) ⇒ [ℂ] → m a
 fail = HS.error
 
+fail𝕊 ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r) m. (STACK) ⇒ 𝕊 → m a
+fail𝕊 = fail ∘ tohsChars
+
 ifThenElse ∷ 𝔹 → a → a → a
 ifThenElse = cond
 

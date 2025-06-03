@@ -289,6 +289,9 @@ eqs xs = case un𝑆 (stream xs) () of
   None → True
   Some (x :* xs') → and $ map ((≡) x) xs'
 
+apply ∷ (a → a → a) → a → [a] → a
+apply f x xs = foldOnFrom xs x $ \ xᵢ xₐ → f xₐ xᵢ
+
 count ∷ ∀ n t a. (Zero n,One n,Plus n,ToIter a t) ⇒ t → n
 count = fold zero $ const succ
 
