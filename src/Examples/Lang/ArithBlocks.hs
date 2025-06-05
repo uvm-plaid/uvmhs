@@ -16,7 +16,7 @@ lexer = lexerWSBasic syntax
 
 testTokenizerSuccess ∷ IO ()
 testTokenizerSuccess =
-  tokenizeFIOMain lexer "" blockifyTokensWSBasic $ tokens $ concat $ inbetween "\n"
+  tokenizeWSAnchoredIOMain lexer "" $ tokens $ concat $ inbetween "\n"
     [ "1 -- blah"
     , "2"
     , "3 4"
@@ -99,7 +99,7 @@ cpExpList = cpManySepBy cpDelimWS cpExp
 testParserSuccess ∷ IO ()
 testParserSuccess = do
   parseIOMain cpExpList ""
-    *$ tokenizeFIO lexer ""  blockifyTokensWSBasic
+    *$ tokenizeWSAnchoredIO lexer ""
      $ tokens
      $ concat
      $ inbetween "\n"
@@ -112,7 +112,7 @@ testParserSuccess = do
 testParserFailure ∷ IO ()
 testParserFailure =
   parseIOMain cpExpList ""
-    *$ tokenizeFIO lexer "" blockifyTokensWSBasic
+    *$ tokenizeWSAnchoredIO lexer ""
      $ tokens
      $ concat
      $ inbetween "\n"

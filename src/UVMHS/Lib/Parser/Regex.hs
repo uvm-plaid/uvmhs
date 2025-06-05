@@ -891,8 +891,11 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
           ]
         | otherwise → error "impossible"
 
-blockifyTokensTL ∷ (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
-blockifyTokensTL = blockifyTokens $ single $ AddBT bot
+blockifyTokensTLAnchored ∷ (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
+blockifyTokensTLAnchored = blockifyTokens $ single $ AddBT bot
+
+blockifyTokensTLUnanchored ∷ (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
+blockifyTokensTLUnanchored = blockifyTokens null
 
 -- The Language --
 
@@ -1000,5 +1003,58 @@ mkIndentTokenWSBasic = \case
   CloseIC → CloseTWSBasic
   NewlineIC → DelimiterTWSBasic
 
-blockifyTokensWSBasic ∷ 𝕍 (PreParserToken TokenWSBasic) → 𝕍 (PreParserToken TokenWSBasic)
-blockifyTokensWSBasic = blockifyTokensTL (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic
+blockifyTokensWSBasicAnchored ∷ 𝕍 (PreParserToken TokenWSBasic) → 𝕍 (PreParserToken TokenWSBasic)
+blockifyTokensWSBasicAnchored = blockifyTokensTLAnchored (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic
+
+blockifyTokensWSBasicUnanchored ∷ 𝕍 (PreParserToken TokenWSBasic) → 𝕍 (PreParserToken TokenWSBasic)
+blockifyTokensWSBasicUnanchored = blockifyTokensTLAnchored (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic
+
+tokenizeWSAnchored ∷
+  ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+  ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (ParserToken TokenWSBasic)
+tokenizeWSAnchored l so ts = do
+  ts₁ ← tokenize l so ts
+  let ts₂ = blockifyTokensWSBasicAnchored ts₁
+      ts₃ = finalizeTokens ts₂
+  return ts₃
+
+tokenizeWSAnchoredIO ∷
+  ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+  ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken TokenWSBasic))
+tokenizeWSAnchoredIO l so ts = elimChoice (\ msg → do pprint msg ; abortIO) return $ tokenizeWSAnchored l so ts
+
+tokenizeWSAnchoredIOMain ∷
+  ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+  ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO ()
+tokenizeWSAnchoredIOMain l so ts = do
+  xs ← tokenizeWSAnchoredIO l so ts
+  pprint $ ppVertical
+    [ ppHeader "Success"
+    , pretty $ mapOn xs $ \ x → parserTokenValue x :* parserContextLocRange (parserTokenContext x)
+    ]
+  pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ parserTokenContext) xs
+
+tokenizeWSUnanchored ∷
+  ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+  ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (ParserToken TokenWSBasic)
+tokenizeWSUnanchored l so ts = do
+  ts₁ ← tokenize l so ts
+  let ts₂ = blockifyTokensWSBasicUnanchored ts₁
+      ts₃ = finalizeTokens ts₂
+  return ts₃
+
+tokenizeWSUnanchoredIO ∷
+  ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+  ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken TokenWSBasic))
+tokenizeWSUnanchoredIO l so ts = elimChoice (\ msg → do pprint msg ; abortIO) return $ tokenizeWSUnanchored l so ts
+
+tokenizeWSUnAnchoredIOMain ∷
+  ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+  ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO ()
+tokenizeWSUnAnchoredIOMain l so ts = do
+  xs ← tokenizeWSUnanchoredIO l so ts
+  pprint $ ppVertical
+    [ ppHeader "Success"
+    , pretty $ mapOn xs $ \ x → parserTokenValue x :* parserContextLocRange (parserTokenContext x)
+    ]
+  pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ parserTokenContext) xs

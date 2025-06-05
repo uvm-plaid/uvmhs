@@ -39,6 +39,64 @@
         extend𝑃 ∷ (Ord b) ⇒ (a → 𝑃 b) → 𝑃 a → 𝑃 b
         extend𝑃 f = pow ∘ extend (iter ∘ f) ∘ iter
 
+- changes to Lib.Parser.Regex
+  - renamed:
+    - `blockifyTokensTL` to `blockifyTokensTLAnchored`
+  - added:
+    
+        blockifyTokensWSBasicUnanchored ∷ 𝕍 (PreParserToken TokenWSBasic) → 𝕍 (PreParserToken TokenWSBasic)
+        blockifyTokensWSBasicUnanchored = blockifyTokensTLAnchored (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic
+
+        tokenizeWSAnchored ∷
+          ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+          ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (ParserToken TokenWSBasic)
+        tokenizeWSAnchored l so ts = do
+          ts₁ ← tokenize l so ts
+          let ts₂ = blockifyTokensWSBasicAnchored ts₁
+              ts₃ = finalizeTokens ts₂
+          return ts₃
+        
+        tokenizeWSAnchoredIO ∷
+          ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+          ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken TokenWSBasic))
+        tokenizeWSAnchoredIO l so ts = elimChoice (\ msg → do pprint msg ; abortIO) return $ tokenizeWSAnchored l so ts
+        
+        tokenizeWSAnchoredIOMain ∷
+          ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+          ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO ()
+        tokenizeWSAnchoredIOMain l so ts = do
+          xs ← tokenizeWSAnchoredIO l so ts
+          pprint $ ppVertical
+            [ ppHeader "Success"
+            , pretty $ mapOn xs $ \ x → parserTokenValue x :* parserContextLocRange (parserTokenContext x)
+            ]
+          pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ parserTokenContext) xs
+        
+        tokenizeWSUnanchored ∷
+          ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+          ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → Doc ∨ 𝕍 (ParserToken TokenWSBasic)
+        tokenizeWSUnanchored l so ts = do
+          ts₁ ← tokenize l so ts
+          let ts₂ = blockifyTokensWSBasicUnanchored ts₁
+              ts₃ = finalizeTokens ts₂
+          return ts₃
+        
+        tokenizeWSUnanchoredIO ∷
+          ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+          ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken TokenWSBasic))
+        tokenizeWSUnanchoredIO l so ts = elimChoice (\ msg → do pprint msg ; abortIO) return $ tokenizeWSUnanchored l so ts
+        
+        tokenizeWSUnAnchoredIOMain ∷
+          ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
+          ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO ()
+        tokenizeWSUnAnchoredIOMain l so ts = do
+          xs ← tokenizeWSUnanchoredIO l so ts
+          pprint $ ppVertical
+            [ ppHeader "Success"
+            , pretty $ mapOn xs $ \ x → parserTokenValue x :* parserContextLocRange (parserTokenContext x)
+            ]
+          pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ parserTokenContext) xs
+      
 - changes to Lib.Parser.CParser.hs
   - rename:
     - `cpNaturalWS` to `cpNatNWS`
@@ -91,3 +149,12 @@
         virtualize = iter
         realize = pow
 
+- new module Lib.StreamM:
+
+
+      newtype 𝑆M m a = 𝑆M { un𝑆M :: () → m (Step (Result a ∧ 𝑆M m a)) }
+      newtype 𝑆MI m a = 𝑆MI { un𝑆MI ∷ 𝑆M m a }
+
+  The idea is that `𝑆M` is the usual monadic stream type, and `𝑆MI` does fair
+  interleaving between streams on `(⧺)` and `(≫=)` operations (a la miniKanren
+  and LogicT)
