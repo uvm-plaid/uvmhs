@@ -58,8 +58,8 @@ testParsingGreedy ∷ IO ()
 testParsingGreedy = parseIOMain parser "<greedy example>" input
   where
     parser = concat ^$ cpOneOrMore $ tries
-      [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ pToken 'y'
-      , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ pToken 'x'
+      [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ rpToken 'y'
+      , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ rpToken 'x'
       , ppFG blue ∘ ppString ^$ cpRender (formats [FG yellow]) $ cpWord "xx"
       ]
     input = tokens "xxx"
@@ -68,12 +68,12 @@ testParsingGreedyAmbiguity ∷ IO ()
 testParsingGreedyAmbiguity = parseIOMain parser "<greedy ambiguity example>" input
   where
     parser = concat ^$ cpOneOrMore $ tries
-      [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ pToken 'y'
+      [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ rpToken 'y'
       , tries
           [ ppFG blue ∘ ppString ^$ cpRender (formats [FG blue]) $ cpWord "x"
           , ppFG pink ∘ ppString ^$ cpRender (formats [FG pink]) $ cpWord "xx"
           ]
-      , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ pToken 'x'
+      , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ rpToken 'x'
       ]
     input = tokens "xxx"
 
@@ -87,7 +87,7 @@ testParsingSuccess = parseIOMain parser "<success example>" input
     input = tokens "xxxxyyxxyy"
 
 testParsingErrorNewline ∷ IO ()
-testParsingErrorNewline = parseIOMain (string ^$ cpMany $ toCParser $ pToken 'x') "<error newline example>" $ tokens "xxx\nx"
+testParsingErrorNewline = parseIOMain (string ^$ cpMany $ toCParser $ rpToken 'x') "<error newline example>" $ tokens "xxx\nx"
 
 testParsingErrorEof ∷ IO ()
 testParsingErrorEof = parseIOMain (exec $ replicate (𝕟 3) $ void $ cpToken 'x') "<error eof example>" $ tokens "xx"

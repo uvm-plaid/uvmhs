@@ -13,25 +13,25 @@ import UVMHS.Lib.Parser.Regex
 
 data CParser t a = CParser
   { cParserNext ∷ t ⇰ CParser t a
-  , cParserFallback ∷ Parser t a
+  , cParserFallback ∷ RawParser t a
   }
 
-onCParser ∷ (Parser t a → Parser t a) → CParser t a → CParser t a
+onCParser ∷ (RawParser t a → RawParser t a) → CParser t a → CParser t a
 onCParser f (CParser n b) = CParser (map (onCParser f) n) $ f b
 
-toCParser ∷ Parser t a → CParser t a
+toCParser ∷ RawParser t a → CParser t a
 toCParser p = CParser dø𝐷 p
 
-frCParser ∷ (Ord t) ⇒ CParser t a → Parser t a
+frCParser ∷ (Ord t) ⇒ CParser t a → RawParser t a
 frCParser (CParser n b)
   | isEmpty n = b
   | otherwise = tries
-      [ do t ← pPluck
+      [ do t ← rpPluck
            case n ⋕? parserTokenValue t of
              Some cp → do
-               pRecord t
+               rpRecord t
                frCParser cp
-             None → pFail (parserTokenContext t) (parserTokenSuffix t)
+             None → rpFail (parserTokenContext t) (parserTokenSuffix t)
       , b
       ]
 
@@ -69,31 +69,31 @@ instance (Ord t) ⇒ Seq (CParser t ()) where
 instance (Ord t) ⇒ Seqoid (CParser t ())
 
 cpRender ∷ (Ord t) ⇒ Formats → CParser t a → CParser t a
-cpRender fm = toCParser ∘ pRender fm ∘ frCParser
+cpRender fm = toCParser ∘ rpRender fm ∘ frCParser
 
 cpErr ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t a
-cpErr s = toCParser ∘ pErr s ∘ frCParser
+cpErr s = toCParser ∘ rpErr s ∘ frCParser
 
 cpToken ∷ (Ord t) ⇒ t → CParser t t
 cpToken t = CParser (t ↦ return t) abort
 
 cpFinal ∷ (Ord t) ⇒ CParser t a → CParser t a
-cpFinal = toCParser ∘ pFinal ∘ frCParser
+cpFinal = toCParser ∘ rpFinal ∘ frCParser
 
 cpShaped ∷ (t → 𝑂 a) → CParser t a
-cpShaped = toCParser ∘ pShaped
+cpShaped = toCParser ∘ rpShaped
 
 cpSatisfies ∷ (t → 𝔹) → CParser t t
-cpSatisfies = toCParser ∘ pSatisfies
+cpSatisfies = toCParser ∘ rpSatisfies
 
 cpAny ∷ CParser t t
-cpAny = toCParser pAny
+cpAny = toCParser rpAny
 
 cpWord ∷ ∀ s t. (Eq t,s ⇄ 𝐼 t) ⇒ s → CParser t s
-cpWord = toCParser ∘ pWord
+cpWord = toCParser ∘ rpWord
 
 cpOptional ∷ (Ord t) ⇒ CParser t a → CParser t (𝑂 a)
-cpOptional = toCParser ∘ pOptional ∘ frCParser
+cpOptional = toCParser ∘ rpOptional ∘ frCParser
 
 cpMany ∷ (Ord t) ⇒ CParser t a → CParser t (𝐿 a)
 cpMany xM = tries
@@ -122,13 +122,13 @@ cpOneOrMoreSepBy sepM xM = do
   return $ x :& xs
 
 cpDie ∷ CParser t a
-cpDie = toCParser pDie
+cpDie = toCParser rpDie
 
 cpGuard ∷ 𝔹 → CParser t ()
-cpGuard = toCParser ∘ pGuard
+cpGuard = toCParser ∘ rpGuard
 
 cpFailEff ∷ 𝑂 a → CParser t a
-cpFailEff = toCParser ∘ pFailEff
+cpFailEff = toCParser ∘ rpFailEff
 
 ----------------------------
 -- Basic Language Parsing --
@@ -213,22 +213,22 @@ cpDelimWS ∷ CParser TokenWSBasic ()
 cpDelimWS = void $ cpToken DelimiterTWSBasic
 
 cpNewExpressionContext ∷ (Ord t) ⇒ CParser t a → CParser t a
-cpNewExpressionContext = toCParser ∘ pNewExpressionContext ∘ frCParser
+cpNewExpressionContext = toCParser ∘ rpNewExpressionContext ∘ frCParser
 
 cpNewErrContext ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t a
-cpNewErrContext msg = toCParser ∘ pNewErrContext msg ∘ frCParser
+cpNewErrContext msg = toCParser ∘ rpNewErrContext msg ∘ frCParser
 
 cpNewContext ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t a
-cpNewContext s = toCParser ∘ pNewContext s ∘ frCParser
+cpNewContext s = toCParser ∘ rpNewContext s ∘ frCParser
 
 cpWithContextRendered ∷ (Ord t) ⇒ CParser t a → CParser t (𝐴 SrcCxt a)
-cpWithContextRendered = toCParser ∘ pWithContextRendered ∘ frCParser
+cpWithContextRendered = toCParser ∘ rpWithContextRendered ∘ frCParser
 
 cpNewWithContextRendered ∷ (Ord t) ⇒ 𝕊 → CParser t a → CParser t (𝐴 SrcCxt a)
 cpNewWithContextRendered s = cpNewContext s ∘ cpWithContextRendered
 
 cpGetContextRendered ∷ CParser t SrcCxt
-cpGetContextRendered = toCParser pGetContextRendered
+cpGetContextRendered = toCParser rpGetContextRendered
 
 cpNewGetContextRendered ∷ (Ord t) ⇒ CParser t SrcCxt
 cpNewGetContextRendered = cpNewExpressionContext cpGetContextRendered
@@ -268,7 +268,7 @@ cpOneOrMoreSepByContext f sepM xM = do
 ---------------------
 
 runParser₀ ∷ (ToIter (ParserToken t) ts,Ord t) ⇒ 𝕊 → ts → CParser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
-runParser₀ so = (∘ frCParser) ∘ runParser (parserEnv₀ so) ∘ parserState₀ ∘ stream
+runParser₀ so = (∘ frCParser) ∘ runRawParser (parserEnv₀ so) ∘ parserState₀ ∘ stream
 
 parse ∷ (Pretty a,ToIter (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → Doc ∨ a
 parse p so ts = case runParser₀ so ts $ cpFinal p of
@@ -277,7 +277,7 @@ parse p so ts = case runParser₀ so ts $ cpFinal p of
 
 parseIO ∷ (Pretty a,ToIter (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → IO a
 parseIO p s ts = case parse p s ts of
-  Inl d → pprint d ≫ abortIO
+  Inl d → do pprint d ; abortIO
   Inr a → return a
 
 parseIOMain ∷ (Pretty a,ToIter (ParserToken t) ts,Ord t) ⇒ CParser t a → 𝕊 → ts → IO ()

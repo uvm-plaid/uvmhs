@@ -39,7 +39,40 @@
         extend𝑃 ∷ (Ord b) ⇒ (a → 𝑃 b) → 𝑃 a → 𝑃 b
         extend𝑃 f = pow ∘ extend (iter ∘ f) ∘ iter
 
-- changes to Lib.Parser.Regex
+- changes to Lib.Parser.Core:
+  - renamed:
+    - `Parser` to `RawParser`
+    - `runParser` to `runRawParser`
+    - `pNewExpressionContext` to `rpNewExpressionContext`
+    - `pGetContext` to `rpGetContext`
+    - `pGetContextRendered` to `rpGetContextRendered`
+    - `pWithContext` to `rpWithContext`
+    - `pFail` to `rpFail`
+    - `pErr` to `rpErr`
+    - `pNewErrContext` to `rpNewErrContext`
+    - `pNewContext ` to `rpNewContext`
+    - `pWithContextRendered` to `rpWithContextRendered`
+    - `pRender` to `rpRender`
+    - `pAdvance` to `rpAdvance`
+    - `pPluck` to `rpPluck`
+    - `pRecord` to `rpRecord`
+    - `pEnd` to `rpEnd`
+    - `pFinal` to `rpFinal`
+    - `pAny` to `rpAny`
+    - `pShaped` to `rpShaped`
+    - `pDie` to `rpDie`
+    - `pGuard` to `rpGuard`
+    - `pFailEff` to `rpFailEff`
+    - `pSatisfies` to `rpSatisfies`
+    - `pToken` to `rpToken`
+    - `pOptional` to `rpOptional`
+    - `pMany` to `rpMany`
+    - `pOneOrMore` to `rpOneOrMore`
+    - `pManySepBy` to `rpManySepBy`
+    - `pOneOrMoreSepBy` to `rpOneOrMoreSepBy`
+    - `pWord` to `rpWord`
+
+- changes to Lib.Parser.Regex:
   - renamed:
     - `blockifyTokensTL` to `blockifyTokensTLAnchored`
   - added:
@@ -97,7 +130,7 @@
             ]
           pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ parserTokenContext) xs
       
-- changes to Lib.Parser.CParser.hs
+- changes to Lib.Parser.CParser.hs:
   - rename:
     - `cpNaturalWS` to `cpNatNWS`
     - `cpNat64N` to `cpNatN64`

@@ -51,9 +51,9 @@ makePrettyRecord ''ParserState
 parserState₀ ∷ 𝑆 (ParserToken t) → ParserState t
 parserState₀ = ParserState null null null null $ AddBT bot
 
--- # Parser
+-- # RawParser
 
-newtype Parser t a = Parser { unParser ∷ ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a }
+newtype RawParser t a = RawParser { unParser ∷ ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a }
   deriving
   ( Functor,Return,Bind,Monad
   , MonadFail
@@ -62,15 +62,15 @@ newtype Parser t a = Parser { unParser ∷ ReaderT ParserEnv (StateT (ParserStat
   , MonadState (ParserState t)
   )
 
-runParser ∷ ParserEnv → ParserState t → Parser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
-runParser e s = unFailT ∘ runStateT s ∘ runReaderT e ∘ unParser
+runRawParser ∷ ParserEnv → ParserState t → RawParser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
+runRawParser e s = unFailT ∘ runStateT s ∘ runReaderT e ∘ unParser
 
 -------------------------
 -- Low Level Interface --
 -------------------------
 
-pNewExpressionContext ∷ Parser t a → Parser t a
-pNewExpressionContext aM = do
+rpNewExpressionContext ∷ RawParser t a → RawParser t a
+rpNewExpressionContext aM = do
   pp ← getL parserStatePrefixL
   pk ← getL parserStateSkipContextL
   pc ← getL parserStateContextL
@@ -90,56 +90,56 @@ pNewExpressionContext aM = do
       putL parserStateContextL $ pc ⧺ pk' ⧺ pc'
   return a
 
-pGetContext ∷ Parser t (WindowR Doc Doc ∧ ParserContext ∧ WindowL Doc Doc)
-pGetContext = do
+rpGetContext ∷ RawParser t (WindowR Doc Doc ∧ ParserContext ∧ WindowL Doc Doc)
+rpGetContext = do
   pp ← getL parserStatePrefixL
   pk ← getL parserStateSkipContextL
   pc ← getL parserStateContextL
   ps ← getL parserStateSuffixL
   return $ (pp ⧺ parserContextDisplayR pk) :* pc :* ps
 
-pGetContextRendered ∷ Parser t SrcCxt
-pGetContextRendered = do
-  pp :* pc :* ps ← pGetContext
+rpGetContextRendered ∷ RawParser t SrcCxt
+rpGetContextRendered = do
+  pp :* pc :* ps ← rpGetContext
   n ← askL parserEnvSourceNameL
   return $ SrcCxt n (parserContextLocRange pc) pp (parserContextDisplayL pc) ps
 
-pWithContext ∷ Parser t a → Parser t (WindowR Doc Doc ∧ ParserContext ∧ WindowL Doc Doc ∧ a)
-pWithContext aM = do
+rpWithContext ∷ RawParser t a → RawParser t (WindowR Doc Doc ∧ ParserContext ∧ WindowL Doc Doc ∧ a)
+rpWithContext aM = do
   x ← aM
-  pp :* pc :* ps ← pGetContext
+  pp :* pc :* ps ← rpGetContext
   return $ pp :* pc :* ps :* x
 
-pFail ∷ ParserContext → WindowL Doc Doc → Parser t a
-pFail tc ps = do
+rpFail ∷ ParserContext → WindowL Doc Doc → RawParser t a
+rpFail tc ps = do
   whenM (askL parserEnvReportErrorsL) $ \ () → do
     let l = locRangeEnd $ parserContextLocRange tc
         d = parserContextError tc
     e :* es ← askL parserEnvErrorStackL
-    pp :* pc :* _ ← pGetContext
+    pp :* pc :* _ ← rpGetContext
     tell $ AddNull $ ParserError l d ps $ single $ ParserErrorInfo pp (parserContextDisplayR pc) e es
   abort
 
-pErr ∷ 𝕊 → Parser t a → Parser t a
-pErr msg = mapEnv $ alter parserEnvErrorStackL $ \ (msg' :* stack) → msg :* (stack ⧺ single msg')
+rpErr ∷ 𝕊 → RawParser t a → RawParser t a
+rpErr msg = mapEnv $ alter parserEnvErrorStackL $ \ (msg' :* stack) → msg :* (stack ⧺ single msg')
 
-pNewErrContext ∷ 𝕊 → Parser t a → Parser t a
-pNewErrContext msg = mapEnv $ update parserEnvErrorStackL $ msg :* null
+rpNewErrContext ∷ 𝕊 → RawParser t a → RawParser t a
+rpNewErrContext msg = mapEnv $ update parserEnvErrorStackL $ msg :* null
 
-pNewContext ∷ 𝕊 → Parser t a → Parser t a
-pNewContext msg = pNewExpressionContext ∘ pNewErrContext msg
+rpNewContext ∷ 𝕊 → RawParser t a → RawParser t a
+rpNewContext msg = rpNewExpressionContext ∘ rpNewErrContext msg
 
-pWithContextRendered ∷ Parser t a → Parser t (𝐴 SrcCxt a)
-pWithContextRendered aM = do
+rpWithContextRendered ∷ RawParser t a → RawParser t (𝐴 SrcCxt a)
+rpWithContextRendered aM = do
   x ← aM
-  fc ← pGetContextRendered
+  fc ← rpGetContextRendered
   return $ 𝐴 fc x
 
-pRender ∷ Formats → Parser t a → Parser t a
-pRender fmt = mapEnv $ alter parserEnvRenderFormatL $ (⧺) fmt
+rpRender ∷ Formats → RawParser t a → RawParser t a
+rpRender fmt = mapEnv $ alter parserEnvRenderFormatL $ (⧺) fmt
 
-pAdvance ∷ Parser t (AddBT Loc ∨ ParserToken t)
-pAdvance = do
+rpAdvance ∷ RawParser t (AddBT Loc ∨ ParserToken t)
+rpAdvance = do
   pi ← getL parserStateInputL
   ep ← getL parserStateEndPosL
   case un𝑆 pi () of
@@ -155,104 +155,104 @@ pAdvance = do
           if parserContextLocRange pc ≡ bot
             then putL parserStateSkipContextL $ pk ⧺ tc
             else putL parserStateContextL $ pc ⧺ tc
-          pAdvance
+          rpAdvance
         else do
           fmt ← askL parserEnvRenderFormatL
           return $ Inr $ ParserToken x sk (formatParserContext fmt tc) ts
 
-pPluck ∷ Parser t (ParserToken t)
-pPluck = do
-  tM ← pAdvance
+rpPluck ∷ RawParser t (ParserToken t)
+rpPluck = do
+  tM ← rpAdvance
   case tM of
-    Inl l → {- pErr "more input" $ -} pFail (eofContext l) null
+    Inl l → {- rpErr "more input" $ -} rpFail (eofContext l) null
     Inr t → return t
 
-pRecord ∷ ParserToken t → Parser t ()
-pRecord t = do
+rpRecord ∷ ParserToken t → RawParser t ()
+rpRecord t = do
   modifyL parserStateContextL $ \ c → c ⧺ parserTokenContext t
   putL parserStateSuffixL $ parserTokenSuffix t
 
-pEnd ∷ Parser t ()
-pEnd = do
-  tM ← pAdvance
+rpEnd ∷ RawParser t ()
+rpEnd = do
+  tM ← rpAdvance
   case tM of
     Inl _ → return ()
-    Inr t → pNewContext "end of input" $ pFail (parserTokenContext t) (parserTokenSuffix t)
+    Inr t → rpNewContext "end of input" $ rpFail (parserTokenContext t) (parserTokenSuffix t)
 
 ----------------
 -- High Level --
 ----------------
 
-pFinal ∷ Parser t a → Parser t a
-pFinal aM = do
+rpFinal ∷ RawParser t a → RawParser t a
+rpFinal aM = do
   a ← aM
-  pEnd
+  rpEnd
   return a
 
-pAny ∷ Parser t t
-pAny = do
-  t ← pPluck
-  pRecord t
+rpAny ∷ RawParser t t
+rpAny = do
+  t ← rpPluck
+  rpRecord t
   return $ parserTokenValue t
 
-pShaped ∷ {- 𝕊 → -} (t → 𝑂 a) → Parser t a
-pShaped {- msg -} sh = do
-  t ← pPluck
+rpShaped ∷ {- 𝕊 → -} (t → 𝑂 a) → RawParser t a
+rpShaped {- msg -} sh = do
+  t ← rpPluck
   case sh $ parserTokenValue t of
-    None → {- pErr msg $ -} pFail (parserTokenContext t) (parserTokenSuffix t)
+    None → {- rpErr msg $ -} rpFail (parserTokenContext t) (parserTokenSuffix t)
     Some x → do
-      pRecord t
+      rpRecord t
       return x
 
-pDie ∷ Parser t a
-pDie = do
-  t ← pPluck
-  pFail (parserTokenContext t) $ parserTokenSuffix t
+rpDie ∷ RawParser t a
+rpDie = do
+  t ← rpPluck
+  rpFail (parserTokenContext t) $ parserTokenSuffix t
 
-pGuard ∷ 𝔹 → Parser t ()
-pGuard b = if b then skip else pDie
+rpGuard ∷ 𝔹 → RawParser t ()
+rpGuard b = if b then skip else rpDie
 
-pFailEff ∷ 𝑂 a → Parser t a
-pFailEff = elim𝑂 (const pDie) return
+rpFailEff ∷ 𝑂 a → RawParser t a
+rpFailEff = elim𝑂 (const rpDie) return
 
-pSatisfies ∷ {- 𝕊 → -} (t → 𝔹) → Parser t t
-pSatisfies {- msg -} p = pShaped {- msg -} $ \ x → case p x of
+rpSatisfies ∷ {- 𝕊 → -} (t → 𝔹) → RawParser t t
+rpSatisfies {- msg -} p = rpShaped {- msg -} $ \ x → case p x of
   True → Some x
   False → None
 
-pToken ∷ (Eq t {- ,Pretty t -}) ⇒ t → Parser t t
-pToken l = pSatisfies {- (ppshow l) -} $ (≡) l
+rpToken ∷ (Eq t {- ,Pretty t -}) ⇒ t → RawParser t t
+rpToken l = rpSatisfies {- (ppshow l) -} $ (≡) l
 
-pOptional ∷ Parser t a → Parser t (𝑂 a)
-pOptional p = tries [map Some p,return None]
+rpOptional ∷ RawParser t a → RawParser t (𝑂 a)
+rpOptional p = tries [map Some p,return None]
 
-pMany ∷ Parser t a → Parser t (𝐿 a)
-pMany xM = tries
-  [ pOneOrMore xM
+rpMany ∷ RawParser t a → RawParser t (𝐿 a)
+rpMany xM = tries
+  [ rpOneOrMore xM
   , return Nil
   ]
 
-pOneOrMore ∷ Parser t a → Parser t (𝐿 a)
-pOneOrMore xM = do
+rpOneOrMore ∷ RawParser t a → RawParser t (𝐿 a)
+rpOneOrMore xM = do
   x ← xM
-  xs ← pMany xM
+  xs ← rpMany xM
   return $ x:&xs
 
-pManySepBy ∷ Parser t () → Parser t a → Parser t (𝐿 a)
-pManySepBy sepM xM = tries
-  [ pOneOrMoreSepBy sepM xM
+rpManySepBy ∷ RawParser t () → RawParser t a → RawParser t (𝐿 a)
+rpManySepBy sepM xM = tries
+  [ rpOneOrMoreSepBy sepM xM
   , return Nil
   ]
 
-pOneOrMoreSepBy ∷ Parser t () → Parser t a → Parser t (𝐿 a)
-pOneOrMoreSepBy sepM xM = do
+rpOneOrMoreSepBy ∷ RawParser t () → RawParser t a → RawParser t (𝐿 a)
+rpOneOrMoreSepBy sepM xM = do
   x ← xM
-  xs ← map snd ^$ pMany $ sepM ⧆ xM
+  xs ← map snd ^$ rpMany $ sepM ⧆ xM
   return $ x :& xs
 
 ------------------------
 -- High-level Helpers --
 ------------------------
 
-pWord ∷ ∀ s t. (Eq t,s ⇄ 𝐼 t) ⇒ s → Parser t s
-pWord s = isofr ^$ mapM pToken (isoto s ∷ 𝐼 t)
+rpWord ∷ ∀ s t. (Eq t,s ⇄ 𝐼 t) ⇒ s → RawParser t s
+rpWord s = isofr ^$ mapM rpToken (isoto s ∷ 𝐼 t)
