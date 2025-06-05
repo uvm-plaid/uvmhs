@@ -23,6 +23,10 @@ import qualified Data.Vector as V
 
 import UVMHS.Lang.ULC
 
+import qualified Control.Monad.Logic as L
+
+import qualified GHC.IsList as IsList
+
 main ∷ IO ()
 main = out "<UVMHS>"
 
@@ -46,7 +50,8 @@ test = do
 dev ∷ IO ()
 dev = cleanExit $ do
   test
-  out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''𝐿)
-  out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''OtherList)
-  out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance ["a"] ''OtherList)
+  -- FUTURE
+  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''𝐿)
+  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''OtherList)
+  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance ["a"] ''OtherList)
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createMonoidInstance ''(∧))

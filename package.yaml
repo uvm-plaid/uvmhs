@@ -50,20 +50,16 @@ default-extensions:
   - ViewPatterns
 
 ghc-options:
-  - -optP-Wno-nonportable-include-path
+  - -O2
   - -Wall
   - -Wno-orphans
   - -Wno-star-is-type
-  - -j2
-  - -fno-prof-auto
-  # when we want to build fast...
-  # - -O0
-  # when we want a slow optimized build...
-  - -O2
-  - -optc-O3
-  - -fspecialise-aggressively
   - -fexpose-all-unfoldings
   - -fprint-potential-instances
+  - -fspecialise-aggressively
+  - -j2
+  - -optP-Wno-nonportable-include-path
+  - -optc-O3
 
 dependencies:
   - base
@@ -81,6 +77,7 @@ dependencies:
   - time
   - vector
   - th-lift-instances
+  - logict
 
 flags:
   no-uvmhs-tests:
