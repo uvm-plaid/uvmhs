@@ -103,3 +103,99 @@ Things to Rename:
   - pow𝑃 -> pow
   - deconflict `cpName` in `CParser.hs` with `pName` and notion of `Name` in
     substitution library
+
+## Notes on RebindableSyntax and fromInteger:
+
+It would be nice to define:
+
+fromInteger ∷ Integer → ℕ64
+negate ∷ ℕ64 → ℤ64
+
+This would cause `5` to always be type `ℕ64` and `-5` to always be type `ℤ64`,
+which in 80%+ cases, is probably just what you want, and it avoids the
+ambiguity of literals being overloaded. (Note that `-5` syntax desugars to
+`negate (fromInteger 5)` when RebindableSyntax is turned on, and desugars I
+think just to fromInteger (-5) when Rebindablesyntax is not turned on.)
+
+However, issues pop up when using Template Haskell, and in particular the
+`Lift` typeclass that is used in quotes/splicing:
+
+1. Haskell quoted expressions in general do not "remember" what the correct
+   definition of `fromInteger` should be in quoted expressions, and also in
+   general negative literals are not desugared to use `negate`, but just
+   `fromInteger` (see small note on this above). 
+   - This is not necessarily intended, but arises from the design intension
+     that [| 1 |] when written by the uses should adapt to the
+     `fromInteger`/RebindableSyntax context at splice time, and the (I think
+     buggy and unfortunate) instance of `liftTyped` for `Int` (and other
+     numeric types) that quotes `1` just as [| 1 |], and not some other Haskell
+     AST construction that pins the AST to be just a raw `Int` lit, and not
+     affected by the splice context's use of RebindableSyntax.
+2. This means that if you splice something that under the hood is using `lift`
+  or `liftTyped` in a module with RebindableSyntax enabled and the
+  `fromInteger`/`negate` types declared at the top of this note, they will give
+  you the wrong thing.
+3. Even worse, negative literals will silently turn into undrflowed natural
+  numbers without any compile-time or run-time error (although you may get a
+  compile-time warning).
+
+Potential solutions:
+
+2. Is navigable by newtype wrapping things, both for raw numeric types, and for
+   any datastructure whose values encode raw numeric types, as is the case for
+   Data.Map and Data.Set.
+
+3. Is much much harder to navigate, as it prevents you from using quoted
+   expressions that have numeric literals in them without being explicit about
+   avoiding the issue, and in the failure case where you don't avoid the issue,
+   you may just get bad underflowed natural number types. This in itself could
+   be somewhat mitigated by choosing a "safe" natural number type that throws
+   errors on underflow, so at least you'd get a runtime (at compile time) error
+   whenever you did this.
+
+NOTE:
+
+It's possible to override the type class instance that is used for types. I'm
+sure this is probably not something that should be relied on, but if you
+introduce a type class dictionary into scope that is more local than the
+existing one, GHC will use that one instead. E.g., you can define this
+instance:
+
+    newtype ℤ64Wrapper = ℤ64Wrapper { unℤ64Wrapper ∷ ℤ64 }
+    
+    instance TH.Lift ℤ64Wrapper where
+      liftTyped ∷ ∀ m. (TH.Quote m) ⇒ ℤ64Wrapper → TH.Code m ℤ64Wrapper
+      liftTyped (ℤ64Wrapper i) = TH.unsafeCodeCoerce $ 
+        let n = zabs $ int i
+        in
+        if i ≥ 𝕫64 0
+        then [| 𝕫64 n |]
+        else [| neg $ 𝕫64 n |]
+    
+    wLiftℤ64Wrapper ∷ W (TH.Lift ℤ64Wrapper)
+    wLiftℤ64Wrapper = W
+    
+    useBetterℤ64LiftInstance ∷ W (TH.Lift ℤ64)
+    useBetterℤ64LiftInstance = 
+      coerce_UNSAFE @(W (TH.Lift ℤ64Wrapper)) @(W (TH.Lift ℤ64))wLiftℤ64Wrapper
+
+And then this quote will use the custom instance for `liftTyped` instead of the
+one that comes with `Language.Haskell.TH`:
+
+    $(let i = (-11)
+      in 
+      with otherLiftℤ64Wrapper 
+        [d| thing = i |])
+
+Conclusion: 
+- Probably just stick with using the `fromInteger` and `negate` from Prelude
+  until a number of fixes occur in GHC, including `lift` and `liftTyped`
+  instances that "pin" their quoted expressions to be robust to splicing
+  contexts that use RebindableSyntax.
+- Maybe just newtype wrap all of the things that are or include numeric types,
+  and then define a "safe nat" type that throws a runtime exception on
+  underflow.
+- Maybe defining this "safe nat" type is a good thing to do anyways... and it
+  sounds like this is what Rust does:
+
+  https://huonw.github.io/blog/2016/04/myths-and-legends-about-integer-overflow-in-rust/
