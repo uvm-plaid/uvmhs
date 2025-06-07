@@ -23,18 +23,18 @@ makeLenses ''DVar
 instance Pretty DVar where
   pretty (DVar n) = ppPun $ concat ["•:",show𝕊 n]
 
-syntaxDVar ∷ LexerBasicSyntax
+syntaxDVar ∷ LexerWSBasicSyntax
 syntaxDVar = concat
-  [ null { lexerBasicSyntaxPuns = pow ["•",":"] }
+  [ null { lexerWSBasicSyntaxPuns = pow ["•",":"] }
   ]
 
-pDVarTail ∷ CParser TokenBasic DVar
-pDVarTail = DVar ^$ cpNat64
+pDVarTail ∷ Parser TokenWSBasic DVar
+pDVarTail = DVar ^$ pTokNat64
 
-pDVar ∷ CParser TokenBasic DVar
+pDVar ∷ Parser TokenWSBasic DVar
 pDVar = do 
-  void $ cpSyntax "•"
-  void $ cpSyntax ":"
+  pTokSyntax "•"
+  pTokSyntax ":"
   pDVarTail
 
 ---------------------------------------------------------------------
@@ -77,20 +77,20 @@ instance Pretty NVar where
     , if n ≡ DVar 0 then null else ppPun $ concat [":",show𝕊 $ unDVar n]
     ]
 
-syntaxNVar ∷ LexerBasicSyntax
+syntaxNVar ∷ LexerWSBasicSyntax
 syntaxNVar = concat
   [ syntaxName
   , syntaxDVar
   ]
 
-pNVarTail ∷ Name → CParser TokenBasic NVar
+pNVarTail ∷ Name → Parser TokenWSBasic NVar
 pNVarTail x = do
-  n ← ifNone (DVar 0) ^$ cpOptional $ do
-    void $ cpSyntax ":"
+  n ← ifNone (DVar 0) ^$ pOptional $ do
+    pTokSyntax ":"
     pDVarTail
   return $ NVar n x
 
-pNVar ∷ CParser TokenBasic NVar
+pNVar ∷ Parser TokenWSBasic NVar
 pNVar = do
   x ← pName
   pNVarTail x
@@ -109,18 +109,18 @@ makeLenses ''GVar
 instance Pretty GVar where
   pretty (GVar x) = concat [pretty x,ppPun ":g"]
 
-syntaxGVar ∷ LexerBasicSyntax
+syntaxGVar ∷ LexerWSBasicSyntax
 syntaxGVar = concat
   [ syntaxName
-  , null { lexerBasicSyntaxPuns = pow [":g"] }
+  , null { lexerWSBasicSyntaxPuns = pow [":g"] }
   ]
 
-pGVarTail ∷ Name → CParser TokenBasic GVar
+pGVarTail ∷ Name → Parser TokenWSBasic GVar
 pGVarTail x = do
-  void $ cpSyntax ":g"
+  pTokSyntax ":g"
   return $ GVar x
 
-pGVar ∷ CParser TokenBasic GVar
+pGVar ∷ Parser TokenWSBasic GVar
 pGVar = do
   x ← pName
   pGVarTail x
@@ -210,7 +210,7 @@ instance Shrinky Var where
     N_Var x → N_Var ^$ shrink x
     G_Var x → G_Var ^$ shrink x
 
-syntaxVar ∷ LexerBasicSyntax
+syntaxVar ∷ LexerWSBasicSyntax
 syntaxVar = concat
   [ syntaxName
   , syntaxDVar
@@ -218,7 +218,7 @@ syntaxVar = concat
   , syntaxGVar
   ]
 
-pVar ∷ CParser TokenBasic Var
+pVar ∷ Parser TokenWSBasic Var
 pVar = concat
   [ D_Var ^$ pDVar
   , do x ← pName
@@ -246,23 +246,23 @@ instance Pretty DVarInf where
     Var_DVI x → pretty x
     Inf_DVI   → ppPun "•:∞"
 
-syntaxDVarInf ∷ LexerBasicSyntax
+syntaxDVarInf ∷ LexerWSBasicSyntax
 syntaxDVarInf = concat
   [ syntaxDVar
-  , null { lexerBasicSyntaxPuns = pow ["INF","∞"] }
+  , null { lexerWSBasicSyntaxPuns = pow ["INF","∞"] }
   ]
 
-pDVarInfTail ∷ CParser  TokenBasic DVarInf
+pDVarInfTail ∷ Parser TokenWSBasic DVarInf
 pDVarInfTail = concat
   [ Var_DVI ^$ pDVarTail
-  , do void $ concat $ map cpSyntax ["INF","∞"]
+  , do pTokSyntaxAny ["INF","∞"]
        return Inf_DVI
   ]
 
-pDVarInf ∷ CParser TokenBasic DVarInf
+pDVarInf ∷ Parser TokenWSBasic DVarInf
 pDVarInf = do
-  void $ cpSyntax "•"
-  void $ cpSyntax ":"
+  pTokSyntax "•"
+  pTokSyntax ":"
   pDVarInfTail
 
 ---------------------------------------------------------------------
@@ -286,19 +286,19 @@ instance Pretty NVarInf where
         _ → null
     ]
 
-syntaxNVarInf ∷ LexerBasicSyntax
+syntaxNVarInf ∷ LexerWSBasicSyntax
 syntaxNVarInf = concat
   [ syntaxName
   , syntaxDVarInf
   ]
 
-pNVarInfTail ∷ Name → CParser TokenBasic NVarInf
+pNVarInfTail ∷ Name → Parser TokenWSBasic NVarInf
 pNVarInfTail x = do
-  void $ cpSyntax ":"
+  pTokSyntax ":"
   n ← pDVarInfTail
   return $ NVarInf n x
 
-pNVarInf ∷ CParser TokenBasic NVarInf
+pNVarInf ∷ Parser TokenWSBasic NVarInf
 pNVarInf = do
   x ← pName
   pNVarInfTail x
@@ -317,14 +317,14 @@ data VarInf =
 makePrisms ''VarInf
 makePrettyUnion ''VarInf
 
-syntaxVarInf ∷ LexerBasicSyntax
+syntaxVarInf ∷ LexerWSBasicSyntax
 syntaxVarInf = concat
   [ syntaxDVarInf
   , syntaxNVarInf
   , syntaxGVar
   ]
 
-pVarInf ∷ CParser TokenBasic VarInf
+pVarInf ∷ Parser TokenWSBasic VarInf
 pVarInf = concat
   [ D_VarInf ^$ pDVarInf
   , do x ← pName

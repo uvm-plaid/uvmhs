@@ -43,23 +43,15 @@ instance Pretty Name where
         Some n → ppPun $ concat ["#",show𝕊 n]
     ]
 
-syntaxName ∷ LexerBasicSyntax
-syntaxName = null { lexerBasicSyntaxPuns = pow ["#"] }
+syntaxName ∷ LexerWSBasicSyntax
+syntaxName = null { lexerWSBasicSyntaxPuns = pow ["#"] }
 
-pName ∷ CParser TokenBasic Name
+pName ∷ Parser TokenWSBasic Name
 pName = do
-  x ← cpShaped $ view nameTBasicL
-  nO ← cpOptional $ do
-    void $ cpSyntax "#"
-    cpNat64
-  return $ Name nO x
-
-pNameWS ∷ CParser TokenWSBasic Name
-pNameWS = do
-  x ← cpShaped $ view nameTWSBasicL
-  nO ← cpOptional $ do
-    void $ cpSyntaxWS "#"
-    cpNat64WS
+  x ← pTokName
+  nO ← pOptional $ do
+    pTokSyntax "#"
+    pTokNat64
   return $ Name nO x
 
 ---------------------------------------------------------------------

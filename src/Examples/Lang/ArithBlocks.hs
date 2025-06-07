@@ -4,10 +4,8 @@ import UVMHS
 
 syntax ∷ LexerWSBasicSyntax
 syntax = null
-  { lexerWSBasicSyntaxBase = null
-    { lexerBasicSyntaxPuns = pow ["(",")"]
-    , lexerBasicSyntaxOprs = pow ["==","+","*","-","^","!"]
-    }
+  { lexerWSBasicSyntaxPuns = pow ["(",")"]
+  , lexerWSBasicSyntaxOprs = pow ["==","+","*","-","^","!"]
   , lexerWSBasicSyntaxBlocks = pow ["local"]
   }
 
@@ -55,46 +53,46 @@ data ExpPre =
 makePrisms ''ExpPre
 makePrettySum ''ExpPre
 
-cpLit ∷ CParser TokenWSBasic Lit
+cpLit ∷ Parser TokenWSBasic Lit
 cpLit = tries
-  [ IntegerL ^$ cpIntWS
-  , DoubleL ^$ cpDoubleWS
-  , StringL ^$ cpStringWS
+  [ IntegerL ^$ pTokInt
+  , DoubleL ^$ pTokDouble
+  , StringL ^$ pTokString
   ]
 
-cpAtom ∷ CParser TokenWSBasic Atom
-cpAtom = cpNewContext "atom" $ tries
+cpAtom ∷ Parser TokenWSBasic Atom
+cpAtom = pNewContext "atom" $ tries
   [ LitA ^$ cpLit
-  , NameA ^$ cpShaped $ view nameTWSBasicL
+  , NameA ^$ pTokShaped $ view nameTWSBasicL
   ]
 
-cpBlock ∷ CParser TokenWSBasic (𝐿 Exp)
-cpBlock = cpNewContext "block" $ do
-  void $ cpBlockWS "local"
-  void $ cpOpenWS
+cpBlock ∷ Parser TokenWSBasic (𝐿 Exp)
+cpBlock = pNewContext "block" $ do
+  pTokBlock "local"
+  pTokOpen
   es ← cpExpList
-  void $ cpCloseWS
+  pTokClose
   return es
 
-cpExp ∷ CParser TokenWSBasic Exp
+cpExp ∷ Parser TokenWSBasic Exp
 cpExp = fmixfixWithContext "exp" $ concat
   [ fmixTerminal $ do
-      void $ cpToken $ SyntaxTWSBasic "("
+      pTok $ SyntaxTWSBasic "("
       e ← cpExp
-      void $ cpToken $ SyntaxTWSBasic ")"
+      pTok $ SyntaxTWSBasic ")"
       return $ extract e
   , fmixTerminal       $ AtomE         ^$ cpAtom
-  , fmixInfix   pCMP   $ const EqualE  ^$ cpSyntaxWS "=="
-  , fmixInfixR  pPLUS  $ const PlusE   ^$ cpSyntaxWS "+"
-  , fmixInfixR  pTIMES $ const TimesE  ^$ cpSyntaxWS "*"
-  , fmixPrefix  pNEG   $ const NegateE ^$ cpSyntaxWS "-"
-  , fmixInfixL  pPOW   $ const ExpoE   ^$ cpSyntaxWS "^"
-  , fmixPostfix pFAC   $ const FactE   ^$ cpSyntaxWS "!"
+  , fmixInfix   pCMP   $ const EqualE  ^$ pTokSyntax "=="
+  , fmixInfixR  pPLUS  $ const PlusE   ^$ pTokSyntax "+"
+  , fmixInfixR  pTIMES $ const TimesE  ^$ pTokSyntax "*"
+  , fmixPrefix  pNEG   $ const NegateE ^$ pTokSyntax "-"
+  , fmixInfixL  pPOW   $ const ExpoE   ^$ pTokSyntax "^"
+  , fmixPostfix pFAC   $ const FactE   ^$ pTokSyntax "!"
   , fmixTerminal $ BlockE ^$ cpBlock
   ]
 
-cpExpList ∷ CParser TokenWSBasic (𝐿 Exp)
-cpExpList = cpManySepBy cpDelimWS cpExp
+cpExpList ∷ Parser TokenWSBasic (𝐿 Exp)
+cpExpList = pManySepBy pTokDelim cpExp
 
 testParserSuccess ∷ IO ()
 testParserSuccess = do

@@ -307,10 +307,10 @@ substyUVar mkVar s = \case
 -- PARSING --
 -------------
 
-syntaxSubst ∷ LexerBasicSyntax
+syntaxSubst ∷ LexerWSBasicSyntax
 syntaxSubst = concat
   [ syntaxVarInf
-  , null { lexerBasicSyntaxPuns = pow 
+  , null { lexerWSBasicSyntaxPuns = pow 
              [ ",","...","…"
              , "{","}","[","]"
              , "|->","↦"
@@ -318,15 +318,15 @@ syntaxSubst = concat
              ] }
   ]
 
-syntaxMVar ∷ LexerBasicSyntax
+syntaxMVar ∷ LexerWSBasicSyntax
 syntaxMVar = concat
   [ syntaxSubst
-  , null { lexerBasicSyntaxPuns = pow 
+  , null { lexerWSBasicSyntaxPuns = pow 
              [ ":m"
              ] }
   ]
 
-syntaxUVar ∷ LexerBasicSyntax
+syntaxUVar ∷ LexerWSBasicSyntax
 syntaxUVar = concat
   [ syntaxVar
   , syntaxMVar
@@ -357,73 +357,73 @@ instance Monoid (ParseSubstAction e)
 
 type ParseSubstActions e = SGName ⇰ ParseSubstAction e
 
-pSubst ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (Subst () e)
-pSubst pE = cpNewContext "subst" $ do
-  let pSubstIncr ∷ Var → CParser TokenBasic (ParseSubstActions e)
+pSubst ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → Parser TokenWSBasic e) → Parser TokenWSBasic (Subst () e)
+pSubst pE = pNewContext "subst" $ do
+  let pSubstIncr ∷ Var → Parser TokenWSBasic (ParseSubstActions e)
       pSubstIncr x₁ = do
-        void $ concat $ map cpSyntax ["...","…"]
-        x₂ ← cpErr "parsing varinf" pVarInf
-        void $ concat $ map cpSyntax ["|->","↦"]
-        void $ concat $ map cpSyntax ["["]
-        i ← cpErr "valid subst shift/incr update" $ concat
-          [ do void $ concat $ map cpSyntax ["==","≡"]
+        pTokSyntaxAny ["...","…"]
+        x₂ ← pErr "parsing varinf" pVarInf
+        pTokSyntaxAny ["|->","↦"]
+        pTokSyntax "["
+        i ← pErr "valid subst shift/incr update" $ concat
+          [ do pTokSyntaxAny ["==","≡"]
                return 0
-          , do i ← cpInt64
-               cpGuard $ i < 0
+          , do i ← pTokInt64
+               pGuard $ i < 0
                return i
-          , do void $ cpSyntax "+"
-               i ← cpInt64
-               cpGuard $ i > 0
+          , do pTokSyntax "+"
+               i ← pTokInt64
+               pGuard $ i > 0
                return i
           ]
-        a ← cpErr "valid subst shift/incr range" $ case (x₁,x₂) of
+        a ← pErr "valid subst shift/incr range" $ case (x₁,x₂) of
           (D_Var(DVar n)         ,D_VarInf(Var_DVI(DVar n'))             ) | n≡0,i≡0      → return $ D_SGName    ↦ parseSubstActionShft (n' + 1)
           (N_Var(NVar (DVar n) x),N_VarInf(NVarInf(Var_DVI (DVar n')) x')) | n≡0,i≡0,x≡x' → return $ N_SGName x' ↦ parseSubstActionShft (n' + 1)
           (D_Var(DVar n)         ,D_VarInf Inf_DVI                       )                → return $ D_SGName    ↦ parseSubstActionIncr n i
           (N_Var(NVar (DVar n) x),N_VarInf(NVarInf Inf_DVI x')           ) |         x≡x' → return $ N_SGName x' ↦ parseSubstActionIncr n i
-          _ → cpDie
-        void $ concat $ map cpSyntax ["]"]
+          _ → pDie
+        pTokSyntax "]"
         return a
-      pSubstElem ∷ Var → CParser TokenBasic (ParseSubstActions e)
+      pSubstElem ∷ Var → Parser TokenWSBasic (ParseSubstActions e)
       pSubstElem x₀ = do
-        void $ concat $ map cpSyntax ["|->","↦"]
+        pTokSyntaxAny ["|->","↦"]
         e ← pE ()
         return $ case x₀ of
           D_Var n          → D_SGName   ↦ parseSubstActionElem (Some n) e
           N_Var (NVar n x) → N_SGName x ↦ parseSubstActionElem (Some n) e
           G_Var (GVar x)   → G_SGName x ↦ parseSubstActionElem None     e
-  void $ cpSyntax "{"
-  xas ← concat ^$ cpManySepBy (void $ cpSyntax ",") $ do
+  pTokSyntax "{"
+  xas ← concat ^$ pManySepBy (pTokSyntax ",") $ do
     x ← pVar
     concat 
       [ pSubstIncr x
       , pSubstElem x
       ]
-  𝓈 ← cpErr "all subst actions valid" $
+  𝓈 ← pErr "all subst actions valid" $
    concat ^$ mapMOn (iter xas) $ \ (wbO :* ParseSubstAction shfts elemss incrs) → do
     let doScoped = do 
           -- should only have zero or one shift
           nShft ∷ ℕ64  
-                ← cpErr "zero or one shift actions" $ cpFailEff $ tries
+                ← pErr "zero or one shift actions" $ pFailEff $ tries
             [ do view empty𝐼L shfts ; return 0
             , view single𝐼L shfts
             ]
           -- elems should map names to only one element
           elems ∷ 𝑂 DVar ⇰ e
-                ← cpErr "one bind per name (scoped)" $ cpFailEff $ mapMOn elemss $ view single𝐼L
+                ← pErr "one bind per name (scoped)" $ pFailEff $ mapMOn elemss $ view single𝐼L
           -- all names of element bindings should have an index
           elemsKeys ∷ 𝐼 DVar
-                    ← cpErr "all variables must have index" $ cpFailEff $ exchange $ iter $ dkeys elems
+                    ← pErr "all variables must have index" $ pFailEff $ exchange $ iter $ dkeys elems
           let elemsVals ∷ 𝕍 e
               elemsVals = vec $ dvals elems
           -- should only have zero or one increment
           nIncr :* iIncr ∷ ℕ64 ∧ ℤ64
-                         ← cpErr "zero or one incr actions" $ cpFailEff $ tries
+                         ← pErr "zero or one incr actions" $ pFailEff $ tries
             [ do view empty𝐼L incrs ; return $ (nShft + csize elemsVals) :* 0
             , view single𝐼L incrs
             ]
           -- element bindings should fill gap between shift and incr
-          cpErr "elements should fill gap" $ cpGuard $ map unDVar elemsKeys ≡ range nShft nIncr
+          pErr "elements should fill gap" $ pGuard $ map unDVar elemsKeys ≡ range nShft nIncr
           -- biding N elements creates a -N incr
           -- target incr I = -N + E for extra incr E
           -- so E = I+N
@@ -431,7 +431,7 @@ pSubst pE = cpNewContext "subst" $ do
           -- so E should be nonnegative
           -- let numElems = nIncr - nShft
           when (iIncr < neg (intΩ64 $ csize elemsVals)) $ \ () →
-            cpErr "incr cannot be less than number of substitution elems" cpDie
+            pErr "incr cannot be less than number of substitution elems" pDie
           let elemsVals' ∷ 𝕍 (SSubstElem s e)
               elemsVals' = mapOn elemsVals $ Trm_SSE ∘ SubstElem null ∘ Some
           return $ nShft :* elemsVals' :* iIncr
@@ -447,31 +447,31 @@ pSubst pE = cpNewContext "subst" $ do
       -- global
       G_SGName x → do
         -- global can't have shifts
-        cpErr "global vars can't have shifts" $ cpGuard $ isEmpty shfts
+        pErr "global vars can't have shifts" $ pGuard $ isEmpty shfts
         -- global can't have incrs
-        cpErr "global vars can't have incrs" $ cpGuard $ isEmpty incrs
+        pErr "global vars can't have incrs" $ pGuard $ isEmpty incrs
         -- should only map each name to one element
-        elems ← cpErr "one bind per name (scoped)" $ cpFailEff $ mapMOn elemss $ view single𝐼L
+        elems ← pErr "one bind per name (scoped)" $ pFailEff $ mapMOn elemss $ view single𝐼L
         wes ← assoc𝐷 ^$ mapMOn (iter elems) $ \ (nO :* e) → do
           -- having an index for the name doesn't make sense
-          cpErr "global vars can't have index" $ cpGuard $ shape noneL nO
+          pErr "global vars can't have index" $ pGuard $ shape noneL nO
           return $ (:*) (() :* x) $ SubstElem null $ Some e
         return $ Subst $ SubstSpaced wes null
-  void $ cpSyntax "}"
+  pTokSyntax "}"
   return 𝓈
 
-pMVarTail ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → Name → CParser TokenBasic (MVar () e)
+pMVarTail ∷ (Eq e,Substy () e e) ⇒ (() → Parser TokenWSBasic e) → Name → Parser TokenWSBasic (MVar () e)
 pMVarTail pE x = do
-  void $ cpSyntax ":m"
-  𝓈 ← ifNone null ^$ cpOptional $ pSubst pE
+  pTokSyntax ":m"
+  𝓈 ← ifNone null ^$ pOptional $ pSubst pE
   return $ MVar 𝓈 x
 
-pMVar ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (MVar () e)
+pMVar ∷ (Eq e,Substy () e e) ⇒ (() → Parser TokenWSBasic e) → Parser TokenWSBasic (MVar () e)
 pMVar pE = do
   x ← pName
   pMVarTail pE x
 
-pUVar ∷ (Eq e,Substy () e e) ⇒ (() → CParser TokenBasic e) → CParser TokenBasic (UVar () e)
+pUVar ∷ (Eq e,Substy () e e) ⇒ (() → Parser TokenWSBasic e) → Parser TokenWSBasic (UVar () e)
 pUVar pE = concat
   [ do x ← pDVar
        return $ D_UVar x

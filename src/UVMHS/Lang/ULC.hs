@@ -45,31 +45,31 @@ canonULC = onULCExp $ mapAVal $ \case
   Lam_ULC xO e → Lam_ULC xO $ canonULC e
   App_ULC e₁ e₂ → App_ULC (canonULC e₁) $ canonULC e₂
 
-syntaxULC ∷ LexerBasicSyntax
+syntaxULC ∷ LexerWSBasicSyntax
 syntaxULC = concat
   [ syntaxUVar
-  , null { lexerBasicSyntaxPuns = pow ["(",")","->","→"] 
-         , lexerBasicSyntaxKeys = pow ["lam","λ"]
+  , null { lexerWSBasicSyntaxPuns = pow ["(",")","->","→"] 
+         , lexerWSBasicSyntaxKeys = pow ["lam","λ"]
          }
   ]
 
-lexULCExp ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexULCExp = lexerBasic syntaxULC
+lexULCExp ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
+lexULCExp = lexerWSBasic syntaxULC
 
-pULCExp ∷ CParser TokenBasic ULCExpSrc
+pULCExp ∷ Parser TokenWSBasic ULCExpSrc
 pULCExp = ULCExp ^$ fmixfixWithContextSet "exp" $ concat
   [ fmixTerminal $ do
-      void $ cpSyntax "("
+      pTokSyntax "("
       e ← pULCExp
-      void $ cpSyntax ")"
+      pTokSyntax ")"
       return $ aval $ unULCExp e
   , fmixTerminal $ do
       x ← pUVar $ \ () → pULCExp
       return $ Var_ULC x
   , fmixPrefix pLET $ do
-      void $ concat $ map cpSyntax ["lam","λ"]
-      xO ← cpOptional $ pName
-      void $ concat $ map cpSyntax ["->","→"]
+      concat $ map pTokSyntax ["lam","λ"]
+      xO ← pOptional $ pName
+      concat $ map pTokSyntax ["->","→"]
       return $ \ e → Lam_ULC xO $ ULCExp e
   , fmixInfixL pAPP $ return $ \ e₁ e₂ →
       App_ULC (ULCExp e₁) $ ULCExp e₂

@@ -1,4 +1,4 @@
-module UVMHS.Lib.Parser.Core where
+module UVMHS.Lib.Parser.RawParser where
 
 import UVMHS.Core
 
@@ -53,7 +53,7 @@ parserState₀ = ParserState null null null null $ AddBT bot
 
 -- # RawParser
 
-newtype RawParser t a = RawParser { unParser ∷ ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a }
+newtype RawParser t a = RawParser { unRawParser ∷ ReaderT ParserEnv (StateT (ParserState t) (FailT ((∧) (ParserOut t)))) a }
   deriving
   ( Functor,Return,Bind,Monad
   , MonadFail
@@ -63,7 +63,7 @@ newtype RawParser t a = RawParser { unParser ∷ ReaderT ParserEnv (StateT (Pars
   )
 
 runRawParser ∷ ParserEnv → ParserState t → RawParser t a → ParserOut t ∧ 𝑂 (ParserState t ∧ a)
-runRawParser e s = unFailT ∘ runStateT s ∘ runReaderT e ∘ unParser
+runRawParser e s = unFailT ∘ runStateT s ∘ runReaderT e ∘ unRawParser
 
 -------------------------
 -- Low Level Interface --

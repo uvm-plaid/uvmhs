@@ -1,6 +1,6 @@
 module UVMHS.Lib.Substitution 
   -- * Names
-  ( Name(..),nameMarkL,nameNameL,mkName,gensymName,syntaxName,pName,pNameWS
+  ( Name(..),nameMarkL,nameNameL,mkName,gensymName,syntaxName,pName
   -- * Individual Variable Types
   , DVar(..),unDVarL,syntaxDVar,pDVarTail,pDVar
   , NVar(..),nvarIndexL,nvarNameL,nvar_Name,name_NVarL,gensymNVar,syntaxNVar,pNVarTail,pNVar

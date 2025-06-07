@@ -1,43 +1,43 @@
 module UVMHS.Lib.Parser.Examples where
 
 import UVMHS.Core
-import UVMHS.Lib.Pretty
-import UVMHS.Lib.Parser.Core
+import UVMHS.Lib.Parser.Parser
 import UVMHS.Lib.Parser.ParserInput
+import UVMHS.Lib.Parser.RawParser
 import UVMHS.Lib.Parser.Regex
-import UVMHS.Lib.Parser.CParser
+import UVMHS.Lib.Pretty
 
 testParsingSmall ∷ IO ()
 testParsingSmall = parseIOMain parser "<small example>" input
   where
-    parser = cpWord $ 𝕤 "xyzxyz"
+    parser = pWord $ 𝕤 "xyzxyz"
     input = tokens "xyzxycxyz"
 
 testParsingMultiline ∷ IO ()
 testParsingMultiline = parseIOMain parser "<multiline example>" input
   where
-    parser = exec $ inbetween (void $ cpWord $ 𝕤 "\n") $ list $ replicateI (𝕟 7) $ \ n → cpNewContext "line" $ void $ cpWord ("xyz" ⧺ show𝕊 n)
+    parser = exec $ inbetween (pWord $ 𝕤 "\n") $ list $ replicateI (𝕟 7) $ \ n → pNewContext "line" $ pWord ("xyz" ⧺ show𝕊 n)
     input = tokens "xyz0\nxyz1\nxyz2\nxyc3\nxyz4\nxyz5\nxyz6\n"
 
 testParsingBranching ∷ IO ()
 testParsingBranching = parseIOMain parser "<branching example>" input
   where
-    parser ∷ CParser ℂ 𝕊
+    parser ∷ Parser ℂ 𝕊
     parser = tries
-      [ cpNewContext "XXX*" $ tries
-          [ cpRender (formats [FG pink]) $ cpWord "xxxy"
-          , cpRender (formats [FG pink]) $ cpWord "xxxz"
+      [ pNewContext "XXX*" $ tries
+          [ pRender (formats [FG pink]) $ pWordRet "xxxy"
+          , pRender (formats [FG pink]) $ pWordRet "xxxz"
           ]
-      , cpNewContext "XXXZ" $ do
-          x ← cpErr "XX" $ cpRender (formats [FG blue]) $ cpWord "xx"
-          y ← cpErr "XZ" $ cpRender (formats [FG green]) $ cpWord "xz"
+      , pNewContext "XXXZ" $ do
+          x ← pErr "XX" $ pRender (formats [FG blue]) $ pWordRet "xx"
+          y ← pErr "XZ" $ pRender (formats [FG green]) $ pWordRet "xz"
           return $ x ⧺ y
-      , cpNewContext "XXZZ" $ cpWord "xxzz"
-      , cpNewContext "XXXAorB" $ cpRender (formats [FG teal]) $ do
-          x ← cpWord "xxx"
+      , pNewContext "XXZZ" $ pWordRet "xxzz"
+      , pNewContext "XXXAorB" $ pRender (formats [FG teal]) $ do
+          x ← pWordRet "xxx"
           y ← single ^$ tries
-            [ cpToken 'a'
-            , cpToken 'b'
+            [ pTokRet 'a'
+            , pTokRet 'b'
             ]
           return $ x ⧺ y
       ]
@@ -48,8 +48,8 @@ testParsingBranching = parseIOMain parser "<branching example>" input
 -- testParsingAmbiguity = parseIOMain parser input
 --   where
 --     parser = concat ^$ pOneOrMore $ tries
---       [ ppFG yellow ∘ ppString ∘ single ^$ pToken 'y'
---       , ppFG green ∘ ppString ∘ single ^$ pToken 'x'
+--       [ ppFG yellow ∘ ppString ∘ single ^$ pTok 'y'
+--       , ppFG green ∘ ppString ∘ single ^$ pTok 'x'
 --       , ppFG blue ∘ ppString ^$ pWord "xx"
 --       ]
 --     input = tokens "xxx"
@@ -57,40 +57,40 @@ testParsingBranching = parseIOMain parser "<branching example>" input
 testParsingGreedy ∷ IO ()
 testParsingGreedy = parseIOMain parser "<greedy example>" input
   where
-    parser = concat ^$ cpOneOrMore $ tries
-      [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ rpToken 'y'
-      , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ rpToken 'x'
-      , ppFG blue ∘ ppString ^$ cpRender (formats [FG yellow]) $ cpWord "xx"
+    parser = concat ^$ pOneOrMore $ tries
+      [ ppFG yellow ∘ ppString ∘ single ^$ pRender (formats [FG yellow]) $ rawToParser $ rpToken 'y'
+      , ppFG green ∘ ppString ∘ single ^$ pRender (formats [FG green]) $ rawToParser $ rpToken 'x'
+      , ppFG blue ∘ ppString ^$ pRender (formats [FG yellow]) $ pWordRet "xx"
       ]
     input = tokens "xxx"
 
 testParsingGreedyAmbiguity ∷ IO ()
 testParsingGreedyAmbiguity = parseIOMain parser "<greedy ambiguity example>" input
   where
-    parser = concat ^$ cpOneOrMore $ tries
-      [ ppFG yellow ∘ ppString ∘ single ^$ cpRender (formats [FG yellow]) $ toCParser $ rpToken 'y'
+    parser = concat ^$ pOneOrMore $ tries
+      [ ppFG yellow ∘ ppString ∘ single ^$ pRender (formats [FG yellow]) $ rawToParser $ rpToken 'y'
       , tries
-          [ ppFG blue ∘ ppString ^$ cpRender (formats [FG blue]) $ cpWord "x"
-          , ppFG pink ∘ ppString ^$ cpRender (formats [FG pink]) $ cpWord "xx"
+          [ ppFG blue ∘ ppString ^$ pRender (formats [FG blue]) $ pWordRet "x"
+          , ppFG pink ∘ ppString ^$ pRender (formats [FG pink]) $ pWordRet "xx"
           ]
-      , ppFG green ∘ ppString ∘ single ^$ cpRender (formats [FG green]) $ toCParser $ rpToken 'x'
+      , ppFG green ∘ ppString ∘ single ^$ pRender (formats [FG green]) $ rawToParser $ rpToken 'x'
       ]
     input = tokens "xxx"
 
 testParsingSuccess ∷ IO ()
 testParsingSuccess = parseIOMain parser "<success example>" input
   where
-    parser = concat ^$ cpOneOrMore $ tries
-      [ cpRender (formats [FG green]) $ cpWord $ 𝕤 "xx"
-      , cpRender (formats [FG blue]) $ cpWord $ 𝕤 "yy"
+    parser = concat ^$ pOneOrMore $ tries
+      [ pRender (formats [FG green]) $ pWord $ 𝕤 "xx"
+      , pRender (formats [FG blue]) $ pWord $ 𝕤 "yy"
       ]
     input = tokens "xxxxyyxxyy"
 
 testParsingErrorNewline ∷ IO ()
-testParsingErrorNewline = parseIOMain (string ^$ cpMany $ toCParser $ rpToken 'x') "<error newline example>" $ tokens "xxx\nx"
+testParsingErrorNewline = parseIOMain (string ^$ pMany $ rawToParser $ rpToken 'x') "<error newline example>" $ tokens "xxx\nx"
 
 testParsingErrorEof ∷ IO ()
-testParsingErrorEof = parseIOMain (exec $ replicate (𝕟 3) $ void $ cpToken 'x') "<error eof example>" $ tokens "xx"
+testParsingErrorEof = parseIOMain (exec $ replicate (𝕟 3) $ pTok 'x') "<error eof example>" $ tokens "xx"
 
 testTokenizeSimple ∷ IO ()
 testTokenizeSimple =

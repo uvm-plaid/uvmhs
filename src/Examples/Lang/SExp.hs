@@ -2,16 +2,16 @@ module Examples.Lang.SExp where
 
 import UVMHS
 
-syntax ∷ LexerBasicSyntax
+syntax ∷ LexerWSBasicSyntax
 syntax = null
-  { lexerBasicSyntaxPuns = pow ["(",")"]
-  , lexerBasicSyntaxKeys = pow ["KEY"]
-  , lexerBasicSyntaxPrms = pow ["PRIM"]
-  , lexerBasicSyntaxOprs = pow ["+"]
+  { lexerWSBasicSyntaxPuns = pow ["(",")"]
+  , lexerWSBasicSyntaxKeys = pow ["KEY"]
+  , lexerWSBasicSyntaxPrms = pow ["PRIM"]
+  , lexerWSBasicSyntaxOprs = pow ["+"]
   }
 
-lexer ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexer = lexerBasic syntax
+lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
+lexer = lexerWSBasic syntax
 
 testSExpTokenizerSuccess ∷ IO ()
 testSExpTokenizerSuccess =
@@ -49,33 +49,33 @@ makePrettySum ''ExpPre
 -- Parser --
 ------------
 
-cpLit ∷ CParser TokenBasic Lit
+cpLit ∷ Parser TokenWSBasic Lit
 cpLit = concat
-  [ IntegerL ^$ cpShaped $ view integerTBasicL
-  , DoubleL ^$ cpShaped $ view doubleTBasicL
-  , StringL ^$ cpShaped $ view stringTBasicL
+  [ IntegerL ^$ pTokShaped $ view integerTWSBasicL
+  , DoubleL ^$ pTokShaped $ view doubleTWSBasicL
+  , StringL ^$ pTokShaped $ view stringTWSBasicL
   ]
 
-cpAtom ∷ CParser TokenBasic Atom
-cpAtom = cpNewContext "atom" $ concat
-  [ cpErr "literal" $ LitA ^$ cpLit
-  , cpErr "name" $ NameA ^$ cpShaped $ view nameTBasicL
-  , cpErr "keyword" $ const KeyA ^$ cpSyntax "KEY"
-  , cpErr "primitive" $ const PrimA ^$ cpSyntax "PRIM"
-  , cpErr "“+”" $ const PlusA ^$ cpSyntax "+"
+cpAtom ∷ Parser TokenWSBasic Atom
+cpAtom = pNewContext "atom" $ concat
+  [ pErr "literal" $ LitA ^$ cpLit
+  , pErr "name" $ NameA ^$ pTokShaped $ view nameTWSBasicL
+  , pErr "keyword" $ const KeyA ^$ pTokSyntax "KEY"
+  , pErr "primitive" $ const PrimA ^$ pTokSyntax "PRIM"
+  , pErr "“+”" $ const PlusA ^$ pTokSyntax "+"
   ]
 
-cpExp ∷ CParser TokenBasic Exp
-cpExp = cpNewContext "expression" $ cpWithContextRendered $ concat
+cpExp ∷ Parser TokenWSBasic Exp
+cpExp = pNewContext "expression" $ pWithContextRendered $ concat
   [ AtomE ^$ cpAtom
   , ListE ^$ cpList
   ]
 
-cpList ∷ CParser TokenBasic (𝐿 Exp)
-cpList = cpNewContext "list" $ do
-  cpErr "“(”" $ void $ cpSyntax "("
-  es ← cpMany cpExp
-  cpErr "“)”" $ void $ cpSyntax ")"
+cpList ∷ Parser TokenWSBasic (𝐿 Exp)
+cpList = pNewContext "list" $ do
+  pErr "“(”" $ pTokSyntax "("
+  es ← pMany cpExp
+  pErr "“)”" $ pTokSyntax ")"
   return es
 
 testSExpParserSuccess ∷ IO ()

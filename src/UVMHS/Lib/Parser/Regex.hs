@@ -956,7 +956,9 @@ lBlocksWSBasic blocks = sequence
   ]
 
 lTokenWSBasic ∷ LexerWSBasicSyntax → Regex CharClass ℂ TokenClassWSBasic ℕ64
-lTokenWSBasic (LexerWSBasicSyntax base blocks) = concat
+lTokenWSBasic (LexerWSBasicSyntax puns keys prms oprs blocks) = 
+  let base = LexerBasicSyntax puns keys prms oprs in
+  concat
   [ lNatCoded             ▷ oepsRegex NaturalCWSBasic
   , lInt                  ▷ oepsRegex IntegerCWSBasic
   , lDbl                  ▷ oepsRegex DoubleCWSBasic
@@ -982,16 +984,19 @@ dfaWSBasic syntax =
   in dfa
 
 data LexerWSBasicSyntax = LexerWSBasicSyntax
-  { lexerWSBasicSyntaxBase   ∷ LexerBasicSyntax
+  { lexerWSBasicSyntaxPuns ∷ 𝑃 𝕊   -- ^ punctuation (default color gray)
+  , lexerWSBasicSyntaxKeys ∷ 𝑃 𝕊   -- ^ keywords    (default color bold yellow)
+  , lexerWSBasicSyntaxPrms ∷ 𝑃 𝕊   -- ^ primitives  (default color blue)
+  , lexerWSBasicSyntaxOprs ∷ 𝑃 𝕊   -- ^ operators   (default color teal)
   , lexerWSBasicSyntaxBlocks ∷ 𝑃 𝕊 -- ^ block keywords (default color bold yellow)
   } deriving (Eq,Ord,Show)
 makeLenses ''LexerWSBasicSyntax
 
 instance Null LexerWSBasicSyntax where 
-  null = LexerWSBasicSyntax null null
+  null = LexerWSBasicSyntax null null null null null
 instance Append LexerWSBasicSyntax where 
-  LexerWSBasicSyntax base₁ blocks₁ ⧺ LexerWSBasicSyntax base₂ blocks₂ =
-    LexerWSBasicSyntax (base₁ ⧺ base₂) $ blocks₁ ⧺ blocks₂
+  LexerWSBasicSyntax puns₁ keys₁ prms₁ oprs₁ blocks₁ ⧺ LexerWSBasicSyntax puns₂ keys₂ prms₂ oprs₂ blocks₂ =
+    LexerWSBasicSyntax (puns₁ ⧺ puns₂) (keys₁ ⧺ keys₂) (prms₁ ⧺ prms₂) (oprs₁ ⧺ oprs₂) $ blocks₁ ⧺ blocks₂
 instance Monoid LexerWSBasicSyntax
 
 lexerWSBasic ∷ LexerWSBasicSyntax → Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic

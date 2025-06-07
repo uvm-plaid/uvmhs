@@ -2,14 +2,14 @@ module Examples.Lang.Arith where
 
 import UVMHS
 
-syntax ∷ LexerBasicSyntax
+syntax ∷ LexerWSBasicSyntax
 syntax = null
-  { lexerBasicSyntaxPuns = pow ["(",")"]
-  , lexerBasicSyntaxOprs = pow ["==","+","*","-","^","!"]
+  { lexerWSBasicSyntaxPuns = pow ["(",")"]
+  , lexerWSBasicSyntaxOprs = pow ["==","+","*","-","^","!"]
   }
 
-lexer ∷ Lexer CharClass ℂ TokenClassBasic ℕ64 TokenBasic
-lexer = lexerBasic syntax
+lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
+lexer = lexerWSBasic syntax
 
 testTokenizerSuccess ∷ IO ()
 testTokenizerSuccess =
@@ -38,33 +38,33 @@ data ExpPre =
 makePrisms ''ExpPre
 makePrettySum ''ExpPre
 
-cpLit ∷ CParser TokenBasic Lit
+cpLit ∷ Parser TokenWSBasic Lit
 cpLit = tries
-  [ IntegerL ^$ cpInt
-  , DoubleL ^$ cpDouble
-  , StringL ^$ cpString
+  [ IntegerL ^$ pTokInt
+  , DoubleL ^$ pTokDouble
+  , StringL ^$ pTokString
   ]
 
-cpAtom ∷ CParser TokenBasic Atom
-cpAtom = cpNewContext "atom" $ tries
+cpAtom ∷ Parser TokenWSBasic Atom
+cpAtom = pNewContext "atom" $ tries
   [ LitA ^$ cpLit
-  , NameA ^$ cpShaped $ view nameTBasicL
+  , NameA ^$ pTokShaped $ view nameTWSBasicL
   ]
 
-cpExp ∷ CParser TokenBasic Exp
+cpExp ∷ Parser TokenWSBasic Exp
 cpExp = fmixfixWithContext "exp" $ concat
   [ fmixTerminal $ do
-      void $ cpToken $ SyntaxTBasic "("
+      pTok $ SyntaxTWSBasic "("
       e ← cpExp
-      void $ cpToken $ SyntaxTBasic ")"
+      pTok $ SyntaxTWSBasic ")"
       return $ extract e
   , fmixTerminal       $ AtomE         ^$ cpAtom
-  , fmixInfix   pCMP   $ const EqualE  ^$ cpSyntax "=="
-  , fmixInfixR  pPLUS  $ const PlusE   ^$ cpSyntax "+"
-  , fmixInfixR  pTIMES $ const TimesE  ^$ cpSyntax "*"
-  , fmixPrefix  pNEG   $ const NegateE ^$ cpSyntax "-"
-  , fmixInfixL  pPOW   $ const ExpoE   ^$ cpSyntax "^"
-  , fmixPostfix pFAC   $ const FactE   ^$ cpSyntax "!"
+  , fmixInfix   pCMP   $ const EqualE  ^$ pTokSyntax "=="
+  , fmixInfixR  pPLUS  $ const PlusE   ^$ pTokSyntax "+"
+  , fmixInfixR  pTIMES $ const TimesE  ^$ pTokSyntax "*"
+  , fmixPrefix  pNEG   $ const NegateE ^$ pTokSyntax "-"
+  , fmixInfixL  pPOW   $ const ExpoE   ^$ pTokSyntax "^"
+  , fmixPostfix pFAC   $ const FactE   ^$ pTokSyntax "!"
   ]
 
 testParserSuccess ∷ IO ()

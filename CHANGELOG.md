@@ -129,34 +129,48 @@
             , pretty $ mapOn xs $ \ x → parserTokenValue x :* parserContextLocRange (parserTokenContext x)
             ]
           pprint $ concat $ map (concat ∘ iter ∘ parserContextDisplayL ∘ parserTokenContext) xs
+
+- changes to Lib.Substitution.hs:
+  - remove: `pNameWS`
+  - change: all parsers are now `TokenWSBasic` parsers
       
 - changes to Lib.Parser.CParser.hs:
+  - rename file `CParser.hs` to `Parser.hs`
   - rename:
-    - `cpNaturalWS` to `cpNatNWS`
-    - `cpNat64N` to `cpNatN64`
-    - `cpIntegerWS` to `cpIntWS`
+    - `cp<X>` to `p<X>`
+    - `p<X>[no-WS suffix]` to `p<X>_DEP`
+    - `p<X>WS` to `p<X>`
+  - change:
+    - `pTok`, `pTokSyntax` and friends now return unit
+    - `pTokRet` has the old behavior of returning the raw token
   - added:
 
-        cpName ∷ CParser TokenBasic 𝕊
-        cpName = cpShaped $ view nameTBasicL
+        pTokAny ∷ (Ord t,ToIter t ts) ⇒ ts → Parser t ()
+        pTokAny ts = concat $ mapOn (iter ts) pTok
+
+        pTokSyntaxAny ∷ (ToIter 𝕊 t) ⇒ t → Parser TokenWSBasic ()
+        pTokSyntaxAny = pTokAny ∘ map SyntaxTWSBasic ∘ iter
+
+        pTokName_DEP ∷ CParser TokenBasic 𝕊
+        pTokName_DEP = cpShaped $ view nameTBasicL
         
-        cpNameWS ∷ CParser TokenWSBasic 𝕊
-        cpNameWS = cpShaped $ view nameTWSBasicL
+        pTokName ∷ CParser TokenWSBasic 𝕊
+        pTokName = cpShaped $ view nameTWSBasicL
 
-        cpNat64NWS ∷ CParser TokenWSBasic ℕ64
-        cpNat64NWS = failEff ∘ natO64 *$ cpNatNWS
+        pTokNat64N ∷ CParser TokenWSBasic ℕ64
+        pTokNat64N = failEff ∘ natO64 *$ cpNatNWS
 
-        cpInt64WS ∷ CParser TokenWSBasic ℤ64
-        cpInt64WS = failEff ∘ intO64 *$ cpIntWS
+        pTokInt64 ∷ CParser TokenWSBasic ℤ64
+        pTokInt64 = failEff ∘ intO64 *$ cpIntWS
 
-        cpNatWS ∷ CParser TokenWSBasic ℕ
-        cpNatWS = failEff ∘ natO *$ cpIntWS
+        pTokNat ∷ CParser TokenWSBasic ℕ
+        pTokNat = failEff ∘ natO *$ cpIntWS
 
-        cpNat64WS ∷ CParser TokenWSBasic ℕ64
-        cpNat64WS = failEff ∘ natO64 *$ cpIntWS
+        pTokNat64 ∷ CParser TokenWSBasic ℕ64
+        pTokNat64 = failEff ∘ natO64 *$ cpIntWS
 
-        cpCharWS ∷ CParser TokenWSBasic ℂ
-        cpCharWS = cpShaped $ view charTWSBasicL
+        pTokChar ∷ CParser TokenWSBasic ℂ
+        pTokChar = cpShaped $ view charTWSBasicL
 
         tokenizeAndParse ∷ (Eq u,Show u,Plus u,Eq o,Ord w,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u w → CParser w a → 𝕊 → (Doc ∨ Doc) ∨ a
         tokenizeAndParse so lex xM s = do
