@@ -287,3 +287,11 @@ parseIOMain p s ts = do
     [ ppHeader "Success"
     , pretty x
     ]
+
+tokenizeAndParse ∷ (Eq u,Show u,Plus u,Eq o,Ord w,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u w → CParser w a → 𝕊 → (Doc ∨ Doc) ∨ a
+tokenizeAndParse so lex xM s = do
+  case tokenize lex so $ tokens s of
+    Inl d → Inl $ Inl d
+    Inr ts → case parse xM so $ finalizeTokens ts of
+      Inl d → Inl $ Inr d
+      Inr x → Inr x

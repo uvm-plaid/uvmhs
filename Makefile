@@ -19,27 +19,6 @@ GHCID_OPTIONS := \
 	--run=$(GHCID_E) \
 	--command="stack ghci --ghci-options='$(GHCID_GHCI_OPTIONS)'"
 
-##############
-# FULL CLEAN #
-##############
-
-.PHONY: clean
-clean:
-	stack clean --full
-	rm -rf .stack-work
-	rm -f $(LIB_NAME).cabal
-	rm -f stack.yaml.lock
-	rm -rf doc
-	rm -f fixity-levels.txt
-
-###################
-# PREPARE RELEASE #
-###################
-
-.PHONY: release
-release:
-	make build && make test && make docs && make fixity-levels
-
 ####################
 # PRIMARY COMMANDS #
 ####################
@@ -71,6 +50,27 @@ fixity-levels.txt: $(ALL_HS_FILES)
 	echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >> $@
 	echo "" >> $@
 	grep -E '^infix' $(ALL_HS_FILES) >> $@
+
+##############
+# FULL CLEAN #
+##############
+
+.PHONY: clean
+clean:
+	stack clean --full
+	rm -rf .stack-work
+	rm -f $(LIB_NAME).cabal
+	rm -f stack.yaml.lock
+	rm -rf doc
+	rm -f fixity-levels.txt
+
+###################
+# PREPARE RELEASE #
+###################
+
+.PHONY: release
+release:
+	make build && make test && make docs && make fixity-levels
 
 #########################
 # GHCI AND GHCID SPINUP #
