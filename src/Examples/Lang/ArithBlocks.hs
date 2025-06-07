@@ -63,7 +63,7 @@ cpLit = tries
 cpAtom ∷ Parser TokenWSBasic Atom
 cpAtom = pNewContext "atom" $ tries
   [ LitA ^$ cpLit
-  , NameA ^$ pTokShaped $ view nameTWSBasicL
+  , NameA ^$ pTokName
   ]
 
 cpBlock ∷ Parser TokenWSBasic (𝐿 Exp)

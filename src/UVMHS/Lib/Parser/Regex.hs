@@ -1053,10 +1053,10 @@ tokenizeWSUnanchoredIO ∷
   ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO (𝕍 (ParserToken TokenWSBasic))
 tokenizeWSUnanchoredIO l so ts = elimChoice (\ msg → do pprint msg ; abortIO) return $ tokenizeWSUnanchored l so ts
 
-tokenizeWSUnAnchoredIOMain ∷
+tokenizeWSUnanchoredIOMain ∷
   ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
   ⇒ Lexer c t o u TokenWSBasic → 𝕊 → 𝕍 (ParserToken t) → IO ()
-tokenizeWSUnAnchoredIOMain l so ts = do
+tokenizeWSUnanchoredIOMain l so ts = do
   xs ← tokenizeWSUnanchoredIO l so ts
   pprint $ ppVertical
     [ ppHeader "Success"

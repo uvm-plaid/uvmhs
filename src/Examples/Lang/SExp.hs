@@ -51,15 +51,15 @@ makePrettySum ''ExpPre
 
 cpLit ∷ Parser TokenWSBasic Lit
 cpLit = concat
-  [ IntegerL ^$ pTokShaped $ view integerTWSBasicL
-  , DoubleL ^$ pTokShaped $ view doubleTWSBasicL
-  , StringL ^$ pTokShaped $ view stringTWSBasicL
+  [ IntegerL ^$ pTokInt
+  , DoubleL ^$ pTokDouble
+  , StringL ^$ pTokString
   ]
 
 cpAtom ∷ Parser TokenWSBasic Atom
 cpAtom = pNewContext "atom" $ concat
   [ pErr "literal" $ LitA ^$ cpLit
-  , pErr "name" $ NameA ^$ pTokShaped $ view nameTWSBasicL
+  , pErr "name" $ NameA ^$ pTokName
   , pErr "keyword" $ const KeyA ^$ pTokSyntax "KEY"
   , pErr "primitive" $ const PrimA ^$ pTokSyntax "PRIM"
   , pErr "“+”" $ const PlusA ^$ pTokSyntax "+"

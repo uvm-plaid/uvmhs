@@ -78,11 +78,11 @@ pFinal = rawToParser ∘ rpFinal ∘ rawFrParser
 pTok ∷ (Ord t) ⇒ t → Parser t ()
 pTok t = Parser (t ↦ return ()) abort
 
-pTokRet ∷ (Ord t) ⇒ t → Parser t t
-pTokRet t = Parser (t ↦ return t) abort
-
 pTokAny ∷ (Ord t,ToIter t ts) ⇒ ts → Parser t ()
 pTokAny ts = concat $ mapOn (iter ts) pTok
+
+pTokRet ∷ (Ord t) ⇒ t → Parser t t
+pTokRet t = Parser (t ↦ return t) abort
 
 pTokShaped ∷ (t → 𝑂 a) → Parser t a
 pTokShaped = rawToParser ∘ rpShaped
@@ -184,8 +184,8 @@ pTokInt64 = failEff ∘ intO64 *$ pTokInt
 pTokNat_DEP ∷ Parser TokenBasic ℕ
 pTokNat_DEP = failEff ∘ natO *$ pTokInt_DEP
 
-pToKNat ∷ Parser TokenWSBasic ℕ
-pToKNat = failEff ∘ natO *$ pTokInt
+pTokNat ∷ Parser TokenWSBasic ℕ
+pTokNat = failEff ∘ natO *$ pTokInt
 
 pTokNat64_DEP ∷ Parser TokenBasic ℕ64
 pTokNat64_DEP = failEff ∘ natO64 *$ pTokInt_DEP
@@ -261,12 +261,12 @@ pOneOrMoreContext f xM = do
 
 pManySepByContext ∷ (Ord t,Comonad f) ⇒ (∀ b. Parser t b → Parser t (f b)) → Parser t () → Parser t a → Parser t (𝐿 (f a))
 pManySepByContext f sepM xM = tries
-  [ pOneorMoreSepByContext f sepM xM
+  [ pOneOrMoreSepByContext f sepM xM
   , return Nil
   ]
 
-pOneorMoreSepByContext ∷ (Ord t,Comonad f) ⇒ (∀ b. Parser t b → Parser t (f b)) → Parser t () → Parser t a → Parser t (𝐿 (f a))
-pOneorMoreSepByContext f sepM xM = do
+pOneOrMoreSepByContext ∷ (Ord t,Comonad f) ⇒ (∀ b. Parser t b → Parser t (f b)) → Parser t () → Parser t a → Parser t (𝐿 (f a))
+pOneOrMoreSepByContext f sepM xM = do
   xxs ← f $ do
     x ← xM
     xs ← pManyContext f $ map snd $ sepM ⧆ xM
@@ -306,3 +306,18 @@ tokenizeAndParse so lex xM s = do
     Inr ts → case parse xM so $ finalizeTokens ts of
       Inl d → Inl $ Inr d
       Inr x → Inr x
+
+tokenizeAndParseIO ∷ (Eq u,Show u,Plus u,Eq o,Ord w,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u w → Parser w a → 𝕊 → IO a
+tokenizeAndParseIO so lex xM s = do
+  case tokenizeAndParse so lex xM s of
+    Inl (Inl d) → do pprint $ ppErr "LEXING ERROR" ; pprint d ; abortIO
+    Inl (Inr d) → do pprint $ ppErr "PARSING ERROR" ; pprint d ; abortIO
+    Inr x → return x
+
+tokenizeAndParseIOMain ∷ (Eq u,Show u,Plus u,Eq o,Ord w,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u w → Parser w a → 𝕊 → IO ()
+tokenizeAndParseIOMain so lex xM s = do
+  x ← tokenizeAndParseIO so lex xM s
+  pprint $ ppVertical
+    [ ppHeader "Success"
+    , pretty x
+    ]
