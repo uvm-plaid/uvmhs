@@ -13,10 +13,12 @@ import UVMHS.Future.TH.Deriving
              fuzzy = do 
                d ← fuzzyDepth
                wrchoose 
-                 [ \ () → one :* do return Nil
-                 , \ () → d :* do x0 ← fuzzy @a
-                                  x1 ← fuzzyRec @(𝐿 a)
-                                  return ((:&) x0 x1)
+                 [ (:*) one $ \ () → do 
+                     return Nil
+                 , (:*) d $ \ () → do 
+                     x0 ← fuzzy @a
+                     x1 ← fuzzyRec @(𝐿 a)
+                     return ((:&) x0 x1)
                  ]
        |]) 
   |]
@@ -25,9 +27,10 @@ import UVMHS.Future.TH.Deriving
   [| id @𝕊 $(thShowDecs $ 
        [d| instance (Fuzzy a, Fuzzy b) => Fuzzy (a ∧ b) where 
              fuzzy = wrchoose 
-               [ \ () → one :* do x0 ← fuzzy @a
-                                  x1 ← fuzzy @b
-                                  return ((:*) x0 x1)
+               [ (:*) one $ \ () → do 
+                   x0 ← fuzzy @a
+                   x1 ← fuzzy @b
+                   return ((:*) x0 x1)
                ]
        |]) 
   |]

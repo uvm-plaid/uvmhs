@@ -77,7 +77,7 @@ createFuzzyInstance recNamesS name = do
               when (anyRec ⩓ nonRec ≡ zero) $ \ () →
                 fail $ "not ok to have only recursive fields in constructor: " ⧺ show anyRec ⧺ " " ⧺ show nonRec
               let weight = if anyRec then [| $(TH.varE d) |] else [| one |]
-              e ← [| \ () → $(weight) :* $(TH.doE $ lazyList $ concat [stmts,single $ TH.noBindS [| return $con |]]) |]
+              e ← [| (:*) $(weight) $ \ () → $(TH.doE $ lazyList $ concat [stmts,single $ TH.noBindS [| return $con |]]) |]
               return $ anyRec :* e
             if or anyRecs
             then
