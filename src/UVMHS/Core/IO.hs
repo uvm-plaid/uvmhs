@@ -8,7 +8,6 @@ import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
 import UVMHS.Core.Monads ()
-import UVMHS.Core.Time
 import UVMHS.Core.FilePath
 
 import System.Exit     (ExitCode)
@@ -237,43 +236,55 @@ gc = Mem.performGC
 -- Profiling --
 ---------------
 
-time ∷ (() → a) → IO (a ∧ TimeD)
-time f = do
-  gc
-  t₁ ← now
-  let x = f ()
-  gc
-  t₂ ← now
-  return $ x :* (t₂ ⨺ t₁)
+-- takes a quantity in nanoseconds and gives a more human readable version
+humanReadableTime ∷ 𝔻 → 𝕊 ∧ 𝔻
+humanReadableTime t = if 
+  | t ≥ 1000000000 → "s"  :* (t / 1000000000)
+  | t ≥ 1000000    → "ms" :* (t / 1000000)
+  | t ≥ 1000       → "μs" :* (t / 1000)
+  | otherwise      → "ns" :* t
 
-rtime ∷ 𝕊 → (() → a) → IO a
-rtime s f = do
-  do out $ "TIMING: " ⧺ s ; oflush
-  x :* t ← time f
-  do out $ "RESULT: " ⧺ show𝕊 t ; oflush
+-- takes a quantity in bytes and gives a more human readable version
+humanReadableBytes ∷ 𝔻 → 𝕊 ∧ 𝔻
+humanReadableBytes b = if 
+  | b ≥ 1000000000 → "GB" :* (b / 1000000000)
+  | b ≥ 1000000    → "MB" :* (b / 1000000)
+  | b ≥ 1000       → "KB" :* (b / 1000)
+  | otherwise       → "B"  :* b
+
+-- requires +RTS -T
+nowCPU ∷ IO ℤ64
+nowCPU = do
+  gc
+  s ← Stat.getRTSStats
+  return $ Stat.cpu_ns s
+
+-- returns time in nanoseconds
+-- requires +RTS -T
+timeIO ∷ (() → IO a) → IO (a ∧ ℕ64)
+timeIO f = do
+  t₁ ← nowCPU
+  x ← f ()
+  t₂ ← nowCPU
+  return $ x :* natΩ64 (t₂ - t₁)
+
+-- requires +RTS -T
+timeIOLog ∷ 𝕊 → (() → IO a) → IO a
+timeIOLog s f = do
+  out $ "TIMING: " ⧺ s 
+  oflush
+  x :* t ← timeIO f
+  let u :* t' = humanReadableTime $ dbl t
+  out $ "CPU TIME ELAPSED: " ⧺ show𝕊 t' ⧺ " " ⧺ u
+  oflush
   return x
 
-timeIO ∷ IO a → IO (a ∧ TimeD)
-timeIO xM = do
-  gc
-  t₁ ← now
-  x ← xM
-  gc
-  t₂ ← now
-  return $ x :* (t₂ ⨺ t₁)
-
-rtimeIO ∷ 𝕊 → IO a → IO a
-rtimeIO s xM = do
-  do out $ "TIMING: " ⧺ s ; oflush
-  x :* t ← timeIO xM
-  do out $ "RESULT: " ⧺ show𝕊 t ; oflush
-  return x
-
-profile ∷ IO a → IO (a ∧ 𝔻 ∧ 𝔻)
-profile xM = do
+-- requires +RTS -T
+profileIO ∷ (() → IO a) → IO (a ∧ ℕ64 ∧ 𝔻)
+profileIO xM = do
   gc
   s₁ ← Stat.getRTSStats
-  x ← xM
+  x ← xM ()
   gc
   s₂ ← Stat.getRTSStats
   let -- total number of major GCs
@@ -288,7 +299,20 @@ profile xM = do
       t₂ = Stat.cpu_ns s₂
       --
       -- elapsed CPU time in seconds
-      t' = dbl (t₂ - t₁) / 1000000000.0
-      -- average live data across GCs
+      t = natΩ64 $ t₂ - t₁
+      -- average live data across GCs in bytes
       m  = dbl (u₂ - u₁) / dbl (n₂ - n₁)
-  return $ x :* t' :* m
+  return $ x :* t :* m
+
+-- requires +RTS -T
+profileIOLog ∷ 𝕊 → (() → IO a) → IO a
+profileIOLog s xM = do
+  out $ "TIMING AND MEMORY: " ⧺ s 
+  oflush
+  x :* t :* m ← profileIO xM
+  let ut :* t' = humanReadableTime $ dbl t
+      um :* m' = humanReadableBytes m
+  out $ "CPU TIME ELAPSED: " ⧺ show𝕊 t' ⧺ " " ⧺ ut
+  out $ "AVERAGE MEMORY USED: " ⧺ show𝕊 m' ⧺ " " ⧺ um
+  oflush
+  return x

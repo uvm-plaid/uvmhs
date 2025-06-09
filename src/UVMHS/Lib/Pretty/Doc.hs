@@ -538,6 +538,9 @@ ppIter xs = ppApp (ppCon "𝐼") [ppList xs]
 ppIterC ∷ (ToIter Doc t) ⇒ t → Doc
 ppIterC xs = ppApp (ppCon "𝐼C") [ppList xs]
 
+ppStream ∷ (ToIter Doc t) ⇒ t → Doc
+ppStream xs = ppApp (ppCon "𝑆") [ppList xs]
+
 ppSeq ∷ (ToIter Doc t) ⇒ t → Doc
 ppSeq xs = ppApp (ppCon "𝑄") [ppList xs]
 
@@ -593,6 +596,7 @@ instance (Pretty a)            ⇒ Pretty (𝐿 a)       where pretty = ppList �
 instance (Pretty a)            ⇒ Pretty [a]         where pretty = ppLazyList ∘ map pretty ∘ iter
 instance (Pretty a)            ⇒ Pretty (𝐼 a)       where pretty = ppIter ∘ map pretty
 instance (Pretty a)            ⇒ Pretty (𝐼C a)      where pretty = ppIterC ∘ map pretty ∘ iter
+instance (Pretty a)            ⇒ Pretty (𝑆 a)       where pretty = ppStream ∘ map pretty
 instance (Pretty a)            ⇒ Pretty (𝑄 a)       where pretty = ppSeq ∘ map pretty ∘ iter
 instance (Pretty a)            ⇒ Pretty (𝑃 a)       where pretty = ppSet ∘ map pretty ∘ iter
 instance (Pretty k,Pretty v)   ⇒ Pretty (k ⇰ v)     where pretty = ppDict ∘ map (mapPair pretty pretty) ∘ iter

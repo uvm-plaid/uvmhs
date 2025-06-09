@@ -20,8 +20,6 @@ import UVMHS.Lib.Substitution.Var
 
 import UVMHS.Lang.ULC
 
--- substitutions --
-
 𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 0 (id @(𝕍 (SSubstElem () ())) $ null) 0 |] 
                  [| "{}" |]
 𝔱 "subst:pretty" [| ppRenderNoFmtWide $ pretty $ SubstScoped 1 (id @(𝕍 (SSubstElem () ())) $ null) 0 |] 

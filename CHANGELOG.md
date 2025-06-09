@@ -33,11 +33,104 @@
               (Some (x :* xs'),Some (y :* ys')) → Some (f₃ x y :* loop xs' ys')
               (None           ,None           ) → None
 
+        instance Null (𝑆 a) where null = null𝑆
+        instance Append (𝑆 a) where (⧺) = append𝑆
+        instance Monoid (𝑆 a)
+        
+        instance Single a (𝑆 a) where single = single𝑆
+        
+        null𝑆 ∷ 𝑆 a
+        null𝑆 = 𝑆 $ \ () → None
+        
+        single𝑆 ∷ a → 𝑆 a
+        single𝑆 x = 𝑆 $ \ () → Some $ x :* null𝑆
+        
+        append𝑆 ∷ 𝑆 a → 𝑆 a → 𝑆 a
+        append𝑆 xs ys = 𝑆 $ \ () →
+          case un𝑆 xs () of
+            None → un𝑆 ys ()
+            Some (x :* xs') → Some $ x :* append𝑆 xs' ys
+
 - changes to Core.Data.Set:
   - added:
 
         extend𝑃 ∷ (Ord b) ⇒ (a → 𝑃 b) → 𝑃 a → 𝑃 b
         extend𝑃 f = pow ∘ extend (iter ∘ f) ∘ iter
+
+- changes to Core.Data.Arithmetic:
+  - added:
+
+        round ∷ 𝔻 → ℤ
+        round = HS.round
+
+- changes to Core.IO:
+  - API is now:
+    
+        humanReadableTime ∷ 𝔻 → 𝕊 ∧ 𝔻
+        humanReadableTime t = if 
+          | t ≥ 1000000000 → "s"  :* (t / 1000000000)
+          | t ≥ 1000000    → "ms" :* (t / 1000000)
+          | t ≥ 1000       → "μs" :* (t / 1000)
+          | otherwise      → "ns" :* t
+        
+        humanReadableBytes ∷ 𝔻 → 𝕊 ∧ 𝔻
+        humanReadableBytes b = if 
+          | b ≥ 1000000000 → "GB" :* (b / 1000000000)
+          | b ≥ 1000000    → "MB" :* (b / 1000000)
+          | b ≥ 1000       → "KB" :* (b / 1000)
+          | otherwise       → "B"  :* b
+        
+        nowCPU ∷ IO ℤ64
+        nowCPU = do
+          gc
+          s ← Stat.getRTSStats
+          return $ Stat.cpu_ns s
+        
+        timeIO ∷ (() → IO a) → IO (a ∧ ℕ64)
+        timeIO f = do
+          t₁ ← nowCPU
+          x ← f ()
+          t₂ ← nowCPU
+          return $ x :* natΩ64 (t₂ - t₁)
+        
+        timeIOLog ∷ 𝕊 → (() → IO a) → IO a
+        timeIOLog s f = do
+          out $ "TIMING: " ⧺ s 
+          oflush
+          x :* t ← timeIO f
+          let u :* t' = humanReadableTime $ dbl t
+          out $ "CPU TIME ELAPSED: " ⧺ show𝕊 t' ⧺ " " ⧺ u
+          oflush
+          return x
+        
+        profileIO ∷ (() → IO a) → IO (a ∧ ℕ64 ∧ 𝔻)
+        profileIO xM = do
+          gc
+          s₁ ← Stat.getRTSStats
+          x ← xM ()
+          gc
+          s₂ ← Stat.getRTSStats
+          let n₁ = Stat.major_gcs s₁
+              u₁ = Stat.cumulative_live_bytes s₁
+              t₁ = Stat.cpu_ns s₁
+              n₂ = Stat.major_gcs s₂
+              u₂ = Stat.cumulative_live_bytes s₂
+              t₂ = Stat.cpu_ns s₂
+              t = natΩ64 $ t₂ - t₁
+              m  = dbl (u₂ - u₁) / dbl (n₂ - n₁)
+          return $ x :* t :* m
+        
+        profileIOLog ∷ 𝕊 → (() → IO a) → IO a
+        profileIOLog s xM = do
+          out $ "TIMING AND MEMORY: " ⧺ s 
+          oflush
+          x :* t :* m ← profileIO xM
+          let ut :* t' = humanReadableTime $ dbl t
+              um :* m' = humanReadableBytes m
+          out $ "CPU TIME ELAPSED: " ⧺ show𝕊 t' ⧺ " " ⧺ ut
+          out $ "AVERAGE MEMORY USED: " ⧺ show𝕊 m' ⧺ " " ⧺ um
+          oflush
+          return x
 
 - changes to Lib.Parser.Core:
   - renamed:
@@ -213,3 +306,5 @@
   The idea is that `𝑆M` is the usual monadic stream type, and `𝑆MI` does fair
   interleaving between streams on `(⧺)` and `(≫=)` operations (a la miniKanren
   and LogicT)
+
+- new IterTypes benchmark

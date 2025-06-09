@@ -25,6 +25,9 @@ numerᴾ = HS.numerator
 denomᴾ ∷ ℚᴾ → ℕ
 denomᴾ = HS.denominator
 
+round ∷ 𝔻 → ℤ
+round = HS.round
+
 truncate ∷ 𝔻 → ℤ
 truncate = HS.truncate
 

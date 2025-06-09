@@ -11,6 +11,7 @@ import qualified Prelude as HS
 
 import UVMHS.Tests.Core
 import UVMHS.Tests.Substitution
+import UVMHS.Tests.Deriving
 
 import qualified Language.Haskell.TH as TH
 import qualified Language.Haskell.TH.Syntax as TH
@@ -27,6 +28,9 @@ import qualified Control.Monad.Logic as L
 
 import qualified GHC.IsList as IsList
 
+import UVMHS.Future.TH
+import UVMHS.Future.TH.Deriving
+
 main ∷ IO ()
 main = out "<UVMHS>"
 
@@ -38,6 +42,7 @@ test = do
   $$(testModules True (fuzzParamsSml 10)
     [ "UVMHS.Tests.Core"
     , "UVMHS.Tests.Substitution"
+    , "UVMHS.Tests.Deriving"
     ])
   -- eachOn (upto 100) $ \ s → do
   --   rngSeed s
@@ -49,8 +54,23 @@ test = do
 
 dev ∷ IO ()
 dev = cleanExit $ do
+  out $ $(thShowDecs $ mapp thStripModuleNamesDec $ createFuzzyInstance [] ''𝐿)
+  out $ $(thShowDecs $ mapp thStripModuleNamesDec $
+       [d| instance (Fuzzy a, Fuzzy (𝐿 a)) => Fuzzy (𝐿 a) where 
+             fuzzy = do 
+               d ← fuzzyDepth
+               wrchoose 
+                 [ \ () → one :* do return Nil
+                 , \ () → d :* do x0 ← fuzzy @a
+                                  x1 ← fuzzyRec @(𝐿 a)
+                                  return ((:&) x0 x1)
+                 ]
+       |]) 
   test
   -- FUTURE
+  -- out $(thShowDecs ds₁)
+  -- out $(thShowDecs ds₂)
+  -- shout $ $(thShowDecs ds₁) ≡ $(thShowDecs ds₂)
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''𝐿)
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''OtherList)
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance ["a"] ''OtherList)

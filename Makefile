@@ -23,6 +23,10 @@ GHCID_OPTIONS := \
 # PRIMARY COMMANDS #
 ####################
 
+uvmhs: build
+	rm -f uvmhs
+	ln -s `stack path --dist-dir`/build/uvmhs/uvmhs ./
+
 .PHONY: build
 build: .stack-work
 	stack build

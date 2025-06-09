@@ -1,5 +1,6 @@
 module UVMHS
-  ( module UVMHS.Core
+  ( module UVMHS
+  , module UVMHS.Core
   , module UVMHS.Lang.ULC
   , module UVMHS.Lib.Annotated
   , module UVMHS.Lib.Dataframe
@@ -45,4 +46,24 @@ import UVMHS.Lib.TreeAnnote
 import UVMHS.Lib.TreeNested
 import UVMHS.Lib.Window
 
-import UVMHS.Future.TH ()
+
+import qualified Language.Haskell.TH as TH
+
+import UVMHS.Future.TH
+import UVMHS.Future.TH.Deriving
+
+ds₁ ∷ TH.DecsQ
+ds₁ = map thStripModuleNamesDec ^$
+  [d| instance (Fuzzy a, Fuzzy (𝐿 a)) => Fuzzy (𝐿 a) where 
+        fuzzy = do 
+          d <- fuzzyDepth
+          wrchoose 
+            [ \(()) -> one :* do return Nil
+            , \(()) -> d :* do x0 <- fuzzy @a
+                               x1 <- fuzzyRec @(𝐿 a)
+                               return ((:&) x0 x1)
+            ]
+  |]
+
+ds₂ ∷ TH.DecsQ
+ds₂ = map thStripModuleNamesDec ^$ createFuzzyInstance [] ''𝐿

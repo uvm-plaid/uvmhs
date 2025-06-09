@@ -79,6 +79,24 @@ map𝑆 f xs = 𝑆 $ \ () →
 
 instance Functor 𝑆 where map = map𝑆
 
+instance Null (𝑆 a) where null = null𝑆
+instance Append (𝑆 a) where (⧺) = append𝑆
+instance Monoid (𝑆 a)
+
+instance Single a (𝑆 a) where single = single𝑆
+
+null𝑆 ∷ 𝑆 a
+null𝑆 = 𝑆 $ \ () → None
+
+single𝑆 ∷ a → 𝑆 a
+single𝑆 x = 𝑆 $ \ () → Some $ x :* null𝑆
+
+append𝑆 ∷ 𝑆 a → 𝑆 a → 𝑆 a
+append𝑆 xs ys = 𝑆 $ \ () →
+  case un𝑆 xs () of
+    None → un𝑆 ys ()
+    Some (x :* xs') → Some $ x :* append𝑆 xs' ys
+
 --
 -- instance Null (𝑆 a) where null = empty𝑆
 -- instance Append (𝑆 a) where (⧺) = append𝑆
