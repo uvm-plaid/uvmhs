@@ -3,9 +3,9 @@ module UVMHS.Core.TH where
 import UVMHS.Core.Init
 import UVMHS.Core.Classes
 import UVMHS.Core.Data
+import UVMHS.Core.Monads
 
 import UVMHS.Core.Effects
-import UVMHS.Core.Monads
 
 import qualified Language.Haskell.TH as TH
 import qualified Language.Haskell.TH.Syntax as TH
@@ -14,14 +14,11 @@ import qualified Prelude as HS
 
 type THLift = TH.Lift
 
-class MonadQ (m ∷ ★ → ★) where qio ∷ TH.Q a → m a
 
-instance Functor TH.Q where map = mmap
-instance Return TH.Q where return = HS.return
-instance Bind TH.Q where (≫=) = (HS.>>=)
-instance Monad TH.Q
-instance MonadIO TH.Q where io = TH.runIO
-instance MonadQ TH.Q where qio = id
+instance Functor QIO where map = mmap
+instance Return QIO where return = HS.return
+instance Bind QIO where (≫=) = (HS.>>=)
+instance Monad QIO
 
 instance Apply TH.Exp where (⊙) = TH.AppE
 
@@ -122,7 +119,7 @@ thRecCL = Prism
   , construct = \ (n :* fs) → TH.RecC n (tohs fs)
   }
 
-thLoc𝕊 ∷ TH.Q 𝕊
+thLoc𝕊 ∷ QIO 𝕊
 thLoc𝕊 = do
   l ← TH.location
   return $ concat
@@ -133,20 +130,20 @@ thLoc𝕊 = do
     , show𝕊 $ TH.loc_end l
     ]
 
-thLoc ∷ TH.Q (TH.TExp ((𝕊 → c) → c))
+thLoc ∷ QIO (TH.TExp ((𝕊 → c) → c))
 thLoc = do
   lS ← thLoc𝕊
   TH.examineCode [|| \ f → f lS ||]
 
-thExp ∷ TH.Q (TH.TExp a) → TH.Q (TH.TExp ((𝕊 → a → c) → c))
+thExp ∷ QIO (TH.TExp a) → QIO (TH.TExp ((𝕊 → a → c) → c))
 thExp xQ = do
   xS ← show𝕊 ∘ TH.unType ^$ xQ
   TH.examineCode [|| \ f → f xS $$(TH.Code xQ) ||]
 
-thmut ∷ (HS.Monad (WriterT (𝐼 TH.Dec) TH.Q) ⇒ WriterT (𝐼 TH.Dec) TH.Q ()) → TH.Q [TH.Dec]
+thmut ∷ (HS.Monad (WriterT (𝐼 TH.Dec) QIO) ⇒ WriterT (𝐼 TH.Dec) QIO ()) → QIO [TH.Dec]
 thmut xM = do
-  ds :* () ← unWriterT $ with (tohsMonad @(WriterT (𝐼 TH.Dec) TH.Q)) xM
+  ds :* () ← unWriterT $ with (tohsMonad @(WriterT (𝐼 TH.Dec) QIO)) xM
   return $ lazyList ds
 
-thdec ∷ TH.Q [TH.Dec] → WriterT (𝐼 TH.Dec) TH.Q ()
+thdec ∷ QIO [TH.Dec] → WriterT (𝐼 TH.Dec) QIO ()
 thdec dsM = tell *$ iter ^$ lift dsM

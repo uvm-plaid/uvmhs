@@ -141,14 +141,14 @@ runTests noisy γ tests = do
       ]
     abortIO
 
-𝔱 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → TH.Q [TH.Dec]
+𝔱 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → QIO [TH.Dec]
 #ifdef NO_UVMHS_TESTS
 𝔱 _ _ _ = return []
 #else
 𝔱 tag xEQ yEQ = 𝔱T @() tag (TH.unsafeCodeCoerce xEQ) (TH.unsafeCodeCoerce yEQ)
 #endif
 
-𝔱T ∷ (Eq a,Pretty a) ⇒ 𝕊 → TH.CodeQ a → TH.CodeQ a → TH.Q [TH.Dec]
+𝔱T ∷ (Eq a,Pretty a) ⇒ 𝕊 → TH.CodeQ a → TH.CodeQ a → QIO [TH.Dec]
 𝔱T tag xE yE = do
   l ← TH.location
   let lS = concat [frhsChars $ TH.loc_module l,":",show𝕊 $ fst $ frhs $ TH.loc_start l]
@@ -159,14 +159,14 @@ runTests noisy γ tests = do
   TH.putQ @(𝐼 (TH.CodeQ (𝑇D Test))) tests'
   return []
 
-𝔣 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → TH.ExpQ → TH.Q [TH.Dec]
+𝔣 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → TH.ExpQ → QIO [TH.Dec]
 #ifdef NO_UVMHS_TESTS
 𝔣 _ _ _ _ = return []
 #else
 𝔣 tag xIO p xD = 𝔣T @() tag (TH.unsafeCodeCoerce xIO) (TH.unsafeCodeCoerce p) $ TH.unsafeCodeCoerce xD
 #endif
 
-𝔣T ∷ (Pretty a,Shrinky a) ⇒ 𝕊 → TH.CodeQ (FuzzyM a) → TH.CodeQ (a → 𝔹) → TH.CodeQ (a → Doc) → TH.Q [TH.Dec]
+𝔣T ∷ (Pretty a,Shrinky a) ⇒ 𝕊 → TH.CodeQ (FuzzyM a) → TH.CodeQ (a → 𝔹) → TH.CodeQ (a → Doc) → QIO [TH.Dec]
 𝔣T tag xIOE pE xDE = do
   l ← TH.location
   let lS = concat
@@ -181,7 +181,7 @@ runTests noisy γ tests = do
   TH.putQ @(𝐼 (TH.CodeQ (𝑇D Test))) tests'
   return []
 
-buildTests ∷ TH.Q [TH.Dec]
+buildTests ∷ QIO [TH.Dec]
 buildTests = do
   testEQs ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.CodeQ (𝑇D Test)))
   l ← TH.location
@@ -232,7 +232,7 @@ testModules noisy γ nsS =
 --   e → e
 -- 
 -- 
--- play ∷ TH.ExpQ → TH.Q [TH.Dec]
+-- play ∷ TH.ExpQ → QIO [TH.Dec]
 -- play e = do
 --   e' ← e
 --   let s = string $ TH.pprint $ unqualifyExp e'

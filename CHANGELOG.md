@@ -1,5 +1,31 @@
 # Future
 
+- changes to Core.Init:
+  - added:
+
+        type QIO = TH.Q
+    
+- changes to Core.Effects:
+  - renamed:
+    - `MonadQ` to `MonadQIO`
+    - `???` to `qio`
+  - added:
+
+        listen ∷ (Monad m,MonadWriter o m) ⇒ m a → m (o ∧ a)
+        listen xM = do
+          o :* x ← hijack xM
+          tell o
+          return $ o :* x
+        
+        listenL ∷ (Monad m,MonadWriter o₁ m) ⇒ (o₁ ⟢ o₂) → m a → m (o₂ ∧ a)
+        listenL ℓ xM = do
+          o₁ :* x ← hijack xM
+          tell o₁
+          return $ access ℓ o₁ :* x
+
+- changes to Core.Monads:
+  - created `LiftQIO` and `MonadQIO` instances for all monad transformers
+
 - changes to Core.Data.Function:
   - added:
   

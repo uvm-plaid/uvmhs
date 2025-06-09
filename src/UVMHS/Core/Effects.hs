@@ -9,9 +9,13 @@ import qualified Prelude as HS
 infixl 5 ⊞,⎅
 
 class MonadIO (m ∷ ★ → ★) where io ∷ IO a → m a
+class MonadQIO (m ∷ ★ → ★) where qio ∷ QIO a → m a
 
 class LiftIO t where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → t m a)
+
+class LiftQIO t where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → (∀ a. QIO a → t m a)
 
 class MonadReader r m | m → r where
   askL ∷ r ⟢ r' → m r'
@@ -192,13 +196,26 @@ hijackL ℓ xM = do
 
 mapOut ∷ (Monad m,MonadWriter o m) ⇒ (o → o) → m a → m a
 mapOut f aM = do
-  (o :* a) ← hijack aM
+  o :* a ← hijack aM
   tell $ f o
   return a
 
+listen ∷ (Monad m,MonadWriter o m) ⇒ m a → m (o ∧ a)
+listen xM = do
+  o :* x ← hijack xM
+  tell o
+  return $ o :* x
+
+listenL ∷ (Monad m,MonadWriter o₁ m) ⇒ (o₁ ⟢ o₂) → m a → m (o₂ ∧ a)
+listenL ℓ xM = do
+  o₁ :* x ← hijack xM
+  tell o₁
+  return $ access ℓ o₁ :* x
+
+-- returns the output, and replaces the output with null
 retOut ∷ ∀ o m a. (Monad m,MonadWriter o m) ⇒ m a → m o
 retOut xM = do
-  (o :* _) ← hijack xM
+  o :* _ ← hijack xM
   return o
 
 -- # State

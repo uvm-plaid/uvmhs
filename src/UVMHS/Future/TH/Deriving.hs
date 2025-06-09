@@ -42,14 +42,14 @@ createMonoidInstance name = do
 createFuzzyInstance ∷ [𝕊] → [TH.Name] → TH.Name → TH.DecsQ
 createFuzzyInstance recVarNamesS recTyNamesS name = do
   when (count @ℕ64 (pow𝑃 recVarNamesS) ≢ count recVarNamesS) $ \ () →
-    fail $ err_MSG_DUPLICATE_REC_NAMES ()
+    fail𝕊 $ err_MSG_DUPLICATE_REC_NAMES ()
   𝒾 ← adtInfo "createFuzzyInstance" name
   let nameMap ∷ 𝕊 ⇰ TH.Name
       nameMap = adtInfoTypeArgsNameMap 𝒾
   recNames ∷ 𝑃 TH.Name
             ← pow ^$ mapMOn recVarNamesS $ \ nameᵢ → do
     case nameMap ⋕? nameᵢ of
-      None → fail $ err_MSG_INVALID_REC_NAME nameMap
+      None → fail𝕊 $ err_MSG_INVALID_REC_NAME nameMap
       Some nameᵣ → return nameᵣ
   let recNames' ∷ 𝑃 TH.Name
       recNames' = recNames ∪ single name ∪ pow recTyNamesS
@@ -60,26 +60,29 @@ createFuzzyInstance recVarNamesS recTyNamesS name = do
         where
           fuzzy = $(do
             d ← thGensymS "d"
-            anyRecs :* es ← split ∘ list ^$ exchange $ adtInfoConssQ 𝒾 $ \ mk τs → do
-              (con :* (anyRec :* nonRec :* stmts)) 
-                ∷ TH.ExpQ ∧ (𝔹 ∧ ℕ64 ∧ 𝐼 TH.StmtQ)
-                ← evalRWST () mk $ 
-                    retStateOut $ 
-                      eachOn (withIndex τs) $ \ (n :* τ) → UVMHS.Core.do
-                x' ← lift $ thGensymN n
-                modify $ \ eQ → [| $eQ $(TH.varE x') |]
-                isRec ∷ 𝔹
-                      ← lift $ thAnyNameOccursInType recNames' ^$ τ
-                tellL (fstL ⊚ fstL) isRec
-                when (not isRec) $ \ () →
-                  tellL (sndL ⊚ fstL) one
-                tellL sndL $ single $ TH.bindS (TH.varP x') $ if not isRec then [| fuzzy @($τ) |] else [| fuzzyRec @($τ) |]
-              when (anyRec ⩓ nonRec ≡ zero) $ \ () →
-                fail $ "not ok to have only recursive fields in constructor: " ⧺ show anyRec ⧺ " " ⧺ show nonRec
-              let weight = if anyRec then [| $(TH.varE d) |] else [| one |]
-              e ← [| (:*) $(weight) $ \ () → $(TH.doE $ lazyList $ concat [stmts,single $ TH.noBindS [| return $con |]]) |]
-              return $ anyRec :* e
-            if or anyRecs
+            anyConAnyRecFields :* anyConAllNonRecFields :* es ← unWriterT $ adtInfoConssQ 𝒾 $ \ mk τs → 
+              id @(WriterT (𝔹 ∧ 𝔹) QIO (TH.Exp)) $
+              UVMHS.Core.do
+                conQ :* (anyRecField :* stmts) ← evalRWST () mk $ retStateOut $ eachOn (withIndex τs) $ uncurry $ \ n τ → 
+                  id @(RWST () (𝔹 ∧ 𝐼 TH.StmtQ) (TH.ExpQ) (WriterT (𝔹 ∧ 𝔹) QIO) ()) $
+                  UVMHS.Core.do 
+                    x' ← qio $ thGensymN n
+                    modify $ \ eQ → [| $eQ $(TH.varE x') |]
+                    isRec ← qio $ thAnyNameOccursInType recNames' ^$ τ
+                    tellL fstL isRec
+                    tellL sndL $ single $ TH.bindS (TH.varP x') $ if not isRec then [| fuzzy @($τ) |] else [| fuzzyRec @($τ) |]
+                tellL fstL anyRecField
+                tellL sndL $ not anyRecField
+                let weight = if anyRecField then [| $(TH.varE d) |] else [| one |]
+                qio [| (:*) $(weight) $ \ () → $(TH.doE $ lazyList $ concat [stmts,single $ TH.noBindS [| return $conQ |]]) |]
+            when (anyConAnyRecFields ⩓ not anyConAllNonRecFields) $ \ () → 
+              fail𝕊 $ concat $ inbetween " " $ 
+                [ "createFuzzyInstance:"
+                , "if there are any constructors that have any recursive fields"
+                , "then there must be at least one constructor"
+                , "that has all non-recursive fields"
+                ]
+            if anyConAnyRecFields
             then
               [| do $(TH.varP d) ← fuzzyDepth
                     wrchoose $(return $ TH.ListE $ lazyList es)
@@ -87,33 +90,38 @@ createFuzzyInstance recVarNamesS recTyNamesS name = do
             else
               [| wrchoose $(return $ TH.ListE $ lazyList es)
               |])
+
+
+
+
+
    |]
   where
-    err_MSG_DUPLICATE_REC_NAMES ∷ () → [ℂ]
+    err_MSG_DUPLICATE_REC_NAMES ∷ () → 𝕊
     err_MSG_DUPLICATE_REC_NAMES () = concat $ inbetween " "
       [ "createFuzzyInstance:"
       , "[["
-      , TH.pprint name
+      , string $ TH.pprint name
       , ","
-      , lazyList $ ppRenderNoFmt $ pretty recVarNamesS
+      , ppRenderNoFmt $ pretty recVarNamesS
       , "]]"
       , "the list of provided names"
       , "should not include any duplicates"
       , "(purely as a sanity check)."
       ]
-    err_MSG_INVALID_REC_NAME ∷ 𝕊 ⇰ TH.Name → [ℂ]
+    err_MSG_INVALID_REC_NAME ∷ 𝕊 ⇰ TH.Name → 𝕊
     err_MSG_INVALID_REC_NAME nameMap = concat $ inbetween " " $
       [ "createFuzzyInstance:"
       , "[["
-      , TH.pprint name
+      , string $ TH.pprint name
       , ","
-      , lazyList $ ppRenderNoFmt $ pretty recVarNamesS
+      , ppRenderNoFmt $ pretty recVarNamesS
       , "]]"
       , "each provided name must must match"
       , "the name of a type variable argument"
       , "for the declared data type."
       , "valid options are:"
-      , show $ dkeys nameMap
+      , show𝕊 $ dkeys nameMap
       ]
 
 

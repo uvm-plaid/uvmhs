@@ -14,7 +14,7 @@ import qualified Language.Haskell.TH as TH
 --   [| fieldL ∷ ∀ a₁ … aₙ. (C₁,…,Cₙ) ⇒ ty a₁ … aₙ ⟢ fieldty
 --      fieldL ≔ lens field (\ x s → s { field = x })
 --   |]
-makeLensLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → TH.Name → TH.Type → TH.Q (𝐿 TH.Dec)
+makeLensLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → TH.Name → TH.Type → QIO (𝐿 TH.Dec)
 makeLensLogic cx ty tyargs field fieldty = do
   let lensName = TH.mkName $ tohsChars $ string (TH.nameBase field) ⧺ "L"
       tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
@@ -32,7 +32,7 @@ makeLensLogic cx ty tyargs field fieldty = do
         TH.VarE 'lens ⊙ TH.VarE field ⊙$ TH.LamE [TH.VarP tmpˢ,TH.VarP tmpˣ] $ TH.RecUpdE (TH.VarE tmpˢ) [(field,TH.VarE tmpˣ)]
     ]
 
-makeLenses ∷ TH.Name → TH.Q [TH.Dec]
+makeLenses ∷ TH.Name → QIO [TH.Dec]
 makeLenses name = do
   (cx :* ty :* tyargs :* _ :* c :* _) ← ifNoneM (io abortIO) ∘ (thViewSingleConADT *∘ view thTyConIL) *$ TH.reify name
   (_ :* fields) ← ifNoneM (io abortIO) $ view thRecCL c
@@ -47,7 +47,7 @@ makeLenses name = do
 --            _ → None
 --        }
 --   |]
-makePrismLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → TH.Name → 𝐿 TH.Type → ℕ → TH.Q (𝐿 TH.Dec)
+makePrismLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → TH.Name → 𝐿 TH.Type → ℕ → QIO (𝐿 TH.Dec)
 makePrismLogic cx ty tyargs con fieldtys numcons = do
   let prismName = TH.mkName $ tohsChars $ (string $ mapFirst toLower $ TH.nameBase con) ⧺ "L"
       tyargVars = map (TH.VarT ∘ thTyVarBndrName) tyargs
@@ -76,7 +76,7 @@ makePrismLogic cx ty tyargs con fieldtys numcons = do
               ])
     ]
 
-makePrisms ∷ TH.Name → TH.Q [TH.Dec]
+makePrisms ∷ TH.Name → QIO [TH.Dec]
 makePrisms name = do
   (cx :* ty :* tyargs :* _ :* cs :* _) ← ifNoneM (io abortIO) ∘ (thViewADT *∘ view thTyConIL) *$ TH.reify name
   scs ← mapM (ifNoneM (io abortIO) ∘ thViewSimpleCon) cs

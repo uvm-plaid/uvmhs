@@ -400,6 +400,11 @@ uncurry f = \ (x :* y) → f x y
 curry ∷ (a ∧ b → c) → a → b → c
 curry f = \ x y → f (x :* y)
 
+----------------------
+-- TEMPLATE HASKELL --
+---------------------
+
+type QIO = TH.Q
 
 -----------------------------------
 -- Conversion to Vanilla Haskell --

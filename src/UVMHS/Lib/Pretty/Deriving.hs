@@ -17,7 +17,7 @@ import qualified Data.Text as Text
 --          …
 --          pretty (conₘ (xₘ₁ ∷ contyₘ₁) … xₘ⸤nₘ⸥) = app [con "conₘ",pretty xₘ₁,…,pretty xₘ⸤nₘ⸥]
 --   |]
-makePrettySumLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → TH.Q (𝐿 TH.Dec)
+makePrettySumLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → QIO (𝐿 TH.Dec)
 makePrettySumLogic cx ty tyargs concontys = do
   conxs ∷ 𝐿 (TH.Name ∧ 𝐿 TH.Name) ← mapMOn concontys $ \ (con :* contys) → do
     tmpˣˢ ← mapMOn contys $ const $ TH.newName $ tohsChars "x"
@@ -39,7 +39,7 @@ makePrettySumLogic cx ty tyargs concontys = do
         in thSingleClause (single $ TH.ConP con [] $ tohs $ map TH.VarP tmpˣˢ) $ TH.VarE 'ppApp ⊙ prettyCon ⊙$ TH.VarE 'list ⊙$ TH.ListE (tohs prettyXs)
   return $ single $ TH.InstanceD (tohs None) (tohs instanceCx) instanceTy $ single instanceDec
 
-makePrettySum ∷ TH.Name → TH.Q [TH.Dec]
+makePrettySum ∷ TH.Name → QIO [TH.Dec]
 makePrettySum name = do
   (cx :* ty :* tyargs :* _ :* cs :* _) ← ifNoneM (io abortIO) ∘ (thViewADT *∘ view thTyConIL) *$ TH.reify name
   scs ← mapM (ifNoneM (io abortIO) ∘ thViewSimpleCon) cs
@@ -54,7 +54,7 @@ makePrettySum name = do
 --          …
 --          pretty (conₘ (xₘ₁ ∷ contyₘ₁) … xₘ⸤nₘ⸥) = tup [pretty xₘ₁,…,pretty xₘ⸤nₘ⸥]
 --   |]
-makePrettyUnionLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → TH.Q (𝐿 TH.Dec)
+makePrettyUnionLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → 𝐿 (TH.Name ∧ 𝐿 TH.Type) → QIO (𝐿 TH.Dec)
 makePrettyUnionLogic cx ty tyargs concontys = do
   conxs ∷ 𝐿 (TH.Name ∧ 𝐿 TH.Name) ← mapMOn concontys $ \ (con :* fieldtys) → do
     tmpˣˢ ← mapMOn fieldtys $ const $ TH.newName $ tohsChars "x"
@@ -80,7 +80,7 @@ makePrettyUnionLogic cx ty tyargs concontys = do
             ⊙$ TH.ListE (tohs prettyXs)
   return $ single $ TH.InstanceD (tohs None) (tohs instanceCx) instanceTy $ single $ instanceDec
 
-makePrettyUnion ∷ TH.Name → TH.Q [TH.Dec]
+makePrettyUnion ∷ TH.Name → QIO [TH.Dec]
 makePrettyUnion name = do
   (cx :* ty :* tyargs :* _ :* cs :* _) ← ifNoneM (io abortIO) ∘ (thViewADT *∘ view thTyConIL) *$ TH.reify name
   scs ← mapM (ifNoneM (io abortIO) ∘ thViewSimpleCon) cs
@@ -93,7 +93,7 @@ makePrettyUnion name = do
 --        ) ⇒ Pretty (ty a₁ … aₙ) where
 --          pretty (con {field₁ = tmp₁;fieldₙ = tmpₙ}) = app [con "con",record [("field₁",tmp₁),…,("fieldₙ",tmpₙ)
 --   |]
-makePrettyRecordLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → TH.Name → 𝐿 (TH.Name ∧ TH.Type) → TH.Q (𝐿 TH.Dec)
+makePrettyRecordLogic ∷ TH.Cxt → TH.Name → 𝐿 (TH.TyVarBndr TH.BndrVis) → TH.Name → 𝐿 (TH.Name ∧ TH.Type) → QIO (𝐿 TH.Dec)
 makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
   let conName = string $ TH.nameBase con
       conNameFirstLower = string $ mapFirst toLower $ iter conName
@@ -138,7 +138,7 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
                       ⊙ (TH.VarE 'pretty ⊙ TH.VarE tmpˣ)
   return $ single $ TH.InstanceD (tohs None) (tohs instanceCx) instanceTy $ single $ instanceDec
 
-makePrettyRecord ∷ TH.Name → TH.Q [TH.Dec]
+makePrettyRecord ∷ TH.Name → QIO [TH.Dec]
 makePrettyRecord name = do
   (cx :* ty :* tyargs :* _ :* c :* _) ← ifNoneM (io abortIO) ∘ (thViewSingleConADT *∘ view thTyConIL) *$ TH.reify name
   (con :* fields) ← ifNoneM (io abortIO) $ view thRecCL c

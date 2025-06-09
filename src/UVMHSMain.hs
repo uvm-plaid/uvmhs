@@ -59,7 +59,7 @@ dev = cleanExit $ do
   -- out $(thShowDecs ds₁)
   -- out $(thShowDecs ds₂)
   -- shout $ $(thShowDecs ds₁) ≡ $(thShowDecs ds₂)
-  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''𝐿)
+  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance ["a"] [] ''(∨))
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''OtherList)
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance ["a"] ''OtherList)
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createMonoidInstance ''(∧))

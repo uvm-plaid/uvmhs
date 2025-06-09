@@ -9,6 +9,8 @@ import UVMHS.Core.Transformers
 
 import qualified Prelude as HS
 
+import qualified Language.Haskell.TH as TH
+
 newtype MU m = MU { unMU ∷ m () }
 
 onMU ∷ (m () → m ()) → MU m → MU m
@@ -20,6 +22,11 @@ instance (Monad m) ⇒ Monoid (MU m)
 
 instance MonadIO IO where
   io = id
+
+instance MonadIO QIO where 
+  io = TH.runIO
+instance MonadQIO QIO where
+  qio = id
 
 instance Functor IO where
   map = mmap
@@ -517,9 +524,17 @@ instance Transformer UContT where
 
 instance LiftIO (ReaderT r) where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → ReaderT r m a)
-  liftIO ioM xM = ReaderT $ \ _ → ioM xM
+  liftIO = (∘) lift
 instance (Monad m,MonadIO m) ⇒ MonadIO (ReaderT r m) where
+  io ∷ ∀ a. IO a → ReaderT r m a
   io = liftIO io
+
+instance LiftQIO (ReaderT r) where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → (∀ a. QIO a → ReaderT r m a)
+  liftQIO = (∘) lift
+instance (Monad m,MonadQIO m) ⇒ MonadQIO (ReaderT r m) where
+  qio ∷ ∀ a. QIO a → ReaderT r m a
+  qio = liftQIO qio
 
 instance LiftReader (ReaderT r) where
   liftAskL ∷ ∀ m r'. (Monad m) ⇒ (∀ r''. r' ⟢ r'' → m r'') → (∀ r''. r' ⟢ r'' → ReaderT r m r'')
@@ -609,11 +624,17 @@ instance (Monad m,MonadCont r' m) ⇒ MonadCont r' (ReaderT r m) where
 
 instance (Null o) ⇒ LiftIO (WriterT o) where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → WriterT o m a)
-  liftIO ioM xM = WriterT $ do
-    x ← ioM xM
-    return (null :* x)
+  liftIO = (∘) lift
 instance (Null o,Monad m,MonadIO m) ⇒ MonadIO (WriterT o m) where
+  io ∷ ∀ a. IO a → WriterT o m a
   io = liftIO io
+
+instance (Null o) ⇒ LiftQIO (WriterT o) where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → (∀ a. QIO a → WriterT o m a)
+  liftQIO = (∘) lift
+instance (Null o,Monad m,MonadQIO m) ⇒ MonadQIO (WriterT o m) where
+  qio ∷ ∀ a. QIO a → WriterT o m a
+  qio = liftQIO qio
 
 instance (Null o) ⇒ LiftReader (WriterT o) where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → WriterT o m r')
@@ -711,11 +732,17 @@ instance (Monoid o,Monad m,MonadCont (o ∧ r) m) ⇒ MonadCont r (WriterT o m) 
 
 instance LiftIO (StateT s) where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → StateT s m a)
-  liftIO ioM xM = StateT $ \ s → do
-    x ← ioM xM
-    return (s :* x)
+  liftIO = (∘) lift
 instance (Monad m,MonadIO m) ⇒ MonadIO (StateT s m) where
+  io ∷ ∀ a. IO a → StateT s m a
   io = liftIO io
+
+instance LiftQIO (StateT s) where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → (∀ a. QIO a → StateT s m a)
+  liftQIO = (∘) lift
+instance (Monad m,MonadQIO m) ⇒ MonadQIO (StateT s m) where
+  qio ∷ ∀ a. QIO a → StateT s m a
+  qio = liftQIO qio
 
 instance LiftReader (StateT s) where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → StateT s m r')
@@ -814,11 +841,17 @@ instance (Monad m,MonadCont (s ∧ u) m) ⇒ MonadCont u (StateT s m) where
 
 instance LiftIO FailT where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → FailT m a)
-  liftIO ioM xM = FailT $ do
-    x ← ioM xM
-    return $ Some x
+  liftIO = (∘) lift
 instance (Monad m,MonadIO m) ⇒ MonadIO (FailT m) where
+  io ∷ ∀ a. IO a → FailT m a
   io = liftIO io
+
+instance LiftQIO FailT where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → (∀ a. QIO a → FailT m a)
+  liftQIO = (∘) lift
+instance (Monad m,MonadQIO m) ⇒ MonadQIO (FailT m) where
+  qio ∷ ∀ a. QIO a → FailT m a
+  qio = liftQIO qio
 
 instance LiftReader FailT where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → FailT m r')
@@ -919,11 +952,17 @@ instance (Monad m,MonadCont (𝑂 r) m) ⇒ MonadCont r (FailT m) where
 
 instance LiftIO (ErrorT e) where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → ErrorT e m a)
-  liftIO ioM xM = ErrorT $ do
-    x ← ioM xM
-    return $ Inr x
+  liftIO = (∘) lift
 instance (Monad m,MonadIO m) ⇒ MonadIO (ErrorT e m) where
+  io ∷ ∀ a. IO a → ErrorT e m a
   io = liftIO io
+
+instance LiftQIO (ErrorT e) where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → (∀ a. QIO a → ErrorT e m a)
+  liftQIO = (∘) lift
+instance (Monad m,MonadQIO m) ⇒ MonadQIO (ErrorT e m) where
+  qio ∷ ∀ a. QIO a → ErrorT e m a
+  qio = liftQIO qio
 
 instance LiftReader (ErrorT e) where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → ErrorT e m r')
@@ -1025,9 +1064,19 @@ instance (Monad m,MonadCont (e ∨ r) m) ⇒ MonadCont r (ErrorT e m) where
 -----------
 
 instance LiftIO DelayT where
-  liftIO ioM xM = DelayT $ \ () → ioM xM
+  liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → ∀ a. IO a → DelayT m a
+  liftIO = (∘) lift
 instance (Monad m,MonadIO m) ⇒ MonadIO (DelayT m) where
+  io ∷ ∀ a. IO a → DelayT m a
   io = liftIO io
+
+instance LiftQIO DelayT where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → ∀ a. QIO a → DelayT m a
+  liftQIO = (∘) lift
+instance (Monad m,MonadQIO m) ⇒ MonadQIO (DelayT m) where
+  qio ∷ ∀ a. QIO a → DelayT m a
+  qio = liftQIO qio
+
 instance LiftReader DelayT where
   liftAskL askLM ℓ = DelayT $ \ () → askLM ℓ
   liftLocalL localLM ℓ r xM = DelayT $ \ () → localLM ℓ r $ runDelayT xM
@@ -1090,11 +1139,17 @@ instance (MonadUCont m) ⇒ MonadUCont (DelayT m) where
 
 instance LiftIO NondetT where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → NondetT m a)
-  liftIO ioM xM = NondetT $ do
-    x ← ioM xM
-    return $ single x
+  liftIO = (∘) lift
 instance (Monad m,MonadIO m) ⇒ MonadIO (NondetT m) where
+  io ∷ ∀ a. IO a → NondetT m a
   io = liftIO io
+
+instance LiftQIO NondetT where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → (∀ a. QIO a → NondetT m a)
+  liftQIO = (∘) lift
+instance (Monad m,MonadQIO m) ⇒ MonadQIO (NondetT m) where
+  qio ∷ ∀ a. QIO a → NondetT m a
+  qio = liftQIO qio
 
 instance LiftReader NondetT where
   liftAskL ∷ ∀ m r. (Monad m) ⇒ (∀ r'. r ⟢ r' → m r') → (∀ r'. r ⟢ r' → NondetT m r')
@@ -1193,11 +1248,17 @@ instance (Monad m,Func Monoid m,MonadCont (𝑄 r) m) ⇒ MonadCont r (NondetT m
 
 instance LiftIO (ContT u) where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → ContT u m a)
-  liftIO ioM xM = ContT $ \ (k ∷ a → m r) → do
-    x ← ioM xM
-    k x
+  liftIO = (∘) lift
 instance (Monad m,MonadIO m) ⇒ MonadIO (ContT u m) where
+  io ∷ ∀ a. IO a → ContT u m a
   io = liftIO io
+
+instance LiftQIO (ContT u) where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → (∀ a. QIO a → ContT u m a)
+  liftQIO = (∘) lift
+instance (Monad m,MonadQIO m) ⇒ MonadQIO (ContT u m) where
+  qio ∷ ∀ a. QIO a → ContT u m a
+  qio = liftQIO qio
 
 instance (Monad m,MonadReader r m) ⇒ MonadReader r (ContT u m) where
   askL ∷ ∀ r'. r ⟢ r' → ContT u m r'
@@ -1276,7 +1337,15 @@ instance LiftIO UContT where
   liftIO ∷ ∀ m. (Monad m) ⇒ (∀ a. IO a → m a) → (∀ a. IO a → UContT m a)
   liftIO ioM xM = UContT HS.$ \ (𝓀 ∷ a → m u) → 𝓀 *$ ioM xM
 instance (Monad m,MonadIO m) ⇒ MonadIO (UContT m) where
+  io ∷ ∀ a. IO a → UContT m a
   io = liftIO io
+
+instance LiftQIO UContT where
+  liftQIO ∷ ∀ m. (Monad m) ⇒ (∀ a. QIO a → m a) → (∀ a. QIO a → UContT m a)
+  liftQIO ioM xM = UContT HS.$ \ (𝓀 ∷ a → m u) → 𝓀 *$ ioM xM
+instance (Monad m,MonadQIO m) ⇒ MonadQIO (UContT m) where
+  qio ∷ ∀ a. QIO a → UContT m a
+  qio = liftQIO qio
 
 instance (Monad m,MonadReader r m) ⇒ MonadReader r (UContT m) where
   askL ∷ ∀ r'. r ⟢ r' → UContT m r'
@@ -1347,7 +1416,7 @@ instance (Monad m,MonadTop m) ⇒ MonadTop (UContT m) where
 newtype RWST r o s m a = RWST { unRWST ∷ ReaderT r (WriterT o (StateT s m)) a }
   deriving
   ( Functor,Return,Bind,Monad
-  , MonadIO
+  , MonadIO,MonadQIO
   , MonadReader r,MonadWriter o,MonadState s
   , MonadFail,MonadError e
   , MonadDelay
