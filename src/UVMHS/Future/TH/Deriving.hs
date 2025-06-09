@@ -39,20 +39,20 @@ createMonoidInstance name = do
 -- DERIVING FUZZY --
 --------------------
 
-createFuzzyInstance ∷ [𝕊] → TH.Name → TH.DecsQ
-createFuzzyInstance recNamesS name = do
-  when (count @ℕ64 (pow𝑃 recNamesS) ≢ count recNamesS) $ \ () →
+createFuzzyInstance ∷ [𝕊] → [TH.Name] → TH.Name → TH.DecsQ
+createFuzzyInstance recVarNamesS recTyNamesS name = do
+  when (count @ℕ64 (pow𝑃 recVarNamesS) ≢ count recVarNamesS) $ \ () →
     fail $ err_MSG_DUPLICATE_REC_NAMES ()
   𝒾 ← adtInfo "createFuzzyInstance" name
   let nameMap ∷ 𝕊 ⇰ TH.Name
       nameMap = adtInfoTypeArgsNameMap 𝒾
   recNames ∷ 𝑃 TH.Name
-            ← pow ^$ mapMOn recNamesS $ \ nameᵢ → do
+            ← pow ^$ mapMOn recVarNamesS $ \ nameᵢ → do
     case nameMap ⋕? nameᵢ of
       None → fail $ err_MSG_INVALID_REC_NAME nameMap
       Some nameᵣ → return nameᵣ
   let recNames' ∷ 𝑃 TH.Name
-      recNames' = recNames ∪ single name
+      recNames' = recNames ∪ single name ∪ pow recTyNamesS
   [d| instance 
         $(thTupsTQ $ mapOn (adtInfoAllConArgsQ 𝒾) $ \ τ → [t| Fuzzy $τ |])
         ⇒
@@ -95,7 +95,7 @@ createFuzzyInstance recNamesS name = do
       , "[["
       , TH.pprint name
       , ","
-      , lazyList $ ppRenderNoFmt $ pretty recNamesS
+      , lazyList $ ppRenderNoFmt $ pretty recVarNamesS
       , "]]"
       , "the list of provided names"
       , "should not include any duplicates"
@@ -107,7 +107,7 @@ createFuzzyInstance recNamesS name = do
       , "[["
       , TH.pprint name
       , ","
-      , lazyList $ ppRenderNoFmt $ pretty recNamesS
+      , lazyList $ ppRenderNoFmt $ pretty recVarNamesS
       , "]]"
       , "each provided name must must match"
       , "the name of a type variable argument"

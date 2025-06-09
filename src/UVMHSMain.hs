@@ -54,18 +54,6 @@ test = do
 
 dev ∷ IO ()
 dev = cleanExit $ do
-  out $ $(thShowDecs $ mapp thStripModuleNamesDec $ createFuzzyInstance [] ''𝐿)
-  out $ $(thShowDecs $ mapp thStripModuleNamesDec $
-       [d| instance (Fuzzy a, Fuzzy (𝐿 a)) => Fuzzy (𝐿 a) where 
-             fuzzy = do 
-               d ← fuzzyDepth
-               wrchoose 
-                 [ \ () → one :* do return Nil
-                 , \ () → d :* do x0 ← fuzzy @a
-                                  x1 ← fuzzyRec @(𝐿 a)
-                                  return ((:&) x0 x1)
-                 ]
-       |]) 
   test
   -- FUTURE
   -- out $(thShowDecs ds₁)

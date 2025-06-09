@@ -7,8 +7,8 @@ import UVMHS.Future.TH
 import UVMHS.Future.TH.Deriving
 
 𝔱 "deriving:fuzzy" 
-  [| id @𝕊 $(thShowDecs $ createFuzzyInstance [] ''𝐿) |]
-  [| id @𝕊 $(thShowDecs $ 
+  [| 𝕤 $(thShowDecs $ createFuzzyInstance [] [] ''𝐿) |]
+  [| 𝕤 $(thShowDecs $ 
        [d| instance (Fuzzy a, Fuzzy (𝐿 a)) => Fuzzy (𝐿 a) where 
              fuzzy = do 
                d ← fuzzyDepth
@@ -23,8 +23,8 @@ import UVMHS.Future.TH.Deriving
        |]) 
   |]
 𝔱 "deriving:fuzzy"
-  [| id @𝕊 $(thShowDecs $ createFuzzyInstance [] ''(∧)) |]
-  [| id @𝕊 $(thShowDecs $ 
+  [| 𝕤 $(thShowDecs $ createFuzzyInstance [] [] ''(∧)) |]
+  [| 𝕤 $(thShowDecs $ 
        [d| instance (Fuzzy a, Fuzzy b) => Fuzzy (a ∧ b) where 
              fuzzy = wrchoose 
                [ (:*) one $ \ () → do 
@@ -36,4 +36,3 @@ import UVMHS.Future.TH.Deriving
   |]
 
 buildTests
-

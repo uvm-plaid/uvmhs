@@ -66,4 +66,4 @@ ds₁ = map thStripModuleNamesDec ^$
   |]
 
 ds₂ ∷ TH.DecsQ
-ds₂ = map thStripModuleNamesDec ^$ createFuzzyInstance [] ''𝐿
+ds₂ = map thStripModuleNamesDec ^$ createFuzzyInstance [] [] ''𝐿
