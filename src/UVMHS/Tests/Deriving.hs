@@ -24,13 +24,11 @@ import UVMHS.Future.TH.Deriving
   [| id @𝕊 $(thShowDecs $ createFuzzyInstance [] ''(∧)) |]
   [| id @𝕊 $(thShowDecs $ 
        [d| instance (Fuzzy a, Fuzzy b) => Fuzzy (a ∧ b) where 
-             fuzzy = do 
-               d ← fuzzyDepth
-               wrchoose 
-                 [ \ () → one :* do x0 ← fuzzy @a
-                                    x1 ← fuzzy @b
-                                    return ((:*) x0 x1)
-                 ]
+             fuzzy = wrchoose 
+               [ \ () → one :* do x0 ← fuzzy @a
+                                  x1 ← fuzzy @b
+                                  return ((:*) x0 x1)
+               ]
        |]) 
   |]
 

@@ -255,7 +255,7 @@ adtInfoCasesQ 𝒾 f = TH.LamCaseE ^$ mapMOn (adtInfoCons 𝒾) $ \ 𝒾C → do
        ← TH.NormalB ^$ f (return $ TH.VarE $ adtConInfoName 𝒾C) $ map (return ∘ TH.VarE) xs
   return $ TH.Match pat body []
 
-adtInfoConssQ ∷ ADTInfo → (TH.ExpQ → [TH.TypeQ] → TH.ExpQ) → [TH.ExpQ]
+adtInfoConssQ ∷ ADTInfo → (TH.ExpQ → [TH.TypeQ] → TH.Q a) → [TH.Q a]
 adtInfoConssQ 𝒾 f = mapOn (adtInfoCons 𝒾) $ \ 𝒾C → f (TH.varE $ adtConInfoName 𝒾C) $ map return $ adtConInfoArgTypes 𝒾C
 
 -----------------

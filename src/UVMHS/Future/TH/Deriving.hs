@@ -60,7 +60,7 @@ createFuzzyInstance recNamesS name = do
         where
           fuzzy = $(do
             d ← thGensymS "d"
-            es ← TH.listE $ adtInfoConssQ 𝒾 $ \ mk τs → do
+            anyRecs :* es ← split ∘ list ^$ exchange $ adtInfoConssQ 𝒾 $ \ mk τs → do
               (con :* (anyRec :* nonRec :* stmts)) 
                 ∷ TH.ExpQ ∧ (𝔹 ∧ ℕ64 ∧ 𝐼 TH.StmtQ)
                 ← evalRWST () mk $ 
@@ -77,10 +77,16 @@ createFuzzyInstance recNamesS name = do
               when (anyRec ⩓ nonRec ≡ zero) $ \ () →
                 fail $ "not ok to have only recursive fields in constructor: " ⧺ show anyRec ⧺ " " ⧺ show nonRec
               let weight = if anyRec then [| $(TH.varE d) |] else [| one |]
-              [| \ () → $(weight) :* $(TH.doE $ lazyList $ concat [stmts,single $ TH.noBindS [| return $con |]]) |]
-            [| do $(TH.varP d) ← fuzzyDepth
-                  wrchoose $(return es)
-             |])
+              e ← [| \ () → $(weight) :* $(TH.doE $ lazyList $ concat [stmts,single $ TH.noBindS [| return $con |]]) |]
+              return $ anyRec :* e
+            if or anyRecs
+            then
+              [| do $(TH.varP d) ← fuzzyDepth
+                    wrchoose $(return $ TH.ListE $ lazyList es)
+              |]
+            else
+              [| wrchoose $(return $ TH.ListE $ lazyList es)
+              |])
    |]
   where
     err_MSG_DUPLICATE_REC_NAMES ∷ () → [ℂ]
