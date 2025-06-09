@@ -59,8 +59,8 @@ thShowDecs decsQ = do
   let s = TH.pprint decs
   [| s |]
 
-thAllTermNamesTypeWith ∷ (TH.Name → 𝔹) → TH.Type → 𝑃 TH.Name
-thAllTermNamesTypeWith f = 
+thAllTermNamesFilteredBy ∷ (TH.Name → 𝔹) → TH.Type → 𝑃 TH.Name
+thAllTermNamesFilteredBy f = 
   let loop = \case
         TH.ForallT (_tyVarBndrs ∷ [TH.TyVarBndr TH.Specificity]) (_cxt ∷ TH.Cxt) (ty ∷ TH.Type) → loop ty
         TH.ForallVisT (_tyVarBndrs ∷ [TH.TyVarBndr ()]) (ty ∷ TH.Type) → loop ty
@@ -93,7 +93,7 @@ thAllTermNamesTypeWith f =
   in loop
 
 thAnyNameOccursInType ∷ 𝑃 TH.Name → TH.Type → 𝔹
-thAnyNameOccursInType names τ  = thAllTermNamesTypeWith (∈ names) τ ≢ null
+thAnyNameOccursInType names τ  = thAllTermNamesFilteredBy (∈ names) τ ≢ null
 
 ----------------
 -- ADTConInfo --
@@ -256,7 +256,7 @@ adtInfoCasesQ 𝒾 f = TH.LamCaseE ^$ mapMOn (adtInfoCons 𝒾) $ \ 𝒾C → do
   return $ TH.Match pat body []
 
 adtInfoConssQ ∷ ADTInfo → (TH.ExpQ → [TH.TypeQ] → TH.Q a) → [TH.Q a]
-adtInfoConssQ 𝒾 f = mapOn (adtInfoCons 𝒾) $ \ 𝒾C → f (TH.varE $ adtConInfoName 𝒾C) $ map return $ adtConInfoArgTypes 𝒾C
+adtInfoConssQ 𝒾 f = mapOn (adtInfoCons 𝒾) $ \ 𝒾C → f (TH.conE $ adtConInfoName 𝒾C) $ map return $ adtConInfoArgTypes 𝒾C
 
 -----------------
 -- ADTProdInfo --
