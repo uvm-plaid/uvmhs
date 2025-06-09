@@ -37,7 +37,9 @@ module UVMHS.Lib.Parser
   , pNewExpressionContext,pNewErrContext,pNewContext,pWithContextRendered,pNewWithContextRendered,pGetContextRendered
   , pManyContext,pOneOrMoreContext,pManySepByContext,pOneOrMoreSepByContext
   , runParser₀,parse,parseIO,parseIOMain
-  , tokenizeAndParse,tokenizeAndParseIO,tokenizeAndParseIOMain
+  , lexAndParse,lexAndParseIO,lexAndParseIOMain
+  , lexAndParseAnchored,lexAndParseAnchoredIO,lexAndParseAnchoredIOMain
+  , lexAndParseUnanchored,lexAndParseUnanchoredIO,lexAndParseUnanchoredIOMain
   -- * MIXFIX API
   , MixfixF(..)
   , onlyTerminalsF

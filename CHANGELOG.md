@@ -291,13 +291,74 @@
         pTokChar ∷ CParser TokenWSBasic ℂ
         pTokChar = cpShaped $ view charTWSBasicL
 
-        tokenizeAndParse ∷ (Eq u,Show u,Plus u,Eq o,Ord w,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u w → CParser w a → 𝕊 → (Doc ∨ Doc) ∨ a
-        tokenizeAndParse so lex xM s = do
+        lexAndParse ∷ (Eq u,Show u,Plus u,Eq o,Ord w,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u w → Parser w a → 𝕊 → (Doc ∨ Doc) ∨ a
+        lexAndParse so lex xM s = do
           case tokenize lex so $ tokens s of
             Inl d → Inl $ Inl d
             Inr ts → case parse xM so $ finalizeTokens ts of
               Inl d → Inl $ Inr d
               Inr x → Inr x
+        
+        lexAndParseIO ∷ (Eq u,Show u,Plus u,Eq o,Ord w,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u w → Parser w a → 𝕊 → IO a
+        lexAndParseIO so lex xM s = do
+          case lexAndParse so lex xM s of
+            Inl (Inl d) → do pprint $ ppErr "LEXING ERROR" ; pprint d ; abortIO
+            Inl (Inr d) → do pprint $ ppErr "PARSING ERROR" ; pprint d ; abortIO
+            Inr x → return x
+        
+        lexAndParseIOMain ∷ (Eq u,Show u,Plus u,Eq o,Ord w,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u w → Parser w a → 𝕊 → IO ()
+        lexAndParseIOMain so lex xM s = do
+          x ← lexAndParseIO so lex xM s
+          pprint $ ppVertical
+            [ ppHeader "Success"
+            , pretty x
+            ]
+        
+        lexAndParseAnchored ∷ (Eq u,Show u,Plus u,Eq o,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u TokenWSBasic → Parser TokenWSBasic a → 𝕊 → (Doc ∨ Doc) ∨ a
+        lexAndParseAnchored so lex xM s = do
+          case tokenize lex so $ tokens s of
+            Inl d → Inl $ Inl d
+            Inr ts → case parse xM so $ finalizeTokens $ blockifyTokensWSBasicAnchored ts of
+              Inl d → Inl $ Inr d
+              Inr x → Inr x
+        
+        lexAndParseAnchoredIO ∷ (Eq u,Show u,Plus u,Eq o,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u TokenWSBasic → Parser TokenWSBasic a → 𝕊 → IO a
+        lexAndParseAnchoredIO so lex xM s = do
+          case lexAndParseAnchored so lex xM s of
+            Inl (Inl d) → do pprint $ ppErr "LEXING ERROR" ; pprint d ; abortIO
+            Inl (Inr d) → do pprint $ ppErr "PARSING ERROR" ; pprint d ; abortIO
+            Inr x → return x
+        
+        lexAndParseAnchoredIOMain ∷ (Eq u,Show u,Plus u,Eq o,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u TokenWSBasic → Parser TokenWSBasic a → 𝕊 → IO ()
+        lexAndParseAnchoredIOMain so lex xM s = do
+          x ← lexAndParseAnchoredIO so lex xM s
+          pprint $ ppVertical
+            [ ppHeader "Success"
+            , pretty x
+            ]
+        
+        lexAndParseUnanchored ∷ (Eq u,Show u,Plus u,Eq o,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u TokenWSBasic → Parser TokenWSBasic a → 𝕊 → (Doc ∨ Doc) ∨ a
+        lexAndParseUnanchored so lex xM s = do
+          case tokenize lex so $ tokens s of
+            Inl d → Inl $ Inl d
+            Inr ts → case parse xM so $ finalizeTokens $ blockifyTokensWSBasicUnanchored ts of
+              Inl d → Inl $ Inr d
+              Inr x → Inr x
+        
+        lexAndParseUnanchoredIO ∷ (Eq u,Show u,Plus u,Eq o,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u TokenWSBasic → Parser TokenWSBasic a → 𝕊 → IO a
+        lexAndParseUnanchoredIO so lex xM s = do
+          case lexAndParseUnanchored so lex xM s of
+            Inl (Inl d) → do pprint $ ppErr "LEXING ERROR" ; pprint d ; abortIO
+            Inl (Inr d) → do pprint $ ppErr "PARSING ERROR" ; pprint d ; abortIO
+            Inr x → return x
+        
+        lexAndParseUnanchoredIOMain ∷ (Eq u,Show u,Plus u,Eq o,Pretty a) ⇒ 𝕊 → Lexer CharClass ℂ o u TokenWSBasic → Parser TokenWSBasic a → 𝕊 → IO ()
+        lexAndParseUnanchoredIOMain so lex xM s = do
+          x ← lexAndParseUnanchoredIO so lex xM s
+          pprint $ ppVertical
+            [ ppHeader "Success"
+            , pretty x
+            ]
 
 - changes to Lib.Annotated:
   - added:
