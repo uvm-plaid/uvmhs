@@ -62,4 +62,6 @@ dev = cleanExit $ do
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance ["a"] [] ''(∨))
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance [] ''OtherList)
   -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createFuzzyInstance ["a"] ''OtherList)
-  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createMonoidInstance ''(∧))
+  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createShrinkyInstance ''(∧))
+  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createShrinkyInstance ''(∨))
+  -- out $(thShowDecs $ map thStripModuleNamesDec ^$ createShrinkyInstance ''𝑆)

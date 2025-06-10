@@ -2,6 +2,7 @@ module UVMHS.Future.TH.Deriving where
 
 import UVMHS.Core
 import UVMHS.Lib.Fuzzy
+import UVMHS.Lib.Shrinky
 import UVMHS.Lib.Pretty
 import UVMHS.Future.TH
 
@@ -11,29 +12,29 @@ import qualified Language.Haskell.TH as TH
 -- DERIVING MONOID --
 ---------------------
 
-createMonoidInstance ∷ TH.Name → TH.DecsQ
-createMonoidInstance name = do
-  𝒾 ← adtProdInfo "createMonoidInstance" name
-  [d| instance
-        $(thTupsTQ $ mapOn (adtProdInfoAllConArgsQ 𝒾) $ \ τ → [t| Null $τ |])
-        ⇒
-        Null $(adtProdInfoFullTypeQ 𝒾)
-        where
-          null = $(adtProdInfoConsQ 𝒾 $ \ mk τs →
-            foldOnFrom τs mk $ \ τ eQ → [| $eQ (null @($τ)) |])
-      instance
-        $(thTupsTQ $ mapOn (adtProdInfoAllConArgsQ 𝒾) $ \ τ → [t| Append $τ |])
-        ⇒
-        Append $(adtProdInfoFullTypeQ 𝒾)
-        where
-          x ⧺ y = $(adtProdInfoLetQ 𝒾 [| x |] $ \ xs → adtProdInfoLetQ 𝒾 [| y |] $ \ ys →
-            adtProdInfoConsQ 𝒾 $ \ mk _τs →
-              foldOnFrom (zip xs ys) mk $ uncurry $ \ xᵢ yᵢ eQ → [| $eQ ($xᵢ ⧺ $yᵢ) |])
-      instance
-        $(thTupsTQ $ mapOn (adtProdInfoAllConArgsQ 𝒾) $ \ τ → [t| Monoid $τ |])
-        ⇒
-        Monoid $(adtProdInfoFullTypeQ 𝒾)
-   |]
+-- createMonoidInstance ∷ TH.Name → TH.DecsQ
+-- createMonoidInstance name = do
+--   𝒾 ← adtProdInfo "createMonoidInstance" name
+--   [d| instance
+--         $(thTupsTQ $ mapOn (adtProdInfoAllConArgsQ 𝒾) $ \ τ → [t| Null $τ |])
+--         ⇒
+--         Null $(adtProdInfoFullTypeQ 𝒾)
+--         where
+--           null = $(adtProdInfoConsQ 𝒾 $ \ mk τs →
+--             foldOnFrom τs mk $ \ τ eQ → [| $eQ (null @($τ)) |])
+--       instance
+--         $(thTupsTQ $ mapOn (adtProdInfoAllConArgsQ 𝒾) $ \ τ → [t| Append $τ |])
+--         ⇒
+--         Append $(adtProdInfoFullTypeQ 𝒾)
+--         where
+--           x ⧺ y = $(adtProdInfoLetQ 𝒾 [| x |] $ \ xs → adtProdInfoLetQ 𝒾 [| y |] $ \ ys →
+--             adtProdInfoConsQ 𝒾 $ \ mk _τs →
+--               foldOnFrom (zip xs ys) mk $ uncurry $ \ xᵢ yᵢ eQ → [| $eQ ($xᵢ ⧺ $yᵢ) |])
+--       instance
+--         $(thTupsTQ $ mapOn (adtProdInfoAllConArgsQ 𝒾) $ \ τ → [t| Monoid $τ |])
+--         ⇒
+--         Monoid $(adtProdInfoFullTypeQ 𝒾)
+--    |]
 
 --------------------
 -- DERIVING FUZZY --
@@ -59,14 +60,14 @@ createFuzzyInstance recVarNamesS recTyNamesS name = do
         Fuzzy $(adtInfoFullTypeQ 𝒾) 
         where
           fuzzy = $(do
-            d ← thGensymS "d"
+            d ← thGensym "d"
             anyConAnyRecFields :* anyConAllNonRecFields :* es ← unWriterT $ adtInfoConssQ 𝒾 $ \ mk τs → 
-              id @(WriterT (𝔹 ∧ 𝔹) QIO (TH.Exp)) $
+              id @(WriterT (𝔹 ∧ 𝔹) QIO TH.Exp) $
               UVMHS.Core.do
                 conQ :* (anyRecField :* stmts) ← evalRWST () mk $ retStateOut $ eachOn (withIndex τs) $ uncurry $ \ n τ → 
-                  id @(RWST () (𝔹 ∧ 𝐼 TH.StmtQ) (TH.ExpQ) (WriterT (𝔹 ∧ 𝔹) QIO) ()) $
+                  id @(RWST () (𝔹 ∧ 𝐼 TH.StmtQ) TH.ExpQ (WriterT (𝔹 ∧ 𝔹) QIO) ()) $
                   UVMHS.Core.do 
-                    x' ← qio $ thGensymN n
+                    x' ← qio $ thGensymN "x" n
                     modify $ \ eQ → [| $eQ $(TH.varE x') |]
                     isRec ← qio $ thAnyNameOccursInType recNames' ^$ τ
                     tellL fstL isRec
@@ -74,7 +75,7 @@ createFuzzyInstance recVarNamesS recTyNamesS name = do
                 tellL fstL anyRecField
                 tellL sndL $ not anyRecField
                 let weight = if anyRecField then [| $(TH.varE d) |] else [| one |]
-                qio [| (:*) $(weight) $ \ () → $(TH.doE $ lazyList $ concat [stmts,single $ TH.noBindS [| return $conQ |]]) |]
+                qio [| (:*) $(weight) $ \ () → $(TH.doE $ lazyList $ concat [stmts,single $ TH.noBindS [| return $ $conQ |]]) |]
             when (anyConAnyRecFields ⩓ not anyConAllNonRecFields) $ \ () → 
               fail𝕊 $ concat $ inbetween " " $ 
                 [ "createFuzzyInstance:"
@@ -90,11 +91,6 @@ createFuzzyInstance recVarNamesS recTyNamesS name = do
             else
               [| wrchoose $(return $ TH.ListE $ lazyList es)
               |])
-
-
-
-
-
    |]
   where
     err_MSG_DUPLICATE_REC_NAMES ∷ () → 𝕊
@@ -124,6 +120,32 @@ createFuzzyInstance recVarNamesS recTyNamesS name = do
       , show𝕊 $ dkeys nameMap
       ]
 
+createShrinkyInstance ∷ TH.Name → TH.DecsQ
+createShrinkyInstance name = do
+  𝒾 ← adtInfo "createShrinkyInstance" name
+  [d| instance 
+        $(thTupsTQ $ mapOn (adtInfoAllConArgsQ 𝒾) $ \ τ → [t| Shrinky $τ |])
+        ⇒
+        Shrinky $(adtInfoFullTypeQ 𝒾) 
+        where
+          shrink = $(evalStateT 0 $ adtInfoCasesQ 𝒾 $ \ mk xs → UVMHS.Core.do
+            let nxs ∷ ℕ64 ⇰ TH.ExpQ
+                nxs = assoc $ withIndex xs
+            es ← mapMOn (iter nxs) $ uncurry $ \ n x → UVMHS.Core.do
+              x' ← qio $ thGensym "x'"
+              let nxs' ∷ ℕ64 ⇰ TH.ExpQ
+                  nxs' = (n ↦ TH.varE x') ⩌ nxs
+                  conQ ∷ TH.ExpQ
+                  conQ = apply TH.appE mk $ lazyList $ dvals nxs'
+              qio $ 
+                [| do $(TH.varP x') ← shrink $x 
+                      return $ $(conQ)
+                |]
+            if isEmpty es
+            then qio [| null |]
+            else qio [| concat $(return $ TH.ListE $ lazyList es) |])
+              
+   |]
 
 -------------------
 -- DERIVING LENS --

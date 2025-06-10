@@ -218,6 +218,9 @@ retOut xM = do
   o :* _ ← hijack xM
   return o
 
+retWithOut ∷ ∀ o m a. (Monad m,MonadWriter o m) ⇒ m a → m (o ∧ a)
+retWithOut = hijack
+
 -- # State
 
 getL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → m a

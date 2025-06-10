@@ -13,17 +13,19 @@ import qualified Language.Haskell.TH.Syntax as TH
 
 import qualified Prelude as HS
 
-thGensymS ∷ 𝕊 → QIO TH.Name
-thGensymS s = TH.newName $ tohsChars s
+thGensym ∷ 𝕊 → QIO TH.Name
+thGensym s = TH.newName $ tohsChars s
 
-thGensymSN ∷ 𝕊 → ℕ64 → QIO TH.Name
-thGensymSN s n = thGensymS $ s ⧺ show𝕊 n
+thGensymN ∷ 𝕊 → ℕ64 → QIO TH.Name
+thGensymN s n = thGensym $ s ⧺ show𝕊 n
 
-thGensymN ∷ ℕ64 → QIO TH.Name
-thGensymN n = thGensymSN "x" n
+thGensymNextL ∷ (Monad m,MonadQIO m,MonadState s m) ⇒ s ⟢ ℕ64 → 𝕊 → m TH.Name
+thGensymNextL ℓ s = do
+  n ← nextL ℓ
+  qio $ thGensymN s n
 
-thGensym ∷ QIO TH.Name
-thGensym = thGensymS "x"
+thGensymNext ∷ (Monad m,MonadQIO m,MonadState ℕ64 m) ⇒ 𝕊 → m TH.Name
+thGensymNext = thGensymNextL refl
 
 thTupsT ∷ [TH.Type] → TH.Type
 thTupsT τs = apply TH.AppT (TH.TupleT (HS.length τs)) τs
@@ -246,14 +248,20 @@ adtInfoFullType 𝒾 = apply TH.AppT (TH.ConT (adtInfoName 𝒾)) $ adtInfoTypeA
 adtInfoFullTypeQ ∷ ADTInfo → TH.TypeQ
 adtInfoFullTypeQ = return ∘ adtInfoFullType
 
-adtInfoCasesQ ∷ ADTInfo → (TH.ExpQ → [TH.ExpQ] → TH.ExpQ) → TH.ExpQ
-adtInfoCasesQ 𝒾 f = TH.LamCaseE ^$ mapMOn (adtInfoCons 𝒾) $ \ 𝒾C → do
-  xs ← mapMOn (adtConInfoArgTypes 𝒾C) $ const $ thGensym
-  let pat ∷ TH.Pat
-      pat = TH.ConP (adtConInfoName 𝒾C) [] $ map TH.VarP xs
-  body ∷ TH.Body
-       ← TH.NormalB ^$ f (return $ TH.VarE $ adtConInfoName 𝒾C) $ map (return ∘ TH.VarE) xs
-  return $ TH.Match pat body []
+adtInfoCasesQL ∷ (Monad m,MonadQIO m,MonadState s m) ⇒ (s ⟢ ℕ64) → ADTInfo → (TH.ExpQ → [TH.ExpQ] → m TH.Exp) → m TH.Exp
+adtInfoCasesQL ℓ 𝒾 f = do
+  n ← getL ℓ
+  TH.LamCaseE ^$ mapMOn (adtInfoCons 𝒾) $ \ 𝒾C → do
+    putL ℓ n
+    xs ← mapMOn (adtConInfoArgTypes 𝒾C) $ const $ thGensymNextL ℓ "x"
+    let pat ∷ TH.Pat
+        pat = TH.ConP (adtConInfoName 𝒾C) [] $ map TH.VarP xs
+    body ∷ TH.Body
+         ← TH.NormalB ^$ f (return $ TH.ConE $ adtConInfoName 𝒾C) $ map (return ∘ TH.VarE) xs
+    return $ TH.Match pat body []
+
+adtInfoCasesQ ∷ (Monad m,MonadQIO m,MonadState ℕ64 m) ⇒ ADTInfo → (TH.ExpQ → [TH.ExpQ] → m TH.Exp) → m TH.Exp
+adtInfoCasesQ = adtInfoCasesQL refl
 
 adtInfoConssQ ∷ (Monad m,MonadQIO m) ⇒ ADTInfo → (TH.ExpQ → [TH.TypeQ] → m a) → m [a]
 adtInfoConssQ 𝒾 f = mapMOn (adtInfoCons 𝒾) $ \ 𝒾C → f (qio $ TH.conE $ adtConInfoName 𝒾C) $ map return $ adtConInfoArgTypes 𝒾C
@@ -310,13 +318,13 @@ adtProdInfoFullType 𝒾 = apply TH.AppT (TH.ConT (adtProdInfoName 𝒾)) $ adtP
 adtProdInfoFullTypeQ ∷ ADTProdInfo → TH.TypeQ
 adtProdInfoFullTypeQ = return ∘ adtProdInfoFullType
 
-adtProdInfoLetQ ∷ ADTProdInfo → TH.ExpQ → ([TH.ExpQ] → TH.ExpQ) → TH.ExpQ
-adtProdInfoLetQ 𝒾 e f = do
-  let 𝒾C = adtProdInfoCon 𝒾
-  xs ← mapMOn (adtConInfoArgTypes 𝒾C) $ const $ thGensym
-  [| let $(TH.conP (adtConInfoName 𝒾C) $ map TH.varP xs) = $e in 
-     $(f $ map TH.varE xs) 
-   |]
+-- adtProdInfoLetQ ∷ ADTProdInfo → TH.ExpQ → ([TH.ExpQ] → TH.ExpQ) → TH.ExpQ
+-- adtProdInfoLetQ 𝒾 e f = do
+--   let 𝒾C = adtProdInfoCon 𝒾
+--   xs ← mapMOn (adtConInfoArgTypes 𝒾C) $ const $ thGensym "x"
+--   [| let $(TH.conP (adtConInfoName 𝒾C) $ map TH.varP xs) = $e in 
+--      $(f $ map TH.varE xs) 
+--    |]
 
 adtProdInfoConsQ ∷ ADTProdInfo → (TH.ExpQ → [TH.TypeQ] → TH.ExpQ) → TH.ExpQ
 adtProdInfoConsQ 𝒾 f = 
