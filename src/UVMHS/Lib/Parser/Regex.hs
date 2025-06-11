@@ -698,11 +698,17 @@ lexerBasic syntax = Lexer (dfaBasic syntax) mkTokenBasic zero
 
 data IndentCommand = OpenIC | CloseIC | NewlineIC
 
+data BlockifyTokensEnv t = BlockifyTokensEnv
+  { blockifyTokensEnvIsNewline     ∷ t → 𝔹
+  , blockifyTokensEnvIsBlock       ∷ t → 𝔹
+  , blockifyTokensEnvMkIndentToken ∷ IndentCommand → t
+  }
+
 -- ... anchor ->| blah blah blah
 --                  blah
 --                  ^^^^
-blockifyTokens ∷ ∀ t. 𝐿 (AddBT Loc) → (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
-blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop null bot False False anchors₀ $ stream ts₀
+blockifyTokens ∷ ∀ t. BlockifyTokensEnv t → 𝐿 (AddBT Loc) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
+blockifyTokens γ anchors₀ ts₀ = vecC $ loop null bot False False anchors₀ $ stream ts₀
   where
     syntheticToken ∷ AddBT Loc → IndentCommand → PreParserToken t
     syntheticToken loc x =
@@ -712,7 +718,7 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
             NewlineIC → ppBG white $ ppFG grayLight $ ppString "‣"
           pc = ParserContext (LocRange loc loc) (eWindowL pcS) (eWindowR pcS) $ eWindowR pcS
       in
-      PreParserToken (mkIndentToken x) False pc
+      PreParserToken (blockifyTokensEnvMkIndentToken γ x) False pc
     loop ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
     loop prefix prefixLocRangeBumped isFreshBlock isAfterNewline = \case
       Nil → loopUnanchored prefix prefixLocRangeBumped isFreshBlock
@@ -740,7 +746,7 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
             , single t
             , loopAnchored null
                            (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd)
-                           (isBlock $ preParserTokenValue t)
+                           (blockifyTokensEnvIsBlock γ $ preParserTokenValue t)
                            False
                            locₜ
                            null
@@ -755,7 +761,7 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
           , single t
           , loopUnanchored null
                            (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd)
-                           (isBlock $ preParserTokenValue t)
+                           (blockifyTokensEnvIsBlock γ $ preParserTokenValue t)
                            ts'
           ]
     loopAnchored ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → AddBT Loc → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
@@ -812,7 +818,7 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
                 -- keep going with new anchor
                 , loopAnchored null
                                (LocRange prefixLocRangeBumpedEnd' prefixLocRangeBumpedEnd')
-                               (isBlock $ preParserTokenValue t)
+                               (blockifyTokensEnvIsBlock γ $ preParserTokenValue t)
                                False
                                anchor'
                                anchors'
@@ -825,7 +831,7 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
          loopAnchored (prefix ⧺ single t)
                       (prefixLocRangeBumped ⊔ bumpColEnd₂ (parserContextLocRange $ preParserTokenContext t))
                       isFreshBlock
-                      (isAfterNewline ⩔ isNewline (preParserTokenValue t))
+                      (isAfterNewline ⩔ blockifyTokensEnvIsNewline γ (preParserTokenValue t))
                       anchor
                       anchors
                       ts'
@@ -892,10 +898,14 @@ blockifyTokens anchors₀ isNewline isBlock mkIndentToken ts₀ = vecC $ loop nu
         | otherwise → error "impossible"
 
 blockifyTokensTLAnchored ∷ (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
-blockifyTokensTLAnchored = blockifyTokens $ single $ AddBT bot
+blockifyTokensTLAnchored isNewline isBlock mkIndentToken = 
+  let γ = BlockifyTokensEnv isNewline isBlock mkIndentToken
+  in blockifyTokens γ $ single $ AddBT bot
 
 blockifyTokensTLUnanchored ∷ (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
-blockifyTokensTLUnanchored = blockifyTokens null
+blockifyTokensTLUnanchored isNewline isBlock mkIndentToken = 
+  let γ = BlockifyTokensEnv isNewline isBlock mkIndentToken
+  in blockifyTokens γ null
 
 -- The Language --
 

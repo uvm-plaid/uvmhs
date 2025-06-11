@@ -134,7 +134,7 @@ abortIO ∷ IO a
 abortIO = abortIOCode $ 𝕫64 1
 
 exitIO ∷ IO a
-exitIO = HS.exitWith $ HS.ExitSuccess
+exitIO = HS.exitWith HS.ExitSuccess
 
 failIO ∷ 𝕊 → IO a
 failIO = HS.fail ∘ tohsChars

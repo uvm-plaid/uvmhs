@@ -20,6 +20,24 @@ Improve:
 - Rethink tohs/frhs, consider `toChars` and `fromChars`.
 
 New Feature:
+- Pretty Printer Library:
+  - add a flag to the pretty printer context for "in block" vs "not in block".
+    E.g., when printing an application, you can print this:
+    
+        thing1 thing2 thinge
+
+    as:
+
+        thing1
+        thing2
+        thing3
+
+    when not in a block, but when in a block, you should print as
+
+        thing1
+          thing2
+          thing3
+
 - Parser Library: 
   - allow for two categories of errors, "invalid token" error (as
     is not), and "validation error". Validation error should underline in red
@@ -31,6 +49,7 @@ New Feature:
   - combine `<parser>` and `<parser>WS` functionality into a single interface
     (likely some sort of typeclass)
   - lexer doesn't properly support character tokens
+  - teach the lexer blockifier about parentheses
 - Substitution Library:
   - in SubstElem type, support delayed shifts in addition to delayed incrs.
     Right now the representation is `s ⇰ ℕ64`, which means "for each ⟨s,n⟩, do
