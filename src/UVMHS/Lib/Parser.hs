@@ -6,7 +6,7 @@ module UVMHS.Lib.Parser
   , ParserErrorInfo(..)
   , ParserError(..)
   , PreParserToken(..)
-  , ParserToken(..),preTokens,finalizeTokens,tokens
+  , ParserToken(..),preTokens,finalizeTokens,tokens,renderParserTokens
   -- * LEXER API
   -- ** REGEX
   , CharClass(..)
@@ -25,6 +25,8 @@ module UVMHS.Lib.Parser
   , TokenClassWSBasic(..)
   , TokenWSBasic(..)
   , LexerWSBasicSyntax(..),lexerWSBasic
+  , lexerWSBasicSyntaxPunsMk,lexerWSBasicSyntaxKeysMk,lexerWSBasicSyntaxPrmsMk
+  , lexerWSBasicSyntaxOprsMk,lexerWSBasicSyntaxBlocksMk
   -- ** BLOCKIFY
   , blockifyTokensWSBasicAnchored,blockifyTokensWSBasicUnanchored
   -- * PARSER API

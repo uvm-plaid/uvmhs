@@ -31,6 +31,10 @@ import qualified GHC.IsList as IsList
 import UVMHS.Future.TH
 import UVMHS.Future.TH.Deriving
 
+import qualified UVMHS.Tests.Lexer as TestLexer
+
+import UVMHS.Tests.Lexer hiding (lexer)
+
 main ∷ IO ()
 main = out "<UVMHS>"
 
@@ -43,6 +47,7 @@ test = do
     [ "UVMHS.Tests.Core"
     , "UVMHS.Tests.Substitution"
     , "UVMHS.Tests.Deriving"
+    , "UVMHS.Tests.Lexer"
     ])
   -- eachOn (upto 100) $ \ s → do
   --   rngSeed s
@@ -55,6 +60,7 @@ test = do
 dev ∷ IO ()
 dev = cleanExit $ do
   test
+  pprint $ map renderParserTokens $ tokenizeWSAnchored TestLexer.lexer "<>" (tokens "a\nb\nc")
   -- FUTURE
   -- out $(thShowDecs ds₁)
   -- out $(thShowDecs ds₂)

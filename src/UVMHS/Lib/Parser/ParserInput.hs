@@ -27,6 +27,9 @@ data ParserToken t = ParserToken
 makeLenses ''ParserToken
 makePrettySum ''ParserToken
 
+renderParserTokens ∷ (ToIter (ParserToken t) u) ⇒ u → Doc
+renderParserTokens = concat ∘ map (concat ∘ parserContextDisplayL ∘ parserTokenContext) ∘ iter
+
 renderNLDisplay ∷ Doc
 renderNLDisplay = ppString "\n"
 

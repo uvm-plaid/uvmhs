@@ -3,11 +3,11 @@ module Examples.Lang.ArithBlocks where
 import UVMHS
 
 syntax ∷ LexerWSBasicSyntax
-syntax = null
-  { lexerWSBasicSyntaxPuns = pow ["(",")"]
-  , lexerWSBasicSyntaxOprs = pow ["==","+","*","-","^","!"]
-  , lexerWSBasicSyntaxBlocks = pow ["local"]
-  }
+syntax = concat
+  [ lexerWSBasicSyntaxPunsMk   $ pow ["(",")"]
+  , lexerWSBasicSyntaxOprsMk   $ pow ["==","+","*","-","^","!"]
+  , lexerWSBasicSyntaxBlocksMk $ pow ["local"]
+  ]
 
 lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
 lexer = lexerWSBasic syntax

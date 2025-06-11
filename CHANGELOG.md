@@ -158,6 +158,12 @@
           oflush
           return x
 
+- changes to Lib.Parser.ParserToken:
+  - added:
+  
+        renderParserTokens ∷ (ToIter (ParserToken t) u) ⇒ u → Doc
+        renderParserTokens = concat ∘ map (concat ∘ parserContextDisplayL ∘ parserTokenContext) ∘ iter
+
 - changes to Lib.Parser.Core:
   - renamed:
     - `Parser` to `RawParser`
@@ -195,6 +201,21 @@
   - renamed:
     - `blockifyTokensTL` to `blockifyTokensTLAnchored`
   - added:
+
+        lexerWSBasicSyntaxPunsMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+        lexerWSBasicSyntaxPunsMk puns = null { lexerWSBasicSyntaxPuns = puns }
+        
+        lexerWSBasicSyntaxKeysMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+        lexerWSBasicSyntaxKeysMk puns = null { lexerWSBasicSyntaxKeys = puns }
+        
+        lexerWSBasicSyntaxPrmsMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+        lexerWSBasicSyntaxPrmsMk puns = null { lexerWSBasicSyntaxPrms = puns }
+        
+        lexerWSBasicSyntaxOprsMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+        lexerWSBasicSyntaxOprsMk puns = null { lexerWSBasicSyntaxOprs = puns }
+        
+        lexerWSBasicSyntaxBlocksMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+        lexerWSBasicSyntaxBlocksMk puns = null { lexerWSBasicSyntaxBlocks = puns }
     
         blockifyTokensWSBasicUnanchored ∷ 𝕍 (PreParserToken TokenWSBasic) → 𝕍 (PreParserToken TokenWSBasic)
         blockifyTokensWSBasicUnanchored = blockifyTokensTLAnchored (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic

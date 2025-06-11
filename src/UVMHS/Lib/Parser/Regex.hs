@@ -702,7 +702,45 @@ data BlockifyTokensEnv t = BlockifyTokensEnv
   { blockifyTokensEnvIsNewline     ∷ t → 𝔹
   , blockifyTokensEnvIsBlock       ∷ t → 𝔹
   , blockifyTokensEnvMkIndentToken ∷ IndentCommand → t
+  , blockifyTokensEnvIsLParen      ∷ t → 𝔹
+  , blockifyTokensEnvIsRParen      ∷ t → 𝔹
   }
+
+-- NOTES
+-- things that are tracked:
+-- - the prefix (skip tokens)
+-- - the location begin/end of the prefix
+-- - whether or not the previous non-skip token was a block token
+-- - whether or not this token is the first non-skip token after a newline
+-- - a stack of anchors
+--
+-- NEW
+-- - anchored mode: a stack of (anchor ∧ open-paren-count)
+-- - unanchored mode: open-paren-count
+-- - any mode: count of all open parens in stack
+-- - if in unanchored mode: just track open/close parens
+-- - if in anchored mode:
+--   - if you see an open paren, just add it to open-paren-count
+--   - if you see a close paren
+--     - if open-paren-count is zero, emit a close, pop the anchor stack, and
+--       try again recursively
+--     - if open-paren-count is larger than zero, just decrement it and
+--       continue
+--
+-- →block⋅
+--    thing ( block
+--              stuff)
+--    thing
+--
+-- ⇒block
+--   →thing⋅( block
+--               stuff)
+--    thing
+--
+-- ⇒block
+--   →thing→(⋅block
+--               stuff)
+--    thing
 
 -- ... anchor ->| blah blah blah
 --                  blah
@@ -716,7 +754,9 @@ blockifyTokens γ anchors₀ ts₀ = vecC $ loop null bot False False anchors₀
             OpenIC → ppBG white $ ppFG grayLight $ ppString "⦗"
             CloseIC → ppBG white $ ppFG grayLight $ ppString "⦘"
             NewlineIC → ppBG white $ ppFG grayLight $ ppString "‣"
-          pc = ParserContext (LocRange loc loc) (eWindowL pcS) (eWindowR pcS) $ eWindowR pcS
+          eL = eWindowL pcS
+          eR = eWindowR pcS
+          pc = ParserContext (LocRange loc loc) eL eR eR
       in
       PreParserToken (blockifyTokensEnvMkIndentToken γ x) False pc
     loop ∷ 𝐼C (PreParserToken t) → LocRange → 𝔹 → 𝔹 → 𝐿 (AddBT Loc) → 𝑆 (PreParserToken t) → 𝐼C (PreParserToken t)
@@ -897,15 +937,11 @@ blockifyTokens γ anchors₀ ts₀ = vecC $ loop null bot False False anchors₀
           ]
         | otherwise → error "impossible"
 
-blockifyTokensTLAnchored ∷ (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
-blockifyTokensTLAnchored isNewline isBlock mkIndentToken = 
-  let γ = BlockifyTokensEnv isNewline isBlock mkIndentToken
-  in blockifyTokens γ $ single $ AddBT bot
+blockifyTokensTLAnchored ∷ BlockifyTokensEnv t → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
+blockifyTokensTLAnchored γ = blockifyTokens γ $ single $ AddBT bot
 
-blockifyTokensTLUnanchored ∷ (t → 𝔹) → (t → 𝔹) → (IndentCommand → t) → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
-blockifyTokensTLUnanchored isNewline isBlock mkIndentToken = 
-  let γ = BlockifyTokensEnv isNewline isBlock mkIndentToken
-  in blockifyTokens γ null
+blockifyTokensTLUnanchored ∷ BlockifyTokensEnv t → 𝕍 (PreParserToken t) → 𝕍 (PreParserToken t)
+blockifyTokensTLUnanchored γ = blockifyTokens γ null
 
 -- The Language --
 
@@ -1009,6 +1045,21 @@ instance Append LexerWSBasicSyntax where
     LexerWSBasicSyntax (puns₁ ⧺ puns₂) (keys₁ ⧺ keys₂) (prms₁ ⧺ prms₂) (oprs₁ ⧺ oprs₂) $ blocks₁ ⧺ blocks₂
 instance Monoid LexerWSBasicSyntax
 
+lexerWSBasicSyntaxPunsMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+lexerWSBasicSyntaxPunsMk puns = null { lexerWSBasicSyntaxPuns = puns }
+
+lexerWSBasicSyntaxKeysMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+lexerWSBasicSyntaxKeysMk puns = null { lexerWSBasicSyntaxKeys = puns }
+
+lexerWSBasicSyntaxPrmsMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+lexerWSBasicSyntaxPrmsMk puns = null { lexerWSBasicSyntaxPrms = puns }
+
+lexerWSBasicSyntaxOprsMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+lexerWSBasicSyntaxOprsMk puns = null { lexerWSBasicSyntaxOprs = puns }
+
+lexerWSBasicSyntaxBlocksMk ∷ 𝑃 𝕊 → LexerWSBasicSyntax
+lexerWSBasicSyntaxBlocksMk puns = null { lexerWSBasicSyntaxBlocks = puns }
+
 lexerWSBasic ∷ LexerWSBasicSyntax → Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
 lexerWSBasic syntax = Lexer (dfaWSBasic syntax) mkTokenWSBasic zero
 
@@ -1019,10 +1070,16 @@ mkIndentTokenWSBasic = \case
   NewlineIC → DelimiterTWSBasic
 
 blockifyTokensWSBasicAnchored ∷ 𝕍 (PreParserToken TokenWSBasic) → 𝕍 (PreParserToken TokenWSBasic)
-blockifyTokensWSBasicAnchored = blockifyTokensTLAnchored (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic
+blockifyTokensWSBasicAnchored = blockifyTokensTLAnchored $ 
+  BlockifyTokensEnv 
+    (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic
+    ((≡) $ SyntaxTWSBasic "(") ((≡) $ SyntaxTWSBasic ")")
 
 blockifyTokensWSBasicUnanchored ∷ 𝕍 (PreParserToken TokenWSBasic) → 𝕍 (PreParserToken TokenWSBasic)
-blockifyTokensWSBasicUnanchored = blockifyTokensTLAnchored (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic
+blockifyTokensWSBasicUnanchored = blockifyTokensTLAnchored $
+    BlockifyTokensEnv
+      (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic
+      ((≡) $ SyntaxTWSBasic "(") ((≡) $ SyntaxTWSBasic ")")
 
 tokenizeWSAnchored ∷
   ∀ c t o u. (Show u,Ord c,Ord t,Pretty t,Classified c t,Eq o,Eq u,Plus u)
