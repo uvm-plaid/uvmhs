@@ -9,22 +9,707 @@ import UVMHS.Lib.Testing
 syntax ∷ LexerWSBasicSyntax
 syntax = concat
   [ lexerWSBasicSyntaxPunsMk   $ pow ["(",")"]
-  , lexerWSBasicSyntaxOprsMk   $ pow ["+"]
   , lexerWSBasicSyntaxBlocksMk $ pow ["local"]
   ]
 
 lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
 lexer = lexerWSBasic syntax
 
-lexerTest ∷ 𝕊 → 𝕊
-lexerTest s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSAnchored lexer "" $ tokens s
+lexerTestA ∷ 𝕊 → 𝕊
+lexerTestA s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSAnchored lexer "" $ tokens s
 
-𝔱 "lexer" 
-  [| lexerTest "a\nb\nc" |] 
+lexerTestU ∷ 𝕊 → 𝕊
+lexerTestU s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnanchored lexer "" $ tokens s
+
+-- ======== --
+-- ANCHORED --
+-- ======== --
+
+-----------------------
+-- top level newline --
+-----------------------
+
+𝔱 "lexer:anchored:top-level-newline" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       ] 
+  |] 
   [| concat $ inbetween "\n" 
-       [ "a"
-       , "‣b"
-       , "‣c" 
+       [ "a b;"
+       , "c d;"
+       , "e f;" 
+       , "g h" 
+       ]
+  |]
+-- TODO: how do we want this one to lex? as written? or error?
+𝔱 "lexer:anchored:top-level-newline" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "  a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "  a b;"
+       , "c d;"
+       , "e f;" 
+       , "g h"
+       ]
+  |]
+𝔱 "lexer:anchored:top-level-newline" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "  c d"
+       , "e f" 
+       , "g h" 
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "  c d;"
+       , "e f;" 
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:top-level-newline" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "  e f" 
+       , "g h"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "c d"
+       , "  e f;" 
+       , "g h"
+       ]
+  |]
+𝔱 "lexer:anchored:top-level-newline" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "c d"
+       , "e f" 
+       , "g h"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{};"
+       , "c d;"
+       , "e f;" 
+       , "g h"
+       ]
+  |]
+𝔱 "lexer:anchored:top-level-newline" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       , "local"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "c d;"
+       , "e f;" 
+       , "g h;"
+       , "local{}"
+       ]
+  |]
+𝔱 "lexer:anchored:top-level-newline" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       , "local"
+       , "  i"
+       , "  local" 
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "c d;"
+       , "e f;" 
+       , "g h;"
+       , "local{"
+       , "  i;"
+       , "  local{}}"
+       ]
+  |]
+𝔱 "lexer:anchored:top-level-newline" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       , "local"
+       , "  local" 
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "c d;"
+       , "e f;" 
+       , "g h;"
+       , "local{"
+       , "  local{}}"
+       ]
+  |]
+
+----------------------
+-- block same line  --
+----------------------
+
+𝔱 "lexer:anchored:block-same-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "e f" 
+       , "g h"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{ c d};"
+       , "e f;"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-same-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "  e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{ c d}"
+       , "  e f;"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-same-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "      e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{ c d;"
+       , "      e f};"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-same-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "        e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{ c d"
+       , "        e f};"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-same-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "      e f"
+       , "  g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{ c d;"
+       , "      e f}"
+       , "  g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-same-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "e f"
+       , "  g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{ c d};"
+       , "e f"
+       , "  g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-same-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    local c d"
+       , "  e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{"
+       , "    local{ c d}}"
+       , "  e f;"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-same-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    local"
+       , "  e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{"
+       , "    local{}}"
+       , "  e f;"
+       , "g h" 
+       ]
+  |]
+
+---------------------
+-- block next line --
+---------------------
+
+𝔱 "lexer:anchored:block-next-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    c d"
+       , "e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{"
+       , "    c d};"
+       , "e f;"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-next-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    c d"
+       , "    e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{"
+       , "    c d;"
+       , "    e f};"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-next-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    c d"
+       , "    e f"
+       , "  g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{"
+       , "    c d;"
+       , "    e f}"
+       , "  g h" 
+       ]
+  |]
+𝔱 "lexer:anchored:block-next-line" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    c d"
+       , "    e f"
+       , "      g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b;"
+       , "local{"
+       , "    c d;"
+       , "    e f"
+       , "      g h}" 
+       ]
+  |]
+
+-- ========== --
+-- UNANCHORED --
+-- ========== --
+
+-----------------------
+-- top level newline --
+-----------------------
+
+𝔱 "lexer:unanchored:top-level-newline" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h" 
+       ]
+  |]
+-- TODO: how do we want this one to lex? as written? or error?
+𝔱 "lexer:unanchored:top-level-newline" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "  a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "  a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       ]
+  |]
+𝔱 "lexer:unanchored:top-level-newline" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "  c d"
+       , "e f" 
+       , "g h" 
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "  c d"
+       , "e f" 
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:top-level-newline" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "  e f" 
+       , "g h"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "c d"
+       , "  e f" 
+       , "g h"
+       ]
+  |]
+𝔱 "lexer:unanchored:top-level-newline" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "c d"
+       , "e f" 
+       , "g h"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{}"
+       , "c d"
+       , "e f" 
+       , "g h"
+       ]
+  |]
+𝔱 "lexer:unanchored:top-level-newline" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       , "local"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       , "local{}"
+       ]
+  |]
+𝔱 "lexer:unanchored:top-level-newline" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       , "local"
+       , "  i"
+       , "  local" 
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       , "local{"
+       , "  i;"
+       , "  local{}}"
+       ]
+  |]
+𝔱 "lexer:unanchored:top-level-newline" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       , "local"
+       , "  local" 
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       , "local{"
+       , "  local{}}"
+       ]
+  |]
+
+----------------------
+-- block same line  --
+----------------------
+
+𝔱 "lexer:unanchored:block-same-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "e f" 
+       , "g h"
+       ] 
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{ c d}"
+       , "e f"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-same-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "  e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{ c d}"
+       , "  e f"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-same-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "      e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{ c d;"
+       , "      e f}"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-same-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "        e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{ c d"
+       , "        e f}"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-same-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "      e f"
+       , "  g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{ c d;"
+       , "      e f}"
+       , "  g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-same-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local c d"
+       , "e f"
+       , "  g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{ c d}"
+       , "e f"
+       , "  g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-same-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    local c d"
+       , "  e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{"
+       , "    local{ c d}}"
+       , "  e f"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-same-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    local"
+       , "  e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{"
+       , "    local{}}"
+       , "  e f"
+       , "g h" 
+       ]
+  |]
+
+---------------------
+-- block next line --
+---------------------
+
+𝔱 "lexer:unanchored:block-next-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    c d"
+       , "e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{"
+       , "    c d}"
+       , "e f"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-next-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    c d"
+       , "    e f"
+       , "g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{"
+       , "    c d;"
+       , "    e f}"
+       , "g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-next-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    c d"
+       , "    e f"
+       , "  g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{"
+       , "    c d;"
+       , "    e f}"
+       , "  g h" 
+       ]
+  |]
+𝔱 "lexer:unanchored:block-next-line" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "a b"
+       , "local"
+       , "    c d"
+       , "    e f"
+       , "      g h" 
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "a b"
+       , "local{"
+       , "    c d;"
+       , "    e f"
+       , "      g h}" 
        ]
   |]
 

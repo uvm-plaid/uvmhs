@@ -751,9 +751,9 @@ blockifyTokens γ anchors₀ ts₀ = vecC $ loop null bot False False anchors₀
     syntheticToken ∷ AddBT Loc → IndentCommand → PreParserToken t
     syntheticToken loc x =
       let pcS = case x of
-            OpenIC → ppBG white $ ppFG grayLight $ ppString "⦗"
-            CloseIC → ppBG white $ ppFG grayLight $ ppString "⦘"
-            NewlineIC → ppBG white $ ppFG grayLight $ ppString "‣"
+            OpenIC → ppBG white $ ppFG grayLight $ ppString "{"
+            CloseIC → ppBG white $ ppFG grayLight $ ppString "}"
+            NewlineIC → ppBG white $ ppFG grayLight $ ppString ";"
           eL = eWindowL pcS
           eR = eWindowR pcS
           pc = ParserContext (LocRange loc loc) eL eR eR
@@ -781,8 +781,8 @@ blockifyTokens γ anchors₀ ts₀ = vecC $ loop null bot False False anchors₀
             --
             --     ... <block> <token>
             --                 ^^^^^^^
-            [ prefix
-            , single $ syntheticToken prefixLocRangeBumpedEnd OpenIC
+            [ single $ syntheticToken prefixLocRangeBumpedEnd OpenIC
+            , prefix
             , single t
             , loopAnchored null
                            (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd)
@@ -813,11 +813,10 @@ blockifyTokens γ anchors₀ ts₀ = vecC $ loop null bot False False anchors₀
               then null
               else case anchors' of
                 Nil → null
-                (_ :& anchors'') → concat
+                _ :& anchors'' → concat
                   [ single $ syntheticToken (locRangeBegin prefixLocRangeBumped) CloseIC
                   , loop' anchors''
                   ]
-            -- () = pptrace $ ppHorizontal [ppBD $ ppString "COUNT",pretty $ count prefix]
         in concat
           [ if isFreshBlock
               then concat
@@ -849,10 +848,10 @@ blockifyTokens γ anchors₀ ts₀ = vecC $ loop null bot False False anchors₀
                     --                   ^^^^^^^
                     else anchor :* anchors
               in concat
-                -- record the prefix
-                [ prefix'
                 -- record an “open” if we have a new anchor
-                , if weHaveANewAnchor then single $ syntheticToken prefixLocRangeBumpedEnd' OpenIC else null
+                [ if weHaveANewAnchor then single $ syntheticToken prefixLocRangeBumpedEnd' OpenIC else null
+                -- record the prefix
+                , prefix'
                 -- record the token
                 , single t
                 -- keep going with new anchor
@@ -909,10 +908,10 @@ blockifyTokens γ anchors₀ ts₀ = vecC $ loop null bot False False anchors₀
               , single $ syntheticToken prefixLocRangeBumpedBegin CloseIC
               ]
             else null
-          -- record the prefix
-          , prefix
           -- record a “newline”
           , single $ syntheticToken prefixLocRangeBumpedEnd NewlineIC
+          -- record the prefix
+          , prefix
           -- keep going
           , recordTokenKeepGoing null (LocRange prefixLocRangeBumpedEnd prefixLocRangeBumpedEnd) False
           ]
@@ -1076,7 +1075,7 @@ blockifyTokensWSBasicAnchored = blockifyTokensTLAnchored $
     ((≡) $ SyntaxTWSBasic "(") ((≡) $ SyntaxTWSBasic ")")
 
 blockifyTokensWSBasicUnanchored ∷ 𝕍 (PreParserToken TokenWSBasic) → 𝕍 (PreParserToken TokenWSBasic)
-blockifyTokensWSBasicUnanchored = blockifyTokensTLAnchored $
+blockifyTokensWSBasicUnanchored = blockifyTokensTLUnanchored $
     BlockifyTokensEnv
       (shape newlineTWSBasicL) (shape blockTWSBasicL) mkIndentTokenWSBasic
       ((≡) $ SyntaxTWSBasic "(") ((≡) $ SyntaxTWSBasic ")")
