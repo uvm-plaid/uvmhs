@@ -35,7 +35,7 @@ runFuzzyMRG γ xM = mkState $ \ ℊ → runFuzzyM γ ℊ xM
 fuzzyDec ∷ FuzzyM a → FuzzyM a
 fuzzyDec xM = do
   d ← askL fuzzyEnvDepthL
-  let _ = assert $ d ≢ 0
+  assertM $ \ () → d ≢ 0
   localL fuzzyEnvDepthL (d - 1) xM
 
 fuzzyRec ∷ (Fuzzy a) ⇒ FuzzyM a

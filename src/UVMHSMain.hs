@@ -35,6 +35,9 @@ import qualified UVMHS.Tests.Lexer as TestLexer
 
 import UVMHS.Tests.Lexer hiding (lexer)
 
+import UVMHS.Lib.Parser.Blockify
+import UVMHS.Lib.Parser.Regex (mkIndentTokenWSBasic,blockTWSBasicL)
+
 main ∷ IO ()
 main = out "<UVMHS>"
 
@@ -57,10 +60,32 @@ test = do
   --     , "UVMHS.Tests.Substitution"
   --     ])
 
+blockifyArgs ∷ 𝔹 → 𝑆 (PreParserToken TokenWSBasic) → BlockifyArgs TokenWSBasic
+blockifyArgs anchorTL = BlockifyArgs anchorTL mkIndentTokenWSBasic (NewlineTWSBasic "\n") (shape blockTWSBasicL) isBracket closeBracket
+  where
+    isBracket t = (∈♭) t $ pow $ map SyntaxTWSBasic ["(",",",")"]
+    closeBracket = SyntaxTWSBasic "(" ↦ BlockifyBracket (single $ SyntaxTWSBasic ",") (single $ SyntaxTWSBasic ")")
+
+
 dev ∷ IO ()
 dev = cleanExit $ do
   test
-  pprint $ map renderParserTokens $ tokenizeWSAnchored TestLexer.lexer "<>" (tokens "a\nb\nc")
+  let s = concat $ inbetween "\n"
+       [ "a b"
+       , "c d"
+       , "e f" 
+       , "g h"
+       ] 
+  let r₁ = map renderParserTokens $ 
+        tokenizeWSUnanchored TestLexer.lexer "<>" $ tokens s
+      r₂ = do
+        ts ← tokenize TestLexer.lexer "<>" $ tokens s
+        ts' ← blockify $ blockifyArgs False $ stream ts
+        return $ renderParserTokens $ finalizeTokens $ vec ts'
+  pprint r₁
+  pprint r₂
+  pprint $ r₁ ≡ r₂
+
   -- FUTURE
   -- out $(thShowDecs ds₁)
   -- out $(thShowDecs ds₂)

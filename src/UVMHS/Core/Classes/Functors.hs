@@ -274,6 +274,20 @@ when = \ b f → if b then f () else skip
 whenM ∷ (Monad m) ⇒ m 𝔹 → (() → m ()) → m ()
 whenM = \ bM xM → do b ← bM ; when b xM
 
+assertM ∷ (Monad m) ⇒ (() → 𝔹) → m ()
+#ifdef __GLASGOW_HASKELL_ASSERTS_IGNORED__
+assertM = \ _ → skip
+#else
+assertM = \ b → let _ = assert b in skip
+#endif
+
+assertMM ∷ (Monad m) ⇒ (() → m 𝔹) → m ()
+#ifdef __GLASGOW_HASKELL_ASSERTS_IGNORED__
+assertMM = \ _ → skip
+#else
+assertMM = \ bM → do b ← bM () ; assertM $ \ () → b
+#endif
+
 -- Compat --
 
 newtype ToHSM (m ∷ ★ → ★) (a ∷ ★) = ToHSM { unToHSM ∷ m a }

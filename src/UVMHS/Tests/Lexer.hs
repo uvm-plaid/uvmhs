@@ -367,6 +367,101 @@ lexerTestU s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnancho
        ]
   |]
 
+-- corner cases --
+
+𝔱 "lexer:anchored:corner-cases" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ ""
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       ]
+  |]
+𝔱 "lexer:anchored:corner-cases" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ ""
+       , "a"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "a"
+       ]
+  |]
+𝔱 "lexer:anchored:corner-cases" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ ""
+       , "  a"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "  a"
+       ]
+  |]
+𝔱 "lexer:anchored:corner-cases" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ ""
+       , "a"
+       , "b"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "a;"
+       , "b"
+       ]
+  |]
+𝔱 "lexer:anchored:corner-cases" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ ""
+       , "  a"
+       , "b"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "  a;"
+       , "b"
+       ]
+  |]
+𝔱 "lexer:anchored:corner-cases" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ ""
+       , "local"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "local{}"
+       ]
+  |]
+𝔱 "lexer:anchored:corner-cases" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ ""
+       , "  local"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "  local{}"
+       ]
+  |]
+𝔱 "lexer:anchored:corner-cases" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ ""
+       , "  local"
+       , "local"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "  local{};"
+       , "local{}"
+       ]
+  |]
+
 -- ========== --
 -- UNANCHORED --
 -- ========== --
@@ -710,6 +805,101 @@ lexerTestU s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnancho
        , "    c d;"
        , "    e f"
        , "      g h}" 
+       ]
+  |]
+
+-- corner cases --
+
+𝔱 "lexer:unanchored:corner-cases" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ ""
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       ]
+  |]
+𝔱 "lexer:unanchored:corner-cases" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ ""
+       , "a"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "a"
+       ]
+  |]
+𝔱 "lexer:unanchored:corner-cases" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ ""
+       , "  a"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "  a"
+       ]
+  |]
+𝔱 "lexer:unanchored:corner-cases" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ ""
+       , "a"
+       , "b"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "a"
+       , "b"
+       ]
+  |]
+𝔱 "lexer:unanchored:corner-cases" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ ""
+       , "  a"
+       , "b"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "  a"
+       , "b"
+       ]
+  |]
+𝔱 "lexer:unanchored:corner-cases" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ ""
+       , "local"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "local{}"
+       ]
+  |]
+𝔱 "lexer:unanchored:corner-cases" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ ""
+       , "  local"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "  local{}"
+       ]
+  |]
+𝔱 "lexer:unanchored:corner-cases" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ ""
+       , "  local"
+       , "local"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ ""
+       , "  local{}"
+       , "local{}"
        ]
   |]
 

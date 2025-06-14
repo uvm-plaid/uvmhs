@@ -51,6 +51,7 @@ import qualified Language.Haskell.TH.Syntax as TH
 infixr 0 $
 
 infixr 1 ⇰
+infixr 1 ⇛
 infixl 2 ⩔
 infixl 3 ⩓
 infixl 5 ∨
@@ -101,6 +102,9 @@ b₁ ⩔ ~b₂ = if b₁ then True else b₂
 
 (⩓) ∷ 𝔹 → 𝔹 → 𝔹
 b₁ ⩓ ~b₂ = if b₁ then b₂ else False
+
+(⇛) ∷ 𝔹 → 𝔹 → 𝔹
+(⇛) b₁ b₂ = not b₁ ⩔ b₂
 
 cond ∷ 𝔹 → a → a → a
 cond b ~x ~y = case b of { True → x ; False → y }
@@ -351,8 +355,12 @@ type STACK = HS.HasCallStack
 error ∷ ∀ (r ∷ HS.RuntimeRep) (a ∷ HS.TYPE r). (STACK) ⇒ 𝕊 → a
 error s = HS.error (tohsChars s)
 
-assert ∷ 𝔹 → ()
-assert b = HS.assert b ()
+assert ∷ (() → 𝔹) → ()
+#ifdef __GLASGOW_HASKELL_ASSERTS_IGNORED__
+assert = \ _ → ()
+#else
+assert = \ b → HS.assert (b ()) ()
+#endif
 
 ------------------------------
 -- Basic Function Functions --
@@ -368,7 +376,7 @@ appto ∷ a → (a → b) → b
 appto = \ x f → f x
 
 const ∷ a → b → a
-const x = \ _ → x
+const = \ x _ → x
 
 (∘) ∷ (b → c) → (a → b) → a → c
 g ∘ f = \ x → g (f x)
