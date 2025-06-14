@@ -1,4 +1,4 @@
-module UVMHS.Tests.Lexer (lexer,g__TESTS__UVMHS__Tests__Lexer) where
+module UVMHS.Tests.Lexer (blockifyArgs,lexer,g__TESTS__UVMHS__Tests__Lexer) where
 
 import UVMHS.Core
 
@@ -17,8 +17,8 @@ syntax = concat
 lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
 lexer = lexerWSBasic syntax
 
-blockifyArgs ∷ 𝔹 → 𝑆 (PreParserToken TokenWSBasic) → BlockifyArgs TokenWSBasic
-blockifyArgs anchorTL = BlockifyArgs anchorTL mkIndentTokenWSBasic (NewlineTWSBasic "\n") (shape blockTWSBasicL) isBracket closeBracket
+blockifyArgs ∷ 𝕊 → 𝔹 → 𝑆 (PreParserToken TokenWSBasic) → BlockifyArgs TokenWSBasic
+blockifyArgs so anchorTL = BlockifyArgs so anchorTL mkIndentTokenWSBasic (NewlineTWSBasic "\n") (shape blockTWSBasicL) isBracket closeBracket
   where
     isBracket t = (∈♭) t $ pow $ map SyntaxTWSBasic ["(",",",")"]
     closeBracket = SyntaxTWSBasic "(" ↦ BlockifyBracket (single $ SyntaxTWSBasic ",") (single $ SyntaxTWSBasic ")")
@@ -32,25 +32,25 @@ lexerTestUOld s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnan
 lexerTestANew ∷ 𝕊 → 𝕊
 lexerTestANew s = ppshow $ viewΩ inrL $ do
   ts ← tokenize lexer "<>" $ tokens s
-  ts' ← blockify $ blockifyArgs True $ stream ts
+  ts' ← blockify $ blockifyArgs "<>" True $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
 
 lexerTestANewDebug ∷ 𝕊 → 𝕊
 lexerTestANewDebug s = ppshow $ do
   ts ← tokenize lexer "<>" $ tokens s
-  ts' ← blockify $ blockifyArgs True $ stream ts
+  ts' ← blockify $ blockifyArgs "<>" True $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
 
 lexerTestUNew ∷ 𝕊 → 𝕊
 lexerTestUNew s = ppshow $ viewΩ inrL $ do
   ts ← tokenize lexer "<>" $ tokens s
-  ts' ← blockify $ blockifyArgs False $ stream ts
+  ts' ← blockify $ blockifyArgs "<>" False $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
 
 lexerTestUNewDebug ∷ 𝕊 → 𝕊
 lexerTestUNewDebug s = ppshow $ do
   ts ← tokenize lexer "<>" $ tokens s
-  ts' ← blockify $ blockifyArgs False $ stream ts
+  ts' ← blockify $ blockifyArgs "<>" False $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
 
 lexerTestA ∷ 𝕊 → 𝕊

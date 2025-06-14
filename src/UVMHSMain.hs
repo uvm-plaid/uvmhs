@@ -60,13 +60,6 @@ test = do
   --     , "UVMHS.Tests.Substitution"
   --     ])
 
-blockifyArgs ∷ 𝔹 → 𝑆 (PreParserToken TokenWSBasic) → BlockifyArgs TokenWSBasic
-blockifyArgs anchorTL = BlockifyArgs anchorTL mkIndentTokenWSBasic (NewlineTWSBasic "\n") (shape blockTWSBasicL) isBracket closeBracket
-  where
-    isBracket t = (∈♭) t $ pow $ map SyntaxTWSBasic ["(",",",")"]
-    closeBracket = SyntaxTWSBasic "(" ↦ BlockifyBracket (single $ SyntaxTWSBasic ",") (single $ SyntaxTWSBasic ")")
-
-
 dev ∷ IO ()
 dev = cleanExit $ do
   test
@@ -80,11 +73,23 @@ dev = cleanExit $ do
         tokenizeWSUnanchored TestLexer.lexer "<>" $ tokens s
       r₂ = do
         ts ← tokenize TestLexer.lexer "<>" $ tokens s
-        ts' ← blockify $ blockifyArgs False $ stream ts
+        ts' ← blockify $ TestLexer.blockifyArgs "<>" False $ stream ts
+        return $ renderParserTokens $ finalizeTokens $ vec ts'
+  let debugThing s' = do
+        ts ← tokenize TestLexer.lexer "<>" $ tokens s'
+        ts' ← blockify $ blockifyArgs "<>" True $ stream ts
         return $ renderParserTokens $ finalizeTokens $ vec ts'
   pprint r₁
   pprint r₂
   pprint $ r₁ ≡ r₂
+  pprint $ debugThing $ concat $ inbetween "\n"
+    [ "a b"
+    , "+ c d"
+    ]
+  pprint $ debugThing $ concat $ inbetween "\n"
+    [ "a b"
+    , ") c d"
+    ]
 
   -- FUTURE
   -- out $(thShowDecs ds₁)

@@ -32,7 +32,8 @@ blockifyAnchor₀ = BlockifyAnchor (AddBT 0) null
 --------------------
 
 data BlockifyArgs t = BlockifyArgs
-  { blockifyArgsAnchorTL ∷ 𝔹
+  { blockifyArgsSource ∷ 𝕊
+  , blockifyArgsAnchorTL ∷ 𝔹
   , blockifyArgsMkBlockifyToken ∷ IndentCommand → t
   , blockifyArgsNewlineToken ∷ t
   , blockifyArgsIsBlock ∷ t → 𝔹
@@ -44,7 +45,8 @@ data BlockifyArgs t = BlockifyArgs
   }
 
 data BlockifyEnv t = BlockifyEnv
-  { blockifyEnvAnchorTL ∷ 𝔹
+  { blockifyEnvSource ∷ 𝕊
+  , blockifyEnvAnchorTL ∷ 𝔹
   , blockifyEnvMkBlockifyToken ∷ IndentCommand → t
   , blockifyEnvNewlineToken ∷ t
   , blockifyEnvIsBlock ∷ t → 𝔹
@@ -56,7 +58,8 @@ makeLenses ''BlockifyEnv
 
 blockifyEnv₀ ∷ BlockifyArgs t → BlockifyEnv t
 blockifyEnv₀ ρ = 
-  BlockifyEnv (blockifyArgsAnchorTL ρ)
+  BlockifyEnv (blockifyArgsSource ρ)
+              (blockifyArgsAnchorTL ρ)
               (blockifyArgsMkBlockifyToken ρ)
               (blockifyArgsNewlineToken ρ)
               (blockifyArgsIsBlock ρ)
@@ -129,9 +132,16 @@ blockifyPushAnchor col = do
   𝑎 ← getputL blockifyStateCurrentAnchorL $ BlockifyAnchor col null
   modifyL blockifyStateParentAnchorsL $ (:&) 𝑎
 
-blockifyPopAnchor ∷ BlockifyM t ()
-blockifyPopAnchor = do
+blockifyPopAnchor ∷ 𝑂 (PreParserToken t) → BlockifyM t ()
+blockifyPopAnchor tO = do
+  pc ← case tO of
+    None → do
+      pEnd ← getL blockifyStatePrefixEndL
+      return $ eofContext pEnd
+    Some t → return $ preParserTokenContext t
   𝑎s ← getL blockifyStateParentAnchorsL
+  so ← askL blockifyEnvSourceL
+  -- let er = displaySourceError so $ AddNull $ ParserError
   case 𝑎s of
     Nil → throw $ ppVertical
       [ ppErr "BLOCKIFY INTERNAL ERROR"
@@ -268,7 +278,7 @@ blockifyEmitToken t = do
             -- - pop the anchor
             -- - repeat
             blockifyEmitSyntheticToken CloseIC
-            blockifyPopAnchor
+            blockifyPopAnchor $ Some t
             again ()
   --------------------
   -- EMIT THE TOKEN --
@@ -352,7 +362,7 @@ blockifyM = do
           blockifyEmitSyntheticToken CloseIC
           -- - safe to assume parent anchors are non-empty 
           --   (otherwise a ≡ a₀ would succeed)
-          blockifyPopAnchor
+          blockifyPopAnchor None
           again ()
         -- - the current anchor is the initial anchor
         -- - nothing left to do
@@ -488,7 +498,7 @@ blockifyM = do
             --      ↑          ⇒ ↑
             --
             blockifyEmitSyntheticToken CloseIC
-            blockifyPopAnchor
+            blockifyPopAnchor $ Some t
             again ()
         --
         --     token   token ⇒ token   token
