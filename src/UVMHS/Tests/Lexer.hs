@@ -5,21 +5,59 @@ import UVMHS.Core
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Testing
+import UVMHS.Lib.Parser.Blockify
+import UVMHS.Lib.Parser.Regex (mkIndentTokenWSBasic,blockTWSBasicL)
 
 syntax ∷ LexerWSBasicSyntax
 syntax = concat
-  [ lexerWSBasicSyntaxPunsMk   $ pow ["(",")"]
+  [ lexerWSBasicSyntaxPunsMk   $ pow ["(",")",","]
   , lexerWSBasicSyntaxBlocksMk $ pow ["local"]
   ]
 
 lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
 lexer = lexerWSBasic syntax
 
+blockifyArgs ∷ 𝔹 → 𝑆 (PreParserToken TokenWSBasic) → BlockifyArgs TokenWSBasic
+blockifyArgs anchorTL = BlockifyArgs anchorTL mkIndentTokenWSBasic (NewlineTWSBasic "\n") (shape blockTWSBasicL) isBracket closeBracket
+  where
+    isBracket t = (∈♭) t $ pow $ map SyntaxTWSBasic ["(",",",")"]
+    closeBracket = SyntaxTWSBasic "(" ↦ BlockifyBracket (single $ SyntaxTWSBasic ",") (single $ SyntaxTWSBasic ")")
+
+lexerTestAOld ∷ 𝕊 → 𝕊
+lexerTestAOld s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSAnchored lexer "" $ tokens s
+
+lexerTestUOld ∷ 𝕊 → 𝕊
+lexerTestUOld s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnanchored lexer "" $ tokens s
+
+lexerTestANew ∷ 𝕊 → 𝕊
+lexerTestANew s = ppshow $ viewΩ inrL $ do
+  ts ← tokenize lexer "<>" $ tokens s
+  ts' ← blockify $ blockifyArgs True $ stream ts
+  return $ renderParserTokens $ finalizeTokens $ vec ts'
+
+lexerTestANewDebug ∷ 𝕊 → 𝕊
+lexerTestANewDebug s = ppshow $ do
+  ts ← tokenize lexer "<>" $ tokens s
+  ts' ← blockify $ blockifyArgs True $ stream ts
+  return $ renderParserTokens $ finalizeTokens $ vec ts'
+
+lexerTestUNew ∷ 𝕊 → 𝕊
+lexerTestUNew s = ppshow $ viewΩ inrL $ do
+  ts ← tokenize lexer "<>" $ tokens s
+  ts' ← blockify $ blockifyArgs False $ stream ts
+  return $ renderParserTokens $ finalizeTokens $ vec ts'
+
+lexerTestUNewDebug ∷ 𝕊 → 𝕊
+lexerTestUNewDebug s = ppshow $ do
+  ts ← tokenize lexer "<>" $ tokens s
+  ts' ← blockify $ blockifyArgs False $ stream ts
+  return $ renderParserTokens $ finalizeTokens $ vec ts'
+
 lexerTestA ∷ 𝕊 → 𝕊
-lexerTestA s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSAnchored lexer "" $ tokens s
+lexerTestA = lexerTestANew
 
 lexerTestU ∷ 𝕊 → 𝕊
-lexerTestU s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnanchored lexer "" $ tokens s
+lexerTestU = lexerTestUNew
 
 -- ======== --
 -- ANCHORED --
@@ -462,6 +500,103 @@ lexerTestU s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnancho
        ]
   |]
 
+-- parens --
+
+𝔱 "lexer:anchored:parens" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "()"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "()"
+       ]
+  |]
+𝔱 "lexer:anchored:parens" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "(local)"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(local{})"
+       ]
+  |]
+𝔱 "lexer:anchored:parens" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "local(local)"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "local{(local{})}"
+       ]
+  |]
+𝔱 "lexer:anchored:parens" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "(local(local))"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(local{(local{})})"
+       ]
+  |]
+𝔱 "lexer:anchored:parens" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "(local"
+       , "   local)"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(local{"
+       , "   local{}})"
+       ]
+  |]
+𝔱 "lexer:anchored:parens" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "(local"
+       , "   local"
+       , "     local"
+       , "       a"
+       , "       b)c"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(local{"
+       , "   local{"
+       , "     local{"
+       , "       a;"
+       , "       b}}})c"
+       ]
+  |]
+𝔱 "lexer:anchored:parens" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "( local "
+       , "    local a"
+       , "    (b) c"
+       , "    (d"
+       , "     e)"
+       , "  , d"
+       , "  )"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "( local{ "
+       , "    local{ a};"
+       , "    (b) c;"
+       , "    (d"
+       , "     e)}"
+       , "  , d"
+       , "  )"
+       ]
+  |]
+𝔱 "lexer:anchored:parens" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "(local local,local local)"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(local{ local{}},local{ local{}})"
+       ]
+  |]
+
 -- ========== --
 -- UNANCHORED --
 -- ========== --
@@ -900,6 +1035,94 @@ lexerTestU s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnancho
        [ ""
        , "  local{}"
        , "local{}"
+       ]
+  |]
+
+-- parens --
+
+𝔱 "lexer:unanchored:parens" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "()"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "()"
+       ]
+  |]
+𝔱 "lexer:unanchored:parens" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "(local)"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(local{})"
+       ]
+  |]
+𝔱 "lexer:unanchored:parens" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "local(local)"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "local{(local{})}"
+       ]
+  |]
+𝔱 "lexer:unanchored:parens" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "(local(local))"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(local{(local{})})"
+       ]
+  |]
+𝔱 "lexer:unanchored:parens" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "(local"
+       , "   local)"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(local{"
+       , "   local{}})"
+       ]
+  |]
+𝔱 "lexer:unanchored:parens" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "(local"
+       , "   local"
+       , "     local"
+       , "       a"
+       , "       b)c"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(local{"
+       , "   local{"
+       , "     local{"
+       , "       a;"
+       , "       b}}})c"
+       ]
+  |]
+𝔱 "lexer:unanchored:parens" 
+  [| lexerTestU $ concat $ inbetween "\n"
+       [ "( local "
+       , "    local a"
+       , "    (b) c"
+       , "    (d"
+       , "     e)"
+       , "  , d"
+       , "  )"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "( local{ "
+       , "    local{ a};"
+       , "    (b) c;"
+       , "    (d"
+       , "     e)}"
+       , "  , d"
+       , "  )"
        ]
   |]
 

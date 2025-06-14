@@ -25,7 +25,7 @@ data BlockifyAnchor t = BlockifyAnchor
 makeLenses ''BlockifyAnchor
 
 blockifyAnchor₀ ∷ BlockifyAnchor t
-blockifyAnchor₀ = BlockifyAnchor BotBT null
+blockifyAnchor₀ = BlockifyAnchor (AddBT 0) null
 
 --------------------
 -- BLOCKIFY MONAD --
@@ -73,6 +73,7 @@ data BlockifyState t = BlockifyState
   , blockifyStateCurrentAnchor ∷ BlockifyAnchor t
   , blockifyStateParentAnchors ∷ 𝐿 (BlockifyAnchor t)
   , blockifyStateJustSawBlock ∷ 𝔹
+  , blockifyStateIsAfterFirstToken ∷ 𝔹
   }
 makeLenses ''BlockifyState
 
@@ -80,8 +81,8 @@ blockifyState₀ ∷ BlockifyArgs t → BlockifyState t
 blockifyState₀ ρ = 
   BlockifyState 
     (blockifyArgsInput ρ) 
-    null BotBT False blockifyAnchor₀ null $ 
-    blockifyArgsAnchorTL ρ
+    null BotBT False blockifyAnchor₀ null
+    False False
 
 newtype BlockifyM t a = BlockifyM 
   { unBlockifyM ∷ RWST (BlockifyEnv t) (BlockifyOut t) (BlockifyState t) ((∨) Doc) a }
@@ -163,10 +164,12 @@ blockifyFlushSkipPrefix = do
   putL blockifyStateSkipPrefixContainsNewlineL False
   tell sp
 
-blockifyEmitToken ∷ (Ord t) ⇒ PreParserToken t → BlockifyM t ()
+blockifyEmitToken ∷ (Pretty t,Ord t) ⇒ PreParserToken t → BlockifyM t ()
 blockifyEmitToken t = do
-  blockifyFlushSkipPrefix
-  tell $ single t
+  -----------------------
+  -- FIRST TOKEN LOGIC --
+  -----------------------
+  putL blockifyStateIsAfterFirstTokenL True
   -----------------
   -- BLOCK LOGIC --
   -----------------
@@ -195,9 +198,14 @@ blockifyEmitToken t = do
         blockifyPushAnchorBracket bt
       None → repeat $ \ again → do
         𝑎ᵢ ← getL blockifyStateCurrentAnchorL
-        -- - this is either a sep or a close bracket
+        ----------------------------------
+        -- IT IS A BRACKET SEP OR CLOSE --
+        ----------------------------------
         case blockifyAnchorBrackets 𝑎ᵢ of
           bt :& bts → do
+            ----------------------------------------------
+            -- IT IS A BRACKET TOKEN FOR CURRENT ANCHOR --
+            ----------------------------------------------
             -- - we are currently inside a bracket
             -- - try to match token with sep or close
             -- - if sep, do nothing
@@ -224,6 +232,7 @@ blockifyEmitToken t = do
               --     (token(token  ) ⇒ (token(token  )
               --                 ⇧ ↑ ⇒             ⇧ ↑
               --
+              -- - pop the bracket stack
               putL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) bts
             else do
               -------------------------------
@@ -240,7 +249,7 @@ blockifyEmitToken t = do
               --     (token  ;
               --           ⇧ ↑
               --
-              --
+              -- - fail
               throw $ ppVertical
                     [ ppErr "BLOCKIFY ERROR"
                     , ppString "improper nesting/use of bracket close/sep"
@@ -250,17 +259,22 @@ blockifyEmitToken t = do
             -- IT IS A BRACKET TOKEN FOR PARENT ANCHOR --
             ---------------------------------------------
             --
-            --           ⌄          ⌄    ▽
-            --     block(block  ) ⇒ block(block{}  )
-            --                ⇧ ↑                ⇧ ↑
+            --           ⌄                 ⌄    ▽
+            --     block(block{ token  ) ⇒ block(block{ token}  )
+            --                       ⇧ ↑                      ⇧ ↑
             --
-            -- - we are currently inside a block
+            -- - we are currently inside a block anchor with no bracket stack
             -- - close out the block
             -- - pop the anchor
             -- - repeat
             blockifyEmitSyntheticToken CloseIC
             blockifyPopAnchor
             again ()
+  --------------------
+  -- EMIT THE TOKEN --
+  --------------------
+  blockifyFlushSkipPrefix
+  tell $ single t
 
 blockifyEmitSyntheticToken ∷ IndentCommand → BlockifyM t ()
 blockifyEmitSyntheticToken ic = do
@@ -309,12 +323,9 @@ blockifyM = do
       --          ⇧↑     ⇒        ⇧↑
       --
       justSawBlock ← getL blockifyStateJustSawBlockL
-      𝑎 ← getL blockifyStateCurrentAnchorL
-      when (justSawBlock ⩓ (anchorTL ⇛ 𝑎 ≢ blockifyAnchor₀)) $ \ () → do
+      when justSawBlock $ \ () → do
         -- - we just saw a block token and haven't created an anchor for it yet.
         -- - open and close it out
-        -- - NOTE: we suppress open and close brackets for the topmost anchor
-        --   in `anchorTL` mode
         blockifyEmitSyntheticToken OpenIC 
         blockifyEmitSyntheticToken CloseIC 
         putL blockifyStateJustSawBlockL False
@@ -329,12 +340,9 @@ blockifyM = do
       --
       repeat $ \ again → do
         𝑎ᵢ ← getL blockifyStateCurrentAnchorL
-        𝑎sᵢ ← getL blockifyStateParentAnchorsL
-        when (𝑎ᵢ ≢ blockifyAnchor₀ ⩓ (anchorTL ⇛ 𝑎sᵢ ≢ single blockifyAnchor₀)) $ \ () → do
+        when (𝑎ᵢ ≢ blockifyAnchor₀) $ \ () → do
           -- - the current anchor is not the initial anchor
           -- - fail if there are outstanding open brackets
-          -- - NOTE: we suppress open and close brackets for the topmost anchor
-          --   in `anchorTL` mode
           when (not $ isEmpty $ blockifyAnchorBrackets 𝑎ᵢ) $ \ () →
             throw $ ppVertical
               [ ppErr "BLOCKIFY ERROR"
@@ -398,10 +406,7 @@ blockifyM = do
               --          token ⇒     token
               --          ↑     ⇒     ↑
               --
-              when (anchorTL ⇛ 𝑎 ≢ blockifyAnchor₀) $ \ () → 
-                -- - NOTE: we suppress open and close brackets for the topmost
-                --   anchor in `anchorTL` mode
-                blockifyEmitSyntheticToken OpenIC
+              blockifyEmitSyntheticToken OpenIC
               blockifyAnchorOnToken t
               putL blockifyStateJustSawBlockL False
           else if tCol ≡ 𝑎Col then do
@@ -436,7 +441,20 @@ blockifyM = do
             --      token  ⇒ token
             --      ↑      ⇒ ↑
             --
-            blockifyEmitSyntheticToken NewlineIC
+            isAfterFirstToken ← getL blockifyStateIsAfterFirstTokenL
+            when (isAfterFirstToken ⩓ (not anchorTL ⇛ 𝑎 ≢ blockifyAnchor₀)) $ \ () → do
+              -- CORNER CASES:
+              -- - isAfterFirstToken: 
+              --   When in anchored mode, we start with an anchor at column
+              --   zero. This has the effect of the algorithm thinking the
+              --   first token is a "fresh newline", which would emit a
+              --   newline synthetic token, and not just "the first line",
+              --   which shouldn't have a newline synthetic token before it.
+              -- - anchorTL:
+              --   when in unanchored mode (anchorTL ≡ False), do not emit
+              --   newlines when the current anchor is the root/initial
+              --   anchor.
+              blockifyEmitSyntheticToken NewlineIC
           else {- if tCol < 𝑎Col then -} do
             ---------------------------------------
             -- IT IS ON NEXT LINE LEFT OF ANCHOR --
