@@ -27,6 +27,9 @@ data ParserToken t = ParserToken
 makeLenses ''ParserToken
 makePrettySum ''ParserToken
 
+parserTokenToPreParserToken ∷ ParserToken t → PreParserToken t
+parserTokenToPreParserToken (ParserToken v sk cxt _suf) = PreParserToken v sk cxt
+
 renderParserTokens ∷ (ToIter (ParserToken t) u) ⇒ u → Doc
 renderParserTokens = concat ∘ map (concat ∘ parserContextDisplayL ∘ parserTokenContext) ∘ iter
 

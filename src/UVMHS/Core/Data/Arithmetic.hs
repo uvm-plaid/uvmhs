@@ -57,11 +57,13 @@ instance DivMod ℕ where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℕ where (^^) = (HS.^)
 instance Pow    ℕ where (^)  = (HS.^)
 
-instance Bot    ℕ where bot  = 0
-instance Join   ℕ where (⊔)  = (⩏)
-instance Meet   ℕ where (⊓)  = (⩎)
-instance Null   ℕ where null = 0
-instance Append ℕ where (⧺)  = (+)
+instance POrd   ℕ where (⊑) = (≤)
+
+instance Bot        ℕ where bot  = 0
+instance Join       ℕ where (⊔)  = (⩏)
+instance Meet       ℕ where (⊓)  = (⩎)
+instance Null       ℕ where null = 0
+instance Append     ℕ where (⧺)  = (+)
 
 instance Additive       ℕ
 instance Multiplicative ℕ
@@ -121,6 +123,8 @@ instance Times  ℕ64 where (×)  = (HS.*)
 instance DivMod ℕ64 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℕ64 where (^^) = (HS.^)
 instance Pow    ℕ64 where (^)  = (HS.^)
+
+instance POrd   ℕ64 where (⊑) = (≤)
 
 instance Bot    ℕ64 where bot  = zero
 instance Join   ℕ64 where (⊔)  = (⩏)
@@ -186,6 +190,8 @@ instance DivMod ℕ32 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℕ32 where (^^) = (HS.^)
 instance Pow    ℕ32 where (^)  = (HS.^)
 
+instance POrd   ℕ32 where (⊑) = (≤)
+
 instance Bot    ℕ32 where bot  = 𝕟32 0
 instance Join   ℕ32 where (⊔)  = (⩏)
 instance Top    ℕ32 where top  = HS.maxBound
@@ -244,6 +250,8 @@ instance DivMod ℕ16 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℕ16 where (^^) = (HS.^)
 instance Pow    ℕ16 where (^)  = (HS.^)
 
+instance POrd   ℕ16 where (⊑) = (≤)
+
 instance Bot    ℕ16 where bot  = 𝕟16 0
 instance Join   ℕ16 where (⊔)  = (⩏)
 instance Top    ℕ16 where top  = HS.maxBound
@@ -296,6 +304,8 @@ instance DivMod ℕ8 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℕ8 where (^^) = (HS.^)
 instance Pow    ℕ8 where (^)  = (HS.^)
 
+instance POrd   ℕ8 where (⊑) = (≤)
+
 instance Bot    ℕ8 where bot  = 𝕟8 0
 instance Join   ℕ8 where (⊔)  = (⩏)
 instance Top    ℕ8 where top  = HS.maxBound
@@ -340,6 +350,8 @@ instance One    ℤ where one  = 𝕫 1
 instance Times  ℤ where (×)  = (HS.*)
 instance DivMod ℤ where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ where (^^) = (HS.^)
+
+instance POrd   ℤ where (⊑) = (≤)
 
 instance Join   ℤ where (⊔)  = (⩏)
 instance Meet   ℤ where (⊓)  = (⩎)
@@ -425,6 +437,8 @@ instance Times  ℤ64 where (×)  = (HS.*)
 instance DivMod ℤ64 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ64 where (^^) = (HS.^)
 
+instance POrd   ℤ64 where (⊑) = (≤)
+
 instance Bot    ℤ64 where bot  = HS.minBound
 instance Join   ℤ64 where (⊔)  = (⩏)
 instance Top    ℤ64 where top  = HS.maxBound
@@ -508,6 +522,8 @@ instance Times  ℤ32 where (×)  = (HS.*)
 instance DivMod ℤ32 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ32 where (^^) = (HS.^)
 
+instance POrd   ℤ32 where (⊑) = (≤)
+
 instance Bot    ℤ32 where bot  = HS.minBound
 instance Join   ℤ32 where (⊔)  = (⩏)
 instance Top    ℤ32 where top  = HS.maxBound
@@ -586,6 +602,8 @@ instance Times  ℤ16 where (×)  = (HS.*)
 instance DivMod ℤ16 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ16 where (^^) = (HS.^)
 
+instance POrd   ℤ16 where (⊑) = (≤)
+
 instance Bot    ℤ16 where bot  = HS.minBound
 instance Join   ℤ16 where (⊔)  = (⩏)
 instance Top    ℤ16 where top  = HS.maxBound
@@ -659,6 +677,8 @@ instance Times  ℤ8 where (×)  = (HS.*)
 instance DivMod ℤ8 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ8 where (^^) = (HS.^)
 
+instance POrd   ℤ8 where (⊑) = (≤)
+
 instance Bot    ℤ8 where bot  = HS.minBound
 instance Join   ℤ8 where (⊔)  = (⩏)
 instance Top    ℤ8 where top  = HS.maxBound
@@ -726,6 +746,8 @@ instance One    ℚ where one  = 𝕢 1
 instance Times  ℚ where (×)  = (HS.*)
 instance Divide ℚ where (/)  = (HS./)
 instance Pon    ℚ where (^^) = (HS.^)
+
+instance POrd   ℚ where (⊑) = (≤)
 
 instance Bot    ℚ where bot  = 𝕢 0
 instance Join   ℚ where (⊔)  = (⩏)
@@ -807,6 +829,8 @@ instance Times  ℚᴾ where (×)  = (HS.*)
 instance Divide ℚᴾ where (/)  = (HS./)
 instance Pon    ℚᴾ where (^^) = (HS.^)
 
+instance POrd   ℚᴾ where (⊑) = (≤)
+
 instance Bot    ℚᴾ where bot  = 𝕢ᴾ 0
 instance Join   ℚᴾ where (⊔)  = (⩏)
 instance Meet   ℚᴾ where (⊓)  = (⩎)
@@ -881,6 +905,8 @@ instance Log    𝔻 where log  = HS.log
 instance Efn    𝔻 where efn  = HS.exp
 instance Sin    𝔻 where sin  = HS.sin
 instance Cos    𝔻 where cos  = HS.cos
+
+instance POrd   𝔻 where (⊑) = (≤)
 
 instance Bot    𝔻 where bot  = neg 1.0/0.0
 instance Join   𝔻 where (⊔)  = (⩏)
@@ -994,6 +1020,8 @@ instance Log    𝔻ᴾ where log  = HS.log
 instance Efn    𝔻ᴾ where efn  = HS.exp
 instance Sin    𝔻ᴾ where sin  = HS.sin
 instance Cos    𝔻ᴾ where cos  = HS.cos
+
+instance POrd   𝔻ᴾ where (⊑) = (≤)
 
 instance Bot    𝔻ᴾ where bot  = 𝕕ᴾ 0.0
 instance Join   𝔻ᴾ where (⊔)  = (⩏)
@@ -1147,6 +1175,8 @@ instance Cos ℝ where
   cos (Rational q) = Double $ cos $ dbl q
   cos (Double   d) = Double $ cos d
 
+instance POrd   ℝ where (⊑) = (≤)
+
 instance Bot    ℝ where bot  = zero
 instance Join   ℝ where (⊔)  = numberBOp (Integer ∘∘ (⊔)) (Rational ∘∘ (⊔)) (Double ∘∘ (⊔))
 instance Meet   ℝ where (⊓)  = numberBOp (Integer ∘∘ (⊓)) (Rational ∘∘ (⊓)) (Double ∘∘ (⊓))
@@ -1247,6 +1277,8 @@ instance Join   ℝᴾ where (⊔)  = numberBOpᴾ (Natural ∘∘ (⊔)) (Ratio
 instance Meet   ℝᴾ where (⊓)  = numberBOpᴾ (Natural ∘∘ (⊓)) (Rationalᴾ ∘∘ (⊓)) (Doubleᴾ ∘∘ (⊓))
 instance Null   ℝᴾ where null = zero
 instance Append ℝᴾ where (⧺)  = (+)
+
+instance POrd   ℝᴾ where (⊑) = (≤)
 
 instance Additive       ℝᴾ
 instance Multiplicative ℝᴾ

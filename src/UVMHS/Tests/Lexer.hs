@@ -10,18 +10,23 @@ import UVMHS.Lib.Parser.Regex (mkIndentTokenWSBasic,blockTWSBasicL)
 
 syntax ∷ LexerWSBasicSyntax
 syntax = concat
-  [ lexerWSBasicSyntaxPunsMk   $ pow ["(",")",","]
+  [ lexerWSBasicSyntaxPunsMk   $ pow ["(",")",",","[","]",";"]
   , lexerWSBasicSyntaxBlocksMk $ pow ["local"]
   ]
 
 lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
 lexer = lexerWSBasic syntax
 
-blockifyArgs ∷ 𝕊 → 𝔹 → 𝑆 (PreParserToken TokenWSBasic) → BlockifyArgs TokenWSBasic
-blockifyArgs so anchorTL = BlockifyArgs so anchorTL mkIndentTokenWSBasic (NewlineTWSBasic "\n") (shape blockTWSBasicL) isBracket closeBracket
+blockifyArgs ∷ 𝕊 → 𝔹 → 𝑆 (ParserToken TokenWSBasic) → BlockifyArgs TokenWSBasic
+blockifyArgs so anchorTL = BlockifyArgs so anchorTL mkIndentTokenWSBasic (NewlineTWSBasic "\n") (shape blockTWSBasicL) bracketOpens bracketSeps bracketCloses closeBracket
   where
-    isBracket t = (∈♭) t $ pow $ map SyntaxTWSBasic ["(",",",")"]
-    closeBracket = SyntaxTWSBasic "(" ↦ BlockifyBracket (single $ SyntaxTWSBasic ",") (single $ SyntaxTWSBasic ")")
+    bracketOpens = pow $ map SyntaxTWSBasic ["(","["]
+    bracketSeps = pow $ map SyntaxTWSBasic [",",";"]
+    bracketCloses = pow $ map SyntaxTWSBasic [")","]"]
+    closeBracket = dict
+      [ SyntaxTWSBasic "(" ↦ BlockifyBracketArg (single $ SyntaxTWSBasic ",") (single $ SyntaxTWSBasic ")")
+      , SyntaxTWSBasic "[" ↦ BlockifyBracketArg (single $ SyntaxTWSBasic ";") (single $ SyntaxTWSBasic "]")
+      ]
 
 lexerTestAOld ∷ 𝕊 → 𝕊
 lexerTestAOld s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSAnchored lexer "" $ tokens s
@@ -31,25 +36,25 @@ lexerTestUOld s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnan
 
 lexerTestANew ∷ 𝕊 → 𝕊
 lexerTestANew s = ppshow $ viewΩ inrL $ do
-  ts ← tokenize lexer "<>" $ tokens s
+  ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
   ts' ← blockify $ blockifyArgs "<>" True $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
 
 lexerTestANewDebug ∷ 𝕊 → 𝕊
 lexerTestANewDebug s = ppshow $ do
-  ts ← tokenize lexer "<>" $ tokens s
+  ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
   ts' ← blockify $ blockifyArgs "<>" True $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
 
 lexerTestUNew ∷ 𝕊 → 𝕊
 lexerTestUNew s = ppshow $ viewΩ inrL $ do
-  ts ← tokenize lexer "<>" $ tokens s
+  ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
   ts' ← blockify $ blockifyArgs "<>" False $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
 
 lexerTestUNewDebug ∷ 𝕊 → 𝕊
 lexerTestUNewDebug s = ppshow $ do
-  ts ← tokenize lexer "<>" $ tokens s
+  ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
   ts' ← blockify $ blockifyArgs "<>" False $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
 

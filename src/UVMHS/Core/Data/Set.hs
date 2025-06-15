@@ -10,7 +10,7 @@ import UVMHS.Core.Data.String
 
 import qualified Data.Set as Set
 
-infix 4 ⊆,⊇,∈,∉
+infix 4 ⊆,⊇,∈,∉,∈♭
 infixl 5 ∪,∖
 infixl 6 ∩
 

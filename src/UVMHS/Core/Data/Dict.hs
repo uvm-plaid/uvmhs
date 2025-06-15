@@ -42,21 +42,25 @@ class
   , OBiFunctor d
   , KBiFunctor k d
   , OKBiFunctor k d
-  , ∀ x.                   CSized (d x)
-  , ∀ x. (Eq x)          ⇒ Eq (d x)
-  , ∀ x. (Ord x)         ⇒ Ord (d x)
-  , ∀ x.                   ToIter (k ∧ x) (d x)
-  , ∀ x.                   Single (k ∧ x) (d x)
-  , ∀ x.                   Lookup k x (d x)
-  , ∀ x.                   Null (d x)
-  , ∀ x. (Append x)      ⇒ Append (d x)
-  , ∀ x. (Monoid x)      ⇒ Monoid (d x)
-  , ∀ x. (POrd x)        ⇒ POrd (d x)
-  , ∀ x.                   Bot (d x)
-  , ∀ x. (Join x)        ⇒ Join (d x)
-  , ∀ x. (JoinLattice x) ⇒ JoinLattice (d x)
-  , ∀ x. (Meet x)        ⇒ Meet (d x)
-  , ∀ x. (Difference x)  ⇒ Difference (d x)
+  , ∀ x.                      CSized (d x)
+  , ∀ x. (Eq x)             ⇒ Eq (d x)
+  , ∀ x. (Ord x)            ⇒ Ord (d x)
+  , ∀ x.                      ToIter (k ∧ x) (d x)
+  , ∀ x.                      Single (k ∧ x) (d x)
+  , ∀ x.                      Lookup k x (d x)
+  , ∀ x.                      Null (d x)
+  , ∀ x. (Append x)         ⇒ Append (d x)
+  , ∀ x. (Monoid x)         ⇒ Monoid (d x)
+  , ∀ x. (POrd x)           ⇒ POrd (d x)
+  , ∀ x.                      Bot (d x)
+  , ∀ x. (Join x)           ⇒ Join (d x)
+  , ∀ x. (JoinLattice x)    ⇒ JoinLattice (d x)
+  , ∀ x. (Meet x)           ⇒ Meet (d x)
+  , ∀ x. (Difference x)     ⇒ Difference (d x)
+  , ∀ x.                      Zero (d x)
+  , ∀ x. (Plus x)           ⇒ Plus (d x)
+  , ∀ x. (Additive x)       ⇒ Additive (d x)
+  , ∀ x. (Zero x,Minus x)   ⇒ Minus (d x)
   ) ⇒ Dict k s d | d→k,d→s
   where
     dø ∷ d a
@@ -391,16 +395,10 @@ zero𝐷 = dø𝐷
 plus𝐷 ∷ (Ord k,Plus a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
 plus𝐷 = dunionBy𝐷 (+)
 
--- CLASS DEFINITIONS: Multiplicative --
+-- CLASS DEFINITIONS: Minus --
 
-one𝐷 ∷ (Ord k,Zero k,Zero a) ⇒ k ⇰ a
-one𝐷 = zero ↦♭ zero
-
-times𝐷 ∷ (Ord k,Plus k,Plus a,Times a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
-times𝐷 d₁ d₂ = fold dø𝐷 (dunionBy𝐷 (+)) $ do
-  (k₁ :* x₁) ← iter d₁
-  (k₂ :* x₂) ← iter d₂
-  return $ (k₁ + k₂) ↦♭ (x₁ × x₂)
+minus𝐷 ∷ (Ord k,Zero a,Minus a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
+minus𝐷 = bimap id (\ x → zero - x) (-)
 
 -- CLASS DEFINITIONS: POrd --
 
@@ -477,9 +475,7 @@ instance (Ord k,Monoid k,Prodoid a)          ⇒ Prodoid        (k ⇰ a)
 instance                                       Zero           (k ⇰ a) where zero     = zero𝐷
 instance (Ord k,Plus a)                      ⇒ Plus           (k ⇰ a) where (+)      = plus𝐷
 instance (Ord k,Plus a)                      ⇒ Additive       (k ⇰ a)
-instance (Ord k,Zero k,Zero a)               ⇒ One            (k ⇰ a) where one      = one𝐷
-instance (Ord k,Plus k,Plus a,Times a)       ⇒ Times          (k ⇰ a) where (×)      = times𝐷
-instance (Ord k,Additive k,Multiplicative a) ⇒ Multiplicative (k ⇰ a)
+instance (Ord k,Zero a,Minus a)              ⇒ Minus          (k ⇰ a) where (-)      = minus𝐷
 instance (Ord k,POrd a)                      ⇒ POrd           (k ⇰ a) where (⊑)      = plte𝐷
 instance                                       Bot            (k ⇰ a) where bot      = bot𝐷
 instance (Ord k,Join a)                      ⇒ Join           (k ⇰ a) where (⊔)      = join𝐷

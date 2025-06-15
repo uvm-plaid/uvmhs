@@ -72,11 +72,11 @@ dev = cleanExit $ do
   let r₁ = map renderParserTokens $ 
         tokenizeWSUnanchored TestLexer.lexer "<>" $ tokens s
       r₂ = do
-        ts ← tokenize TestLexer.lexer "<>" $ tokens s
+        ts ← finalizeTokens ^$ tokenize TestLexer.lexer "<>" $ tokens s
         ts' ← blockify $ TestLexer.blockifyArgs "<>" False $ stream ts
         return $ renderParserTokens $ finalizeTokens $ vec ts'
   let debugThing s' = do
-        ts ← tokenize TestLexer.lexer "<>" $ tokens s'
+        ts ← finalizeTokens ^$ tokenize TestLexer.lexer "<>" $ tokens s'
         ts' ← blockify $ blockifyArgs "<>" True $ stream ts
         return $ renderParserTokens $ finalizeTokens $ vec ts'
   pprint r₁
@@ -88,6 +88,22 @@ dev = cleanExit $ do
     ]
   pprint $ debugThing $ concat $ inbetween "\n"
     [ "a b"
+    , ") c d"
+    ]
+  pprint $ debugThing $ concat $ inbetween "\n"
+    [ "a b"
+    , "( c d"
+    ]
+  pprint $ debugThing $ concat $ inbetween "\n"
+    [ "a b"
+    , ", c d"
+    ]
+  pprint $ debugThing $ concat $ inbetween "\n"
+    [ "(a b"
+    , ") c d"
+    ]
+  pprint $ debugThing $ concat $ inbetween "\n"
+    [ "a local (a b"
     , ") c d"
     ]
 

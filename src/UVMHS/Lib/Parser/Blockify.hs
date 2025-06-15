@@ -6,6 +6,7 @@ import UVMHS.Lib.Pretty
 import UVMHS.Lib.Parser.ParserInput
 import UVMHS.Lib.Parser.Loc
 import UVMHS.Lib.Parser.ParserContext
+import UVMHS.Lib.Parser.ParserError
 import UVMHS.Lib.Parser.Regex (IndentCommand(..))
 import UVMHS.Lib.Window
 
@@ -15,8 +16,13 @@ import UVMHS.Lib.Window
 
 data BlockifyBracket t = BlockifyBracket
   { blockifyBracketSeps ∷ 𝑃 t
-  , blockifyBracketsCloses ∷ 𝑃 t
+  , blockifyBracketCloses ∷ 𝑃 t
+  , blockifyBracketSepsAndCloses ∷ 𝑃 t
   } deriving (Eq,Ord,Show)
+
+blockifyBracketDepthOne ∷ (Ord t) ⇒ BlockifyBracket t → t ⇰ ℕ64
+blockifyBracketDepthOne bb =
+  dict $ mapOn (iter $ blockifyBracketSepsAndCloses bb) $ \ t → t ↦ 1
 
 data BlockifyAnchor t = BlockifyAnchor
   { blockifyAnchorCol ∷ AddBT ℕ64
@@ -31,6 +37,15 @@ blockifyAnchor₀ = BlockifyAnchor (AddBT 0) null
 -- BLOCKIFY MONAD --
 --------------------
 
+data BlockifyBracketArg t = BlockifyBracketArg
+  { blockifyBracketArgSeps ∷ 𝑃 t
+  , blockifyBracketArgCloses ∷ 𝑃 t
+  } deriving (Eq,Ord,Show)
+
+blockifyBracketArgToBlockifyBracket ∷ (Ord t) ⇒ BlockifyBracketArg t → BlockifyBracket t
+blockifyBracketArgToBlockifyBracket (BlockifyBracketArg seps closes) =
+  BlockifyBracket seps closes $ seps ∪ closes
+
 data BlockifyArgs t = BlockifyArgs
   { blockifyArgsSource ∷ 𝕊
   , blockifyArgsAnchorTL ∷ 𝔹
@@ -38,10 +53,12 @@ data BlockifyArgs t = BlockifyArgs
   , blockifyArgsNewlineToken ∷ t
   , blockifyArgsIsBlock ∷ t → 𝔹
  -- | true for open, sep and close brackets
-  , blockifyArgsIsBracket ∷ t → 𝔹
+  , blockifyArgsBracketOpens ∷ 𝑃 t
+  , blockifyArgsBracketSeps ∷ 𝑃 t
+  , blockifyArgsBracketCloses ∷ 𝑃 t
   -- | map each open bracket to its matching sep/close info
-  , blockifyArgsGetCloseBracket ∷ t ⇰ BlockifyBracket t 
-  , blockifyArgsInput ∷ 𝑆 (PreParserToken t)
+  , blockifyArgsGetCloseBracket ∷ t ⇰ BlockifyBracketArg t 
+  , blockifyArgsInput ∷ 𝑆 (ParserToken t)
   }
 
 data BlockifyEnv t = BlockifyEnv
@@ -50,33 +67,43 @@ data BlockifyEnv t = BlockifyEnv
   , blockifyEnvMkBlockifyToken ∷ IndentCommand → t
   , blockifyEnvNewlineToken ∷ t
   , blockifyEnvIsBlock ∷ t → 𝔹
+  , blockifyEnvBracketOpens ∷ 𝑃 t
+  , blockifyEnvBracketSeps ∷ 𝑃 t
+  , blockifyEnvBracketCloses ∷ 𝑃 t
   , blockifyEnvIsBracket ∷ t → 𝔹
   -- | map each open bracket to its matching sep/close info
   , blockifyEnvGetCloseBracket ∷ t ⇰ BlockifyBracket t 
   }
 makeLenses ''BlockifyEnv
 
-blockifyEnv₀ ∷ BlockifyArgs t → BlockifyEnv t
+blockifyEnv₀ ∷ (Ord t) ⇒ BlockifyArgs t → BlockifyEnv t
 blockifyEnv₀ ρ = 
+  let bracketOpens = blockifyArgsBracketOpens ρ
+      bracketSeps = blockifyArgsBracketSeps ρ
+      bracketCloses = blockifyArgsBracketCloses ρ
+  in
   BlockifyEnv (blockifyArgsSource ρ)
               (blockifyArgsAnchorTL ρ)
               (blockifyArgsMkBlockifyToken ρ)
               (blockifyArgsNewlineToken ρ)
               (blockifyArgsIsBlock ρ)
-              (blockifyArgsIsBracket ρ) $
-              blockifyArgsGetCloseBracket ρ
+              bracketOpens bracketSeps bracketCloses 
+              (flip (∈♭) $ unions [bracketOpens,bracketSeps,bracketCloses]) $
+              map blockifyBracketArgToBlockifyBracket $ blockifyArgsGetCloseBracket ρ
 
 type BlockifyOut t = 𝐼C (PreParserToken t)
 
 data BlockifyState t = BlockifyState
-  { blockifyStateInput ∷ 𝑆 (PreParserToken t)
-  , blockifyStateSkipPrefix ∷ 𝐼C (PreParserToken t)
+  { blockifyStateInput ∷ 𝑆 (ParserToken t)
+  , blockifyStateSkipPrefix ∷ 𝐼C (ParserToken t)
+  , blockifyStatePrefix ∷ WindowR Doc Doc
   , blockifyStatePrefixEnd ∷ AddBT Loc
   , blockifyStateSkipPrefixContainsNewline ∷ 𝔹
   , blockifyStateCurrentAnchor ∷ BlockifyAnchor t
   , blockifyStateParentAnchors ∷ 𝐿 (BlockifyAnchor t)
   , blockifyStateJustSawBlock ∷ 𝔹
   , blockifyStateIsAfterFirstToken ∷ 𝔹
+  , blockifyStateBracketTokenDepth ∷ t ⇰ ℕ64
   }
 makeLenses ''BlockifyState
 
@@ -84,8 +111,8 @@ blockifyState₀ ∷ BlockifyArgs t → BlockifyState t
 blockifyState₀ ρ = 
   BlockifyState 
     (blockifyArgsInput ρ) 
-    null BotBT False blockifyAnchor₀ null
-    False False
+    null null BotBT False blockifyAnchor₀ null
+    False False null
 
 newtype BlockifyM t a = BlockifyM 
   { unBlockifyM ∷ RWST (BlockifyEnv t) (BlockifyOut t) (BlockifyState t) ((∨) Doc) a }
@@ -106,7 +133,7 @@ evalBlockifyM γ σ = map snd ∘ runBlockifyM γ σ
 oevalBlockifyM ∷ BlockifyEnv t → BlockifyState t → BlockifyM t a → Doc ∨ BlockifyOut t
 oevalBlockifyM γ σ = evalBlockifyM γ σ ∘ retOut
 
-oevalBlockifyM₀ ∷ BlockifyArgs t → BlockifyM t a → Doc ∨ BlockifyOut t
+oevalBlockifyM₀ ∷ (Ord t) ⇒ BlockifyArgs t → BlockifyM t a → Doc ∨ BlockifyOut t
 oevalBlockifyM₀ ρ = oevalBlockifyM (blockifyEnv₀ ρ) $ blockifyState₀ ρ
 
 -------------
@@ -132,49 +159,56 @@ blockifyPushAnchor col = do
   𝑎 ← getputL blockifyStateCurrentAnchorL $ BlockifyAnchor col null
   modifyL blockifyStateParentAnchorsL $ (:&) 𝑎
 
-blockifyPopAnchor ∷ 𝑂 (PreParserToken t) → BlockifyM t ()
-blockifyPopAnchor tO = do
-  pc ← case tO of
+blockifyErr ∷ 𝑂 (ParserToken t) → 𝕊 → BlockifyM t ()
+blockifyErr tO msg = do
+  pc :* ps ← case tO of
     None → do
       pEnd ← getL blockifyStatePrefixEndL
-      return $ eofContext pEnd
-    Some t → return $ preParserTokenContext t
-  𝑎s ← getL blockifyStateParentAnchorsL
+      return $ eofContext pEnd :* null
+    Some t → return $ parserTokenContext t :* parserTokenSuffix t
   so ← askL blockifyEnvSourceL
-  -- let er = displaySourceError so $ AddNull $ ParserError
+  pr ← getL blockifyStatePrefixL
+  spr ← getL blockifyStateSkipPrefixL
+  let pr' = concat [pr,concat $ map (parserContextDisplayR ∘ parserTokenContext) spr]
+      pei = ParserErrorInfo pr' null msg null
+      pe = ParserError (locRangeEnd $ parserContextLocRange pc) (parserContextError pc) ps $ single pei
+  throw $ displaySourceError so $ AddNull pe
+
+blockifyPopAnchor ∷ 𝑂 (ParserToken t) → 𝕊 → BlockifyM t ()
+blockifyPopAnchor tO msg = do
+  𝑎 ← getL blockifyStateCurrentAnchorL
+  when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () → 
+    blockifyErr tO msg
+  𝑎s ← getL blockifyStateParentAnchorsL
   case 𝑎s of
-    Nil → throw $ ppVertical
-      [ ppErr "BLOCKIFY INTERNAL ERROR"
-      , ppString "could not pop anchor stack"
-      ]
-    𝑎 :& 𝑎s' → do
-      putL blockifyStateCurrentAnchorL 𝑎
+    Nil → blockifyErr tO msg
+    𝑎' :& 𝑎s' → do
+      putL blockifyStateCurrentAnchorL 𝑎'
       putL blockifyStateParentAnchorsL 𝑎s'
 
-blockifyPushAnchorBracket ∷ BlockifyBracket t → BlockifyM t ()
-blockifyPushAnchorBracket bt =
-  modifyL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) $ (:&) bt
+blockifyPushAnchorBracket ∷ (Ord t) ⇒ BlockifyBracket t → BlockifyM t ()
+blockifyPushAnchorBracket bb = do
+  modifyL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) $ (:&) bb
+  modifyL blockifyStateBracketTokenDepthL $ (+) $ blockifyBracketDepthOne bb
 
-blockifyPopAnchorBracket ∷ BlockifyM t ()
-blockifyPopAnchorBracket = do
-  BlockifyAnchor col bs ← getL blockifyStateCurrentAnchorL
-  case bs of
-    Nil → throw $ ppVertical
-      [ ppErr "BLOCKIFY INTERNAL ERROR"
-      , ppString "could not pop anchor bracket stack"
-      ]
-    _b :& bs' → do
-      putL blockifyStateCurrentAnchorL $ BlockifyAnchor col bs'
+blockifyRecordPrefix ∷ 𝐼C (PreParserToken t) → BlockifyM t ()
+blockifyRecordPrefix ts =
+  modifyL blockifyStatePrefixL $ pospend $ concat $ map (parserContextDisplayR ∘ preParserTokenContext) ts
+
+blockifyEmit ∷ 𝐼C (PreParserToken t) → BlockifyM t ()
+blockifyEmit ts = do
+  blockifyRecordPrefix ts
+  tell ts
 
 blockifyFlushSkipPrefix ∷ BlockifyM t ()
 blockifyFlushSkipPrefix = do
   sp ← getputL blockifyStateSkipPrefixL null 
-  let spEnd = joins $ mapOn sp $ \ t → locRangeEnd $ parserContextLocRange $ preParserTokenContext t
+  let spEnd = joins $ mapOn sp $ \ t → locRangeEnd $ parserContextLocRange $ parserTokenContext t
   modifyL blockifyStatePrefixEndL $ (⊔) spEnd
   putL blockifyStateSkipPrefixContainsNewlineL False
-  tell sp
+  blockifyEmit $ map parserTokenToPreParserToken sp
 
-blockifyEmitToken ∷ (Pretty t,Ord t) ⇒ PreParserToken t → BlockifyM t ()
+blockifyEmitToken ∷ (Pretty t,Ord t) ⇒ ParserToken t → BlockifyM t ()
 blockifyEmitToken t = do
   -----------------------
   -- FIRST TOKEN LOGIC --
@@ -184,7 +218,7 @@ blockifyEmitToken t = do
   -- BLOCK LOGIC --
   -----------------
   isBlock ← askL blockifyEnvIsBlockL
-  if isBlock $ preParserTokenValue t
+  if isBlock $ parserTokenValue t
   then putL blockifyStateJustSawBlockL True
   else putL blockifyStateJustSawBlockL False
   -------------------
@@ -192,7 +226,7 @@ blockifyEmitToken t = do
   -------------------
   isBracket ← askL blockifyEnvIsBracketL
   getCloseBracket ← askL blockifyEnvGetCloseBracketL
-  let tVal = preParserTokenValue t
+  let tVal = parserTokenValue t
   when (isBracket tVal) $ \ () → do
     case getCloseBracket ⋕? tVal of
       Some bt → do
@@ -221,8 +255,7 @@ blockifyEmitToken t = do
             -- - if sep, do nothing
             -- - if close, close this bracket (pop the bracket stack)
             -- - fail if no match
-            let BlockifyBracket seps closes = bt
-            if tVal ∈ seps then do
+            if tVal ∈ blockifyBracketSeps bt then do
               -------------------------
               -- IT IS A BRACKET SEP --
               -------------------------
@@ -233,7 +266,7 @@ blockifyEmitToken t = do
               --
               -- - nothing to do
               skip
-            else if tVal ∈ closes then do
+            else if tVal ∈ blockifyBracketCloses bt then do
               ---------------------------
               -- IT IS A BRACKET CLOSE --
               ---------------------------
@@ -260,10 +293,11 @@ blockifyEmitToken t = do
               --           ⇧ ↑
               --
               -- - fail
-              throw $ ppVertical
-                    [ ppErr "BLOCKIFY ERROR"
-                    , ppString "improper nesting/use of bracket close/sep"
-                    ]
+              bracketSeps ← askL blockifyEnvBracketSepsL
+              blockifyErr (Some t) $ concat $ inbetween " " 
+                [ "bracket CLOSE before this bracket"
+                , if tVal ∈ bracketSeps then "SEP" else "CLOSE"
+                ]
           Nil → do
             ---------------------------------------------
             -- IT IS A BRACKET TOKEN FOR PARENT ANCHOR --
@@ -277,33 +311,43 @@ blockifyEmitToken t = do
             -- - close out the block
             -- - pop the anchor
             -- - repeat
+            tokenDepth ← getL blockifyStateBracketTokenDepthL
+            bracketSeps ← askL blockifyEnvBracketSepsL
+            when (tokenDepth ⋕? tVal ∈♭ pow [None,Some 0]) $ \ () →
+              blockifyErr (Some t) $ concat $ inbetween " "
+                [ "bracket OPEN before this bracket"
+                , if tVal ∈ bracketSeps then "SEP" else "CLOSE"
+                ]
             blockifyEmitSyntheticToken CloseIC
-            blockifyPopAnchor $ Some t
+            blockifyPopAnchor (Some t) $ concat $ inbetween " " 
+              [ "bracket OPEN before this bracket"
+              , if tVal ∈ bracketSeps then "SEP" else "CLOSE"
+              ]
             again ()
   --------------------
   -- EMIT THE TOKEN --
   --------------------
   blockifyFlushSkipPrefix
-  tell $ single t
+  blockifyEmit $ single $ parserTokenToPreParserToken t
 
 blockifyEmitSyntheticToken ∷ IndentCommand → BlockifyM t ()
 blockifyEmitSyntheticToken ic = do
-  tell *$ single ^$ blockifySyntheticToken ic
+  blockifyEmit *$ single ^$ blockifySyntheticToken ic
 
-blockifyEmitSkipToken ∷ (Eq t) ⇒ PreParserToken t → BlockifyM t ()
+blockifyEmitSkipToken ∷ (Eq t) ⇒ ParserToken t → BlockifyM t ()
 blockifyEmitSkipToken t = do
   newlineToken ← askL blockifyEnvNewlineTokenL
   modifyL blockifyStateSkipPrefixL $ pospend $ single t
-  modifyL blockifyStatePrefixEndL $ (⊔) $ locRangeEnd $ parserContextLocRange $ preParserTokenContext t
-  modifyL blockifyStateSkipPrefixContainsNewlineL $ (⩔) $ preParserTokenValue t ≡ newlineToken
+  modifyL blockifyStatePrefixEndL $ (⊔) $ locRangeEnd $ parserContextLocRange $ parserTokenContext t
+  modifyL blockifyStateSkipPrefixContainsNewlineL $ (⩔) $ parserTokenValue t ≡ newlineToken
 
-blockifyAnchorOnToken ∷ PreParserToken t → BlockifyM t ()
+blockifyAnchorOnToken ∷ ParserToken t → BlockifyM t ()
 blockifyAnchorOnToken t = do
   let tCol ∷ AddBT ℕ64
-      tCol = map locCol $ locRangeBegin $ parserContextLocRange $ preParserTokenContext t
+      tCol = map locCol $ locRangeBegin $ parserContextLocRange $ parserTokenContext t
   blockifyPushAnchor tCol
 
-blockifyPopInput ∷ BlockifyM t (𝑂 (PreParserToken t))
+blockifyPopInput ∷ BlockifyM t (𝑂 (ParserToken t))
 blockifyPopInput = do
   ts ← getL blockifyStateInputL
   case un𝑆 ts () of
@@ -354,15 +398,12 @@ blockifyM = do
           -- - the current anchor is not the initial anchor
           -- - fail if there are outstanding open brackets
           when (not $ isEmpty $ blockifyAnchorBrackets 𝑎ᵢ) $ \ () →
-            throw $ ppVertical
-              [ ppErr "BLOCKIFY ERROR"
-              , ppString "input ended before a closing bracket"
-              ]
+            blockifyErr None "bracket CLOSE before END OF INPUT"
           -- - otherwise let's "close out" this anchor with a close token and continue
           blockifyEmitSyntheticToken CloseIC
           -- - safe to assume parent anchors are non-empty 
           --   (otherwise a ≡ a₀ would succeed)
-          blockifyPopAnchor None
+          blockifyPopAnchor None "[INTERNAL ERROR]"
           again ()
         -- - the current anchor is the initial anchor
         -- - nothing left to do
@@ -379,7 +420,7 @@ blockifyM = do
       -- =============================== --
       -- we have a next token to process --
       -- =============================== --
-      if preParserTokenSkip t then do
+      if parserTokenSkip t then do
         ------------------------
         -- IT IS A SKIP TOKEN --
         ------------------------
@@ -393,7 +434,7 @@ blockifyM = do
           justSawBlock ← getL blockifyStateJustSawBlockL
           𝑎 ← getL blockifyStateCurrentAnchorL
           let 𝑎Col = blockifyAnchorCol 𝑎
-              tCol = map locCol $ locRangeBegin $ parserContextLocRange $ preParserTokenContext t
+              tCol = map locCol $ locRangeBegin $ parserContextLocRange $ parserTokenContext t
           if tCol > 𝑎Col then do
             ---------------------
             -- RIGHT OF ANCHOR --
@@ -465,6 +506,10 @@ blockifyM = do
               --   newlines when the current anchor is the root/initial
               --   anchor.
               blockifyEmitSyntheticToken NewlineIC
+              when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () →
+                blockifyErr (Some t) $ concat $ inbetween " " 
+                  [ "bracket CLOSE before block NEWLINE"
+                  ]
           else {- if tCol < 𝑎Col then -} do
             ---------------------------------------
             -- IT IS ON NEXT LINE LEFT OF ANCHOR --
@@ -498,7 +543,11 @@ blockifyM = do
             --      ↑          ⇒ ↑
             --
             blockifyEmitSyntheticToken CloseIC
-            blockifyPopAnchor $ Some t
+            when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () →
+              blockifyErr (Some t) $ concat $ inbetween " " 
+                [ "bracket CLOSE before block CLOSE"
+                ]
+            blockifyPopAnchor (Some t) "[INTERNAL ERROR]"
             again ()
         --
         --     token   token ⇒ token   token
