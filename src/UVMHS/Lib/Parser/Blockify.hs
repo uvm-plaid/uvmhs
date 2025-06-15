@@ -174,14 +174,14 @@ blockifyErr tO msg = do
       pe = ParserError (locRangeEnd $ parserContextLocRange pc) (parserContextError pc) ps $ single pei
   throw $ displaySourceError so $ AddNull pe
 
-blockifyPopAnchor ∷ 𝑂 (ParserToken t) → 𝕊 → BlockifyM t ()
-blockifyPopAnchor tO msg = do
+blockifyPopAnchor ∷ 𝑂 (ParserToken t) → BlockifyM t ()
+blockifyPopAnchor tO = do
   𝑎 ← getL blockifyStateCurrentAnchorL
   when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () → 
-    blockifyErr tO msg
+    blockifyErr tO "[INTERNAL ERROR]"
   𝑎s ← getL blockifyStateParentAnchorsL
   case 𝑎s of
-    Nil → blockifyErr tO msg
+    Nil → blockifyErr tO "[INTERNAL ERROR]"
     𝑎' :& 𝑎s' → do
       putL blockifyStateCurrentAnchorL 𝑎'
       putL blockifyStateParentAnchorsL 𝑎s'
@@ -319,10 +319,7 @@ blockifyEmitToken t = do
                 , if tVal ∈ bracketSeps then "SEP" else "CLOSE"
                 ]
             blockifyEmitSyntheticToken CloseIC
-            blockifyPopAnchor (Some t) $ concat $ inbetween " " 
-              [ "bracket OPEN before this bracket"
-              , if tVal ∈ bracketSeps then "SEP" else "CLOSE"
-              ]
+            blockifyPopAnchor $ Some t
             again ()
   --------------------
   -- EMIT THE TOKEN --
@@ -403,7 +400,7 @@ blockifyM = do
           blockifyEmitSyntheticToken CloseIC
           -- - safe to assume parent anchors are non-empty 
           --   (otherwise a ≡ a₀ would succeed)
-          blockifyPopAnchor None "[INTERNAL ERROR]"
+          blockifyPopAnchor None
           again ()
         -- - the current anchor is the initial anchor
         -- - nothing left to do
@@ -508,7 +505,7 @@ blockifyM = do
               blockifyEmitSyntheticToken NewlineIC
               when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () →
                 blockifyErr (Some t) $ concat $ inbetween " " 
-                  [ "bracket CLOSE before block NEWLINE"
+                  [ "bracket CLOSE before this block NEWLINE"
                   ]
           else {- if tCol < 𝑎Col then -} do
             ---------------------------------------
@@ -545,9 +542,9 @@ blockifyM = do
             blockifyEmitSyntheticToken CloseIC
             when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () →
               blockifyErr (Some t) $ concat $ inbetween " " 
-                [ "bracket CLOSE before block CLOSE"
+                [ "bracket CLOSE before this block CLOSE"
                 ]
-            blockifyPopAnchor (Some t) "[INTERNAL ERROR]"
+            blockifyPopAnchor $ Some t
             again ()
         --
         --     token   token ⇒ token   token
