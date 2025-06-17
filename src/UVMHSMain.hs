@@ -103,8 +103,20 @@ dev = cleanExit $ do
     , ") c d"
     ]
   pprint $ debugThing $ concat $ inbetween "\n"
+    [ "(a b"
+    , "c d"
+    ]
+  pprint $ debugThing $ concat $ inbetween "\n"
     [ "a local (a b"
     , ") c d"
+    ]
+  pprint $ debugThing $ concat $ inbetween "\n"
+    [ "a local (a b"
+    , "c d"
+    ]
+  pprint $ debugThing $ concat $ inbetween "\n"
+    [ "a b"
+    , "  ( c] d"
     ]
 
   -- FUTURE

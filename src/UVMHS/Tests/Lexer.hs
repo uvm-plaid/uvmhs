@@ -20,9 +20,9 @@ lexer = lexerWSBasic syntax
 blockifyArgs ∷ 𝕊 → 𝔹 → 𝑆 (ParserToken TokenWSBasic) → BlockifyArgs TokenWSBasic
 blockifyArgs so anchorTL = BlockifyArgs so anchorTL mkIndentTokenWSBasic (NewlineTWSBasic "\n") (shape blockTWSBasicL) bracketOpens bracketSeps bracketCloses closeBracket
   where
-    bracketOpens = pow $ map SyntaxTWSBasic ["(","["]
-    bracketSeps = pow $ map SyntaxTWSBasic [",",";"]
-    bracketCloses = pow $ map SyntaxTWSBasic [")","]"]
+    bracketOpens = pow $ map (\ s → s :* SyntaxTWSBasic s) ["(","["]
+    bracketSeps = pow $ map (\ s → s :* SyntaxTWSBasic s) [",",";"]
+    bracketCloses = pow $ map (\ s → s :* SyntaxTWSBasic s) [")","]"]
     closeBracket = dict
       [ SyntaxTWSBasic "(" ↦ BlockifyBracketArg (single $ SyntaxTWSBasic ",") (single $ SyntaxTWSBasic ")")
       , SyntaxTWSBasic "[" ↦ BlockifyBracketArg (single $ SyntaxTWSBasic ";") (single $ SyntaxTWSBasic "]")

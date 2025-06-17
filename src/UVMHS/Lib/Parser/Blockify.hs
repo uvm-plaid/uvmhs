@@ -53,9 +53,9 @@ data BlockifyArgs t = BlockifyArgs
   , blockifyArgsNewlineToken ∷ t
   , blockifyArgsIsBlock ∷ t → 𝔹
  -- | true for open, sep and close brackets
-  , blockifyArgsBracketOpens ∷ 𝑃 t
-  , blockifyArgsBracketSeps ∷ 𝑃 t
-  , blockifyArgsBracketCloses ∷ 𝑃 t
+  , blockifyArgsBracketOpens ∷ 𝑃 (𝕊 ∧ t)
+  , blockifyArgsBracketSeps ∷ 𝑃 (𝕊 ∧ t)
+  , blockifyArgsBracketCloses ∷ 𝑃 (𝕊 ∧ t)
   -- | map each open bracket to its matching sep/close info
   , blockifyArgsGetCloseBracket ∷ t ⇰ BlockifyBracketArg t 
   , blockifyArgsInput ∷ 𝑆 (ParserToken t)
@@ -73,14 +73,27 @@ data BlockifyEnv t = BlockifyEnv
   , blockifyEnvIsBracket ∷ t → 𝔹
   -- | map each open bracket to its matching sep/close info
   , blockifyEnvGetCloseBracket ∷ t ⇰ BlockifyBracket t 
+  , blockifyEnvGetOpenBracket ∷ t ⇰ 𝑃 t
+  , blockifyEnvGetDisplayToken ∷ t ⇰ 𝕊
   }
 makeLenses ''BlockifyEnv
 
 blockifyEnv₀ ∷ (Ord t) ⇒ BlockifyArgs t → BlockifyEnv t
 blockifyEnv₀ ρ = 
-  let bracketOpens = blockifyArgsBracketOpens ρ
-      bracketSeps = blockifyArgsBracketSeps ρ
-      bracketCloses = blockifyArgsBracketCloses ρ
+  let bracketOpens = map𝑃 snd $ blockifyArgsBracketOpens ρ
+      bracketSeps = map𝑃 snd $ blockifyArgsBracketSeps ρ
+      bracketCloses = map𝑃 snd $ blockifyArgsBracketCloses ρ
+      isBracket = flip (∈♭) $ unions [bracketOpens,bracketSeps,bracketCloses]
+      getCloseBracket = map blockifyBracketArgToBlockifyBracket $ blockifyArgsGetCloseBracket ρ
+      getOpenBracket = concat $ do
+        open :* bb ← iter getCloseBracket
+        tok ← iter $ blockifyBracketSepsAndCloses bb
+        return $ tok ↦ single open
+      getDisplayToken = dict $ concat
+        [ mapOn (iter $ blockifyArgsBracketOpens ρ) $ uncurry $ \ s t → t ↦ s
+        , mapOn (iter $ blockifyArgsBracketSeps ρ) $ uncurry $ \ s t → t ↦ s
+        , mapOn (iter $ blockifyArgsBracketCloses ρ) $ uncurry $ \ s t → t ↦ s
+        ]
   in
   BlockifyEnv (blockifyArgsSource ρ)
               (blockifyArgsAnchorTL ρ)
@@ -88,8 +101,8 @@ blockifyEnv₀ ρ =
               (blockifyArgsNewlineToken ρ)
               (blockifyArgsIsBlock ρ)
               bracketOpens bracketSeps bracketCloses 
-              (flip (∈♭) $ unions [bracketOpens,bracketSeps,bracketCloses]) $
-              map blockifyBracketArgToBlockifyBracket $ blockifyArgsGetCloseBracket ρ
+              isBracket getCloseBracket getOpenBracket
+              getDisplayToken
 
 type BlockifyOut t = 𝐼C (PreParserToken t)
 
@@ -159,8 +172,8 @@ blockifyPushAnchor col = do
   𝑎 ← getputL blockifyStateCurrentAnchorL $ BlockifyAnchor col null
   modifyL blockifyStateParentAnchorsL $ (:&) 𝑎
 
-blockifyErr ∷ 𝑂 (ParserToken t) → 𝕊 → BlockifyM t ()
-blockifyErr tO msg = do
+blockifyError ∷ 𝑂 (ParserToken t) → 𝕊 → BlockifyM t ()
+blockifyError tO msg = do
   pc :* ps ← case tO of
     None → do
       pEnd ← getL blockifyStatePrefixEndL
@@ -178,10 +191,10 @@ blockifyPopAnchor ∷ 𝑂 (ParserToken t) → BlockifyM t ()
 blockifyPopAnchor tO = do
   𝑎 ← getL blockifyStateCurrentAnchorL
   when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () → 
-    blockifyErr tO "[INTERNAL ERROR]"
+    blockifyError tO "[INTERNAL ERROR]"
   𝑎s ← getL blockifyStateParentAnchorsL
   case 𝑎s of
-    Nil → blockifyErr tO "[INTERNAL ERROR]"
+    Nil → blockifyError tO "[INTERNAL ERROR]"
     𝑎' :& 𝑎s' → do
       putL blockifyStateCurrentAnchorL 𝑎'
       putL blockifyStateParentAnchorsL 𝑎s'
@@ -226,6 +239,8 @@ blockifyEmitToken t = do
   -------------------
   isBracket ← askL blockifyEnvIsBracketL
   getCloseBracket ← askL blockifyEnvGetCloseBracketL
+  getOpenBracket ← askL blockifyEnvGetOpenBracketL
+  getDisplayToken ← askL blockifyEnvGetDisplayTokenL
   let tVal = parserTokenValue t
   when (isBracket tVal) $ \ () → do
     case getCloseBracket ⋕? tVal of
@@ -241,11 +256,11 @@ blockifyEmitToken t = do
         -- - push its sep/close info on the stack
         blockifyPushAnchorBracket bt
       None → repeat $ \ again → do
-        𝑎ᵢ ← getL blockifyStateCurrentAnchorL
+        𝑎 ← getL blockifyStateCurrentAnchorL
         ----------------------------------
         -- IT IS A BRACKET SEP OR CLOSE --
         ----------------------------------
-        case blockifyAnchorBrackets 𝑎ᵢ of
+        case blockifyAnchorBrackets 𝑎 of
           bt :& bts → do
             ----------------------------------------------
             -- IT IS A BRACKET TOKEN FOR CURRENT ANCHOR --
@@ -294,8 +309,11 @@ blockifyEmitToken t = do
               --
               -- - fail
               bracketSeps ← askL blockifyEnvBracketSepsL
-              blockifyErr (Some t) $ concat $ inbetween " " 
-                [ "bracket CLOSE before this bracket"
+              let expectedCloses = blockifyBracketCloses bt
+              blockifyError (Some t) $ concat $ inbetween " " 
+                [ "matching bracket CLOSE"
+                , concat $ inbetween " OR " $ mapOn (iter expectedCloses) $ \ tᵢ → concat ["‹",getDisplayToken ⋕! tᵢ,"›" ]
+                , "before this bracket"
                 , if tVal ∈ bracketSeps then "SEP" else "CLOSE"
                 ]
           Nil → do
@@ -314,8 +332,12 @@ blockifyEmitToken t = do
             tokenDepth ← getL blockifyStateBracketTokenDepthL
             bracketSeps ← askL blockifyEnvBracketSepsL
             when (tokenDepth ⋕? tVal ∈♭ pow [None,Some 0]) $ \ () →
-              blockifyErr (Some t) $ concat $ inbetween " "
-                [ "bracket OPEN before this bracket"
+              blockifyError (Some t) $ concat $ inbetween " "
+                [ "matching bracket OPEN"
+                , concat $ inbetween " OR " $ do
+                    tᵢ ← iter $ getOpenBracket ⋕! tVal
+                    return $ concat ["‹",getDisplayToken ⋕! tᵢ,"›"]
+                , "before this bracket"
                 , if tVal ∈ bracketSeps then "SEP" else "CLOSE"
                 ]
             blockifyEmitSyntheticToken CloseIC
@@ -361,6 +383,7 @@ blockifyM ∷ ∀ t. (Ord t,Pretty t) ⇒ BlockifyM t ()
 blockifyM = do
   tO ← blockifyPopInput
   anchorTL ← askL blockifyEnvAnchorTLL
+  getDisplayToken ← askL blockifyEnvGetDisplayTokenL
   case tO of
     None → do
       -- ============================== --
@@ -390,12 +413,18 @@ blockifyM = do
       --              ⇧↑     ⇒            ⇧↑
       --
       repeat $ \ again → do
-        𝑎ᵢ ← getL blockifyStateCurrentAnchorL
-        when (𝑎ᵢ ≢ blockifyAnchor₀) $ \ () → do
+        𝑎 ← getL blockifyStateCurrentAnchorL
+        when (𝑎 ≢ blockifyAnchor₀) $ \ () → do
           -- - the current anchor is not the initial anchor
           -- - fail if there are outstanding open brackets
-          when (not $ isEmpty $ blockifyAnchorBrackets 𝑎ᵢ) $ \ () →
-            blockifyErr None "bracket CLOSE before END OF INPUT"
+          when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () → do
+            let expectedCloses = blockifyBracketCloses $ viewΩ someL $ firstElem $ blockifyAnchorBrackets 𝑎
+            blockifyError None $ concat $ inbetween " "
+              [ "bracket CLOSE"
+              , concat $ inbetween " OR " $ mapOn (iter expectedCloses) $ \ tᵢ → concat ["‹",getDisplayToken ⋕! tᵢ,"›" ]
+              , "before END OF INPUT"
+              ]
+
           -- - otherwise let's "close out" this anchor with a close token and continue
           blockifyEmitSyntheticToken CloseIC
           -- - safe to assume parent anchors are non-empty 
@@ -503,9 +532,12 @@ blockifyM = do
               --   newlines when the current anchor is the root/initial
               --   anchor.
               blockifyEmitSyntheticToken NewlineIC
-              when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () →
-                blockifyErr (Some t) $ concat $ inbetween " " 
-                  [ "bracket CLOSE before this block NEWLINE"
+              when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () → do
+                let expectedCloses = blockifyBracketCloses $ viewΩ someL $ firstElem $ blockifyAnchorBrackets 𝑎
+                blockifyError (Some t) $ concat $ inbetween " " 
+                  [ "bracket CLOSE"
+                  , concat $ inbetween " OR " $ mapOn (iter expectedCloses) $ \ tᵢ → concat ["‹",getDisplayToken ⋕! tᵢ,"›" ]
+                  , "before block NEWLINE triggered by this TOKEN"
                   ]
           else {- if tCol < 𝑎Col then -} do
             ---------------------------------------
@@ -540,9 +572,12 @@ blockifyM = do
             --      ↑          ⇒ ↑
             --
             blockifyEmitSyntheticToken CloseIC
-            when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () →
-              blockifyErr (Some t) $ concat $ inbetween " " 
-                [ "bracket CLOSE before this block CLOSE"
+            when (not $ isEmpty $ blockifyAnchorBrackets 𝑎) $ \ () → do
+              let expectedCloses = blockifyBracketCloses $ viewΩ someL $ firstElem $ blockifyAnchorBrackets 𝑎
+              blockifyError (Some t) $ concat $ inbetween " " 
+                [ "bracket CLOSE"
+                , concat $ inbetween " OR " $ mapOn (iter expectedCloses) $ \ tᵢ → concat ["‹",getDisplayToken ⋕! tᵢ,"›" ]
+                , "before block CLOSE triggered by this TOKEN"
                 ]
             blockifyPopAnchor $ Some t
             again ()
