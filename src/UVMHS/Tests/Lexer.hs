@@ -28,32 +28,14 @@ blockifyArgs so anchorTL = BlockifyArgs so anchorTL mkIndentTokenWSBasic (Newlin
       , SyntaxTWSBasic "[" ↦ BlockifyBracketArg (single $ SyntaxTWSBasic ";") (single $ SyntaxTWSBasic "]")
       ]
 
-lexerTestAOld ∷ 𝕊 → 𝕊
-lexerTestAOld s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSAnchored lexer "" $ tokens s
-
-lexerTestUOld ∷ 𝕊 → 𝕊
-lexerTestUOld s = ppshow $ viewΩ inrL $ map renderParserTokens $ tokenizeWSUnanchored lexer "" $ tokens s
-
 lexerTestANew ∷ 𝕊 → 𝕊
-lexerTestANew s = ppshow $ viewΩ inrL $ do
-  ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
-  ts' ← blockify $ blockifyArgs "<>" True $ stream ts
-  return $ renderParserTokens $ finalizeTokens $ vec ts'
-
-lexerTestANewDebug ∷ 𝕊 → 𝕊
-lexerTestANewDebug s = ppshow $ do
+lexerTestANew s = elimChoice ppshow ppshow $ do
   ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
   ts' ← blockify $ blockifyArgs "<>" True $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
 
 lexerTestUNew ∷ 𝕊 → 𝕊
 lexerTestUNew s = ppshow $ viewΩ inrL $ do
-  ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
-  ts' ← blockify $ blockifyArgs "<>" False $ stream ts
-  return $ renderParserTokens $ finalizeTokens $ vec ts'
-
-lexerTestUNewDebug ∷ 𝕊 → 𝕊
-lexerTestUNewDebug s = ppshow $ do
   ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
   ts' ← blockify $ blockifyArgs "<>" False $ stream ts
   return $ renderParserTokens $ finalizeTokens $ vec ts'
@@ -1128,6 +1110,173 @@ lexerTestU = lexerTestUNew
        , "     e)}"
        , "  , d"
        , "  )"
+       ]
+  |]
+
+-- ======= --
+-- FAILURE --
+-- ======= --
+
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "+ c d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:1"
+       , "One of:"
+       , "a b"
+       , "+ c d"
+       , "^"
+       , "Expected <token>"
+       ]
+  |]
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , ") c d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:1"
+       , "One of:"
+       , "a b;"
+       , ") c d"
+       , "^"
+       , "Expected matching bracket OPEN ‹(› before this bracket CLOSE"
+       ]
+  |]
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "( c d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:4"
+       , "One of:"
+       , "a b;"
+       , "( c dEOF"
+       , "     ^^^"
+       , "Expected bracket CLOSE ‹)› before END OF INPUT"
+       ]
+  |]
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , ", c d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:1"
+       , "One of:"
+       , "a b;"
+       , ", c d"
+       , "^"
+       , "Expected matching bracket OPEN ‹(› before this bracket SEP"
+       ]
+  |]
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "(a b"
+       , ") c d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:1"
+       , "One of:"
+       , "(a b;"
+       , ") c d"
+       , "^"
+       , "Expected bracket CLOSE ‹)› before block NEWLINE triggered by this TOKEN"
+       ]
+  |]
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "(a b"
+       , "c d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:1"
+       , "One of:"
+       , "(a b;"
+       , "c d"
+       , "^"
+       , "Expected bracket CLOSE ‹)› before block NEWLINE triggered by this TOKEN"
+       ]
+  |]
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a local (a b"
+       , ") c d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:1"
+       , "One of:"
+       , "a local{ (a b}"
+       , ") c d"
+       , "^"
+       , "Expected bracket CLOSE ‹)› before block CLOSE triggered by this TOKEN"
+       ]
+  |]
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a local (a b"
+       , "c d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:1"
+       , "One of:"
+       , "a local{ (a b}"
+       , "c d"
+       , "^"
+       , "Expected bracket CLOSE ‹)› before block CLOSE triggered by this TOKEN"
+       ]
+  |]
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
+       , "  ( c] d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:6"
+       , "One of:"
+       , "a b"
+       , "  ( c] d"
+       , "     ^"
+       , "Expected matching bracket CLOSE ‹)› before this bracket CLOSE"
        ]
   |]
 
