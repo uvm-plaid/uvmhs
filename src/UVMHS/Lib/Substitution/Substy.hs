@@ -111,7 +111,7 @@ fvssMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ a → s ⇰ 𝑃 (MVar s e)
 fvssMetas = map (pow ∘ filterMap (view m_UVarL) ∘ iter) ∘ fvssWith (\ _s y → shape m_UVarL y)
 
 fvsMetas ∷ (Ord s,Ord e,Substy s e a) ⇒ s → a → 𝑃 (MVar s e)
-fvsMetas s = ifNone pø ∘ lup s ∘ fvssMetas
+fvsMetas s = ifNone (const pø) ∘ lup s ∘ fvssMetas
 
 todbr ∷ (Substy s e a) ⇒ a → 𝑂 a
 todbr = snd ∘ evalSubstM (Subst_SA $ SubstAction AllNameless_RA null) ∘ substy
@@ -207,7 +207,7 @@ substySVarG mkVar s x = do
     FreeVars_SA a → do
       let -- `m` is the number of binders we are underneath
           m ∷ ℕ64
-          m = ifNone 0 $ freeVarsActionScope a ⋕? (s :* xName)
+          m = ifNone (const 0) $ freeVarsActionScope a ⋕? (s :* xName)
       -- when `xLevel ≥ m` it is a free variable
       when (unDVar xLevel ≥ m) $ \ () → do
         let -- create the free variable to accumulate, whose variable level
@@ -307,26 +307,24 @@ substyUVar mkVar s = \case
 -- PARSING --
 -------------
 
-syntaxSubst ∷ LexerWSBasicSyntax
+syntaxSubst ∷ Syntax
 syntaxSubst = concat
   [ syntaxVarInf
-  , null { lexerWSBasicSyntaxPuns = pow 
-             [ ",","...","…"
-             , "{","}","[","]"
-             , "|->","↦"
-             , "==","≡","+"
-             ] }
+  , syntaxPuns 
+      [ ",","...","…"
+      , "{","}","[","]"
+      , "|->","↦"
+      , "==","≡","+"
+      ]
   ]
 
-syntaxMVar ∷ LexerWSBasicSyntax
+syntaxMVar ∷ Syntax
 syntaxMVar = concat
   [ syntaxSubst
-  , null { lexerWSBasicSyntaxPuns = pow 
-             [ ":m"
-             ] }
+  , syntaxPuns [":m"]
   ]
 
-syntaxUVar ∷ LexerWSBasicSyntax
+syntaxUVar ∷ Syntax
 syntaxUVar = concat
   [ syntaxVar
   , syntaxMVar
@@ -357,9 +355,9 @@ instance Monoid (ParseSubstAction e)
 
 type ParseSubstActions e = SGName ⇰ ParseSubstAction e
 
-pSubst ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → Parser TokenWSBasic e) → Parser TokenWSBasic (Subst () e)
+pSubst ∷ ∀ e. (Eq e,Substy () e e) ⇒ (() → Parser e) → Parser (Subst () e)
 pSubst pE = pNewContext "subst" $ do
-  let pSubstIncr ∷ Var → Parser TokenWSBasic (ParseSubstActions e)
+  let pSubstIncr ∷ Var → Parser (ParseSubstActions e)
       pSubstIncr x₁ = do
         pTokSyntaxAny ["...","…"]
         x₂ ← pErr "parsing varinf" pVarInf
@@ -384,7 +382,7 @@ pSubst pE = pNewContext "subst" $ do
           _ → pDie
         pTokSyntax "]"
         return a
-      pSubstElem ∷ Var → Parser TokenWSBasic (ParseSubstActions e)
+      pSubstElem ∷ Var → Parser (ParseSubstActions e)
       pSubstElem x₀ = do
         pTokSyntaxAny ["|->","↦"]
         e ← pE ()
@@ -393,7 +391,7 @@ pSubst pE = pNewContext "subst" $ do
           N_Var (NVar n x) → N_SGName x ↦ parseSubstActionElem (Some n) e
           G_Var (GVar x)   → G_SGName x ↦ parseSubstActionElem None     e
   pTokSyntax "{"
-  xas ← concat ^$ pManySepBy (pTokSyntax ",") $ do
+  xas ← concat ^$ manySepBy (pTokSyntax ",") $ do
     x ← pVar
     concat 
       [ pSubstIncr x
@@ -460,18 +458,18 @@ pSubst pE = pNewContext "subst" $ do
   pTokSyntax "}"
   return 𝓈
 
-pMVarTail ∷ (Eq e,Substy () e e) ⇒ (() → Parser TokenWSBasic e) → Name → Parser TokenWSBasic (MVar () e)
+pMVarTail ∷ (Eq e,Substy () e e) ⇒ (() → Parser e) → Name → Parser (MVar () e)
 pMVarTail pE x = do
   pTokSyntax ":m"
-  𝓈 ← ifNone null ^$ pOptional $ pSubst pE
+  𝓈 ← ifNone null ^$ optional $ pSubst pE
   return $ MVar 𝓈 x
 
-pMVar ∷ (Eq e,Substy () e e) ⇒ (() → Parser TokenWSBasic e) → Parser TokenWSBasic (MVar () e)
+pMVar ∷ (Eq e,Substy () e e) ⇒ (() → Parser e) → Parser (MVar () e)
 pMVar pE = do
   x ← pName
   pMVarTail pE x
 
-pUVar ∷ (Eq e,Substy () e e) ⇒ (() → Parser TokenWSBasic e) → Parser TokenWSBasic (UVar () e)
+pUVar ∷ (Eq e,Substy () e e) ⇒ (() → Parser e) → Parser (UVar () e)
 pUVar pE = concat
   [ do x ← pDVar
        return $ D_UVar x

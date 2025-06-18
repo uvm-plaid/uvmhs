@@ -2,18 +2,17 @@ module Examples.Lang.Arith where
 
 import UVMHS
 
-syntax ∷ LexerWSBasicSyntax
-syntax = null
-  { lexerWSBasicSyntaxPuns = pow ["(",")"]
-  , lexerWSBasicSyntaxOprs = pow ["==","+","*","-","^","!"]
-  }
+syntax ∷ Syntax
+syntax = concat
+  [ syntaxPuns ["(",")"]
+  , syntaxOprs ["==","+","*","-","^","!"]
+  ]
 
-lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
-lexer = lexerWSBasic syntax
+lExp ∷ Lexer
+lExp = mkLexer $ LexerArgs False syntax
 
 testTokenizerSuccess ∷ IO ()
-testTokenizerSuccess =
-  tokenizeIOMain lexer "" $ tokens "1 + 2 - 3 * 4 ^ 5 ! == 1 \n -- blah blah \n {- ml {{- ml --}-} -- blah\nb"
+testTokenizerSuccess = lexIOMain lExp "<>" "1 + 2 - 3 * 4 ^ 5 ! == 1 \n -- blah blah \n {- ml {{- ml --}-} -- blah\nb"
 
 data Lit =
     IntegerL ℤ
@@ -38,41 +37,40 @@ data ExpPre =
 makePrisms ''ExpPre
 makePrettySum ''ExpPre
 
-cpLit ∷ Parser TokenWSBasic Lit
-cpLit = tries
+pLit ∷ Parser Lit
+pLit = tries
   [ IntegerL ^$ pTokInt
   , DoubleL ^$ pTokDouble
   , StringL ^$ pTokString
   ]
 
-cpAtom ∷ Parser TokenWSBasic Atom
-cpAtom = pNewContext "atom" $ tries
-  [ LitA ^$ cpLit
+pAtom ∷ Parser Atom
+pAtom = pNewContext "atom" $ tries
+  [ LitA ^$ pLit
   , NameA ^$ pTokName
   ]
 
-cpExp ∷ Parser TokenWSBasic Exp
-cpExp = fmixfixWithContext "exp" $ concat
-  [ fmixTerminal $ do
-      pTok $ SyntaxTWSBasic "("
-      e ← cpExp
-      pTok $ SyntaxTWSBasic ")"
+pExp ∷ Parser Exp
+pExp = mixfix id "exp" $ concat
+  [ mixTerminal $ do
+      pTokSyntax "("
+      e ← pExp
+      pTokSyntax "("
       return $ extract e
-  , fmixTerminal       $ AtomE         ^$ cpAtom
-  , fmixInfix   pCMP   $ const EqualE  ^$ pTokSyntax "=="
-  , fmixInfixR  pPLUS  $ const PlusE   ^$ pTokSyntax "+"
-  , fmixInfixR  pTIMES $ const TimesE  ^$ pTokSyntax "*"
-  , fmixPrefix  pNEG   $ const NegateE ^$ pTokSyntax "-"
-  , fmixInfixL  pPOW   $ const ExpoE   ^$ pTokSyntax "^"
-  , fmixPostfix pFAC   $ const FactE   ^$ pTokSyntax "!"
+  , mixTerminal       $ AtomE         ^$ pAtom
+  , mixInfix   pCMP   $ const EqualE  ^$ pTokSyntax "=="
+  , mixInfixR  pPLUS  $ const PlusE   ^$ pTokSyntax "+"
+  , mixInfixR  pTIMES $ const TimesE  ^$ pTokSyntax "*"
+  , mixPrefix  pNEG   $ const NegateE ^$ pTokSyntax "-"
+  , mixInfixL  pPOW   $ const ExpoE   ^$ pTokSyntax "^"
+  , mixPostfix pFAC   $ const FactE   ^$ pTokSyntax "!"
   ]
 
 testParserSuccess ∷ IO ()
-testParserSuccess = do
-  parseIOMain cpExp "" *$ tokenizeIO lexer "" $ tokens "(- 1) + - 2 + 3 * 4 ^ 5 ^ 6 !"
+testParserSuccess = lexParseIOMain lExp pExp "<>" "(- 1) + - 2 + 3 * 4 ^ 5 ^ 6 !"
 
 testParserFailure1 ∷ IO ()
-testParserFailure1 = parseIOMain cpExp "" *$ tokenizeIO lexer "" $ tokens "((9 == ((- 1))) + 2 + 3 * 4 ^ 5 ^ 6 !))"
+testParserFailure1 = lexParseIOMain lExp pExp "<>" "((9 == ((- 1))) + 2 + 3 * 4 ^ 5 ^ 6 !))"
 
 testParserFailure2 ∷ IO ()
-testParserFailure2 = parseIOMain cpExp "" *$ tokenizeIO lexer "" $ tokens "(((((- 1))) + 2 + 3 * 4 ^ 5 ^ ! == 0))"
+testParserFailure2 = lexParseIOMain lExp pExp "<>" "(((((- 1))) + 2 + 3 * 4 ^ 5 ^ ! == 0))"

@@ -223,32 +223,32 @@ rpSatisfies {- msg -} p = rpShaped {- msg -} $ \ x → case p x of
 rpToken ∷ (Eq t {- ,Pretty t -}) ⇒ t → RawParser t t
 rpToken l = rpSatisfies {- (ppshow l) -} $ (≡) l
 
-rpOptional ∷ RawParser t a → RawParser t (𝑂 a)
-rpOptional p = tries [map Some p,return None]
-
-rpMany ∷ RawParser t a → RawParser t (𝐿 a)
-rpMany xM = tries
-  [ rpOneOrMore xM
-  , return Nil
-  ]
-
-rpOneOrMore ∷ RawParser t a → RawParser t (𝐿 a)
-rpOneOrMore xM = do
-  x ← xM
-  xs ← rpMany xM
-  return $ x:&xs
-
-rpManySepBy ∷ RawParser t () → RawParser t a → RawParser t (𝐿 a)
-rpManySepBy sepM xM = tries
-  [ rpOneOrMoreSepBy sepM xM
-  , return Nil
-  ]
-
-rpOneOrMoreSepBy ∷ RawParser t () → RawParser t a → RawParser t (𝐿 a)
-rpOneOrMoreSepBy sepM xM = do
-  x ← xM
-  xs ← map snd ^$ rpMany $ sepM ⧆ xM
-  return $ x :& xs
+-- rpOptional ∷ RawParser t a → RawParser t (𝑂 a)
+-- rpOptional p = tries [map Some p,return None]
+-- 
+-- rpMany ∷ RawParser t a → RawParser t (𝐿 a)
+-- rpMany xM = tries
+--   [ rpOneOrMore xM
+--   , return Nil
+--   ]
+-- 
+-- rpOneOrMore ∷ RawParser t a → RawParser t (𝐿 a)
+-- rpOneOrMore xM = do
+--   x ← xM
+--   xs ← rpMany xM
+--   return $ x:&xs
+-- 
+-- rpManySepBy ∷ RawParser t () → RawParser t a → RawParser t (𝐿 a)
+-- rpManySepBy sepM xM = tries
+--   [ rpOneOrMoreSepBy sepM xM
+--   , return Nil
+--   ]
+-- 
+-- rpOneOrMoreSepBy ∷ RawParser t () → RawParser t a → RawParser t (𝐿 a)
+-- rpOneOrMoreSepBy sepM xM = do
+--   x ← xM
+--   xs ← map snd ^$ rpMany $ sepM ⧆ xM
+--   return $ x :& xs
 
 ------------------------
 -- High-level Helpers --

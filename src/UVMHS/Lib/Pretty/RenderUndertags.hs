@@ -91,7 +91,7 @@ renderChunkUndertags = \case
   NewlineChunkI n → do renderUndertags ; renderNewline n
 
 annotateRenderUT ∷ Annotation → RenderUTM () → RenderUTM ()
-annotateRenderUT (Annotation fm ut) = mapOut (annotateSummaryO fm) ∘ mapEnvL renderUTEnvUnderFormatL (first ut)
+annotateRenderUT (Annotation fm ut) = mapOut (annotateSummaryO fm) ∘ mapEnvL renderUTEnvUnderFormatL (first𝑂 ut)
 
 compileRenderUT ∷ TreeI → RenderUT
 compileRenderUT rd = onRenderUT (\ xM → xM ≫ renderUndertags) $ un𝑇V rd fₑ fₐ

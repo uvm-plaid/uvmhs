@@ -43,13 +43,13 @@ instance Pretty Name where
         Some n → ppPun $ concat ["#",show𝕊 n]
     ]
 
-syntaxName ∷ LexerWSBasicSyntax
-syntaxName = null { lexerWSBasicSyntaxPuns = pow ["#"] }
+syntaxName ∷ Syntax
+syntaxName = syntaxPuns ["#"]
 
-pName ∷ Parser TokenWSBasic Name
+pName ∷ Parser Name
 pName = do
   x ← pTokName
-  nO ← pOptional $ do
+  nO ← optional $ do
     pTokSyntax "#"
     pTokNat64
   return $ Name nO x

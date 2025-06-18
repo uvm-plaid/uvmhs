@@ -3,40 +3,18 @@ module UVMHSMain where
 
 import UVMHS
 
-import qualified Examples.Lang.Arith as Arith
-import qualified Examples.Lang.ArithBlocks as ArithBlocks
-import qualified Examples.Lang.SExp as SExp
-
-import qualified Prelude as HS
+import UVMHS.Future.TH
+import UVMHS.Future.TH.Deriving
 
 import UVMHS.Tests.Core
 import UVMHS.Tests.Substitution
 import UVMHS.Tests.Deriving
+import UVMHS.Tests.Lexer
+
+import qualified Prelude as HS
 
 import qualified Language.Haskell.TH as TH
 import qualified Language.Haskell.TH.Syntax as TH
-
-import Test.QuickCheck (Arbitrary, arbitrary)
-import qualified Test.QuickCheck as QC
-import qualified Data.Text as Text
-import qualified Data.Map as Map
-import qualified Data.Vector as V
-
-import UVMHS.Lang.ULC
-
-import qualified Control.Monad.Logic as L
-
-import qualified GHC.IsList as IsList
-
-import UVMHS.Future.TH
-import UVMHS.Future.TH.Deriving
-
-import qualified UVMHS.Tests.Lexer as TestLexer
-
-import UVMHS.Tests.Lexer hiding (lexer)
-
-import UVMHS.Lib.Parser.Blockify
-import UVMHS.Lib.Parser.Regex (mkIndentTokenWSBasic,blockTWSBasicL)
 
 main ∷ IO ()
 main = out "<UVMHS>"
@@ -58,11 +36,13 @@ test = do
   --   $$(testModules False fuzzParamsTny
   --     [ "UVMHS.Tests.Core"
   --     , "UVMHS.Tests.Substitution"
+  --     , "UVMHS.Tests.Deriving"
+  --     , "UVMHS.Tests.Lexer"
   --     ])
 
 dev ∷ IO ()
 dev = cleanExit $ do
-  test
+  noExit test
 
   -- FUTURE
   -- out $(thShowDecs ds₁)

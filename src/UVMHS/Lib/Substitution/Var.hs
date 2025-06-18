@@ -23,15 +23,13 @@ makeLenses ''DVar
 instance Pretty DVar where
   pretty (DVar n) = ppPun $ concat ["•:",show𝕊 n]
 
-syntaxDVar ∷ LexerWSBasicSyntax
-syntaxDVar = concat
-  [ null { lexerWSBasicSyntaxPuns = pow ["•",":"] }
-  ]
+syntaxDVar ∷ Syntax
+syntaxDVar = syntaxPuns ["•",":"]
 
-pDVarTail ∷ Parser TokenWSBasic DVar
+pDVarTail ∷ Parser DVar
 pDVarTail = DVar ^$ pTokNat64
 
-pDVar ∷ Parser TokenWSBasic DVar
+pDVar ∷ Parser DVar
 pDVar = do 
   pTokSyntax "•"
   pTokSyntax ":"
@@ -77,20 +75,20 @@ instance Pretty NVar where
     , if n ≡ DVar 0 then null else ppPun $ concat [":",show𝕊 $ unDVar n]
     ]
 
-syntaxNVar ∷ LexerWSBasicSyntax
+syntaxNVar ∷ Syntax
 syntaxNVar = concat
   [ syntaxName
   , syntaxDVar
   ]
 
-pNVarTail ∷ Name → Parser TokenWSBasic NVar
+pNVarTail ∷ Name → Parser NVar
 pNVarTail x = do
-  n ← ifNone (DVar 0) ^$ pOptional $ do
+  n ← ifNone (const $ DVar 0) ^$ optional $ do
     pTokSyntax ":"
     pDVarTail
   return $ NVar n x
 
-pNVar ∷ Parser TokenWSBasic NVar
+pNVar ∷ Parser NVar
 pNVar = do
   x ← pName
   pNVarTail x
@@ -109,18 +107,18 @@ makeLenses ''GVar
 instance Pretty GVar where
   pretty (GVar x) = concat [pretty x,ppPun ":g"]
 
-syntaxGVar ∷ LexerWSBasicSyntax
+syntaxGVar ∷ Syntax
 syntaxGVar = concat
   [ syntaxName
-  , null { lexerWSBasicSyntaxPuns = pow [":g"] }
+  , syntaxPuns [":g"]
   ]
 
-pGVarTail ∷ Name → Parser TokenWSBasic GVar
+pGVarTail ∷ Name → Parser GVar
 pGVarTail x = do
   pTokSyntax ":g"
   return $ GVar x
 
-pGVar ∷ Parser TokenWSBasic GVar
+pGVar ∷ Parser GVar
 pGVar = do
   x ← pName
   pGVarTail x
@@ -210,7 +208,7 @@ instance Shrinky Var where
     N_Var x → N_Var ^$ shrink x
     G_Var x → G_Var ^$ shrink x
 
-syntaxVar ∷ LexerWSBasicSyntax
+syntaxVar ∷ Syntax
 syntaxVar = concat
   [ syntaxName
   , syntaxDVar
@@ -218,7 +216,7 @@ syntaxVar = concat
   , syntaxGVar
   ]
 
-pVar ∷ Parser TokenWSBasic Var
+pVar ∷ Parser Var
 pVar = concat
   [ D_Var ^$ pDVar
   , do x ← pName
@@ -246,20 +244,20 @@ instance Pretty DVarInf where
     Var_DVI x → pretty x
     Inf_DVI   → ppPun "•:∞"
 
-syntaxDVarInf ∷ LexerWSBasicSyntax
+syntaxDVarInf ∷ Syntax
 syntaxDVarInf = concat
   [ syntaxDVar
-  , null { lexerWSBasicSyntaxPuns = pow ["INF","∞"] }
+  , syntaxPuns ["INF","∞"]
   ]
 
-pDVarInfTail ∷ Parser TokenWSBasic DVarInf
+pDVarInfTail ∷ Parser DVarInf
 pDVarInfTail = concat
   [ Var_DVI ^$ pDVarTail
   , do pTokSyntaxAny ["INF","∞"]
        return Inf_DVI
   ]
 
-pDVarInf ∷ Parser TokenWSBasic DVarInf
+pDVarInf ∷ Parser DVarInf
 pDVarInf = do
   pTokSyntax "•"
   pTokSyntax ":"
@@ -286,19 +284,19 @@ instance Pretty NVarInf where
         _ → null
     ]
 
-syntaxNVarInf ∷ LexerWSBasicSyntax
+syntaxNVarInf ∷ Syntax
 syntaxNVarInf = concat
   [ syntaxName
   , syntaxDVarInf
   ]
 
-pNVarInfTail ∷ Name → Parser TokenWSBasic NVarInf
+pNVarInfTail ∷ Name → Parser NVarInf
 pNVarInfTail x = do
   pTokSyntax ":"
   n ← pDVarInfTail
   return $ NVarInf n x
 
-pNVarInf ∷ Parser TokenWSBasic NVarInf
+pNVarInf ∷ Parser NVarInf
 pNVarInf = do
   x ← pName
   pNVarInfTail x
@@ -317,14 +315,14 @@ data VarInf =
 makePrisms ''VarInf
 makePrettyUnion ''VarInf
 
-syntaxVarInf ∷ LexerWSBasicSyntax
+syntaxVarInf ∷ Syntax
 syntaxVarInf = concat
   [ syntaxDVarInf
   , syntaxNVarInf
   , syntaxGVar
   ]
 
-pVarInf ∷ Parser TokenWSBasic VarInf
+pVarInf ∷ Parser VarInf
 pVarInf = concat
   [ D_VarInf ^$ pDVarInf
   , do x ← pName

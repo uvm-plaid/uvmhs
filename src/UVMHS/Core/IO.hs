@@ -101,8 +101,8 @@ traceM msg =
 ewrite ∷ 𝕊 → IO ()
 ewrite = BS.hPutStr IO.stderr ∘ Text.encodeUtf8
 
-err ∷ 𝕊 → IO ()
-err s = exec [ewrite s,ewrite "\n"]
+eout ∷ 𝕊 → IO ()
+eout s = exec [ewrite s,ewrite "\n"]
 
 eflush ∷ IO ()
 eflush = IO.hFlush IO.stderr
@@ -147,6 +147,9 @@ catchIO = HS.catchIOError
 
 cleanExit ∷ IO a → IO a
 cleanExit xM = HS.catch xM (\ (c ∷ ExitCode) → shout c ≫ exitIO)
+
+noExit ∷ IO () → IO ()
+noExit xM = HS.catch xM (\ (_c ∷ ExitCode) → skip)
 
 -----------
 -- Files --

@@ -129,7 +129,7 @@ compareSSubstElem ℓvar substE e₁ e₂ = interpSSubstElem ℓvar substE e₁ 
 
 introSSubstElem ∷ (Ord s) ⇒ s → s ⇰ ℕ64 → SSubstElem s e → SSubstElem s e
 introSSubstElem s ιs = \case
-  Var_SSE n → Var_SSE $ DVar $ unDVar n + ifNone 0 (ιs ⋕? s)
+  Var_SSE n → Var_SSE $ DVar $ unDVar n + ifNone (const 0) (ιs ⋕? s)
   Trm_SSE e → Trm_SSE $ introSubstElem ιs e
 
 substSSubstElem ∷ e ⌲ DVar → (s ⇰ ℕ64 → e → 𝑂 e) → SSubstElem s e → SSubstElem s e

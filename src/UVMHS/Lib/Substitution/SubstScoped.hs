@@ -127,7 +127,7 @@ introSubstScoped = SubstScoped 0 null ∘ intΩ64
 
 shiftSubstScoped ∷ (Ord s) ⇒ s ⇰ ℕ64 → s → SubstScoped s e → SubstScoped s e
 shiftSubstScoped ιs s (SubstScoped ρ es ι) = 
-  let ρ'  = (+) ρ $ ifNone 0 $ ιs ⋕? s
+  let ρ'  = (+) ρ $ ifNone (const 0) $ ιs ⋕? s
       es' = mapOn es $ introSSubstElem s ιs
   in SubstScoped ρ' es' ι
 

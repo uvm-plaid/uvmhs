@@ -54,31 +54,16 @@ isSome = \case
   None → False
   Some _ → True
 
--- TODO: fix this to be explicitly delayed in first argument
-ifNone ∷ a → 𝑂 a → a
-ifNone i = \case
-  None → i
-  Some x → x
+ifNone ∷ (() → a) → 𝑂 a → a
+ifNone xF = elim𝑂 xF id
 
-ifNoneZ ∷ a → 𝑂 a → a
-ifNoneZ ~i = \case
-  None → i
-  Some x → x
+ifNoneM ∷ (Return m) ⇒ (() → m a) → 𝑂 a → m a
+ifNoneM xMF = elim𝑂 xMF return
 
-ifNoneM ∷ (Return m) ⇒ m a → 𝑂 a → m a
-ifNoneM xM = \case
-  None → xM
-  Some x → return $ x
-
-ifNoneMZ ∷ (Return m) ⇒ m a → 𝑂 a → m a
-ifNoneMZ ~xM = \case
-  None → xM
-  Some x → return $ x
-
-first ∷ 𝑂 a → 𝑂 a → 𝑂 a
-first = \case
+first𝑂 ∷ 𝑂 a → 𝑂 a → 𝑂 a
+first𝑂 = \case
   None → id
   Some x → const $ Some x
 
-last ∷ 𝑂 a → 𝑂 a → 𝑂 a
-last = flip first
+last𝑂 ∷ 𝑂 a → 𝑂 a → 𝑂 a
+last𝑂 = flip first𝑂

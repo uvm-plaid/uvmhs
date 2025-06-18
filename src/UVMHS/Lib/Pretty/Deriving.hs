@@ -41,8 +41,8 @@ makePrettySumLogic cx ty tyargs concontys = do
 
 makePrettySum ∷ TH.Name → QIO [TH.Dec]
 makePrettySum name = do
-  (cx :* ty :* tyargs :* _ :* cs :* _) ← ifNoneM (io abortIO) ∘ (thViewADT *∘ view thTyConIL) *$ TH.reify name
-  scs ← mapM (ifNoneM (io abortIO) ∘ thViewSimpleCon) cs
+  (cx :* ty :* tyargs :* _ :* cs :* _) ← ifNoneM (const $ io abortIO) ∘ (thViewADT *∘ view thTyConIL) *$ TH.reify name
+  scs ← mapM (ifNoneM (const $ io abortIO) ∘ thViewSimpleCon) cs
   map tohs $ makePrettySumLogic cx ty tyargs scs
 
 -- makePrettyUnionLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] [(con₁,[conty₁₁,…,conty₁⸤n₁⸥]),…,(conₘ,[contyₘ₁,…,contyₘ⸤nₘ⸥])] ≔
@@ -82,8 +82,8 @@ makePrettyUnionLogic cx ty tyargs concontys = do
 
 makePrettyUnion ∷ TH.Name → QIO [TH.Dec]
 makePrettyUnion name = do
-  (cx :* ty :* tyargs :* _ :* cs :* _) ← ifNoneM (io abortIO) ∘ (thViewADT *∘ view thTyConIL) *$ TH.reify name
-  scs ← mapM (ifNoneM (io abortIO) ∘ thViewSimpleCon) cs
+  (cx :* ty :* tyargs :* _ :* cs :* _) ← ifNoneM (const $ io abortIO) ∘ (thViewADT *∘ view thTyConIL) *$ TH.reify name
+  scs ← mapM (ifNoneM (const $ io abortIO) ∘ thViewSimpleCon) cs
   map tohs $ makePrettyUnionLogic cx ty tyargs scs
 
 -- makePrettyRecordLogic [C₁,…,Cₙ] ty [a₁,…,aₙ] con [(field₁,fieldty₁),…,(fieldₙ,fieldtyₙ)] ≔
@@ -100,7 +100,7 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
       conNameAllLower = string $ map toLower $ iter conName
   fieldNameTmps ← mapMOn fieldfieldtys $ \ (field :* _) → do
     let fieldName = string $ TH.nameBase field
-    let afterPrefix = ifNone fieldName $ firstSome $ list
+    let afterPrefix = ifNone (const fieldName) $ firstSome $ list
           [ frhs $ Text.stripPrefix conNameFirstLower fieldName
           , frhs $ Text.stripPrefix conNameAllLower fieldName
           , frhs $ Text.stripSuffix conName fieldName
@@ -140,7 +140,7 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
 
 makePrettyRecord ∷ TH.Name → QIO [TH.Dec]
 makePrettyRecord name = do
-  (cx :* ty :* tyargs :* _ :* c :* _) ← ifNoneM (io abortIO) ∘ (thViewSingleConADT *∘ view thTyConIL) *$ TH.reify name
-  (con :* fields) ← ifNoneM (io abortIO) $ view thRecCL c
+  (cx :* ty :* tyargs :* _ :* c :* _) ← ifNoneM (const $ io abortIO) ∘ (thViewSingleConADT *∘ view thTyConIL) *$ TH.reify name
+  (con :* fields) ← ifNoneM (const $ io abortIO) $ view thRecCL c
   let fieldfieldtys = mapOn fields $ \ (frhs → field :* _ :* fieldty) → (field :* fieldty)
   map tohs $ makePrettyRecordLogic cx ty tyargs con fieldfieldtys

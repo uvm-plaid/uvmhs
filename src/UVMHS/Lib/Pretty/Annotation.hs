@@ -30,7 +30,7 @@ data Formats = Formats
 instance Null Formats where null = Formats None None None None None
 instance Append Formats where
   Formats fg₁ bg₁ ul₁ bd₁ it₁ ⧺ Formats fg₂ bg₂ ul₂ bd₂ it₂ =
-    Formats (first fg₁ fg₂) (first bg₁ bg₂) (first ul₁ ul₂) (first bd₁ bd₂) (first it₁ it₂)
+    Formats (first𝑂 fg₁ fg₂) (first𝑂 bg₁ bg₂) (first𝑂 ul₁ ul₂) (first𝑂 bd₁ bd₂) (first𝑂 it₁ it₂)
 instance Monoid Formats
 
 format ∷ Format → Formats
@@ -63,7 +63,7 @@ data Annotation = Annotation
 instance Null Annotation where
   null = Annotation null None
 instance Append Annotation where
-  Annotation a₁ u₁ ⧺ Annotation a₂ u₂ = Annotation (a₁ ⧺ a₂) (last u₁ u₂)
+  Annotation a₁ u₁ ⧺ Annotation a₂ u₂ = Annotation (a₁ ⧺ a₂) (last𝑂 u₁ u₂)
 instance Monoid Annotation
 
 formatAnnotation ∷ Formats → Annotation

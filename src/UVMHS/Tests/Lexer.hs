@@ -1,50 +1,34 @@
-module UVMHS.Tests.Lexer (blockifyArgs,lexer,g__TESTS__UVMHS__Tests__Lexer) where
+module UVMHS.Tests.Lexer (g__TESTS__UVMHS__Tests__Lexer) where
 
 import UVMHS.Core
 
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Testing
-import UVMHS.Lib.Parser.Blockify
-import UVMHS.Lib.Parser.Regex (mkIndentTokenWSBasic,blockTWSBasicL)
 
-syntax ∷ LexerWSBasicSyntax
+syntax ∷ Syntax
 syntax = concat
-  [ lexerWSBasicSyntaxPunsMk   $ pow ["(",")",",","[","]",";"]
-  , lexerWSBasicSyntaxBlocksMk $ pow ["local"]
+  [ syntaxBrks $ dict
+      [ "(" ↦ [","] :* [")"]
+      , "[" ↦ [";"] :* ["]"]
+      ]
+  , syntaxBlks ["local"]
   ]
 
-lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
-lexer = lexerWSBasic syntax
+lexerArgs ∷ 𝔹 → LexerArgs
+lexerArgs anchorTL = LexerArgs anchorTL syntax
 
-blockifyArgs ∷ 𝕊 → 𝔹 → 𝑆 (ParserToken TokenWSBasic) → BlockifyArgs TokenWSBasic
-blockifyArgs so anchorTL = BlockifyArgs so anchorTL mkIndentTokenWSBasic (NewlineTWSBasic "\n") (shape blockTWSBasicL) bracketOpens bracketSeps bracketCloses closeBracket
-  where
-    bracketOpens = pow $ map (\ s → s :* SyntaxTWSBasic s) ["(","["]
-    bracketSeps = pow $ map (\ s → s :* SyntaxTWSBasic s) [",",";"]
-    bracketCloses = pow $ map (\ s → s :* SyntaxTWSBasic s) [")","]"]
-    closeBracket = dict
-      [ SyntaxTWSBasic "(" ↦ BlockifyBracketArg (single $ SyntaxTWSBasic ",") (single $ SyntaxTWSBasic ")")
-      , SyntaxTWSBasic "[" ↦ BlockifyBracketArg (single $ SyntaxTWSBasic ";") (single $ SyntaxTWSBasic "]")
-      ]
+lexer ∷ 𝔹 → Lexer
+lexer = mkLexer ∘ lexerArgs
 
-lexerTestANew ∷ 𝕊 → 𝕊
-lexerTestANew s = elimChoice ppshow ppshow $ do
-  ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
-  ts' ← blockify $ blockifyArgs "<>" True $ stream ts
-  return $ renderParserTokens $ finalizeTokens $ vec ts'
-
-lexerTestUNew ∷ 𝕊 → 𝕊
-lexerTestUNew s = ppshow $ viewΩ inrL $ do
-  ts ← finalizeTokens ^$ tokenize lexer "<>" $ tokens s
-  ts' ← blockify $ blockifyArgs "<>" False $ stream ts
-  return $ renderParserTokens $ finalizeTokens $ vec ts'
+lexerTest ∷ 𝔹 → 𝕊 → 𝕊
+lexerTest anchorTL s = elimChoice ppshow (ppshow ∘ renderParserTokens) $ lex (lexer anchorTL) "<>" s
 
 lexerTestA ∷ 𝕊 → 𝕊
-lexerTestA = lexerTestANew
+lexerTestA = lexerTest True
 
 lexerTestU ∷ 𝕊 → 𝕊
-lexerTestU = lexerTestUNew
+lexerTestU = lexerTest False
 
 -- ======== --
 -- ANCHORED --
@@ -1204,7 +1188,7 @@ lexerTestU = lexerTestUNew
        , "(a b;"
        , ") c d"
        , "^"
-       , "Expected bracket CLOSE ‹)› before block NEWLINE triggered by this TOKEN"
+       , "Expected bracket CLOSE ‹)› before block SEP triggered by this TOKEN"
        ]
   |]
 𝔱 "lexer:anchored:failure" 
@@ -1222,7 +1206,7 @@ lexerTestU = lexerTestUNew
        , "(a b;"
        , "c d"
        , "^"
-       , "Expected bracket CLOSE ‹)› before block NEWLINE triggered by this TOKEN"
+       , "Expected bracket CLOSE ‹)› before block SEP triggered by this TOKEN"
        ]
   |]
 𝔱 "lexer:anchored:failure" 

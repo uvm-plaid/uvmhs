@@ -281,24 +281,24 @@ frameParse s = do
     elimChoice (failIO ∘ string) (return ∘ map (map (Text.decodeUtf8 ∘ BSL.toStrict) ∘ 𝕍) ∘ 𝕍) $
       frhs $ CSV.decode @(Vector.Vector BSL.ByteString) CSV.NoHeader $
         BSL.fromStrict $ Text.encodeUtf8 s
-  cols ∷ 𝐿 𝕊 ← ifNoneM (failIO "bad1") $ list ^$ sss ⋕? 0
-  typs ∷ 𝐿 𝕊 ← ifNoneM (failIO "bad2") $ list ^$ sss ⋕? 1
+  cols ∷ 𝐿 𝕊 ← ifNoneM (const $ failIO "bad1") $ list ^$ sss ⋕? 0
+  typs ∷ 𝐿 𝕊 ← ifNoneM (const $ failIO "bad2") $ list ^$ sss ⋕? 1
   let sss' ∷ 𝕍 (𝕍 𝕊)
       sss' = vecF (csize sss - 2) $ \ i → sss ⋕! (i + 2)
       rows ∷ ℕ64
       rows = csize sss'
-  typs' ∷ 𝐿 FrameType ← ifNoneM (failIO "bad3") $ mapMOn typs $ flip lup $ dict @((⇰) _)
+  typs' ∷ 𝐿 FrameType ← ifNoneM (const $ failIO "bad3") $ mapMOn typs $ flip lup $ dict @((⇰) _)
     [ frameTypeCode B_FT ↦ B_FT
     , frameTypeCode N_FT ↦ N_FT
     , frameTypeCode Z_FT ↦ Z_FT
     , frameTypeCode D_FT ↦ D_FT
     , frameTypeCode S_FT ↦ S_FT
     ]
-  coltyps ∷ 𝐿 (𝕊 ∧ FrameType) ← ifNoneM (failIO "bad4") $ zipSameLength cols typs'
+  coltyps ∷ 𝐿 (𝕊 ∧ FrameType) ← ifNoneM (const $ failIO "bad4") $ zipSameLength cols typs'
   let coltyps' ∷ 𝕊 ⇰ FrameType
       coltyps' = assoc coltyps
   svss ∷ 𝕍 (𝕊 ⇰ FrameVal) ← mapMOn sss' $ \ ss → do
-    stss ← ifNoneM (failIO "unexpected row") $ zipSameLength coltyps $ list ss
+    stss ← ifNoneM (const $ failIO "unexpected row") $ zipSameLength coltyps $ list ss
     assoc ^$ mapMOn stss $ \ ((key :* t) :* sᵢ) → do
       v ← frameValParse sᵢ t
       return $ key :* v

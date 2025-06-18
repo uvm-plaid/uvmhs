@@ -57,3 +57,9 @@ mapMInl = flip mapMChoice return
 
 mapMInr ∷ (Monad m) ⇒ (b → m b') → a ∨ b → m (a ∨ b')
 mapMInr = mapMChoice return
+
+ifInl ∷ (a → b) → a ∨ b → b
+ifInl f = elimChoice f id
+
+ifInlM ∷ (Monad m) ⇒ (a → m b) → a ∨ b → m b
+ifInlM f = elimChoice f return

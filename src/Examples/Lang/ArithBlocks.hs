@@ -2,32 +2,31 @@ module Examples.Lang.ArithBlocks where
 
 import UVMHS
 
-syntax ∷ LexerWSBasicSyntax
+syntax ∷ Syntax
 syntax = concat
-  [ lexerWSBasicSyntaxPunsMk   $ pow ["(",")"]
-  , lexerWSBasicSyntaxOprsMk   $ pow ["==","+","*","-","^","!"]
-  , lexerWSBasicSyntaxBlocksMk $ pow ["local"]
+  [ syntaxBrks $ dict [ "(" ↦ [] :* [")"] ]
+  , syntaxOprs ["==","+","*","-","^","!"]
+  , syntaxBlks ["local"]
   ]
 
-lexer ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
-lexer = lexerWSBasic syntax
+lExp ∷ Lexer
+lExp = mkLexer $ LexerArgs True syntax
 
 testTokenizerSuccess ∷ IO ()
-testTokenizerSuccess =
-  tokenizeWSAnchoredIOMain lexer "" $ tokens $ concat $ inbetween "\n"
-    [ "1 -- blah"
-    , "2"
-    , "3 4"
-    , "  5"
-    , "local 6"
-    , "7"
-    , "local 8"
-    , "      9"
-    , "local"
-    , "10"
-    , "local local "
-    , "      local"
-    ]
+testTokenizerSuccess = lexIOMain lExp "" $ concat $ inbetween "\n"
+  [ "1 -- blah"
+  , "2"
+  , "3 4"
+  , "  5"
+  , "local 6"
+  , "7"
+  , "local 8"
+  , "      9"
+  , "local"
+  , "10"
+  , "local local "
+  , "      local"
+  ]
 
 data Lit =
     IntegerL ℤ
@@ -53,20 +52,20 @@ data ExpPre =
 makePrisms ''ExpPre
 makePrettySum ''ExpPre
 
-cpLit ∷ Parser TokenWSBasic Lit
+cpLit ∷ Parser Lit
 cpLit = tries
   [ IntegerL ^$ pTokInt
   , DoubleL ^$ pTokDouble
   , StringL ^$ pTokString
   ]
 
-cpAtom ∷ Parser TokenWSBasic Atom
+cpAtom ∷ Parser Atom
 cpAtom = pNewContext "atom" $ tries
   [ LitA ^$ cpLit
   , NameA ^$ pTokName
   ]
 
-cpBlock ∷ Parser TokenWSBasic (𝐿 Exp)
+cpBlock ∷ Parser (𝐿 Exp)
 cpBlock = pNewContext "block" $ do
   pTokBlock "local"
   pTokOpen
@@ -74,48 +73,38 @@ cpBlock = pNewContext "block" $ do
   pTokClose
   return es
 
-cpExp ∷ Parser TokenWSBasic Exp
-cpExp = fmixfixWithContext "exp" $ concat
-  [ fmixTerminal $ do
-      pTok $ SyntaxTWSBasic "("
+cpExp ∷ Parser Exp
+cpExp = mixfix id "exp" $ concat
+  [ mixTerminal $ do
+      pTokSyntax "("
       e ← cpExp
-      pTok $ SyntaxTWSBasic ")"
+      pTokSyntax ")"
       return $ extract e
-  , fmixTerminal       $ AtomE         ^$ cpAtom
-  , fmixInfix   pCMP   $ const EqualE  ^$ pTokSyntax "=="
-  , fmixInfixR  pPLUS  $ const PlusE   ^$ pTokSyntax "+"
-  , fmixInfixR  pTIMES $ const TimesE  ^$ pTokSyntax "*"
-  , fmixPrefix  pNEG   $ const NegateE ^$ pTokSyntax "-"
-  , fmixInfixL  pPOW   $ const ExpoE   ^$ pTokSyntax "^"
-  , fmixPostfix pFAC   $ const FactE   ^$ pTokSyntax "!"
-  , fmixTerminal $ BlockE ^$ cpBlock
+  , mixTerminal       $ AtomE         ^$ cpAtom
+  , mixInfix   pCMP   $ const EqualE  ^$ pTokSyntax "=="
+  , mixInfixR  pPLUS  $ const PlusE   ^$ pTokSyntax "+"
+  , mixInfixR  pTIMES $ const TimesE  ^$ pTokSyntax "*"
+  , mixPrefix  pNEG   $ const NegateE ^$ pTokSyntax "-"
+  , mixInfixL  pPOW   $ const ExpoE   ^$ pTokSyntax "^"
+  , mixPostfix pFAC   $ const FactE   ^$ pTokSyntax "!"
+  , mixTerminal $ BlockE ^$ cpBlock
   ]
 
-cpExpList ∷ Parser TokenWSBasic (𝐿 Exp)
-cpExpList = pManySepBy pTokDelim cpExp
+cpExpList ∷ Parser (𝐿 Exp)
+cpExpList = manySepBy pTokSep cpExp
 
 testParserSuccess ∷ IO ()
-testParserSuccess = do
-  parseIOMain cpExpList ""
-    *$ tokenizeWSAnchoredIO lexer ""
-     $ tokens
-     $ concat
-     $ inbetween "\n"
-    [ "(- 1) + 2"
-    , "local 2 + 3"
-    , "      local - 2 + 3"
-    , "        * 4 ^ 5 ^ 6 !"
-    ]
+testParserSuccess = lexParseIOMain lExp cpExpList "<>" $ concat $ inbetween "\n"
+  [ "(- 1) + 2"
+  , "local 2 + 3"
+  , "      local - 2 + 3"
+  , "        * 4 ^ 5 ^ 6 !"
+  ]
 
 testParserFailure ∷ IO ()
-testParserFailure =
-  parseIOMain cpExpList ""
-    *$ tokenizeWSAnchoredIO lexer ""
-     $ tokens
-     $ concat
-     $ inbetween "\n"
-    [ "(- 1) + 2"
-    , "local 2 + 3 + 4"
-    , "      local - 2 + 3"
-    , "      + 4 ^ 5 ^ 6 !"
-    ]
+testParserFailure = lexParseIOMain lExp cpExpList "<>" $ concat $ inbetween "\n"
+  [ "(- 1) + 2"
+  , "local 2 + 3 + 4"
+  , "      local - 2 + 3"
+  , "      + 4 ^ 5 ^ 6 !"
+  ]

@@ -150,7 +150,7 @@ keyL k = lens (⋕? k) $ flip $ \case
 
 keyL𝑂 ∷ (Ord k,Null v) ⇒ k → (k ⇰ v) ⟢ v
 keyL𝑂 k =
-  let ℓ = lens (ifNone null) $ const Some
+  let ℓ = lens (ifNone $ const null) $ const Some
   in ℓ ⊚ keyL k
 
 --------------------------

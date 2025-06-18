@@ -342,22 +342,43 @@ tries = foldr abort (⎅)
 guard ∷ (Monad m,MonadFail m) ⇒ 𝔹 → m ()
 guard b = if b then skip else abort
 
+optional ∷ (Monad m,MonadFail m) ⇒ m a → m (𝑂 a)
+optional p = tries [map Some p,return None]
+
+many ∷ (Monad m,MonadFail m) ⇒ m a → m (𝐿 a)
+many aM = tries
+  [ oneOrMore aM
+  , return Nil
+  ]
+
+oneOrMore ∷ (Monad m,MonadFail m) ⇒ m a → m (𝐿 a)
+oneOrMore xM = do
+  x :* xs ← oneOrMoreSplit xM
+  return $ x :& xs
+
 oneOrMoreSplit ∷ (Monad m,MonadFail m) ⇒ m a → m (a ∧ 𝐿 a)
 oneOrMoreSplit aM = do
   x ← aM
   xs ← many aM
   return $ x :* xs
 
-oneOrMore ∷ (Monad m,MonadFail m) ⇒ m a → m (𝐿 a)
-oneOrMore xM = do
-  (x :* xs) ← oneOrMoreSplit xM
+manySepBy ∷ (Monad m,MonadFail m) ⇒ m () → m a → m (𝐿 a)
+manySepBy sepM xM = tries
+  [ oneOrMoreSepBy sepM xM
+  , return Nil
+  ]
+
+oneOrMoreSepBy ∷ (Monad m,MonadFail m) ⇒ m () → m a → m (𝐿 a)
+oneOrMoreSepBy sepM xM = do
+  x :* xs ← oneOrMoreSepBySplit sepM xM
   return $ x :& xs
 
-many ∷ (Monad m,MonadFail m) ⇒ m a → m (𝐿 a)
-many aM = tries
-  [ oneOrMore aM
-  , return null
-  ]
+oneOrMoreSepBySplit ∷ (Monad m,MonadFail m) ⇒ m () → m a → m (a ∧ 𝐿 a)
+oneOrMoreSepBySplit sepM xM = do
+  x ← xM
+  xs ← many $ do sepM ; xM
+  return $ x :* xs
+  
 
 -- Error --
 
@@ -398,30 +419,30 @@ manyNT aM = mconcat
   , return null
   ]
 
-twoOrMoreSplitNT ∷ (Monad m,MonadNondet m) ⇒ m a → m (a ∧ a ∧ 𝐿 a)
-twoOrMoreSplitNT aM = do
-  x₁ ← aM
-  (x₂ :* xs) ← oneOrMoreSplitNT aM
-  return (x₁ :* x₂ :* xs)
+-- twoOrMoreSplitNT ∷ (Monad m,MonadNondet m) ⇒ m a → m (a ∧ a ∧ 𝐿 a)
+-- twoOrMoreSplitNT aM = do
+--   x₁ ← aM
+--   (x₂ :* xs) ← oneOrMoreSplitNT aM
+--   return (x₁ :* x₂ :* xs)
 
-manySepBy ∷ (Monad m,MonadNondet m) ⇒ m () → m a → m (𝐿 a)
-manySepBy uM xM = mconcat
-  [ do
-      x ← xM
-      xs ← manyPrefBy uM xM
-      return $ x :& xs
-  , return null
-  ]
-
-manyPrefBy ∷ (Monad m,MonadNondet m) ⇒ m () → m a → m (𝐿 a)
-manyPrefBy uM xM = mconcat
-  [ do
-      uM
-      x ← xM
-      xs ← manyPrefBy uM xM
-      return $ x :& xs
-  , return null
-  ]
+-- manySepBy ∷ (Monad m,MonadNondet m) ⇒ m () → m a → m (𝐿 a)
+-- manySepBy uM xM = mconcat
+--   [ do
+--       x ← xM
+--       xs ← manyPrefBy uM xM
+--       return $ x :& xs
+--   , return null
+--   ]
+-- 
+-- manyPrefBy ∷ (Monad m,MonadNondet m) ⇒ m () → m a → m (𝐿 a)
+-- manyPrefBy uM xM = mconcat
+--   [ do
+--       uM
+--       x ← xM
+--       xs ← manyPrefBy uM xM
+--       return $ x :& xs
+--   , return null
+--   ]
 
 mzero𝑂 ∷ (Monad m,MonadNondet m) ⇒ 𝑂 a → m a
 mzero𝑂 = elim𝑂 (const mzero) return

@@ -45,33 +45,32 @@ canonULC = onULCExp $ mapAVal $ \case
   Lam_ULC xO e → Lam_ULC xO $ canonULC e
   App_ULC e₁ e₂ → App_ULC (canonULC e₁) $ canonULC e₂
 
-syntaxULC ∷ LexerWSBasicSyntax
+syntaxULC ∷ Syntax
 syntaxULC = concat
   [ syntaxUVar
-  , null { lexerWSBasicSyntaxPuns = pow ["(",")","->","→"] 
-         , lexerWSBasicSyntaxKeys = pow ["lam","λ"]
-         }
+  , syntaxPuns ["(",")","->","→"] 
+  , syntaxKeys ["lam","λ"]
   ]
 
-lexULCExp ∷ Lexer CharClass ℂ TokenClassWSBasic ℕ64 TokenWSBasic
-lexULCExp = lexerWSBasic syntaxULC
+lULCExp ∷ Lexer
+lULCExp = mkLexer $ LexerArgs False syntaxULC
 
-pULCExp ∷ Parser TokenWSBasic ULCExpSrc
-pULCExp = ULCExp ^$ fmixfixWithContextSet "exp" $ concat
-  [ fmixTerminal $ do
+pULCExp ∷ Parser ULCExpSrc
+pULCExp = ULCExp ^$ mixfix single "exp" $ concat
+  [ mixTerminal $ do
       pTokSyntax "("
       e ← pULCExp
       pTokSyntax ")"
       return $ aval $ unULCExp e
-  , fmixTerminal $ do
+  , mixTerminal $ do
       x ← pUVar $ \ () → pULCExp
       return $ Var_ULC x
-  , fmixPrefix pLET $ do
+  , mixPrefix pLET $ do
       concat $ map pTokSyntax ["lam","λ"]
-      xO ← pOptional $ pName
+      xO ← optional $ pName
       concat $ map pTokSyntax ["->","→"]
       return $ \ e → Lam_ULC xO $ ULCExp e
-  , fmixInfixL pAPP $ return $ \ e₁ e₂ →
+  , mixInfixL pAPP $ return $ \ e₁ e₂ →
       App_ULC (ULCExp e₁) $ ULCExp e₂
   ]
 
@@ -111,23 +110,20 @@ ulc = TH.QuasiQuoter qe qp qt qd
     qe s = do
       l ← TH.location
       let lS = concat [frhsChars $ TH.loc_module l,":",show𝕊 $ fst $ frhs $ TH.loc_start l]
-      ts ← case tokenize lexULCExp lS $ tokens $ frhsChars s of
-        Inl r → do
+      case lexParse lULCExp pULCExp lS $ string s of
+        Inl (Inl err) → do
           -- [hack] call to `replaced𝕊` required to make the whole error show
           -- up when using ghcid
           HS.fail $ tohsChars $ replace𝕊 "\n" "\n        " $ ppRender $ ppVertical
             [ ppHeader "[Lexing Failure]"
-            , r
+            , err
             ]
-        Inr xs → return $ finalizeTokens xs
-      let eC = parse pULCExp lS ts
-      case eC of
-        Inl r → do
+        Inl (Inr err) → 
           -- [hack] call to `replace𝕊` is required to make the whole error show
           -- up when using ghcid
           HS.fail $ tohsChars $ replace𝕊 "\n" "\n        " $ ppRender $ ppVertical
             [ ppHeader "[Parsing Failure]"
-            , r
+            , err
             ]
         Inr e → [| e |]
     qp = const $ HS.fail "quoting patterns not supported"
