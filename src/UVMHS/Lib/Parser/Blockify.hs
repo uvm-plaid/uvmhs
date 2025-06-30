@@ -112,11 +112,26 @@ data BlockifyState t = BlockifyState
   , blockifyStateJustSawBlock ∷ 𝔹
   , blockifyStateIsAfterFirstToken ∷ 𝔹
   , blockifyStateBracketTokenDepth ∷ t ⇰ ℤ64
+  , blockifyStateValidNextSepsAndCloses ∷ 𝑃 t
+  , blockifyStateValidNextSepsAndClosesStack ∷ 𝐿 (𝑃 t)
   }
 makeLenses ''BlockifyState
 
 blockifyState₀ ∷ 𝕍 (ParserToken t) → BlockifyState t
-blockifyState₀ ts = BlockifyState (stream ts) null null BotBT False blockifyAnchor₀ null False False null
+blockifyState₀ ts = BlockifyState 
+  { blockifyStateInput = stream ts
+  , blockifyStateSkipPrefix = null 
+  , blockifyStatePrefix = null 
+  , blockifyStatePrefixEnd = BotBT 
+  , blockifyStateSkipPrefixContainsNewline = False 
+  , blockifyStateCurrentAnchor = blockifyAnchor₀ 
+  , blockifyStateParentAnchors = null 
+  , blockifyStateJustSawBlock = False 
+  , blockifyStateIsAfterFirstToken = False 
+  , blockifyStateBracketTokenDepth = null
+  , blockifyStateValidNextSepsAndCloses = null
+  , blockifyStateValidNextSepsAndClosesStack = null
+  }
 
 newtype BlockifyM t a = BlockifyM 
   { unBlockifyM ∷ RWST (BlockifyEnv t) (BlockifyOut t) (BlockifyState t) ((∨) Doc) a }
@@ -194,12 +209,14 @@ blockifyPushAnchorBracket ∷ (Ord t) ⇒ OpenBracketInfo t → BlockifyM t ()
 blockifyPushAnchorBracket obi = do
   modifyL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) $ (:&) obi
   modifyL blockifyStateBracketTokenDepthL $ (+) $ openBracketInfoDepthOne obi
+  vnscs ← getputL blockifyStateValidNextSepsAndClosesL $ openBracketInfoSepsAndCloses obi
+  modifyL blockifyStateValidNextSepsAndClosesStackL $ (:&) vnscs
 
 blockifyPopAnchorBracket ∷ (Ord t) ⇒ OpenBracketInfo t → 𝐿 (OpenBracketInfo t) → BlockifyM t ()
 blockifyPopAnchorBracket obi obis = do
   putL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) obis
   modifyL blockifyStateBracketTokenDepthL $ (+) $ neg $ openBracketInfoDepthOne obi
-
+  modifyL blockifyStateValidNextSepsAndClosesStackL $ snd ∘ viewΩ consL
 
 blockifyRecordPrefix ∷ 𝐼C (PreParserToken t) → BlockifyM t ()
 blockifyRecordPrefix ts =
@@ -239,10 +256,10 @@ blockifyEmitToken t = do
   getOpenBracket ← askL blockifyEnvGetOpenBracketL
   getDisplayToken ← askL blockifyEnvGetDisplayTokenL
   let tVal = parserTokenValue t
-  tokenDepth₀ ← getL blockifyStateBracketTokenDepthL
+  vnscs ← getL blockifyStateValidNextSepsAndClosesL
   when (isBracket tVal) $ \ () → do
     case getOpenBracketInfo ⋕? tVal of
-      Some bt | tokenDepth₀ ⋕? tVal ∈♭ pow [None,Some 0] → do
+      Some bt | not $ tVal ∈♭ vnscs → do
         --------------------------
         -- IT IS A BRACKET OPEN --
         --------------------------
@@ -327,8 +344,6 @@ blockifyEmitToken t = do
             -- - close out the block
             -- - pop the anchor
             -- - repeat
-            -- TODO: change `tokenDepth` to just be the nearest
-            --       AnchorBracketInfo object up the anchor stack
             tokenDepth ← getL blockifyStateBracketTokenDepthL
             closeBrackets ← askL blockifyEnvCloseBracketsL
             when (tokenDepth ⋕? tVal ∈♭ pow [None,Some 0]) $ \ () →
