@@ -1296,7 +1296,6 @@ lexerTestU = lexerTest False
        [ "|local{}|"
        ]
   |]
-
 𝔱 "lexer:pipe-like" 
   [| lexerTestA $ concat $ inbetween "\n"
        [ "(|a(|local|)|)"
@@ -1304,6 +1303,15 @@ lexerTestU = lexerTest False
   |] 
   [| concat $ inbetween "\n" 
        [ "(|a(|local{}|)|)"
+       ]
+  |]
+𝔱 "lexer:pipe-like" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "(|a[]|)"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(|a[]|)"
        ]
   |]
 

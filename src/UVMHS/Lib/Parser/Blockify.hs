@@ -207,16 +207,26 @@ blockifyPopAnchor tO = do
 
 blockifyPushAnchorBracket ∷ (Ord t) ⇒ OpenBracketInfo t → BlockifyM t ()
 blockifyPushAnchorBracket obi = do
+  -- add to anchor brackets stack
   modifyL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) $ (:&) obi
+  -- add to token depth
   modifyL blockifyStateBracketTokenDepthL $ (+) $ openBracketInfoDepthOne obi
+  -- set next seps and closes
   vnscs ← getputL blockifyStateValidNextSepsAndClosesL $ openBracketInfoSepsAndCloses obi
+  -- push to next seps and closes stack
   modifyL blockifyStateValidNextSepsAndClosesStackL $ (:&) vnscs
 
 blockifyPopAnchorBracket ∷ (Ord t) ⇒ OpenBracketInfo t → 𝐿 (OpenBracketInfo t) → BlockifyM t ()
 blockifyPopAnchorBracket obi obis = do
+  -- pop anchor brackets stack
   putL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) obis
+  -- subtract from token depth
   modifyL blockifyStateBracketTokenDepthL $ (+) $ neg $ openBracketInfoDepthOne obi
-  modifyL blockifyStateValidNextSepsAndClosesStackL $ snd ∘ viewΩ consL
+  vnscs :* vnscss ← viewΩ consL ^$ getL blockifyStateValidNextSepsAndClosesStackL
+  -- pop next seps and closes
+  putL blockifyStateValidNextSepsAndClosesL vnscs
+  -- pop next seps and closes stack
+  putL blockifyStateValidNextSepsAndClosesStackL vnscss
 
 blockifyRecordPrefix ∷ 𝐼C (PreParserToken t) → BlockifyM t ()
 blockifyRecordPrefix ts =
