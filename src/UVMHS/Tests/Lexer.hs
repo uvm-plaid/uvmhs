@@ -11,6 +11,7 @@ syntax = concat
   [ syntaxBrks $ dict
       [ "(" ↦ [","] :* [")"]
       , "[" ↦ [";"] :* ["]"]
+      , "|" ↦ [":"] :* ["|"]
       ]
   , syntaxBlks ["local"]
   ]
@@ -1261,6 +1262,20 @@ lexerTestU = lexerTest False
        , "  ( c] d"
        , "     ^"
        , "Expected matching bracket CLOSE ‹)› before this bracket CLOSE"
+       ]
+  |]
+
+-- ========= --
+-- PIPE-LIKE --
+-- ========= --
+
+𝔱 "lexer:pipe-like" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "|local|"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "|local{}|"
        ]
   |]
 

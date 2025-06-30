@@ -233,9 +233,10 @@ blockifyEmitToken t = do
   getOpenBracket ← askL blockifyEnvGetOpenBracketL
   getDisplayToken ← askL blockifyEnvGetDisplayTokenL
   let tVal = parserTokenValue t
+  tokenDepth₀ ← getL blockifyStateBracketTokenDepthL
   when (isBracket tVal) $ \ () → do
     case getOpenBracketInfo ⋕? tVal of
-      Some bt → do
+      Some bt | tokenDepth₀ ⋕? tVal ∈♭ pow [None,Some 0] → do
         --------------------------
         -- IT IS A BRACKET OPEN --
         --------------------------
@@ -246,7 +247,7 @@ blockifyEmitToken t = do
         --
         -- - push its sep/close info on the stack
         blockifyPushAnchorBracket bt
-      None → repeat $ \ again → do
+      _ → repeat $ \ again → do
         𝑎 ← getL blockifyStateCurrentAnchorL
         ----------------------------------
         -- IT IS A BRACKET SEP OR CLOSE --
