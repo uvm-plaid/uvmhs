@@ -1141,6 +1141,24 @@ lexerTestU = lexerTest False
 𝔱 "lexer:anchored:failure" 
   [| lexerTestA $ concat $ inbetween "\n"
        [ "a b"
+       , "()) c d"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "Parse Failure"
+       , "Source:"
+       , "> <>"
+       , "> line:2 column:3"
+       , "One of:"
+       , "a b;"
+       , "()) c d"
+       , "  ^"
+       , "Expected matching bracket OPEN ‹(› before this bracket CLOSE"
+       ]
+  |]
+𝔱 "lexer:anchored:failure" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "a b"
        , "( c d"
        ]
   |] 
@@ -1276,6 +1294,16 @@ lexerTestU = lexerTest False
   |] 
   [| concat $ inbetween "\n" 
        [ "|local{}|"
+       ]
+  |]
+
+𝔱 "lexer:pipe-like" 
+  [| lexerTestA $ concat $ inbetween "\n"
+       [ "(|a(|local|)|)"
+       ]
+  |] 
+  [| concat $ inbetween "\n" 
+       [ "(|a(|local{}|)|)"
        ]
   |]
 

@@ -26,7 +26,7 @@ data OpenBracketInfo t = OpenBracketInfo
   , openBracketInfoSepsAndCloses ∷ 𝑃 t
   } deriving (Eq,Ord,Show)
 
-openBracketInfoDepthOne ∷ (Ord t) ⇒ OpenBracketInfo t → t ⇰ ℕ64
+openBracketInfoDepthOne ∷ (Ord t) ⇒ OpenBracketInfo t → t ⇰ ℤ64
 openBracketInfoDepthOne obi =
   dict $ mapOn (iter $ openBracketInfoSepsAndCloses obi) $ \ t → t ↦ 1
 
@@ -111,7 +111,7 @@ data BlockifyState t = BlockifyState
   , blockifyStateParentAnchors ∷ 𝐿 (BlockifyAnchor t)
   , blockifyStateJustSawBlock ∷ 𝔹
   , blockifyStateIsAfterFirstToken ∷ 𝔹
-  , blockifyStateBracketTokenDepth ∷ t ⇰ ℕ64
+  , blockifyStateBracketTokenDepth ∷ t ⇰ ℤ64
   }
 makeLenses ''BlockifyState
 
@@ -194,6 +194,12 @@ blockifyPushAnchorBracket ∷ (Ord t) ⇒ OpenBracketInfo t → BlockifyM t ()
 blockifyPushAnchorBracket obi = do
   modifyL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) $ (:&) obi
   modifyL blockifyStateBracketTokenDepthL $ (+) $ openBracketInfoDepthOne obi
+
+blockifyPopAnchorBracket ∷ (Ord t) ⇒ OpenBracketInfo t → 𝐿 (OpenBracketInfo t) → BlockifyM t ()
+blockifyPopAnchorBracket obi obis = do
+  putL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) obis
+  modifyL blockifyStateBracketTokenDepthL $ (+) $ neg $ openBracketInfoDepthOne obi
+
 
 blockifyRecordPrefix ∷ 𝐼C (PreParserToken t) → BlockifyM t ()
 blockifyRecordPrefix ts =
@@ -283,7 +289,7 @@ blockifyEmitToken t = do
               --                 ⇧ ↑ ⇒             ⇧ ↑
               --
               -- - pop the bracket stack
-              putL (blockifyAnchorBracketsL ⊚ blockifyStateCurrentAnchorL) bts
+              blockifyPopAnchorBracket bt bts
             else do
               -------------------------------
               -- IT IS A BAD BRACKET TOKEN --
@@ -321,6 +327,8 @@ blockifyEmitToken t = do
             -- - close out the block
             -- - pop the anchor
             -- - repeat
+            -- TODO: change `tokenDepth` to just be the nearest
+            --       AnchorBracketInfo object up the anchor stack
             tokenDepth ← getL blockifyStateBracketTokenDepthL
             closeBrackets ← askL blockifyEnvCloseBracketsL
             when (tokenDepth ⋕? tVal ∈♭ pow [None,Some 0]) $ \ () →
