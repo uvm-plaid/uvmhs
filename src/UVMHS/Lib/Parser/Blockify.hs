@@ -449,7 +449,6 @@ blockifyM = do
               , concat $ inbetween " OR " $ mapOn (iter expectedCloses) $ \ tᵢ → concat ["‹",getDisplayToken ⋕! tᵢ,"›" ]
               , "before END OF INPUT"
               ]
-
           -- - otherwise let's "close out" this anchor with a close token and continue
           blockifyEmitSyntheticToken Close_BT
           -- - safe to assume parent anchors are non-empty 
