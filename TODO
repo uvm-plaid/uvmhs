@@ -5,6 +5,12 @@ Testing Framework:
   provide the one element. This lets you do a "test" but have a custom way to
   pretty print the results.
 
+Parsing Framework:
+- Modify Blockify to support parsing `let x = e in e` style blocks
+  - need to teach it that block keywords like `let` can come with a set of
+    block terminating keywords like `in`.
+- Support explicit brackets that ignore layout logic, e.g., `let { x = e } in e`
+
 Fix:
 - Pretty Printer. I think it's buggy. There is a branch where I'm most the way
   through solving it. Consider refactoring and adding test suite along the way.
