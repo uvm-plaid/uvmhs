@@ -58,12 +58,12 @@ pExp = mixfix id "exp" $ concat
       pTokSyntax "("
       return $ extract e
   , mixTerminal       $ AtomE         ^$ pAtom
-  , mixInfix   pCMP   $ const EqualE  ^$ pTokSyntax "=="
-  , mixInfixR  pPLUS  $ const PlusE   ^$ pTokSyntax "+"
-  , mixInfixR  pTIMES $ const TimesE  ^$ pTokSyntax "*"
-  , mixPrefix  pNEG   $ const NegateE ^$ pTokSyntax "-"
-  , mixInfixL  pPOW   $ const ExpoE   ^$ pTokSyntax "^"
-  , mixPostfix pFAC   $ const FactE   ^$ pTokSyntax "!"
+  , mixInfix   pCMP   $ const (return ∘∘ EqualE ) ^$ pTokSyntax "=="
+  , mixInfixR  pPLUS  $ const (return ∘∘ PlusE  ) ^$ pTokSyntax "+"
+  , mixInfixR  pTIMES $ const (return ∘∘ TimesE ) ^$ pTokSyntax "*"
+  , mixPrefix  pNEG   $ const (return ∘  NegateE) ^$ pTokSyntax "-"
+  , mixInfixL  pPOW   $ const (return ∘∘ ExpoE  ) ^$ pTokSyntax "^"
+  , mixPostfix pFAC   $ const (return ∘  FactE  ) ^$ pTokSyntax "!"
   ]
 
 testParserSuccess ∷ IO ()

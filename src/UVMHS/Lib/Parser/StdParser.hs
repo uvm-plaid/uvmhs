@@ -526,11 +526,11 @@ lexParseIOMain l p so s = parseIOMain p so *$ lexIO l so s
 ------------
 
 data Mixes c a = Mixes
-  { mixesPrefix  ∷ Parser (𝐴 c a → a)
-  , mixesPostfix ∷ Parser (𝐴 c a → a)
-  , mixesInfix  ∷ Parser (𝐴 c a → 𝐴 c a → a)
-  , mixesInfixL ∷ Parser (𝐴 c a → 𝐴 c a → a)
-  , mixesInfixR ∷ Parser (𝐴 c a → 𝐴 c a → a)
+  { mixesPrefix  ∷ Parser (𝐴 c a → Parser a)
+  , mixesPostfix ∷ Parser (𝐴 c a → Parser a)
+  , mixesInfix  ∷ Parser (𝐴 c a → 𝐴 c a → Parser a)
+  , mixesInfixL ∷ Parser (𝐴 c a → 𝐴 c a → Parser a)
+  , mixesInfixR ∷ Parser (𝐴 c a → 𝐴 c a → Parser a)
   }
 
 instance Null (Mixes c a) where null = Mixes null null null null null
@@ -550,19 +550,19 @@ instance Monoid (Mixfix c a)
 mixOnlyTerms ∷ Mixfix c a → Mixfix c a
 mixOnlyTerms m = Mixfix (mixfixTerminals m) null
 
-mixPrefix ∷ ℕ64 → Parser (𝐴 c a → a) → Mixfix c a
+mixPrefix ∷ ℕ64 → Parser (𝐴 c a → Parser a) → Mixfix c a
 mixPrefix l p = null { mixfixLevels = dict [ l ↦ null { mixesPrefix = p } ] }
 
-mixPostfix ∷ ℕ64 → Parser (𝐴 c a → a) → Mixfix c a
+mixPostfix ∷ ℕ64 → Parser (𝐴 c a → Parser a) → Mixfix c a
 mixPostfix l p = null { mixfixLevels = dict [ l ↦ null { mixesPostfix = p } ] }
 
-mixInfix ∷ ℕ64 → Parser (𝐴 c a → 𝐴 c a → a) → Mixfix c a
+mixInfix ∷ ℕ64 → Parser (𝐴 c a → 𝐴 c a → Parser a) → Mixfix c a
 mixInfix l p = null { mixfixLevels = dict [ l ↦ null { mixesInfix = p } ] }
 
-mixInfixL ∷ ℕ64 → Parser (𝐴 c a → 𝐴 c a → a) → Mixfix c a
+mixInfixL ∷ ℕ64 → Parser (𝐴 c a → 𝐴 c a → Parser a) → Mixfix c a
 mixInfixL l p = null { mixfixLevels = dict [ l ↦ null { mixesInfixL = p } ] }
 
-mixInfixR ∷ ℕ64 → Parser (𝐴 c a → 𝐴 c a → a) → Mixfix c a
+mixInfixR ∷ ℕ64 → Parser (𝐴 c a → 𝐴 c a → Parser a) → Mixfix c a
 mixInfixR l p = null { mixfixLevels = dict [ l ↦ null { mixesInfixR = p } ] }
 
 mixTerminal ∷ Parser a → Mixfix c a
@@ -573,11 +573,11 @@ mixfix f s m =
   let m' = GenMixfixF
         { genMixfixFTerminals = unParser $ mixfixTerminals m
         , genMixfixFLevels = mapOn (mixfixLevels m) $ \ ms → GenMixesF
-            { genMixesFPrefix = unParser $ mixesPrefix ms
-            , genMixesFPostfix = unParser $ mixesPostfix ms
-            , genMixesFInfix = unParser $ mixesInfix ms
-            , genMixesFInfixL = unParser $ mixesInfixL ms
-            , genMixesFInfixR = unParser $ mixesInfixR ms
+            { genMixesFPrefix = unParser $ mapp unParser $ mixesPrefix ms
+            , genMixesFPostfix = unParser $ mapp unParser $ mixesPostfix ms
+            , genMixesFInfix = unParser $ mappp unParser $ mixesInfix ms
+            , genMixesFInfixL = unParser $ mappp unParser $ mixesInfixL ms
+            , genMixesFInfixR = unParser $ mappp unParser $ mixesInfixR ms
             }
         }
   in

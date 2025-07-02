@@ -69,9 +69,9 @@ pULCExp = ULCExp ^$ mixfix single "exp" $ concat
       concat $ map pTokSyntax ["lam","λ"]
       xO ← optional $ pName
       concat $ map pTokSyntax ["->","→"]
-      return $ \ e → Lam_ULC xO $ ULCExp e
+      return $ \ e → return $ Lam_ULC xO $ ULCExp e
   , mixInfixL pAPP $ return $ \ e₁ e₂ →
-      App_ULC (ULCExp e₁) $ ULCExp e₂
+      return $ App_ULC (ULCExp e₁) $ ULCExp e₂
   ]
 
 instance (Show 𝒸) ⇒ Pretty (ULCExp 𝒸) where pretty = pretty ∘ aval ∘ unULCExp

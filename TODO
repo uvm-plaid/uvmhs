@@ -11,6 +11,14 @@ Parsing Framework:
     block terminating keywords like `in`.
 - Support explicit brackets that ignore layout logic, e.g., `let { x = e } in e`
 
+Fuzzing:
+- Make randomly generated doubles have fewer decimals of precision (e.g., just
+  2)
+
+Pretty Printing:
+- support a "hanging" operator that causes all newlines of a document to have
+  at least some indentation
+
 Fix:
 - Pretty Printer. I think it's buggy. There is a branch where I'm most the way
   through solving it. Consider refactoring and adding test suite along the way.
