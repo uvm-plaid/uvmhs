@@ -8,7 +8,7 @@ import UVMHS.Lib.Pretty.Annotation
 import UVMHS.Lib.Pretty.Common
 import UVMHS.Lib.Pretty.Shape
 
--- DocA renders group and algin commands
+-- DocA renders group and align commands
 
 data DocAEnv = DocAEnv
   -- global env
@@ -16,14 +16,16 @@ data DocAEnv = DocAEnv
   , docAEnvMaxRibbonWidth ∷ 𝑂 ℕ64
   -- local env
   , docAEnvNest ∷ ℕ64
+  -- , docAEnvHang ∷ ℕ64
   } deriving (Eq,Ord,Show)
 makeLenses ''DocAEnv
 
 docAEnv₀ ∷ DocAEnv
 docAEnv₀ = DocAEnv
-  { docAEnvMaxLineWidth = Some $ 𝕟64 120
-  , docAEnvMaxRibbonWidth = Some $ 𝕟64 100
-  , docAEnvNest = 𝕟64 0
+  { docAEnvMaxLineWidth = Some 120
+  , docAEnvMaxRibbonWidth = Some 100
+  , docAEnvNest = 0
+  -- , docAEnvHang = 0
   }
 
 data DocAState = DocAState
@@ -35,9 +37,9 @@ makeLenses ''DocAState
 
 docAState₀ ∷ DocAState
 docAState₀ = DocAState
-  { docAStateRib = 𝕟64 0
-  , docAStateRow = 𝕟64 0
-  , docAStateCol = 𝕟64 0
+  { docAStateRib = 0
+  , docAStateRow = 0
+  , docAStateCol = 0
   }
 
 type DocAM = RWS DocAEnv TreeI DocAState
@@ -59,9 +61,9 @@ dynamicDocA = \case
 instance Null DocA where null = StaticDocA null
 instance Append DocA where
   StaticDocA s₁ ⧺ StaticDocA s₂ = StaticDocA $ s₁ ⧺ s₂
-  StaticDocA s₁ ⧺ DynamicDocA s₂ r₂ = DynamicDocA (s₁ ⧺ s₂) $ renderSummaryI s₁ ≫ r₂
-  DynamicDocA s₁ r₁ ⧺ StaticDocA s₂ = DynamicDocA (s₁ ⧺ s₂) $ r₁ ≫ renderSummaryI s₂
-  DynamicDocA s₁ r₁ ⧺ DynamicDocA s₂ r₂ = DynamicDocA (s₁ ⧺ s₂) $ r₁ ≫ r₂
+  StaticDocA s₁ ⧺ DynamicDocA s₂ r₂ = DynamicDocA (s₁ ⧺ s₂) $ do renderSummaryI s₁ ; r₂
+  DynamicDocA s₁ r₁ ⧺ StaticDocA s₂ = DynamicDocA (s₁ ⧺ s₂) $ do r₁ ; renderSummaryI s₂
+  DynamicDocA s₁ r₁ ⧺ DynamicDocA s₂ r₂ = DynamicDocA (s₁ ⧺ s₂) $ do r₁ ; r₂
 instance Monoid DocA
 
 renderSummaryI ∷ SummaryI → DocAM ()
@@ -72,10 +74,11 @@ renderSummaryI s =
         else id
   in f $ do
     nest ← askL docAEnvNestL
-    let o = mapOn (summaryIContents s) $ map $ \case
-          NewlineChunkI n → NewlineChunkI $ n + nest
-          c → c
-    tell o
+    -- hang ← askL docAEnvHangL
+    let shift = nest -- ⊔ hang
+    tell $ mappOn (summaryIContents s) $ \case
+      NewlineChunkI n → NewlineChunkI $ n + shift
+      c → c
     case shapeIShape $ summaryIShape s of
       SingleLine l → do
         modifyL docAStateRibL $ (+) l
@@ -136,10 +139,21 @@ alignDocAM xM = do
   modifyL docAStateColL $ (+) col
   return x
 
+
 alignDocA ∷ DocA → DocA
 alignDocA = \case
   StaticDocA s → StaticDocA $ alignSummary s
   DynamicDocA s r → DynamicDocA (alignSummary s) $ alignDocAM r
+
+-- hangDocAM ∷ ℕ64 → DocAM a → DocAM a
+-- hangDocAM n xM = do
+--   nest ← askL docAEnvNestL
+--   localL docAEnvHangL (nest + n) xM
+-- 
+-- hangDocA ∷ ℕ64 → DocA → DocA
+-- hangDocA n = \case
+--   StaticDocA s → StaticDocA s
+--   DynamicDocA s xM → DynamicDocA s $ hangDocAM n xM
 
 execDocAWith ∷ (DocAM () → DocAM ()) → DocA → TreeI
 execDocAWith f d = evalRWS docAEnv₀ docAState₀ $ retOut $ f $ case d of

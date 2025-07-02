@@ -10,6 +10,7 @@ import UVMHS.Tests.Core
 import UVMHS.Tests.Substitution
 import UVMHS.Tests.Deriving
 import UVMHS.Tests.Lexer
+import UVMHS.Tests.Pretty
 
 import qualified Prelude as HS
 
@@ -29,6 +30,7 @@ test = do
     , "UVMHS.Tests.Substitution"
     , "UVMHS.Tests.Deriving"
     , "UVMHS.Tests.Lexer"
+    , "UVMHS.Tests.Pretty"
     ])
   -- eachOn (upto 100) $ \ s → do
   --   rngSeed s

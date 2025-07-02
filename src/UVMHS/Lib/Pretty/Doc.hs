@@ -122,6 +122,9 @@ ppGroup = onDoc $ mapOut groupDocA
 ppAlign ∷ Doc → Doc
 ppAlign = onDoc $ mapOut alignDocA
 
+-- ppHang ∷ ℕ64 → Doc → Doc
+-- ppHang n = onDoc $ mapOut $ hangDocA n
+
 ppGA ∷ Doc → Doc
 ppGA = ppAlign ∘ ppGroup
 
