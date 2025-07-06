@@ -22,8 +22,8 @@ import UVMHS.Lib.Pretty2.Shape2 ()
 main ∷ IO ()
 main = out "<UVMHS>"
 
-test ∷ IO ()
-test = do
+mainTest ∷ IO ()
+mainTest = do
   pprint $ ppHeader "COLOR TEST"
   pprint colorsDemo
   rngSeed 0
@@ -44,9 +44,9 @@ test = do
   --     , "UVMHS.Tests.Lexer"
   --     ])
 
-dev ∷ IO ()
-dev = cleanExit $ do
-  noExit test
+mainDev ∷ IO ()
+mainDev = cleanExit $ do
+  noExit mainTest
 
   -- FUTURE
   -- out $(thShowDecs ds₁)

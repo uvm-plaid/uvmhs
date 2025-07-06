@@ -51,6 +51,12 @@ eqTest tags lS x y = keys𝑇D tags $ val𝑇D $ Test (ppString lS) $ \ () →
     , 𝐤 "R" $ 𝐯 $ pretty y
     ]
 
+propTest ∷ (Pretty a) ⇒ 𝐿 𝕊 → 𝕊 → a → (a → 𝔹) → (a → Doc) → 𝑇D Test
+propTest tags lS x p xD = keys𝑇D tags $ val𝑇D $ Test (ppString lS) $ \ () → do
+  if p x
+  then tell one
+  else throw $ \ () → 𝐤 "V" $ 𝐯 $ xD x
+
 fuzzTest ∷ (Pretty a,Shrinky a) ⇒ 𝐿 𝕊 → 𝕊 → FuzzyM a → (a → 𝔹) → (a → Doc) → 𝑇D Test
 fuzzTest tags lS xM p xD = keys𝑇D tags $ val𝑇D $ Test (ppString lS) $ \ () → do
   FuzzParams radiusMax radiusStep depthMax depthStep spread ← ask
@@ -63,10 +69,14 @@ fuzzTest tags lS xM p xD = keys𝑇D tags $ val𝑇D $ Test (ppString lS) $ \ ()
         else
           let n :* x' = shrunk (not ∘ p) x
               errD () = concat
+                -- fuzzing radius
                 [ 𝐤 "R" $ 𝐯 $ pretty r
+                -- fuzzing depth
                 , 𝐤 "D" $ 𝐯 $ pretty d
+                -- number of shrinking steps
                 , 𝐤 "N" $ 𝐯 $ pretty n
-                , 𝐤 "X" $ 𝐯 $ xD x'
+                -- counterexample value
+                , 𝐤 "V" $ 𝐯 $ xD x'
                 ]
           in throw errD
 
@@ -117,13 +127,13 @@ runTests noisy γ tests = do
             [ if p ≡ 0 then null𝐼 else single $
                 ppHorizontal
                   [ ppFG green $ ppString "PASSED"
-                  , ppBD $ ppFG green $ ppString $ alignRight (𝕟 3) $ show𝕊 p
+                  , ppBD $ ppFG green $ ppString $ alignRight 4 $ show𝕊 p
                   , ppPun $ concat ["» ",src]
                   ]
             , if f ≡ 0 then null else single $
                 ppHorizontal
                   [ ppFG red $ ppString "FAILED"
-                  , ppBD $ ppFG red $ ppString $ alignRight (𝕟 3) $ show𝕊 f
+                  , ppBD $ ppFG red $ ppString $ alignRight 4 $ show𝕊 f
                   , ppPun $ concat ["» ",src]
                   ]
             ]
@@ -141,47 +151,81 @@ runTests noisy γ tests = do
       ]
     abortIO
 
-𝔱 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → QIO [TH.Dec]
+newtype TestSection = TestSection { unTestSection ∷ 𝕊 }
+
+testSection ∷ 𝕊 → TH.DecsQ
+testSection s = do
+  TH.putQ $ TestSection s
+  return []
+
+testSectionTags ∷ QIO (𝐿 𝕊)
+testSectionTags = do
+  sO ← map unTestSection ∘ frhs ^$ TH.getQ
+  return $ list $ splitOn𝕊 ":" $ ifNone (const "<toplevel>") sO
+
+test ∷ TH.ExpQ → TH.ExpQ → TH.DecsQ
 #ifdef NO_UVMHS_TESTS
-𝔱 _ _ _ = return []
+test _ _ = return []
 #else
-𝔱 tag xEQ yEQ = 𝔱T @() tag (TH.unsafeCodeCoerce xEQ) (TH.unsafeCodeCoerce yEQ)
+test xEQ yEQ = testT @() (TH.unsafeCodeCoerce xEQ) (TH.unsafeCodeCoerce yEQ)
 #endif
 
-𝔱T ∷ (Eq a,Pretty a) ⇒ 𝕊 → TH.CodeQ a → TH.CodeQ a → QIO [TH.Dec]
-𝔱T tag xE yE = do
+testT ∷ (Eq a,Pretty a) ⇒ TH.CodeQ a → TH.CodeQ a → TH.DecsQ
+testT xE yE = do
   l ← TH.location
   let lS = concat [frhsChars $ TH.loc_module l,":",show𝕊 $ fst $ frhs $ TH.loc_start l]
-  let tags = list $ splitOn𝕊 ":" tag
+  tags ← testSectionTags
   tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.CodeQ (𝑇D Test)))
   let t = [|| eqTest tags lS $$xE $$yE ||]
       tests' = tests ⧺ single t
   TH.putQ @(𝐼 (TH.CodeQ (𝑇D Test))) tests'
   return []
 
-𝔣 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → TH.ExpQ → QIO [TH.Dec]
+prop ∷ TH.ExpQ → TH.ExpQ → TH.ExpQ → TH.DecsQ
 #ifdef NO_UVMHS_TESTS
-𝔣 _ _ _ _ = return []
+prop _ _ _ = return []
 #else
-𝔣 tag xIO p xD = 𝔣T @() tag (TH.unsafeCodeCoerce xIO) (TH.unsafeCodeCoerce p) $ TH.unsafeCodeCoerce xD
+prop xIO p xD = propT @() (TH.unsafeCodeCoerce xIO) (TH.unsafeCodeCoerce p) $ TH.unsafeCodeCoerce xD
 #endif
 
-𝔣T ∷ (Pretty a,Shrinky a) ⇒ 𝕊 → TH.CodeQ (FuzzyM a) → TH.CodeQ (a → 𝔹) → TH.CodeQ (a → Doc) → QIO [TH.Dec]
-𝔣T tag xIOE pE xDE = do
+propT ∷ (Pretty a) ⇒ TH.CodeQ a → TH.CodeQ (a → 𝔹) → TH.CodeQ (a → Doc) → TH.DecsQ
+propT xIOE pE xDE = do
   l ← TH.location
   let lS = concat
         [ frhsChars $ TH.loc_module l
         , ":"
         , show𝕊 $ fst $ frhs $ TH.loc_start l
         ]
-  let tags = list $ splitOn𝕊 ":" tag
+  tags ← testSectionTags
+  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.CodeQ (𝑇D Test)))
+  let t' = [|| propTest tags lS $$xIOE $$pE $$xDE ||]
+      tests' = tests ⧺ single t'
+  TH.putQ @(𝐼 (TH.CodeQ (𝑇D Test))) tests'
+  return []
+
+fuzz ∷ TH.ExpQ → TH.ExpQ → TH.ExpQ → TH.DecsQ
+#ifdef NO_UVMHS_TESTS
+fuzz _ _ _ = return []
+#else
+fuzz xIO p xD = fuzzT @() (TH.unsafeCodeCoerce xIO) (TH.unsafeCodeCoerce p) $ TH.unsafeCodeCoerce xD
+#endif
+
+fuzzT ∷ (Pretty a,Shrinky a) ⇒ TH.CodeQ (FuzzyM a) → TH.CodeQ (a → 𝔹) → TH.CodeQ (a → Doc) → TH.DecsQ
+fuzzT xIOE pE xDE = do
+  l ← TH.location
+  let lS = concat
+        [ frhsChars $ TH.loc_module l
+        , ":"
+        , show𝕊 $ fst $ frhs $ TH.loc_start l
+        ]
+  tags ← testSectionTags
   tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.CodeQ (𝑇D Test)))
   let t' = [|| fuzzTest tags lS $$xIOE $$pE $$xDE ||]
       tests' = tests ⧺ single t'
   TH.putQ @(𝐼 (TH.CodeQ (𝑇D Test))) tests'
   return []
 
-buildTests ∷ QIO [TH.Dec]
+buildTests ∷ TH.DecsQ
 buildTests = do
   testEQs ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.CodeQ (𝑇D Test)))
   l ← TH.location
@@ -208,32 +252,3 @@ testModules noisy γ nsS =
       testsEQ = TH.Code $ TH.TExp ^$ TH.listE $ lazyList testNamesE
   in
   [|| runTests noisy γ $ concat $$testsEQ ||]
-
--- unqualifyName ∷ TH.Name → TH.Name
--- unqualifyName = id -- TH.mkName ∘ TH.nameBase
--- 
--- unqualifyExp ∷ TH.Exp → TH.Exp
--- unqualifyExp = \case
---   TH.VarE x → TH.VarE $ unqualifyName x
---   TH.ConE x → TH.ConE x
---   TH.LitE l → TH.LitE l
---   TH.AppE e₁ e₂ → TH.AppE (unqualifyExp e₁) $ unqualifyExp e₂
---   TH.AppTypeE e t → TH.AppTypeE e t
---   TH.InfixE eM₁ e₂ eM₃ → TH.InfixE eM₁ e₂ eM₃
---   TH.UInfixE eM₁ e₂ eM₃ → TH.UInfixE eM₁ e₂ eM₃
---   TH.ParensE e → TH.ParensE e
---   TH.LamE ps e → TH.LamE ps e
---   TH.LamCaseE ms → TH.LamCaseE ms
---   TH.LamCasesE cs → TH.LamCasesE cs
---   TH.TupE eMs → TH.TupE eMs
---   TH.UnboxedTupE eMs → TH.UnboxedTupE eMs
---   TH.UnboxedSumE e al ar → TH.UnboxedSumE e al ar
---   TH.CondE e₁ e₂ e₃ → TH.CondE e₁ e₂ e₃
---   e → e
--- 
--- 
--- play ∷ TH.ExpQ → QIO [TH.Dec]
--- play e = do
---   e' ← e
---   let s = string $ TH.pprint $ unqualifyExp e'
---   [d| doPlay = s |]

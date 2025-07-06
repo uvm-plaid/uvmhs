@@ -1,19 +1,10 @@
 # David's Notes for Fixes, Improvements and Enhancements
 
-Testing Framework:
-- Add "prop" in addition "test" and "fuzz", which is like "fuzz" but you just
-  provide the one element. This lets you do a "test" but have a custom way to
-  pretty print the results.
-
 Parsing Framework:
 - Modify Blockify to support parsing `let x = e in e` style blocks
   - need to teach it that block keywords like `let` can come with a set of
     block terminating keywords like `in`.
 - Support explicit brackets that ignore layout logic, e.g., `let { x = e } in e`
-
-Fuzzing:
-- Make randomly generated doubles have fewer decimals of precision (e.g., just
-  2)
 
 Pretty Printing:
 - support a "hanging" operator that causes all newlines of a document to have

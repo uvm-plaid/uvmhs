@@ -39,535 +39,507 @@ lexerTestU = lexerTest False
 -- top level newline --
 -----------------------
 
-𝔱 "lexer:anchored:top-level-newline" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "c d;"
-       , "e f;" 
-       , "g h" 
-       ]
-  |]
--- TODO: how do we want this one to lex? as written? or error?
-𝔱 "lexer:anchored:top-level-newline" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "  a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "  a b;"
-       , "c d;"
-       , "e f;" 
-       , "g h"
-       ]
-  |]
-𝔱 "lexer:anchored:top-level-newline" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "  c d"
-       , "e f" 
-       , "g h" 
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "  c d;"
-       , "e f;" 
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:top-level-newline" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "  e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "c d"
-       , "  e f;" 
-       , "g h"
-       ]
-  |]
-𝔱 "lexer:anchored:top-level-newline" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "c d"
-       , "e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{};"
-       , "c d;"
-       , "e f;" 
-       , "g h"
-       ]
-  |]
-𝔱 "lexer:anchored:top-level-newline" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       , "local"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "c d;"
-       , "e f;" 
-       , "g h;"
-       , "local{}"
-       ]
-  |]
-𝔱 "lexer:anchored:top-level-newline" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       , "local"
-       , "  i"
-       , "  local" 
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "c d;"
-       , "e f;" 
-       , "g h;"
-       , "local{"
-       , "  i;"
-       , "  local{}}"
-       ]
-  |]
-𝔱 "lexer:anchored:top-level-newline" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       , "local"
-       , "  local" 
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "c d;"
-       , "e f;" 
-       , "g h;"
-       , "local{"
-       , "  local{}}"
-       ]
-  |]
+testSection "lexer:anchored:top-level-newline"
+
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "c d;"
+          , "e f;" 
+          , "g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "  a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "  a b;"
+          , "c d;"
+          , "e f;" 
+          , "g h"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "  c d"
+          , "e f" 
+          , "g h" 
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "  c d;"
+          , "e f;" 
+          , "g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "  e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "c d"
+          , "  e f;" 
+          , "g h"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "c d"
+          , "e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{};"
+          , "c d;"
+          , "e f;" 
+          , "g h"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          , "local"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "c d;"
+          , "e f;" 
+          , "g h;"
+          , "local{}"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          , "local"
+          , "  i"
+          , "  local" 
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "c d;"
+          , "e f;" 
+          , "g h;"
+          , "local{"
+          , "  i;"
+          , "  local{}}"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          , "local"
+          , "  local" 
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "c d;"
+          , "e f;" 
+          , "g h;"
+          , "local{"
+          , "  local{}}"
+          ]
+     |]
 
 ----------------------
 -- block same line  --
 ----------------------
 
-𝔱 "lexer:anchored:block-same-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{ c d};"
-       , "e f;"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-same-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "  e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{ c d}"
-       , "  e f;"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-same-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "      e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{ c d;"
-       , "      e f};"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-same-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "        e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{ c d"
-       , "        e f};"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-same-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "      e f"
-       , "  g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{ c d;"
-       , "      e f}"
-       , "  g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-same-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "e f"
-       , "  g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{ c d};"
-       , "e f"
-       , "  g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-same-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    local c d"
-       , "  e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{"
-       , "    local{ c d}}"
-       , "  e f;"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-same-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    local"
-       , "  e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{"
-       , "    local{}}"
-       , "  e f;"
-       , "g h" 
-       ]
-  |]
+testSection "lexer:anchored:block-same-line"
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{ c d};"
+          , "e f;"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "  e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{ c d}"
+          , "  e f;"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "      e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{ c d;"
+          , "      e f};"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "        e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{ c d"
+          , "        e f};"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "      e f"
+          , "  g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{ c d;"
+          , "      e f}"
+          , "  g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "e f"
+          , "  g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{ c d};"
+          , "e f"
+          , "  g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    local c d"
+          , "  e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{"
+          , "    local{ c d}}"
+          , "  e f;"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    local"
+          , "  e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{"
+          , "    local{}}"
+          , "  e f;"
+          , "g h" 
+          ]
+     |]
 
 ---------------------
 -- block next line --
 ---------------------
 
-𝔱 "lexer:anchored:block-next-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    c d"
-       , "e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{"
-       , "    c d};"
-       , "e f;"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-next-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    c d"
-       , "    e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{"
-       , "    c d;"
-       , "    e f};"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-next-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    c d"
-       , "    e f"
-       , "  g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{"
-       , "    c d;"
-       , "    e f}"
-       , "  g h" 
-       ]
-  |]
-𝔱 "lexer:anchored:block-next-line" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    c d"
-       , "    e f"
-       , "      g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b;"
-       , "local{"
-       , "    c d;"
-       , "    e f"
-       , "      g h}" 
-       ]
-  |]
+testSection "lexer:anchored:block-next-line"
+
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    c d"
+          , "e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{"
+          , "    c d};"
+          , "e f;"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    c d"
+          , "    e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{"
+          , "    c d;"
+          , "    e f};"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    c d"
+          , "    e f"
+          , "  g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{"
+          , "    c d;"
+          , "    e f}"
+          , "  g h" 
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    c d"
+          , "    e f"
+          , "      g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , "local{"
+          , "    c d;"
+          , "    e f"
+          , "      g h}" 
+          ]
+     |]
 
 -- corner cases --
 
-𝔱 "lexer:anchored:corner-cases" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ ""
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       ]
-  |]
-𝔱 "lexer:anchored:corner-cases" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ ""
-       , "a"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "a"
-       ]
-  |]
-𝔱 "lexer:anchored:corner-cases" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ ""
-       , "  a"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "  a"
-       ]
-  |]
-𝔱 "lexer:anchored:corner-cases" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ ""
-       , "a"
-       , "b"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "a;"
-       , "b"
-       ]
-  |]
-𝔱 "lexer:anchored:corner-cases" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ ""
-       , "  a"
-       , "b"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "  a;"
-       , "b"
-       ]
-  |]
-𝔱 "lexer:anchored:corner-cases" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ ""
-       , "local"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "local{}"
-       ]
-  |]
-𝔱 "lexer:anchored:corner-cases" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ ""
-       , "  local"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "  local{}"
-       ]
-  |]
-𝔱 "lexer:anchored:corner-cases" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ ""
-       , "  local"
-       , "local"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "  local{};"
-       , "local{}"
-       ]
-  |]
+testSection "lexer:anchored:corner-cases"
+
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ ""
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ ""
+          , "a"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "a"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ ""
+          , "  a"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "  a"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ ""
+          , "a"
+          , "b"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "a;"
+          , "b"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ ""
+          , "  a"
+          , "b"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "  a;"
+          , "b"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ ""
+          , "local"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "local{}"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ ""
+          , "  local"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "  local{}"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ ""
+          , "  local"
+          , "local"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "  local{};"
+          , "local{}"
+          ]
+     |]
 
 -- parens --
 
-𝔱 "lexer:anchored:parens" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "()"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "()"
-       ]
-  |]
-𝔱 "lexer:anchored:parens" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "(local)"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(local{})"
-       ]
-  |]
-𝔱 "lexer:anchored:parens" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "local(local)"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "local{(local{})}"
-       ]
-  |]
-𝔱 "lexer:anchored:parens" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "(local(local))"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(local{(local{})})"
-       ]
-  |]
-𝔱 "lexer:anchored:parens" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "(local"
-       , "   local)"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(local{"
-       , "   local{}})"
-       ]
-  |]
-𝔱 "lexer:anchored:parens" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "(local"
-       , "   local"
-       , "     local"
-       , "       a"
-       , "       b)c"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(local{"
-       , "   local{"
-       , "     local{"
-       , "       a;"
-       , "       b}}})c"
-       ]
-  |]
-𝔱 "lexer:anchored:parens" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "( local "
-       , "    local a"
-       , "    (b) c"
-       , "    (d"
-       , "     e)"
-       , "  , d"
-       , "  )"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "( local{ "
-       , "    local{ a};"
-       , "    (b) c;"
-       , "    (d"
-       , "     e)}"
-       , "  , d"
-       , "  )"
-       ]
-  |]
-𝔱 "lexer:anchored:parens" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "(local local,local local)"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(local{ local{}},local{ local{}})"
-       ]
-  |]
+testSection "lexer:anchored:parens"
+
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "()"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "()"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "(local)"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(local{})"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "local(local)"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "local{(local{})}"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "(local(local))"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(local{(local{})})"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "(local"
+          , "   local)"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(local{"
+          , "   local{}})"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "(local"
+          , "   local"
+          , "     local"
+          , "       a"
+          , "       b)c"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(local{"
+          , "   local{"
+          , "     local{"
+          , "       a;"
+          , "       b}}})c"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "( local "
+          , "    local a"
+          , "    (b) c"
+          , "    (d"
+          , "     e)"
+          , "  , d"
+          , "  )"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "( local{ "
+          , "    local{ a};"
+          , "    (b) c;"
+          , "    (d"
+          , "     e)}"
+          , "  , d"
+          , "  )"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "(local local,local local)"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(local{ local{}},local{ local{}})"
+          ]
+     |]
 
 -- ========== --
 -- UNANCHORED --
@@ -577,193 +549,183 @@ lexerTestU = lexerTest False
 -- top level newline --
 -----------------------
 
-𝔱 "lexer:unanchored:top-level-newline" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h" 
-       ]
-  |]
--- TODO: how do we want this one to lex? as written? or error?
-𝔱 "lexer:unanchored:top-level-newline" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "  a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "  a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       ]
-  |]
-𝔱 "lexer:unanchored:top-level-newline" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "  c d"
-       , "e f" 
-       , "g h" 
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "  c d"
-       , "e f" 
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:top-level-newline" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "  e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "c d"
-       , "  e f" 
-       , "g h"
-       ]
-  |]
-𝔱 "lexer:unanchored:top-level-newline" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "c d"
-       , "e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{}"
-       , "c d"
-       , "e f" 
-       , "g h"
-       ]
-  |]
-𝔱 "lexer:unanchored:top-level-newline" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       , "local"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       , "local{}"
-       ]
-  |]
-𝔱 "lexer:unanchored:top-level-newline" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       , "local"
-       , "  i"
-       , "  local" 
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       , "local{"
-       , "  i;"
-       , "  local{}}"
-       ]
-  |]
-𝔱 "lexer:unanchored:top-level-newline" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       , "local"
-       , "  local" 
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "c d"
-       , "e f" 
-       , "g h"
-       , "local{"
-       , "  local{}}"
-       ]
-  |]
+testSection "lexer:unanchored:top-level-newline"
+
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "  a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "  a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "  c d"
+          , "e f" 
+          , "g h" 
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "  c d"
+          , "e f" 
+          , "g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "  e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "c d"
+          , "  e f" 
+          , "g h"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "c d"
+          , "e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{}"
+          , "c d"
+          , "e f" 
+          , "g h"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          , "local"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          , "local{}"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          , "local"
+          , "  i"
+          , "  local" 
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          , "local{"
+          , "  i;"
+          , "  local{}}"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          , "local"
+          , "  local" 
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "c d"
+          , "e f" 
+          , "g h"
+          , "local{"
+          , "  local{}}"
+          ]
+     |]
 
 ----------------------
 -- block same line  --
 ----------------------
 
-𝔱 "lexer:unanchored:block-same-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "e f" 
-       , "g h"
-       ] 
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{ c d}"
-       , "e f"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:block-same-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "  e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{ c d}"
-       , "  e f"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:block-same-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "      e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{ c d;"
-       , "      e f}"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:block-same-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
+testSection "lexer:unanchored:block-same-line"
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "e f" 
+          , "g h"
+          ] 
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{ c d}"
+          , "e f"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "  e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{ c d}"
+          , "  e f"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "      e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{ c d;"
+          , "      e f}"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
        [ "a b"
        , "local c d"
        , "        e f"
@@ -777,192 +739,183 @@ lexerTestU = lexerTest False
        , "g h" 
        ]
   |]
-𝔱 "lexer:unanchored:block-same-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "      e f"
-       , "  g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{ c d;"
-       , "      e f}"
-       , "  g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:block-same-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local c d"
-       , "e f"
-       , "  g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{ c d}"
-       , "e f"
-       , "  g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:block-same-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    local c d"
-       , "  e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{"
-       , "    local{ c d}}"
-       , "  e f"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:block-same-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    local"
-       , "  e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{"
-       , "    local{}}"
-       , "  e f"
-       , "g h" 
-       ]
-  |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "      e f"
+          , "  g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{ c d;"
+          , "      e f}"
+          , "  g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local c d"
+          , "e f"
+          , "  g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{ c d}"
+          , "e f"
+          , "  g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    local c d"
+          , "  e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{"
+          , "    local{ c d}}"
+          , "  e f"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    local"
+          , "  e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{"
+          , "    local{}}"
+          , "  e f"
+          , "g h" 
+          ]
+     |]
 
 ---------------------
 -- block next line --
 ---------------------
 
-𝔱 "lexer:unanchored:block-next-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    c d"
-       , "e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{"
-       , "    c d}"
-       , "e f"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:block-next-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    c d"
-       , "    e f"
-       , "g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{"
-       , "    c d;"
-       , "    e f}"
-       , "g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:block-next-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    c d"
-       , "    e f"
-       , "  g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{"
-       , "    c d;"
-       , "    e f}"
-       , "  g h" 
-       ]
-  |]
-𝔱 "lexer:unanchored:block-next-line" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "a b"
-       , "local"
-       , "    c d"
-       , "    e f"
-       , "      g h" 
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "a b"
-       , "local{"
-       , "    c d;"
-       , "    e f"
-       , "      g h}" 
-       ]
-  |]
+testSection "lexer:unanchored:block-next-line"
+
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    c d"
+          , "e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{"
+          , "    c d}"
+          , "e f"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    c d"
+          , "    e f"
+          , "g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{"
+          , "    c d;"
+          , "    e f}"
+          , "g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    c d"
+          , "    e f"
+          , "  g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{"
+          , "    c d;"
+          , "    e f}"
+          , "  g h" 
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b"
+          , "local"
+          , "    c d"
+          , "    e f"
+          , "      g h" 
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b"
+          , "local{"
+          , "    c d;"
+          , "    e f"
+          , "      g h}" 
+          ]
+     |]
 
 -- corner cases --
 
-𝔱 "lexer:unanchored:corner-cases" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ ""
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       ]
-  |]
-𝔱 "lexer:unanchored:corner-cases" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ ""
-       , "a"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "a"
-       ]
-  |]
-𝔱 "lexer:unanchored:corner-cases" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ ""
-       , "  a"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "  a"
-       ]
-  |]
-𝔱 "lexer:unanchored:corner-cases" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ ""
-       , "a"
-       , "b"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "a"
-       , "b"
-       ]
-  |]
-𝔱 "lexer:unanchored:corner-cases" 
-  [| lexerTestU $ concat $ inbetween "\n"
+testSection "lexer:unanchored:corner-cases"
+
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ ""
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ ""
+          , "a"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "a"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ ""
+          , "  a"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "  a"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ ""
+          , "a"
+          , "b"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "a"
+          , "b"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
        [ ""
        , "  a"
        , "b"
@@ -974,345 +927,328 @@ lexerTestU = lexerTest False
        , "b"
        ]
   |]
-𝔱 "lexer:unanchored:corner-cases" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ ""
-       , "local"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "local{}"
-       ]
-  |]
-𝔱 "lexer:unanchored:corner-cases" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ ""
-       , "  local"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "  local{}"
-       ]
-  |]
-𝔱 "lexer:unanchored:corner-cases" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ ""
-       , "  local"
-       , "local"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ ""
-       , "  local{}"
-       , "local{}"
-       ]
-  |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ ""
+          , "local"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "local{}"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ ""
+          , "  local"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "  local{}"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ ""
+          , "  local"
+          , "local"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ ""
+          , "  local{}"
+          , "local{}"
+          ]
+     |]
 
 -- parens --
 
-𝔱 "lexer:unanchored:parens" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "()"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "()"
-       ]
-  |]
-𝔱 "lexer:unanchored:parens" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "(local)"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(local{})"
-       ]
-  |]
-𝔱 "lexer:unanchored:parens" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "local(local)"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "local{(local{})}"
-       ]
-  |]
-𝔱 "lexer:unanchored:parens" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "(local(local))"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(local{(local{})})"
-       ]
-  |]
-𝔱 "lexer:unanchored:parens" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "(local"
-       , "   local)"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(local{"
-       , "   local{}})"
-       ]
-  |]
-𝔱 "lexer:unanchored:parens" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "(local"
-       , "   local"
-       , "     local"
-       , "       a"
-       , "       b)c"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(local{"
-       , "   local{"
-       , "     local{"
-       , "       a;"
-       , "       b}}})c"
-       ]
-  |]
-𝔱 "lexer:unanchored:parens" 
-  [| lexerTestU $ concat $ inbetween "\n"
-       [ "( local "
-       , "    local a"
-       , "    (b) c"
-       , "    (d"
-       , "     e)"
-       , "  , d"
-       , "  )"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "( local{ "
-       , "    local{ a};"
-       , "    (b) c;"
-       , "    (d"
-       , "     e)}"
-       , "  , d"
-       , "  )"
-       ]
-  |]
+testSection "lexer:unanchored:parens"
+
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "()"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "()"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "(local)"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(local{})"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "local(local)"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "local{(local{})}"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "(local(local))"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(local{(local{})})"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "(local"
+          , "   local)"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(local{"
+          , "   local{}})"
+          ]
+     |]
+test [| lexerTestU $ concat $ inbetween "\n"
+         [ "(local"
+         , "   local"
+         , "     local"
+         , "       a"
+         , "       b)c"
+         ]
+    |] 
+    [| concat $ inbetween "\n" 
+         [ "(local{"
+         , "   local{"
+         , "     local{"
+         , "       a;"
+         , "       b}}})c"
+         ]
+    |]
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "( local "
+          , "    local a"
+          , "    (b) c"
+          , "    (d"
+          , "     e)"
+          , "  , d"
+          , "  )"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "( local{ "
+          , "    local{ a};"
+          , "    (b) c;"
+          , "    (d"
+          , "     e)}"
+          , "  , d"
+          , "  )"
+          ]
+     |]
 
 -- ======= --
 -- FAILURE --
 -- ======= --
 
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "+ c d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:1"
-       , "One of:"
-       , "a b"
-       , "+ c d"
-       , "^"
-       , "Expected <token>"
-       ]
-  |]
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , ") c d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:1"
-       , "One of:"
-       , "a b;"
-       , ") c d"
-       , "^"
-       , "Expected matching bracket OPEN ‹(› before this bracket CLOSE"
-       ]
-  |]
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "()) c d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:3"
-       , "One of:"
-       , "a b;"
-       , "()) c d"
-       , "  ^"
-       , "Expected matching bracket OPEN ‹(› before this bracket CLOSE"
-       ]
-  |]
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "( c d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:4"
-       , "One of:"
-       , "a b;"
-       , "( c dEOF"
-       , "     ^^^"
-       , "Expected bracket CLOSE ‹)› before END OF INPUT"
-       ]
-  |]
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , ", c d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:1"
-       , "One of:"
-       , "a b;"
-       , ", c d"
-       , "^"
-       , "Expected matching bracket OPEN ‹(› before this bracket SEP"
-       ]
-  |]
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "(a b"
-       , ") c d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:1"
-       , "One of:"
-       , "(a b;"
-       , ") c d"
-       , "^"
-       , "Expected bracket CLOSE ‹)› before block SEP triggered by this TOKEN"
-       ]
-  |]
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "(a b"
-       , "c d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:1"
-       , "One of:"
-       , "(a b;"
-       , "c d"
-       , "^"
-       , "Expected bracket CLOSE ‹)› before block SEP triggered by this TOKEN"
-       ]
-  |]
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a local (a b"
-       , ") c d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:1"
-       , "One of:"
-       , "a local{ (a b}"
-       , ") c d"
-       , "^"
-       , "Expected bracket CLOSE ‹)› before block CLOSE triggered by this TOKEN"
-       ]
-  |]
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a local (a b"
-       , "c d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:1"
-       , "One of:"
-       , "a local{ (a b}"
-       , "c d"
-       , "^"
-       , "Expected bracket CLOSE ‹)› before block CLOSE triggered by this TOKEN"
-       ]
-  |]
-𝔱 "lexer:anchored:failure" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "a b"
-       , "  ( c] d"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "Parse Failure"
-       , "Source:"
-       , "> <>"
-       , "> line:2 column:6"
-       , "One of:"
-       , "a b"
-       , "  ( c] d"
-       , "     ^"
-       , "Expected matching bracket CLOSE ‹)› before this bracket CLOSE"
-       ]
-  |]
+testSection "lexer:anchored:failure"
+
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "+ c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:1"
+          , "One of:"
+          , "a b"
+          , "+ c d"
+          , "^"
+          , "Expected <token>"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , ") c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:1"
+          , "One of:"
+          , "a b;"
+          , ") c d"
+          , "^"
+          , "Expected matching bracket OPEN ‹(› before this bracket CLOSE"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "()) c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:3"
+          , "One of:"
+          , "a b;"
+          , "()) c d"
+          , "  ^"
+          , "Expected matching bracket OPEN ‹(› before this bracket CLOSE"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "( c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:4"
+          , "One of:"
+          , "a b;"
+          , "( c dEOF"
+          , "     ^^^"
+          , "Expected bracket CLOSE ‹)› before END OF INPUT"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , ", c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:1"
+          , "One of:"
+          , "a b;"
+          , ", c d"
+          , "^"
+          , "Expected matching bracket OPEN ‹(› before this bracket SEP"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "(a b"
+          , ") c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:1"
+          , "One of:"
+          , "(a b;"
+          , ") c d"
+          , "^"
+          , "Expected bracket CLOSE ‹)› before block SEP triggered by this TOKEN"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "(a b"
+          , "c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:1"
+          , "One of:"
+          , "(a b;"
+          , "c d"
+          , "^"
+          , "Expected bracket CLOSE ‹)› before block SEP triggered by this TOKEN"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a local (a b"
+          , ") c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:1"
+          , "One of:"
+          , "a local{ (a b}"
+          , ") c d"
+          , "^"
+          , "Expected bracket CLOSE ‹)› before block CLOSE triggered by this TOKEN"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a local (a b"
+          , "c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:1"
+          , "One of:"
+          , "a local{ (a b}"
+          , "c d"
+          , "^"
+          , "Expected bracket CLOSE ‹)› before block CLOSE triggered by this TOKEN"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , "  ( c] d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "Parse Failure"
+          , "Source:"
+          , "> <>"
+          , "> line:2 column:6"
+          , "One of:"
+          , "a b"
+          , "  ( c] d"
+          , "     ^"
+          , "Expected matching bracket CLOSE ‹)› before this bracket CLOSE"
+          ]
+     |]
 
 -- ========= --
 -- PIPE-LIKE --
 -- ========= --
 
-𝔱 "lexer:pipe-like" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "|local|"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "|local{}|"
-       ]
-  |]
-𝔱 "lexer:pipe-like" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "(|a(|local|)|)"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(|a(|local{}|)|)"
-       ]
-  |]
-𝔱 "lexer:pipe-like" 
-  [| lexerTestA $ concat $ inbetween "\n"
-       [ "(|a[]|)"
-       ]
-  |] 
-  [| concat $ inbetween "\n" 
-       [ "(|a[]|)"
-       ]
-  |]
+testSection "lexer:pipe-like"
+
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "|local|"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "|local{}|"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "(|a(|local|)|)"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(|a(|local{}|)|)"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "(|a[]|)"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "(|a[]|)"
+          ]
+     |]
 
 buildTests

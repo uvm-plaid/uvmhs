@@ -4,4 +4,4 @@ import UVMHS
 import qualified UVMHSMain
 
 main ∷ IO ()
-main = UVMHSMain.test
+main = UVMHSMain.mainTest

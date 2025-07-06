@@ -82,7 +82,8 @@ instance Fuzzy ℤ32 where fuzzy = randrRadius ∘ intΩ32 *$ askL fuzzyEnvRadiu
 instance Fuzzy ℤ16 where fuzzy = randrRadius ∘ intΩ16 *$ askL fuzzyEnvRadiusL
 instance Fuzzy ℤ8  where fuzzy = randrRadius ∘ intΩ8  *$ askL fuzzyEnvRadiusL
 
-instance Fuzzy 𝔻   where fuzzy = randrRadius ∘ dbl    *$ askL fuzzyEnvRadiusL
+instance Fuzzy 𝔻   where 
+  fuzzy = truncateDecimals 2 ^∘ randrRadius ∘ dbl *$ askL fuzzyEnvRadiusL
 
 instance Fuzzy () where fuzzy = return ()
 

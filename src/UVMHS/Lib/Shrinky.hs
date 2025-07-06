@@ -33,6 +33,19 @@ instance Shrinky ℤ64 where
           , iter [iP-1,iN+1,iP-2,iN+2,iP⌿2,iN⌿2]
           ]
 
+instance Shrinky 𝔻 where
+  shrink d =
+    if
+    | d ≡ 0     → null
+    | d ≢ d     → null -- NaN
+    | otherwise →
+        let dP = abs d
+            dN = neg dP
+        in
+        iter $ pow𝑃 $ filter ((≢) d) $ iter [0,tcate $ dP/2,tcate $ dN/2,dN]
+    where
+      tcate = truncateDecimals 2
+
 instance (Shrinky a,Shrinky b) ⇒ Shrinky (a,b) where
   shrink (x,y) = concat
     [ do x' ← shrink x ; return (x',y )

@@ -7,6 +7,9 @@ import UVMHS.Core.Data.Option ()
 import qualified Prelude as HS
 import qualified Data.Ratio as HS
 
+abs ∷ 𝔻 → 𝔻
+abs = HS.abs
+
 zabs ∷ ℤ → ℕ
 zabs = HS.fromIntegral ∘ HS.abs
 
@@ -45,6 +48,11 @@ ceilingᴾ = HS.ceiling ∘ un𝔻ᴾ
 
 floorᴾ ∷ 𝔻ᴾ → ℕ
 floorᴾ = HS.floor ∘ un𝔻ᴾ
+
+truncateDecimals ∷ ℕ64 → 𝔻 → 𝔻
+truncateDecimals n d =
+  let scale = 10 ^^ nat n
+  in dbl (truncate (d × scale)) / scale
 
 -- ℕ --
 

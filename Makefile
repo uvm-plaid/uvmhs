@@ -3,7 +3,7 @@ LIB_NAME     := uvmhs
 ALL_HS_FILES := $(shell find src -name '*.hs')
 
 GHCID_FILE    := src/UVMHSMain.hs
-GHCID_E       := dev
+GHCID_E       := mainDev
 GHCID_GHCI_OPTIONS := \
 	-v1 \
 	-j \
