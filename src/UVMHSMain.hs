@@ -48,6 +48,16 @@ mainDev ∷ IO ()
 mainDev = cleanExit $ do
   noExit mainTest
 
+  -- let ppApply ∷ Doc → Doc → Doc
+  --     ppApply = ppInflSpace 10
+  -- let d₁ = ppApply 
+  --           (ppApply 
+  --              (ppApply (ppString "f") $ ppString "x") $ 
+  --              ppApply (ppString "g") $ ppString "y") $
+  --           ppApply (ppString "h") $ ppString "z"
+  --     d₂ = ppParens $ ppApply (ppString "g") $ ppString "y"
+  --     d₃ = ppApply (ppString "g") $ ppString "y"
+  -- out $ show𝕊 $ docShape d₃
   -- FUTURE
   -- out $(thShowDecs ds₁)
   -- out $(thShowDecs ds₂)

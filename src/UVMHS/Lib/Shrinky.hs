@@ -10,16 +10,19 @@ isoShrink = isofr ^∘ shrink ∘ isoto
 
 instance Shrinky () where shrink = const null
 
+instance Shrinky 𝔹 where
+  shrink = \case
+    False → null
+    True → single False
+
 instance Shrinky ℕ64 where
-  shrink n =
-    if 
+  shrink n = if 
     | n ≡ 0     → null
     | n ≡ 1     → single 0
     | otherwise → iter [0,n-1,n-2,n⌿2]
 
 instance Shrinky ℤ64 where
-  shrink i =
-    if
+  shrink i = if
     | i ≡ 0     → null
     | i ≡ 1     → single 0
     | i ≡ neg 1 → single 0
@@ -34,8 +37,7 @@ instance Shrinky ℤ64 where
           ]
 
 instance Shrinky 𝔻 where
-  shrink d =
-    if
+  shrink d = if
     | d ≡ 0     → null
     | d ≢ d     → null -- NaN
     | otherwise →

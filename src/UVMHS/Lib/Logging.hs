@@ -27,7 +27,7 @@ pplog l msg = do
     pprint $ concat
       [ if not b then null else concat
           [ ppBG grayDark $ ppFG white $ ppString $ concat ["▷",show𝕊 l,"◁"]
-          , ppSpace 1
+          , ppSpace
           ]
       , ppGA $ msg ()
       ]
@@ -36,7 +36,7 @@ pplog l msg = do
 pplogd ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogOptions) ⇒ ℕ64 → (() → Doc) → m ()
 pplogd l msg = do
   ld ← askL $ logOptionsDepthL ⊚ hasLens
-  pplog l $ \ () → ppSpace (ld × 𝕟64 2) ⧺ ppGA (msg ())
+  pplog l $ \ () → ppSpaces (ld × 𝕟64 2) ⧺ ppGA (msg ())
 
 pplogdIndent ∷ (Monad m,MonadIO m,MonadReader r m,HasLens r LogOptions) ⇒ m a → m a
 pplogdIndent = mapEnvL (logOptionsDepthL ⊚ hasLens) succ

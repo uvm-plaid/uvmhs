@@ -97,6 +97,22 @@ test [| id @(𝐼 ℕ64) $ uptoStep 0  1  |] [| iter []                    |]
 test [| id @(𝐼 ℕ64) $ uptoStep 0  2  |] [| iter []                    |]
 test [| id @(𝐼 ℕ64) $ uptoStep 0  3  |] [| iter []                    |]
 
+testSection "core:iter:mapFirst"
+
+test [| id @(𝐼 ℕ64) $ mapFirst ((+) 100) $ upto 5 |] [| iter [100,1,2,3,4] |]
+
+testSection "core:iter:mapAfterFirst"
+
+test [| id @(𝐼 ℕ64) $ mapAfterFirst ((+) 100) $ upto 5 |] [| iter [0,101,102,103,104] |]
+
+testSection "core:iter:mapLast"
+
+test [| id @(𝐼 ℕ64) $ mapLast ((+) 100) $ upto 5 |] [| iter [0,1,2,3,104] |]
+
+testSection "core:iter:mapBeforeLast"
+
+test [| id @(𝐼 ℕ64) $ mapBeforeLast ((+) 100) $ upto 5 |] [| iter [100,101,102,103,4] |]
+
 -----------
 -- OTHER --
 -----------

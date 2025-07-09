@@ -120,5 +120,3 @@ instance (Ord k,Fuzzy k,Fuzzy v) ⇒ Fuzzy (k ⇰ v) where
   fuzzy = assoc ^$ fuzzy @(𝐿 _)
 
 instance (Fuzzy a) ⇒ Fuzzy (() → a) where fuzzy = const ^$ fuzzy
-
-

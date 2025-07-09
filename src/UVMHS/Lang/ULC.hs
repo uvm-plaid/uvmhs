@@ -79,12 +79,12 @@ instance (Show 𝒸) ⇒ Pretty (ULCExp 𝒸) where pretty = pretty ∘ aval ∘
 instance (Show 𝒸) ⇒ Pretty (ULCExp_R 𝒸) where
   pretty = \case
     Var_ULC x → pretty x
-    Lam_ULC xO e → flip (ppPreSep pLET) (pretty e) $ ppHorizontal $ concat
+    Lam_ULC xO e → flip (ppPre pLET) (pretty e) $ ppHorizontal $ concat
       [ single𝐼 $ ppKey "λ"
       , elim𝑂 null (single ∘ ppBdrFmt ∘ pretty) xO
       , single𝐼 $ ppKey "→"
       ]
-    App_ULC e₁ e₂ → ppInfl pAPP (ppSpace one) (pretty e₁) $ pretty e₂
+    App_ULC e₁ e₂ → ppInfl pAPP ppSpace (pretty e₁) $ pretty e₂
 
 instance Shrinky (ULCExp 𝒸) where
   shrink (ULCExp (𝐴 𝒸 e)) = ULCExp ∘ 𝐴 𝒸 ^$ shrink e

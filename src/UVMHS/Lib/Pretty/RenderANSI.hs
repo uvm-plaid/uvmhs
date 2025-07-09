@@ -157,7 +157,7 @@ ppRenderWith ∷ (RenderANSIM () → RenderANSIM ())
 ppRenderWith f₁ f₃ f₄ d = io_UNSAFE $ do
   b ← IORef.readIORef gv_PPRINT_COLOR
   let f₁' = appto f₁ $ if b then id else (∘) $ localL ansiEnvDoFormatL False
-  return $ appto (ppGroup d) $
+  return $ appto (ppG d) $
     stringSS
     ∘ execRenderANSIWith f₁'
     ∘ summaryOContents
@@ -171,9 +171,6 @@ ppRender = ppRenderWith id id id
 ppRenderNoFmt ∷ Doc → 𝕊
 ppRenderNoFmt = ppRenderWith (localL ansiEnvDoFormatL False) id id
 
-ppRenderYesFmt ∷ Doc → 𝕊
-ppRenderYesFmt = ppRenderWith (localL ansiEnvDoFormatL True) id id
-
 ppRenderWide ∷ Doc → 𝕊
 ppRenderWide =
   ppRenderWith id
@@ -181,12 +178,15 @@ ppRenderWide =
                 ∘ localL docAEnvMaxRibbonWidthL None)
                id
 
-ppRenderNarrow ∷ Doc → 𝕊
-ppRenderNarrow =
+ppRenderWidth ∷ ℕ64 → ℕ64 → Doc → 𝕊
+ppRenderWidth w rw =
   ppRenderWith id
-               (localL docAEnvMaxLineWidthL (Some zero)
-                ∘ localL docAEnvMaxRibbonWidthL (Some zero))
+               (localL docAEnvMaxLineWidthL (Some w)
+                ∘ localL docAEnvMaxRibbonWidthL (Some rw))
                id
+
+ppRenderNarrow ∷ Doc → 𝕊
+ppRenderNarrow = ppRenderWidth 0 0
 
 ppRenderNoFmtWide ∷ Doc → 𝕊
 ppRenderNoFmtWide =
@@ -194,18 +194,42 @@ ppRenderNoFmtWide =
                (localL docAEnvMaxLineWidthL None ∘ localL docAEnvMaxRibbonWidthL None)
                id
 
-ppRenderNoFmtNarrow ∷ Doc → 𝕊
-ppRenderNoFmtNarrow =
+ppRenderNoFmtWidth ∷ ℕ64 → ℕ64 → Doc → 𝕊
+ppRenderNoFmtWidth w rw =
   ppRenderWith (localL ansiEnvDoFormatL False)
-               (localL docAEnvMaxLineWidthL (Some zero)
-                ∘ localL docAEnvMaxRibbonWidthL (Some zero))
+               (localL docAEnvMaxLineWidthL (Some w)
+                ∘ localL docAEnvMaxRibbonWidthL (Some rw))
                id
+
+ppRenderNoFmtNarrow ∷ Doc → 𝕊
+ppRenderNoFmtNarrow = ppRenderNoFmtWidth 0 0
+
+pprint ∷ (Pretty a) ⇒ a → IO ()
+pprint = out ∘ ppRender ∘ pretty
+
+pprintNoFmt ∷ (Pretty a) ⇒ a → IO ()
+pprintNoFmt = out ∘ ppRenderNoFmt ∘ pretty
+
+pprintWide ∷ (Pretty a) ⇒ a → IO ()
+pprintWide = out ∘ ppRenderWide ∘ pretty
+
+pprintWidth ∷ (Pretty a) ⇒ ℕ64 → ℕ64 → a → IO ()
+pprintWidth w rw = out ∘ ppRenderWidth w rw ∘ pretty
+
+pprintNarrow ∷ (Pretty a) ⇒ a → IO ()
+pprintNarrow = out ∘ ppRenderNarrow ∘ pretty
+
+pprintNoFmtWide ∷ (Pretty a) ⇒ a → IO ()
+pprintNoFmtWide = out ∘ ppRenderNoFmtWide ∘ pretty
+
+pprintNoFmtWidth ∷ (Pretty a) ⇒ ℕ64 → ℕ64 → a → IO ()
+pprintNoFmtWidth w rw = out ∘ ppRenderNoFmtWidth w rw ∘ pretty
+
+pprintNoFmtNarrow ∷ (Pretty a) ⇒ a → IO ()
+pprintNoFmtNarrow = out ∘ ppRenderNoFmtNarrow ∘ pretty
 
 ppshow ∷ (Pretty a) ⇒ a → 𝕊
 ppshow = ppRenderNoFmtWide ∘ pretty
-
-pprint ∷ (Pretty a) ⇒ a → IO ()
-pprint x = out $ ppRender $ pretty x
 
 ppColorOn ∷ IO ()
 ppColorOn = IORef.writeIORef gv_PPRINT_COLOR True
@@ -223,11 +247,6 @@ pptraceM a = let _ = pptrace a in skip
 
 ppabort ∷ (Pretty a) ⇒ a → IO b
 ppabort x = do pprint x ; abortIO
-
-debugShape ∷ Doc → IO ()
-debugShape d = do
-  pprint d
-  pprint $ ppString $ show𝕊 $ docShape d
 
 instance Eq Doc where (==) = (≡) `on` ppRender
 instance Ord Doc where compare = compare `on` ppRender

@@ -16,6 +16,9 @@ import qualified Prelude as HS
 -- Doc renders local configuration options such as colors and
 -- formatting
 
+data PrettyLayoutMode = Exp_PPLM | Cmd_PPLM
+  deriving (Eq,Ord,Show)
+
 data PrettyParams = PrettyParams
   { punctuationFormat        ∷ Formats
   , keywordFormat            ∷ Formats
@@ -49,15 +52,16 @@ prettyParams₀ = PrettyParams
   , errorFormat              = formats [FG white,BG red]
   , lineNumberFormat         = formats [FG grayLight]
   , annotationFormat         = formats [BG grayLight]
-  , appLevel                 = 𝕟64 100
+  , appLevel                 = 100
   }
 
 data DocEnv = DocEnv
   -- global env
   { docEnvPrettyParams ∷ PrettyParams
   -- local env
-  , docEnvPrecLevel ∷ ℕ64
+  , docEnvPrecLevel ∷ AddTop ℕ64
   , docEnvPrecBumped ∷ 𝔹
+  , docEnvLayoutMode ∷ PrettyLayoutMode
   } deriving (Eq,Ord,Show)
 makeLenses ''DocEnv
 
@@ -66,8 +70,9 @@ docEnv₀ = DocEnv
   -- global env
   { docEnvPrettyParams = prettyParams₀
   -- local env
-  , docEnvPrecLevel = 𝕟64 0
+  , docEnvPrecLevel = AddTop 0
   , docEnvPrecBumped = False
+  , docEnvLayoutMode = Exp_PPLM
   }
 
 type DocM = RWS DocEnv DocA ()
@@ -96,11 +101,83 @@ docShape = summaryIShape ∘ staticDocA ∘ execDoc
 -- COMBINATORS --
 -----------------
 
+-- RAW STRINGS
+
+ppString ∷ 𝕊 → Doc
+ppString = Doc ∘ tell ∘ stringDocA
+
+-- MODE: GROUPING / ALIGNMENT --
+
+ppG ∷ Doc → Doc
+ppG = onDoc $ mapOut groupDocA
+
+ppA ∷ Doc → Doc
+ppA = onDoc $ mapOut alignDocA
+
+ppGA ∷ Doc → Doc
+ppGA = ppA ∘ ppG
+
+ppWhenFlat ∷ Doc → Doc
+ppWhenFlat d = Doc $ do
+  da ← retOut $ unDoc d
+  tell $ docAModal da null
+
+ppWhenBreak ∷ Doc → Doc
+ppWhenBreak d = Doc $ do
+  da ← retOut $ unDoc d
+  tell $ docAModal null da
+
+ppGModal ∷ Doc → Doc → Doc
+ppGModal d₁ d₂ = Doc $ do
+  da₁ ← retOut $ unDoc d₁
+  da₂ ← retOut $ unDoc d₂
+  tell $ docAModal da₁ da₂
+
 ppForceBreak ∷ Doc
 ppForceBreak = Doc $ tell $ StaticDocA $ SummaryI True null null
 
-ppWithForcedBreak ∷ Doc → Doc
-ppWithForcedBreak d = ppForceBreak ⧺ d
+ppStringGModal ∷ 𝕊 → 𝕊 → Doc
+ppStringGModal x y = ppGModal (ppString x) $ ppString y
+
+-- MODE: EXP / CMD --
+
+ppE ∷ Doc → Doc
+ppE = onDoc $ localL docEnvLayoutModeL Exp_PPLM
+
+ppEA ∷ Doc → Doc
+ppEA = ppE ∘ ppA
+
+ppEGA ∷ Doc → Doc
+ppEGA = ppE ∘ ppGA
+
+ppC ∷ Doc → Doc
+ppC = onDoc $ localL docEnvLayoutModeL Cmd_PPLM
+
+ppWhenExp ∷ Doc → Doc
+ppWhenExp d = Doc $ do
+  m ← askL docEnvLayoutModeL
+  case m of
+    Exp_PPLM → unDoc d
+    Cmd_PPLM → null
+
+ppWhenCmd ∷ Doc → Doc
+ppWhenCmd d = Doc $ do
+  m ← askL docEnvLayoutModeL
+  case m of
+    Exp_PPLM → null
+    Cmd_PPLM → unDoc d
+
+ppLModal ∷ Doc → Doc → Doc
+ppLModal eD cD = Doc $ do
+  m ← askL docEnvLayoutModeL
+  case m of
+    Exp_PPLM → unDoc eD
+    Cmd_PPLM → unDoc cD
+
+ppModal ∷ Doc → Doc → Doc → Doc
+ppModal flat whenBreakExp whenBreakCmd = ppGModal flat $ ppLModal whenBreakExp whenBreakCmd
+
+-- ANNOTATIONS --
 
 ppAnnotate ∷ Annotation → Doc → Doc
 ppAnnotate = onDoc ∘ mapOut ∘ annotateDocA
@@ -116,29 +193,7 @@ ppFormatParam l d = Doc $ do
 ppUndertag ∷ ℂ → Formats → Doc → Doc
 ppUndertag = ppAnnotate ∘∘ undertagAnnotation
 
-ppGroup ∷ Doc → Doc
-ppGroup = onDoc $ mapOut groupDocA
-
-ppAlign ∷ Doc → Doc
-ppAlign = onDoc $ mapOut alignDocA
-
--- ppHang ∷ ℕ64 → Doc → Doc
--- ppHang n = onDoc $ mapOut $ hangDocA n
-
-ppGA ∷ Doc → Doc
-ppGA = ppAlign ∘ ppGroup
-
-ppString ∷ 𝕊 → Doc
-ppString = Doc ∘ tell ∘ stringDocA
-
-ppStringModal ∷ 𝕊 → 𝕊 → Doc
-ppStringModal sf sb = ppModal (ppString sf) $ ppString sb
-
-ppModal ∷ Doc → Doc → Doc
-ppModal d₁ d₂ = Doc $ do
-  da₁ ← retOut $ unDoc d₁
-  da₂ ← retOut $ unDoc d₂
-  tell $ docAModal da₁ da₂
+-- COLOR: LOWER LEVEL --
 
 ppFG ∷ Color → Doc → Doc
 ppFG c = ppFormat $ formats [FG c]
@@ -157,6 +212,8 @@ ppIT = ppFormat $ formats [IT]
 
 ppUT ∷ ℂ → Color → Doc → Doc
 ppUT c o = ppUndertag c (formats [FG o])
+
+-- COLOR: SYNTACTIC CLASSES --
 
 ppPunFmt ∷ Doc → Doc
 ppPunFmt = ppFormatParam punctuationFormatL
@@ -233,55 +290,63 @@ ppLineNum = ppLineNumFmt ∘ ppString
 ppAnnotation ∷ Doc → Doc
 ppAnnotation = ppFormatParam annotationFormatL
 
-ppCxt ∷ 𝕊 → Doc → Doc
-ppCxt k v = ppHorizontal
-  [ ppFG teal $ ppBD $ ppString k
-  , ppGA v
-  ]
+-- SPACING --
 
-ppSpace ∷ ℕ64 → Doc
-ppSpace n = ppString $ string $ replicate n ' '
+ppSpaces ∷ ℕ64 → Doc
+ppSpaces n = ppString $ string $ replicate n ' '
+
+ppSpace ∷ Doc
+ppSpace = ppSpaces 1
+
+ppNewlines ∷ ℕ64 → Doc
+ppNewlines n = ppString $ string $ replicate n '\n'
 
 ppNewline ∷ Doc
-ppNewline = ppString "\n"
+ppNewline = ppNewlines 1
 
-ppIndented ∷ Doc → Doc
-ppIndented d = concat
-  [ ppSpace 2
-  , ppGA d
-  ]
+ppSpacesIfBreak ∷ ℕ64 → Doc
+ppSpacesIfBreak n = ppWhenBreak $ ppString $ string $ replicate n ' '
 
 ppSpaceIfBreak ∷ Doc
-ppSpaceIfBreak = ppStringModal "" " "
+ppSpaceIfBreak = ppSpacesIfBreak 1
 
-ppSpaceIfNoBreak ∷ Doc
-ppSpaceIfNoBreak = ppStringModal " " ""
+ppSpacesIfFlat ∷ ℕ64 → Doc
+ppSpacesIfFlat n = ppWhenFlat $ ppString $ string $ replicate n ' '
+
+ppSpaceIfFlat ∷ Doc
+ppSpaceIfFlat = ppSpacesIfFlat 1
 
 ppNewlineIfBreak ∷ Doc
-ppNewlineIfBreak = ppStringModal "" "\n"
+ppNewlineIfBreak = ppWhenBreak $ ppString "\n"
+
+ppSpacesNewlineIfBreak ∷ ℕ64 → Doc
+ppSpacesNewlineIfBreak n = ppStringGModal (string $ replicate n ' ') "\n"
 
 ppSpaceNewlineIfBreak ∷ Doc
-ppSpaceNewlineIfBreak = ppStringModal " " "\n"
+ppSpaceNewlineIfBreak = ppSpacesNewlineIfBreak 1
 
-ppHangIfBreak ∷ Doc → Doc
-ppHangIfBreak d = concat
-  [ ppNewlineIfBreak
-  , ppSpaceIfBreak
-  , ppSpaceIfBreak
-  , ppGA d
-  ]
+ppSpacesIfBreakCmd ∷ ℕ64 → Doc
+ppSpacesIfBreakCmd n = ppWhenBreak $ ppWhenCmd $ ppSpaces n
+
+ppSpaceIfBreakCmd ∷ Doc
+ppSpaceIfBreakCmd = ppSpacesIfBreakCmd 1
 
 ppHorizontal ∷ (ToIter Doc t) ⇒ t → Doc
-ppHorizontal = concat ∘ inbetween (ppSpace $ 𝕟64 1) ∘ iter
+ppHorizontal = concat ∘ inbetween ppSpace ∘ iter
 
 ppVertical ∷ (ToIter Doc t) ⇒ t → Doc
 ppVertical = concat ∘ inbetween ppNewline ∘ iter
 
 ppSeparated ∷ (ToIter Doc t) ⇒ t → Doc
-ppSeparated = ppGroup ∘ concat ∘ inbetween ppSpaceNewlineIfBreak ∘ iter
+ppSeparated = ppG ∘ concat ∘ inbetween ppSpaceNewlineIfBreak ∘ iter
+
+-- MANUALLY SETTING LEVELS --
 
 ppSetLevel ∷ ℕ64 → Doc → Doc
-ppSetLevel n = onDoc $ mapEnv $ update docEnvPrecLevelL n ∘ update docEnvPrecBumpedL False
+ppSetLevel n = onDoc $ mapEnv $ update docEnvPrecLevelL (AddTop n) ∘ update docEnvPrecBumpedL False
+
+ppSetTopLevel ∷ Doc → Doc
+ppSetTopLevel = onDoc $ mapEnv $ update docEnvPrecLevelL Top ∘ update docEnvPrecBumpedL True
 
 ppSetBotLevel ∷ Doc → Doc
 ppSetBotLevel = ppSetLevel zero
@@ -289,133 +354,449 @@ ppSetBotLevel = ppSetLevel zero
 ppBump ∷ Doc → Doc
 ppBump = onDoc $ mapEnv $ update docEnvPrecBumpedL True
 
-ppClosed ∷ Doc → Doc → Doc → Doc
-ppClosed alM arM aM = ppSetBotLevel $ concat
-  [ alM
-  , ppGA aM
-  , arM
+-- BRACKETS --
+
+ppBrackets ∷ Doc → Doc → Doc → Doc
+ppBrackets lD rD xD = ppG $ concat
+  [ ppSetTopLevel $ ppA lD
+  , ppSetBotLevel $ ppEA xD
+  , ppSetTopLevel $ ppEA rD
   ]
 
 ppParens ∷ Doc → Doc
-ppParens = ppClosed (ppPun "(") (ppPun ")")
+ppParens = ppBrackets (ppPun "(") $ ppPun ")"
+
+-- FLAT
+--
+--     [f x,g y]
+--
+-- BREAK EXP
+--
+--     [ f x
+--     , g y
+--     ]
+--
+-- BREAK CMD
+--
+--     [ f x ,
+--       g y ]
+--
+ppCollectionF ∷ Doc → Doc → Doc → (𝔹 → 𝑂 (Doc ∧ Doc) → 𝐼 Doc) → Doc
+ppCollectionF l r i xs = 
+  let lWidth = shapeWidth $ shapeIShape $ docShape l
+      iWidth = shapeWidth $ shapeIShape $ docShape i
+      tWidth = lWidth ⊔ iWidth
+      lExtra = tWidth - lWidth
+      iExtra = tWidth - iWidth
+      flat = concat
+        [ ppSetTopLevel $ ppA l
+        , concat $ inbetween (ppSetTopLevel $ ppA i) $ map (ppSetBotLevel ∘ ppEA) $ iter $ xs False None
+        , ppSetTopLevel $ ppEA r
+        ]
+      breakExp = concat
+        [ ppSetTopLevel $ ppA l
+        , ppSpaces lExtra
+        , ppSpace
+        , concat $ inbetween (concat [ppNewline,ppSpaces iExtra,ppSetTopLevel $ ppEA i,ppSpace]) $ 
+            map (ppSetBotLevel ∘ ppEGA) $ iter $ xs True None
+        , ppNewline
+        , ppSetTopLevel $ ppEA r
+        ]
+      breakCmd = concat
+        [ ppSetTopLevel $ ppA l
+        , ppSpace
+        , ppEA $ concat $ inbetween ppNewline $
+            map (ppSetBotLevel ∘ ppEGA) $
+              iter $ xs True $ Some $ 
+                concat [ppSpace,ppSetTopLevel $ ppEA i] 
+                :* concat [ppSpace,ppSetTopLevel $ ppEA r]
+        ]
+  in ppGA $ ppModal flat breakExp breakCmd
+
+ppCollection ∷ (ToIter Doc t) ⇒ Doc → Doc → Doc → t → Doc
+ppCollection l r i xs = ppCollectionF l r i $ const $ \case
+  None → iter xs
+  Some (iᵢ :* rᵢ) → mapBeforeLastLast (\ x → concat [x,iᵢ]) (\ x → concat [x,rᵢ]) $ iter xs
+
+
+-- FLAT
+--
+--     [a b=f x,c d=g y]
+--
+-- BREAK EXP
+--
+--     [ a b = f x
+--     , c d = g y
+--     ]
+--
+--     [ a 
+--       b = f x
+--     , c 
+--       d = g y
+--     ]
+--
+--     [ a 
+--       b = 
+--         f x
+--     , c 
+--       d = 
+--         g y
+--     ]
+--
+--     [ a 
+--       b = 
+--         f 
+--         x
+--     , c 
+--       d = 
+--         g 
+--         y
+--     ]
+--
+-- BREAK CMD
+--
+--     [ a b = f x ,
+--       c d = g y ]
+--
+--     [ a 
+--       b = f x ,
+--       c 
+--       d = g y ]
+--
+--     [ a 
+--       b = 
+--         f x ,
+--       c 
+--       d = 
+--         g y ]
+--
+--     [ a 
+--       b = 
+--         f 
+--         x ,
+--       c 
+--       d = 
+--         g 
+--         y ]
+--
+ppCollectionRec ∷ (ToIter (Doc ∧ Doc) t) ⇒ Doc → Doc → Doc → Doc → t → Doc
+ppCollectionRec l r i rel kvs = ppCollectionF l r i $ \ isBreak irO → 
+  let kvs' = case irO of
+        None → iter kvs
+        Some (iᵢ :* rᵢ) → mapBeforeLastLast (\ (k :* v) → k:*concat [v,iᵢ]) (\ (k :* v) → k:*concat [v,rᵢ]) $ iter kvs
+  in
+  mapOn (iter kvs') $ \ (k :* v) → 
+  let flat = concat 
+        [ ppSetBotLevel $ ppA k
+        , if isBreak then ppSpace else null
+        , ppSetTopLevel $ ppEA rel
+        , if isBreak then ppSpace else null
+        , ppSetBotLevel $ ppEA v
+        ]
+      whenBreak = concat
+        [ ppA k
+        , ppSpace
+        , ppG $ concat
+          [ ppSetTopLevel $ ppEA rel
+          , ppSpaceNewlineIfBreak
+          , ppSpacesIfBreak 2
+          , ppEGA v
+          ]
+        ]
+  in 
+  ppGModal flat whenBreak
+
+ppRecord ∷ (ToIter (Doc ∧ Doc) t) ⇒ Doc → t → Doc
+ppRecord = ppCollectionRec (ppPun "{") (ppPun "}") $ ppPun ","
+
+-- CHANGING LEVELS BY MAYBE WRAPPING WITH PARENS --
 
 ppLevel ∷ ℕ64 → Doc → Doc
 ppLevel i' aM = Doc $ do
   i ← askL $ docEnvPrecLevelL
   b ← askL $ docEnvPrecBumpedL
-  unDoc $ case (i < i') ⩔ ((i ≡ i') ⩓ not b) of
+  unDoc $ case (i < AddTop i') ⩔ ((i ≡ AddTop i') ⩓ not b) of
     True → ppSetLevel i' aM
     False → ppParens $ ppSetLevel i' aM
 
-ppInfLevel ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfLevel i oM x₁M x₂M = ppLevel i $ concat $ iter [ppBump x₁M,oM,ppBump x₂M]
+-- INFIX/PREFIX/POSTFIX --
 
-ppInflLevel ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInflLevel i oM x₁M x₂M = ppLevel i $ concat $ iter [x₁M,oM,ppBump x₂M]
+-- FLAT
+--
+--     f x : g y
+--
+-- BREAK EXP
+--
+--     f x
+--     : g y
+--     
+--     f x
+--     :
+--     g y
+--
+--     f
+--     x
+--     :
+--     g
+--     y
+--
+-- BREAK CMD
+--
+--     f x
+--       : g y
+--
+--     f x
+--       :
+--       g y
+--
+--     f
+--       x
+--       :
+--       g
+--       y
+--
+ppInfG ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfG i o e₁ e₂ = ppLevel i $ concat
+  [ ppA e₁
+  , ppSpaceNewlineIfBreak
+  , ppSpacesIfBreakCmd 2
+  , ppSetTopLevel $ ppEA o 
+  , ppG $ concat
+      [ ppSpaceNewlineIfBreak
+      , ppSpacesIfBreakCmd 2
+      , ppBump $ ppEA e₂
+      ]
+  ]
 
-ppInfrLevel ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfrLevel i oM x₁M x₂M = ppLevel i $ concat $ iter [ppBump x₁M,oM,x₂M]
+-- FLAT
+--
+--     f x:g y
+--
+-- BREAK EXP
+--
+--     f x
+--     :g y
+--     
+--     f x
+--     :
+--     g y
+--
+--     f
+--     x
+--     :
+--     g
+--     y
+--
+-- BREAK CMD
+--
+--     f x
+--       :g y
+--
+--     f x
+--       :
+--       g y
+--
+--     f
+--       x
+--       :
+--       g
+--       y
+--
+ppInfGTight ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfGTight i o e₁ e₂ = ppLevel i $ concat
+  [ ppA e₁
+  , ppNewlineIfBreak
+  , ppSpacesIfBreakCmd 2
+  , ppSetTopLevel $ ppEA o 
+  , ppG $ concat
+      [ ppNewlineIfBreak
+      , ppSpacesIfBreakCmd 2
+      , ppEA e₂
+      ]
+  ]
 
-ppPreLevel ∷ ℕ64 → Doc → Doc → Doc
-ppPreLevel i oM xM = ppLevel i $ concat $ iter [oM,xM]
-
-ppPostLevel ∷ ℕ64 → Doc → Doc → Doc
-ppPostLevel i oM xM = ppLevel i $ concat $ iter [xM,oM]
+ppInfGSpace ∷ ℕ64 → Doc → Doc → Doc
+ppInfGSpace i e₁ e₂ = ppLevel i $ concat
+  [ ppA e₁
+  , ppSpaceNewlineIfBreak
+  , ppSpacesIfBreakCmd 2
+  , ppA e₂
+  ]
 
 ppInf ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInf i o e₁ e₂ =
-  ppInfLevel i (concat [ppNewlineIfBreak,ppAlign o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
+ppInf i o e₁ e₂ = ppInfG i o (ppBump $ ppG e₁) $ ppBump $ ppG e₂
+
+ppInfTight ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfTight i o e₁ e₂ = ppInfGTight i o (ppBump $ ppG e₁) $ ppBump $ ppG e₂
+
+ppInfSpace ∷ ℕ64 → Doc → Doc → Doc
+ppInfSpace i e₁ e₂ = ppInfGSpace i (ppBump $ ppG e₁) $ ppBump $ ppG e₂
 
 ppInfl ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfl i o e₁ e₂ =
-  ppInflLevel i (concat [ppNewlineIfBreak,ppAlign o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
+ppInfl i o e₁ e₂ = ppInfG i o e₁ $ ppBump $ ppG e₂
+
+ppInflTight ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInflTight i o e₁ e₂ = ppInfGTight i o e₁ $ ppBump $ ppG e₂
+
+ppInflSpace ∷ ℕ64 → Doc → Doc → Doc
+ppInflSpace i e₁ e₂ = ppInfGSpace i e₁ $ ppBump $ ppG e₂
 
 ppInfr ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfr i o e₁ e₂ =
-  ppInfrLevel i (concat [ppNewlineIfBreak,ppAlign o,ppSpaceIfBreak]) (ppGA e₁) $ ppGA e₂
+ppInfr i o e₁ e₂ = ppInfG i o (ppBump $ ppG e₁) e₂
 
+ppInfrTight ∷ ℕ64 → Doc → Doc → Doc → Doc
+ppInfrTight i o e₁ e₂ = ppInfGTight i o (ppBump $ ppG e₁) e₂
+
+ppInfrSpace ∷ ℕ64 → Doc → Doc → Doc
+ppInfrSpace i e₁ e₂ = ppInfGSpace i (ppBump $ ppG e₁) e₂
+
+ppAppML ∷ ℕ64 → Doc → Doc → Doc
+ppAppML ℓ = ppInflSpace ℓ
+
+ppAppsML ∷ (ToIter Doc t) ⇒ ℕ64 → Doc → t → Doc
+ppAppsML ℓ x xs = foldOnFrom xs x $ \ xᵢ f → ppAppML ℓ f xᵢ
+
+ppCAppML ∷ Doc → Doc → Doc
+ppCAppML x y = Doc $ do
+  ℓ ← askL $ appLevelL ⊚ docEnvPrettyParamsL
+  unDoc $ ppAppML ℓ x y
+
+ppCAppsML ∷ (ToIter Doc t) ⇒ Doc → t → Doc
+ppCAppsML x xs = Doc $ do
+  ℓ ← askL $ appLevelL ⊚ docEnvPrettyParamsL
+  unDoc $ ppAppsML ℓ x xs
+
+
+
+-- FLAT
+--
+--     ! f x
+--
+-- BREAK EXP
+--
+--     !
+--     f x
+--     
+--     !
+--     f
+--     x
+--
+-- BREAK CMD
+--
+--     !
+--       f x
+--
+--     !
+--       f
+--       x
+--
 ppPre ∷ ℕ64 → Doc → Doc → Doc
-ppPre i o e = ppPreLevel i (concat [ppAlign o,ppNewlineIfBreak]) $ ppGA e
-
-ppPost ∷ ℕ64 → Doc → Doc → Doc
-ppPost i o e = ppPostLevel i (concat [ppNewlineIfBreak,ppAlign o]) $ ppGA e
-
-ppInfSep ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfSep i o = ppInf i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
-
-ppInflSep ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInflSep i o = ppInfl i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
-
-ppInfrSep ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfrSep i o = ppInfr i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
-
-ppPreSep ∷ ℕ64 → Doc → Doc → Doc
-ppPreSep i o = ppPre i $ o ⧺ ppSpaceIfNoBreak
-
-ppPostSep ∷ ℕ64 → Doc → Doc → Doc
-ppPostSep i o = ppPost i $ ppSpaceIfNoBreak ⧺ o
-
-ppInf' ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInf' i o e₁ e₂ =
-  ppInfLevel i (concat [ppNewlineIfBreak,ppAlign o,ppNewlineIfBreak]) (ppGA e₁) $ ppGA e₂
-
-ppInfl' ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfl' i o e₁ e₂ =
-  ppInflLevel i (concat [ppNewlineIfBreak,ppAlign o,ppNewlineIfBreak]) (ppGA e₁) $ ppGA e₂
-
-ppInfr' ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfr' i o e₁ e₂ =
-  ppInfrLevel i (concat [ppNewlineIfBreak,ppAlign o,ppNewlineIfBreak]) (ppGA e₁) $ ppGA e₂
-
-ppInfSep' ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfSep' i o = ppInf' i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
-
-ppInflSep' ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInflSep' i o = ppInfl' i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
-
-ppInfrSep' ∷ ℕ64 → Doc → Doc → Doc → Doc
-ppInfrSep' i o = ppInfr' i $ ppSpaceIfNoBreak ⧺ o ⧺ ppSpaceIfNoBreak
-
-
-ppApp ∷ (ToIter Doc t) ⇒ Doc → t → Doc
-ppApp x xs
-  | count xs ≡ 𝕟64 0 = ppAlign x
-  | otherwise = Doc $ do
-    l ← askL $ appLevelL ⊚ docEnvPrettyParamsL
-    unDoc $ ppLevel l $ concat
-      [ ppGA x
-      , ppSpaceNewlineIfBreak
-      , concat $ inbetween ppSpaceNewlineIfBreak $ map (ppGA ∘ ppBump) $ iter xs
-      ]
-
-ppCollection ∷ (ToIter Doc t) ⇒ Doc → Doc → Doc → t → Doc
-ppCollection l r i xs = ppSetBotLevel $ concat
-  [ l
-  , ppSpaceIfBreak
-  , concat $ inbetween spacer $ map ppGA $ iter xs
-  , ppNewlineIfBreak
-  , r
+ppPre i o e = ppLevel i $ concat
+  [ ppSetTopLevel $ ppA o
+  , ppSpaceNewlineIfBreak
+  , ppSpacesIfBreakCmd 2
+  , ppEA e
   ]
-  where
-    spacer ∷ Doc
-    spacer = concat
-      [ ppNewlineIfBreak
-      , i
-      , ppSpaceIfBreak
-      ]
 
-ppRecord ∷ (ToIter (Doc ∧ Doc) t) ⇒ Doc → t → Doc
-ppRecord rel kvs = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") $ map mapping $ iter kvs
-  where
-    mapping (k :* v) = concat
-      [ ppGA k
-      , ppSpaceIfBreak
-      , rel
-      , ppNewlineIfBreak
-      , ppSpaceIfBreak
-      , ppSpaceIfBreak
-      , ppGA v
-      ]
+-- FLAT
+--
+--     !f x
+--
+-- BREAK EXP
+--
+--     !
+--     f x
+--     
+--     !
+--     f
+--     x
+--
+-- BREAK CMD
+--
+--     !
+--       f x
+--
+--     !
+--       f
+--       x
+--
+ppPreTight ∷ ℕ64 → Doc → Doc → Doc
+ppPreTight i o e = ppLevel i $ concat
+  [ ppSetTopLevel $ ppA o
+  , ppNewlineIfBreak
+  , ppSpacesIfBreakCmd 2
+  , ppEA e
+  ]
+
+-- FLAT
+--
+--     f x ?
+--
+-- BREAK EXP
+--
+--     f x
+--     ?
+--     
+--     f
+--     x
+--     ?
+--
+-- BREAK CMD
+--
+--     f x
+--       ?
+--
+--     f
+--       x
+--       ?
+--
+ppPost ∷ ℕ64 → Doc → Doc → Doc
+ppPost i o e = ppLevel i $ concat
+  [ ppA e
+  , ppSpaceNewlineIfBreak
+  , ppSpacesIfBreakCmd 2
+  , ppSetTopLevel $ ppEA o
+  ]
+
+-- FLAT
+--
+--     f x ?
+--
+-- BREAK EXP
+--
+--     f x
+--     ?
+--     
+--     f
+--     x
+--     ?
+--
+-- BREAK CMD
+--
+--     f x
+--       ?
+--
+--     f
+--       x
+--       ?
+--
+ppPostTight ∷ ℕ64 → Doc → Doc → Doc
+ppPostTight i o e = ppLevel i $ concat
+  [ ppA e
+  , ppNewlineIfBreak
+  , ppSpacesIfBreakCmd 2
+  , ppSetTopLevel $ ppEA o
+  ]
+
+-- STYLES --
+
+ppCxt ∷ 𝕊 → Doc → Doc
+ppCxt k v = ppHorizontal
+  [ ppFG teal $ ppBD $ ppString k
+  , ppEGA v
+  ]
+
+-- BAKING --
 
 ppBake ∷ Doc → TreeI
 ppBake = execDocA ∘ execDoc
@@ -425,18 +806,20 @@ ppEmbed is =
   let s = fold𝑇VOn is summaryChunksI annotateSummaryI
   in Doc $ tell $ StaticDocA s
 
-matrixHelper ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n SummaryO) → 𝕍S n ℕ64 ∧ 𝕍S m (𝕍S n SummaryO)
-matrixHelper has vas sss =
+-- TABLES --
+
+ppTableHelper ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n SummaryO) → 𝕍S n ℕ64 ∧ 𝕍S m (𝕍S n SummaryO)
+ppTableHelper has vas sss =
   let sssT       = 𝐭 sss
       rowHeights = mapOn sss  $ \ ss → joins $ mapOn ss $ \ s → shapeNewlines $ summaryOShape s
       colWidths  = mapOn sssT $ \ ss → joins $ mapOn ss $ \ s → shapeWidth    $ summaryOShape s
       sss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j → hvalign (has ⋕ j) (vas ⋕ i) (colWidths ⋕ j) (rowHeights ⋕ i) $ sss ⋕ i ⋕ j
   in colWidths :* sss'
 
-ppMatrix ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
-ppMatrix has vas dss =
+ppTable ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
+ppTable has vas dss =
   let sss       = mapp (execRenderUT ∘ summaryIContents ∘ staticDocA ∘ execDoc) dss
-      _ :* sss' = matrixHelper has vas sss
+      _ :* sss' = ppTableHelper has vas sss
       dss'      = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
         in Doc $ tell $ StaticDocA $ SummaryI True (ShapeA False sh) $ treeIO t
@@ -444,10 +827,10 @@ ppMatrix has vas dss =
   ppVertical $ mapOn dss' $ \ ds →
     ppHorizontal $ inbetween null ds
 
-ppMatrixCells ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
-ppMatrixCells has vas dss =
+ppTableCells ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
+ppTableCells has vas dss =
   let sss        = mapp (execRenderUT ∘ summaryIContents ∘ staticDocA ∘ execDoc) dss
-      ws :* sss' = matrixHelper has vas sss
+      ws :* sss' = ppTableHelper has vas sss
       sep        = ppFG white $ concat $ inbetween (ppString "─┼─") $ mapOn ws $ \ w → ppString $ string $ replicate w '─'
       dss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
@@ -533,19 +916,19 @@ ppList ∷ (ToIter Doc t) ⇒ t → Doc
 ppList = ppCollection (ppPun "[") (ppPun "]") (ppPun ",") ∘ iter
 
 ppLazyList ∷ (ToIter Doc t) ⇒ t → Doc
-ppLazyList xs = ppApp (ppCon "LL") [ppList xs]
+ppLazyList xs = concat [ppCon "LL",ppList xs]
 
 ppIter ∷ (ToIter Doc t) ⇒ t → Doc
-ppIter xs = ppApp (ppCon "𝐼") [ppList xs]
+ppIter xs = concat [ppCon "𝐼",ppList xs]
 
 ppIterC ∷ (ToIter Doc t) ⇒ t → Doc
-ppIterC xs = ppApp (ppCon "𝐼C") [ppList xs]
+ppIterC xs = concat [ppCon "𝐼C",ppList xs]
 
 ppStream ∷ (ToIter Doc t) ⇒ t → Doc
-ppStream xs = ppApp (ppCon "𝑆") [ppList xs]
+ppStream xs = concat [ppCon "𝑆",ppList xs]
 
 ppSeq ∷ (ToIter Doc t) ⇒ t → Doc
-ppSeq xs = ppApp (ppCon "𝑄") [ppList xs]
+ppSeq xs = concat [ppCon "𝑄",ppList xs]
 
 ppSet ∷ (ToIter Doc t) ⇒ t → Doc
 ppSet = ppCollection (ppPun "{") (ppPun "}") (ppPun ",") ∘ iter
@@ -554,16 +937,16 @@ ppDict ∷ (ToIter (Doc ∧ Doc) t) ⇒ t → Doc
 ppDict = ppRecord (ppPun "↦") ∘ iter
 
 ppVec ∷ (ToIter Doc t) ⇒ t → Doc
-ppVec xs = ppApp (ppCon "𝕍") [ppList xs]
+ppVec xs = concat [ppCon "𝕍",ppList xs]
 
 ppVecS ∷ (ToIter Doc t) ⇒ t → Doc
-ppVecS xs = ppApp (ppCon "𝕍S") [ppList xs]
+ppVecS xs = concat [ppCon "𝕍S",ppList xs]
 
 ppUVec ∷ (ToIter Doc t) ⇒ t → Doc
-ppUVec xs = ppApp (ppCon "𝕌") [ppList xs]
+ppUVec xs = concat [ppCon "𝕌",ppList xs]
 
 ppUVecS ∷ (ToIter Doc t) ⇒ t → Doc
-ppUVecS xs = ppApp (ppCon "𝕌S") [ppList xs]
+ppUVecS xs = concat [ppCon "𝕌S",ppList xs]
 
 ppAddNull ∷ AddNull Doc → Doc
 ppAddNull = \case
@@ -621,7 +1004,7 @@ instance Pretty Stack.CallStack where pretty = ppString ∘ string ∘ Stack.pre
 colorsDemo ∷ Doc
 colorsDemo =
   d𝕍 (vec $ iter allColors) HS.$ \ allColorsS →
-    ppMatrix (const𝕍S 𝕟64s LH) (const𝕍S 𝕟64s TV) $ mapOn allColorsS $ \ (n :* c) →
+    ppTable (const𝕍S 𝕟64s LH) (const𝕍S 𝕟64s TV) $ mapOn allColorsS $ \ (n :* c) →
       svec $ 𝔢 (ppString n)
           ⧺♮ 𝔢 (ppFG c $ ppString "XXXXX")
           ⧺♮ 𝔢 (ppBG c $ ppString "XXXXX")

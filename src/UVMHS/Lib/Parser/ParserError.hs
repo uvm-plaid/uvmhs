@@ -97,6 +97,6 @@ displayErrorTraces (ParserErrorStackTraces final chain) = ppVertical $ concat
           [ ppFG green $ ppString "Parsing"
           , ppString msg
           ]
-      , concat [ppSpace $ 𝕟64 2,ppAlign $ displayErrorTraces tr]
+      , concat [ppSpaces 2,ppA $ displayErrorTraces tr]
       ]
   ]

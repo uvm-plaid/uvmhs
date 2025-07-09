@@ -371,15 +371,25 @@ withIndex = mapState𝐼 zero $ \ x i → succ i :* (i :* x)
 withFirst ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
 withFirst = mapState𝐼 True $ \ x b → False :* (b :* x)
 
+mapFirstAfterFirst ∷ (ToIter a t) ⇒ (a → a) → (a → a) → t → 𝐼 a
+mapFirstAfterFirst ff faf = mapState𝐼 True $ \ x b →
+  let x' = if b then ff x else faf x
+   in False :* x'
+
 mapFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapFirst f = mapState𝐼 True $ \ x b →
-  let x' = if b then f x else x
-  in False :* x'
+mapFirst f = mapFirstAfterFirst f id
 
 mapAfterFirst ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapAfterFirst f = mapState𝐼 True $ \ x b →
-  let x' = if b then x else f x
-  in False :* x'
+mapAfterFirst f = mapFirstAfterFirst id f
+
+mapBeforeLastLast ∷ (ToIter a t) ⇒ (a → a) → (a → a) → t → 𝐼 a
+mapBeforeLastLast fbl fl = reverse ∘ mapFirstAfterFirst fl fbl ∘ reverse
+
+mapLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
+mapLast f = mapBeforeLastLast id f
+
+mapBeforeLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
+mapBeforeLast f = mapBeforeLastLast f id
 
 keepN ∷ (ToIter a t,Ord n,Zero n,One n,Plus n) ⇒ n → t → 𝐼 a
 keepN n₀ xs =
@@ -398,14 +408,8 @@ dropN n₀ xs =
 withLast ∷ (ToIter a t) ⇒ t → 𝐼 (𝔹 ∧ a)
 withLast = reverse ∘ withFirst ∘ reverse
 
-mapLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapLast f = map (\ (b :* x) → if b then f x else x) ∘ withLast
-
 mapLastOn ∷ (ToIter a t) ⇒ t → (a → a) → 𝐼 a
 mapLastOn = flip mapLast
-
-mapBeforeLast ∷ (ToIter a t) ⇒ (a → a) → t → 𝐼 a
-mapBeforeLast f = map (\ (b :* x) → if b then x else f x) ∘ withLast
 
 filter ∷ (ToIter a t) ⇒ (a → 𝔹) → t → 𝐼 a
 filter p = mapCont𝐼 $ \ x i yield continue _done →

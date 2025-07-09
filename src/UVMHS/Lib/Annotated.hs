@@ -3,13 +3,13 @@ module UVMHS.Lib.Annotated where
 import UVMHS.Core
 
 import UVMHS.Lib.Pretty
-
-import qualified GHC.Generics as HS
+import UVMHS.Lib.Fuzzy
+import UVMHS.Lib.Shrinky
 
 data 𝐴 e a = 𝐴
   { atag ∷ e
   , aval ∷ a
-  } deriving (HS.Generic, Show)
+  } deriving (Show)
 makeLenses ''𝐴
 makePrettySum ''𝐴
 
@@ -23,6 +23,12 @@ instance Comonad (𝐴 t)
 
 instance (Null e,Null a) ⇒ Null (𝐴 e a) where null = 𝐴 null null
 instance (Append e,Append a) ⇒ Append (𝐴 e a) where 𝐴 e₁ x₁ ⧺ 𝐴 e₂ x₂ = 𝐴 (e₁ ⧺ e₂) $ x₁ ⧺ x₂
+
+instance (Fuzzy a,Null t) ⇒ Fuzzy (𝐴 t a) where
+  fuzzy = 𝐴 null ^$ fuzzy
+
+instance (Shrinky a) ⇒ Shrinky (𝐴 t a) where
+  shrink (𝐴 t x) = do x' ← shrink x ; return $ 𝐴 t x'
 
 map𝐴 ∷ (e → e') → (a → b) → 𝐴 e a → 𝐴 e' b
 map𝐴 f g (𝐴 e x) = 𝐴 (f e) $ g x

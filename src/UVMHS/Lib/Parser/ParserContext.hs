@@ -46,7 +46,7 @@ instance Pretty SrcCxt where
         ]
     , concat
         [ ppAnnotation $ ppString "«"
-        , ppAlign $ concat
+        , ppA $ concat
             [ renderWindowR pre
             , ppUT '^' green $ renderWindowL d
             , renderWindowL pi
