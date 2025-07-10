@@ -36,7 +36,7 @@ makePrettySumLogic cx ty tyargs concontys = do
         let conString = thString $ string $ TH.nameBase con
             prettyCon = TH.VarE 'ppCon ⊙ conString
             prettyXs = mapOn tmpˣˢ $ \ x → TH.VarE 'pretty ⊙ TH.VarE x
-        in thSingleClause (single $ TH.ConP con [] $ tohs $ map TH.VarP tmpˣˢ) $ TH.VarE 'ppCAppsML ⊙ prettyCon ⊙$ TH.VarE 'list ⊙$ TH.ListE (tohs prettyXs)
+        in thSingleClause (single $ TH.ConP con [] $ tohs $ map TH.VarP tmpˣˢ) $ TH.VarE 'ppAppsML ⊙ prettyCon ⊙$ TH.VarE 'list ⊙$ TH.ListE (tohs prettyXs)
   return $ single $ TH.InstanceD (tohs None) (tohs instanceCx) instanceTy $ single instanceDec
 
 makePrettySum ∷ TH.Name → QIO [TH.Dec]
@@ -122,7 +122,7 @@ makePrettyRecordLogic cx ty tyargs con fieldfieldtys = do
         TH.FunD 'pretty
         $ single
         $ thSingleClause (single $ TH.RecP con $ tohs $ mapOn fieldNameTmps $ \ (field :* _name :* tmpˣ) → (field :* TH.VarP tmpˣ))
-        $ TH.VarE 'ppCAppsML
+        $ TH.VarE 'ppAppsML
           ⊙ (TH.VarE 'ppCon ⊙ (thString $ string $ TH.nameBase con))
           ⊙$ TH.VarE 'list
           ⊙$ TH.ListE

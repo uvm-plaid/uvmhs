@@ -8,15 +8,23 @@ import UVMHS.Lib.Testing
 ppColon ∷ Doc → Doc → Doc
 ppColon = ppInf 5 $ ppString ":"
 
-ppApply ∷ Doc → Doc → Doc
-ppApply = ppInflSpace 10
+ppApp ∷ Doc → Doc → Doc
+ppApp = ppAppMLL 10
+
+ppApps ∷ (ToIter Doc t) ⇒ Doc → t → Doc
+ppApps = ppAppsMLL 10
 
 ppAppOp ∷ Doc → Doc → Doc
 ppAppOp = ppInfl 10 $ ppString "@"
 
-ppAppTight ∷ Doc → Doc → Doc
-ppAppTight = ppInflTight 10 $ ppString "@"
+ppAppOpTight ∷ Doc → Doc → Doc
+ppAppOpTight = ppInflTight 10 $ ppString "@"
 
+ppApp' ∷ (ToIter Doc t) ⇒ Doc → t → Doc
+ppApp' = ppAppCL 10
+
+ppField ∷ Doc → Doc → Doc
+ppField = ppInflTight 20 $ ppPun "."
 
 testit ∷ (𝕊,𝕊) → 𝔹
 testit (x,y) = x ≡ y
@@ -31,11 +39,11 @@ testSection "pretty:infix:nested"
 
 prop 
   [| ( ppRenderNoFmtWide $
-         ppApply 
-           (ppApply 
-              (ppApply (ppString "f") $ ppString "x") $ 
-              ppApply (ppString "g") $ ppString "y") $
-           ppApply (ppString "h") $ ppString "z"
+         ppApp 
+           (ppApp 
+              (ppApp (ppString "f") $ ppString "x") $ 
+              ppApp (ppString "g") $ ppString "y") $
+           ppApp (ppString "h") $ ppString "z"
      , concat $ inbetween "\n"
          [ "f x (g y) (h z)"
          ]
@@ -44,11 +52,11 @@ prop
 
 prop 
   [| ( ppRenderNoFmtWidth 15 15 $
-         ppApply 
-           (ppApply 
-              (ppApply (ppString "f") $ ppString "x") $ 
-              ppApply (ppString "g") $ ppString "y") $
-           ppApply (ppString "h") $ ppString "z"
+         ppApp 
+           (ppApp 
+              (ppApp (ppString "f") $ ppString "x") $ 
+              ppApp (ppString "g") $ ppString "y") $
+           ppApp (ppString "h") $ ppString "z"
      , concat $ inbetween "\n"
          [ "f x (g y) (h z)"
          ]
@@ -57,11 +65,11 @@ prop
 
 prop 
   [| ( ppRenderNoFmtWidth 14 14 $
-         ppApply 
-           (ppApply 
-              (ppApply (ppString "f") $ ppString "x") $ 
-              ppApply (ppString "g") $ ppString "y") $
-           ppApply (ppString "h") $ ppString "z"
+         ppApp 
+           (ppApp 
+              (ppApp (ppString "f") $ ppString "x") $ 
+              ppApp (ppString "g") $ ppString "y") $
+           ppApp (ppString "h") $ ppString "z"
      , concat $ inbetween "\n"
          [ "f"
          , "x"
@@ -73,11 +81,11 @@ prop
 
 prop 
   [| ( ppRenderNoFmtWidth 5 5 $
-         ppApply 
-           (ppApply 
-              (ppApply (ppString "f") $ ppString "x") $ 
-              ppApply (ppString "g") $ ppString "y") $
-           ppApply (ppString "h") $ ppString "z"
+         ppApp 
+           (ppApp 
+              (ppApp (ppString "f") $ ppString "x") $ 
+              ppApp (ppString "g") $ ppString "y") $
+           ppApp (ppString "h") $ ppString "z"
      , concat $ inbetween "\n"
          [ "f"
          , "x"
@@ -89,11 +97,11 @@ prop
 
 prop 
   [| ( ppRenderNoFmtWidth 4 4 $
-         ppApply 
-           (ppApply 
-              (ppApply (ppString "f") $ ppString "x") $ 
-              ppApply (ppString "g") $ ppString "y") $
-           ppApply (ppString "h") $ ppString "z"
+         ppApp 
+           (ppApp 
+              (ppApp (ppString "f") $ ppString "x") $ 
+              ppApp (ppString "g") $ ppString "y") $
+           ppApp (ppString "h") $ ppString "z"
      , concat $ inbetween "\n"
          [ "f"
          , "x"
@@ -107,11 +115,11 @@ prop
 
 prop 
   [| ( ppRenderNoFmtNarrow $
-         ppApply 
-           (ppApply 
-              (ppApply (ppString "f") $ ppString "x") $ 
-              ppApply (ppString "g") $ ppString "y") $
-           ppApply (ppString "h") $ ppString "z"
+         ppApp 
+           (ppApp 
+              (ppApp (ppString "f") $ ppString "x") $ 
+              ppApp (ppString "g") $ ppString "y") $
+           ppApp (ppString "h") $ ppString "z"
      , concat $ inbetween "\n"
          [ "f"
          , "x"
@@ -126,9 +134,9 @@ prop
 testSection "pretty:infix:exp:space"
 
 prop 
-  [| ( ppRenderWide $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWide $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x : g y"
          ]
@@ -136,9 +144,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 9 9 $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x : g y"
          ]
@@ -146,9 +154,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 8 8 $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , ": g y"
@@ -157,9 +165,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 5 5 $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 5 5 $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , ": g y"
@@ -168,9 +176,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 4 4 $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 4 4 $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , ":"
@@ -180,9 +188,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 3 3 $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 3 3 $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , ":"
@@ -192,9 +200,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 2 2 $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 2 2 $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f"
          , "x"
@@ -206,9 +214,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderNarrow $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtNarrow $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f"
          , "x"
@@ -219,12 +227,12 @@ prop
      )
   |] [| testit |] [| showit |]
 
-testSection "pretty:infix:cmd:space"
+testSection "pretty:infix:cmd:space:small"
 
 prop 
-  [| ( ppRenderWide $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWide $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x : g y"
          ]
@@ -232,9 +240,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 9 9 $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x : g y"
          ]
@@ -242,9 +250,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 8 8 $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , "  : g y"
@@ -253,9 +261,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 7 7 $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 7 7 $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , "  : g y"
@@ -264,9 +272,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 6 6 $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 6 6 $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , "  :"
@@ -276,9 +284,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 5 5 $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 5 5 $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , "  :"
@@ -288,9 +296,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 4 4 $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 4 4 $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , "  :"
@@ -301,9 +309,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 3 3 $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 3 3 $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f x"
          , "  :"
@@ -314,11 +322,106 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 2 2 $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 2 2 $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
-         [ "f"
+         [ "f x"
+         , "  :"
+         , "  g"
+         , "  y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+
+prop 
+  [| ( ppRenderNoFmtNarrow $ ppC $
+         ppColon (ppApp (ppString "f") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "f x"
+         , "  :"
+         , "  g"
+         , "  y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+testSection "pretty:infix:cmd:space:large"
+
+prop 
+  [| ( ppRenderNoFmtWide $ ppC $
+         ppColon (ppApp (ppString "fff") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff x : g y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 11 11 $ ppC $
+         ppColon (ppApp (ppString "fff") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff x : g y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 10 10 $ ppC $
+         ppColon (ppApp (ppString "fff") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff x"
+         , "  : g y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 7 7 $ ppC $
+         ppColon (ppApp (ppString "fff") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff x"
+         , "  : g y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 6 6 $ ppC $
+         ppColon (ppApp (ppString "fff") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff x"
+         , "  :"
+         , "  g y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 5 5 $ ppC $
+         ppColon (ppApp (ppString "fff") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff x"
+         , "  :"
+         , "  g y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 4 4 $ ppC $
+         ppColon (ppApp (ppString "fff") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff"
          , "  x"
          , "  :"
          , "  g"
@@ -327,13 +430,12 @@ prop
      )
   |] [| testit |] [| showit |]
 
-
 prop 
-  [| ( ppRenderNarrow $ ppC $
-         ppColon (ppApply (ppString "f") $ ppString "x") $
-                 ppApply (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtNarrow $ ppC $
+         ppColon (ppApp (ppString "fff") $ ppString "x") $
+                 ppApp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
-         [ "f"
+         [ "fff"
          , "  x"
          , "  :"
          , "  g"
@@ -345,7 +447,7 @@ prop
 testSection "pretty:infix:exp:op"
 
 prop 
-  [| ( ppRenderWide $
+  [| ( ppRenderNoFmtWide $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -355,7 +457,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 13 13 $
+  [| ( ppRenderNoFmtWidth 13 13 $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -365,7 +467,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 12 12 $
+  [| ( ppRenderNoFmtWidth 12 12 $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -376,7 +478,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 7 7 $
+  [| ( ppRenderNoFmtWidth 7 7 $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -387,7 +489,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 6 6 $
+  [| ( ppRenderNoFmtWidth 6 6 $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -399,7 +501,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 5 5 $
+  [| ( ppRenderNoFmtWidth 5 5 $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -411,7 +513,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 4 4 $
+  [| ( ppRenderNoFmtWidth 4 4 $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -425,7 +527,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 3 3 $
+  [| ( ppRenderNoFmtWidth 3 3 $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -439,7 +541,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 2 2 $
+  [| ( ppRenderNoFmtWidth 2 2 $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -456,7 +558,7 @@ prop
 
 
 prop 
-  [| ( ppRenderNarrow $
+  [| ( ppRenderNoFmtNarrow $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -471,10 +573,10 @@ prop
      )
   |] [| testit |] [| showit |]
 
-testSection "pretty:infix:cmd:op"
+testSection "pretty:infix:cmd:op:small"
 
 prop 
-  [| ( ppRenderWide $ ppC $
+  [| ( ppRenderNoFmtWide $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -484,7 +586,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 13 13 $ ppC $
+  [| ( ppRenderNoFmtWidth 13 13 $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -494,7 +596,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 12 12 $ ppC $
+  [| ( ppRenderNoFmtWidth 12 12 $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -505,7 +607,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $ ppC $
+  [| ( ppRenderNoFmtWidth 9 9 $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -516,7 +618,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $ ppC $
+  [| ( ppRenderNoFmtWidth 8 8 $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -528,7 +630,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 7 7 $ ppC $
+  [| ( ppRenderNoFmtWidth 7 7 $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -540,7 +642,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 6 6 $ ppC $
+  [| ( ppRenderNoFmtWidth 6 6 $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -553,7 +655,7 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 5 5 $ ppC $
+  [| ( ppRenderNoFmtWidth 5 5 $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
@@ -566,12 +668,11 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 4 4 $ ppC $
+  [| ( ppRenderNoFmtWidth 4 4 $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
-         [ "f"
-         , "  @"
+         [ "f @"
          , "  x"
          , "  :"
          , "  g"
@@ -583,11 +684,138 @@ prop
 
 
 prop 
-  [| ( ppRenderNarrow $ ppC $
+  [| ( ppRenderNoFmtNarrow $ ppC $
          ppColon (ppAppOp (ppString "f") $ ppString "x") $
                  ppAppOp (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
-         [ "f"
+         [ "f @"
+         , "  x"
+         , "  :"
+         , "  g"
+         , "  @"
+         , "  y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+testSection "pretty:infix:cmd:op:large"
+
+prop 
+  [| ( ppRenderNoFmtWide $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff @ x : g @ y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 15 15 $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff @ x : g @ y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 14 14 $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff @ x"
+         , "  : g @ y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 9 9 $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff @ x"
+         , "  : g @ y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 8 8 $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff @ x"
+         , "  :"
+         , "  g @ y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 7 7 $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff @ x"
+         , "  :"
+         , "  g @ y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 6 6 $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff"
+         , "  @ x"
+         , "  :"
+         , "  g"
+         , "  @ y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 5 5 $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff"
+         , "  @ x"
+         , "  :"
+         , "  g"
+         , "  @ y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 4 4 $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff"
+         , "  @"
+         , "  x"
+         , "  :"
+         , "  g"
+         , "  @"
+         , "  y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtNarrow $ ppC $
+         ppColon (ppAppOp (ppString "fff") $ ppString "x") $
+                 ppAppOp (ppString "g") $ ppString "y"
+     , concat $ inbetween "\n"
+         [ "fff"
          , "  @"
          , "  x"
          , "  :"
@@ -601,9 +829,9 @@ prop
 testSection "pretty:infix:exp:narrow"
 
 prop 
-  [| ( ppRenderWide $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWide $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x : g@y"
          ]
@@ -611,9 +839,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 9 9 $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x : g@y"
          ]
@@ -621,9 +849,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 8 8 $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , ": g@y"
@@ -632,9 +860,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 5 5 $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 5 5 $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , ": g@y"
@@ -643,9 +871,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 4 4 $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 4 4 $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , ":"
@@ -655,9 +883,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 3 3 $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 3 3 $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , ":"
@@ -667,9 +895,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 2 2 $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 2 2 $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f"
          , "@x"
@@ -681,9 +909,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 1 1 $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 1 1 $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f"
          , "@"
@@ -697,9 +925,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderNarrow $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtNarrow $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f"
          , "@"
@@ -715,9 +943,9 @@ prop
 testSection "pretty:infix:cmd:narrow"
 
 prop 
-  [| ( ppRenderWide $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWide $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x : g@y"
          ]
@@ -725,9 +953,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 9 9 $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x : g@y"
          ]
@@ -735,9 +963,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 8 8 $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , "  : g@y"
@@ -746,9 +974,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 7 7 $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 7 7 $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , "  : g@y"
@@ -757,9 +985,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 6 6 $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 6 6 $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , "  :"
@@ -769,9 +997,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 5 5 $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 5 5 $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , "  :"
@@ -781,9 +1009,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 4 4 $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 4 4 $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , "  :"
@@ -794,9 +1022,9 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 3 3 $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 3 3 $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
          [ "f@x"
          , "  :"
@@ -808,12 +1036,11 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 2 2 $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtWidth 2 2 $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
-         [ "f"
-         , "  @"
+         [ "f @"
          , "  x"
          , "  :"
          , "  g"
@@ -825,12 +1052,11 @@ prop
 
 
 prop 
-  [| ( ppRenderNarrow $ ppC $
-         ppColon (ppAppTight (ppString "f") $ ppString "x") $
-                 ppAppTight (ppString "g") $ ppString "y"
+  [| ( ppRenderNoFmtNarrow $ ppC $
+         ppColon (ppAppOpTight (ppString "f") $ ppString "x") $
+                 ppAppOpTight (ppString "g") $ ppString "y"
      , concat $ inbetween "\n"
-         [ "f"
-         , "  @"
+         [ "f @"
          , "  x"
          , "  :"
          , "  g"
@@ -843,10 +1069,10 @@ prop
 testSection "pretty:collection:exp"
 
 prop 
-  [| ( ppRenderWide $ 
+  [| ( ppRenderNoFmtWide $ 
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[f x,g y]"
@@ -855,10 +1081,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $ 
+  [| ( ppRenderNoFmtWidth 9 9 $ 
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[f x,g y]"
@@ -867,10 +1093,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $ 
+  [| ( ppRenderNoFmtWidth 8 8 $ 
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[ f x"
@@ -881,10 +1107,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 5 5 $ 
+  [| ( ppRenderNoFmtWidth 5 5 $ 
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[ f x"
@@ -895,10 +1121,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 4 4 $ 
+  [| ( ppRenderNoFmtWidth 4 4 $ 
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[ f"
@@ -911,10 +1137,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderNarrow $ 
+  [| ( ppRenderNoFmtNarrow $ 
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[ f"
@@ -929,10 +1155,10 @@ prop
 testSection "pretty:collection:cmd"
 
 prop 
-  [| ( ppRenderWide $ ppC $
+  [| ( ppRenderNoFmtWide $ ppC $
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[f x,g y]"
@@ -941,10 +1167,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $ ppC $
+  [| ( ppRenderNoFmtWidth 9 9 $ ppC $
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[f x,g y]"
@@ -953,10 +1179,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $ ppC $
+  [| ( ppRenderNoFmtWidth 8 8 $ ppC $
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[ f x ,"
@@ -966,10 +1192,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 7 7 $ ppC $
+  [| ( ppRenderNoFmtWidth 7 7 $ ppC $
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[ f x ,"
@@ -979,10 +1205,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 6 6 $ ppC $
+  [| ( ppRenderNoFmtWidth 6 6 $ ppC $
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[ f"
@@ -994,10 +1220,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderNarrow $ ppC $
+  [| ( ppRenderNoFmtNarrow $ ppC $
          ppCollection (ppString "[") (ppString "]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[ f"
@@ -1011,10 +1237,10 @@ prop
 testSection "pretty:collection:exp:bulky"
 
 prop 
-  [| ( ppRenderWide $ 
+  [| ( ppRenderNoFmtWide $ 
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[|f x,g y|]"
@@ -1023,10 +1249,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 11 11 $ 
+  [| ( ppRenderNoFmtWidth 11 11 $ 
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[|f x,g y|]"
@@ -1035,10 +1261,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 10 10 $ 
+  [| ( ppRenderNoFmtWidth 10 10 $ 
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[| f x"
@@ -1049,10 +1275,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 6 6 $ 
+  [| ( ppRenderNoFmtWidth 6 6 $ 
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[| f x"
@@ -1063,10 +1289,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 5 5 $ 
+  [| ( ppRenderNoFmtWidth 5 5 $ 
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[| f"
@@ -1079,10 +1305,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderNarrow $ 
+  [| ( ppRenderNoFmtNarrow $ 
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[| f"
@@ -1097,10 +1323,10 @@ prop
 testSection "pretty:collection:cmd:bulky"
 
 prop 
-  [| ( ppRenderWide $ ppC $
+  [| ( ppRenderNoFmtWide $ ppC $
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[|f x,g y|]"
@@ -1109,10 +1335,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 11 11 $ ppC $
+  [| ( ppRenderNoFmtWidth 11 11 $ ppC $
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[|f x,g y|]"
@@ -1121,10 +1347,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 10 10 $ ppC $
+  [| ( ppRenderNoFmtWidth 10 10 $ ppC $
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[| f x ,"
@@ -1134,10 +1360,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $ ppC $
+  [| ( ppRenderNoFmtWidth 9 9 $ ppC $
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[| f x ,"
@@ -1147,10 +1373,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $ ppC $
+  [| ( ppRenderNoFmtWidth 8 8 $ ppC $
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[| f x ,"
@@ -1161,10 +1387,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 7 7 $ ppC $
+  [| ( ppRenderNoFmtWidth 7 7 $ ppC $
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[| f"
@@ -1177,10 +1403,10 @@ prop
 
 
 prop 
-  [| ( ppRenderNarrow $ ppC $
+  [| ( ppRenderNoFmtNarrow $ ppC $
          ppCollection (ppString "[|") (ppString "|]") (ppString ",") 
-           [ ppApply (ppString "f") $ ppString "x"
-           , ppApply (ppString "g") $ ppString "y"
+           [ ppApp (ppString "f") $ ppString "x"
+           , ppApp (ppString "g") $ ppString "y"
            ]
      , concat $ inbetween "\n"
          [ "[| f"
@@ -1194,10 +1420,10 @@ prop
 testSection "pretty:record:exp"
 
 prop 
-  [| ( ppRenderWide $ 
+  [| ( ppRenderNoFmtWide $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[a b=f x,c d=g y]"
@@ -1206,10 +1432,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 17 17 $ 
+  [| ( ppRenderNoFmtWidth 17 17 $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[a b=f x,c d=g y]"
@@ -1218,10 +1444,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 16 16 $ 
+  [| ( ppRenderNoFmtWidth 16 16 $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a b = f x"
@@ -1232,10 +1458,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 11 11 $ 
+  [| ( ppRenderNoFmtWidth 11 11 $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a b = f x"
@@ -1246,10 +1472,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 10 10 $ 
+  [| ( ppRenderNoFmtWidth 10 10 $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1262,10 +1488,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $ 
+  [| ( ppRenderNoFmtWidth 9 9 $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1278,10 +1504,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $ 
+  [| ( ppRenderNoFmtWidth 8 8 $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1296,10 +1522,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 7 7 $ 
+  [| ( ppRenderNoFmtWidth 7 7 $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1314,10 +1540,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 6 6 $ 
+  [| ( ppRenderNoFmtWidth 6 6 $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1334,10 +1560,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderNarrow $ 
+  [| ( ppRenderNoFmtNarrow $ 
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1356,10 +1582,10 @@ prop
 testSection "pretty:record:cmd"
 
 prop 
-  [| ( ppRenderWide $ ppC $
+  [| ( ppRenderNoFmtWide $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[a b=f x,c d=g y]"
@@ -1368,10 +1594,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 17 17 $ ppC $
+  [| ( ppRenderNoFmtWidth 17 17 $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[a b=f x,c d=g y]"
@@ -1380,10 +1606,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 16 16 $ ppC $
+  [| ( ppRenderNoFmtWidth 16 16 $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a b = f x ,"
@@ -1393,10 +1619,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 13 13 $ ppC $
+  [| ( ppRenderNoFmtWidth 13 13 $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a b = f x ,"
@@ -1406,10 +1632,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 12 12 $ ppC $
+  [| ( ppRenderNoFmtWidth 12 12 $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1421,10 +1647,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 11 11 $ ppC $
+  [| ( ppRenderNoFmtWidth 11 11 $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1436,10 +1662,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 10 10 $ ppC $
+  [| ( ppRenderNoFmtWidth 10 10 $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1453,10 +1679,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 9 9 $ ppC $
+  [| ( ppRenderNoFmtWidth 9 9 $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1470,10 +1696,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderWidth 8 8 $ ppC $
+  [| ( ppRenderNoFmtWidth 8 8 $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1489,10 +1715,10 @@ prop
   |] [| testit |] [| showit |]
 
 prop 
-  [| ( ppRenderNarrow $ ppC $
+  [| ( ppRenderNoFmtNarrow $ ppC $
          ppCollectionRec (ppString "[") (ppString "]") (ppString ",") (ppString "=")
-           [ ppApply (ppString "a") (ppString "b") :* ppApply (ppString "f") (ppString "x")
-           , ppApply (ppString "c") (ppString "d") :* ppApply (ppString "g") (ppString "y")
+           [ ppApp (ppString "a") (ppString "b") :* ppApp (ppString "f") (ppString "x")
+           , ppApp (ppString "c") (ppString "d") :* ppApp (ppString "g") (ppString "y")
            ]
      , concat $ inbetween "\n"
          [ "[ a"
@@ -1503,6 +1729,362 @@ prop
          , "  d ="
          , "    g"
          , "    y ]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+testSection "pretty:block"
+
+prop 
+  [| ( ppRenderNoFmtWide $
+         ppBlock (ppString "do")
+           [ ppApps (ppString "f") [ppString "x",ppString "y"]
+           , ppApps (ppString "g") [ppString "z"]
+           , ppList [ppString "a",ppString "b",ppString "c"]
+           ]
+     , concat $ inbetween "\n"
+         [ "do"
+         ,  "  f x y"
+         ,  "  g z"
+         ,  "  [a,b,c]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 9 9 $
+         ppBlock (ppString "do")
+           [ ppApps (ppString "f") [ppString "x",ppString "y"]
+           , ppApps (ppString "g") [ppString "z"]
+           , ppList [ppString "a",ppString "b",ppString "c"]
+           ]
+     , concat $ inbetween "\n"
+         [ "do"
+         ,  "  f x y"
+         ,  "  g z"
+         ,  "  [a,b,c]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 8 8 $
+         ppBlock (ppString "do")
+           [ ppApps (ppString "f") [ppString "x",ppString "y"]
+           , ppApps (ppString "g") [ppString "z"]
+           , ppList [ppString "a",ppString "b",ppString "c"]
+           ]
+     , concat $ inbetween "\n"
+         [ "do"
+         ,  "  f x y"
+         ,  "  g z"
+         ,  "  [ a ,"
+         ,  "    b ,"
+         ,  "    c ]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 7 7 $
+         ppBlock (ppString "do")
+           [ ppApps (ppString "f") [ppString "x",ppString "y"]
+           , ppApps (ppString "g") [ppString "z"]
+           , ppList [ppString "a",ppString "b",ppString "c"]
+           ]
+     , concat $ inbetween "\n"
+         [ "do"
+         ,  "  f x y"
+         ,  "  g z"
+         ,  "  [ a ,"
+         ,  "    b ,"
+         ,  "    c ]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 6 6 $
+         ppBlock (ppString "do")
+           [ ppApps (ppString "f") [ppString "x",ppString "y"]
+           , ppApps (ppString "g") [ppString "z"]
+           , ppList [ppString "a",ppString "b",ppString "c"]
+           ]
+     , concat $ inbetween "\n"
+         [ "do"
+         ,  "  f x"
+         ,  "    y"
+         ,  "  g z"
+         ,  "  [ a ,"
+         ,  "    b ,"
+         ,  "    c ]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 5 5 $
+         ppBlock (ppString "do")
+           [ ppApps (ppString "f") [ppString "x",ppString "y"]
+           , ppApps (ppString "g") [ppString "z"]
+           , ppList [ppString "a",ppString "b",ppString "c"]
+           ]
+     , concat $ inbetween "\n"
+         [ "do"
+         ,  "  f x"
+         ,  "    y"
+         ,  "  g z"
+         ,  "  [ a ,"
+         ,  "    b ,"
+         ,  "    c ]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtNarrow $
+         ppBlock (ppString "do")
+           [ ppApps (ppString "f") [ppString "x",ppString "y"]
+           , ppApps (ppString "g") [ppString "z"]
+           , ppList [ppString "a",ppString "b",ppString "c"]
+           ]
+     , concat $ inbetween "\n"
+         [ "do"
+         ,  "  f x"
+         ,  "    y"
+         ,  "  g z"
+         ,  "  [ a ,"
+         ,  "    b ,"
+         ,  "    c ]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+testSection "pretty:appc:nested:large"
+
+prop 
+  [| ( ppRenderNoFmtWide $
+         ppApp' (ppString "f")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f(x,g(y),h(z))"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWide $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f.a.b(x,g(y),h(z))"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 18 18 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f.a.b(x,g(y),h(z))"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 17 17 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f.a.b"
+         , "  (x,g(y),h(z))"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 15 15 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f.a.b"
+         , "  (x,g(y),h(z))"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 14 14 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f.a.b"
+         , "  ( x"
+         , "  , g(y)"
+         , "  , h(z)"
+         , "  )"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 8 8 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f.a.b"
+         , "  ( x"
+         , "  , g(y)"
+         , "  , h(z)"
+         , "  )"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 7 7 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f.a.b"
+         , "  ( x"
+         , "  , g( y"
+         , "     )"
+         , "  , h( z"
+         , "     )"
+         , "  )"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 5 5 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f.a.b"
+         , "  ( x"
+         , "  , g( y"
+         , "     )"
+         , "  , h( z"
+         , "     )"
+         , "  )"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 4 4 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f"
+         , ".a"
+         , ".b"
+         , "  ( x"
+         , "  , g( y"
+         , "     )"
+         , "  , h( z"
+         , "     )"
+         , "  )"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 2 2 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f"
+         , ".a"
+         , ".b"
+         , "  ( x"
+         , "  , g( y"
+         , "     )"
+         , "  , h( z"
+         , "     )"
+         , "  )"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWidth 1 1 $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f"
+         , "."
+         , "a"
+         , "."
+         , "b"
+         , "  ( x"
+         , "  , g( y"
+         , "     )"
+         , "  , h( z"
+         , "     )"
+         , "  )"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtNarrow $
+         ppApp' (ppField (ppField (ppString "f") $ ppString "a") $ ppString "b")
+           [ ppString "x"
+           , ppApp' (ppString "g") [ppString "y"]
+           , ppApp' (ppString "h") [ppString "z"]
+           ]
+     , concat $ inbetween "\n"
+         [ "f"
+         , "."
+         , "a"
+         , "."
+         , "b"
+         , "  ( x"
+         , "  , g( y"
+         , "     )"
+         , "  , h( z"
+         , "     )"
+         , "  )"
          ]
      )
   |] [| testit |] [| showit |]
