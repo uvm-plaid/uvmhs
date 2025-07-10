@@ -540,6 +540,9 @@ ppLevel i' aM = Doc $ do
     True → ppSetLevel i' aM
     False → ppParens $ ppSetLevel i' aM
 
+ppBotLevel ∷ Doc → Doc
+ppBotLevel = ppLevel 0
+
 -- INFIX/PREFIX/POSTFIX --
 
 -- FLAT
