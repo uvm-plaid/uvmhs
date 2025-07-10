@@ -18,9 +18,9 @@ data ChunkI =
     RawChunkI ℕ64 𝕊
   --              ^
   --              string with no newlines
-  | NewlineChunkI ℕ64
-  --              ^^^
-  --              indent after newline
+  | NewlineChunkI 𝔹 ℕ64
+  --              ^ ^^^
+  --        aligned indent after newline
   deriving (Eq,Ord,Show)
 
 rawChunksI ∷ 𝕊 → ChunkI
@@ -30,18 +30,18 @@ splitChunksI ∷ 𝕊 → 𝐼 ChunkI
 splitChunksI s =
   materialize
   $ filter (\ c → c ≢ RawChunkI (𝕟64 0) "")
-  $ inbetween (NewlineChunkI zero)
+  $ inbetween (NewlineChunkI False zero)
   $ map rawChunksI $ splitOn𝕊 "\n" s
 
 shapeIChunk ∷ ChunkI → Shape
 shapeIChunk = \case
   RawChunkI l _ → SingleLine l
-  NewlineChunkI n → newlineShape ⧺ SingleLine n
+  NewlineChunkI _ n → newlineShape ⧺ SingleLine n
 
-extendNewlinesIChunk ∷ ℕ64 → ChunkI → ChunkI
-extendNewlinesIChunk n = \case
+extendAlignedNewlinesIChunk ∷ ℕ64 → ChunkI → ChunkI
+extendAlignedNewlinesIChunk n = \case
   RawChunkI l s → RawChunkI l s
-  NewlineChunkI l → NewlineChunkI $ l + n
+  NewlineChunkI b l → NewlineChunkI b $ if b then l + n else l
 
 ------------------
 -- Output Chunk --
@@ -87,7 +87,7 @@ chunkIO = \case
   PaddingChunkO n → RawChunkI n $ string $ replicate n ' '
 
 treeIO ∷ TreeO → TreeI
-treeIO = map𝑇V formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @_ @(𝐼 _) $ NewlineChunkI zero) (map chunkIO ∘ iter)
+treeIO = map𝑇V formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @_ @(𝐼 _) $ NewlineChunkI False zero) (map chunkIO ∘ iter)
 
 --------------
 -- SummaryI --
@@ -100,8 +100,14 @@ data SummaryI = SummaryI
   }
 makeLenses ''SummaryI
 
+alignChunks ∷ TreeI → TreeI
+alignChunks = mapp $ \case
+  RawChunkI l s → RawChunkI l s
+  NewlineChunkI _ l → NewlineChunkI True l
+
+
 alignSummary ∷ SummaryI → SummaryI
-alignSummary (SummaryI b sh c) = SummaryI b (alignShapeA sh) c
+alignSummary (SummaryI b sh c) = SummaryI b (alignShapeA sh) $ alignChunks c
 
 instance Null SummaryI where null = SummaryI False null null
 instance Append SummaryI where
@@ -109,7 +115,7 @@ instance Append SummaryI where
     let cs₂' =
           if not $ shapeIAligned sh₂
           then cs₂
-          else mappOn cs₂ $ extendNewlinesIChunk $ shapeLastLength $ shapeIShape sh₁
+          else mappOn cs₂ $ extendAlignedNewlinesIChunk $ shapeLastLength $ shapeIShape sh₁
     in SummaryI (b₁ ⩔ b₂) (sh₁ ⧺ sh₂) $ cs₁ ⧺ cs₂'
 instance Monoid SummaryI
 

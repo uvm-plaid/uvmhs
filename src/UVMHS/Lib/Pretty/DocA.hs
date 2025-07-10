@@ -74,10 +74,8 @@ renderSummaryI s =
         else id
   in f $ do
     nest ← askL docAEnvNestL
-    -- hang ← askL docAEnvHangL
-    let shift = nest -- ⊔ hang
     tell $ mappOn (summaryIContents s) $ \case
-      NewlineChunkI n → NewlineChunkI $ n + shift
+      NewlineChunkI a n → NewlineChunkI a $ n + nest
       c → c
     case shapeIShape $ summaryIShape s of
       SingleLine l → do

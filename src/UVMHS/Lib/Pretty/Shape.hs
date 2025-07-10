@@ -198,8 +198,8 @@ instance Append ShapeA where
           --     □□□□XXX   ⧺  □□□□AAA  =  □□□□XXX
           --     ⋅⋅⋅⋅YY       BB          ⋅⋅⋅⋅YY
           --     ⋅⋅⋅⋅ZZZZ     CCCC        ⋅⋅⋅⋅ZZZZAAA
-          --                              ⋅⋅⋅⋅BB
-          --                              ⋅⋅⋅⋅CCCC
+          --                              BB
+          --                              CCCC
           --
           then sh₂
           -- ‣ sh₁ is single-lined

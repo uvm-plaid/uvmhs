@@ -88,7 +88,7 @@ renderUndertags = do
 renderChunkUndertags ∷ ChunkI → RenderUTM ()
 renderChunkUndertags = \case
   RawChunkI l s → do buildUndertags l ; renderRaw l s
-  NewlineChunkI n → do renderUndertags ; renderNewline n
+  NewlineChunkI _ n → do renderUndertags ; renderNewline n
 
 annotateRenderUT ∷ Annotation → RenderUTM () → RenderUTM ()
 annotateRenderUT (Annotation fm ut) = mapOut (annotateSummaryO fm) ∘ mapEnvL renderUTEnvUnderFormatL (first𝑂 ut)

@@ -2119,4 +2119,30 @@ prop
      )
   |] [| testit |] [| showit |]
 
+testSection "pretty:block:break"
+
+prop 
+  [| ( ppRenderNoFmtWide $ 
+         ppList [ppBlock (ppString "do") [ppString "x"],ppString "y"]
+     , concat $ inbetween "\n"
+         [ "[ do"
+         , "    x"
+         , ", y"
+         , "]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtNarrow $ 
+         ppList [ppBlock (ppString "do") [ppString "x"],ppString "y"]
+     , concat $ inbetween "\n"
+         [ "[ do"
+         , "    x"
+         , ", y"
+         , "]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
 buildTests

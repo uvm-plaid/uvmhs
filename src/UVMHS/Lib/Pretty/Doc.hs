@@ -991,13 +991,6 @@ ppPostTight i o e =
 --         y
 --       g z
 --
---     do
---       f 
---         x 
---         y
---       g 
---         z
---
 ppBlock ∷ (ToIter Doc t) ⇒ Doc → t → Doc
 ppBlock b xs = 
   if isEmpty xs
@@ -1005,7 +998,8 @@ ppBlock b xs =
     ppBotLevel $ ppA b
   else
     ppBotLevel $ concat
-      [ ppSetTopLevel $ ppA b
+      [ ppForceBreak
+      , ppSetTopLevel $ ppA b
       , ppNewline
       , ppSpaces 2
       , ppA $ ppVertical $ map ppCG $ iter xs
