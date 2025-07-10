@@ -57,7 +57,7 @@ propTest tags lS x p xD = keys𝑇D tags $ val𝑇D $ Test (ppString lS) $ \ () 
   then tell one
   else throw $ \ () → 𝐤 "V" $ 𝐯 $ xD x
 
-fuzzTest ∷ (Pretty a,Shrinky a) ⇒ 𝐿 𝕊 → 𝕊 → FuzzyM a → (a → 𝔹) → (a → Doc) → 𝑇D Test
+fuzzTest ∷ (Shrinky a) ⇒ 𝐿 𝕊 → 𝕊 → FuzzyM a → (a → 𝔹) → (a → Doc) → 𝑇D Test
 fuzzTest tags lS xM p xD = keys𝑇D tags $ val𝑇D $ Test (ppString lS) $ \ () → do
   FuzzParams radiusMax radiusStep depthMax depthStep spread ← ask
   eachOn (uptoStep radiusMax radiusStep) $ \ r →

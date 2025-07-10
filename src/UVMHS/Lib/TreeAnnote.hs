@@ -21,6 +21,7 @@ data 𝑇 i a =
   | B𝑇 (𝑇 i a) (𝑇 i a)
   | L𝑇 a
   | A𝑇 i (𝑇 i a)
+  deriving (Eq,Ord,Show)
 
 fold𝑇With ∷ (Monoid b) ⇒ (a → b) → (i → b → b) → 𝑇 i a → b
 fold𝑇With fₗ fₐ = loop
@@ -76,6 +77,18 @@ annote𝑇V i (𝑇V g) = 𝑇V HS.$ \ fₑ fₐ → fₐ i $ g fₑ fₐ
 map𝑇V ∷ (i → j) → (a → b) → 𝑇V i a → 𝑇V j b
 map𝑇V f g (𝑇V h) = 𝑇V HS.$ \ fₑ fₐ → h (fₑ ∘ g) $ fₐ ∘ f
 
+realize𝑇 ∷ 𝑇V i a → 𝑇 i a
+realize𝑇 = fold𝑇VWith L𝑇 A𝑇
+
+virtualize𝑇 ∷ 𝑇 i a → 𝑇V i a
+virtualize𝑇 t₀ = 𝑇V HS.$ \ leaf anno → 
+  let loop = \case
+        N𝑇 → null
+        B𝑇 t₁ t₂ → loop t₁ ⧺ loop t₂
+        L𝑇 x → leaf x
+        A𝑇 i t → anno i $ loop t
+  in loop t₀
+
 instance Null (𝑇V i a) where null = null𝑇V
 instance Append (𝑇V i a) where (⧺) = append𝑇V
 instance Monoid (𝑇V i a)
@@ -84,3 +97,7 @@ instance Single a (𝑇V i a) where single = single𝑇V
 instance Annote i (𝑇V i a) where annote = annote𝑇V
 
 instance Functor (𝑇V i) where map = map𝑇V id
+
+instance (Eq a,Eq i) ⇒ Eq (𝑇V i a) where (==) = (≡) `on` realize𝑇
+instance (Ord a,Ord i) ⇒ Ord (𝑇V i a) where compare = (⋚) `on` realize𝑇
+instance (Show a,Show i) ⇒ Show (𝑇V i a) where show = show ∘ realize𝑇

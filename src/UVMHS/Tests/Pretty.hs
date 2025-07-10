@@ -4,6 +4,56 @@ import UVMHS.Core
 
 import UVMHS.Lib.Pretty
 import UVMHS.Lib.Testing
+import UVMHS.Lib.Fuzzy
+import UVMHS.Lib.Rand
+
+import qualified UVMHS.Future.TH.Deriving as Future
+
+Future.createFuzzyInstance [] [] ''ShapeM
+Future.createFuzzyInstance [] [] ''Shape
+Future.createFuzzyInstance [] [] ''ShapeA
+
+Future.createShrinkyInstance ''ShapeM
+Future.createShrinkyInstance ''Shape
+Future.createShrinkyInstance ''ShapeA
+
+makePrettySum ''ShapeM
+makePrettySum ''Shape
+makePrettySum ''ShapeA
+
+testSection "pretty:shape:⧺:lunit"
+
+fuzz
+  [| do s ← fuzzy @Shape
+        return s
+  |]
+  [| \ s → null ⧺ s ≡ s |]
+  [| \ s → pretty s |]
+
+testSection "pretty:shape:⧺:runit"
+
+fuzz
+  [| do s ← fuzzy @Shape
+        return s
+  |]
+  [| \ s → s ⧺ null ≡ s |]
+  [| \ s → pretty s |]
+
+testSection "pretty:shape:⧺:assoc"
+
+fuzz
+  [| do s₁ ← fuzzy @Shape
+        s₂ ← fuzzy @Shape
+        s₃ ← fuzzy @Shape
+        return (s₁,s₂,s₃)
+  |]
+  [| \ (s₁,s₂,s₃) → (s₁ ⧺ s₂) ⧺ s₃ ≡ s₁ ⧺ (s₂ ⧺ s₃) |]
+  [| \ (s₁,s₂,s₃) → ppVertical
+       [ ppCxt "s₁" $ pretty s₁
+       , ppCxt "s₂" $ pretty s₂
+       , ppCxt "s₃" $ pretty s₃
+       ]
+  |]
 
 ppColon ∷ Doc → Doc → Doc
 ppColon = ppInf 5 $ ppString ":"
@@ -2144,5 +2194,23 @@ prop
          ]
      )
   |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtNarrow $ 
+         ppList 
+           [ ppBlock (ppString "do") 
+               [ ppColon (ppGA $ ppApp (ppString "f") $ ppString "x") $ ppGA $ ppApp (ppString "g") $ ppString "y"
+               ]
+           , ppString "z"
+           ]
+     , concat $ inbetween "\n"
+         [ "[ do"
+         , "    f x"
+         , ", y"
+         , "]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
 
 buildTests

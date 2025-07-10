@@ -1002,7 +1002,7 @@ ppBlock b xs =
       , ppSetTopLevel $ ppA b
       , ppNewline
       , ppSpaces 2
-      , ppA $ ppVertical $ map ppCG $ iter xs
+      , ppA $ ppVertical $ map (ppSetBotLevel ∘ ppCG) $ iter xs
       ]
 
 -- STYLES --

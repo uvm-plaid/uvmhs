@@ -97,7 +97,7 @@ data SummaryI = SummaryI
   { summaryIForceBreak ∷ 𝔹
   , summaryIShape ∷ ShapeA
   , summaryIContents ∷ TreeI
-  }
+  } deriving (Eq,Ord,Show)
 makeLenses ''SummaryI
 
 alignChunks ∷ TreeI → TreeI
