@@ -999,7 +999,7 @@ ppPostTight i o e =
 --         z
 --
 ppBlock ∷ (ToIter Doc t) ⇒ Doc → t → Doc
-ppBlock b xs = concat
+ppBlock b xs = ppBotLevel $ concat
   [ ppSetTopLevel $ ppA b
   , ppNewline
   , ppSpaces 2
