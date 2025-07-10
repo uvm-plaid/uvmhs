@@ -999,12 +999,17 @@ ppPostTight i o e =
 --         z
 --
 ppBlock ∷ (ToIter Doc t) ⇒ Doc → t → Doc
-ppBlock b xs = ppBotLevel $ concat
-  [ ppSetTopLevel $ ppA b
-  , ppNewline
-  , ppSpaces 2
-  , ppA $ ppVertical $ map ppCG $ iter xs
-  ]
+ppBlock b xs = 
+  if isEmpty xs
+  then 
+    ppBotLevel $ ppA b
+  else
+    ppBotLevel $ concat
+      [ ppSetTopLevel $ ppA b
+      , ppNewline
+      , ppSpaces 2
+      , ppA $ ppVertical $ map ppCG $ iter xs
+      ]
 
 -- STYLES --
 

@@ -1744,9 +1744,9 @@ prop
            ]
      , concat $ inbetween "\n"
          [ "do"
-         ,  "  f x y"
-         ,  "  g z"
-         ,  "  [a,b,c]"
+         , "  f x y"
+         , "  g z"
+         , "  [a,b,c]"
          ]
      )
   |] [| testit |] [| showit |]
@@ -1760,9 +1760,9 @@ prop
            ]
      , concat $ inbetween "\n"
          [ "do"
-         ,  "  f x y"
-         ,  "  g z"
-         ,  "  [a,b,c]"
+         , "  f x y"
+         , "  g z"
+         , "  [a,b,c]"
          ]
      )
   |] [| testit |] [| showit |]
@@ -1776,11 +1776,11 @@ prop
            ]
      , concat $ inbetween "\n"
          [ "do"
-         ,  "  f x y"
-         ,  "  g z"
-         ,  "  [ a ,"
-         ,  "    b ,"
-         ,  "    c ]"
+         , "  f x y"
+         , "  g z"
+         , "  [ a ,"
+         , "    b ,"
+         , "    c ]"
          ]
      )
   |] [| testit |] [| showit |]
@@ -1794,11 +1794,11 @@ prop
            ]
      , concat $ inbetween "\n"
          [ "do"
-         ,  "  f x y"
-         ,  "  g z"
-         ,  "  [ a ,"
-         ,  "    b ,"
-         ,  "    c ]"
+         , "  f x y"
+         , "  g z"
+         , "  [ a ,"
+         , "    b ,"
+         , "    c ]"
          ]
      )
   |] [| testit |] [| showit |]
@@ -1812,12 +1812,12 @@ prop
            ]
      , concat $ inbetween "\n"
          [ "do"
-         ,  "  f x"
-         ,  "    y"
-         ,  "  g z"
-         ,  "  [ a ,"
-         ,  "    b ,"
-         ,  "    c ]"
+         , "  f x"
+         , "    y"
+         , "  g z"
+         , "  [ a ,"
+         , "    b ,"
+         , "    c ]"
          ]
      )
   |] [| testit |] [| showit |]
@@ -1831,12 +1831,12 @@ prop
            ]
      , concat $ inbetween "\n"
          [ "do"
-         ,  "  f x"
-         ,  "    y"
-         ,  "  g z"
-         ,  "  [ a ,"
-         ,  "    b ,"
-         ,  "    c ]"
+         , "  f x"
+         , "    y"
+         , "  g z"
+         , "  [ a ,"
+         , "    b ,"
+         , "    c ]"
          ]
      )
   |] [| testit |] [| showit |]
@@ -1850,12 +1850,12 @@ prop
            ]
      , concat $ inbetween "\n"
          [ "do"
-         ,  "  f x"
-         ,  "    y"
-         ,  "  g z"
-         ,  "  [ a ,"
-         ,  "    b ,"
-         ,  "    c ]"
+         , "  f x"
+         , "    y"
+         , "  g z"
+         , "  [ a ,"
+         , "    b ,"
+         , "    c ]"
          ]
      )
   |] [| testit |] [| showit |]
@@ -2085,6 +2085,36 @@ prop
          , "  , h( z"
          , "     )"
          , "  )"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+testSection "pretty:block:empty"
+
+prop 
+  [| ( ppRenderNoFmtNarrow $ ppParens $
+         ppBlock (ppString "do")
+           [ ppApps (ppString "f") [ppString "x",ppString "y"]
+           , ppApps (ppString "g") [ppString "z"]
+           , ppList [ppString "a",ppString "b",ppString "c"]
+           ]
+     , concat $ inbetween "\n"
+         [ "(do"
+         , "   f x"
+         , "     y"
+         , "   g z"
+         , "   [ a ,"
+         , "     b ,"
+         , "     c ])"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtNarrow $ ppParens $
+         ppBlock (ppString "do") []
+     , concat $ inbetween "\n"
+         [ "(do)"
          ]
      )
   |] [| testit |] [| showit |]
