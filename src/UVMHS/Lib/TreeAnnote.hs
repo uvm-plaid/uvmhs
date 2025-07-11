@@ -44,6 +44,17 @@ instance Annote i (𝑇 i a) where annote = A𝑇
 
 instance Functor (𝑇 i) where map f = fold𝑇With (L𝑇 ∘ f) annote
 
+instance ToIter a (𝑇 i a) where
+  iter t₀ = 𝐼 HS.$ \ yield →
+    let loop t i continue = case t of
+          N𝑇 → continue i
+          B𝑇 t₁ t₂ →
+            loop t₁ i $ \ i' →
+            loop t₂ i' continue
+          L𝑇 x → yield x i continue
+          A𝑇 _ t' → loop t' i continue
+    in loop t₀
+
 -------------
 -- VIRTUAL --
 -------------
@@ -101,3 +112,5 @@ instance Functor (𝑇V i) where map = map𝑇V id
 instance (Eq a,Eq i) ⇒ Eq (𝑇V i a) where (==) = (≡) `on` realize𝑇
 instance (Ord a,Ord i) ⇒ Ord (𝑇V i a) where compare = (⋚) `on` realize𝑇
 instance (Show a,Show i) ⇒ Show (𝑇V i a) where show = show ∘ realize𝑇
+
+instance ToIter a (𝑇V i a) where iter = iter ∘ realize𝑇

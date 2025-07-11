@@ -105,24 +105,28 @@ alignChunks = mapp $ \case
   RawChunkI l s → RawChunkI l s
   NewlineChunkI _ l → NewlineChunkI True l
 
-
 alignSummary ∷ SummaryI → SummaryI
 alignSummary (SummaryI b sh c) = SummaryI b (alignShapeA sh) $ alignChunks c
 
 instance Null SummaryI where null = SummaryI False null null
 instance Append SummaryI where
   SummaryI b₁ sh₁ cs₁ ⧺ SummaryI b₂ sh₂ cs₂ =
-    let cs₂' =
-          if not $ shapeIAligned sh₂
-          then cs₂
-          else mappOn cs₂ $ extendAlignedNewlinesIChunk $ shapeLastLength $ shapeIShape sh₁
-    in SummaryI (b₁ ⩔ b₂) (sh₁ ⧺ sh₂) $ cs₁ ⧺ cs₂'
+    let cs' = concat
+          [ cs₁
+          , mappOn cs₂ $ \ c →
+              let c' = extendAlignedNewlinesIChunk (shapeALastLength sh₁) c
+                  a = shapeALastAlign sh₁
+              in case c' of
+                RawChunkI l s → RawChunkI l s
+                NewlineChunkI _ l → NewlineChunkI a l
+          ]
+    in SummaryI (b₁ ⩔ b₂) (sh₁ ⧺ sh₂) cs'
 instance Monoid SummaryI
 
 summaryChunksI ∷ 𝐼 ChunkI → SummaryI
 summaryChunksI chunks =
   let sh = concat $ map shapeIChunk $ iter chunks
-  in SummaryI False (ShapeA False sh) $ single chunks
+  in SummaryI False (shapeToShapeA sh) $ single chunks
 
 annotateSummaryI ∷ Annotation → SummaryI → SummaryI
 annotateSummaryI a (SummaryI b sh cs) = SummaryI b sh $ annote a cs

@@ -126,116 +126,140 @@ instance Join Shape where
 
 -- A non-aligned shape looks like:
 --
---     □□□□XXX
+--     XXX
+--     YY
+--     ZZZZ
+--
+--     □XXX
+--     YY
+--     ZZZZ
+--
+--     □□XXX
+--     YY
+--     ZZZZ
+--
+--     □□□XXX
 --     YY
 --     ZZZZ
 --
 -- An aligned shape looks like:
 --
---     □□□□XXX
---     ⋅⋅⋅⋅YY
---     ⋅⋅⋅⋅ZZZZ
+--     XXX
+--     YY
+--     ZZZZ
 --
--- Shapes can be combined, which may affect alignment:
+--     □XXX
+--     ⋅YY
+--     ⋅ZZZZ
 --
---     non-aligned + non-aligned = non-aligned
---     non-aligned + aligned     = non-aligned
---     aligned     + non-aligned = aligned
---     aligned     + aligned     = aligned
+--     □□XXX
+--     ⋅⋅YY
+--     ⋅⋅ZZZZ
 --
--- When the shape is a single line, it is always non-aligned
--- (so, aligned = False)
+--     □□□XXX
+--     ⋅⋅⋅YY
+--     ⋅⋅⋅ZZZZ
+--
+--  Combinig shapes:
+--
+--      □□□XXX ⧺ □□□AAA ≡ □□□XXX
+--      YY       BB       YY
+--      ZZZZ     CCCC     ZZZZAAA
+--                        BB
+--                        CCC
+--
+--      □□□XXX ⧺ □□□AAA ≡ □□□XXX
+--      YY       ⋅⋅⋅BB    YY
+--      ZZZZ     ⋅⋅⋅CCCC  ZZZZAAA
+--                        ⋅⋅⋅⋅BB
+--                        ⋅⋅⋅⋅CCC
+--
+--      □□□XXX ⧺ □□□AAA ≡ □□□XXX
+--      ⋅⋅⋅YY    BB       ⋅⋅⋅YY
+--      ⋅⋅⋅ZZZZ  CCCC     ⋅⋅⋅ZZZZAAA
+--                        BB
+--                        CCC
+--
+--      □□□XXX ⧺ □□□AAA ≡ □□□XXX
+--      ⋅⋅⋅YY    ⋅⋅⋅BB    ⋅⋅⋅YY
+--      ⋅⋅⋅ZZZZ  ⋅⋅⋅CCCC  ⋅⋅⋅ZZZZAAA
+--                        ⋅⋅⋅␣␣␣␣BB
+--                        ⋅⋅⋅␣␣␣␣CCC
+--
+-- Notice that for each shape:
+-- - some lines can be aligned, while others are not
+-- - when combining two aligned shapes, you need to indent the RHS in addition
+--   to marking lines as aligned
+-- - the very first line doesn't need to track if it's aligned or not
 
-data ShapeA = ShapeA
-  { shapeIAligned ∷ 𝔹
-  , shapeIShape   ∷ Shape
-  }
+data ShapeMA = ShapeMA
+  { shapeMAFirstLength   ∷ {-# UNPACK #-} ℕ64
+  , shapeMAMidMaxLengthU ∷ {-# UNPACK #-} ℕ64
+  , shapeMAMidMaxLengthA ∷ {-# UNPACK #-} ℕ64
+  , shapeMALastAlign     ∷ {-# UNPACK #-} 𝔹
+  , shapeMALastLength    ∷ {-# UNPACK #-} ℕ64
+  , shapeMANewlines      ∷ {-# UNPACK #-} ℕ64
+  } deriving (Eq,Ord,Show)
+makeLenses ''ShapeMA
+
+data ShapeA =
+    SingleLineA {-# UNPACK #-} ℕ64
+  | MultiLineA {-# UNPACK #-} ShapeMA
   deriving (Eq,Ord,Show)
-makeLenses ''ShapeA
+makePrisms ''ShapeA
 
-instance Null ShapeA where null = ShapeA False null
+instance Null ShapeA where null = SingleLineA zero
 instance Append ShapeA where
-  ShapeA a₁ sh₁ ⧺ ShapeA a₂ sh₂ =
-    let sh₂' =
-          if not a₂
-          -- ‣ sh₁ is single-line
-          -- ‣ sh₂ is single-line
-          --
-          --     □□□□XXX  ⧺  □□□□AAA  =  □□□□XXXAAA
-          --
-          -- ‣ sh₁ is single-line
-          -- ‣ sh₂ is multiline non-aligned
-          --
-          --     □□□□XXX  ⧺  □□□□AAA  =  □□□□XXXAAA
-          --                 BB          BB
-          --                 CCCC        CCCC
-          --
-          -- ‣ sh₁ is multiline non-aligned
-          -- ‣ sh₂ is single-line
-          --
-          --     □□□□XXX  ⧺ □□□□AAA  =  □□□□XXX
-          --     YY                     YY
-          --     ZZZZ                   ZZZZAAA
-          --
-          -- ‣ sh₁ is multiline non-aligned
-          -- ‣ sh₂ is multiline non-aligned
-          --     □□□□XXX  ⧺  □□□□AAA  =  □□□□XXX
-          --     YY          BB          YY
-          --     ZZZZ        CCCC        ZZZZAAA
-          --                             BB
-          --                             CCCC
-          --
-          -- ‣ sh₁ is multiline aligned
-          -- ‣ sh₂ is single-line
-          --
-          --     □□□□XXX   ⧺  □□□□AAA  =  □□□□XXX
-          --     ⋅⋅⋅⋅YY                   ⋅⋅⋅⋅YY
-          --     ⋅⋅⋅⋅ZZZZ                 ⋅⋅⋅⋅ZZZZAAA
-          --
-          -- ‣ sh₁ is multiline aligned
-          -- ‣ sh₂ is multiline non-aligned
-          --
-          --     □□□□XXX   ⧺  □□□□AAA  =  □□□□XXX
-          --     ⋅⋅⋅⋅YY       BB          ⋅⋅⋅⋅YY
-          --     ⋅⋅⋅⋅ZZZZ     CCCC        ⋅⋅⋅⋅ZZZZAAA
-          --                              BB
-          --                              CCCC
-          --
-          then sh₂
-          -- ‣ sh₁ is single-lined
-          -- ‣ sh₂ is multiline aligned
-          --
-          --     □□□□XXX  ⧺   □□□□AAA   =  □□□□XXXAAA
-          --                  ⋅⋅⋅⋅BB       ⋅⋅⋅⋅␣␣␣BB
-          --                  ⋅⋅⋅⋅CCCC     ⋅⋅⋅⋅␣␣␣CCCC
-          --
-          -- ‣ sh₁ is multiline non-aligned
-          -- ‣ sh₂ is multiline aligned
-          --
-          --     □□□□XXX  ⧺  □□□□AAA   =  □□□□XXX
-          --     YY          ⋅⋅⋅⋅BB       YY
-          --     ZZZZ        ⋅⋅⋅⋅CCCC     ZZZZAAA
-          --                              ␣␣␣␣BB
-          --                              ␣␣␣␣CCCC
-          --
-          -- ‣ sh₁ is multiline aligned
-          -- ‣ sh₂ is multiline aligned
-          --
-          --     □□□□XXX   ⧺  □□□□AAA   =  □□□□XXX
-          --     ⋅⋅⋅⋅YY       ⋅⋅⋅⋅BB       ⋅⋅⋅⋅YY
-          --     ⋅⋅⋅⋅ZZZZ     ⋅⋅⋅⋅CCCC     ⋅⋅⋅⋅ZZZZAAA
-          --                               ⋅⋅⋅⋅␣␣␣␣BB
-          --                               ⋅⋅⋅⋅␣␣␣␣CCCC
-          --
-          else
-            case sh₂ of
-              MultiLine (ShapeM fl₂ mml₂ ll₂ nls₂) →
-                MultiLine $ ShapeM fl₂ (shapeLastLength sh₁ + mml₂) (shapeLastLength sh₁ + ll₂) nls₂
-              _ → error "internal error"
-    in ShapeA (a₁ ⩔ shape singleLineL sh₁ ⩓ a₂) $ sh₁ ⧺ sh₂'
+  s₁ ⧺ s₂ = case (s₁,s₂) of
+    (SingleLineA l₁,SingleLineA l₂) → SingleLineA $ l₁ + l₂
+    (MultiLineA (ShapeMA fl mmlu mmla la ll nls),SingleLineA l) → MultiLineA $ ShapeMA fl mmlu mmla la (ll + l) nls
+    (SingleLineA l,MultiLineA (ShapeMA fl mmlu mmla la ll nls)) → 
+      let fl' = l + fl
+          mmla' = l + mmla
+          ll' = if la then l + ll else ll
+      in
+      MultiLineA $ ShapeMA fl' mmlu mmla' la ll' nls
+    (MultiLineA (ShapeMA fl₁ mmlu₁ mmla₁ la₁ ll₁ nls₁),MultiLineA (ShapeMA fl₂ mmlu₂ mmla₂ la₂ ll₂ nls₂)) →
+      let fl' = fl₁
+          mmlu' = joins [mmlu₁,mmlu₂,if not la₁ then joins [mmla₂,ll₁ + fl₂] else 0]
+          mmla' = joins [mmla₁,if la₁ then joins [mmla₁,ll₁ + fl₂] else 0]
+          la' = la₂
+          ll' = ll₂
+          nls' = nls₁ + nls₂
+      in
+      MultiLineA $ ShapeMA fl' mmlu' mmla' la' ll' nls'
 instance Monoid ShapeA
 
 alignShapeA ∷ ShapeA → ShapeA
-alignShapeA (ShapeA a sh)
-  | shape multiLineL sh = ShapeA True sh
-  | otherwise = ShapeA a sh
+alignShapeA = \case
+  SingleLineA l → SingleLineA l
+  MultiLineA (ShapeMA fl mmlu mmla _la ll nls) →
+    let mmlu' = 0
+        mmla' = mmlu ⊔ mmla
+        la' = True
+    in
+    MultiLineA $ ShapeMA fl mmlu' mmla' la' ll nls
+
+
+shapeMToShapeMA ∷ ShapeM → ShapeMA
+shapeMToShapeMA (ShapeM fl mml ll nls) = ShapeMA fl mml 0 False ll nls
+
+shapeToShapeA ∷ Shape → ShapeA
+shapeToShapeA = \case
+  SingleLine l → SingleLineA l
+  MultiLine s → MultiLineA $ shapeMToShapeMA s
+
+shapeALastLength ∷ ShapeA → ℕ64
+shapeALastLength = \case
+  SingleLineA n → n
+  MultiLineA sh → shapeMALastLength sh
+
+shapeALastAlign ∷ ShapeA → 𝔹
+shapeALastAlign = \case
+  SingleLineA _ → False
+  MultiLineA sh → shapeMALastAlign sh
+
+shapeAWidth ∷ ShapeA → ℕ64
+shapeAWidth = \case
+  SingleLineA n → n
+  MultiLineA (ShapeMA fl mmlu mmla _ ll _) → fl ⊔ mmlu ⊔ mmla ⊔ ll

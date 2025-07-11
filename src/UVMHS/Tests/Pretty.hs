@@ -2195,22 +2195,24 @@ prop
      )
   |] [| testit |] [| showit |]
 
+testSection "pretty:tricky"
+
 prop 
   [| ( ppRenderNoFmtNarrow $ 
-         ppList 
-           [ ppBlock (ppString "do") 
-               [ ppColon (ppGA $ ppApp (ppString "f") $ ppString "x") $ ppGA $ ppApp (ppString "g") $ ppString "y"
-               ]
-           , ppString "z"
+         concat
+           [ ppString "AAA"
+           , ppA ppNewline
+           , ppNewline
+           , ppA $ concat [ppString "X",ppNewline,ppString "X"]
            ]
      , concat $ inbetween "\n"
-         [ "[ do"
-         , "    f x"
-         , ", y"
-         , "]"
+         [ "AAA"
+         , "   "
+         , ""
+         , "X"
+         , "X"
          ]
      )
   |] [| testit |] [| showit |]
-
 
 buildTests

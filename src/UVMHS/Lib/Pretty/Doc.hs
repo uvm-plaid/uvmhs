@@ -404,8 +404,8 @@ ppParens = ppBrackets (ppPun "(") $ ppPun ")"
 --
 ppCollectionF ∷ Doc → Doc → Doc → (𝔹 → 𝑂 (Doc ∧ Doc) → 𝐼 Doc) → Doc
 ppCollectionF l r i xs = 
-  let lWidth = shapeWidth $ shapeIShape $ docShape l
-      iWidth = shapeWidth $ shapeIShape $ docShape i
+  let lWidth = shapeAWidth $ docShape l
+      iWidth = shapeAWidth $ docShape i
       tWidth = lWidth ⊔ iWidth
       lExtra = tWidth - lWidth
       iExtra = tWidth - iWidth
@@ -593,13 +593,11 @@ ppBotLevel = ppLevel 0
 --
 ppInfG ∷ ℕ64 → Doc → Doc → Doc → Doc
 ppInfG i o e₁ e₂ = 
-  let eWidth = shapeWidth $ shapeIShape $ docShape e₁
+  let eWidth = shapeAWidth $ docShape e₁
       eWidthSmall = eWidth ≡ 1
   in
   ppLevel i $ concat
     [ ppA e₁
-    -- , ppSpaceNewlineIfBreak
-    -- , ppSpacesIfBreakCmd 2
     , ppModal
         ppSpace
         ppNewline $
@@ -662,13 +660,11 @@ ppInfG i o e₁ e₂ =
 --
 ppInfGTight ∷ ℕ64 → Doc → Doc → Doc → Doc
 ppInfGTight i o e₁ e₂ = 
-  let eWidth = shapeWidth $ shapeIShape $ docShape e₁
+  let eWidth = shapeAWidth $ docShape e₁
       eWidthSmall = eWidth ≡ 1
   in
   ppLevel i $ concat
     [ ppA e₁
-    -- , ppNewlineIfBreak
-    -- , ppSpacesIfBreakCmd 2
     , ppModal
         null
         ppNewline $
@@ -685,13 +681,11 @@ ppInfGTight i o e₁ e₂ =
 
 ppInfGSpace ∷ ℕ64 → Doc → Doc → Doc
 ppInfGSpace i e₁ e₂ = 
-  let eWidth = shapeWidth $ shapeIShape $ docShape e₁
+  let eWidth = shapeAWidth $ docShape e₁
       eWidthSmall = eWidth ≡ 1
   in
   ppLevel i $ concat
     [ ppA e₁
-    -- , ppSpaceNewlineIfBreak
-    -- , ppSpacesIfBreakCmd 2
     , ppModal
         ppSpace
         ppNewline $
@@ -794,7 +788,7 @@ ppAppsML x xs = Doc $ do
 --
 ppAppCL ∷ (ToIter Doc t) ⇒ ℕ64 → Doc → t → Doc
 ppAppCL ℓ f xs = 
-  let fWidth = shapeWidth $ shapeIShape $ docShape f
+  let fWidth = shapeAWidth $ docShape f
       fWidthSmall = fWidth ≤ 2
   in
   ppLevel ℓ $ concat
@@ -840,13 +834,11 @@ ppAppC f xs = Doc $ do
 --
 ppPre ∷ ℕ64 → Doc → Doc → Doc
 ppPre i o e = 
-  let oWidth = shapeWidth $ shapeIShape $ docShape o
+  let oWidth = shapeAWidth $ docShape o
       oWidthSmall = oWidth ≡ 1
   in
   ppLevel i $ concat
     [ ppSetTopLevel $ ppA o
-    -- , ppSpaceNewlineIfBreak
-    -- , ppSpacesIfBreakCmd 2
     , ppModal
         ppSpace
         ppNewline $
@@ -883,13 +875,11 @@ ppPre i o e =
 --
 ppPreTight ∷ ℕ64 → Doc → Doc → Doc
 ppPreTight i o e = 
-  let oWidth = shapeWidth $ shapeIShape $ docShape o
+  let oWidth = shapeAWidth $ docShape o
       oWidthSmall = oWidth ≡ 1
   in
   ppLevel i $ concat
     [ ppSetTopLevel $ ppA o
-    -- , ppNewlineIfBreak
-    -- , ppSpacesIfBreakCmd 2
     , ppModal
         null
         ppNewline $
@@ -922,13 +912,11 @@ ppPreTight i o e =
 --
 ppPost ∷ ℕ64 → Doc → Doc → Doc
 ppPost i o e = 
-  let eWidth = shapeWidth $ shapeIShape $ docShape e
+  let eWidth = shapeAWidth $ docShape e
       eWidthSmall = eWidth ≡ 1
   in
   ppLevel i $ concat
     [ ppA e
-    -- , ppSpaceNewlineIfBreak
-    -- , ppSpacesIfBreakCmd 2
     , ppModal
         ppSpace
         ppNewline $
@@ -962,13 +950,11 @@ ppPost i o e =
 --
 ppPostTight ∷ ℕ64 → Doc → Doc → Doc
 ppPostTight i o e = 
-  let eWidth = shapeWidth $ shapeIShape $ docShape e
+  let eWidth = shapeAWidth $ docShape e
       eWidthSmall = eWidth ≡ 1
   in
   ppLevel i $ concat
     [ ppA e
-    -- , ppNewlineIfBreak
-    -- , ppSpacesIfBreakCmd 2
     , ppModal
         null
         ppNewline $
@@ -1039,7 +1025,7 @@ ppTable has vas dss =
       _ :* sss' = ppTableHelper has vas sss
       dss'      = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
-        in Doc $ tell $ StaticDocA $ SummaryI True (ShapeA False sh) $ treeIO t
+        in Doc $ tell $ StaticDocA $ SummaryI True (shapeToShapeA sh) $ treeIO t
   in
   ppVertical $ mapOn dss' $ \ ds →
     ppHorizontal $ inbetween null ds
@@ -1051,7 +1037,7 @@ ppTableCells has vas dss =
       sep        = ppFG white $ concat $ inbetween (ppString "─┼─") $ mapOn ws $ \ w → ppString $ string $ replicate w '─'
       dss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
-        in Doc $ tell $ StaticDocA $ SummaryI True (ShapeA False sh) $ treeIO t
+        in Doc $ tell $ StaticDocA $ SummaryI True (shapeToShapeA sh) $ treeIO t
   in
   ppVertical $ inbetween sep $ mapOn dss' $ \ ds →
     ppHorizontal $ inbetween (ppFG white $ ppString "│") ds

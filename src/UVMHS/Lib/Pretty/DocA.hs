@@ -67,24 +67,21 @@ instance Append DocA where
 instance Monoid DocA
 
 renderSummaryI ∷ SummaryI → DocAM ()
-renderSummaryI s =
-  let f =
-        if shapeIAligned $ summaryIShape s
-        then alignDocAM
-        else id
-  in f $ do
-    nest ← askL docAEnvNestL
-    tell $ mappOn (summaryIContents s) $ \case
-      NewlineChunkI a n → NewlineChunkI a $ n + nest
-      c → c
-    case shapeIShape $ summaryIShape s of
-      SingleLine l → do
-        modifyL docAStateRibL $ (+) l
-        modifyL docAStateColL $ (+) l
-      MultiLine (ShapeM _ _ ll lines) → do
-        modifyL docAStateRowL $ (+) lines
-        putL docAStateRibL ll
-        putL docAStateColL ll
+renderSummaryI s = do
+  nest ← askL docAEnvNestL
+  -- traceM $ "bumping newlines by " ⧺ show𝕊 nest
+  tell $ mappOn (summaryIContents s) $ \case
+    NewlineChunkI _ n → NewlineChunkI False $ n + nest
+    c → c
+  case summaryIShape s of
+    SingleLineA l → do
+      -- traceM $ "increasing col by " ⧺ show𝕊 l
+      modifyL docAStateRibL $ (+) l
+      modifyL docAStateColL $ (+) l
+    MultiLineA (ShapeMA _ _ _ _ ll lines) → do
+      modifyL docAStateRowL $ (+) lines
+      putL docAStateRibL ll
+      putL docAStateColL ll
 
 stringDocA ∷ 𝕊 → DocA
 stringDocA = StaticDocA ∘ summaryChunksI ∘ splitChunksI
@@ -107,12 +104,12 @@ groupDocAM s xM = do
     nest ← askL docAEnvNestL
     rib ← getL docAStateRibL
     col ← getL docAStateColL
-    let ml :* mr = case shapeIShape $ summaryIShape s of
-          SingleLine l → (nest + col + l) :* (rib + l)
-          MultiLine (ShapeM fl mml ll _) →
-            joins [ nest + col + fl , nest + mml , nest + ll ]
+    let ml :* mr = case summaryIShape s of
+          SingleLineA l → (nest + col + l) :* (rib + l)
+          MultiLineA (ShapeMA fl mmlu mmla la ll _) →
+            joins [ nest + col + fl , mmlu , nest + mmla , if la then nest + ll else ll ]
             :*
-            joins [ rib + fl , mml , ll ]
+            joins [ rib + fl , mmlu , mmla , ll ]
         mlb = case lwO of
           None → True
           Some lw → ml ≤ lw
@@ -132,8 +129,10 @@ alignDocAM ∷ DocAM a → DocAM a
 alignDocAM xM = do
   col ← getL docAStateColL
   nest ← askL docAEnvNestL
+  -- traceM $ "nesting by " ⧺ show𝕊 col
   putL docAStateColL $ 𝕟64 0
   x ← localL docAEnvNestL (nest + col) xM
+  -- traceM $ "unnesting by " ⧺ show𝕊 col
   modifyL docAStateColL $ (+) col
   return x
 
