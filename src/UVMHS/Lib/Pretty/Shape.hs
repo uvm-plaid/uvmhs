@@ -213,16 +213,11 @@ instance Append ShapeA where
   s₁ ⧺ s₂ = case (s₁,s₂) of
     (SingleLineA l₁,SingleLineA l₂) → SingleLineA $ l₁ + l₂
     (MultiLineA (ShapeMA fl mmlu mmla la ll nls),SingleLineA l) → MultiLineA $ ShapeMA fl mmlu mmla la (ll + l) nls
-    (SingleLineA l,MultiLineA (ShapeMA fl mmlu mmla la ll nls)) → 
-      let fl' = l + fl
-          mmla' = l + mmla
-          ll' = if la then l + ll else ll
-      in
-      MultiLineA $ ShapeMA fl' mmlu mmla' la ll' nls
+    (SingleLineA l,MultiLineA (ShapeMA fl mmlu mmla la ll nls)) → MultiLineA $ ShapeMA (fl + l) mmlu mmla la ll nls
     (MultiLineA (ShapeMA fl₁ mmlu₁ mmla₁ la₁ ll₁ nls₁),MultiLineA (ShapeMA fl₂ mmlu₂ mmla₂ la₂ ll₂ nls₂)) →
       let fl' = fl₁
           mmlu' = joins [mmlu₁,mmlu₂,if not la₁ then joins [mmla₂,ll₁ + fl₂] else 0]
-          mmla' = joins [mmla₁,if la₁ then joins [mmla₁,ll₁ + fl₂] else 0]
+          mmla' = joins [mmla₁,if la₁ then joins [mmla₂,ll₁ + fl₂] else 0]
           la' = la₂
           ll' = ll₂
           nls' = nls₁ + nls₂
