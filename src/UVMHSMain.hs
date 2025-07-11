@@ -47,30 +47,30 @@ mainTest = do
 mainDev ∷ IO ()
 mainDev = cleanExit $ do
   noExit mainTest
-  let d₁ = ppA $ concat [ppString "X",ppNewline,ppString "X"]
-      d₂ = ppNewline ⧺ d₁
-      d₃ = ppA ppNewline ⧺ d₂
-      d₄ = ppString "AAA" ⧺ d₃
-      doit d' = do
-        pprintNoFmtNarrow d'
-        out $ show𝕊 $ docShape d'
-        out $ show𝕊 $ concat $ iter $ summaryIContents $ staticDocA $ execDoc d'
-        out $ show𝕊 $ concat $ iter $ execDocA $ execDoc d'
-  out "<d₁ = ppA $ concat [ppString \"X\",ppNewline,ppString \"X\"]"
-  doit d₁
-  out "<ppNewline>"
-  doit ppNewline
-  out "<d₂ = ppNewline ⧺ d₁>"
-  doit d₂
-  out "<ppA ppNewline>"
-  doit $ ppA ppNewline
-  out "<d₃ = ppA ppNewline ⧺ d₂>"
-  doit d₃
-  out "<ppString \"AAA\">"
-  doit $ ppString "AAA"
-  out "<d₄ = ppString \"AAA\" ⧺ d₃>"
-  doit d₄
-  out "<end>"
+  -- let d₁ = ppA $ concat [ppString "X",ppNewline,ppString "X"]
+  --     d₂ = ppNewline ⧺ d₁
+  --     d₃ = ppA ppNewline ⧺ d₂
+  --     d₄ = ppString "AAA" ⧺ d₃
+  --     doit d' = do
+  --       pprintNoFmtNarrow d'
+  --       out $ show𝕊 $ docShape d'
+  --       out $ show𝕊 $ concat $ iter $ summaryIContents $ staticDocA $ execDoc d'
+  --       out $ show𝕊 $ concat $ iter $ execDocA $ execDoc d'
+  -- out "<d₁ = ppA $ concat [ppString \"X\",ppNewline,ppString \"X\"]"
+  -- doit d₁
+  -- out "<ppNewline>"
+  -- doit ppNewline
+  -- out "<d₂ = ppNewline ⧺ d₁>"
+  -- doit d₂
+  -- out "<ppA ppNewline>"
+  -- doit $ ppA ppNewline
+  -- out "<d₃ = ppA ppNewline ⧺ d₂>"
+  -- doit d₃
+  -- out "<ppString \"AAA\">"
+  -- doit $ ppString "AAA"
+  -- out "<d₄ = ppString \"AAA\" ⧺ d₃>"
+  -- doit d₄
+  -- out "<end>"
   -- FUTURE
   -- out $(thShowDecs ds₁)
   -- out $(thShowDecs ds₂)

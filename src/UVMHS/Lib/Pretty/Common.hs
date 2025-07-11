@@ -115,10 +115,10 @@ instance Append SummaryI where
           [ cs₁
           , mappOn cs₂ $ \ c →
               let c' = extendAlignedNewlinesIChunk (shapeALastLength sh₁) c
-                  a = shapeALastAlign sh₁
+                  aO = shapeALastAlign sh₁
               in case c' of
                 RawChunkI l s → RawChunkI l s
-                NewlineChunkI _ l → NewlineChunkI a l
+                NewlineChunkI la l → NewlineChunkI (elim𝑂 (const id) (⩓) aO la) l
           ]
     in SummaryI (b₁ ⩔ b₂) (sh₁ ⧺ sh₂) cs'
 instance Monoid SummaryI

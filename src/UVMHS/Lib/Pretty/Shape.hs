@@ -254,10 +254,10 @@ shapeALastLength = \case
   SingleLineA n → n
   MultiLineA sh → shapeMALastLength sh
 
-shapeALastAlign ∷ ShapeA → 𝔹
+shapeALastAlign ∷ ShapeA → 𝑂 𝔹
 shapeALastAlign = \case
-  SingleLineA _ → False
-  MultiLineA sh → shapeMALastAlign sh
+  SingleLineA _ → None
+  MultiLineA sh → Some $ shapeMALastAlign sh
 
 shapeAWidth ∷ ShapeA → ℕ64
 shapeAWidth = \case

@@ -2208,7 +2208,6 @@ prop
      , concat $ inbetween "\n"
          [ "AAA"
          , "   "
-         , ""
          , "X"
          , "X"
          ]
