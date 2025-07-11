@@ -543,7 +543,7 @@ blockifyM = do
             --      ↑      ⇒ ↑
             --
             isAfterFirstToken ← getL blockifyStateIsAfterFirstTokenL
-            when (isAfterFirstToken ⩓ (not anchorTL ⇛ 𝑎 ≢ blockifyAnchor₀)) $ \ () → do
+            when (isAfterFirstToken ⩓ (not anchorTL ⇛ blockifyAnchorCol 𝑎 ≢ AddBT 0)) $ \ () → do
               -- CORNER CASES:
               -- - isAfterFirstToken: 
               --   When in anchored mode, we start with an anchor at column

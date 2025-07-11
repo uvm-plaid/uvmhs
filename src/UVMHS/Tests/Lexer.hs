@@ -1251,4 +1251,32 @@ test [| lexerTestA $ concat $ inbetween "\n"
           ]
      |]
 
+testSection "lexer:unanchored:brackets"
+
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b [ c"
+          , "d ] e f"
+          ]
+     |]
+     [| concat $ inbetween "\n"
+          [ "a b [ c"
+          , "d ] e f"
+          ]
+     |]
+
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b c"
+          , "local"
+          , "e ["
+          , "f ] g h"
+          ]
+     |]
+     [| concat $ inbetween "\n"
+          [ "a b c"
+          , "local{}"
+          , "e ["
+          , "f ] g h"
+          ]
+     |]
+
 buildTests
