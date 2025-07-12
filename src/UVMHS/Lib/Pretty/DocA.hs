@@ -69,13 +69,12 @@ instance Monoid DocA
 renderSummaryI ∷ SummaryI → DocAM ()
 renderSummaryI s = do
   nest ← askL docAEnvNestL
-  -- traceM $ "bumping newlines by " ⧺ show𝕊 nest
+  col ← getL docAStateColL
   tell $ mappOn (summaryIContents s) $ \case
-    NewlineChunkI _ n → NewlineChunkI False $ n + nest
+    NewlineChunkI a n → NewlineChunkI False $ n + nest + (if a then col else 0)
     c → c
   case summaryIShape s of
     SingleLineA l → do
-      -- traceM $ "increasing col by " ⧺ show𝕊 l
       modifyL docAStateRibL $ (+) l
       modifyL docAStateColL $ (+) l
     MultiLineA (ShapeMA _ _ _ _ ll lines) → do
@@ -129,28 +128,15 @@ alignDocAM ∷ DocAM a → DocAM a
 alignDocAM xM = do
   col ← getL docAStateColL
   nest ← askL docAEnvNestL
-  -- traceM $ "nesting by " ⧺ show𝕊 col
   putL docAStateColL $ 𝕟64 0
   x ← localL docAEnvNestL (nest + col) xM
-  -- traceM $ "unnesting by " ⧺ show𝕊 col
   modifyL docAStateColL $ (+) col
   return x
-
 
 alignDocA ∷ DocA → DocA
 alignDocA = \case
   StaticDocA s → StaticDocA $ alignSummary s
   DynamicDocA s r → DynamicDocA (alignSummary s) $ alignDocAM r
-
--- hangDocAM ∷ ℕ64 → DocAM a → DocAM a
--- hangDocAM n xM = do
---   nest ← askL docAEnvNestL
---   localL docAEnvHangL (nest + n) xM
--- 
--- hangDocA ∷ ℕ64 → DocA → DocA
--- hangDocA n = \case
---   StaticDocA s → StaticDocA s
---   DynamicDocA s xM → DynamicDocA s $ hangDocAM n xM
 
 execDocAWith ∷ (DocAM () → DocAM ()) → DocA → TreeI
 execDocAWith f d = evalRWS docAEnv₀ docAState₀ $ retOut $ f $ case d of

@@ -2214,4 +2214,24 @@ prop
      )
   |] [| testit |] [| showit |]
 
+prop 
+  [| ( ppRenderNoFmtNarrow $ 
+         concat
+           [ ppForceBreak
+           , ppSpaces 2
+           , ppA $ concat
+               [ ppString "A"
+               , ppNewline
+               , ppString "B"
+               ]
+           , ppSpacesIfBreak 2
+           , ppString "C"
+           ]
+     , concat $ inbetween "\n"
+         [ "  A"
+         , "  B  C"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
 buildTests

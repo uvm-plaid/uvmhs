@@ -47,19 +47,37 @@ mainTest = do
 mainDev ∷ IO ()
 mainDev = cleanExit $ do
   noExit mainTest
-  -- let d₁ = ppA $ concat [ppString "X",ppNewline,ppString "X"]
-  --     d₂ = ppNewline ⧺ d₁
-  --     d₃ = ppA ppNewline ⧺ d₂
-  --     d₄ = ppString "AAA" ⧺ d₃
+  -- let d₁ = concat
+  --       [ ppForceBreak
+  --       , ppSpaces 2
+  --       ]
+  --     d₁' = ppSpaces 2
+  --     d₂ = concat
+  --       [ ppA $ concat
+  --           [ ppString "A"
+  --           , ppNewline
+  --           , ppString "B"
+  --           ]
+  --       , ppSpacesIfBreak 2
+  --       ]
+  --     d₃ = concat [d₁,d₂]
+  -- --     d₃ = ppA ppNewline ⧺ d₂
+  -- --     d₄ = ppString "AAA" ⧺ d₃
   --     doit d' = do
   --       pprintNoFmtNarrow d'
   --       out $ show𝕊 $ docShape d'
   --       out $ show𝕊 $ concat $ iter $ summaryIContents $ staticDocA $ execDoc d'
   --       out $ show𝕊 $ concat $ iter $ execDocA $ execDoc d'
-  -- out "<d₁ = ppA $ concat [ppString \"X\",ppNewline,ppString \"X\"]"
+  -- out "<d₁>"
   -- doit d₁
-  -- out "<ppNewline>"
-  -- doit ppNewline
+  -- out "<d₁'>"
+  -- doit d₁'
+  -- out "<d₂>"
+  -- doit d₂
+  -- out "<d₃>"
+  -- doit d₃
+  -- out "--------------------------"
+  -- pprint d₃
   -- out "<d₂ = ppNewline ⧺ d₁>"
   -- doit d₂
   -- out "<ppA ppNewline>"
