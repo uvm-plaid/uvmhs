@@ -404,35 +404,47 @@ ppParens = ppBrackets (ppPun "(") $ ppPun ")"
 --
 ppCollectionF ∷ Doc → Doc → Doc → (𝔹 → 𝑂 (Doc ∧ Doc) → 𝐼 Doc) → Doc
 ppCollectionF l r i xs = 
-  let lWidth = shapeAWidth $ docShape l
-      iWidth = shapeAWidth $ docShape i
-      tWidth = lWidth ⊔ iWidth
-      lExtra = tWidth - lWidth
-      iExtra = tWidth - iWidth
-      flat = concat
-        [ ppSetTopLevel $ ppA l
-        , concat $ inbetween (ppSetTopLevel $ ppA i) $ map (ppSetBotLevel ∘ ppEA) $ iter $ xs False None
-        , ppSetTopLevel $ ppEA r
-        ]
-      breakExp = concat
-        [ ppSetTopLevel $ ppA l
-        , ppSpaces lExtra
-        , ppSpace
-        , concat $ inbetween (concat [ppNewline,ppSpaces iExtra,ppSetTopLevel $ ppEA i,ppSpace]) $ 
-            map (ppSetBotLevel ∘ ppEGA) $ iter $ xs True None
-        , ppNewline
-        , ppSetTopLevel $ ppEA r
-        ]
-      breakCmd = concat
-        [ ppSetTopLevel $ ppA l
-        , ppSpace
-        , ppEA $ concat $ inbetween ppNewline $
-            map (ppSetBotLevel ∘ ppEGA) $
-              iter $ xs True $ Some $ 
-                concat [ppSpace,ppSetTopLevel $ ppEA i] 
-                :* concat [ppSpace,ppSetTopLevel $ ppEA r]
-        ]
-  in ppGA $ ppModal flat breakExp breakCmd
+  if 
+    and
+      [ isEmpty $ xs False None
+      , isEmpty $ xs True None
+      ]
+  then 
+    concat 
+      [ ppSetTopLevel $ ppA l
+      , ppSetTopLevel $ ppEA r
+      ]
+  else
+    let lWidth = shapeAWidth $ docShape l
+        iWidth = shapeAWidth $ docShape i
+        tWidth = lWidth ⊔ iWidth
+        lExtra = tWidth - lWidth
+        iExtra = tWidth - iWidth
+        flat = concat
+          [ ppSetTopLevel $ ppA l
+          , concat $ inbetween (ppSetTopLevel $ ppA i) $ map (ppSetBotLevel ∘ ppEA) $ iter $ xs False None
+          , ppSetTopLevel $ ppEA r
+          ]
+        breakExp = concat
+          [ ppSetTopLevel $ ppA l
+          , ppSpaces lExtra
+          , ppSpace
+          , concat $ inbetween (concat [ppNewline,ppSpaces iExtra,ppSetTopLevel $ ppEA i,ppSpace]) $ 
+              map (ppSetBotLevel ∘ ppEGA) $ iter $ xs True None
+          , ppNewline
+          , ppSetTopLevel $ ppEA r
+          ]
+        breakCmd = concat
+          [ ppSetTopLevel $ ppA l
+          , ppSpace
+          , ppEA $ concat $ inbetween ppNewline $
+              map (ppSetBotLevel ∘ ppEGA) $
+                iter $ xs True $ Some $ 
+                  concat [ppSpace,ppSetTopLevel $ ppEA i] 
+                  :* concat [ppSpace,ppSetTopLevel $ ppEA r]
+          ]
+    in 
+    ppGA $ ppModal flat breakExp breakCmd
 
 ppCollection ∷ (ToIter Doc t) ⇒ Doc → Doc → Doc → t → Doc
 ppCollection l r i xs = ppCollectionF l r i $ const $ \case

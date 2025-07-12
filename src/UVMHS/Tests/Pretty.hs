@@ -2234,4 +2234,42 @@ prop
      )
   |] [| testit |] [| showit |]
 
+testSection "pretty:collection"
+
+prop 
+  [| ( ppRenderNoFmtWide $ 
+         ppCollection (ppString "[") (ppString "]") (ppString ",") []
+     , concat $ inbetween "\n"
+         [ "[]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtNarrow $ 
+         ppCollection (ppString "[") (ppString "]") (ppString ",") []
+     , concat $ inbetween "\n"
+         [ "[]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWide $ ppC $
+         ppCollection (ppString "[") (ppString "]") (ppString ",") []
+     , concat $ inbetween "\n"
+         [ "[]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtNarrow $ ppC $
+         ppCollection (ppString "[") (ppString "]") (ppString ",") []
+     , concat $ inbetween "\n"
+         [ "[]"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
 buildTests
