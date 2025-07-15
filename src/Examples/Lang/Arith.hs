@@ -51,7 +51,7 @@ pAtom = pNewContext "atom" $ tries
   ]
 
 pExp ∷ Parser Exp
-pExp = mixfix id "exp" $ concat
+pExp = mixfix "exp" id $ concat
   [ mixTerminal $ do
       pTokSyntax "("
       e ← pExp

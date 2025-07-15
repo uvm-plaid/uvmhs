@@ -74,7 +74,7 @@ cpBlock = pNewContext "block" $ do
   return es
 
 cpExp ∷ Parser Exp
-cpExp = mixfix id "exp" $ concat
+cpExp = mixfix "exp" id $ concat
   [ mixTerminal $ do
       pTokSyntax "("
       e ← cpExp
