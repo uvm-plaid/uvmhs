@@ -798,8 +798,8 @@ ppAppsML x xs = Doc $ do
 --          )
 --       )
 --
-ppAppCL ∷ (ToIter Doc t) ⇒ ℕ64 → Doc → t → Doc
-ppAppCL ℓ f xs = 
+ppAppCStyle ∷ (ToIter Doc t) ⇒ ℕ64 → Doc → Doc → Doc → Doc → t → Doc
+ppAppCStyle ℓ l r i f xs = 
   let fWidth = shapeAWidth $ docShape f
       fWidthSmall = fWidth ≤ 2
   in
@@ -810,14 +810,14 @@ ppAppCL ℓ f xs =
             if fWidthSmall 
             then null 
             else concat [ppNewline,ppSpacesIfBreak 2]
-        , ppEGA $ ppCollection (ppPun "(") (ppPun ")") (ppPun ",") xs
+        , ppEGA $ ppCollection l r i xs
         ]
     ]
 
 ppAppC ∷ (ToIter Doc t) ⇒ Doc → t → Doc
 ppAppC f xs = Doc $ do
   ℓ ← askL $ appLevelL ⊚ docEnvPrettyParamsL
-  unDoc $ ppAppCL ℓ f xs
+  unDoc $ ppAppCStyle ℓ (ppPun "(") (ppPun ")") (ppPun ",") f xs
 
 -- FLAT
 --
