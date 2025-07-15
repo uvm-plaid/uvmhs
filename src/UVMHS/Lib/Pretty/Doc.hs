@@ -819,6 +819,21 @@ ppAppC f xs = Doc $ do
   ℓ ← askL $ appLevelL ⊚ docEnvPrettyParamsL
   unDoc $ ppAppCStyle ℓ (ppPun "(") (ppPun ")") (ppPun ",") f xs
 
+ppAppCStyleRec ∷ (ToIter (Doc ∧ Doc) t) ⇒ ℕ64 → Doc → Doc → Doc → Doc → Doc → t → Doc
+ppAppCStyleRec ℓ l r i f rel xs = 
+  let fWidth = shapeAWidth $ docShape f
+      fWidthSmall = fWidth ≤ 2
+  in
+  ppLevel ℓ $ concat
+    [ ppGA f
+    , ppG $ concat
+        [ ppWhenBreak $
+            if fWidthSmall 
+            then null 
+            else concat [ppNewline,ppSpacesIfBreak 2]
+        , ppEGA $ ppCollectionRec l r i rel xs
+        ]
+    ]
 -- FLAT
 --
 --     ! f x
