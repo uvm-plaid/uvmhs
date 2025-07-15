@@ -525,60 +525,60 @@ lexParseIOMain l p so s = parseIOMain p so *$ lexIO l so s
 -- MIXFIX --
 ------------
 
-data Mixes c a = Mixes
-  { mixesPrefix  ∷ Parser (𝐴 c a → Parser a)
-  , mixesPostfix ∷ Parser (𝐴 c a → Parser a)
-  , mixesInfix  ∷ Parser (𝐴 c a → 𝐴 c a → Parser a)
-  , mixesInfixL ∷ Parser (𝐴 c a → 𝐴 c a → Parser a)
-  , mixesInfixR ∷ Parser (𝐴 c a → 𝐴 c a → Parser a)
+data Mixes a b = Mixes
+  { mixesPrefix  ∷ Parser (b → Parser a)
+  , mixesPostfix ∷ Parser (b → Parser a)
+  , mixesInfix  ∷ Parser (b → b → Parser a)
+  , mixesInfixL ∷ Parser (b → b → Parser a)
+  , mixesInfixR ∷ Parser (b → b → Parser a)
   }
 
-instance Null (Mixes c a) where null = Mixes null null null null null
-instance Append (Mixes c a) where
+instance Null (Mixes a b) where null = Mixes null null null null null
+instance Append (Mixes a b) where
   Mixes pre₁ post₁ inf₁ infl₁ infr₁ ⧺ Mixes pre₂ post₂ inf₂ infl₂ infr₂ =
     Mixes (pre₁ ⧺ pre₂) (post₁ ⧺ post₂) (inf₁ ⧺ inf₂) (infl₁ ⧺ infl₂) $ infr₁ ⧺ infr₂
-instance Monoid (Mixes c a)
+instance Monoid (Mixes a b)
 
-data Mixfix c a = Mixfix
+data Mixfix a b = Mixfix
   { mixfixTerminals ∷ Parser a
-  , mixfixLevels ∷ ℕ64 ⇰ Mixes c a
+  , mixfixLevels ∷ ℕ64 ⇰ Mixes a b
   }
-instance Null (Mixfix c a) where null = Mixfix null null
-instance Append (Mixfix c a) where Mixfix ts₁ ls₁ ⧺ Mixfix ts₂ ls₂ = Mixfix (ts₁ ⧺ ts₂) (ls₁ ⧺ ls₂)
-instance Monoid (Mixfix c a)
+instance Null (Mixfix a b) where null = Mixfix null null
+instance Append (Mixfix a b) where Mixfix ts₁ ls₁ ⧺ Mixfix ts₂ ls₂ = Mixfix (ts₁ ⧺ ts₂) (ls₁ ⧺ ls₂)
+instance Monoid (Mixfix a b)
 
-mixOnlyTerms ∷ Mixfix c a → Mixfix c a
+mixOnlyTerms ∷ Mixfix a b → Mixfix a b
 mixOnlyTerms m = Mixfix (mixfixTerminals m) null
 
-mixPrefix ∷ ℕ64 → Parser (𝐴 c a → Parser a) → Mixfix c a
+mixPrefix ∷ ℕ64 → Parser (b → Parser a) → Mixfix a b
 mixPrefix l p = null { mixfixLevels = dict [ l ↦ null { mixesPrefix = p } ] }
 
-mixPostfix ∷ ℕ64 → Parser (𝐴 c a → Parser a) → Mixfix c a
+mixPostfix ∷ ℕ64 → Parser (b → Parser a) → Mixfix a b
 mixPostfix l p = null { mixfixLevels = dict [ l ↦ null { mixesPostfix = p } ] }
 
-mixInfix ∷ ℕ64 → Parser (𝐴 c a → 𝐴 c a → Parser a) → Mixfix c a
+mixInfix ∷ ℕ64 → Parser (b → b → Parser a) → Mixfix a b
 mixInfix l p = null { mixfixLevels = dict [ l ↦ null { mixesInfix = p } ] }
 
-mixInfixL ∷ ℕ64 → Parser (𝐴 c a → 𝐴 c a → Parser a) → Mixfix c a
+mixInfixL ∷ ℕ64 → Parser (b → b → Parser a) → Mixfix a b
 mixInfixL l p = null { mixfixLevels = dict [ l ↦ null { mixesInfixL = p } ] }
 
-mixInfixR ∷ ℕ64 → Parser (𝐴 c a → 𝐴 c a → Parser a) → Mixfix c a
+mixInfixR ∷ ℕ64 → Parser (b → b → Parser a) → Mixfix a b
 mixInfixR l p = null { mixfixLevels = dict [ l ↦ null { mixesInfixR = p } ] }
 
-mixTerminal ∷ Parser a → Mixfix c a
+mixTerminal ∷ Parser a → Mixfix a b
 mixTerminal p = null { mixfixTerminals = p }
 
-mixfix ∷ (SrcCxt → c) → 𝕊 → Mixfix c a → Parser (𝐴 c a)
-mixfix f s m = 
-  let m' = GenMixfixF
-        { genMixfixFTerminals = unParser $ mixfixTerminals m
-        , genMixfixFLevels = mapOn (mixfixLevels m) $ \ ms → GenMixesF
-            { genMixesFPrefix = unParser $ mapp unParser $ mixesPrefix ms
-            , genMixesFPostfix = unParser $ mapp unParser $ mixesPostfix ms
-            , genMixesFInfix = unParser $ mappp unParser $ mixesInfix ms
-            , genMixesFInfixL = unParser $ mappp unParser $ mixesInfixL ms
-            , genMixesFInfixR = unParser $ mappp unParser $ mixesInfixR ms
+mixfix ∷ 𝕊 → (𝐴 SrcCxt a → b) → Mixfix a b → Parser b
+mixfix s mk m = 
+  let m' = GenMixfix
+        { genMixfixTerminals = unParser $ mixfixTerminals m
+        , genMixfixLevels = mapOn (mixfixLevels m) $ \ ms → GenMixes
+            { genMixesPrefix = unParser $ mapp unParser $ mixesPrefix ms
+            , genMixesPostfix = unParser $ mapp unParser $ mixesPostfix ms
+            , genMixesInfix = unParser $ mappp unParser $ mixesInfix ms
+            , genMixesInfixL = unParser $ mappp unParser $ mixesInfixL ms
+            , genMixesInfixR = unParser $ mappp unParser $ mixesInfixR ms
             }
         }
   in
-  Parser $ gfmixfix (gpNewContext s) gpNewExpressionContext (map (mapATag f) ∘ gpWithContextRendered) m'
+  Parser $ gmixfix (gpNewContext s) gpNewExpressionContext (mk ^∘ gpWithContextRendered) m'

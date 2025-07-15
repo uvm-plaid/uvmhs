@@ -26,10 +26,6 @@ module UVMHS.Lib.Parser
   , runGenParser₀
   , gparse,gparseIO,gparseIOMain
   -- * MIXFIX
-  , GenMixesF(..),GenMixfixF(..)
-  , gfmixOnlyTerms
-  , gfmixPrefix,gfmixPostfix,gfmixInfix,gfmixInfixL,gfmixInfixR,gfmixTerminal
-  , gfmixfix,gfmixfixWithContext
   , GenMixes(..),GenMixfix(..)
   , gmixOnlyTerms
   , gmixPrefix,gmixPostfix,gmixInfix,gmixInfixL,gmixInfixR,gmixTerminal
