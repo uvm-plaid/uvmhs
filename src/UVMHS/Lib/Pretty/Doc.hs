@@ -820,7 +820,7 @@ ppAppC f xs = Doc $ do
   unDoc $ ppAppCStyle ℓ (ppPun "(") (ppPun ")") (ppPun ",") f xs
 
 ppAppCStyleRec ∷ (ToIter (Doc ∧ Doc) t) ⇒ ℕ64 → Doc → Doc → Doc → Doc → Doc → t → Doc
-ppAppCStyleRec ℓ l r i f rel xs = 
+ppAppCStyleRec ℓ l r i rel f xs = 
   let fWidth = shapeAWidth $ docShape f
       fWidthSmall = fWidth ≤ 2
   in
