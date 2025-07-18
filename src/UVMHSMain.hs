@@ -17,8 +17,6 @@ import qualified Prelude as HS
 import qualified Language.Haskell.TH as TH
 import qualified Language.Haskell.TH.Syntax as TH
 
-import UVMHS.Lib.Pretty2.Shape2 ()
-
 main ∷ IO ()
 main = out "<UVMHS>"
 

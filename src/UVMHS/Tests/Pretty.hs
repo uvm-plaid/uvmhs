@@ -71,7 +71,7 @@ ppAppOpTight ∷ Doc → Doc → Doc
 ppAppOpTight = ppInflTight 10 $ ppString "@"
 
 ppApp' ∷ (ToIter Doc t) ⇒ Doc → t → Doc
-ppApp' = ppAppCStyle 10 (ppPun "(") (ppPun ")") $ ppPun ","
+ppApp' = ppAppCStyleL 10 (ppPun "(") (ppPun ")") $ ppPun ","
 
 ppField ∷ Doc → Doc → Doc
 ppField = ppInflTight 20 $ ppPun "."

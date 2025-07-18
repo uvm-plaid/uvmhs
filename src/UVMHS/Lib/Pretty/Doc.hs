@@ -798,12 +798,12 @@ ppAppsML x xs = Doc $ do
 --          )
 --       )
 --
-ppAppCStyle ∷ (ToIter Doc t) ⇒ ℕ64 → Doc → Doc → Doc → Doc → t → Doc
-ppAppCStyle ℓ l r i f xs = 
+ppAppCStyle ∷ (ToIter Doc t) ⇒ Doc → Doc → Doc → Doc → t → Doc
+ppAppCStyle l r i f xs = 
   let fWidth = shapeAWidth $ docShape f
       fWidthSmall = fWidth ≤ 2
   in
-  ppLevel ℓ $ concat
+  concat
     [ ppGA f
     , ppG $ concat
         [ ppWhenBreak $
@@ -814,17 +814,20 @@ ppAppCStyle ℓ l r i f xs =
         ]
     ]
 
+ppAppCStyleL ∷ (ToIter Doc t) ⇒ ℕ64 → Doc → Doc → Doc → Doc → t → Doc
+ppAppCStyleL ℓ l r i f xs = ppLevel ℓ $ ppAppCStyle l r i f xs
+
 ppAppC ∷ (ToIter Doc t) ⇒ Doc → t → Doc
 ppAppC f xs = Doc $ do
   ℓ ← askL $ appLevelL ⊚ docEnvPrettyParamsL
-  unDoc $ ppAppCStyle ℓ (ppPun "(") (ppPun ")") (ppPun ",") f xs
+  unDoc $ ppAppCStyleL ℓ (ppPun "(") (ppPun ")") (ppPun ",") f xs
 
-ppAppCStyleRec ∷ (ToIter (Doc ∧ Doc) t) ⇒ ℕ64 → Doc → Doc → Doc → Doc → Doc → t → Doc
-ppAppCStyleRec ℓ l r i rel f xs = 
+ppAppCStyleRec ∷ (ToIter (Doc ∧ Doc) t) ⇒ Doc → Doc → Doc → Doc → Doc → t → Doc
+ppAppCStyleRec l r i rel f xs = 
   let fWidth = shapeAWidth $ docShape f
       fWidthSmall = fWidth ≤ 2
   in
-  ppLevel ℓ $ concat
+  concat
     [ ppGA f
     , ppG $ concat
         [ ppWhenBreak $
@@ -834,6 +837,10 @@ ppAppCStyleRec ℓ l r i rel f xs =
         , ppEGA $ ppCollectionRec l r i rel xs
         ]
     ]
+
+ppAppCStyleRecL ∷ (ToIter (Doc ∧ Doc) t) ⇒ ℕ64 → Doc → Doc → Doc → Doc → Doc → t → Doc
+ppAppCStyleRecL ℓ l r i rel f xs = ppLevel ℓ $ ppAppCStyleRec l r i rel f xs
+
 -- FLAT
 --
 --     ! f x
