@@ -1118,23 +1118,6 @@ test [| lexerTestA $ concat $ inbetween "\n"
           ]
      |]
 test [| lexerTestA $ concat $ inbetween "\n"
-          [ "a b"
-          , ", c d"
-          ]
-     |] 
-     [| concat $ inbetween "\n" 
-          [ "Parse Failure"
-          , "Source:"
-          , "> <>"
-          , "> line:2 column:1"
-          , "One of:"
-          , "a b;"
-          , ", c d"
-          , "^"
-          , "Expected matching bracket OPEN ‹(› before this bracket SEP"
-          ]
-     |]
-test [| lexerTestA $ concat $ inbetween "\n"
           [ "(a b"
           , ") c d"
           ]
@@ -1276,6 +1259,31 @@ test [| lexerTestU $ concat $ inbetween "\n"
           , "local{}"
           , "e ["
           , "f ] g h"
+          ]
+     |]
+
+testSection "lexer:rogue-sep"
+
+test [| lexerTestU $ concat $ inbetween "\n"
+          [ "a b c"
+          , ","
+          , "d e"
+          ]
+     |]
+     [| concat $ inbetween "\n"
+          [ "a b c"
+          , ","
+          , "d e"
+          ]
+     |]
+test [| lexerTestA $ concat $ inbetween "\n"
+          [ "a b"
+          , ", c d"
+          ]
+     |] 
+     [| concat $ inbetween "\n" 
+          [ "a b;"
+          , ", c d"
           ]
      |]
 

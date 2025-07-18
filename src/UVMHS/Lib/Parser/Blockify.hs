@@ -335,12 +335,16 @@ blockifyEmitToken t = do
               -- - fail
               closeBrackets ← askL blockifyEnvCloseBracketsL
               let expectedCloses = openBracketInfoCloses bt
-              blockifyError (Some t) $ concat $ inbetween " " 
-                [ "matching bracket CLOSE"
-                , concat $ inbetween " OR " $ mapOn (iter expectedCloses) $ \ tᵢ → concat ["‹",getDisplayToken ⋕! tᵢ,"›" ]
-                , "before this bracket"
-                , if tVal ∈ closeBrackets then "CLOSE" else "SEP"
-                ]
+              -- if the erroneous token is a CLOSE, let's fail with an error
+              -- otherwise (it's a SEP) let's just ignore it (treat it as any
+              -- other non-special token)
+              when (tVal ∈ closeBrackets) $ \ () →
+                blockifyError (Some t) $ concat $ inbetween " " 
+                  [ "matching bracket CLOSE"
+                  , concat $ inbetween " OR " $ mapOn (iter expectedCloses) $ \ tᵢ → concat ["‹",getDisplayToken ⋕! tᵢ,"›" ]
+                  , "before this bracket"
+                  , if tVal ∈ closeBrackets then "CLOSE" else "SEP"
+                  ]
           Nil → do
             ---------------------------------------------
             -- IT IS A BRACKET TOKEN FOR PARENT ANCHOR --
@@ -356,18 +360,24 @@ blockifyEmitToken t = do
             -- - repeat
             tokenDepth ← getL blockifyStateBracketTokenDepthL
             closeBrackets ← askL blockifyEnvCloseBracketsL
-            when (tokenDepth ⋕? tVal ∈♭ pow [None,Some 0]) $ \ () →
-              blockifyError (Some t) $ concat $ inbetween " "
-                [ "matching bracket OPEN"
-                , concat $ inbetween " OR " $ do
-                    tᵢ ← iter $ getOpenBracket ⋕! tVal
-                    return $ concat ["‹",getDisplayToken ⋕! tᵢ,"›"]
-                , "before this bracket"
-                , if tVal ∈ closeBrackets then "CLOSE" else "SEP"
-                ]
-            blockifyEmitSyntheticToken Close_BT
-            blockifyPopAnchor $ Some t
-            again ()
+            if tokenDepth ⋕? tVal ∈♭ pow [None,Some 0]
+            then
+              -- if the erroneous token is a CLOSE, let's fail with an error
+              -- otherwise (it's a SEP) let's just ignore it (treat it as any
+              -- other non-special token)
+              when (tVal ∈ closeBrackets) $ \ () → 
+                blockifyError (Some t) $ concat $ inbetween " "
+                  [ "matching bracket OPEN"
+                  , concat $ inbetween " OR " $ do
+                      tᵢ ← iter $ getOpenBracket ⋕! tVal
+                      return $ concat ["‹",getDisplayToken ⋕! tᵢ,"›"]
+                  , "before this bracket"
+                  , if tVal ∈ closeBrackets then "CLOSE" else "SEP"
+                  ]
+            else do
+              blockifyEmitSyntheticToken Close_BT
+              blockifyPopAnchor $ Some t
+              again ()
   --------------------
   -- EMIT THE TOKEN --
   --------------------
