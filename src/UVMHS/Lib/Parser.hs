@@ -52,7 +52,9 @@ module UVMHS.Lib.Parser
   , pRender,pErr,pFinal,pTok,pTokAny,pTokRet,pTokShaped,pTokSat,pAny
   , pDie,pGuard,pFailEff
   , pTokName,pTokSyntax,pTokSyntaxAny,pTokNatN,pTokNatN64,pTokInt,pTokInt64,pTokNat,pTokNat64
-  , pTokDouble,pTokString,pTokChar,pTokBlock,pTokOpen,pTokClose,pTokSep
+  , pTokDouble,pTokString,pTokChar
+  , pTokIPv4Addr,pTokIPv4SubnetGlob,pTokIPv4SubnetSlash
+  , pTokBlock,pTokOpen,pTokClose,pTokSep
   , pNewExpressionContext,pNewErrContext,pNewContext,pWithContextRendered,pNewWithContextRendered,pGetContextRendered
   , parse,parseIO,parseIOMain
   , lexParse,lexParseIO,lexParseIOMain
