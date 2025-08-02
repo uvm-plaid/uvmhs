@@ -9,6 +9,7 @@ module UVMHS.Lib.Parser
   , ParserToken(..),preTokens,finalizeTokens,tokens,renderParserTokens
   -- * GENERIC TYPES
   -- ** REGEX
+  , Classified(..)
   , Regex(..)
   , nullRegex
   , resRegex,epsRegex,retRegex,outRegex,lepsRegex,fepsRegex,oepsRegex,uepsRegex

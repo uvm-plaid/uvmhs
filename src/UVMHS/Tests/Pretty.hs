@@ -2272,4 +2272,63 @@ prop
      )
   |] [| testit |] [| showit |]
 
+testSection "pretty:force-break"
+
+prop 
+  [| ( ppRenderNoFmtWide $ concat
+         [ null
+         , ppString "X"
+         , ppNewlineIfBreak
+         , ppString "Y"
+         ] 
+     , concat $ inbetween "\n"
+         [ "XY"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWide $ concat
+         [ ppForceBreak
+         , ppString "X"
+         , ppNewlineIfBreak
+         , ppString "Y"
+         ] 
+     , concat $ inbetween "\n"
+         [ "X"
+         , "Y"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWide $ concat
+         [ ppForceBreak
+         , ppG $ concat
+             [ ppString "X"
+             , ppNewlineIfBreak
+             , ppString "Y"
+             ]
+         ] 
+     , concat $ inbetween "\n"
+         [ "XY"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
+prop 
+  [| ( ppRenderNoFmtWide $ concat
+         [ ppG $ concat
+             [ ppString "X"
+             , ppNewlineIfBreak
+             , ppString "Y"
+             ]
+         , ppForceBreak
+         ] 
+     , concat $ inbetween "\n"
+         [ "XY"
+         ]
+     )
+  |] [| testit |] [| showit |]
+
 buildTests

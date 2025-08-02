@@ -113,6 +113,11 @@ foldWithOn = rotateL fold
 foldWithFrom ∷ (ToIter a t) ⇒ (a → b → b) → b → t → b
 foldWithFrom = flip fold
 
+-- `foldk` is like a normal fold, but where the folding function takes a
+-- continuation parameter. The continuation parameter is the continuation of
+-- the fold over all elements, and must be called to continue the fold.
+-- Returning a value from the folding function without calling the continuation
+-- will terminate the fold early.
 foldk ∷ (ToIter a t) ⇒ b → (a → b → (b → b) → b) → t → b
 foldk i f = foldk𝐼 i f ∘ iter
 

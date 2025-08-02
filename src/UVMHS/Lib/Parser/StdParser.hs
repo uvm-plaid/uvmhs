@@ -171,6 +171,46 @@ lCommentMLBody = sequence
   , fepsRegex $ formats [IT,FG grayLight]
   ]
 
+lIPv4Addr ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex StdCharClass ℂ o u
+lIPv4Addr = sequence
+  [ oom $ concat $ map tokRegex ['0'..'9']
+  , tokRegex '.'
+  , oom $ concat $ map tokRegex ['0'..'9']
+  , tokRegex '.'
+  , oom $ concat $ map tokRegex ['0'..'9']
+  , tokRegex '.'
+  , oom $ concat $ map tokRegex ['0'..'9']
+  , fepsRegex $ formats [FG red]
+  , lepsRegex 101
+  ]
+
+lIPv4SubnetGlob ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex StdCharClass ℂ o u
+lIPv4SubnetGlob = sequence
+  [ oom $ concat $ map tokRegex $ ['*'] ⧺ ['0'..'9']
+  , tokRegex '.'
+  , oom $ concat $ map tokRegex $ ['*'] ⧺ ['0'..'9']
+  , tokRegex '.'
+  , oom $ concat $ map tokRegex $ ['*'] ⧺ ['0'..'9']
+  , tokRegex '.'
+  , oom $ concat $ map tokRegex $ ['*'] ⧺ ['0'..'9']
+  , fepsRegex $ formats [FG red]
+  , lepsRegex 100
+  ]
+  
+lIPv4SubnetSlash ∷ (Zero u,Ord o,Ord u,Additive u) ⇒ Regex StdCharClass ℂ o u
+lIPv4SubnetSlash = sequence
+  [ oom $ concat $ map tokRegex ['0'..'9']
+  , tokRegex '.'
+  , oom $ concat $ map tokRegex ['0'..'9']
+  , tokRegex '.'
+  , oom $ concat $ map tokRegex ['0'..'9']
+  , tokRegex '.'
+  , oom $ concat $ map tokRegex ['0'..'9']
+  , tokRegex '/'
+  , oom $ concat $ map tokRegex ['0'..'9']
+  , fepsRegex $ formats [FG red]
+  ]
+
 -----------
 -- LEXER --
 -----------
@@ -187,9 +227,57 @@ data TokenClass =
   | Dbl_TC
   | Char_TC
   | Syntax_TC
+  | IPv4Addr_TC
+  | IPv4SubnetGlob_TC
+  | IPv4SubnetSlash_TC
   deriving (Eq,Ord,Show)
 makePrisms ''TokenClass
 makePrettySum ''TokenClass
+
+data IPv4Addr = IPv4Addr ℕ8 ℕ8 ℕ8 ℕ8
+  deriving (Eq,Ord,Show)
+
+instance Pretty IPv4Addr where
+  pretty (IPv4Addr n₁ n₂ n₃ n₄) = concat
+    [ pretty n₁
+    , ppLit "."
+    , pretty n₂
+    , ppLit "."
+    , pretty n₃
+    , ppLit "."
+    , pretty n₄
+    ]
+
+data IPv4SubnetGlob = IPv4SubnetGlob (𝑂 ℕ8) (𝑂 ℕ8) (𝑂 ℕ8) (𝑂 ℕ8)
+  deriving (Eq,Ord,Show)
+
+instance Pretty IPv4SubnetGlob where
+  pretty (IPv4SubnetGlob nO₁ nO₂ nO₃ nO₄) = concat
+    [ elim𝑂 (const $ ppLit "*") pretty nO₁
+    , ppLit "."
+    , elim𝑂 (const $ ppLit "*") pretty nO₂
+    , ppLit "."
+    , elim𝑂 (const $ ppLit "*") pretty nO₃
+    , ppLit "."
+    , elim𝑂 (const $ ppLit "*") pretty nO₄
+    ]
+
+
+data IPv4SubnetSlash = IPv4SubnetSlash ℕ8 ℕ8 ℕ8 ℕ8 ℕ8
+  deriving (Eq,Ord,Show)
+
+instance Pretty IPv4SubnetSlash where
+  pretty (IPv4SubnetSlash n₁ n₂ n₃ n₄ n₅) = concat
+    [ pretty n₁
+    , ppLit "."
+    , pretty n₂
+    , ppLit "."
+    , pretty n₃
+    , ppLit "."
+    , pretty n₄
+    , ppLit "/"
+    , pretty n₅
+    ]
 
 data Token =
     Space_T 𝕊
@@ -203,6 +291,9 @@ data Token =
   | Dbl_T 𝔻
   | Char_T ℂ
   | Syntax_T 𝕊
+  | IPv4Addr_T IPv4Addr
+  | IPv4SubnetGlob_T  IPv4SubnetGlob
+  | IPv4SubnetSlash_T IPv4SubnetSlash
   | BlockOpen_T
   | BlockClose_T
   | BlockSep_T
@@ -210,20 +301,43 @@ data Token =
 makePrisms ''Token
 makePrettySum ''Token
 
+parseIPv4AddrToken ∷ 𝐼C ℂ → IPv4Addr
+parseIPv4AddrToken cs = case lazyList $ splitOn𝕊 "." $ string cs of
+  [n₁,n₂,n₃,n₄] → IPv4Addr (read𝕊 n₁) (read𝕊 n₂) (read𝕊 n₃) $ read𝕊 n₄
+  _ → error "INTERNAL ERROR: parseIPv4AddrToken"
+
+parseIPv4SubnetGlobToken ∷ 𝐼C ℂ → IPv4SubnetGlob
+parseIPv4SubnetGlobToken cs = 
+  let process s =
+        if s ≡ "*" then None else Some $ read𝕊 s
+  in case lazyList $ splitOn𝕊 "." $ string cs of
+    [n₁,n₂,n₃,n₄] → IPv4SubnetGlob (process n₁) (process n₂) (process n₃) $ process n₄
+    _ → error "INTERNAL ERROR: parseIPv4SubnetGlob"
+
+parseIPv4SubnetSlashToken ∷ 𝐼C ℂ → IPv4SubnetSlash
+parseIPv4SubnetSlashToken cs = case lazyList $ splitOn𝕊 "." $ string cs of 
+  [n₁,n₂,n₃,n₄] → case lazyList $ splitOn𝕊 "/" n₄ of
+    [n₄1,n₄2] → IPv4SubnetSlash (read𝕊 n₁) (read𝕊 n₂) (read𝕊 n₃) (read𝕊 n₄1) $ read𝕊 n₄2
+    _ → error "INTERNAL ERROR: parseIPv4SubnetSlash"
+  _ → error "INTERNAL ERROR: parseIPv4SubnetSlash"
+
 mkToken ∷ 𝐼C ℂ → 𝑂 TokenClass → 𝔹 ∧ Token
 mkToken cs = \case
   None → error "no token class"
-  Some Space_TC → (:*) True $ Space_T $ stringCS cs
-  Some Newline_TC → (:*) True $ Newline_T $ stringCS cs
-  Some Comment_TC → (:*) True $ Comment_T $ stringCS cs
-  Some Block_TC → (:*) False $ Block_T $ stringCS cs
-  Some String_TC → (:*) False $ String_T $ read𝕊 $ stringCS cs
-  Some Name_TC → (:*) False $ Name_T $ stringCS cs
-  Some Nat_TC → (:*) False $ Nat_T $ read𝕊 $ string $ filter (\ c → c ∉ pow𝑃 ['_','n']) cs
-  Some Int_TC → (:*) False $ Int_T $ read𝕊 $ string $ filter ((≢) '_') cs
-  Some Dbl_TC → (:*) False $ Dbl_T $ read𝕊 $ string $ filter ((≢) '_') cs
-  Some Char_TC → (:*) False $ Char_T $ read𝕊 $ stringCS cs
-  Some Syntax_TC → (:*) False $ Syntax_T $ stringCS cs
+  Some Space_TC           → (:*) True  $ Space_T $ stringCS cs
+  Some Newline_TC         → (:*) True  $ Newline_T $ stringCS cs
+  Some Comment_TC         → (:*) True  $ Comment_T $ stringCS cs
+  Some Block_TC           → (:*) False $ Block_T $ stringCS cs
+  Some String_TC          → (:*) False $ String_T $ read𝕊 $ stringCS cs
+  Some Name_TC            → (:*) False $ Name_T $ stringCS cs
+  Some Nat_TC             → (:*) False $ Nat_T $ read𝕊 $ string $ filter (\ c → c ∉ pow𝑃 ['_','n']) cs
+  Some Int_TC             → (:*) False $ Int_T $ read𝕊 $ string $ filter ((≢) '_') cs
+  Some Dbl_TC             → (:*) False $ Dbl_T $ read𝕊 $ string $ filter ((≢) '_') cs
+  Some Char_TC            → (:*) False $ Char_T $ read𝕊 $ stringCS cs
+  Some Syntax_TC          → (:*) False $ Syntax_T $ stringCS cs
+  Some IPv4Addr_TC        → (:*) False $ IPv4Addr_T $ parseIPv4AddrToken cs
+  Some IPv4SubnetGlob_TC  → (:*) False $ IPv4SubnetGlob_T $ parseIPv4SubnetGlobToken cs
+  Some IPv4SubnetSlash_TC → (:*) False $ IPv4SubnetSlash_T $ parseIPv4SubnetSlashToken cs
 
 data Syntax = Syntax
   { syntaxBrkss ∷ 𝕊 ⇰ 𝑃 𝕊 ∧ 𝑃 𝕊  -- ^ brackets       (default color gray)
@@ -312,6 +426,9 @@ lToken syntax =
   , lComment          ▷ oepsRegex Comment_TC
   , lCommentMLOpen    ▷ oepsRegex Comment_TC
   , regexSyntax syntax
+  , lIPv4Addr         ▷ oepsRegex IPv4Addr_TC
+  , lIPv4SubnetGlob   ▷ oepsRegex IPv4SubnetGlob_TC
+  , lIPv4SubnetSlash  ▷ oepsRegex IPv4SubnetSlash_TC
   ]
 
 lTokenCommentMLBody ∷ Regex StdCharClass ℂ TokenClass ℤ64
@@ -458,12 +575,6 @@ pNewGetContextRendered = Parser gpNewGetContextRendered
 pTokName ∷ Parser 𝕊
 pTokName = Parser $ gpTokShaped $ view name_TL
 
-pTokSyntax ∷ 𝕊 → Parser ()
-pTokSyntax = Parser ∘ gpTok ∘ Syntax_T
-
-pTokSyntaxAny ∷ (ToIter 𝕊 t) ⇒ t → Parser ()
-pTokSyntaxAny = Parser ∘ gpTokAny ∘ map Syntax_T ∘ iter
-
 pTokNatN ∷ Parser ℕ
 pTokNatN = Parser $ gpTokShaped $ view nat_TL
 
@@ -490,6 +601,21 @@ pTokString = Parser $ gpTokShaped $ view string_TL
 
 pTokChar ∷ Parser ℂ
 pTokChar = Parser $ gpTokShaped $ view char_TL
+
+pTokSyntax ∷ 𝕊 → Parser ()
+pTokSyntax = Parser ∘ gpTok ∘ Syntax_T
+
+pTokSyntaxAny ∷ (ToIter 𝕊 t) ⇒ t → Parser ()
+pTokSyntaxAny = Parser ∘ gpTokAny ∘ map Syntax_T ∘ iter
+
+pTokIPv4Addr ∷ Parser IPv4Addr
+pTokIPv4Addr = Parser $ gpTokShaped $ view iPv4Addr_TL
+
+pTokIPv4SubnetGlob ∷ Parser IPv4SubnetGlob
+pTokIPv4SubnetGlob = Parser $ gpTokShaped $ view iPv4SubnetGlob_TL
+
+pTokIPv4SubnetSlash ∷ Parser IPv4SubnetSlash
+pTokIPv4SubnetSlash = Parser $ gpTokShaped $ view iPv4SubnetSlash_TL
 
 pTokBlock ∷ 𝕊 → Parser ()
 pTokBlock = Parser ∘ gpTok ∘ Block_T
