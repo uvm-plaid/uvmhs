@@ -36,6 +36,7 @@ module UVMHS.Lib.Parser
   , StdCharClass(..)
   , lWord,lSpaceOrNL,lSpace,lNL,lName,lNatPre,lNat,lNatCoded,lIntPre,lInt,lDbl,lString
   , lComment,lCommentMLOpen,lCommentMLBodyOpen,lCommentMLBodyClose,lCommentMLBody
+  , IPv4Addr(..),IPv4SubnetGlob(..),IPv4SubnetSlash(..)
   -- ** Lexer
   , TokenClass(..)
   , Token(..)
