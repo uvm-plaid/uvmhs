@@ -367,7 +367,7 @@ assert = \ b → HS.assert (b ()) ()
 ------------------------------
 
 ($) ∷ ∀ r a (b ∷ HS.TYPE r). (a → b) → a → b
-f $ x = f x
+($) = \ f x → f x
 
 id ∷ a → a
 id = \ x → x
@@ -379,7 +379,7 @@ const ∷ a → b → a
 const = \ x _ → x
 
 (∘) ∷ (b → c) → (a → b) → a → c
-g ∘ f = \ x → g (f x)
+(∘) = \ g f x → g (f x)
 
 (∘∘) ∷ (c → d) → (a → b → c) → (a → b → d)
 (∘∘) = (∘) ∘ (∘)
