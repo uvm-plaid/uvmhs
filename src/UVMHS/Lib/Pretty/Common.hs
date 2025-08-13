@@ -93,6 +93,18 @@ treeIO = map𝑇V formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single 
 -- SummaryI --
 --------------
 
+-- data AlignPosition = AlignPosition
+--   { alignPositionAligned ∷ 𝔹
+--   , alignPositionLength ∷ ℕ64
+--   } deriving (Eq,Ord,Show)
+-- 
+-- instance Null AlignPosition where
+--   null = AlignPosition True 0
+-- instance Append AlignPosition where
+--   AlignPosition a₁ l₁ ⧺ AlignPosition a₂ l₂ = AlignPosition (a₁ ⩓ a₂) $ l₁ + l₂
+-- instance Monoid AlignPosition
+
+
 data SummaryI = SummaryI
   { summaryIForceBreak ∷ 𝔹
   , summaryIShape ∷ ShapeA
@@ -113,12 +125,20 @@ instance Append SummaryI where
   SummaryI b₁ sh₁ cs₁ ⧺ SummaryI b₂ sh₂ cs₂ =
     let cs' = concat
           [ cs₁
-          , mappOn cs₂ $ \ c →
-              let c' = extendAlignedNewlinesIChunk (shapeALastLength sh₁) c
-                  aO = shapeALastAlign sh₁
-              in case c' of
-                RawChunkI l s → RawChunkI l s
-                NewlineChunkI la l → NewlineChunkI (elim𝑂 (const id) (⩓) aO la) l
+          , annote𝑇V (indentAnnotation 0 sh₁) cs₂
+          -- , mappOn cs₂ $ \ c →
+          --     -- let -- c' = extendAlignedNewlinesIChunk (shapeALastLength sh₁) c
+          --     --     aO = shapeALastAlign sh₁
+          --     -- in 
+          --     case c of
+          --       RawChunkI l s → RawChunkI l s
+          --       NewlineChunkI la l → 
+          --         let la' = case shapeALastAlign sh₁ of 
+          --               None → la 
+          --               Some laᵢ → la ⩓ laᵢ
+          --             l' = if la then l + shapeALastLength sh₁ else l
+          --         in
+          --         NewlineChunkI la' l'
           ]
     in SummaryI (b₁ ⩔ b₂) (sh₁ ⧺ sh₂) cs'
 instance Monoid SummaryI

@@ -70,9 +70,10 @@ renderSummaryI ∷ SummaryI → DocAM ()
 renderSummaryI s = do
   nest ← askL docAEnvNestL
   col ← getL docAStateColL
-  tell $ mappOn (summaryIContents s) $ \case
-    NewlineChunkI a n → NewlineChunkI False $ n + nest + (if a then col else 0)
-    c → c
+  tell $ annote𝑇V (indentAnnotation nest $ SingleLineA col) $ summaryIContents s
+  -- mappOn (summaryIContents s) $ \case
+  --   NewlineChunkI a n → NewlineChunkI False $ n + nest + (if a then col else 0)
+  --   c → c
   case summaryIShape s of
     SingleLineA l → do
       modifyL docAStateRibL $ (+) l

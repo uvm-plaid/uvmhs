@@ -34,6 +34,8 @@ instance (TH.Lift a) ⇒ TH.Lift (() → a) where
     let x = f ()
     in [|| \ () → x ||]
 deriving instance (TH.Lift a,TH.Lift b) ⇒ TH.Lift (a ∧ b)
+deriving instance TH.Lift ShapeMA
+deriving instance TH.Lift ShapeA
 deriving instance TH.Lift Annotation
 deriving instance TH.Lift Formats
 deriving instance TH.Lift Color

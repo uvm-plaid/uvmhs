@@ -7,14 +7,21 @@ import UVMHS.Lib.Sep
 
 import UVMHS.Lib.Pretty.Annotation
 import UVMHS.Lib.Pretty.Common
+import UVMHS.Lib.Pretty.Shape
 
 data RenderUTEnv = RenderUTEnv
-  { renderUTEnvUnderFormat ∷ 𝑂 (ℂ ∧ Formats) }
+  { renderUTEnvUnderFormat ∷ 𝑂 (ℂ ∧ Formats) 
+  , renderUTEnvNest ∷ ℕ64
+  , renderUTEnvIndent ∷ ShapeA
+  }
 makeLenses ''RenderUTEnv
 
 renderUTEnv₀ ∷ RenderUTEnv
 renderUTEnv₀ = RenderUTEnv
-  { renderUTEnvUnderFormat = None }
+  { renderUTEnvUnderFormat = None 
+  , renderUTEnvNest = 0
+  , renderUTEnvIndent = null
+  }
 
 data RenderUTState = RenderUTState
   { t2StateCol ∷ ℕ64
@@ -54,9 +61,12 @@ buildUndertags l = do
       col ← getL t2StateColL
       modifyL t2StateUndersL $ pospend $ single (col :* l :* c :* fm)
 
-renderNewline ∷ ℕ64 → RenderUTM ()
-renderNewline n = do
-  tell $ summaryChunksO $ sepI () ⧺ SepE (single $ PaddingChunkO n)
+renderNewline ∷ 𝔹 → ℕ64 → RenderUTM ()
+renderNewline a n = do
+  nst ← askL renderUTEnvNestL
+  sh ← askL renderUTEnvIndentL
+  let n' = n + nst + if a then shapeALastLength sh else 0
+  tell $ summaryChunksO $ sepI () ⧺ SepE (single $ PaddingChunkO n')
   putL t2StateColL n
 
 renderRaw ∷ ℕ64 → 𝕊 → RenderUTM ()
@@ -79,7 +89,7 @@ renderUndertags = do
   case us ≡ null of
     True → skip
     False → do
-      renderNewline zero
+      renderNewline False zero
       eachOn us $ \ (colf :* l :* c :* fm) → do
         col ← getL t2StateColL
         renderPadding $ colf - col
@@ -88,10 +98,14 @@ renderUndertags = do
 renderChunkUndertags ∷ ChunkI → RenderUTM ()
 renderChunkUndertags = \case
   RawChunkI l s → do buildUndertags l ; renderRaw l s
-  NewlineChunkI _ n → do renderUndertags ; renderNewline n
+  NewlineChunkI a n → do renderUndertags ; renderNewline a n
 
 annotateRenderUT ∷ Annotation → RenderUTM () → RenderUTM ()
-annotateRenderUT (Annotation fm ut) = mapOut (annotateSummaryO fm) ∘ mapEnvL renderUTEnvUnderFormatL (first𝑂 ut)
+annotateRenderUT (Annotation fm ut n i) = 
+  mapOut (annotateSummaryO fm) 
+  ∘ mapEnvL renderUTEnvUnderFormatL (first𝑂 ut)
+  ∘ mapEnvL renderUTEnvIndentL (pospend i)
+  ∘ mapEnvL renderUTEnvNestL ((+) n)
 
 compileRenderUT ∷ TreeI → RenderUT
 compileRenderUT rd = onRenderUT (\ xM → xM ≫ renderUndertags) $ un𝑇V rd fₑ fₐ

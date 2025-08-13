@@ -2,6 +2,7 @@ module UVMHS.Lib.Pretty.Annotation where
 
 import UVMHS.Core
 import UVMHS.Lib.Pretty.Color
+import UVMHS.Lib.Pretty.Shape
 
 -------------
 -- Formats --
@@ -58,16 +59,21 @@ override = list [NOFG,NOBG,NOUL,NOBD,NOIT]
 data Annotation = Annotation
   { annotationFormats ∷ Formats
   , annotationUndertag ∷ 𝑂 (ℂ ∧ Formats)
+  , annotationNest ∷ ℕ64
+  , annotationIndent ∷ ShapeA
   } deriving (Eq,Ord,Show)
 
 instance Null Annotation where
-  null = Annotation null None
+  null = Annotation null None 0 null
 instance Append Annotation where
-  Annotation a₁ u₁ ⧺ Annotation a₂ u₂ = Annotation (a₁ ⧺ a₂) (last𝑂 u₁ u₂)
+  Annotation a₁ u₁ n₁ s₁ ⧺ Annotation a₂ u₂ n₂ s₂ = Annotation (a₁ ⧺ a₂) (last𝑂 u₁ u₂) (n₁ + n₂) $ s₁ ⧺ s₂
 instance Monoid Annotation
 
 formatAnnotation ∷ Formats → Annotation
-formatAnnotation fm = Annotation fm None
+formatAnnotation fm = Annotation fm None 0 null
 
 undertagAnnotation ∷ ℂ → Formats → Annotation
-undertagAnnotation c fm = Annotation null $ Some (c :* fm)
+undertagAnnotation c fm = Annotation null (Some $ c :* fm) 0 null
+
+indentAnnotation ∷ ℕ64 → ShapeA → Annotation
+indentAnnotation = Annotation null None
