@@ -225,7 +225,7 @@ class Functor2Iso (w ∷ (★ → ★) → (★ → ★)) where map2iso ∷ Iso2
 (>>=) = (≫=)
 
 (>>) ∷ (Bind m) ⇒ m a → m b → m b
-(>>) = \ xM ~yM → xM ≫= \ _ → id yM
+(>>) = (≫)
 
 class Return (m ∷ ★ → ★) where return ∷ a → m a
 class Bind (m ∷ ★ → ★) where (≫=) ∷ m a → (a → m b) → m b
@@ -247,6 +247,7 @@ kreturn = \ f → return ∘ f
 extend ∷ (Bind m) ⇒ (a → m b) → (m a → m b)
 extend = \ f xM → xM ≫= f
 
+{-# INLINE (≫) #-}
 (≫) ∷ (Bind m) ⇒ m a → m b → m b
 (≫) = \ xM ~yM → xM ≫= \ _ → id yM
 

@@ -366,45 +366,59 @@ assert = \ b → HS.assert (b ()) ()
 -- Basic Function Functions --
 ------------------------------
 
+{-# INLINE ($) #-}
 ($) ∷ ∀ r a (b ∷ HS.TYPE r). (a → b) → a → b
 ($) = \ f x → f x
 
+{-# INLINE id #-}
 id ∷ a → a
 id = \ x → x
 
+{-# INLINE appto #-}
 appto ∷ a → (a → b) → b
 appto = \ x f → f x
 
+{-# INLINE const #-}
 const ∷ a → b → a
 const = \ x _ → x
 
+{-# INLINE (∘) #-}
 (∘) ∷ (b → c) → (a → b) → a → c
 (∘) = \ g f x → g (f x)
 
+{-# INLINE (∘∘) #-}
 (∘∘) ∷ (c → d) → (a → b → c) → (a → b → d)
 (∘∘) = (∘) ∘ (∘)
 
+{-# INLINE (∘∘∘) #-}
 (∘∘∘) ∷ (d → e) → (a → b → c → d) → a → b → c → e
 (∘∘∘) = (∘∘) ∘ (∘)
 
+{-# INLINE flip #-}
 flip ∷ (a → b → c) → (b → a → c)
 flip f = \ y x → f x y
 
+{-# INLINE rotateR #-}
 rotateR ∷ (a → b → c → d) → (c → a → b → d)
-rotateR f = \ c a b → f a b c
+rotateR = \ f c a b → f a b c
 
+{-# INLINE rotateL #-}
 rotateL ∷ (a → b → c → d) → (b → c → a → d)
-rotateL f = \ b c a → f a b c
+rotateL = \ f b c a → f a b c
 
+{-# INLINE mirror #-}
 mirror ∷ (a → b → c → d) → (c → b → a → d)
-mirror f = \ c b a → f a b c
+mirror = \ f c b a → f a b c
 
+{-# INLINE on #-}
 on ∷ (b → b → c) → (a → b) → (a → a → c)
-on p f = \ x y → p (f x) (f y)
+on = \ p f x y → p (f x) (f y)
 
+{-# INLINE uncurry #-}
 uncurry ∷ (a → b → c) → a ∧ b → c
-uncurry f = \ (x :* y) → f x y
+uncurry = \ f (x :* y) → f x y
 
+{-# INLINE curry #-}
 curry ∷ (a ∧ b → c) → a → b → c
 curry f = \ x y → f (x :* y)
 
