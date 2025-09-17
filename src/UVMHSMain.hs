@@ -42,6 +42,15 @@ test = do
   --     [ "UVMHS.Tests.Core"
   --     , "UVMHS.Tests.Substitution"
   --     ])
+  let n ∷ ℕ64
+      n = 11
+      thing ∷ Doc
+      thing = foldOnFrom (upto n) (ppString "•") $ \ _ t → ppVertical
+        [ ppCxt "b1" t
+        , ppCxt "b2" t
+        ]
+  pprint thing
+
 
 dev ∷ IO ()
 dev = cleanExit test
