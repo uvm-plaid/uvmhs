@@ -4,9 +4,6 @@ import UVMHS.Core
 import UVMHS.Lib.Parser
 import UVMHS.Lib.Pretty
 
-oops ∷ (Monad m,MonadReader r m,HasLens r e,MonadError e m) ⇒ m a
-oops = throw *$ askL hasLens
-
 data GError = GError
   { gerrorTyp ∷ () → 𝕊
   , gerrorLoc ∷ () → 𝑃 SrcCxt
@@ -30,6 +27,9 @@ gerrorFromIO ∷ IOError → GError
 gerrorFromIO e = GError (const "IO Error") null (\ () → show𝕊 e) null
 
 -- ERR AS STATE EFFECT --
+
+oops ∷ (Monad m,MonadState s m,HasLens s e,MonadError e m) ⇒ m a
+oops = throw *$ getL hasLens
 
 localizeErr ∷ (Monad m,MonadState s m,HasLens s GError) ⇒ m a → m a
 localizeErr = localizeL $ hasLens @_ @GError
@@ -71,6 +71,9 @@ getErrCxtDoc ∷ (Monad m,MonadState s m,HasLens s GError) ⇒ m Doc
 getErrCxtDoc = ppVertical ∘ reverse ^$ getErrCxt
 
 -- ERR AS READER EFFECT --
+
+oopsEnv ∷ (Monad m,MonadReader r m,HasLens r e,MonadError e m) ⇒ m a
+oopsEnv = throw *$ askL hasLens
 
 setErrTypEnv ∷ (Monad m,MonadReader r m,HasLens r GError) ⇒ (() → 𝕊) → m a → m a
 setErrTypEnv = localL $ gerrorTypL ⊚ hasLens
