@@ -227,7 +227,7 @@ getL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → m a
 getL l = map (access l) get
 
 putL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → a → m ()
-putL 𝓁 = modify ∘ update 𝓁
+putL ℓ = modify ∘ update ℓ
 
 modify ∷ (Monad m,MonadState s m) ⇒ (s → s) → m ()
 modify f = do
@@ -240,10 +240,10 @@ modifyM f = do
   put *$ f s
 
 modifyL ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → (a → a) → m ()
-modifyL 𝓁 = modify ∘ alter 𝓁
+modifyL ℓ = modify ∘ alter ℓ
 
 modifyML ∷ (Monad m,MonadState s m) ⇒ s ⟢ a → (a → m a) → m ()
-modifyML 𝓁 = modifyM ∘ alterM 𝓁
+modifyML ℓ = modifyM ∘ alterM ℓ
 
 getput ∷ (Monad m,MonadState s m) ⇒ s → m s
 getput s = do
@@ -252,9 +252,9 @@ getput s = do
   return s'
 
 getputL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → s₂ → m s₂
-getputL 𝓁 x = do
-  x' ← getL 𝓁
-  putL 𝓁 x
+getputL ℓ x = do
+  x' ← getL ℓ
+  putL ℓ x
   return x'
 
 next ∷ (Monad m,MonadState s m,Multiplicative s) ⇒ m s
@@ -275,25 +275,29 @@ bump = modify succ
 bumpL ∷ (Monad m,MonadState s m,Multiplicative a) ⇒ s ⟢ a → m ()
 bumpL l = modifyL l succ
 
-localize ∷ (Monad m,MonadState s m) ⇒ s → m a → m (s ∧ a)
-localize s xM = do
+localizeState ∷ (Monad m,MonadState s m) ⇒ s → m a → m (s ∧ a)
+localizeState s xM = do
   s' ← getput s
   x ← xM
   s'' ← getput s'
   return (s'' :* x)
 
-localizeL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → s₂ → m a → m (s₂ ∧ a)
-localizeL 𝓁 s₂ aM = do
-  s₂' ← getputL 𝓁 s₂
+localizeStateL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → s₂ → m a → m (s₂ ∧ a)
+localizeStateL ℓ s₂ aM = do
+  s₂' ← getputL ℓ s₂
   x ← aM
-  s₂'' ← getputL 𝓁 s₂'
+  s₂'' ← getputL ℓ s₂'
   return (s₂'' :* x)
 
-localState ∷ (Monad m,MonadState s m) ⇒ s → m a → m a
-localState s = map snd ∘ localize s
+localize ∷ (Monad m,MonadState s m) ⇒ m a → m a
+localize xM = do
+  s ← get
+  snd ^$ localizeState s xM
 
-localStateL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → s₂ → m a → m a
-localStateL 𝓁 s = map snd ∘ localizeL 𝓁 s
+localizeL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → m a → m a
+localizeL ℓ xM = do
+  s ← getL ℓ
+  snd ^$ localizeStateL ℓ s xM
 
 retState ∷ (Monad m,MonadState s m) ⇒ m a → m s
 retState xM = do
@@ -307,20 +311,15 @@ retStateOut xM = do
   return $ s :* o
 
 tellStateL ∷ (Monad m,MonadState o₁ m,Append o₂) ⇒ o₁ ⟢ o₂ → o₂ → m ()
-tellStateL 𝓁 o = modifyL 𝓁 $ (⧺) o
+tellStateL ℓ o = modifyL ℓ $ (⧺) o
 
 hijackStateL ∷ (Monad m,MonadState o₁ m,Null o₂) ⇒ o₁ ⟢ o₂ → m a → m (o₂ ∧ a)
-hijackStateL 𝓁 aM = localizeL 𝓁 null aM
+hijackStateL ℓ aM = localizeStateL ℓ null aM
 
 localMapStateL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → (s₂ → s₂) → m a → m a
 localMapStateL ℓ f xM = do
   s ← getL ℓ
-  snd ^$ localizeL ℓ (f s) xM
-
-localStateEffectsL ∷ (Monad m,MonadState s₁ m) ⇒ s₁ ⟢ s₂ → m a → m a
-localStateEffectsL ℓ xM = do
-  s ← getL ℓ
-  localStateL ℓ s xM
+  snd ^$ localizeStateL ℓ (f s) xM
 
 -- Fail
 
