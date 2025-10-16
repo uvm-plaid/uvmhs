@@ -18,7 +18,8 @@ data ChunkI =
     RawChunkI ℕ64 𝕊
   --              ^
   --              string with no newlines
-  | NewlineChunkI 𝔹 ℕ64
+  | PaddingChunkI ℕ64
+  | NewlineChunkI -- 𝔹 ℕ64
   --              ^ ^^^
   --        aligned indent after newline
   deriving (Eq,Ord,Show)
@@ -30,18 +31,19 @@ splitChunksI ∷ 𝕊 → 𝐼 ChunkI
 splitChunksI s =
   materialize
   $ filter (\ c → c ≢ RawChunkI (𝕟64 0) "")
-  $ inbetween (NewlineChunkI False zero)
+  $ inbetween NewlineChunkI
   $ map rawChunksI $ splitOn𝕊 "\n" s
 
 shapeIChunk ∷ ChunkI → Shape
 shapeIChunk = \case
   RawChunkI l _ → SingleLine l
-  NewlineChunkI _ n → newlineShape ⧺ SingleLine n
+  PaddingChunkI l → SingleLine l
+  NewlineChunkI {- _ n -} → newlineShape -- ⧺ SingleLine n
 
-extendAlignedNewlinesIChunk ∷ ℕ64 → ChunkI → ChunkI
-extendAlignedNewlinesIChunk n = \case
-  RawChunkI l s → RawChunkI l s
-  NewlineChunkI b l → NewlineChunkI b $ if b then l + n else l
+-- extendAlignedNewlinesIChunk ∷ ℕ64 → ChunkI → ChunkI
+-- extendAlignedNewlinesIChunk n = \case
+--   RawChunkI l s → RawChunkI l s
+--   NewlineChunkI b l → NewlineChunkI b $ if b then l + n else l
 
 ------------------
 -- Output Chunk --
@@ -87,7 +89,70 @@ chunkIO = \case
   PaddingChunkO n → RawChunkI n $ string $ replicate n ' '
 
 treeIO ∷ TreeO → TreeI
-treeIO = map𝑇V formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @_ @(𝐼 _) $ NewlineChunkI False zero) (map chunkIO ∘ iter)
+treeIO = map𝑇V formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single @_ @(𝐼 _) NewlineChunkI) (map chunkIO ∘ iter)
+
+---------------
+-- ContentsM --
+---------------
+
+newtype ContentsM a = ContentsM { unContentsM ∷ RWS ℕ64 TreeI ℕ64 a }
+  deriving 
+  ( Return,Functor,Bind,Monad
+  , MonadReader ℕ64
+  -- , MonadWriter TreeI
+  , MonadState ℕ64
+  )
+
+runContentsM ∷ ℕ64 → ℕ64 → ContentsM a → ℕ64 ∧ TreeI ∧ a
+runContentsM γ σ = runRWS γ σ ∘ unContentsM
+
+evalContentsM ∷ ℕ64 → ℕ64 → ContentsM a → a
+evalContentsM γ σ = snd ∘ runContentsM γ σ
+
+instance Null (ContentsM ()) where null = skip
+instance Append (ContentsM ()) where (⧺) = (≫)
+instance Monoid (ContentsM ())
+
+-- instance Single (𝐼 ChunkI) (ContentsM ()) where single = tell ∘ single
+
+-- instance Annote Annotation (ContentsM ()) where
+--   annote = mapOut ∘ annote
+
+alignContents ∷ ContentsM a → ContentsM a
+alignContents xM = do
+  col ← get
+  nest ← ask
+  put 0
+  x ← local (nest + col) xM
+  modify $ (+) col
+  return x
+
+newlineContents ∷ ContentsM ()
+newlineContents = do
+  nest ← ask
+  ContentsM $ tell $ single $ single NewlineChunkI
+  ContentsM $ tell $ single $ single $ PaddingChunkI nest
+
+chunksContents ∷ 𝐼 ChunkI → ContentsM ()
+chunksContents = eachWith $ \case
+  RawChunkI l s → do
+    ContentsM $ tell $ single $ single $ RawChunkI l s
+    modify $ (+) l
+  PaddingChunkI l → do
+    ContentsM $ tell $ single $ single $ PaddingChunkI l
+    modify $ (+) l
+  NewlineChunkI → do
+    newlineContents
+    put 0
+
+annoteContents ∷ Annotation → ContentsM () → ContentsM ()
+annoteContents a = ContentsM ∘ mapOut (annote a) ∘ unContentsM
+
+treeContents ∷ TreeI → ContentsM ()
+treeContents = fold𝑇VWith chunksContents annoteContents
+
+retOutContents ∷ ContentsM a → ContentsM TreeI
+retOutContents = ContentsM ∘ retOut ∘ unContentsM
 
 --------------
 -- SummaryI --
@@ -96,40 +161,30 @@ treeIO = map𝑇V formatAnnotation $ concat ∘ iter ∘ mapSep (const $ single 
 data SummaryI = SummaryI
   { summaryIForceBreak ∷ 𝔹
   , summaryIShape ∷ ShapeA
-  , summaryIContents ∷ TreeI
-  } deriving (Eq,Ord,Show)
+  , summaryIContents ∷ ContentsM ()
+  }
 makeLenses ''SummaryI
 
-alignChunks ∷ TreeI → TreeI
-alignChunks = mapp $ \case
-  RawChunkI l s → RawChunkI l s
-  NewlineChunkI _ l → NewlineChunkI True l
+-- alignChunks ∷ TreeI → TreeI
+-- alignChunks = mapp $ \case
+--   RawChunkI l s → RawChunkI l s
+--   NewlineChunkI _ l → NewlineChunkI True l
 
 alignSummary ∷ SummaryI → SummaryI
-alignSummary (SummaryI b sh c) = SummaryI b (alignShapeA sh) $ alignChunks c
+alignSummary (SummaryI b sh c) = SummaryI b (alignShapeA sh) $ alignContents c
 
 instance Null SummaryI where null = SummaryI False null null
 instance Append SummaryI where
-  SummaryI b₁ sh₁ cs₁ ⧺ SummaryI b₂ sh₂ cs₂ =
-    let cs' = concat
-          [ cs₁
-          , mappOn cs₂ $ \ c →
-              let c' = extendAlignedNewlinesIChunk (shapeALastLength sh₁) c
-                  aO = shapeALastAlign sh₁
-              in case c' of
-                RawChunkI l s → RawChunkI l s
-                NewlineChunkI la l → NewlineChunkI (elim𝑂 (const id) (⩓) aO la) l
-          ]
-    in SummaryI (b₁ ⩔ b₂) (sh₁ ⧺ sh₂) cs'
+  SummaryI b₁ sh₁ cs₁ ⧺ SummaryI b₂ sh₂ cs₂ = SummaryI (b₁ ⩔ b₂) (sh₁ ⧺ sh₂) $ cs₁ ⧺ cs₂
 instance Monoid SummaryI
 
 summaryChunksI ∷ 𝐼 ChunkI → SummaryI
 summaryChunksI chunks =
   let sh = concat $ map shapeIChunk $ iter chunks
-  in SummaryI False (shapeToShapeA sh) $ single chunks
+  in SummaryI False (shapeToShapeA sh) $ chunksContents chunks
 
 annotateSummaryI ∷ Annotation → SummaryI → SummaryI
-annotateSummaryI a (SummaryI b sh cs) = SummaryI b sh $ annote a cs
+annotateSummaryI a (SummaryI b sh cs) = SummaryI b sh $ annoteContents a cs
 
 --------------
 -- SummaryO --

@@ -1055,23 +1055,23 @@ ppTableHelper has vas sss =
 
 ppTable ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
 ppTable has vas dss =
-  let sss       = mapp (execRenderUT ∘ summaryIContents ∘ staticDocA ∘ execDoc) dss
+  let sss       = mapp (execRenderUT ∘ evalContentsM 0 0 ∘ retOutContents ∘ summaryIContents ∘ staticDocA ∘ execDoc) dss
       _ :* sss' = ppTableHelper has vas sss
       dss'      = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
-        in Doc $ tell $ StaticDocA $ SummaryI True (shapeToShapeA sh) $ treeIO t
+        in Doc $ tell $ StaticDocA $ SummaryI True (shapeToShapeA sh) $ treeContents $ treeIO t
   in
   ppVertical $ mapOn dss' $ \ ds →
     ppHorizontal $ inbetween null ds
 
 ppTableCells ∷ (𝒩 m,𝒩 n) ⇒ 𝕍S n HAlign → 𝕍S m VAlign → 𝕍S m (𝕍S n Doc) → Doc
 ppTableCells has vas dss =
-  let sss        = mapp (execRenderUT ∘ summaryIContents ∘ staticDocA ∘ execDoc) dss
+  let sss        = mapp (execRenderUT ∘ evalContentsM 0 0 ∘ retOutContents ∘ summaryIContents ∘ staticDocA ∘ execDoc) dss
       ws :* sss' = ppTableHelper has vas sss
       sep        = ppFG white $ concat $ inbetween (ppString "─┼─") $ mapOn ws $ \ w → ppString $ string $ replicate w '─'
       dss'       = svecF 𝕟64s $ \ i → svecF 𝕟64s $ \ j →
         let SummaryO sh t = sss' ⋕ i ⋕ j
-        in Doc $ tell $ StaticDocA $ SummaryI True (shapeToShapeA sh) $ treeIO t
+        in Doc $ tell $ StaticDocA $ SummaryI True (shapeToShapeA sh) $ treeContents $ treeIO t
   in
   ppVertical $ inbetween sep $ mapOn dss' $ \ ds →
     ppHorizontal $ inbetween (ppFG white $ ppString "│") ds
@@ -1086,37 +1086,38 @@ class Pretty a where
 class PrettyM m a | a → m where
   mpretty ∷ a → m Doc
 
-instance Pretty Doc where pretty = id
-instance Pretty Void where pretty = \case
-instance Pretty () where pretty = ppCon ∘ show𝕊
-instance Pretty 𝔹 where pretty = ppCon ∘ show𝕊
-instance Pretty ℕ where pretty = ppLit ∘ show𝕊
-instance Pretty ℕ64 where pretty = ppLit ∘ show𝕊
-instance Pretty ℕ32 where pretty = ppLit ∘ show𝕊
-instance Pretty ℕ16 where pretty = ppLit ∘ show𝕊
-instance Pretty ℕ8 where pretty = ppLit ∘ show𝕊
-instance Pretty ℤ where pretty = ppLit ∘ show𝕊
-instance Pretty ℤ64 where pretty = ppLit ∘ show𝕊
-instance Pretty ℤ32 where pretty = ppLit ∘ show𝕊
-instance Pretty ℤ16 where pretty = ppLit ∘ show𝕊
-instance Pretty ℤ8 where pretty = ppLit ∘ show𝕊
-instance Pretty ℚ where pretty = ppLit ∘ show𝕊
-instance Pretty ℚᴾ where pretty = ppLit ∘ show𝕊
-instance Pretty 𝔻  where pretty = ppLit ∘ show𝕊
-instance Pretty 𝔻ᴾ  where pretty (𝔻ᴾ d) = ppLit $ show𝕊 d
-instance Pretty ℝ  where
+instance Pretty Doc   where pretty = id
+instance Pretty Void  where pretty = \case
+instance Pretty ()    where pretty = ppCon ∘ show𝕊
+instance Pretty 𝔹     where pretty = ppCon ∘ show𝕊
+instance Pretty ℕ     where pretty = ppLit ∘ show𝕊
+instance Pretty ℕ64   where pretty = ppLit ∘ show𝕊
+instance Pretty ℕ32   where pretty = ppLit ∘ show𝕊
+instance Pretty ℕ16   where pretty = ppLit ∘ show𝕊
+instance Pretty ℕ8    where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ     where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ64   where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ32   where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ16   where pretty = ppLit ∘ show𝕊
+instance Pretty ℤ8    where pretty = ppLit ∘ show𝕊
+instance Pretty ℚ     where pretty = ppLit ∘ show𝕊
+instance Pretty ℚᴾ    where pretty = ppLit ∘ show𝕊
+instance Pretty 𝔻     where pretty = ppLit ∘ show𝕊
+instance Pretty 𝔻ᴾ    where pretty = ppLit ∘ show𝕊 ∘ un𝔻ᴾ
+instance Pretty Time  where pretty = ppLit ∘ show𝕊
+instance Pretty TimeD where pretty = ppLit ∘ show𝕊
+
+instance Pretty ℝ where
   pretty = \case
     Integer i → pretty i
     Rational q → pretty q
     Double d → pretty d
-instance Pretty ℝᴾ  where
+
+instance Pretty ℝᴾ where
   pretty = \case
     Natural n → pretty n
     Rationalᴾ q → pretty q
     Doubleᴾ d → pretty d
-
-instance Pretty Time where pretty = ppLit ∘ show𝕊
-instance Pretty TimeD where pretty = ppLit ∘ show𝕊
 
 escape ∷ ℂ → 𝐼 ℂ
 escape = \case

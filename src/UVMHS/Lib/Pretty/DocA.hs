@@ -16,7 +16,6 @@ data DocAEnv = DocAEnv
   , docAEnvMaxRibbonWidth ∷ 𝑂 ℕ64
   -- local env
   , docAEnvNest ∷ ℕ64
-  -- , docAEnvHang ∷ ℕ64
   } deriving (Eq,Ord,Show)
 makeLenses ''DocAEnv
 
@@ -25,7 +24,6 @@ docAEnv₀ = DocAEnv
   { docAEnvMaxLineWidth = Some 120
   , docAEnvMaxRibbonWidth = Some 100
   , docAEnvNest = 0
-  -- , docAEnvHang = 0
   }
 
 data DocAState = DocAState
@@ -70,17 +68,15 @@ renderSummaryI ∷ SummaryI → DocAM ()
 renderSummaryI s = do
   nest ← askL docAEnvNestL
   col ← getL docAStateColL
-  tell $ mappOn (summaryIContents s) $ \case
-    NewlineChunkI a n → NewlineChunkI False $ n + nest + (if a then col else 0)
-    c → c
+  let col' :* o :* () = runContentsM nest col $ summaryIContents s
+  tell o
+  putL docAStateColL col'
   case summaryIShape s of
     SingleLineA l → do
       modifyL docAStateRibL $ (+) l
-      modifyL docAStateColL $ (+) l
     MultiLineA (ShapeMA _ _ _ _ ll lines) → do
       modifyL docAStateRowL $ (+) lines
       putL docAStateRibL ll
-      putL docAStateColL ll
 
 stringDocA ∷ 𝕊 → DocA
 stringDocA = StaticDocA ∘ summaryChunksI ∘ splitChunksI
@@ -128,7 +124,7 @@ alignDocAM ∷ DocAM a → DocAM a
 alignDocAM xM = do
   col ← getL docAStateColL
   nest ← askL docAEnvNestL
-  putL docAStateColL $ 𝕟64 0
+  putL docAStateColL 0
   x ← localL docAEnvNestL (nest + col) xM
   modifyL docAStateColL $ (+) col
   return x
@@ -140,7 +136,7 @@ alignDocA = \case
 
 execDocAWith ∷ (DocAM () → DocAM ()) → DocA → TreeI
 execDocAWith f d = evalRWS docAEnv₀ docAState₀ $ retOut $ f $ case d of
-  StaticDocA s → tell $ summaryIContents s
+  StaticDocA s → tell $ evalContentsM 0 0 $ retOutContents $ summaryIContents s
   DynamicDocA _ r → r
 
 execDocA ∷ DocA → TreeI

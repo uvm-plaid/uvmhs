@@ -54,10 +54,15 @@ buildUndertags l = do
       col ← getL t2StateColL
       modifyL t2StateUndersL $ pospend $ single (col :* l :* c :* fm)
 
-renderNewline ∷ ℕ64 → RenderUTM ()
-renderNewline n = do
+renderNewlinePadding ∷ ℕ64 → RenderUTM ()
+renderNewlinePadding n = do
   tell $ summaryChunksO $ sepI () ⧺ SepE (single $ PaddingChunkO n)
   putL t2StateColL n
+
+renderNewline ∷ RenderUTM ()
+renderNewline = do
+  tell $ summaryChunksO $ sepI ()
+  putL t2StateColL 0
 
 renderRaw ∷ ℕ64 → 𝕊 → RenderUTM ()
 renderRaw l s = do
@@ -79,7 +84,7 @@ renderUndertags = do
   case us ≡ null of
     True → skip
     False → do
-      renderNewline zero
+      renderNewline
       eachOn us $ \ (colf :* l :* c :* fm) → do
         col ← getL t2StateColL
         renderPadding $ colf - col
@@ -88,7 +93,8 @@ renderUndertags = do
 renderChunkUndertags ∷ ChunkI → RenderUTM ()
 renderChunkUndertags = \case
   RawChunkI l s → do buildUndertags l ; renderRaw l s
-  NewlineChunkI _ n → do renderUndertags ; renderNewline n
+  PaddingChunkI l → do buildUndertags l ; renderPadding l
+  NewlineChunkI → do renderUndertags ; renderNewline
 
 annotateRenderUT ∷ Annotation → RenderUTM () → RenderUTM ()
 annotateRenderUT (Annotation fm ut) = mapOut (annotateSummaryO fm) ∘ mapEnvL renderUTEnvUnderFormatL (first𝑂 ut)
