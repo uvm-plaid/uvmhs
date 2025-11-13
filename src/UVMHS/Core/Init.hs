@@ -150,7 +150,6 @@ newtype 𝐼 a = 𝐼 { un𝐼 ∷ ∀ b. (a → b → (b → b) → b) → b �
 --                                ↑   ↑↑↑↑↑↑↑        ↑
 --                      accumulator   continuation   accumulator
 
-
 run𝐼 ∷ (b → b) → b → (a → b → (b → b) → b) → 𝐼 a → b
 run𝐼 𝓀 i f xs = un𝐼 xs f i 𝓀
 
@@ -197,13 +196,15 @@ lazyList𝐼 ∷ 𝐼 a → [a]
 lazyList𝐼 = foldr𝐼 [] (:)
 
 iterLL ∷ [a] → 𝐼 a
-iterLL xs₀ = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
+iterLL xs₀ = 𝐼 HS.$ \ yield i₀ done →
   let loop xs i = case xs of
-        [] → 𝓀 i
+        [] → done i
         x:xs' →
-          f x i $ \ i' →
+          yield x i $ \ i' →
           loop xs' i'
-  in loop xs₀
+  in loop xs₀ i₀
+
+-- TODO: give intuition for design of 𝐼 by walking through iterLL and firstElem
 
 -- stream
 newtype 𝑆 a = 𝑆 { un𝑆 ∷ () → 𝑂 (a ∧ 𝑆 a) }
