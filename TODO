@@ -1,5 +1,19 @@
 # David's Notes for Fixes, Improvements and Enhancements
 
+- Separate out pre-processor flags for UVMHS tests vs other tests that use the
+  UVMHS testing library.
+
+- Make `Cos`, `Sin` and `Trig` type classes
+
+- Adopt this API:
+
+      Class Abs a where
+        abs :: a -> a
+      
+      zabs :: ℤ -> ℕ
+      qabs :: ℚ -> ℚᴾ
+      dabs :: 𝔻 -> 𝔻ᴾ
+
 - make it so that building the test suite isn't done by default from client
 projects that import uvmhs as a library
 
