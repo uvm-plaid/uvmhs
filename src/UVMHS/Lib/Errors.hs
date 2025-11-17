@@ -17,7 +17,7 @@ instance Pretty GError where
     [ single𝐼 $ ppHeader $ typ ()
     , map pretty $ iter $ loc ()
     , single𝐼 $ ppErr $ msg ()
-    , single𝐼 $ pretty $ cxt ()
+    , single𝐼 $ ppVertical $ reverse $ cxt ()
     ]
 
 gerror₀ ∷ GError
