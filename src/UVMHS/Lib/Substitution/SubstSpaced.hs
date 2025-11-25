@@ -201,7 +201,7 @@ appendSubstSpaced ℓvars substE 𝓈P₂ 𝓈P₁ =
       𝓈Gᵣ = map (substSubstElemSpaced ℓvars substE 𝓈P₂) 𝓈G₁ ⩌ 𝓈G₂
       𝓈S₁' = kmapOn 𝓈S₁ $ \ s 𝓈 → 
         substSubstScoped (ℓvars s) (substSpacedExtended ℓvars substE 𝓈P₂) 𝓈
-      𝓈Sᵣ= dunionByOn 𝓈S₁' 𝓈S₂ $ \ 𝓈₁ 𝓈₂ →
+      𝓈Sᵣ= dunionOn 𝓈S₁' 𝓈S₂ $ \ 𝓈₁ 𝓈₂ →
         if
         | isNullSubstScoped 𝓈₁ → 𝓈₂
         | isNullSubstScoped 𝓈₂ → 𝓈₁

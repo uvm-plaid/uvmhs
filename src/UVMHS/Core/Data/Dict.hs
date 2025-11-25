@@ -73,25 +73,25 @@ class
     drem k = okmapAt k $ const None
     dupd ∷ k → (a → 𝑂 a) → d a → d a
     dupd k f = okmapAt k $ extend f
-    dlteBy ∷ (a → a → 𝔹) → d a → d a → 𝔹 -- NO DEFAULT
-    dunionBy ∷ (a → a → a) → d a → d a → d a
-    dunionBy f = bimap id id f
-    dkunionBy ∷ (k → a → a → a) → d a → d a → d a
-    dkunionBy f = kbimap (const id) (const id) f
-    dinterBy ∷ (a → b → c) → d a → d b → d c
-    dinterBy f = obimap (const None) (const None) $ Some ∘∘ f
-    dsdiffBy ∷ (a → b → 𝑂 a) → d a → d b → d a
-    dsdiffBy f = obimap Some (const None) f
+    dlteWith ∷ (a → a → 𝔹) → d a → d a → 𝔹 -- NO DEFAULT
+    dunionWith ∷ (a → a → a) → d a → d a → d a
+    dunionWith f = bimap id id f
+    dkunionWith ∷ (k → a → a → a) → d a → d a → d a
+    dkunionWith f = kbimap (const id) (const id) f
+    dinterWith ∷ (a → b → c) → d a → d b → d c
+    dinterWith f = obimap (const None) (const None) $ Some ∘∘ f
+    dsdiffWith ∷ (a → b → 𝑂 a) → d a → d b → d a
+    dsdiffWith f = obimap Some (const None) f
     (⋿) ∷ ∀ a. k → d a → 𝔹
     k ⋿ d = case d ⋕? k of {None→False;Some (_∷a)→True}
     (⫑) ∷ (Eq a) ⇒ d a → d a → 𝔹
-    (⫑) = dlteBy (≡)
+    (⫑) = dlteWith (≡)
     (⩌) ∷ d a → d a → d a
-    (⩌) = dunionBy const
+    (⩌) = dunionWith const
     (⩍) ∷ d a → d a → d a
-    (⩍) = dinterBy const
+    (⩍) = dinterWith const
     (⧅) ∷ (Eq a) ⇒ d a → d a → d a
-    (⧅) = dsdiffBy $ \ x y → if x ≡ y then None else Some x
+    (⧅) = dsdiffWith $ \ x y → if x ≡ y then None else Some x
     dminView ∷ d a → 𝑂 (k ∧ a ∧ d a) -- NO DEFAULT
     dmaxView ∷ d a → 𝑂 (k ∧ a ∧ d a) -- NO DEFAULT
     dkeyView ∷ k → d a → 𝑂 (a ∧ d a) -- NO DEFAULT
@@ -110,17 +110,17 @@ class
     dvals ∷ ∀ a. d a → 𝐼 a
     dvals = map snd ∘ iter @(k ∧ a)
 
-dunionByOn ∷ (Dict k s d) ⇒ d a → d a → (a → a → a) → d a
-dunionByOn = rotateL dunionBy
+dunionOn ∷ (Dict k s d) ⇒ d a → d a → (a → a → a) → d a
+dunionOn = rotateL dunionWith
 
-dkunionByOn ∷ (Dict k s d) ⇒ d a → d a → (k → a → a → a) → d a
-dkunionByOn = rotateL dkunionBy
+dkunionOn ∷ (Dict k s d) ⇒ d a → d a → (k → a → a → a) → d a
+dkunionOn = rotateL dkunionWith
 
-dinterByOn ∷ (Dict k s d) ⇒ d a → d b → (a → b → c) → d c
-dinterByOn = rotateL dinterBy
+dinterOn ∷ (Dict k s d) ⇒ d a → d b → (a → b → c) → d c
+dinterOn = rotateL dinterWith
 
-dinterByM ∷ (Monad m,Dict k s d) ⇒ (a → b → m c) → d a → d b → m (d c)
-dinterByM f = obimapM (const $ return None) (const $ return None) $ map Some ∘∘ f
+dinterWithM ∷ (Monad m,Dict k s d) ⇒ (a → b → m c) → d a → d b → m (d c)
+dinterWithM f = obimapM (const $ return None) (const $ return None) $ map Some ∘∘ f
 
 dict ∷ ∀ d t a k s. (Dict k s d,ToIter (d a) t) ⇒ t → d a
 dict = foldr dø (⩌)
@@ -149,17 +149,17 @@ drem𝐷 = coerce @(k → Map.Map k a → Map.Map k a) Map.delete
 dupd𝐷 ∷ ∀ k a. (Ord k) ⇒ k → (a → 𝑂 a) → k ⇰ a → k ⇰ a
 dupd𝐷 = coerce @(k → (a → 𝑂 a) → Map.Map k a → Map.Map k a) $ \ k f → flip Map.update k $ tohs ∘ f
 
-dlteBy𝐷 ∷ ∀ k a. (Ord k) ⇒ (a → a → 𝔹) → k ⇰ a → k ⇰ a → 𝔹
-dlteBy𝐷 = coerce @((a → a → 𝔹) → Map.Map k a → Map.Map k a → 𝔹) Map.isSubmapOfBy
+dlteWith𝐷 ∷ ∀ k a. (Ord k) ⇒ (a → a → 𝔹) → k ⇰ a → k ⇰ a → 𝔹
+dlteWith𝐷 = coerce @((a → a → 𝔹) → Map.Map k a → Map.Map k a → 𝔹) Map.isSubmapOfBy
 
-dunionBy𝐷 ∷ ∀ k a. (Ord k) ⇒ (a → a → a) → k ⇰ a → k ⇰ a → k ⇰ a
-dunionBy𝐷 = coerce @((a → a → a) → Map.Map k a → Map.Map k a → Map.Map k a) Map.unionWith
+dunionWith𝐷 ∷ ∀ k a. (Ord k) ⇒ (a → a → a) → k ⇰ a → k ⇰ a → k ⇰ a
+dunionWith𝐷 = coerce @((a → a → a) → Map.Map k a → Map.Map k a → Map.Map k a) Map.unionWith
 
-dinterBy𝐷 ∷ ∀ k a b c. (Ord k) ⇒ (a → b → c) → k ⇰ a → k ⇰ b → k ⇰ c
-dinterBy𝐷 = coerce @((a → b → c) → Map.Map k a → Map.Map k b → Map.Map k c) $ Map.intersectionWith
+dinterWith𝐷 ∷ ∀ k a b c. (Ord k) ⇒ (a → b → c) → k ⇰ a → k ⇰ b → k ⇰ c
+dinterWith𝐷 = coerce @((a → b → c) → Map.Map k a → Map.Map k b → Map.Map k c) $ Map.intersectionWith
 
-dsdiffBy𝐷 ∷ ∀ k b a. (Ord k) ⇒ (a → b → 𝑂 a) → k ⇰ a → k ⇰ b → k ⇰ a
-dsdiffBy𝐷 = coerce @((a → b → 𝑂 a) → Map.Map k a → Map.Map k b → Map.Map k a) $ \ f → Map.differenceWith $ tohs ∘∘ f
+dsdiffWith𝐷 ∷ ∀ k b a. (Ord k) ⇒ (a → b → 𝑂 a) → k ⇰ a → k ⇰ b → k ⇰ a
+dsdiffWith𝐷 = coerce @((a → b → 𝑂 a) → Map.Map k a → Map.Map k b → Map.Map k a) $ \ f → Map.differenceWith $ tohs ∘∘ f
 
 (⋿♭) ∷ ∀ k a. (Ord k) ⇒ k → k ⇰ a → 𝔹
 (⋿♭) = coerce @(k → Map.Map k a → 𝔹) Map.member
@@ -374,7 +374,7 @@ null𝐷 ∷ k ⇰ a
 null𝐷 = dø𝐷
 
 append𝐷 ∷ (Ord k,Append a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
-append𝐷 = dunionBy𝐷 (⧺)
+append𝐷 = dunionWith𝐷 (⧺)
 
 -- CLASS DEFINITIONS: Prodoid --
 
@@ -382,7 +382,7 @@ unit𝐷 ∷ (Ord k,Null k,Null a) ⇒ k ⇰ a
 unit𝐷 = null ↦♭ null
 
 cross𝐷 ∷ (Ord k,Append k,Append a,Cross a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
-cross𝐷 d₁ d₂ = foldr dø𝐷 (dunionBy𝐷 (⧺)) $ do
+cross𝐷 d₁ d₂ = foldr dø𝐷 (dunionWith𝐷 (⧺)) $ do
   (k₁ :* x₁) ← iter d₁
   (k₂ :* x₂) ← iter d₂
   return $ (k₁ ⧺ k₂) ↦♭ (x₁ ⨳ x₂)
@@ -393,7 +393,7 @@ zero𝐷 ∷ k ⇰ a
 zero𝐷 = dø𝐷
 
 plus𝐷 ∷ (Ord k,Plus a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
-plus𝐷 = dunionBy𝐷 (+)
+plus𝐷 = dunionWith𝐷 (+)
 
 -- CLASS DEFINITIONS: Minus --
 
@@ -403,7 +403,7 @@ minus𝐷 = bimap id (\ x → zero - x) (-)
 -- CLASS DEFINITIONS: POrd --
 
 plte𝐷 ∷ (Ord k,POrd a) ⇒ k ⇰ a → k ⇰ a → 𝔹
-plte𝐷 = dlteBy𝐷 (⊑)
+plte𝐷 = dlteWith𝐷 (⊑)
 
 -- CLASS DEFINITIONS: Lattice --
 
@@ -411,13 +411,13 @@ bot𝐷 ∷ k ⇰ a
 bot𝐷 = dø𝐷
 
 join𝐷 ∷ (Ord k,Join a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
-join𝐷 = dunionBy𝐷 (⊔)
+join𝐷 = dunionWith𝐷 (⊔)
 
 meet𝐷 ∷ (Ord k,Meet a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
-meet𝐷 = dinterBy𝐷 (⊓)
+meet𝐷 = dinterWith𝐷 (⊓)
 
 diff𝐷 ∷ (Ord k,Difference a) ⇒ k ⇰ a → k ⇰ a → k ⇰ a
-diff𝐷 = dsdiffBy𝐷 $ Some ∘∘ (⊟)
+diff𝐷 = dsdiffWith𝐷 $ Some ∘∘ (⊟)
 
 -- CLASS DEFINITIONS: All --
 
@@ -490,10 +490,10 @@ instance (Ord k) ⇒ Dict k (𝑃 k) ((⇰) k) where
     dadd     = dadd𝐷
     drem     = drem𝐷
     dupd     = dupd𝐷
-    dlteBy   = dlteBy𝐷
-    dunionBy = dunionBy𝐷
-    dinterBy = dinterBy𝐷
-    dsdiffBy = dsdiffBy𝐷
+    dlteWith   = dlteWith𝐷
+    dunionWith = dunionWith𝐷
+    dinterWith = dinterWith𝐷
+    dsdiffWith = dsdiffWith𝐷
     (⋿)      = (⋿♭)
     (⫑)      = (⫑♭)
     (⩌)      = (⩌♭)

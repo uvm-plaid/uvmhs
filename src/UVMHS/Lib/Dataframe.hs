@@ -111,11 +111,11 @@ frameGroupingInterWithM
   → FrameGrouping v₂
   → m (FrameGrouping v₃)
 frameGroupingInterWithM f vs₁ vs₂ = case (vs₁,vs₂) of
-  (B_FG kvs₁,B_FG kvs₂) → B_FG ^$ dinterByM f kvs₁ kvs₂
-  (N_FG kvs₁,N_FG kvs₂) → N_FG ^$ dinterByM f kvs₁ kvs₂
-  (Z_FG kvs₁,Z_FG kvs₂) → Z_FG ^$ dinterByM f kvs₁ kvs₂
-  (D_FG kvs₁,D_FG kvs₂) → D_FG ^$ dinterByM f kvs₁ kvs₂
-  (S_FG kvs₁,S_FG kvs₂) → S_FG ^$ dinterByM f kvs₁ kvs₂
+  (B_FG kvs₁,B_FG kvs₂) → B_FG ^$ dinterWithM f kvs₁ kvs₂
+  (N_FG kvs₁,N_FG kvs₂) → N_FG ^$ dinterWithM f kvs₁ kvs₂
+  (Z_FG kvs₁,Z_FG kvs₂) → Z_FG ^$ dinterWithM f kvs₁ kvs₂
+  (D_FG kvs₁,D_FG kvs₂) → D_FG ^$ dinterWithM f kvs₁ kvs₂
+  (S_FG kvs₁,S_FG kvs₂) → S_FG ^$ dinterWithM f kvs₁ kvs₂
   _ → abort
 
 data FrameData =
@@ -154,8 +154,8 @@ frameProduct fr₁ fr₂ = do
       colt'  ∷ 𝕊 ⇰ FrameType
       colt'  = colt₁' ⩌ colt₂'
   grpt' ∷ 𝕊 ⇰ FrameType
-        ← dinterByM (\ τ₁ τ₂ → do guard $ τ₁ ≡ τ₂ ; return τ₁) grpt₁ grpt₂
-  let data' = dinterByOn data₁ data₂ $ \ (n₁ :* svss₁) (n₂ :* svss₂) →
+        ← dinterWithM (\ τ₁ τ₂ → do guard $ τ₁ ≡ τ₂ ; return τ₁) grpt₁ grpt₂
+  let data' = dinterOn data₁ data₂ $ \ (n₁ :* svss₁) (n₂ :* svss₂) →
         let svss₁'₁ ∷ 𝕊 ⇰ FrameCol
             svss₁'₁ = assoc $ mapOn (iter svss₁) $ mapFst $ flip (⧺) "_L"
             svss₂'₁ ∷ 𝕊 ⇰ FrameCol

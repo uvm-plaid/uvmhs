@@ -8,25 +8,41 @@ import qualified Prelude as HS
 
 import qualified Data.Char as HS
 
+import qualified GHC.Prim as Prim
+import qualified GHC.Word as Word
+import qualified GHC.Int as Int
+import qualified GHC.Float as Float
+
 
 ------------
 -- Chunks --
 ------------
 
-trℕ8 ∷ ℕ64 → ℕ8
-trℕ8 = HS.fromIntegral
+-- Why not `fromIntegral`?
+-- - Not guaranteed to be fast
+-- - Not guaranteed to be 'bit-representation preserving'
+-- See also: https://stackoverflow.com/questions/64044693/how-can-i-bit-convert-between-int-and-word-quickly
+
+firstByte ∷ ℕ64 → ℕ8
+firstByte (Word.W64# n) = Word.W8# (Prim.wordToWord8# (Prim.word64ToWord# n))
+
+toBitsHSInt ∷ HS.Int → ℕ64
+toBitsHSInt (Int.I# i) = Word.W64# (Prim.int64ToWord64# (Prim.intToInt64# i))
+
+frBitsHSInt ∷ ℕ64 → HS.Int
+frBitsHSInt (Word.W64# n) = Int.I# (Prim.int64ToInt# (Prim.word64ToInt64# n))
 
 toBitsℤ64 ∷ ℤ64 → ℕ64
-toBitsℤ64 = coerce_UNSAFE
+toBitsℤ64 (Int.I64# i) = Word.W64# (Prim.int64ToWord64# i)
 
 frBitsℤ64 ∷ ℕ64 → ℤ64
-frBitsℤ64 = coerce_UNSAFE
+frBitsℤ64 (Word.W64# n) = Int.I64# (Prim.word64ToInt64# n)
 
 toBits𝔻 ∷ 𝔻 → ℕ64
-toBits𝔻 = coerce_UNSAFE
+toBits𝔻 = Float.castDoubleToWord64
 
 frBits𝔻 ∷ ℕ64 → 𝔻
-frBits𝔻 = coerce_UNSAFE
+frBits𝔻 = Float.castWord64ToDouble
 
 skipChunk ∷ (Monad m) ⇒ m ℕ8 → ℕ64 → m ()
 skipChunk g n₀ = loop (𝕟64 0)
@@ -53,14 +69,14 @@ joinBytes (b₁,b₂,b₃,b₄,b₅,b₆,b₇,b₈) =
 
 splitBytes ∷ ℕ64 → (ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8,ℕ8)
 splitBytes n =
-  ( trℕ8 $ n ⋙ 𝕟64  0
-  , trℕ8 $ n ⋙ 𝕟64  8
-  , trℕ8 $ n ⋙ 𝕟64 16
-  , trℕ8 $ n ⋙ 𝕟64 24
-  , trℕ8 $ n ⋙ 𝕟64 32
-  , trℕ8 $ n ⋙ 𝕟64 40
-  , trℕ8 $ n ⋙ 𝕟64 48
-  , trℕ8 $ n ⋙ 𝕟64 56
+  ( firstByte $ n ⋙ 𝕟64  0
+  , firstByte $ n ⋙ 𝕟64  8
+  , firstByte $ n ⋙ 𝕟64 16
+  , firstByte $ n ⋙ 𝕟64 24
+  , firstByte $ n ⋙ 𝕟64 32
+  , firstByte $ n ⋙ 𝕟64 40
+  , firstByte $ n ⋙ 𝕟64 48
+  , firstByte $ n ⋙ 𝕟64 56
   )
 
 class Chunky a where

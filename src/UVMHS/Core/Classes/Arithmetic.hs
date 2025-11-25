@@ -21,8 +21,11 @@ class Pow a where (^) ∷ a → a → a
 class Root a where root ∷ a → a
 class Log a where log ∷ a → a
 class Efn a where efn ∷ a → a
+class Abs a where abs ∷ a → a
+
 class Sin a where sin ∷ a → a
 class Cos a where cos ∷ a → a
+
 
 class (Zero a,Plus a) ⇒ Additive a
 class (Additive a,One a,Times a) ⇒ Multiplicative a

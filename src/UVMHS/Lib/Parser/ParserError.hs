@@ -47,7 +47,7 @@ stackTraces fin msgs = foldrOnFrom msgs (ParserErrorStackTraces (single fin) bot
 
 parserErrorFailuresMap ∷ 𝐼 ParserErrorInfo → (𝕊 ∧ 𝔹) ⇰ WindowR Doc Doc ∧ WindowR Doc Doc ∧ ParserErrorStackTraces
 parserErrorFailuresMap eis =
-  fold bot (dunionBy $ \ (c' :* p' :* t₁) (_ :* _ :* t₂) → c' :* p' :* (t₁ ⊔ t₂)) $
+  fold bot (dunionWith $ \ (c' :* p' :* t₁) (_ :* _ :* t₂) → c' :* p' :* (t₁ ⊔ t₂)) $
     mapOn eis $ \ (ParserErrorInfo p c sh st) →
       (ppRender (concat c) :* overflowR c) ↦ (p :* c :* stackTraces sh st)
 

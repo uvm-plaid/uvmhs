@@ -1,7 +1,5 @@
 # David's Notes for Fixes, Improvements and Enhancements
 
-- make `exitIO` return `()`, and a polymorphic one named something else.
-
 - Consider renaming `BiFunctor` due to differences with other popular
   libraries:
   - CrossFunctor?
@@ -11,15 +9,6 @@
   UVMHS testing library.
 
 - Make `Cos`, `Sin` and `Trig` type classes
-
-- Adopt this API:
-
-      Class Abs a where
-        abs :: a -> a
-      
-      zabs :: ℤ -> ℕ
-      qabs :: ℚ -> ℚᴾ
-      dabs :: 𝔻 -> 𝔻ᴾ
 
 - make it so that building the test suite isn't done by default from client
 projects that import uvmhs as a library
@@ -34,14 +23,6 @@ Parsing Framework:
   - need to teach it that block keywords like `let` can come with a set of
     block terminating keywords like `in`.
 - Support explicit brackets that ignore layout logic, e.g., `let { x = e } in e`
-
-Pretty Printing:
-- support a "hanging" operator that causes all newlines of a document to have
-  at least some indentation
-
-Fix:
-- Pretty Printer. I think it's buggy. There is a branch where I'm most the way
-  through solving it. Consider refactoring and adding test suite along the way.
 
 Refactor:
 - Parser Library:
@@ -63,7 +44,7 @@ New Feature:
   - add a flag to the pretty printer context for "in block" vs "not in block".
     E.g., when printing an application, you can print this:
     
-        thing1 thing2 thinge
+        thing1 thing2 thing3
 
     as:
 
@@ -125,9 +106,6 @@ Test Suite Needed:
 - Parser Library
 - Pretty Printer Library
 
-Other:
-- Turn on QualifiedDo
-
 Naming Conventions:
   - convThingAToThingB -- A → B
   - convThingBToThingA -- B → A
@@ -150,7 +128,6 @@ Naming Conventions:
     - exchange -> rename back to sequence
 
 Small things to fix:
-  - whenM should take a delayed argument
   - make lazy lists instance of csized
 
 Things to Rename:

@@ -297,7 +297,7 @@ compileRegex e₀ =
           modifyL regexStateDeadL $ (⩌) $ n ↦ (extract (unRegex e) ≡ NullR)
           eachOn codes $ \ xc → do
             n' ← compile $ derRegex xc e
-            modifyL regexStateTransitionsL $ dunionBy (⩌) $ xc ↦ (n ↦ n')
+            modifyL regexStateTransitionsL $ dunionWith (⩌) $ xc ↦ (n ↦ n')
           return n
     newRegexEntry ∷ Regex c t o u → State (RegexState c t o u) ℕ64
     newRegexEntry e = do

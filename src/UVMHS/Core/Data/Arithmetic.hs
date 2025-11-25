@@ -7,14 +7,14 @@ import UVMHS.Core.Data.Option ()
 import qualified Prelude as HS
 import qualified Data.Ratio as HS
 
-abs ∷ 𝔻 → 𝔻
-abs = HS.abs
-
 zabs ∷ ℤ → ℕ
-zabs = HS.fromIntegral ∘ HS.abs
+zabs = natΩ ∘ abs
 
 qabs ∷ ℚ → ℚᴾ
-qabs = HS.fromRational ∘ HS.abs
+qabs = ratᴾΩ ∘ abs
+
+dabs ∷ 𝔻 → 𝔻ᴾ
+dabs = dblᴾΩ ∘ abs
 
 numer ∷ ℚ → ℤ
 numer = HS.numerator
@@ -358,6 +358,7 @@ instance One    ℤ where one  = 𝕫 1
 instance Times  ℤ where (×)  = (HS.*)
 instance DivMod ℤ where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ where (^^) = (HS.^)
+instance Abs    ℤ where abs  = HS.abs
 
 instance POrd   ℤ where (⊑) = (≤)
 
@@ -444,6 +445,7 @@ instance One    ℤ64 where one  = 𝕫64 1
 instance Times  ℤ64 where (×)  = (HS.*)
 instance DivMod ℤ64 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ64 where (^^) = (HS.^)
+instance Abs    ℤ64 where abs  = HS.abs
 
 instance POrd   ℤ64 where (⊑) = (≤)
 
@@ -529,6 +531,7 @@ instance One    ℤ32 where one  = 𝕫32 1
 instance Times  ℤ32 where (×)  = (HS.*)
 instance DivMod ℤ32 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ32 where (^^) = (HS.^)
+instance Abs    ℤ32 where abs  = HS.abs
 
 instance POrd   ℤ32 where (⊑) = (≤)
 
@@ -609,6 +612,7 @@ instance One    ℤ16 where one  = 𝕫16 1
 instance Times  ℤ16 where (×)  = (HS.*)
 instance DivMod ℤ16 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ16 where (^^) = (HS.^)
+instance Abs    ℤ16 where abs  = HS.abs
 
 instance POrd   ℤ16 where (⊑) = (≤)
 
@@ -684,6 +688,7 @@ instance One    ℤ8 where one  = 𝕫8 1
 instance Times  ℤ8 where (×)  = (HS.*)
 instance DivMod ℤ8 where (⌿)  = HS.div ; (÷) = HS.mod
 instance Pon    ℤ8 where (^^) = (HS.^)
+instance Abs    ℤ8 where abs  = HS.abs
 
 instance POrd   ℤ8 where (⊑) = (≤)
 
@@ -754,6 +759,7 @@ instance One    ℚ where one  = 𝕢 1
 instance Times  ℚ where (×)  = (HS.*)
 instance Divide ℚ where (/)  = (HS./)
 instance Pon    ℚ where (^^) = (HS.^)
+instance Abs    ℚ where abs  = HS.abs
 
 instance POrd   ℚ where (⊑) = (≤)
 
@@ -913,6 +919,7 @@ instance Log    𝔻 where log  = HS.log
 instance Efn    𝔻 where efn  = HS.exp
 instance Sin    𝔻 where sin  = HS.sin
 instance Cos    𝔻 where cos  = HS.cos
+instance Abs    𝔻 where abs  = HS.abs
 
 instance POrd   𝔻 where (⊑) = (≤)
 
@@ -1182,6 +1189,10 @@ instance Cos ℝ where
   cos (Integer  i) = Double $ cos $ dbl i
   cos (Rational q) = Double $ cos $ dbl q
   cos (Double   d) = Double $ cos d
+instance Abs ℝ where
+  abs (Integer  i) = Integer  $ abs i
+  abs (Rational q) = Rational $ abs q
+  abs (Double   d) = Double   $ abs d
 
 instance POrd   ℝ where (⊑) = (≤)
 

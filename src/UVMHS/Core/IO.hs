@@ -131,9 +131,9 @@ abortIOCode ∷ ℤ64 → IO a
 abortIOCode i = HS.exitWith $ HS.ExitFailure $ tohs i
 
 abortIO ∷ IO a
-abortIO = abortIOCode $ 𝕫64 1
+abortIO = abortIOCode 1
 
-exitIO ∷ IO a
+exitIO ∷ IO ()
 exitIO = HS.exitWith HS.ExitSuccess
 
 failIO ∷ 𝕊 → IO a
@@ -146,10 +146,10 @@ catchIO ∷ IO a → (IOError → IO a) → IO a
 catchIO = HS.catchIOError
 
 cleanExit ∷ IO a → IO a
-cleanExit xM = HS.catch xM (\ (c ∷ ExitCode) → shout c ≫ exitIO)
+cleanExit xM = HS.catch xM $ \ (c ∷ ExitCode) → do shout c ; exitIO ; abortIO
 
 noExit ∷ IO () → IO ()
-noExit xM = HS.catch xM (\ (_c ∷ ExitCode) → skip)
+noExit xM = HS.catch xM $ \ (_c ∷ ExitCode) → skip
 
 -----------
 -- Files --

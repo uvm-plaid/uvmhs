@@ -54,7 +54,7 @@ instance Null (GenParser t a) where
   null = gpRawParser abort
 instance (Ord t) ⇒ Append (GenParser t a) where
   (⧺) ∷ GenParser t a → GenParser t a → GenParser t a
-  GenParser n₁ b₁ ⧺ GenParser n₂ b₂ = GenParser (dunionBy (⧺) n₁ n₂) $ b₁ ⎅ b₂
+  GenParser n₁ b₁ ⧺ GenParser n₂ b₂ = GenParser (dunionWith (⧺) n₁ n₂) $ b₁ ⎅ b₂
 instance (Ord t) ⇒ Monoid (GenParser t a)
 
 instance Eps (GenParser t ()) where
