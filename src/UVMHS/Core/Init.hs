@@ -143,6 +143,72 @@ data 𝑂 a = None | Some a
 data 𝐿 a = Nil | a :& 𝐿 a
   deriving (Eq,Ord,TH.Lift)
 
+-- Design and algorithmic properties of the iterator type.
+--
+-- Here are a few ways to help one's understanding of "what" and "why" the
+-- iterator type `𝐼` is defined the way it is.
+--
+-- - The definition of `𝐼` is closely related to "difference lists" in Haskell,
+--   for which there are many existing resources, including stack overflow and
+--   the Real World Haskell book. The "difference list" type is typically
+--   defined as:
+--
+--       newtype DiffList = DiffList ([a] → [a])
+--
+--   The function in this datatype means "you give me a list suffix, and I'll
+--   prepend myself to the beginning of that suffix". What is nice about this
+--   type is that the concatenation of two lists is defined to be literally
+--   just function composition, and this is O(1).
+--
+--   If you reimagine this type to instead be "you give me a fold function (and
+--   initial accumulator value) to process a list, and I'll apply that fold to
+--   all of my values" you get the following type, which is almost `𝐼`.
+--
+--       newtype Almost𝐼 = Almost𝐼 (∀ b. (a → b → b) → b → b)
+--
+--   This type has O(1) concatenation just like difference lists (again, just
+--   through function composition), and it has the benefit that you can process
+--   the resulting sequence without having to construct the intermediate
+--   concatenated list. You can recover `DiffList` from `Almost𝐼` by fixing the
+--   folding function to be `(:)
+--
+--   The difference between `Almost𝐼` and `𝐼` is that `𝐼` adds an additional
+--   continuation component to the fold in order to support early termination.
+--   With this feature, you can implement `firstElem` as O(1), folds over
+--   booleans that compute disjunction or conjunction with short circuiting,
+--   `take x` as O(x) instead of O(N), etc.
+--
+-- - You can think of `𝐼` as being essentially isomorphic to streams `𝑆`,
+--   with the added benefit of folding over `𝐼` typically being a guaranteed
+--   non-allocating operation. E.g., folding over `tree1 ⧺ tree2` at the
+--   iterator type will just walk the datatypes for `tree1` and `tree2`,
+--   passing their values to the folding function, and won't create any
+--   intermediate data structures just for the purposes of processing the
+--   collection. (Converting the values to lists or streams before the
+--   concatenation will typically result in cons cells or stream result cells
+--   being created and then immediately garbage collected.)
+--
+-- In terms of asymptotic performance, `𝐼` has O(1) complexity for
+-- concatenation, and that's the main reason to use it. (It's also the main
+-- reason why anyone would use a `DiffList`.)
+--
+-- There is a small performance detail around stack size when iterating. When
+-- deeply left-nested, the stack will grow proportional to the nesting depth,
+-- whereas when deeply right-nested, the stack size will not grow at all.
+-- (TODO: validate this claim through actual benchmarking.) The performance
+-- follows the same profile you would get if you collected items into a naive
+-- binary tree and then iterated over them.
+--
+-- Something to keep in mind for both iterator `𝐼` and stream `𝑆` types is that
+-- they are not "fully constructed" containers... they merely ask an existing
+-- container to provide its values one at a time for the purposes of folding.
+-- In particular, if you `map` over an `𝐼` or `𝑆` type, the mapping function
+-- will get called every time you fold over the result, as opposed to just once
+-- when using "fully constructed" containers like linked lists or trees.
+-- You can create a "fully constructed" value at type `𝐼` by folding over it
+-- and passing `cons𝐼` and `null` as the folding function and starting
+-- accumulator values.
+
 -- iterator type
 --                           fold function               continuation
 --                           ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓       ↓↓↓↓↓↓↓
