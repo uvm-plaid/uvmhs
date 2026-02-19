@@ -250,13 +250,13 @@ list𝐼 ∷ 𝐼 a → 𝐿 a
 list𝐼 = foldr𝐼 Nil (:&)
 
 iter𝐿 ∷ 𝐿 a → 𝐼 a
-iter𝐿 xs₀ = 𝐼 HS.$ \ f → flip $ \ 𝓀 →
+iter𝐿 xs₀ = 𝐼 HS.$ \ yield i₀ done →
   let loop xs i = case xs of
-        Nil → 𝓀 i
+        Nil → done i
         x :& xs' →
-          f x i $ \ i' →
+          yield x i $ \ i' →
           loop xs' i'
-  in loop xs₀
+  in loop xs₀ i₀
 
 lazyList𝐼 ∷ 𝐼 a → [a]
 lazyList𝐼 = foldr𝐼 [] (:)
