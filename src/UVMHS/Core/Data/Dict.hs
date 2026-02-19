@@ -99,6 +99,14 @@ class
     dminElem = map fst ∘ dminView
     dmaxElem ∷ d a → 𝑂 (k ∧ a)
     dmaxElem = map fst ∘ dmaxView
+    dminKey ∷ d a → 𝑂 k
+    dminKey = map (fst ∘ fst) ∘ dminView
+    dmaxKey ∷ d a → 𝑂 k
+    dmaxKey = map (fst ∘ fst) ∘ dmaxView
+    dminVal ∷ d a → 𝑂 a
+    dminVal = map (snd ∘ fst) ∘ dminView
+    dmaxVal ∷ d a → 𝑂 a
+    dmaxVal = map (snd ∘ fst) ∘ dmaxView
     dkeep ∷ s → d a → d a
     dkeep s d = fold𝐼 dø (\ k → case d ⋕? k of {None → id;Some x → dadd k x}) $ iter s
     dtoss ∷ s → d a → d a

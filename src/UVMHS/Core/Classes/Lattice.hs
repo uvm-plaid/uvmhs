@@ -1,9 +1,8 @@
 module UVMHS.Core.Classes.Lattice where
 
 import UVMHS.Core.Init
-import UVMHS.Core.Classes.Order
 
-infix  4 ∇,⊑,⊒,⪤
+infix  4 ∇,⊑,⊒
 infixl 5 ⊔,⊟
 infixl 6 ⊓
 
@@ -32,5 +31,5 @@ x ∇ y = case (x ⊑ y,y ⊑ x) of
 (⊒) ∷ (POrd a) ⇒ a → a → 𝔹
 (⊒) = flip (⊑)
 
-(⪤) ∷ (POrd a) ⇒ a → a → 𝔹
-x ⪤ y = ((x ⊑ y) ≡ True) ⩓ ((y ⊑ x) ≡ False)
+-- should be x ≈ y iff x ⊑ y and y ⊑ x
+class Equiv where (≈) ∷ a → a → 𝔹

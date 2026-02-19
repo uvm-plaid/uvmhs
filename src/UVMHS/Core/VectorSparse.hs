@@ -10,7 +10,8 @@ import qualified Data.IntSet as IntSet
 
 import qualified Prelude as HS
 
-data 𝑉 a = 𝑉 { un𝑉 ∷ IntMap.IntMap a }
+-- TODO: make newtype
+newtype 𝑉 a = 𝑉 { un𝑉 ∷ IntMap.IntMap a }
   deriving (Eq,Ord)
 
 instance Lookup ℕ64 a (𝑉 a) where (⋕?) = lookup𝑉
