@@ -148,15 +148,17 @@ runTests noisy γ tests = do
 𝔱 tag xEQ yEQ = 𝔱T @() tag (TH.unsafeCodeCoerce xEQ) (TH.unsafeCodeCoerce yEQ)
 #endif
 
+newtype TypedTest = TypedTest { unTypedTest ∷ TH.CodeQ (𝑇D Test) }
+
 𝔱T ∷ (Eq a,Pretty a) ⇒ 𝕊 → TH.CodeQ a → TH.CodeQ a → TH.Q [TH.Dec]
 𝔱T tag xE yE = do
   l ← TH.location
   let lS = concat [frhsChars $ TH.loc_module l,":",show𝕊 $ fst $ frhs $ TH.loc_start l]
   let tags = list $ splitOn𝕊 ":" tag
-  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.CodeQ (𝑇D Test)))
+  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 TypedTest)
   let t = [|| eqTest tags lS $$xE $$yE ||]
-      tests' = tests ⧺ single t
-  TH.putQ @(𝐼 (TH.CodeQ (𝑇D Test))) tests'
+      tests' = tests ⧺ single (TypedTest t)
+  TH.putQ @(𝐼 TypedTest) tests'
   return []
 
 𝔣 ∷ 𝕊 → TH.ExpQ → TH.ExpQ → TH.ExpQ → TH.Q [TH.Dec]
@@ -175,21 +177,21 @@ runTests noisy γ tests = do
         , show𝕊 $ fst $ frhs $ TH.loc_start l
         ]
   let tags = list $ splitOn𝕊 ":" tag
-  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.CodeQ (𝑇D Test)))
+  tests ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 TypedTest)
   let t' = [|| fuzzTest tags lS $$xIOE $$pE $$xDE ||]
-      tests' = tests ⧺ single t'
-  TH.putQ @(𝐼 (TH.CodeQ (𝑇D Test))) tests'
+      tests' = tests ⧺ single (TypedTest t')
+  TH.putQ @(𝐼 TypedTest) tests'
   return []
 
 buildTests ∷ TH.Q [TH.Dec]
 buildTests = do
-  testEQs ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 (TH.CodeQ (𝑇D Test)))
+  testEQs ← ifNone null ∘ frhs𝑂 ^$ TH.getQ @(𝐼 TypedTest)
   l ← TH.location
   let modNameS = frhsChars $ TH.loc_module l
       testsNameS = "g__TESTS__" ⧺ replace𝕊 "." "__" modNameS
       testsName = TH.mkName $ tohsChars testsNameS
       testEQs' ∷ TH.CodeQ [𝑇D Test]
-      testEQs' = TH.Code $ TH.TExp ^$ TH.listE $ lazyList $ map TH.unTypeCode testEQs
+      testEQs' = TH.Code $ TH.TExp ^$ TH.listE $ lazyList $ map (TH.unTypeCode ∘ unTypedTest) testEQs
       testsEQ ∷ TH.CodeQ (𝑇D Test)
       testsEQ = [|| concat $$testEQs' ||]
   concat ^$ exchange $
